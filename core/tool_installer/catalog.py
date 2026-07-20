@@ -305,4 +305,42 @@ TOOL_CATALOG: dict[str, InstallSpec] = {
     "PrinterBug":   InstallSpec(
         git=("https://github.com/ly4k/PrinterBug", "toolboxes/microsoft/PrinterBug"),
     ),
+    # --- WiFi / monitor / capture helpers (apt) ---
+    "airmon-ng":     InstallSpec(apt="aircrack-ng"),
+    "gpspipe":       InstallSpec(apt="gpsd"),
+    "hcxpsktool":    InstallSpec(apt="hcxtools"),
+    # --- LAN post-exploit (apt) ---
+    "arpspoof":      InstallSpec(apt="dsniff"),
+    "dnsspoof":      InstallSpec(apt="dsniff"),
+    "ssldump":       InstallSpec(apt="ssldump"),
+    "snmpwalk":      InstallSpec(apt="snmp"),
+    "dig":           InstallSpec(apt="dnsutils"),
+    "telnet":        InstallSpec(apt="telnet"),
+    "evil-winrm":    InstallSpec(apt="evil-winrm"),
+    "msfconsole":    InstallSpec(apt="metasploit-framework"),
+    "msfvenom":      InstallSpec(apt="metasploit-framework"),
+    "pwsh":          InstallSpec(apt="powershell"),
+    # --- tunnel / pivot (git) ---
+    "chisel":        InstallSpec(
+        git=("https://github.com/jpillora/chisel", "toolboxes/post_exploit/chisel"),
+    ),
+    "ligolo-ng":     InstallSpec(
+        git=("https://github.com/tnpitsecurity/ligolo-ng", "toolboxes/post_exploit/ligolo-ng"),
+    ),
+    # --- OSINT (pip / git) ---
+    "holehe":        InstallSpec(pip="holehe"),
+    "maigret":       InstallSpec(pip="maigret"),
+    "sherlock":      InstallSpec(pip="sherlock-project"),
+    "nexfil":        InstallSpec(pip="nexfil"),
+    "toutatis":      InstallSpec(pip="toutatis"),
+    "phoneinfoga":   InstallSpec(
+        git=("https://github.com/sundowndev/phoneinfoga", "toolboxes/osint/phoneinfoga"),
+    ),
+    # --- AI / BLE (apt + pip) ---
+    "ollama":        InstallSpec(apt="ollama"),
+    "bleak":         InstallSpec(pip="bleak"),
+    # --- iOS / Android transitive (apt + pip) ---
+    "ios-deploy":    InstallSpec(apt="ios-deploy"),
+    "httptools":     InstallSpec(pip="httptools"),
+    "mitmdump":      InstallSpec(pip="mitmproxy"),
 }
