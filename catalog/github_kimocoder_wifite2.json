@@ -1,0 +1,42 @@
+{
+  "id": "github:kimocoder/wifite2",
+  "kind": "external_repository",
+  "name": "wifite2",
+  "full_name": "kimocoder/wifite2",
+  "owner": "kimocoder",
+  "category": "Wireless Security",
+  "url": "https://github.com/kimocoder/wifite2",
+  "summary": "wifite2 — automated wireless auditor that wraps aircrack-ng / reaver / bully / pyrit / cowpatty / mdk4. The KFIOSA 'wifite4' brand extends this with mt7921e packet injection.",
+  "documentation": {
+    "readme": "https://raw.githubusercontent.com/kimocoder/wifite2/master/README.md",
+    "usage_sections": [],
+    "arguments": [],
+    "examples": [
+      {"command": "sudo wifite --kill", "description": "Run wifite2 in default aggressive mode (kills interfering processes)."},
+      {"command": "wifite -i wlan0mon -c 1,6,11 --dict /usr/share/wordlists/rockyou.txt", "description": "Capture WPA handshakes on a specific interface and channel set, crack with rockyou."}
+    ]
+  },
+  "metadata_status": "index_only",
+  "trust": {
+    "official_kali": true,
+    "reviewed": true,
+    "warning": "Kali ships this as the `wifite` package. The KFIOSA wifite4 brand adds mt7921e packet-injection glue on top — same upstream codebase, augmented driver paths."
+  },
+  "toolbox_path": "toolboxes/wifi_attack/wifite2",
+  "install": {
+    "apt": "sudo apt install wifite",
+    "git": "git clone https://github.com/kimocoder/wifite2 toolboxes/wifi_attack/wifite2"
+  },
+  "dependencies": {
+    "apt": ["aircrack-ng", "iw", "wireless-tools", "net-tools", "iproute2", "hashcat", "hcxdumptool", "hcxtools", "mdk3", "mdk4", "bully", "reaver", "hostapd", "dnsmasq", "iptables", "ettercap", "tcpdump", "tshark", "kismet", "asleap", "pyrit", "cowpatty", "airgraph-ng", "wireshark", "nmap", "masscan", "curl", "wget", "python3", "git", "ettercap-text-only", "freeradius", "hostapd-wpe"],
+    "pip": ["scapy", "psycopg2-binary"],
+    "note": "wifite2 itself is just a Python orchestrator; the heavy lifting is in the apt-installed drivers and crackers."
+  },
+  "risk": {
+    "level": "high",
+    "signals": ["wireless_attack", "automated_handshake_capture", "automated_pmkid_capture", "automated_wps_pixie", "wps_bruteforce"],
+    "requires_explicit_authorization": true,
+    "allow_autonomous_execution": false,
+    "examples_policy": "destructive_on_target"
+  }
+}
