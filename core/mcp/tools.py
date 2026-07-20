@@ -838,6 +838,166 @@ def _make_post_exploit_ext_wrappers() -> Dict[str, KaliToolWrapper]:
     return out
 
 
+# ---------------------------------------------------------------------------
+# Microsoft target-class wrappers (Phase 2.0.M0+M1)
+# ---------------------------------------------------------------------------
+def _make_microsoft_attack_wrappers() -> Dict[str, KaliToolWrapper]:
+    """Surface the 8 Microsoft attack-surface read methods as MCP
+    wrappers. Read-only (risk=READ). The intrusive / destructive
+    surface (impacket psexec, mimikatz, PetitPotam coerce, DCSync)
+    is composed from core.post_exploit.runner_ext in Phase 2.0.M2
+    and is exposed via the post_exploit_ext wrappers — not these."""
+    try:
+        from core.microsoft.runner import (
+            MICROSOFT_ATTACKS, run_attack as _run_ms)
+    except Exception:  # noqa: BLE001
+        return {}
+
+    def _runner(method: str):
+        def _r(args: Dict[str, Any], timeout: int = 120,
+               cwd: Optional[str] = None) -> Dict[str, Any]:
+            try:
+                return _run_ms(method=method, args=(args or {}))
+            except Exception as e:  # noqa: BLE001 — never raise out of MCP
+                return {"ok": False, "error": str(e)}
+        return _r
+
+    out: Dict[str, KaliToolWrapper] = {}
+    for spec in MICROSOFT_ATTACKS:
+        out[spec["name"]] = KaliToolWrapper(
+            name=spec["name"],
+            binary="core.microsoft.runner",
+            description=spec["description"],
+            input_schema=spec["input_schema"],
+            examples=spec["examples"],
+            risk_level=spec.get("risk_level", RISK_READ),
+            requires_root=spec.get("requires_root", False),
+            runner=_runner(spec["method"]),
+        )
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Android target-class wrappers (Phase 2.0.A0+A1)
+# ---------------------------------------------------------------------------
+def _make_android_attack_wrappers() -> Dict[str, KaliToolWrapper]:
+    """Surface the 8 Android target-class read methods as MCP
+    wrappers. Read-only (risk=READ). The 4 intrusive methods
+    (frida_trace_attach_method, apktool_repack_with_frida_gadget,
+    adb_logcat_pull, drozer_content_provider_enum) are layered on
+    in Phase 2.0.A2."""
+    try:
+        from core.android.runner import (
+            ANDROID_ATTACKS, run_attack as _run_android)
+    except Exception:  # noqa: BLE001
+        return {}
+
+    def _runner(method: str):
+        def _r(args: Dict[str, Any], timeout: int = 120,
+               cwd: Optional[str] = None) -> Dict[str, Any]:
+            try:
+                return _run_android(method=method, args=(args or {}))
+            except Exception as e:  # noqa: BLE001
+                return {"ok": False, "error": str(e)}
+        return _r
+
+    out: Dict[str, KaliToolWrapper] = {}
+    for spec in ANDROID_ATTACKS:
+        out[spec["name"]] = KaliToolWrapper(
+            name=spec["name"],
+            binary="core.android.runner",
+            description=spec["description"],
+            input_schema=spec["input_schema"],
+            examples=spec["examples"],
+            risk_level=spec.get("risk_level", RISK_READ),
+            requires_root=spec.get("requires_root", False),
+            runner=_runner(spec["method"]),
+        )
+    return out
+
+
+# ---------------------------------------------------------------------------
+# iOS target-class wrappers (Phase 2.0.I0+I1)
+# ---------------------------------------------------------------------------
+def _make_ios_attack_wrappers() -> Dict[str, KaliToolWrapper]:
+    """Surface the 8 iOS target-class read methods as MCP wrappers.
+    Read-only (risk=READ). The 4 intrusive methods
+    (ssl_kill_switch_attach, objection_run_method,
+    frida_trace_class, idevicebackup2_extract) are layered on in
+    Phase 2.0.I2."""
+    try:
+        from core.ios.runner import (
+            IOS_ATTACKS, run_attack as _run_ios)
+    except Exception:  # noqa: BLE001
+        return {}
+
+    def _runner(method: str):
+        def _r(args: Dict[str, Any], timeout: int = 120,
+               cwd: Optional[str] = None) -> Dict[str, Any]:
+            try:
+                return _run_ios(method=method, args=(args or {}))
+            except Exception as e:  # noqa: BLE001
+                return {"ok": False, "error": str(e)}
+        return _r
+
+    out: Dict[str, KaliToolWrapper] = {}
+    for spec in IOS_ATTACKS:
+        out[spec["name"]] = KaliToolWrapper(
+            name=spec["name"],
+            binary="core.ios.runner",
+            description=spec["description"],
+            input_schema=spec["input_schema"],
+            examples=spec["examples"],
+            risk_level=spec.get("risk_level", RISK_READ),
+            requires_root=spec.get("requires_root", False),
+            runner=_runner(spec["method"]),
+        )
+    return out
+
+
+# ---------------------------------------------------------------------------
+# live_target wrappers (Phase 2.0.L)
+# ---------------------------------------------------------------------------
+def _make_live_target_wrappers() -> Dict[str, KaliToolWrapper]:
+    """Surface the 9 whitelist-only polyglot safe-patch
+    identifiers (PowerShell / C# / Java / Smali / Swift / plist /
+    Mach-O / Frida / BloodHound cypher) as MCP wrappers. The
+    live_target module edits KFIOSA's own emitted artifacts (a
+    saved .cypher, a Frida .js, a .plist snippet, a .ps1 wrapper)
+    — NOT the target machine's code. risk=WRITE."""
+    try:
+        from core.live_target import (LIVE_TARGET_PATCHES,
+                                       run_patch as _run_live)
+    except Exception:  # noqa: BLE001
+        return {}
+
+    def _runner(patch_id: str):
+        def _r(args: Dict[str, Any], timeout: int = 120,
+               cwd: Optional[str] = None) -> Dict[str, Any]:
+            try:
+                return _run_live(patch_id=patch_id,
+                                 target_class=(args or {}).get(
+                                     "target_class", ""),
+                                 params=(args or {}).get("params") or {})
+            except Exception as e:  # noqa: BLE001
+                return {"ok": False, "error": str(e)}
+        return _r
+
+    out: Dict[str, KaliToolWrapper] = {}
+    for spec in LIVE_TARGET_PATCHES:
+        out[spec["name"]] = KaliToolWrapper(
+            name=spec["name"],
+            binary="core.live_target",
+            description=spec["description"],
+            input_schema=spec["input_schema"],
+            examples=spec["examples"],
+            risk_level=spec.get("risk_level", RISK_INTRUSIVE),
+            requires_root=spec.get("requires_root", False),
+            runner=_runner(spec["patch_id"]),
+        )
+    return out
+
+
 def _make_extended_wifi_wrappers() -> Dict[str, KaliToolWrapper]:
     from core.extended_wifi.runner import (EXT_WIFI_ATTACKS,
                                             run_attack as _run_extwifi)
@@ -1500,6 +1660,10 @@ KALI_TOOL_WRAPPERS: Dict[str, KaliToolWrapper] = {
     **_make_ble_attack_wrappers(),
     **_make_wifi_attack_wrappers(),
     **_make_post_exploit_ext_wrappers(),
+    **_make_microsoft_attack_wrappers(),
+    **_make_android_attack_wrappers(),
+    **_make_ios_attack_wrappers(),
+    **_make_live_target_wrappers(),
     **_make_extended_wifi_wrappers(),
     **_make_ble_post_exploit_wrappers(),
     **_make_extended_ble_wrappers(),
@@ -1561,6 +1725,23 @@ def list_mcp_tools(domain: Optional[str] = None) -> List[Dict[str, Any]]:
             # POST_EXPLOIT_PROMPT_STANZA so the AI knows the AI-driven
             # path is available.
             name_to_domain.setdefault(name, "post_exploitation")
+        elif name.startswith("microsoft_attack_"):
+            # Microsoft target-class read methods; surfaces in
+            # MICROSOFT_PROMPT_STANZA so the AI knows the AI-driven
+            # path is available for AD / Windows / M365 / ADCS.
+            name_to_domain.setdefault(name, "microsoft")
+        elif name.startswith("android_attack_"):
+            # Android target-class read methods; surfaces in
+            # ANDROID_PROMPT_STANZA.
+            name_to_domain.setdefault(name, "android")
+        elif name.startswith("ios_attack_"):
+            # iOS target-class read methods; surfaces in
+            # IOS_PROMPT_STANZA.
+            name_to_domain.setdefault(name, "ios")
+        elif name.startswith("live_target_"):
+            # Live-target polyglot safe-patch wrappers; surfaces in
+            # LIVE_TARGET_PROMPT_STANZA.
+            name_to_domain.setdefault(name, "live_target")
     # External injection toolbox tools are all wifi-domain for now.
     try:
         from core.modules.external_injection import EXTERNAL_INJECTION_TOOLS
