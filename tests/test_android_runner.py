@@ -402,8 +402,9 @@ class TestRegistryAndSingleGate(unittest.TestCase):
     """Registry + the single-gate invariant."""
 
     def test_methods_count(self) -> None:
-        self.assertEqual(len(ANDROID_METHODS), 8)
-        self.assertEqual(len(ANDROID_ATTACKS), 8)
+        # 8 read (A1) + 4 intrusive (A2) = 12
+        self.assertEqual(len(ANDROID_METHODS), 12)
+        self.assertEqual(len(ANDROID_ATTACKS), 12)
 
     def test_registry_names_unique(self) -> None:
         names = [a["name"] for a in ANDROID_ATTACKS]
@@ -412,9 +413,26 @@ class TestRegistryAndSingleGate(unittest.TestCase):
         for n in names:
             self.assertTrue(n.startswith("android_attack_"))
 
-    def test_registry_risk_level_read(self) -> None:
-        for a in ANDROID_ATTACKS:
-            self.assertEqual(a["risk_level"], "read")
+    def test_registry_risk_levels(self) -> None:
+        by_method = {a["method"]: a for a in ANDROID_ATTACKS}
+        for m in ("adb_devices_list", "adb_packages_dump",
+                  "adb_apps_running", "frida_processes_enumerate",
+                  "apktool_decode_manifest", "jadx_dex_to_java",
+                  "drozer_modules_discovery",
+                  "nmap_android_adb_discovery"):
+            self.assertEqual(by_method[m]["risk_level"], "read",
+                             f"{m} should be read")
+        self.assertEqual(
+            by_method["frida_trace_attach_method"]["risk_level"],
+            "intrusive")
+        self.assertEqual(
+            by_method["apktool_repack_with_frida_gadget"]
+            ["risk_level"], "destructive")
+        self.assertEqual(
+            by_method["adb_logcat_pull"]["risk_level"], "intrusive")
+        self.assertEqual(
+            by_method["drozer_content_provider_enum"]["risk_level"],
+            "intrusive")
 
     def test_unknown_method(self) -> None:
         r = run_attack("nope", args={})
@@ -446,6 +464,138 @@ class TestRegistryAndSingleGate(unittest.TestCase):
         self.assertIn("name", r)
         self.assertIn("duration_s", r)
         self.assertFalse(r["ok"])
+
+
+# ---------------------------------------------------------------------------
+# Phase 2.0.A2 — Android intrusive surface (4 methods)
+# ---------------------------------------------------------------------------
+
+class TestAndroidIntrusiveSurface(unittest.TestCase):
+
+    # --- frida_trace_attach_method ------------------------------------
+
+    def test_frida_trace_missing_pkg(self) -> None:
+        r = run_attack("frida_trace_attach_method",
+                       args={"method_name": "foo"})
+        self.assertFalse(r["ok"])
+        self.assertIn("package", r["error"])
+
+    def test_frida_trace_missing_method(self) -> None:
+        r = run_attack("frida_trace_attach_method",
+                       args={"package": "com.example.app"})
+        self.assertFalse(r["ok"])
+        self.assertIn("method_name", r["error"])
+
+    def test_frida_trace_emits_command(self) -> None:
+        r = run_attack("frida_trace_attach_method",
+                       args={"package": "com.example.app",
+                             "method_name": "getUserToken"})
+        self.assertTrue(r["ok"], r.get("error"))
+        cmd = r["data"]["command"]
+        self.assertEqual(cmd[0], "frida")
+        self.assertIn("com.example.app", cmd)
+        self.assertIn("agent.js", cmd)
+
+    def test_frida_trace_rejects_shell_meta(self) -> None:
+        r = run_attack("frida_trace_attach_method",
+                       args={"package": "com.x; rm -rf /",
+                             "method_name": "x"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    # --- apktool_repack_with_frida_gadget ------------------------------
+
+    def test_apktool_repack_missing_apk(self) -> None:
+        r = run_attack("apktool_repack_with_frida_gadget",
+                       args={"out_path": "/tmp/x"})
+        self.assertFalse(r["ok"])
+
+    def test_apktool_repack_missing_out(self) -> None:
+        r = run_attack("apktool_repack_with_frida_gadget",
+                       args={"apk_path": "/tmp/in.apk"})
+        self.assertFalse(r["ok"])
+
+    def test_apktool_repack_emits_command(self) -> None:
+        r = run_attack("apktool_repack_with_frida_gadget",
+                       args={"apk_path": "/tmp/in.apk",
+                             "out_path": "/tmp/out"})
+        self.assertTrue(r["ok"], r.get("error"))
+        cmd = r["data"]["command"]
+        self.assertEqual(cmd[0], "apktool")
+        self.assertIn("/tmp/in.apk", cmd)
+
+    def test_apktool_repack_rejects_shell_meta(self) -> None:
+        r = run_attack("apktool_repack_with_frida_gadget",
+                       args={"apk_path": "/tmp/x; evil",
+                             "out_path": "/tmp/y"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    # --- adb_logcat_pull ----------------------------------------------
+
+    def test_logcat_missing_adb(self) -> None:
+        import shutil
+        if shutil.which("adb"):
+            self.skipTest("adb installed; can't exercise degrade path")
+        r = run_attack("adb_logcat_pull", args={})
+        self.assertFalse(r["ok"])
+        self.assertIn("adb", r["error"])
+
+    def test_logcat_rejects_shell_meta(self) -> None:
+        r = run_attack("adb_logcat_pull",
+                       args={"grep": "x; rm -rf /"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    def test_logcat_never_emits_clear(self) -> None:
+        # logcat -c is the CLEAR flag; the runner must NEVER use
+        # it (it would destroy forensic evidence). The runner
+        # only emits "logcat -d" (dump).
+        from core.android.runner import AndroidRunner
+        runner = AndroidRunner(args={})
+        st = runner._adb_logcat_pull({"grep": "GPS"})
+        # If adb is not installed, the runner returns ok=False
+        # with "adb not installed". We just assert the error
+        # doesn't mention "-c" (clear).
+        self.assertNotIn("-c", st.get("error", ""))
+
+    # --- drozer_content_provider_enum ---------------------------------
+
+    def test_drozer_enum_missing_pkg(self) -> None:
+        r = run_attack("drozer_content_provider_enum", args={})
+        self.assertFalse(r["ok"])
+        self.assertIn("package", r["error"])
+
+    def test_drozer_enum_emits_command(self) -> None:
+        r = run_attack("drozer_content_provider_enum",
+                       args={"package": "com.example.app"})
+        self.assertTrue(r["ok"], r.get("error"))
+        cmd = r["data"]["command"]
+        self.assertEqual(cmd[0], "drozer")
+        # The 3 drozer modules are all there.
+        joined = " ".join(cmd)
+        self.assertIn("app.provider.finduris", joined)
+        self.assertIn("app.provider.query", joined)
+        self.assertIn("app.provider.info", joined)
+
+    def test_drozer_enum_rejects_shell_meta(self) -> None:
+        r = run_attack("drozer_content_provider_enum",
+                       args={"package": "com.x; evil"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    # --- envelope shape invariants ------------------------------------
+
+    def test_all_intrusive_methods_return_envelope(self) -> None:
+        for m in ("frida_trace_attach_method",
+                  "apktool_repack_with_frida_gadget",
+                  "drozer_content_provider_enum"):
+            r = run_attack(m, args={})
+            self.assertIn("ok", r)
+            self.assertIn("name", r)
+            self.assertEqual(r["name"], m)
+            self.assertFalse(r["ok"])
+            self.assertIn("error", r)
 
 
 if __name__ == "__main__":

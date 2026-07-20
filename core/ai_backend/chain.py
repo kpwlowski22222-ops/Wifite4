@@ -178,6 +178,106 @@ CVE_TO_EXPLOIT_PROMPT_STANZA = (
     "    tool name cve_to_exploit.\n"
 )
 
+# microsoft_attack action — AI-driven Microsoft / Windows / AD / M365
+MICROSOFT_PROMPT_STANZA = (
+    "  - microsoft_attack (risk READ, GATED) runs one of the 8 "
+    "Microsoft attack-surface read methods in core/microsoft/runner.py. "
+    "The set covers nmap SMB/RPC/WinRM/RDP/Kerberos/LDAP discovery, "
+    "impacket lookupsid parser, responder passive NBNS poll, "
+    "BloodHound collector command-line builder (operator starts the "
+    "actual collection), certipy AD CS ESC1-ESC15 template parser, "
+    "ldapsearch filter validator + command-line builder, kerbrute "
+    "username validator + userenum/asreproast plan, and M365 OpenID "
+    "Connect tenant discovery (NO creds, NO Graph scope). All 8 are "
+    "READ. The intrusive / destructive surface (impacket_psexec, "
+    "mimikatz_via_impacket, PetitPotam coerce, DCSync, AD CS ESC "
+    "exploitation) is composed from core.post_exploit.runner_ext in "
+    "Phase 2.0.M2 and surfaces as a separate gated action. Every "
+    "microsoft_attack step is per-step ACCEPT-gated at run time. You "
+    "may also drive these via mcp_call with the per-method tool names "
+    "(microsoft_attack_nmap_smb_rpc_winrm_discovery, ...). Method "
+    "names (set args.method to one of): nmap_smb_rpc_winrm_discovery, "
+    "impacket_lookupsid_users, responder_discovery_sweep, "
+    "bloodhound_collector_scheduled, certipy_adcs_find_vuln_templates, "
+    "ldapsearch_ad_query, kerbrute_userenum_oasrep, "
+    "m365_graph_tenant_recon. Never fabricate a CVE id, a cracked "
+    "PSK, a cleartext credential, an NTLM hash, a Kerberos ticket, "
+    "or an AD CS ESC verdict without ground truth from the source "
+    "output the runner parses.\n"
+)
+
+# android_attack action — AI-driven Android target class
+ANDROID_PROMPT_STANZA = (
+    "  - android_attack (risk READ, GATED) runs one of the 8 Android "
+    "target-class read methods in core/android/runner.py. The set "
+    "covers adb devices/packages/running-processes enumeration, Frida "
+    "process enumeration, apktool AndroidManifest.xml decode, jadx "
+    "dex-to-Java decode, drozer attack-surface module discovery, and "
+    "nmap NSE for android-adb. The 4 intrusive methods "
+    "(frida_trace_attach_method, apktool_repack_with_frida_gadget, "
+    "adb_logcat_pull, drozer_content_provider_enum) are layered on in "
+    "Phase 2.0.A2. Every android_attack step is per-step ACCEPT-gated "
+    "at run time. You may also drive these via mcp_call with the per-"
+    "method tool names (android_attack_adb_devices_list, ...). Method "
+    "names (set args.method to one of): adb_devices_list, "
+    "adb_packages_dump, adb_apps_running, frida_processes_enumerate, "
+    "apktool_decode_manifest, jadx_dex_to_java, "
+    "drozer_modules_discovery, nmap_android_adb_discovery. The "
+    "runner degrades honestly when adb / frida / apktool / jadx / "
+    "drozer / nmap is absent. fastboot oem unlock and Magisk boot "
+    "image patch are DESTRUCTIVE and live in a separate gated action; "
+    "the runner refuses to run them when device_state is not "
+    "unlocked.\n"
+)
+
+# ios_attack action — AI-driven iOS target class
+IOS_PROMPT_STANZA = (
+    "  - ios_attack (risk READ, GATED) runs one of the 8 iOS target-"
+    "class read methods in core/ios/runner.py. The set covers "
+    "libimobiledevice lockdownd query, usbmuxd listening devices, "
+    "ideviceinfo dump, idevicedebug apps list, idevicebackup2 "
+    "backup enumeration, frida-ios-dump bundle-id dumper, objection "
+    "environment inventory, and nmap NSE for apple-mdns. The 4 "
+    "intrusive methods (ssl_kill_switch_attach, objection_run_method, "
+    "frida_trace_class, idevicebackup2_extract) land in Phase "
+    "2.0.I2. Every ios_attack step is per-step ACCEPT-gated at run "
+    "time. You may also drive these via mcp_call with the per-method "
+    "tool names (ios_attack_libimobiledevice_list_devices, ...). "
+    "Method names (set args.method to one of): "
+    "libimobiledevice_list_devices, usbmuxd_list_connected, "
+    "ideviceinfo_dump, idevicedebug_apps_list, idevicebackup2_list, "
+    "frida_ios_dump_bundle_id, objection_environment_inventory, "
+    "nmap_apple_mdns_discovery. The runner degrades honestly when "
+    "the libimobiledevice toolchain, Frida, objection, or nmap is "
+    "absent. checkm8 / limera1n DFU operations are DESTRUCTIVE and "
+    "require the device to already be in DFU; the runner refuses to "
+    "send the USB reset itself. libimobiledevice backup/restore is "
+    "WRITE; the runner never auto-deletes backups (only enumerates).\n"
+)
+
+# live_target action — AI-driven polyglot runtime-mod
+LIVE_TARGET_PROMPT_STANZA = (
+    "  - live_target (risk WRITE, GATED) applies one of the 9 "
+    "whitelist-only safe patches in core/live_target/safe_patches.py "
+    "to a KFIOSA-emitted artifact (a saved .cypher, a Frida .js, a "
+    ".plist snippet, a PowerView .ps1 wrapper, an AndroidManifest "
+    "snippet, a Magisk module.prop, a checkm8 shell wrapper). The "
+    "patch is identified by patch_id (set args.patch_id). The 9 "
+    "patches: microsoft::swap_bloodhound_query_param, "
+    "microsoft::swap_powerview_filter, "
+    "microsoft::swap_certipy_template, "
+    "android::swap_frida_script_steal_method, "
+    "android::swap_apk_package_id, android::swap_magisk_module_prop, "
+    "ios::swap_plist_key_value, ios::swap_frida_ios_dump_bundle_id, "
+    "ios::swap_checkm8_args. The validator rejects any patch that "
+    "touches os.system / Runtime.exec / NSTask / posix_spawn / "
+    "dlopen or that introduces shell metas in the swapped string. "
+    "The live_target module edits KFIOSA's own emitted artifacts — "
+    "NOT the target machine's code. Every live_target step is per-"
+    "step ACCEPT-gated at run time. You may also drive this via "
+    "mcp_call with the tool name live_target_<patch_id>.\n"
+)
+
 
 _SYSTEM_PROMPT = (
     "You are an expert penetration tester. Given a target and the\n"
@@ -671,6 +771,10 @@ _SYSTEM_PROMPT = (
     f"{OSINT_EXT_PROMPT_STANZA}\n"
     f"{EXTENDED_BLE_PROMPT_STANZA}\n"
     f"{CVE_TO_EXPLOIT_PROMPT_STANZA}\n"
+    f"{MICROSOFT_PROMPT_STANZA}\n"
+    f"{ANDROID_PROMPT_STANZA}\n"
+    f"{IOS_PROMPT_STANZA}\n"
+    f"{LIVE_TARGET_PROMPT_STANZA}\n"
 )
 # Heuristic fallback — used only when both LLM attempts fail. Mirrors
 # the existing ``AIBackend._heuristic`` in spirit but emits the new
@@ -1081,10 +1185,16 @@ class AIChainPlanner:
         cves = cves or []
         kb_tools = kb_tools or []
         ctx = dict(context or {})
+        # Phase 2.0.P: pull target_class from the seed (operator-set)
+        # or from the context (per-step override). The picker uses
+        # it to choose the right model for Microsoft / Android / iOS.
+        target_class = (target.get("target_class")
+                         or ctx.get("target_class") or "")
         ctx.update({
             "target": target,
             "matched_cves": cves,
             "kb_tools": kb_tools[:20],  # cap so the prompt stays small
+            "target_class": target_class,
         })
 
         # Surface the MCP tool registry (schemas + examples + risk) to
@@ -1137,7 +1247,8 @@ class AIChainPlanner:
 
         # 1) Primary LLM call.
         try:
-            text = self._query_primary(domain, prompt, ctx)
+            text = self._query_primary(domain, prompt, ctx,
+                                         target_class=target_class)
             steps = _parse_chain_json(text)
         except ChainPlanError as e:
             self._emit(f"[chain-planner] primary LLM failed: {e}")
@@ -1158,7 +1269,8 @@ class AIChainPlanner:
                     # note in the context that the operator approved
                     # the uncensored swap.
                     ctx["uncensored_swap"] = tag
-                    text = self._query_primary(domain, prompt, ctx)
+                    text = self._query_primary(domain, prompt, ctx,
+                                                 target_class=target_class)
                     steps = _parse_chain_json(text)
             except ChainPlanError as e:
                 self._emit(
@@ -1243,12 +1355,21 @@ class AIChainPlanner:
             pass
 
     def _query_primary(self, domain: str, prompt: str,
-                       context: Dict[str, Any]) -> str:
+                       context: Dict[str, Any],
+                       target_class: str = "") -> str:
         """Run the primary LLM call. Returns the raw text response.
 
         Raises ``ChainPlanError`` if no backend is wired in. Other
         backend errors propagate so the caller can decide whether to
         swap models.
+
+        Phase 2.0.P: when ``target_class`` is one of
+        ``microsoft`` / ``android`` / ``ios``, the model is
+        chosen from :data:`core.ai_backend.TARGET_MODEL_CATALOG`
+        (the operator's preferred uncensored code-architect model
+        for code generation tasks). The per-step ACCEPT/CANCEL
+        gate and the refusal-safety stance are unchanged — only
+        the model tag is selected.
         """
         if self.ai_backend is None:
             raise ChainPlanError("no AI backend wired into the planner")
@@ -1268,11 +1389,28 @@ class AIChainPlanner:
                 restore = False
         else:
             restore = False
+        # Phase 2.0.P: consult the target-class model picker. The
+        # picker sets ``domain_models[domain]`` so that the
+        # backend's ``_model_for`` returns the picker-selected
+        # model. We restore the previous value in the finally block.
+        picker = getattr(self.ai_backend, "_pick_model_for_target", None)
+        prev_model = None
+        if callable(picker) and target_class:
+            try:
+                prev_model = self.ai_backend.domain_models.get(domain)
+                self.ai_backend.domain_models[domain] = picker(target_class)
+            except Exception:
+                prev_model = None
         try:
             return self.ai_backend.query(domain, prompt, context=context)
         finally:
             if restore:
                 try:
                     self.ai_backend.domain_prompts.pop(domain, None)
+                except Exception:
+                    pass
+            if prev_model is not None:
+                try:
+                    self.ai_backend.domain_models[domain] = prev_model
                 except Exception:
                     pass

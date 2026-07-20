@@ -405,8 +405,9 @@ class TestRegistryAndSingleGate(unittest.TestCase):
     """Registry + the single-gate invariant."""
 
     def test_methods_count(self) -> None:
-        self.assertEqual(len(IOS_METHODS), 8)
-        self.assertEqual(len(IOS_ATTACKS), 8)
+        # 8 read (I1) + 4 intrusive (I2) = 12
+        self.assertEqual(len(IOS_METHODS), 12)
+        self.assertEqual(len(IOS_ATTACKS), 12)
 
     def test_registry_names_unique(self) -> None:
         names = [a["name"] for a in IOS_ATTACKS]
@@ -414,9 +415,19 @@ class TestRegistryAndSingleGate(unittest.TestCase):
         for n in names:
             self.assertTrue(n.startswith("ios_attack_"))
 
-    def test_registry_risk_level_read(self) -> None:
-        for a in IOS_ATTACKS:
-            self.assertEqual(a["risk_level"], "read")
+    def test_registry_risk_levels(self) -> None:
+        by_method = {a["method"]: a for a in IOS_ATTACKS}
+        for m in ("libimobiledevice_list_devices", "usbmuxd_list_connected",
+                  "ideviceinfo_dump", "idevicedebug_apps_list",
+                  "idevicebackup2_list", "frida_ios_dump_bundle_id",
+                  "objection_environment_inventory",
+                  "nmap_apple_mdns_discovery"):
+            self.assertEqual(by_method[m]["risk_level"], "read",
+                             f"{m} should be read")
+        for m in ("ssl_kill_switch_attach", "objection_run_method",
+                  "frida_trace_class", "idevicebackup2_extract"):
+            self.assertEqual(by_method[m]["risk_level"], "intrusive",
+                             f"{m} should be intrusive")
 
     def test_unknown_method(self) -> None:
         r = run_attack("nope", args={})
@@ -448,6 +459,139 @@ class TestRegistryAndSingleGate(unittest.TestCase):
         self.assertIn("name", r)
         self.assertIn("duration_s", r)
         self.assertFalse(r["ok"])
+
+
+# ---------------------------------------------------------------------------
+# Phase 2.0.I2 — iOS intrusive surface (4 methods)
+# ---------------------------------------------------------------------------
+
+class TestIosIntrusiveSurface(unittest.TestCase):
+
+    # --- ssl_kill_switch_attach ---------------------------------------
+
+    def test_ssl_kill_missing_bundle(self) -> None:
+        r = run_attack("ssl_kill_switch_attach", args={})
+        self.assertFalse(r["ok"])
+        self.assertIn("bundle_id", r["error"])
+
+    def test_ssl_kill_emits_command(self) -> None:
+        r = run_attack("ssl_kill_switch_attach",
+                       args={"bundle_id": "com.example.app"})
+        self.assertTrue(r["ok"], r.get("error"))
+        cmd = r["data"]["command"]
+        self.assertEqual(cmd[0], "frida")
+        self.assertIn("com.example.app", cmd)
+        self.assertIn("SSL_Kill_Switch_2.js", " ".join(cmd))
+
+    def test_ssl_kill_rejects_shell_meta(self) -> None:
+        r = run_attack("ssl_kill_switch_attach",
+                       args={"bundle_id": "com.x; evil"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    # --- objection_run_method -----------------------------------------
+
+    def test_objection_missing_bundle(self) -> None:
+        r = run_attack("objection_run_method",
+                       args={"method": "- foo:bar:"})
+        self.assertFalse(r["ok"])
+
+    def test_objection_missing_method(self) -> None:
+        r = run_attack("objection_run_method",
+                       args={"bundle_id": "com.x"})
+        self.assertFalse(r["ok"])
+
+    def test_objection_emits_command(self) -> None:
+        r = run_attack("objection_run_method",
+                       args={"bundle_id": "com.example.app",
+                             "method": "NSURLSession dataTaskWithRequest:"})
+        self.assertTrue(r["ok"], r.get("error"))
+        cmd = r["data"]["command"]
+        self.assertEqual(cmd[0], "objection")
+        # colon is a valid method-path char
+        self.assertIn("NSURLSession", " ".join(cmd))
+
+    def test_objection_rejects_shell_meta(self) -> None:
+        r = run_attack("objection_run_method",
+                       args={"bundle_id": "com.x; evil",
+                             "method": "foo"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    # --- frida_trace_class --------------------------------------------
+
+    def test_frida_trace_missing_bundle(self) -> None:
+        r = run_attack("frida_trace_class",
+                       args={"class_name": "NSURLSession"})
+        self.assertFalse(r["ok"])
+
+    def test_frida_trace_missing_class(self) -> None:
+        r = run_attack("frida_trace_class",
+                       args={"bundle_id": "com.x"})
+        self.assertFalse(r["ok"])
+
+    def test_frida_trace_emits_command(self) -> None:
+        r = run_attack("frida_trace_class",
+                       args={"bundle_id": "com.example.app",
+                             "class_name": "NSURLSession"})
+        self.assertTrue(r["ok"], r.get("error"))
+        cmd = r["data"]["command"]
+        self.assertEqual(cmd[0], "frida")
+        self.assertIn("objc_class_trace.js", " ".join(cmd))
+
+    def test_frida_trace_rejects_shell_meta(self) -> None:
+        r = run_attack("frida_trace_class",
+                       args={"bundle_id": "com.x; evil",
+                             "class_name": "Foo"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    # --- idevicebackup2_extract ---------------------------------------
+
+    def test_backup_missing_out_dir(self) -> None:
+        r = run_attack("idevicebackup2_extract", args={})
+        self.assertFalse(r["ok"])
+        self.assertIn("out_dir", r["error"])
+
+    def test_backup_emits_command(self) -> None:
+        r = run_attack("idevicebackup2_extract",
+                       args={"udid": "00008101001234567890abcdef0102030a0b0c0d",
+                             "out_dir": "/tmp/newbackup"})
+        self.assertTrue(r["ok"], r.get("error"))
+        cmd = r["data"]["command"]
+        self.assertEqual(cmd[0], "idevicebackup2")
+        self.assertIn("/tmp/newbackup", cmd)
+        # The udid is passed
+        self.assertIn("00008101001234567890abcdef0102030a0b0c0d", cmd)
+
+    def test_backup_rejects_shell_meta(self) -> None:
+        r = run_attack("idevicebackup2_extract",
+                       args={"out_dir": "/tmp/x; evil"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    def test_backup_data_mentions_sensitivity(self) -> None:
+        # The data envelope MUST mention the sensitivity of the
+        # backup output (keychain / SMS / photos) so the
+        # operator's downstream consumer handles it carefully.
+        r = run_attack("idevicebackup2_extract",
+                       args={"out_dir": "/tmp/newbackup"})
+        self.assertTrue(r["ok"], r.get("error"))
+        note = r["data"].get("note", "")
+        self.assertIn("keychain", note.lower())
+        self.assertIn("sensitive", note.lower())
+
+    # --- envelope shape invariants ------------------------------------
+
+    def test_all_intrusive_methods_return_envelope(self) -> None:
+        for m in ("ssl_kill_switch_attach", "objection_run_method",
+                  "frida_trace_class", "idevicebackup2_extract"):
+            r = run_attack(m, args={})
+            self.assertIn("ok", r)
+            self.assertIn("name", r)
+            self.assertEqual(r["name"], m)
+            self.assertFalse(r["ok"])
+            self.assertIn("error", r)
 
 
 if __name__ == "__main__":

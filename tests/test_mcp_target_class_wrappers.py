@@ -1,8 +1,8 @@
 """Hermetic tests for the Phase 2.0 MCP factory wrappers:
 
-  * ``_make_microsoft_attack_wrappers`` (8 read methods)
-  * ``_make_android_attack_wrappers``  (8 read methods)
-  * ``_make_ios_attack_wrappers``      (8 read methods)
+  * ``_make_microsoft_attack_wrappers`` (14 methods: 8 read + 6 intrusive)
+  * ``_make_android_attack_wrappers``  (12 methods: 8 read + 4 intrusive)
+  * ``_make_ios_attack_wrappers``      (12 methods: 8 read + 4 intrusive)
   * ``_make_live_target_wrappers``     (9 whitelist patches)
 
 These wrappers are added to ``KALI_TOOL_WRAPPERS`` in
@@ -36,7 +36,7 @@ class TestMicrosoftWrappers:
         from core.mcp.tools import KALI_TOOL_WRAPPERS
         ms = [n for n in KALI_TOOL_WRAPPERS
               if n.startswith("microsoft_attack_")]
-        assert len(ms) == 8, f"expected 8 microsoft_attack_*, got {len(ms)}"
+        assert len(ms) == 14, f"expected 14 microsoft_attack_*, got {len(ms)}"
 
     def test_names_unique(self):
         from core.mcp.tools import KALI_TOOL_WRAPPERS
@@ -57,15 +57,19 @@ class TestMicrosoftWrappers:
         from core.mcp.tools import list_mcp_tools
         tools = {t["name"]: t for t in list_mcp_tools("microsoft")}
         ms = [n for n in tools if n.startswith("microsoft_attack_")]
-        assert len(ms) == 8
+        assert len(ms) == 14
         for t in tools.values():
             assert t["domain"] == "microsoft"
 
-    def test_risk_level_read(self):
+    def test_risk_levels(self):
+        # 8 read + 5 intrusive + 1 destructive (mimikatz)
         from core.mcp.tools import KALI_TOOL_WRAPPERS
-        for n in [n for n in KALI_TOOL_WRAPPERS
-                  if n.startswith("microsoft_attack_")]:
-            assert KALI_TOOL_WRAPPERS[n].risk_level == "read"
+        risks = {KALI_TOOL_WRAPPERS[n].risk_level
+                 for n in KALI_TOOL_WRAPPERS
+                 if n.startswith("microsoft_attack_")}
+        assert "read" in risks
+        assert "intrusive" in risks
+        assert "destructive" in risks
 
     def test_run_envelope_unknown(self):
         # An unknown method shouldn't fake a success — it should
@@ -85,7 +89,7 @@ class TestAndroidWrappers:
         from core.mcp.tools import KALI_TOOL_WRAPPERS
         a = [n for n in KALI_TOOL_WRAPPERS
              if n.startswith("android_attack_")]
-        assert len(a) == 8, f"expected 8 android_attack_*, got {len(a)}"
+        assert len(a) == 12, f"expected 12 android_attack_*, got {len(a)}"
 
     def test_names_unique(self):
         from core.mcp.tools import KALI_TOOL_WRAPPERS
@@ -106,15 +110,19 @@ class TestAndroidWrappers:
         from core.mcp.tools import list_mcp_tools
         tools = {t["name"]: t for t in list_mcp_tools("android")}
         a = [n for n in tools if n.startswith("android_attack_")]
-        assert len(a) == 8
+        assert len(a) == 12
         for t in tools.values():
             assert t["domain"] == "android"
 
-    def test_risk_level_read(self):
+    def test_risk_levels(self):
+        # 8 read + 3 intrusive + 1 destructive (apktool_repack)
         from core.mcp.tools import KALI_TOOL_WRAPPERS
-        for n in [n for n in KALI_TOOL_WRAPPERS
-                  if n.startswith("android_attack_")]:
-            assert KALI_TOOL_WRAPPERS[n].risk_level == "read"
+        risks = {KALI_TOOL_WRAPPERS[n].risk_level
+                 for n in KALI_TOOL_WRAPPERS
+                 if n.startswith("android_attack_")}
+        assert "read" in risks
+        assert "intrusive" in risks
+        assert "destructive" in risks
 
     def test_run_envelope_unknown(self):
         from core.mcp.tools import call_mcp_tool
@@ -131,7 +139,7 @@ class TestIosWrappers:
         from core.mcp.tools import KALI_TOOL_WRAPPERS
         i = [n for n in KALI_TOOL_WRAPPERS
              if n.startswith("ios_attack_")]
-        assert len(i) == 8, f"expected 8 ios_attack_*, got {len(i)}"
+        assert len(i) == 12, f"expected 12 ios_attack_*, got {len(i)}"
 
     def test_names_unique(self):
         from core.mcp.tools import KALI_TOOL_WRAPPERS
@@ -152,15 +160,18 @@ class TestIosWrappers:
         from core.mcp.tools import list_mcp_tools
         tools = {t["name"]: t for t in list_mcp_tools("ios")}
         i = [n for n in tools if n.startswith("ios_attack_")]
-        assert len(i) == 8
+        assert len(i) == 12
         for t in tools.values():
             assert t["domain"] == "ios"
 
-    def test_risk_level_read(self):
+    def test_risk_levels(self):
+        # 8 read + 4 intrusive (all 4 intrusive iOS methods are intrusive)
         from core.mcp.tools import KALI_TOOL_WRAPPERS
-        for n in [n for n in KALI_TOOL_WRAPPERS
-                  if n.startswith("ios_attack_")]:
-            assert KALI_TOOL_WRAPPERS[n].risk_level == "read"
+        risks = {KALI_TOOL_WRAPPERS[n].risk_level
+                 for n in KALI_TOOL_WRAPPERS
+                 if n.startswith("ios_attack_")}
+        assert "read" in risks
+        assert "intrusive" in risks
 
     def test_run_envelope_unknown(self):
         from core.mcp.tools import call_mcp_tool
@@ -231,9 +242,9 @@ class TestRegistryShape:
     def test_all_new_wrappers_present(self):
         from core.mcp.tools import KALI_TOOL_WRAPPERS
         all_new = []
-        for prefix, n_expected in (("microsoft_attack_", 8),
-                                    ("android_attack_", 8),
-                                    ("ios_attack_", 8),
+        for prefix, n_expected in (("microsoft_attack_", 14),
+                                    ("android_attack_", 12),
+                                    ("ios_attack_", 12),
                                     ("live_target_", 9)):
             got = [n for n in KALI_TOOL_WRAPPERS
                    if n.startswith(prefix)]

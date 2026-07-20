@@ -1853,6 +1853,18 @@ class AutonomousOrchestrator:
         if action == "post_exploit_ext":
             self._dispatch_post_exploit_ext(step, seed, report)
             return
+        if action == "microsoft_attack":
+            self._dispatch_microsoft_attack(step, seed, report)
+            return
+        if action == "android_attack":
+            self._dispatch_android_attack(step, seed, report)
+            return
+        if action == "ios_attack":
+            self._dispatch_ios_attack(step, seed, report)
+            return
+        if action == "live_target":
+            self._dispatch_live_target(step, seed, report)
+            return
         if action == "extended_wifi":
             self._dispatch_extended_wifi(step, seed, report)
             return
@@ -3162,6 +3174,225 @@ class AutonomousOrchestrator:
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] extended_ble {method} failed: {e}")
             report["skipped"].append(f"extended_ble {method}: {e}")
+
+    def _dispatch_microsoft_attack(self, step: Dict[str, Any],
+                                   seed: Dict[str, Any],
+                                   report: Dict[str, Any]) -> None:
+        """Run one of the 8 Microsoft attack-surface read methods
+        from :mod:`core.microsoft.runner` (nmap / impacket lookupsid /
+        responder poll / BloodHound collector schedule / certipy AD
+        CS / ldapsearch / kerbrute / M365 OpenID tenant recon).
+
+        All 8 are READ — the intrusive / destructive surface
+        (impacket psexec, mimikatz, DCSync, PetitPotam coerce, AD
+        CS ESC exploitation) is composed from
+        :mod:`core.post_exploit.runner_ext` in Phase 2.0.M2 and is
+        NOT in this dispatch's allowed set yet. The per-step
+        ACCEPT/CANCEL gate already fired in
+        :meth:`_walk_ai_step` — these are read but still operator-
+        gated like every chain step. Args shape::
+
+            {"method": "nmap_smb_rpc_winrm_discovery",
+             "target": "10.10.10.1", "ports": [445, 3389]}
+
+        The returned method data is merged into
+        ``seed["microsoft"]`` so the re-planner (Part B) sees the
+        new signal (open SMB/WinRM/RDP, AD CS templates, kerbrute-
+        valid usernames, tenant metadata) when proposing the next
+        step. Never raises."""
+        from core.microsoft import runner as msrunner
+
+        args = step.get("args", {}) or {}
+        method = (args.get("method") or step.get("tool") or "").strip()
+        # Permit ``tool`` to carry microsoft_attack_<method> too.
+        if method.startswith("microsoft_attack_"):
+            method = method[len("microsoft_attack_"):]
+        if method not in msrunner.MicrosoftRunner.MICROSOFT_METHODS:
+            self._emit(
+                f"[-] microsoft_attack: unknown method {method!r}; "
+                f"one of {list(msrunner.MicrosoftRunner.MICROSOFT_METHODS)}"
+            )
+            report["skipped"].append(
+                f"microsoft_attack: unknown method {method}")
+            return
+        try:
+            res = msrunner.run_attack(method=method, args=args)
+            ok = bool(res.get("ok"))
+            self._emit(
+                f"[+] microsoft_attack {method}: ok={ok} "
+                f"error={res.get('error') or 'none'}"
+            )
+            entry = {
+                "desc": f"microsoft_attack {method}",
+                "kind": "ai", "action": "microsoft_attack",
+                "tool": f"core.microsoft.runner.{method}",
+                "method": method,
+                "ok": ok,
+                "result": res,
+            }
+            report["executed"].append(entry)
+            self._record_access(report, entry)
+            # Merge the probe data into the seed's microsoft dict so
+            # the re-planner sees the new signal (smb_open,
+            # kerbrute-valid users, AD CS ESC findings, m365
+            # tenant metadata) when proposing the next step.
+            if ok and isinstance(res.get("data"), dict):
+                seed.setdefault("microsoft", {})
+                seed["microsoft"][method] = res.get("data")
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] microsoft_attack {method} failed: {e}")
+            report["skipped"].append(f"microsoft_attack {method}: {e}")
+
+    def _dispatch_android_attack(self, step: Dict[str, Any],
+                                 seed: Dict[str, Any],
+                                 report: Dict[str, Any]) -> None:
+        """Run one of the Android target-class read methods from
+        :mod:`core.android.runner` (adb / frida / apktool / jadx /
+        drozer / nmap). The 8 read methods are read-only; the 4
+        intrusive methods (frida_trace_attach,
+        apktool_repack_with_frida_gadget, adb_logcat_pull,
+        drozer_content_provider_enum) land in Phase 2.0.A2. The
+        per-step ACCEPT/CANCEL gate already fired in
+        :meth:`_walk_ai_step` (single-gate invariant). Never raises."""
+        from core.android import runner as arunner
+
+        args = step.get("args", {}) or {}
+        method = (args.get("method") or step.get("tool") or "").strip()
+        if method.startswith("android_attack_"):
+            method = method[len("android_attack_"):]
+        if method not in arunner.AndroidRunner.ANDROID_METHODS:
+            self._emit(
+                f"[-] android_attack: unknown method {method!r}; "
+                f"one of {list(arunner.AndroidRunner.ANDROID_METHODS)}"
+            )
+            report["skipped"].append(
+                f"android_attack: unknown method {method}")
+            return
+        try:
+            res = arunner.run_attack(method=method, args=args)
+            ok = bool(res.get("ok"))
+            self._emit(
+                f"[+] android_attack {method}: ok={ok} "
+                f"error={res.get('error') or 'none'}"
+            )
+            entry = {
+                "desc": f"android_attack {method}",
+                "kind": "ai", "action": "android_attack",
+                "tool": f"core.android.runner.{method}",
+                "method": method,
+                "ok": ok,
+                "result": res,
+            }
+            report["executed"].append(entry)
+            self._record_access(report, entry)
+            if ok and isinstance(res.get("data"), dict):
+                seed.setdefault("android", {})
+                seed["android"][method] = res.get("data")
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] android_attack {method} failed: {e}")
+            report["skipped"].append(f"android_attack {method}: {e}")
+
+    def _dispatch_ios_attack(self, step: Dict[str, Any],
+                             seed: Dict[str, Any],
+                             report: Dict[str, Any]) -> None:
+        """Run one of the iOS target-class read methods from
+        :mod:`core.ios.runner` (libimobiledevice / usbmuxd / frida
+        ios-dump / objection / nmap apple-mdns). The 8 read
+        methods are read-only; the 4 intrusive methods
+        (ssl_kill_switch_attach, objection_run_method,
+        frida_trace_class, idevicebackup2_extract) land in
+        Phase 2.0.I2. The per-step ACCEPT/CANCEL gate already
+        fired in :meth:`_walk_ai_step` (single-gate invariant).
+        Never raises."""
+        from core.ios import runner as irunner
+
+        args = step.get("args", {}) or {}
+        method = (args.get("method") or step.get("tool") or "").strip()
+        if method.startswith("ios_attack_"):
+            method = method[len("ios_attack_"):]
+        if method not in irunner.IOSRunner.IOS_METHODS:
+            self._emit(
+                f"[-] ios_attack: unknown method {method!r}; "
+                f"one of {list(irunner.IOSRunner.IOS_METHODS)}"
+            )
+            report["skipped"].append(
+                f"ios_attack: unknown method {method}")
+            return
+        try:
+            res = irunner.run_attack(method=method, args=args)
+            ok = bool(res.get("ok"))
+            self._emit(
+                f"[+] ios_attack {method}: ok={ok} "
+                f"error={res.get('error') or 'none'}"
+            )
+            entry = {
+                "desc": f"ios_attack {method}",
+                "kind": "ai", "action": "ios_attack",
+                "tool": f"core.ios.runner.{method}",
+                "method": method,
+                "ok": ok,
+                "result": res,
+            }
+            report["executed"].append(entry)
+            self._record_access(report, entry)
+            if ok and isinstance(res.get("data"), dict):
+                seed.setdefault("ios", {})
+                seed["ios"][method] = res.get("data")
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] ios_attack {method} failed: {e}")
+            report["skipped"].append(f"ios_attack {method}: {e}")
+
+    def _dispatch_live_target(self, step: Dict[str, Any],
+                              seed: Dict[str, Any],
+                              report: Dict[str, Any]) -> None:
+        """Run one of the polyglot live-target safe patches from
+        :mod:`core.live_target` (PowerShell / C# / Java / Smali /
+        Swift / plist / Mach-O / Frida script / BloodHound cypher).
+
+        The runner edits KFIOSA's own emitted artifacts (a saved
+        .cypher, a Frida .js, a .plist snippet, a .ps1 wrapper) —
+        NOT the target machine's code. The validator rejects
+        shell metas and dangerous APIs. The per-step ACCEPT/CANCEL
+        gate already fired in :meth:`_walk_ai_step` (single-gate
+        invariant). Never raises."""
+        from core.live_target import run_patch, LIVE_TARGET_PATCHES
+
+        args = step.get("args", {}) or {}
+        patch_id = (args.get("patch_id") or step.get("tool") or "").strip()
+        target_class = (args.get("target_class")
+                        or seed.get("target_class") or "")
+        if patch_id not in LIVE_TARGET_PATCHES:
+            self._emit(
+                f"[-] live_target: unknown patch_id {patch_id!r}; "
+                f"one of {list(LIVE_TARGET_PATCHES)}"
+            )
+            report["skipped"].append(
+                f"live_target: unknown patch_id {patch_id}")
+            return
+        try:
+            res = run_patch(patch_id=patch_id, target_class=target_class,
+                            params=args.get("params") or {})
+            ok = bool(res.get("ok"))
+            self._emit(
+                f"[+] live_target {patch_id}: ok={ok} "
+                f"error={res.get('error') or 'none'}"
+            )
+            entry = {
+                "desc": f"live_target {patch_id}",
+                "kind": "ai", "action": "live_target",
+                "tool": f"core.live_target.{patch_id}",
+                "patch_id": patch_id,
+                "ok": ok,
+                "result": res,
+            }
+            report["executed"].append(entry)
+            self._record_access(report, entry)
+            if ok and isinstance(res.get("data"), dict):
+                seed.setdefault("live_target", {})
+                seed["live_target"][patch_id] = res.get("data")
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] live_target {patch_id} failed: {e}")
+            report["skipped"].append(f"live_target {patch_id}: {e}")
 
     def _dispatch_extended_wifi(self, step: Dict[str, Any],
                                   seed: Dict[str, Any],

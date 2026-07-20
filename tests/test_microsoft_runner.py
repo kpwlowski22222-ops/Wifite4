@@ -560,17 +560,36 @@ class TestRegistryAndSingleGate(unittest.TestCase):
     """Registry + the single-gate invariant (no re-confirm)."""
 
     def test_methods_count(self) -> None:
-        self.assertEqual(len(MICROSOFT_METHODS), 8)
-        self.assertEqual(len(MICROSOFT_ATTACKS), 8)
+        # 8 read (M1) + 6 intrusive (M2) = 14
+        self.assertEqual(len(MICROSOFT_METHODS), 14)
+        self.assertEqual(len(MICROSOFT_ATTACKS), 14)
 
     def test_registry_names_unique(self) -> None:
         names = [a["name"] for a in MICROSOFT_ATTACKS]
         self.assertEqual(len(names), len(set(names)))
+        for n in names:
+            self.assertTrue(n.startswith("microsoft_attack_"))
 
-    def test_registry_risk_level_read(self) -> None:
-        # All 8 Phase M0+M1 methods are read-only.
-        for a in MICROSOFT_ATTACKS:
-            self.assertEqual(a["risk_level"], "read")
+    def test_registry_risk_levels(self) -> None:
+        # M1 = 8 read; M2 = 5 intrusive + 1 destructive (mimikatz).
+        by_method = {a["method"]: a for a in MICROSOFT_ATTACKS}
+        for m in ("nmap_smb_rpc_winrm_discovery",
+                  "impacket_lookupsid_users",
+                  "responder_discovery_sweep",
+                  "bloodhound_collector_scheduled",
+                  "certipy_adcs_find_vuln_templates",
+                  "ldapsearch_ad_query",
+                  "kerbrute_userenum_oasrep",
+                  "m365_graph_tenant_recon"):
+            self.assertEqual(by_method[m]["risk_level"], "read",
+                             f"{m} should be read")
+        for m in ("impacket_secretsdump_ms", "impacket_psexec_ms",
+                  "responder_poison", "PetitPotam_coerce",
+                  "ShadowCoerce_or_DFSCoerce"):
+            self.assertEqual(by_method[m]["risk_level"], "intrusive",
+                             f"{m} should be intrusive")
+        self.assertEqual(by_method["mimikatz_via_impacket"]
+                         ["risk_level"], "destructive")
 
     def test_unknown_method(self) -> None:
         r = run_attack("nope", args={})
@@ -607,6 +626,141 @@ class TestRegistryAndSingleGate(unittest.TestCase):
         self.assertIn("name", r)
         self.assertIn("duration_s", r)
         self.assertFalse(r["ok"])
+
+
+# ---------------------------------------------------------------------------
+# Phase 2.0.M2 — Microsoft intrusive surface (6 methods)
+# ---------------------------------------------------------------------------
+
+class TestMicrosoftIntrusiveSurface(unittest.TestCase):
+    """The 6 Phase 2.0.M2 methods (composed from post_exploit_ext
+    or emit-only). Hermetic: no real impacket / responder / mimikatz
+    runs, no real network."""
+
+    # --- impacket_secretsdump_ms --------------------------------------
+
+    def test_secretsdump_missing_target(self) -> None:
+        r = run_attack("impacket_secretsdump_ms",
+                       args={"user": "admin"})
+        self.assertFalse(r["ok"])
+        self.assertIn("target", r["error"])
+
+    def test_secretsdump_missing_user(self) -> None:
+        r = run_attack("impacket_secretsdump_ms",
+                       args={"target": "10.10.10.1"})
+        self.assertFalse(r["ok"])
+        self.assertIn("user", r["error"])
+
+    # --- impacket_psexec_ms -------------------------------------------
+
+    def test_psexec_missing_target(self) -> None:
+        r = run_attack("impacket_psexec_ms", args={})
+        self.assertFalse(r["ok"])
+        self.assertIn("target", r["error"])
+
+    # --- mimikatz_via_impacket ----------------------------------------
+
+    def test_mimikatz_missing_target(self) -> None:
+        r = run_attack("mimikatz_via_impacket", args={})
+        self.assertFalse(r["ok"])
+        self.assertIn("target", r["error"])
+
+    def test_mimikatz_risk_level(self) -> None:
+        by_method = {a["method"]: a for a in MICROSOFT_ATTACKS}
+        self.assertEqual(by_method["mimikatz_via_impacket"]
+                         ["risk_level"], "destructive")
+
+    # --- responder_poison ---------------------------------------------
+
+    def test_responder_missing_interface(self) -> None:
+        r = run_attack("responder_poison", args={})
+        self.assertFalse(r["ok"])
+        self.assertIn("interface", r["error"])
+
+    # --- PetitPotam_coerce --------------------------------------------
+
+    def test_petitpotam_missing_target(self) -> None:
+        r = run_attack("PetitPotam_coerce", args={"listener": "10.0.0.1"})
+        self.assertFalse(r["ok"])
+        self.assertIn("target", r["error"])
+
+    def test_petitpotam_missing_listener(self) -> None:
+        r = run_attack("PetitPotam_coerce", args={"target": "10.10.10.1"})
+        self.assertFalse(r["ok"])
+        self.assertIn("listener", r["error"])
+
+    def test_petitpotam_emits_command(self) -> None:
+        r = run_attack("PetitPotam_coerce",
+                       args={"target": "10.10.10.1",
+                             "listener": "10.0.0.5"})
+        self.assertTrue(r["ok"], r.get("error"))
+        cmd = r["data"]["command"]
+        self.assertEqual(cmd[0], "python3")
+        self.assertIn("PetitPotam.py", cmd[1])
+        self.assertEqual(cmd[-2:], ["10.0.0.5", "10.10.10.1"])
+
+    def test_petitpotam_rejects_shell_meta(self) -> None:
+        r = run_attack("PetitPotam_coerce",
+                       args={"target": "10.10.10.1",
+                             "listener": "10.0.0.5; rm -rf /"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    # --- ShadowCoerce_or_DFSCoerce ------------------------------------
+
+    def test_shadow_missing_target(self) -> None:
+        r = run_attack("ShadowCoerce_or_DFSCoerce",
+                       args={"listener": "10.0.0.1"})
+        self.assertFalse(r["ok"])
+
+    def test_shadow_emits_two_candidates(self) -> None:
+        r = run_attack("ShadowCoerce_or_DFSCoerce",
+                       args={"target": "10.10.10.1",
+                             "listener": "10.0.0.5"})
+        self.assertTrue(r["ok"], r.get("error"))
+        candidates = r["data"]["candidates"]
+        self.assertEqual(len(candidates), 2)
+        tools = {c["tool"] for c in candidates}
+        self.assertEqual(tools, {"ShadowCoerce", "DFSCoerce"})
+        protocols = {c["protocol"] for c in candidates}
+        self.assertEqual(protocols, {"MS-FSRVP", "MS-DFSNM"})
+
+    def test_shadow_rejects_shell_meta(self) -> None:
+        r = run_attack("ShadowCoerce_or_DFSCoerce",
+                       args={"target": "10.10.10.1",
+                             "listener": "10.0.0.5`whoami`"})
+        self.assertFalse(r["ok"])
+        self.assertIn("shell meta", r["error"])
+
+    # --- envelope shape invariants ------------------------------------
+
+    def test_all_intrusive_methods_return_envelope(self) -> None:
+        # Each method returns the standard step envelope regardless
+        # of ok status.
+        for m in ("impacket_secretsdump_ms", "impacket_psexec_ms",
+                  "mimikatz_via_impacket", "responder_poison",
+                  "PetitPotam_coerce", "ShadowCoerce_or_DFSCoerce"):
+            r = run_attack(m, args={})  # missing-arg path
+            self.assertIn("ok", r)
+            self.assertIn("name", r)
+            self.assertEqual(r["name"], m)
+            self.assertFalse(r["ok"])
+            self.assertIn("error", r)
+
+    def test_no_fabricated_secrets_in_envelope(self) -> None:
+        # The runner must NEVER invent a cleartext password, an
+        # NTLM hash, or a Kerberos ticket in the envelope.
+        import json as _json
+        # Try a method that can return data without error.
+        r = run_attack("PetitPotam_coerce",
+                       args={"target": "10.10.10.1",
+                             "listener": "10.0.0.5"})
+        blob = _json.dumps(r, default=str)
+        for forbidden in ("aad3b435b51404eeaad3b435b51404ee",
+                          ":500:0",  # typical NTLM jth format
+                          "krbtgt"):
+            self.assertNotIn(forbidden, blob,
+                             f"runner fabricated: {forbidden!r}")
 
 
 if __name__ == "__main__":
