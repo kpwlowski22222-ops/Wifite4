@@ -1853,6 +1853,9 @@ class AutonomousOrchestrator:
         if action == "post_exploit_ext":
             self._dispatch_post_exploit_ext(step, seed, report)
             return
+        if action == "post_exploit_anti_forensic":
+            self._dispatch_post_exploit_anti_forensic(step, seed, report)
+            return
         if action == "microsoft_attack":
             self._dispatch_microsoft_attack(step, seed, report)
             return
@@ -3058,6 +3061,74 @@ class AutonomousOrchestrator:
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] post_exploit_ext {method} failed: {e}")
             report["skipped"].append(f"post_exploit_ext {method}: {e}")
+
+    def _dispatch_post_exploit_anti_forensic(self, step: Dict[str, Any],
+                                              seed: Dict[str, Any],
+                                              report: Dict[str, Any]) -> None:
+        """Run one of the 60 anti-forensic / OPSEC modules from
+        :mod:`core.post_exploit.anti_forensic` per ``implementacja_for.txt``.
+
+        These run on the OPERATOR's local box (KFIOSA's own host), NOT
+        on the victim. They are anti-forensic for the attacker — they
+        clean up KFIOSA's own machine post-engagement.
+
+        The per-step ACCEPT/CANCEL gate (TuiConfirmFn, default-deny 300s)
+        already fired in :meth:`_walk_ai_step` BEFORE this dispatch runs
+        (single, default-deny gate; we do NOT re-confirm here). Args
+        shape::
+
+            {"method": "post_clear_bash_history"}
+            {"method": "post_secure_delete_file", "path": "/tmp/foo"}
+            {"method": "post_self_destruct"}
+
+        The 5 destructive modules (``post_self_destruct``,
+        ``post_secure_delete_file`` un-sandboxed, ``post_wipe_free_space``,
+        ``post_clean_pagefile``, ``post_clean_hiberfil``) get a
+        "destructive on the local box, ACCEPT?" prompt with the
+        destructive wording — set in the gate prompt by the risk
+        classifier (the gate itself fires once, here we just route the
+        step).
+
+        The returned envelope is merged into ``seed["post_exploit_anti_forensic"]``
+        so the re-planner sees which cleanup steps ran. Never raises.
+        """
+        from core.post_exploit import anti_forensic as af
+
+        args = step.get("args", {}) or {}
+        method = (args.get("method") or step.get("tool") or "").strip()
+        if method.startswith("post_exploit_anti_forensic_"):
+            method = method[len("post_exploit_anti_forensic_"):]
+        if method not in af.POST_EXPLOIT_ANTI_FORENSIC_METHODS:
+            self._emit(
+                f"[-] post_exploit_anti_forensic: unknown method {method!r}; "
+                f"first 5 known: "
+                f"{list(af.POST_EXPLOIT_ANTI_FORENSIC_METHODS)[:5]}")
+            report["skipped"].append(
+                f"post_exploit_anti_forensic: unknown method {method}")
+            return
+        try:
+            res = af.run_anti_forensic(method=method, args=args)
+            ok = bool(res.get("ok"))
+            self._emit(
+                f"[+] post_exploit_anti_forensic {method}: ok={ok} "
+                f"host={res.get('host_os', '?')} risk={res.get('risk', '?')} "
+                f"error={res.get('error') or 'none'}")
+            entry = {
+                "desc": f"post_exploit_anti_forensic {method}",
+                "kind": "ai", "action": "post_exploit_anti_forensic",
+                "tool": f"core.post_exploit.anti_forensic.{method}",
+                "method": method, "ok": ok, "result": res,
+            }
+            report["executed"].append(entry)
+            self._record_access(report, entry)
+            if isinstance(res.get("data"), dict):
+                seed.setdefault("post_exploit_anti_forensic", {})
+                seed["post_exploit_anti_forensic"][method] = res.get("data")
+        except Exception as e:  # noqa: BLE001
+            self._emit(
+                f"[!] post_exploit_anti_forensic {method} failed: {e}")
+            report["skipped"].append(
+                f"post_exploit_anti_forensic {method}: {e}")
 
     def _dispatch_ble_post_exploit(self, step: Dict[str, Any],
                                      seed: Dict[str, Any],

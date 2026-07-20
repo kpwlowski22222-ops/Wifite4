@@ -58,7 +58,7 @@ class ChainPlanError(RuntimeError):
 _CHAIN_STEP_SCHEMA_HINT = """{
   "chain": [
     {
-      "action": "<one of: mcp_call, post_exploit, external_terminal, zero_day_propose, zero_day_build, zero_day_execute, mt7921e_test_injection, mt7921e_inject, external_inject, recon_probe, ble_probe, ble_attack, wifi_attack, post_exploit_ext, extended_wifi, ble_post_exploit, osint_ext, extended_ble, open_shell, open_post_access_tui, cve_to_exploit, crack, crack_gpu, pmkid, wps_pixie, wps_online, join_network, host_discovery, deploy_payload, run_tool, parse, decide, osint_probe, post_exploit_probe, live_edit, tool_install>",
+      "action": "<one of: mcp_call, post_exploit, external_terminal, zero_day_propose, zero_day_build, zero_day_execute, mt7921e_test_injection, mt7921e_inject, external_inject, recon_probe, ble_probe, ble_attack, wifi_attack, post_exploit_ext, post_exploit_anti_forensic, extended_wifi, ble_post_exploit, osint_ext, extended_ble, open_shell, open_post_access_tui, cve_to_exploit, cve_to_exploit_batch, open_ble_tui, open_network_tui, crack, crack_gpu, pmkid, wps_pixie, wps_online, join_network, host_discovery, deploy_payload, run_tool, parse, decide, osint_probe, post_exploit_probe, live_edit, tool_install>",
       "tool": "<canonical tool name, e.g. airodump-ng, aireplay-ng, msfconsole, mt7921e.test_injection, cve_lookup>",
       "args": { ... tool-specific args ... },
       "rationale": "<one-sentence why this step>",
@@ -276,6 +276,90 @@ LIVE_TARGET_PROMPT_STANZA = (
     "NOT the target machine's code. Every live_target step is per-"
     "step ACCEPT-gated at run time. You may also drive this via "
     "mcp_call with the tool name live_target_<patch_id>.\n"
+)
+
+# post_exploit_anti_forensic action — 60 anti-forensic / OPSEC modules
+# per implementacja_for.txt. The LLM emits a plan; the
+# PostExploitSelector (deterministic) maps the plan to a module
+# sequence. The LLM's role is to decide HIGH-LEVEL INTENT only.
+POST_EXPLOIT_AI_PROMPT_STANZA = (
+    "  - post_exploit_anti_forensic (risk INTRUSIVE, GATED) runs one\n"
+    "    of the 60 anti-forensic / OPSEC modules from\n"
+    "    core.post_exploit.anti_forensic per implementacja_for.txt.\n"
+    "    These run on the OPERATOR's local box (KFIOSA's host), NOT\n"
+    "    the victim. They are anti-forensic for the attacker — they\n"
+    "    clean up KFIOSA's own machine post-engagement. 5 modules are\n"
+    "    DESTRUCTIVE: post_secure_delete_file, post_secure_delete_directory,\n"
+    "    post_wipe_free_space, post_clean_pagefile, post_clean_hiberfil,\n"
+    "    post_self_destruct — they get a 'destructive on the local box,\n"
+    "    ACCEPT?' prompt with destructive wording. Step shape:\n"
+    "      {\"action\": \"post_exploit_anti_forensic\",\n"
+    "       \"args\": {\"method\": \"post_clear_bash_history\"}}\n"
+    "    or with the runner prefix:\n"
+    "      {\"action\": \"post_exploit_anti_forensic\",\n"
+    "       \"args\": {\"method\": \"post_exploit_anti_forensic_post_clear_bash_history\"}}\n"
+    "    Args specific to the method (path, ip, ports, interface, ...)\n"
+    "    are passed as a flat dict in args. The per-step ACCEPT/CANCEL\n"
+    "    gate fires ONCE in _walk_ai_step before dispatch; we do NOT\n"
+    "    re-confirm. The PostExploitSelector is the deterministic\n"
+    "    function in core.ai_backend.post_exploit_selector that maps\n"
+    "    the engagement context (target_class, used actions, anonymity\n"
+    "    required, detaching) to a 1-3 module sequence. Selection rules:\n"
+    "      * target_class=microsoft + powershell → post_clear_powershell_history\n"
+    "      * target_class=linux → post_clear_linux_syslog\n"
+    "      * target_class=macos → post_clear_macos_unified_log\n"
+    "      * anonymity_required → post_randomize_mac_address + post_use_dns_over_https + post_use_tor_for_exfil\n"
+    "      * meterpreter / msfconsole used → post_disable_etw (Win) or post_disable_audit_logging (Linux)\n"
+    "      * ARP used → post_clear_arp_cache\n"
+    "      * DNS used → post_clear_dns_cache\n"
+    "      * webshell deployed → post_remove_web_shells\n"
+    "      * always → post_clear_bash_history (operator-side shell)\n"
+    "      * detaching → post_self_destruct (DESTRUCTIVE)\n"
+    "    The full list of 60 modules is in\n"
+    "    POST_EXPLOIT_ANTI_FORENSIC_METHODS — consult that before\n"
+    "    emitting a method. Never fabricate module names; the runner\n"
+    "    honest-degrades on unknown methods.\n"
+)
+
+# cve_to_exploit_batch action — multi-CVE exploit generation in one step
+CVE_TO_EXPLOIT_BATCH_PROMPT_STANZA = (
+    "  - cve_to_exploit_batch (risk INTRUSIVE, GATED) takes a list of\n"
+    "    CVE ids and emits one exploit per CVE via the existing\n"
+    "    cve_to_exploit_pipeline (Phase 2.0 M-tower). The NVD API key\n"
+    "    is loaded via get_nvd_key() (NEVER inline). Step shape:\n"
+    "      {\"action\": \"cve_to_exploit_batch\",\n"
+    "       \"args\": {\"cve_ids\": [\"CVE-...\", ...], \"tier\": \"default|heavy|fallback\"}}\n"
+    "    Each CVE is looked up via NVD; the LLM NEVER fabricates CVEs.\n"
+    "    The exploit body is generated by the operator's preferred\n"
+    "    uncensored code-architect model (Qwen2.5-Coder-14B-Instruct-\n"
+    "    uncensored default; 32B hybrid GPU+CPU for long exploits; 4B\n"
+    "    fallback on minimal hardware). The per-step ACCEPT/CANCEL\n"
+    "    gate fires ONCE; the batch's sub-steps are not re-gated.\n"
+)
+
+# open_ble_tui + open_network_tui actions — extend the post-access TUI
+POST_ACCESS_TUI_MODES_PROMPT_STANZA = (
+    "  - open_ble_tui (risk READ, UNGATED) opens the BLE RAT-like\n"
+    "    panel inside the post-access TUI (core.post_access_tui.ble_panel).\n"
+    "    The panel scans, connects, walks GATT services, reads/writes\n"
+    "    characteristics, subscribes to notifications, and emits BLE\n"
+    "    shell commands over a writable characteristic. It NEVER\n"
+    "    auto-pairs or auto-bonds — the operator runs the bond command\n"
+    "    from the panel's prompt. Step shape:\n"
+    "      {\"action\": \"open_ble_tui\",\n"
+    "       \"args\": {\"tui_mode\": \"ble\", \"device_path\": \"<from scan>\"}}\n"
+    "  - open_network_tui (risk READ, UNGATED) opens the network\n"
+    "    session-multiplexer panel (core.post_access_tui.network_panel)\n"
+    "    with per-session command prompt (SSH, msfconsole, chisel,\n"
+    "    socat, reverse shell), session list, attach/detach, broadcast,\n"
+    "    file transfer, portfwd manager, SOCKS list. Step shape:\n"
+    "      {\"action\": \"open_network_tui\",\n"
+    "       \"args\": {\"tui_mode\": \"network\",\n"
+    "                  \"net_session_filter\": \"ssh|msfconsole|chisel|socat|all\"}}\n"
+    "    The post-access TUI is launched by spawner.spawn_post_access_tui\n"
+    "    with --state-b64 carrying tui_mode + ble_device_path +\n"
+    "    net_session_filter. The TUI's session multiplexer reuses\n"
+    "    core.post_exploit.runner.run_shell for per-session shell I/O.\n"
 )
 
 
@@ -771,6 +855,9 @@ _SYSTEM_PROMPT = (
     f"{OSINT_EXT_PROMPT_STANZA}\n"
     f"{EXTENDED_BLE_PROMPT_STANZA}\n"
     f"{CVE_TO_EXPLOIT_PROMPT_STANZA}\n"
+    f"{POST_EXPLOIT_AI_PROMPT_STANZA}\n"
+    f"{CVE_TO_EXPLOIT_BATCH_PROMPT_STANZA}\n"
+    f"{POST_ACCESS_TUI_MODES_PROMPT_STANZA}\n"
     f"{MICROSOFT_PROMPT_STANZA}\n"
     f"{ANDROID_PROMPT_STANZA}\n"
     f"{IOS_PROMPT_STANZA}\n"
