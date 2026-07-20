@@ -1128,6 +1128,82 @@ class AutonomousOrchestrator:
         })
 
 
+    def _dispatch_cve_to_exploit_batch(self, step: Dict[str, Any],
+                                        seed: Dict[str, Any],
+                                        report: Dict[str, Any]) -> None:
+        """Multi-CVE exploit generation. Wraps
+        :func:`core.cve_to_exploit.cve_to_exploit_batch` which calls
+        :func:`cve_to_exploit_pipeline` once per CVE id.
+
+        Args shape::
+
+            {"cve_ids": ["CVE-2017-13077", "CVE-2017-13082", ...],
+             "tier": "default" | "heavy" | "fallback"}
+
+        The NVD API key is loaded via
+        :func:`core.ai_backend.get_nvd_key` (NEVER inline). Each
+        per-CVE call uses the operator's preferred uncensored
+        code-architect model (Tier 1 default; the ExploitGenModelManager
+        falls back to HERETIC 9B then the cyber-tuned GGUF tier).
+
+        Never fabricates CVEs — only operator-supplied ids are looked
+        up. The honest-degrade envelope ``{ok: False, error: ...}`` is
+        returned for unknown ids, NOT a fabricated exploit.
+
+        The per-step ACCEPT/CANCEL gate already fired in
+        :meth:`_walk_ai_step` (single, default-deny; we do NOT
+        re-confirm). Never raises.
+        """
+        from core.cve_to_exploit import cve_to_exploit_batch
+
+        args = step.get("args", {}) or {}
+        cve_ids = args.get("cve_ids") or args.get("cves") or []
+        if not isinstance(cve_ids, list):
+            self._emit(
+                f"[-] cve_to_exploit_batch: 'cve_ids' must be a list, got "
+                f"{type(cve_ids).__name__}")
+            report["skipped"].append(
+                "cve_to_exploit_batch: cve_ids not a list")
+            return
+        try:
+            res = cve_to_exploit_batch(
+                cve_ids=cve_ids,
+                on_event=self._emit,
+            )
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] cve_to_exploit_batch failed: {e}")
+            report["skipped"].append(f"cve_to_exploit_batch: {e}")
+            return
+        ok = bool(res.get("ok"))
+        summary = (res.get("data") or {}).get("summary", {})
+        n_ok = summary.get("ok_count", 0)
+        n_fail = summary.get("fail_count", 0)
+        self._emit(
+            f"[+] cve_to_exploit_batch: {n_ok} ok / {n_fail} fail "
+            f"out of {len(cve_ids)} CVEs; "
+            f"nvd_key_loaded={res.get('nvd_key_loaded', False)}; "
+            f"error={res.get('error') or 'none'}")
+        entry = {
+            "desc": f"cve_to_exploit_batch ({len(cve_ids)} cves)",
+            "kind": "ai", "action": "cve_to_exploit_batch",
+            "tool": "core.cve_to_exploit.batch",
+            "ok": ok, "result": res,
+        }
+        report["executed"].append(entry)
+        # Surface the per-CVE results on seed["exploits"] so the
+        # re-planner sees them.
+        for sub in (res.get("results") or []):
+            if sub.get("ok") and sub.get("data"):
+                seed.setdefault("exploits", []).append(sub["data"])
+        # Dashboard pill
+        self._push_dashboard_exploit_status({
+            "last_cve_id": (cve_ids[0] if cve_ids else ""),
+            "last_model": "batch",
+            "ok": ok,
+            "last_ts": res.get("duration_s", 0.0),
+        })
+
+
     def _dispatch_open_shell(self, step: Dict[str, Any], seed: Dict[str, Any],
                              report: Dict[str, Any]) -> None:
         """AI ``open_shell`` step dispatcher (the non-msf shell path).
@@ -1894,6 +1970,9 @@ class AutonomousOrchestrator:
             return
         if action == "cve_to_exploit":
             self._dispatch_cve_to_exploit(step, seed, report)
+            return
+        if action == "cve_to_exploit_batch":
+            self._dispatch_cve_to_exploit_batch(step, seed, report)
             return
         if action == "crack":
             self._dispatch_crack(step, seed, report)
