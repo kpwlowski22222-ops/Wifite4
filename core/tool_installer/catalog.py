@@ -343,4 +343,65 @@ TOOL_CATALOG: dict[str, InstallSpec] = {
     "ios-deploy":    InstallSpec(apt="ios-deploy"),
     "httptools":     InstallSpec(pip="httptools"),
     "mitmdump":      InstallSpec(pip="mitmproxy"),
+    # --- SDR / wireless chipset helpers (apt) ---
+    "hackrf_info":   InstallSpec(
+        apt="hackrf",
+        git=("https://github.com/greatscottgadgets/hackrf", "toolboxes/recon/hackrf"),
+    ),
+    "rtl_test":      InstallSpec(
+        apt="rtl-sdr",
+        git=("https://github.com/osmocom/rtl-sdr", "toolboxes/recon/rtl-sdr"),
+    ),
+    "bladeRF-cli":   InstallSpec(
+        apt="bladerf",
+        git=("https://github.com/Nuand/bladeRF", "toolboxes/recon/bladeRF"),
+    ),
+    "lsusb":         InstallSpec(apt="usbutils"),
+    # --- WiFi-Pixie / WPS (apt + git) ---
+    "pixiewps":      InstallSpec(
+        apt="pixiewps",
+        git=("https://github.com/wiire/pixiewps", "toolboxes/wifi_attack/pixiewps"),
+        confirm_required=True,
+    ),
+    "wifite":        InstallSpec(
+        apt="wifite",
+        git=("https://github.com/derv82/wifite2", "toolboxes/wifi_attack/wifite"),
+        confirm_required=True,
+    ),
+    # --- Wireless / Bluetooth CLI helpers (apt) ---
+    "iwlist":        InstallSpec(apt="wireless-tools"),
+    "hciconfig":     InstallSpec(apt="bluez"),
+    # --- Firewall / GUI helpers (apt) ---
+    "ufw":           InstallSpec(apt="ufw"),
+    "vncviewer":     InstallSpec(apt="tigervnc-viewer", confirm_required=True),
+    "wkhtmltopdf":   InstallSpec(apt="wkhtmltopdf"),
+    "xdg-open":      InstallSpec(apt="xdg-utils"),
+    # --- Container / packaging CLI (apt + git) ---
+    "docker-compose": InstallSpec(
+        apt="docker-compose",
+        git=("https://github.com/docker/compose", "toolboxes/c2/docker-compose"),
+        confirm_required=True,
+    ),
+    # --- Recon / Python wrapper repos (git; CLI entry points) ---
+    "pyExploitDb":   InstallSpec(
+        git=("https://github.com/vulnersCom/PyExploitDb", "toolboxes/recon/PyExploitDb"),
+    ),
+    "libnmap":       InstallSpec(
+        git=("https://github.com/savon-noir/python-libnmap", "toolboxes/recon/python-libnmap"),
+        confirm_required=True,
+    ),
+    "mitmproxy":     InstallSpec(
+        git=("https://github.com/mitmproxy/mitmproxy", "toolboxes/recon/mitmproxy"),
+        confirm_required=True,
+    ),
+    "mss":           InstallSpec(
+        git=("https://github.com/BoboTiG/cookiecutter-mss", "toolboxes/recon/mss"),
+        confirm_required=True,
+    ),
+    "curl_cffi":     InstallSpec(
+        git=("https://github.com/yifeikong/curl_cffi", "toolboxes/c2/curl_cffi"),
+        confirm_required=True,
+    ),
+    # --- NTLM (PyPI: package name `python-ntlm` — note: not `ntlm3`/`impacket`) ---
+    "ntlm":          InstallSpec(pip="python-ntlm", confirm_required=True),
 }
