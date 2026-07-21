@@ -1,0 +1,117 @@
+{
+  "id": "github:ahirankush771/netprobe",
+  "kind": "external_repository",
+  "name": "netprobe",
+  "full_name": "ahirankush771/netprobe",
+  "owner": "ahirankush771",
+  "category": "WiFi Reconnaissance — Client Enumeration",
+  "url": "https://github.com/ahirankush771/netprobe",
+  "summary": "Repository indexing entry for the ``netprobe`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/ahirankush771__netprobe",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "sudo python3 main.py -t 192.168.1.0/24 -m scan  (interactive: sudo python3 main.py; dashboard: python3 main.py --dashboard)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "sudo python3 main.py -t 192.168.1.0/24 -m scan  (interactive: sudo python3 main.py; dashboard: python3 main.py --dashboard)"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "scapy (implied, for ARP scanning)",
+    "flask (web dashboard)",
+    "python stdlib",
+    "nmap-like functionality via custom port_scanner.py",
+    "GeoIP/Shodan libs (osint.py)",
+    "Telegram bot lib (alerts.py)",
+    "root/sudo for raw ARP sockets"
+  ],
+  "algorithms": [
+    "ARP subnet sweep for live-host enumeration (scanner.py)",
+    "TCP port scanning with service identification (port_scanner.py)",
+    "MAC OUI vendor lookup + hostname reverse-DNS pattern matching for device-type fingerprinting (fingerprint.py)",
+    "ARP table inconsistency monitoring for spoof/MITM detection (arp_detector.py)",
+    "periodic ARP rescan 'monitor mode' to flag newly-joined hosts (alerts.py + whitelist.py)",
+    "GeoIP/Shodan/reverse-DNS OSINT on public IPs (osint.py)",
+    "network topology visualization + HTML/PDF/JSON report generation"
+  ],
+  "produces": [
+    "HTML/PDF/JSON scan reports",
+    "Flask web dashboard with network topology map",
+    "Telegram alerts on new-device appearance",
+    "device inventory with vendor/type/hostname/port classifications",
+    "ARP spoof/MITM detection events"
+  ],
+  "capability_bucket": "client_enum",
+  "runnable": true,
+  "novelty": "none for WiFi recon — this is a wired/LAN-style ARP host enumerator and port scanner, not an 802.11 frame tool. It does not use aircrack-ng, airodump-ng, wash, hcxtools, or scapy 802.11 monitor-mode capture; its \"monitor mode\" is just periodic ARP rescans, not radio monitor mode. No WPS, PMKID, handshake, EAPOL, deauth, hidden-SSID, or GPS capability. The integration of ARP sweep + port scan + OUI fingerprint + Flask dashboard + Telegram alerts is a generic home-network inventory tool; KFIOSA's existing scapy/airodump baseline already covers host enumeration more directly at the 802.11 layer.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "netprobe",
+    "ahirankush771",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/netprobe && python3 netprobe.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/netprobe && python3 netprobe.py --help",
+    "cd toolboxes/netprobe && python3 netprobe.py --help",
+    "cd toolboxes/netprobe && python3 netprobe.py --help",
+    "cd toolboxes/netprobe && python3 netprobe.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST netprobe --output $KFIOSA_OUTPUT_DIR/netprobe.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST netprobe --output $KFIOSA_OUTPUT_DIR/netprobe.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

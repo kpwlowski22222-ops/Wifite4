@@ -1,0 +1,131 @@
+{
+  "id": "kali:ridenum",
+  "kind": "kali_source_package",
+  "name": "ridenum",
+  "title": "ridenum",
+  "summary": "### ridenum",
+  "version": "1.7-0kali4",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/trustedsec/ridenum",
+  "repository": "https://gitlab.com/kalilinux/packages/ridenum",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install ridenum"
+  },
+  "packages": [
+    {
+      "name": "ridenum"
+    }
+  ],
+  "commands": [
+    {
+      "name": "ridenum",
+      "description": "- - -",
+      "usage": "./ridenum.py <server_ip> <start_rid> <end_rid> <optional_username> <optional_password> <optional_password_file> <optional_username_filename>",
+      "arguments": [],
+      "raw_help": "root@kali:~# ridenum -h\n \n .______       __   _______         _______ .__   __.  __    __  .___  ___.\n |   _  \\     |  | |       \\       |   ____||  \\ |  | |  |  |  | |   \\/   |\n |  |_)  |    |  | |  .--.  |      |  |__   |   \\|  | |  |  |  | |  \\  /  |\n |      /     |  | |  |  |  |      |   __|  |  . `  | |  |  |  | |  |\\/|  |\n |  |\\  \\----.|  | |  '--'  |      |  |____ |  |\\   | |  `--'  | |  |  |  |\n | _| `._____||__| |_______/  _____|_______||__| \\__|  \\______/  |__|  |__|\n                           |______|\n \n Written by: David Kennedy (ReL1K)\n Company: https://www.trustedsec.com\n Twitter: @TrustedSec\n Twitter: @HackingDave\n \n Rid Enum is a RID cycling attack that attempts to enumerate user accounts through\n null sessions and the SID to RID enum. If you specify a password file, it will\n automatically attempt to brute force the user accounts when its finished enumerating.\n \n - RIDENUM is open source and uses all standard python libraries minus python-pexpect. -\n \n You can also specify an already dumped username file, it needs to be in the DOMAINNAME\\\\USERNAME\n format.\n \n Example: ./ridenum.py 192.168.1.50 500 50000 /root/dict.txt /root/user.txt\n \n Usage: ./ridenum.py <server_ip> <start_rid> <end_rid> <optional_username> <optional_password> <optional_password_file> <optional_username_filename>",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "ridenum 192.168.1.236 500 50000 /tmp/passes.txt\n[*] Attempting lsaquery first...This will enumerate the base domain SID\n[*] Successfully enumerated base domain SID.. Moving on to extract via RID\n[*] Enumerating user accounts.. This could take a little while.",
+          "template": null,
+          "original_sha256": "04a1bac1ca1e4031d14b0f668828b4b2ae166919b617564161e444eb268d2361"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": ".______       __   _______         _______ .__   __.  __    __  .___  ___.\n|   _  \\     |  | |       \\       |   ____||  \\ |  | |  |  |  | |   \\/   |\n|  |_)  |    |  | |  .--.  |      |  |__   |   \\|  | |  |  |  | |  \\  /  |\n|      /     |  | |  |  |  |      |   __|  |  . `  | |  |  |  | |  |\\/|  |\n|  |\\  \\----.|  | |  '--'  |      |  |____ |  |\\   | |  `--'  | |  |  |  |\n| _| `._____||__| |_______/  _____|_______||__| \\__|  \\______/  |__|  |__|\n                            |______|\n\nWritten by: David Kennedy (ReL1K)\nCompany: https://www.trustedsec.com\nTwitter: @TrustedSec\nTwitter: @HackingDave\n\nRid Enum is a RID cycling attack that attempts to enumerate user accounts through\nnull sessions and the SID to RID enum. If you specify a password file, it will\nautomatically attempt to brute force the user accounts when its finished enumerating.\n\n- RIDENUM is open source and uses all standard python libraries minus python-pexpect. -\n\nYou can also specify an already dumped username file, it needs to be in the DOMAINNAME\\\\USERNAME\nformat.\n\nExample: ./ridenum.py 192.168.1.50 500 50000 /root/dict.txt /root/user.txt\n\nUsage: ./ridenum.py <server_ip> <start_rid> <end_rid> <optional_username> <optional_password> <optional_password_file> <optional_username_filename>",
+        "-h": ".______       __   _______         _______ .__   __.  __    __  .___  ___.\n|   _  \\     |  | |       \\       |   ____||  \\ |  | |  |  |  | |   \\/   |\n|  |_)  |    |  | |  .--.  |      |  |__   |   \\|  | |  |  |  | |  \\  /  |\n|      /     |  | |  |  |  |      |   __|  |  . `  | |  |  |  | |  |\\/|  |\n|  |\\  \\----.|  | |  '--'  |      |  |____ |  |\\   | |  `--'  | |  |  |  |\n| _| `._____||__| |_______/  _____|_______||__| \\__|  \\______/  |__|  |__|\n                            |______|\n\nWritten by: David Kennedy (ReL1K)\nCompany: https://www.trustedsec.com\nTwitter: @TrustedSec\nTwitter: @HackingDave\n\nRid Enum is a RID cycling attack that attempts to enumerate user accounts through\nnull sessions and the SID to RID enum. If you specify a password file, it will\nautomatically attempt to brute force the user accounts when its finished enumerating.\n\n- RIDENUM is open source and uses all standard python libraries minus python-pexpect. -\n\nYou can also specify an already dumped username file, it needs to be in the DOMAINNAME\\\\USERNAME\nformat.\n\nExample: ./ridenum.py 192.168.1.50 500 50000 /root/dict.txt /root/user.txt\n\nUsage: ./ridenum.py <server_ip> <start_rid> <end_rid> <optional_username> <optional_password> <optional_password_file> <optional_username_filename>",
+        "help": ".______       __   _______         _______ .__   __.  __    __  .___  ___.\n|   _  \\     |  | |       \\       |   ____||  \\ |  | |  |  |  | |   \\/   |\n|  |_)  |    |  | |  .--.  |      |  |__   |   \\|  | |  |  |  | |  \\  /  |\n|      /     |  | |  |  |  |      |   __|  |  . `  | |  |  |  | |  |\\/|  |\n|  |\\  \\----.|  | |  '--'  |      |  |____ |  |\\   | |  `--'  | |  |  |  |\n| _| `._____||__| |_______/  _____|_______||__| \\__|  \\______/  |__|  |__|\n                            |______|\n\nWritten by: David Kennedy (ReL1K)\nCompany: https://www.trustedsec.com\nTwitter: @TrustedSec\nTwitter: @HackingDave\n\nRid Enum is a RID cycling attack that attempts to enumerate user accounts through\nnull sessions and the SID to RID enum. If you specify a password file, it will\nautomatically attempt to brute force the user accounts when its finished enumerating.\n\n- RIDENUM is open source and uses all standard python libraries minus python-pexpect. -\n\nYou can also specify an already dumped username file, it needs to be in the DOMAINNAME\\\\USERNAME\nformat.\n\nExample: ./ridenum.py 192.168.1.50 500 50000 /root/dict.txt /root/user.txt\n\nUsage: ./ridenum.py <server_ip> <start_rid> <end_rid> <optional_username> <optional_password> <optional_password_file> <optional_username_filename>"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/ridenum",
+        "size_bytes": 16958,
+        "is_symlink": false,
+        "file_type": "Python script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/ridenum/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/ridenum/index.md",
+    "retrieved_at": "2026-07-14T13:08:06+00:00",
+    "sha256": "cd19aa4e039839a7311dc5fed7414d10c06be52f9271154998f47ff51aa85871"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "32",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "1.7-0kali4",
+    "depends": "python3, python3-pexpect",
+    "description": "Null session RID cycle attack tool\nRid Enum is a RID cycling attack that attempts to enumerate user accounts\nthrough null sessions and the SID to RID enum. If you specify a password file,\nit will automatically attempt to brute force the user accounts when its\nfinished enumerating.",
+    "homepage": "https://github.com/trustedsec/ridenum"
+  },
+  "tags": [
+    "offensive",
+    "ridenum",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/ridenum && python3 ridenum.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ridenum && python3 ridenum.py --help",
+    "cd toolboxes/ridenum && python3 ridenum.py --help",
+    "cd toolboxes/ridenum && python3 ridenum.py --help",
+    "cd toolboxes/ridenum && python3 ridenum.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ridenum --output $KFIOSA_OUTPUT_DIR/ridenum.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ridenum --output $KFIOSA_OUTPUT_DIR/ridenum.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

@@ -1,0 +1,875 @@
+{
+  "id": "kali:berate-ap",
+  "kind": "kali_source_package",
+  "name": "berate-ap",
+  "title": "berate-ap",
+  "summary": "### berate-ap",
+  "version": "0.4.6+git20240824-0kali1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/sensepost/berate_ap",
+  "repository": "https://gitlab.com/kalilinux/packages/berate-ap",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install berate-ap"
+  },
+  "packages": [
+    {
+      "name": "berate-ap"
+    }
+  ],
+  "commands": [
+    {
+      "name": "berate_ap",
+      "description": "- - -",
+      "usage": "berate_ap [options] <wifi-interface> [<interface-with-internet>] [<access-point-name> [<passphrase>]]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Show this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help              Show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print version number",
+          "default": null,
+          "choices": null,
+          "raw": " --version               Print version number"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "channel",
+          "takes_value": true,
+          "description": "Channel number (default: 1)",
+          "default": "1",
+          "choices": null,
+          "raw": " -c <channel>            Channel number (default: 1)"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": "WPA version",
+          "takes_value": true,
+          "description": "Use 1 for WPA, use 2 for WPA2, 3 for WPA3, use 1+2 for WPA/2 (default), or 2+3 for WPA3/2 transition",
+          "default": null,
+          "choices": null,
+          "raw": " -w <WPA version>        Use 1 for WPA, use 2 for WPA2, 3 for WPA3, use 1+2 for WPA/2 (default), or 2+3 for WPA3/2 transition"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable Internet sharing (if you use this, don't pass",
+          "default": null,
+          "choices": null,
+          "raw": " -n                      Disable Internet sharing (if you use this, don't pass"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "method",
+          "takes_value": true,
+          "description": "Method for Internet sharing.",
+          "default": null,
+          "choices": null,
+          "raw": " -m <method>             Method for Internet sharing."
+        },
+        {
+          "flags": [
+            "--psk"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use 64 hex digits pre-shared-key instead of passphrase",
+          "default": null,
+          "choices": null,
+          "raw": " --psk                   Use 64 hex digits pre-shared-key instead of passphrase"
+        },
+        {
+          "flags": [
+            "--hidden"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Make the Access Point hidden (do not broadcast the SSID)",
+          "default": null,
+          "choices": null,
+          "raw": " --hidden                Make the Access Point hidden (do not broadcast the SSID)"
+        },
+        {
+          "flags": [
+            "--qrcode"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show the qrcode of the created Access Point (qrencode must be installed)",
+          "default": null,
+          "choices": null,
+          "raw": " --qrcode                Show the qrcode of the created Access Point (qrencode must be installed)"
+        },
+        {
+          "flags": [
+            "--mac-filter"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable MAC address filtering",
+          "default": null,
+          "choices": null,
+          "raw": " --mac-filter            Enable MAC address filtering"
+        },
+        {
+          "flags": [
+            "--mac-filter-accept"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Location of MAC address filter list (defaults to /etc/hostapd/hostapd.accept)",
+          "default": "s to /etc/hostapd/hostapd",
+          "choices": null,
+          "raw": " --mac-filter-accept     Location of MAC address filter list (defaults to /etc/hostapd/hostapd.accept)"
+        },
+        {
+          "flags": [
+            "--redirect-to-localhost",
+            "-n"
+          ],
+          "metavar": "If is set redirect every web request to localhost useful for public information networks",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --redirect-to-localhost If -n is set, redirect every web request to localhost (useful for public information networks)"
+        },
+        {
+          "flags": [
+            "--hostapd-debug",
+            "-d",
+            "-dd"
+          ],
+          "metavar": "level With level between 1 and 2 passes arguments or d to hostapd for debugging.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --hostapd-debug <level> With level between 1 and 2, passes arguments -d or -dd to hostapd for debugging."
+        },
+        {
+          "flags": [
+            "--isolate-clients"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable communication between clients",
+          "default": null,
+          "choices": null,
+          "raw": " --isolate-clients       Disable communication between clients"
+        },
+        {
+          "flags": [
+            "--ieee80211n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable IEEE 802.11n (HT)",
+          "default": null,
+          "choices": null,
+          "raw": " --ieee80211n            Enable IEEE 802.11n (HT)"
+        },
+        {
+          "flags": [
+            "--ieee80211ac"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable IEEE 802.11ac (VHT)",
+          "default": null,
+          "choices": null,
+          "raw": " --ieee80211ac           Enable IEEE 802.11ac (VHT)"
+        },
+        {
+          "flags": [
+            "--ht_capab"
+          ],
+          "metavar": "HT",
+          "takes_value": true,
+          "description": "HT capabilities (default: [HT40+])",
+          "default": "[HT40+]",
+          "choices": null,
+          "raw": " --ht_capab <HT>         HT capabilities (default: [HT40+])"
+        },
+        {
+          "flags": [
+            "--vht_capab"
+          ],
+          "metavar": "VHT",
+          "takes_value": true,
+          "description": "VHT capabilities",
+          "default": null,
+          "choices": null,
+          "raw": " --vht_capab <VHT>       VHT capabilities"
+        },
+        {
+          "flags": [
+            "--country"
+          ],
+          "metavar": "code",
+          "takes_value": true,
+          "description": "Set two-letter country code for regularity (example: US)",
+          "default": null,
+          "choices": null,
+          "raw": " --country <code>        Set two-letter country code for regularity (example: US)"
+        },
+        {
+          "flags": [
+            "--freq-band"
+          ],
+          "metavar": "GHz",
+          "takes_value": true,
+          "description": "Set frequency band. Valid inputs: 2.4, 5 (default: 2.4)",
+          "default": "2",
+          "choices": null,
+          "raw": " --freq-band <GHz>       Set frequency band. Valid inputs: 2.4, 5 (default: 2.4)"
+        },
+        {
+          "flags": [
+            "--driver"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Choose your WiFi adapter driver (default: nl80211)",
+          "default": "nl80211",
+          "choices": null,
+          "raw": " --driver                Choose your WiFi adapter driver (default: nl80211)"
+        },
+        {
+          "flags": [
+            "--ieee80211w"
+          ],
+          "metavar": "0-2",
+          "takes_value": true,
+          "description": "Enable IEEE 802.11w Management Frame Protection (MFP). 0 disabled (default), 1 optional , 2 mandatory",
+          "default": null,
+          "choices": null,
+          "raw": " --ieee80211w <0-2>      Enable IEEE 802.11w Management Frame Protection (MFP). 0 disabled (default), 1 optional , 2 mandatory"
+        },
+        {
+          "flags": [
+            "--no-virt"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not create virtual interface",
+          "default": null,
+          "choices": null,
+          "raw": " --no-virt               Do not create virtual interface"
+        },
+        {
+          "flags": [
+            "--no-haveged"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not run 'haveged' automatically when needed",
+          "default": null,
+          "choices": null,
+          "raw": " --no-haveged            Do not run 'haveged' automatically when needed"
+        },
+        {
+          "flags": [
+            "--fix-unmanaged"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "If NetworkManager shows your interface as unmanaged after you",
+          "default": null,
+          "choices": null,
+          "raw": " --fix-unmanaged         If NetworkManager shows your interface as unmanaged after you"
+        },
+        {
+          "flags": [
+            "--mac"
+          ],
+          "metavar": "MAC",
+          "takes_value": true,
+          "description": "Set MAC address",
+          "default": null,
+          "choices": null,
+          "raw": " --mac <MAC>             Set MAC address"
+        },
+        {
+          "flags": [
+            "--dhcp-dns"
+          ],
+          "metavar": "IP1 IP2",
+          "takes_value": true,
+          "description": "Set DNS returned by DHCP",
+          "default": null,
+          "choices": null,
+          "raw": " --dhcp-dns <IP1[,IP2]>  Set DNS returned by DHCP"
+        },
+        {
+          "flags": [
+            "--daemon"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Run create_ap in the background",
+          "default": null,
+          "choices": null,
+          "raw": " --daemon                Run create_ap in the background"
+        },
+        {
+          "flags": [
+            "--stop"
+          ],
+          "metavar": "id",
+          "takes_value": true,
+          "description": "Send stop command to an already running create_ap. For an <id>",
+          "default": null,
+          "choices": null,
+          "raw": " --stop <id>             Send stop command to an already running create_ap. For an <id>"
+        },
+        {
+          "flags": [
+            "--list-running"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show the create_ap processes that are already running",
+          "default": null,
+          "choices": null,
+          "raw": " --list-running          Show the create_ap processes that are already running"
+        },
+        {
+          "flags": [
+            "--list-clients"
+          ],
+          "metavar": "id",
+          "takes_value": true,
+          "description": "List the clients connected to create_ap instance associated with <id>.",
+          "default": null,
+          "choices": null,
+          "raw": " --list-clients <id>     List the clients connected to create_ap instance associated with <id>."
+        },
+        {
+          "flags": [
+            "--mkconfig"
+          ],
+          "metavar": "conf_file",
+          "takes_value": true,
+          "description": "Store configs in conf_file",
+          "default": null,
+          "choices": null,
+          "raw": " --mkconfig <conf_file>  Store configs in conf_file"
+        },
+        {
+          "flags": [
+            "--config"
+          ],
+          "metavar": "conf_file",
+          "takes_value": true,
+          "description": "Load configs from conf_file",
+          "default": null,
+          "choices": null,
+          "raw": " --config <conf_file>    Load configs from conf_file"
+        },
+        {
+          "flags": [
+            "--owe"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Will enable Opportunistic Wireless Encryption. This does not do transision mode.",
+          "default": null,
+          "choices": null,
+          "raw": " --owe                   Will enable Opportunistic Wireless Encryption. This does not do transision mode."
+        },
+        {
+          "flags": [
+            "--eap"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable Enterprise (EAP) wireless settings",
+          "default": null,
+          "choices": null,
+          "raw": " --eap                   Enable Enterprise (EAP) wireless settings"
+        },
+        {
+          "flags": [
+            "--eap-user-file"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Full path to EAP user file",
+          "default": null,
+          "choices": null,
+          "raw": " --eap-user-file         Full path to EAP user file"
+        },
+        {
+          "flags": [
+            "--eap-cert-subj"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Set or modify certificate subject",
+          "default": null,
+          "choices": null,
+          "raw": " --eap-cert-subj         Set or modify certificate subject"
+        },
+        {
+          "flags": [
+            "--eap-cert-path"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Full path to wireless certificates",
+          "default": null,
+          "choices": null,
+          "raw": " --eap-cert-path         Full path to wireless certificates"
+        },
+        {
+          "flags": [
+            "--eap-key-passwd"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "If key requires a password",
+          "default": null,
+          "choices": null,
+          "raw": " --eap-key-passwd        If key requires a password"
+        },
+        {
+          "flags": [
+            "--radius-server"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use an external RADIUS server rather than built in",
+          "default": null,
+          "choices": null,
+          "raw": " --radius-server         Use an external RADIUS server rather than built in"
+        },
+        {
+          "flags": [
+            "--remote-radius"
+          ],
+          "metavar": "ip address",
+          "takes_value": true,
+          "description": "port]",
+          "default": null,
+          "choices": null,
+          "raw": "                             --remote-radius <ip address>[:port]"
+        },
+        {
+          "flags": [
+            "--radius-secret"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Provide shared RADIUS secret",
+          "default": null,
+          "choices": null,
+          "raw": " --radius-secret         Provide shared RADIUS secret"
+        },
+        {
+          "flags": [
+            "--mana-wpe"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable WPE mode",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-wpe              Enable WPE mode"
+        },
+        {
+          "flags": [
+            "--mana-credout"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Set location of output creds file",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-credout <file>   Set location of output creds file"
+        },
+        {
+          "flags": [
+            "--mana-eapsuccess"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Always return an EAP success message",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-eapsuccess       Always return an EAP success message"
+        },
+        {
+          "flags": [
+            "--mana-eaptls"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Accept any EAP-TLS client certificate",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-eaptls           Accept any EAP-TLS client certificate"
+        },
+        {
+          "flags": [
+            "--mana"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable Mana Attack",
+          "default": null,
+          "choices": null,
+          "raw": " --mana                  Enable Mana Attack"
+        },
+        {
+          "flags": [
+            "--mana-loud"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable Mana loud mode",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-loud             Enable Mana loud mode"
+        },
+        {
+          "flags": [
+            "--mana-whitelist"
+          ],
+          "metavar": "list Provide a list of SSIDs to respond to",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-whitelist <list> Provide a list of SSIDs to respond to"
+        },
+        {
+          "flags": [
+            "--mana-logging"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable Device logging to file, taxonomy enabled by default",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-logging          Enable Device logging to file, taxonomy enabled by default"
+        },
+        {
+          "flags": [
+            "--mana-manaout"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Set location of output mana logging file",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-manaout <file>   Set location of output mana logging file"
+        },
+        {
+          "flags": [
+            "--mana-wpa"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable MANA WPA handshake capture",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-wpa              Enable MANA WPA handshake capture"
+        },
+        {
+          "flags": [
+            "--mana-wpaout"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Set location of output for wpa-psk handshakes",
+          "default": null,
+          "choices": null,
+          "raw": " --mana-wpaout <file>    Set location of output for wpa-psk handshakes"
+        },
+        {
+          "flags": [
+            "--colour"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Colourise MANA output and credential capture so its easier to distinguish",
+          "default": null,
+          "choices": null,
+          "raw": " --colour                Colourise MANA output and credential capture so its easier to distinguish"
+        },
+        {
+          "flags": [
+            "--vanilla"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "By default berate_ap will use hostapd_mana,",
+          "default": "berate_ap will use hostapd_mana",
+          "choices": null,
+          "raw": " --vanilla               By default berate_ap will use hostapd_mana,"
+        },
+        {
+          "flags": [
+            "--wpa-sycophant"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable the enable_sycophant flag in MANA",
+          "default": null,
+          "choices": null,
+          "raw": " --wpa-sycophant         Enable the enable_sycophant flag in MANA"
+        },
+        {
+          "flags": [
+            "--no-dns"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable dnsmasq DNS server",
+          "default": null,
+          "choices": null,
+          "raw": " --no-dns                Disable dnsmasq DNS server"
+        },
+        {
+          "flags": [
+            "--no-dnsmasq"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable dnsmasq server completely",
+          "default": null,
+          "choices": null,
+          "raw": " --no-dnsmasq            Disable dnsmasq server completely"
+        },
+        {
+          "flags": [
+            "-g"
+          ],
+          "metavar": "gateway",
+          "takes_value": true,
+          "description": "IPv4 Gateway for the Access Point (default: 192.168.12.1)",
+          "default": "192",
+          "choices": null,
+          "raw": " -g <gateway>            IPv4 Gateway for the Access Point (default: 192.168.12.1)"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "DNS server will take into account /etc/hosts",
+          "default": null,
+          "choices": null,
+          "raw": " -d                      DNS server will take into account /etc/hosts"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "hosts_file",
+          "takes_value": true,
+          "description": "DNS server will take into account additional hosts file",
+          "default": null,
+          "choices": null,
+          "raw": " -e <hosts_file>         DNS server will take into account additional hosts file"
+        }
+      ],
+      "raw_help": "root@kali:~# berate_ap -h\n Usage: berate_ap [options] <wifi-interface> [<interface-with-internet>] [<access-point-name> [<passphrase>]]\n \n Options:\n -h, --help              Show this help\n --version               Print version number\n -c <channel>            Channel number (default: 1)\n -w <WPA version>        Use 1 for WPA, use 2 for WPA2, 3 for WPA3, use 1+2 for WPA/2 (default), or 2+3 for WPA3/2 transition\n -n                      Disable Internet sharing (if you use this, don't pass\n                         the <interface-with-internet> argument)\n -m <method>             Method for Internet sharing.\n                         Use: 'nat' for NAT (default)\n                              'bridge' for bridging\n                              'none' for no Internet sharing (equivalent to -n)\n --psk                   Use 64 hex digits pre-shared-key instead of passphrase\n --hidden                Make the Access Point hidden (do not broadcast the SSID)\n --qrcode                Show the qrcode of the created Access Point (qrencode must be installed)\n --mac-filter            Enable MAC address filtering\n --mac-filter-accept     Location of MAC address filter list (defaults to /etc/hostapd/hostapd.accept)\n --redirect-to-localhost If -n is set, redirect every web request to localhost (useful for public information networks)\n --hostapd-debug <level> With level between 1 and 2, passes arguments -d or -dd to hostapd for debugging.\n --isolate-clients       Disable communication between clients\n --ieee80211n            Enable IEEE 802.11n (HT)\n --ieee80211ac           Enable IEEE 802.11ac (VHT)\n --ht_capab <HT>         HT capabilities (default: [HT40+])\n --vht_capab <VHT>       VHT capabilities\n --country <code>        Set two-letter country code for regularity (example: US)\n --freq-band <GHz>       Set frequency band. Valid inputs: 2.4, 5 (default: 2.4)\n --driver                Choose your WiFi adapter driver (default: nl80211)\n --ieee80211w <0-2>      Enable IEEE 802.11w Management Frame Protection (MFP). 0 disabled (default), 1 optional , 2 mandatory\n --no-virt               Do not create virtual interface\n --no-haveged            Do not run 'haveged' automatically when needed\n --fix-unmanaged         If NetworkManager shows your interface as unmanaged after you\n                         close create_ap, then use this option to switch your interface\n                         back to managed\n --mac <MAC>             Set MAC address\n --dhcp-dns <IP1[,IP2]>  Set DNS returned by DHCP\n --daemon                Run create_ap in the background\n --stop <id>             Send stop command to an already running create_ap. For an <id>\n                         you can put the PID of create_ap or the WiFi interface. You can\n                         get them with --list-running\n --list-running          Show the create_ap processes that are already running\n --list-clients <id>     List the clients connected to create_ap instance associated with <id>.\n                         For an <id> you can put the PID of create_ap or the WiFi interface.\n                         If virtual WiFi interface was created, then use that one.\n                         You can get them with --list-running\n --mkconfig <conf_file>  Store configs in conf_file\n --config <conf_file>    Load configs from conf_file\n --owe                   Will enable Opportunistic Wireless Encryption. This does not do transision mode.\n                         As this is a 'Open' network option, if there is a PSK it will be removed with this enabled \n \n Enterprise Options:\n --eap                   Enable Enterprise (EAP) wireless settings\n                         Default is to use built in RADIUS server\n \n                         *Built in RADIUS server*\n --eap-user-file         Full path to EAP user file\n                         Default will use Manas hostapd.eap_user\n --eap-cert-subj         Set or modify certificate subject\n --eap-cert-path         Full path to wireless certificates\n                         Name of the certs at the location:\n                             - hostapd.ca.pem\n                             - hostapd.dh.pem\n                             - hostapd.cert.pem\n                             - hostapd.key.pem\n                         You will be prompted to generate a cert if no path is provided\n --eap-key-passwd        If key requires a password\n \n                         *Use external RADIUS server*\n --radius-server         Use an external RADIUS server rather than built in\n                         Default port is 1812\n                             --remote-radius <ip address>[:port]\n --radius-secret         Provide shared RADIUS secret\n \n Mana WPE Options:\n --mana-wpe              Enable WPE mode\n                         Will intercept various EAP credentials\n --mana-credout <file>   Set location of output creds file\n                         Default location is at /tmp/hostapd.credout\n --mana-eapsuccess       Always return an EAP success message\n --mana-eaptls           Accept any EAP-TLS client certificate\n \n Mana/Karma Options:\n --mana                  Enable Mana Attack\n                         Will respond affirmative to all device access point probes\n --mana-loud             Enable Mana loud mode\n                         Will respond with all seen access points to devices\n --mana-whitelist <list> Provide a list of SSIDs to respond to\n --mana-logging          Enable Device logging to file, taxonomy enabled by default\n                         Default output location is at /tmp/hostapd.manaout\n --mana-manaout <file>   Set location of output mana logging file\n \n MANA Other Options:\n --mana-wpa              Enable MANA WPA handshake capture\n                         Mana can capture handshakes for users attempting to connect which are then placed\n                         into hashcats hccpx format. \n                         PLEASE NOTE: This attack currently does not work with mana enabled so the correct\n                         ESSID will have to be specified\n                         Default output location is at /tmp/hostapd.hccapx\n --mana-wpaout <file>    Set location of output for wpa-psk handshakes\n --colour                Colourise MANA output and credential capture so its easier to distinguish\n --vanilla               By default berate_ap will use hostapd_mana,\n                         if you would like to use vanilla hostapd please use this flag\n                         Using this flag will prevent evil mana operations\n \n wpa_sycophant Options:\n --wpa-sycophant         Enable the enable_sycophant flag in MANA\n                         wpa_sycophant is a tool used to relay MSCHAP authentication attempts\n                         between a rogue AP and a legitimate AP\n                         This may be used to authenticate to a legitimate AP using someone elses login attempt\n                         similar to a tool like Impackets ntlmrelayx.py in the wired world.\n                         This option needs to be used in conjunction with https://github.com/sensepost/wpa_sycophant\n Non-Bridging Options:\n --no-dns                Disable dnsmasq DNS server\n --no-dnsmasq            Disable dnsmasq server completely\n -g <gateway>            IPv4 Gateway for the Access Point (default: 192.168.12.1)\n -d                      DNS server will take into account /etc/hosts\n -e <hosts_file>         DNS server will take into account additional hosts file\n \n Useful informations:\n * If you're not using the --no-virt option, then you can create an AP with the same\n   interface you are getting your Internet connection.\n * You can pass your SSID and password through pipe or through arguments (see examples).\n * On bridge method if the <interface-with-internet> is not a bridge interface, then\n   a bridge interface is created automatically.\n \n Examples:\n berate_ap wlan0 eth0 MyAccessPoint MyPassPhrase\n echo -e 'MyAccessPoint\\nMyPassPhrase' | berate_ap wlan0 eth0\n berate_ap wlan0 eth0 MyAccessPoint\n echo 'MyAccessPoint' | berate_ap wlan0 eth0\n berate_ap wlan0 wlan0 MyAccessPoint MyPassPhrase\n berate_ap -n wlan0 MyAccessPoint MyPassPhrase\n berate_ap -m bridge wlan0 eth0 MyAccessPoint MyPassPhrase\n berate_ap -m bridge wlan0 br0 MyAccessPoint MyPassPhrase\n berate_ap --driver rtl871xdrv wlan0 eth0 MyAccessPoint MyPassPhrase\n berate_ap --daemon wlan0 eth0 MyAccessPoint MyPassPhrase\n berate_ap --stop wlan0\n berate_ap --eap --eap-cert-subj '/O=Internet Widgits Pty Ltd/ST=Some-State/C=AU' wlan0 eth0 MyAccessPoint\n berate_ap --eap --eap-user-file /etc/hostapd/hostapd.eap_user wlan0 eth0 MyAccessPoint\n berate_ap --trifecta wlan0 eth0 MyAccessPoint MyPassPhrase",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "berate_ap wlan0 eth0 MyAccessPoint MyPassPhrase",
+          "template": null,
+          "original_sha256": "98163919da4809db49141f31c92a552de9349d277a9768392de18cce06bdcff1"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap wlan0 eth0 MyAccessPoint",
+          "template": null,
+          "original_sha256": "0d3b87a280d72670c6e497f8bdbf612f3a76f47c3de806861dcfd0a3754d830d"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap wlan0 wlan0 MyAccessPoint MyPassPhrase",
+          "template": null,
+          "original_sha256": "2c0ee959fc4b97b95f1dd1fde784213ab68ca06a310b6b033f4d238122e40ae2"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap -n wlan0 MyAccessPoint MyPassPhrase",
+          "template": null,
+          "original_sha256": "c616e677027e94a435a1a5dcc643ee9a46cb4577f56f5c44b48810743f13c570"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap -m bridge wlan0 eth0 MyAccessPoint MyPassPhrase",
+          "template": null,
+          "original_sha256": "2f87e1f4201edbdb76da91ccdbf7e8e2a7223997fbc0ebdddb61693115edb0bd"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap -m bridge wlan0 br0 MyAccessPoint MyPassPhrase",
+          "template": null,
+          "original_sha256": "1002010ced745f4e6b6cdb5095ce2620f235ff9a6193e396802eb0b00b584bfe"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap --driver rtl871xdrv wlan0 eth0 MyAccessPoint MyPassPhrase",
+          "template": null,
+          "original_sha256": "929c6e3dfcfc655b4445f31116f2a3207897d24783407ced477f6ffda53f3823"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap --daemon wlan0 eth0 MyAccessPoint MyPassPhrase",
+          "template": null,
+          "original_sha256": "921b25579a1c21cbafec3a3120fe4547c772ee8122d5e5a63420c18427ad0103"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap --stop wlan0",
+          "template": null,
+          "original_sha256": "a920df45e88011c48a104281bee728d8eea3bc4497ca02e468704359ac064b1c"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap --eap --eap-cert-subj '/O=Internet Widgits Pty Ltd/ST=Some-State/C=AU' wlan0 eth0 MyAccessPoint",
+          "template": null,
+          "original_sha256": "ce97abcd12be549862e3f1a546b9f0a3dda007f2ac16c0ba13978fb9ef28220a"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap --eap --eap-user-file /etc/hostapd/hostapd.eap_user wlan0 eth0 MyAccessPoint",
+          "template": null,
+          "original_sha256": "25edaee68dea4267d21571a0ab14b5016d9421105f9a07eb4335d5ffe52bb3ec"
+        },
+        {
+          "status": "operational_example",
+          "command": "berate_ap --trifecta wlan0 eth0 MyAccessPoint MyPassPhrase",
+          "template": null,
+          "original_sha256": "6a22d01d54557677140f32a145003cb7a3e4f213d4bf98e22a44411f11530426"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: berate_ap [options] <wifi-interface> [<interface-with-internet>] [<access-point-name> [<passphrase>]]\n\nOptions:\n  -h, --help              Show this help\n  --version               Print version number\n  -c <channel>            Channel number (default: 1)\n  -w <WPA version>        Use 1 for WPA, use 2 for WPA2, 3 for WPA3, use 1+2 for WPA/2 (default), or 2+3 for WPA3/2 transition\n  -n                      Disable Internet sharing (if you use this, don't pass\n                          the <interface-with-internet> argument)\n  -m <method>             Method for Internet sharing.\n                          Use: 'nat' for NAT (default)\n                               'bridge' for bridging\n                               'none' for no Internet sharing (equivalent to -n)\n  --psk                   Use 64 hex digits pre-shared-key instead of passphrase\n  --hidden                Make the Access Point hidden (do not broadcast the SSID)\n  --qrcode                Show the qrcode of the created Access Point (qrencode must be installed)\n  --mac-filter            Enable MAC address filtering\n  --mac-filter-accept     Location of MAC address filter list (defaults to /etc/hostapd/hostapd.accept)\n  --redirect-to-localhost If -n is set, redirect every web request to localhost (useful for public information networks)\n  --hostapd-debug <level> With level between 1 and 2, passes arguments -d or -dd to hostapd for debugging.\n  --isolate-clients       Disable communication between clients\n  --ieee80211n            Enable IEEE 802.11n (HT)\n  --ieee80211ac           Enable IEEE 802.11ac (VHT)\n  --ht_capab <HT>         HT capabilities (default: [HT40+])\n  --vht_capab <VHT>       VHT capabilities\n  --country <code>        Set two-letter country code for regularity (example: US)\n  --freq-band <GHz>       Set frequency band. Valid inputs: 2.4, 5 (default: 2.4)\n  --driver                Choose your WiFi adapter driver (default: nl80211)\n  --ieee80211w <0-2>      Enable IEEE 802.11w Management Frame Protection (MFP). 0 disabled (default), 1 optional , 2 mandatory\n  --no-virt               Do not create virtual interface\n  --no-haveged            Do not run 'haveged' automatically when needed\n  --fix-unmanaged         If NetworkManager shows your interface as unmanaged after you\n                          close create_ap, then use this option to switch your interface\n                          back to managed\n  --mac <MAC>             Set MAC address\n  --dhcp-dns <IP1[,IP2]>  Set DNS returned by DHCP\n  --daemon                Run create_ap in the background\n  --stop <id>             Send stop command to an already running create_ap. For an <id>\n                          you can put the PID of create_ap or the WiFi interface. You can\n                          get them with --list-running\n  --list-running          Show the create_ap processes that are already running\n  --list-clients <id>     List the clients connected to create_ap instance associated with <id>.\n                          For an <id> you can put the PID of create_ap or the WiFi interface.\n                          If virtual WiFi interface was created, then use that one.\n                          You can get them with --list-running\n  --mkconfig <conf_file>  Store configs in conf_file\n  --config <conf_file>    Load configs from conf_file\n  --owe                   Will enable Opportunistic Wireless Encryption. This does not do transision mode.\n                          As this is a 'Open' network option, if there is a PSK it will be removed with this enabled \n\nEnterprise Options:\n  --eap                   Enable Enterprise (EAP) wireless settings\n                          Default is to use built in RADIUS server\n\n                          *Built in RADIUS server*\n  --eap-user-file         Full path to EAP user file\n                          Default will use Manas hostapd.eap_user\n  --eap-cert-subj         Set or modify certificate subject\n  --eap-cert-path         Full path to wireless certificates\n                          Name of the certs at the location:\n                              - hostapd.ca.pem\n                              - hostapd.dh.pem\n                              - hostapd.cert.pem\n                              - hostapd.key.pem\n                          You will be prompted to generate a cert if no path is provided\n  --eap-key-passwd        If key requires a password\n\n                          *Use external RADIUS server*\n  --radius-server         Use an external RADIUS server rather than built in\n                          Default port is 1812\n                              --remote-radius <ip address>[:port]\n  --radius-secret         Provide shared RADIUS secret\n\nMana WPE Options:\n  --mana-wpe              Enable WPE mode\n                          Will intercept various EAP credentials\n  --mana-credout <file>   Set location of output creds file\n                          Default location is at /tmp/hostapd.credout\n  --mana-eapsuccess       Always return an EAP success message\n  --mana-eaptls           Accept any EAP-TLS client certificate\n\nMana/Karma Options:\n  --mana                  Enable Mana Attack\n                          Will respond affirmative to all device access point probes\n  --mana-loud             Enable Mana loud mode\n                          Will respond with all seen access points to devices\n  --mana-whitelist <list> Provide a list of SSIDs to respond to\n  --mana-logging          Enable Device logging to file, taxonomy enabled by default\n                          Default output location is at /tmp/hostapd.manaout\n  --mana-manaout <file>   Set location of output mana logging file\n\nMANA Other Options:\n  --mana-wpa              Enable MANA WPA handshake capture\n                          Mana can capture handshakes for users attempting to connect which are then placed\n                          into hashcats hccpx format. \n                          PLEASE NOTE: This attack currently does not work with mana enabled so the correct\n                          ESSID will have to be specified\n                          Default output location is at /tmp/hostapd.hccapx\n  --mana-wpaout <file>    Set location of output for wpa-psk handshakes\n  --colour                Colourise MANA output and credential capture so its easier to distinguish\n  --vanilla               By default berate_ap will use hostapd_mana,\n                          if you would like to use vanilla hostapd please use this flag\n                          Using this flag will prevent evil mana operations\n\nwpa_sycophant Options:\n  --wpa-sycophant         Enable the enable_sycophant flag in MANA\n                          wpa_sycophant is a tool used to relay MSCHAP authentication attempts\n                          between a rogue AP and a legitimate AP\n                          This may be used to authenticate to a legitimate AP using someone elses login attempt\n                          similar to a tool like Impackets ntlmrelayx.py in the wired world.\n                          This option needs to be used in conjunction with https://github.com/sensepost/wpa_sycophant\nNon-Bridging Options:\n  --no-dns                Disable dnsmasq DNS server\n  --no-dnsmasq            Disable dnsmasq server completely\n  -g <gateway>            IPv4 Gateway for the Access Point (default: 192.168.12.1)\n  -d                      DNS server will take into account /etc/hosts\n  -e <hosts_file>         DNS server will take into account additional hosts file\n\nUseful informations:\n  * If you're not using the --no-virt option, then you can create an AP with the same\n    interface you are getting your Internet connection.\n  * You can pass your SSID and password through pipe or through arguments (see examples).\n  * On bridge method if the <interface-with-internet> is not a bridge interface, then\n    a bridge interface is created automatically.\n\nExamples:\n  berate_ap wlan0 eth0 MyAccessPoint MyPassPhrase\n  echo -e 'MyAccessPoint\\nMyPassPhrase' | berate_ap wlan0 eth0\n  berate_ap wlan0 eth0 MyAccessPoint\n  echo 'MyAccessPoint' | berate_ap wlan0 eth0\n  berate_ap wlan0 wlan0 MyAccessPoint MyPassPhrase\n  berate_ap -n wlan0 MyAccessPoint MyPassPhrase\n  berate_ap -m bridge wlan0 eth0 MyAccessPoint MyPassPhrase\n  berate_ap -m bridge wlan0 br0 MyAccessPoint MyPassPhrase\n  berate_ap --driver rtl871xdrv wlan0 eth0 MyAccessPoint MyPassPhrase\n  berate_ap --daemon wlan0 eth0 MyAccessPoint MyPassPhrase\n  berate_ap --stop wlan0\n  berate_ap --eap --eap-cert-subj '/O=Internet Widgits Pty Ltd/ST=Some-State/C=AU' wlan0 eth0 MyAccessPoint\n  berate_ap --eap --eap-user-file /etc/hostapd/hostapd.eap_user wlan0 eth0 MyAccessPoint\n  berate_ap --trifecta wlan0 eth0 MyAccessPoint MyPassPhrase",
+        "-h": "Usage: berate_ap [options] <wifi-interface> [<interface-with-internet>] [<access-point-name> [<passphrase>]]\n\nOptions:\n  -h, --help              Show this help\n  --version               Print version number\n  -c <channel>            Channel number (default: 1)\n  -w <WPA version>        Use 1 for WPA, use 2 for WPA2, 3 for WPA3, use 1+2 for WPA/2 (default), or 2+3 for WPA3/2 transition\n  -n                      Disable Internet sharing (if you use this, don't pass\n                          the <interface-with-internet> argument)\n  -m <method>             Method for Internet sharing.\n                          Use: 'nat' for NAT (default)\n                               'bridge' for bridging\n                               'none' for no Internet sharing (equivalent to -n)\n  --psk                   Use 64 hex digits pre-shared-key instead of passphrase\n  --hidden                Make the Access Point hidden (do not broadcast the SSID)\n  --qrcode                Show the qrcode of the created Access Point (qrencode must be installed)\n  --mac-filter            Enable MAC address filtering\n  --mac-filter-accept     Location of MAC address filter list (defaults to /etc/hostapd/hostapd.accept)\n  --redirect-to-localhost If -n is set, redirect every web request to localhost (useful for public information networks)\n  --hostapd-debug <level> With level between 1 and 2, passes arguments -d or -dd to hostapd for debugging.\n  --isolate-clients       Disable communication between clients\n  --ieee80211n            Enable IEEE 802.11n (HT)\n  --ieee80211ac           Enable IEEE 802.11ac (VHT)\n  --ht_capab <HT>         HT capabilities (default: [HT40+])\n  --vht_capab <VHT>       VHT capabilities\n  --country <code>        Set two-letter country code for regularity (example: US)\n  --freq-band <GHz>       Set frequency band. Valid inputs: 2.4, 5 (default: 2.4)\n  --driver                Choose your WiFi adapter driver (default: nl80211)\n  --ieee80211w <0-2>      Enable IEEE 802.11w Management Frame Protection (MFP). 0 disabled (default), 1 optional , 2 mandatory\n  --no-virt               Do not create virtual interface\n  --no-haveged            Do not run 'haveged' automatically when needed\n  --fix-unmanaged         If NetworkManager shows your interface as unmanaged after you\n                          close create_ap, then use this option to switch your interface\n                          back to managed\n  --mac <MAC>             Set MAC address\n  --dhcp-dns <IP1[,IP2]>  Set DNS returned by DHCP\n  --daemon                Run create_ap in the background\n  --stop <id>             Send stop command to an already running create_ap. For an <id>\n                          you can put the PID of create_ap or the WiFi interface. You can\n                          get them with --list-running\n  --list-running          Show the create_ap processes that are already running\n  --list-clients <id>     List the clients connected to create_ap instance associated with <id>.\n                          For an <id> you can put the PID of create_ap or the WiFi interface.\n                          If virtual WiFi interface was created, then use that one.\n                          You can get them with --list-running\n  --mkconfig <conf_file>  Store configs in conf_file\n  --config <conf_file>    Load configs from conf_file\n  --owe                   Will enable Opportunistic Wireless Encryption. This does not do transision mode.\n                          As this is a 'Open' network option, if there is a PSK it will be removed with this enabled \n\nEnterprise Options:\n  --eap                   Enable Enterprise (EAP) wireless settings\n                          Default is to use built in RADIUS server\n\n                          *Built in RADIUS server*\n  --eap-user-file         Full path to EAP user file\n                          Default will use Manas hostapd.eap_user\n  --eap-cert-subj         Set or modify certificate subject\n  --eap-cert-path         Full path to wireless certificates\n                          Name of the certs at the location:\n                              - hostapd.ca.pem\n                              - hostapd.dh.pem\n                              - hostapd.cert.pem\n                              - hostapd.key.pem\n                          You will be prompted to generate a cert if no path is provided\n  --eap-key-passwd        If key requires a password\n\n                          *Use external RADIUS server*\n  --radius-server         Use an external RADIUS server rather than built in\n                          Default port is 1812\n                              --remote-radius <ip address>[:port]\n  --radius-secret         Provide shared RADIUS secret\n\nMana WPE Options:\n  --mana-wpe              Enable WPE mode\n                          Will intercept various EAP credentials\n  --mana-credout <file>   Set location of output creds file\n                          Default location is at /tmp/hostapd.credout\n  --mana-eapsuccess       Always return an EAP success message\n  --mana-eaptls           Accept any EAP-TLS client certificate\n\nMana/Karma Options:\n  --mana                  Enable Mana Attack\n                          Will respond affirmative to all device access point probes\n  --mana-loud             Enable Mana loud mode\n                          Will respond with all seen access points to devices\n  --mana-whitelist <list> Provide a list of SSIDs to respond to\n  --mana-logging          Enable Device logging to file, taxonomy enabled by default\n                          Default output location is at /tmp/hostapd.manaout\n  --mana-manaout <file>   Set location of output mana logging file\n\nMANA Other Options:\n  --mana-wpa              Enable MANA WPA handshake capture\n                          Mana can capture handshakes for users attempting to connect which are then placed\n                          into hashcats hccpx format. \n                          PLEASE NOTE: This attack currently does not work with mana enabled so the correct\n                          ESSID will have to be specified\n                          Default output location is at /tmp/hostapd.hccapx\n  --mana-wpaout <file>    Set location of output for wpa-psk handshakes\n  --colour                Colourise MANA output and credential capture so its easier to distinguish\n  --vanilla               By default berate_ap will use hostapd_mana,\n                          if you would like to use vanilla hostapd please use this flag\n                          Using this flag will prevent evil mana operations\n\nwpa_sycophant Options:\n  --wpa-sycophant         Enable the enable_sycophant flag in MANA\n                          wpa_sycophant is a tool used to relay MSCHAP authentication attempts\n                          between a rogue AP and a legitimate AP\n                          This may be used to authenticate to a legitimate AP using someone elses login attempt\n                          similar to a tool like Impackets ntlmrelayx.py in the wired world.\n                          This option needs to be used in conjunction with https://github.com/sensepost/wpa_sycophant\nNon-Bridging Options:\n  --no-dns                Disable dnsmasq DNS server\n  --no-dnsmasq            Disable dnsmasq server completely\n  -g <gateway>            IPv4 Gateway for the Access Point (default: 192.168.12.1)\n  -d                      DNS server will take into account /etc/hosts\n  -e <hosts_file>         DNS server will take into account additional hosts file\n\nUseful informations:\n  * If you're not using the --no-virt option, then you can create an AP with the same\n    interface you are getting your Internet connection.\n  * You can pass your SSID and password through pipe or through arguments (see examples).\n  * On bridge method if the <interface-with-internet> is not a bridge interface, then\n    a bridge interface is created automatically.\n\nExamples:\n  berate_ap wlan0 eth0 MyAccessPoint MyPassPhrase\n  echo -e 'MyAccessPoint\\nMyPassPhrase' | berate_ap wlan0 eth0\n  berate_ap wlan0 eth0 MyAccessPoint\n  echo 'MyAccessPoint' | berate_ap wlan0 eth0\n  berate_ap wlan0 wlan0 MyAccessPoint MyPassPhrase\n  berate_ap -n wlan0 MyAccessPoint MyPassPhrase\n  berate_ap -m bridge wlan0 eth0 MyAccessPoint MyPassPhrase\n  berate_ap -m bridge wlan0 br0 MyAccessPoint MyPassPhrase\n  berate_ap --driver rtl871xdrv wlan0 eth0 MyAccessPoint MyPassPhrase\n  berate_ap --daemon wlan0 eth0 MyAccessPoint MyPassPhrase\n  berate_ap --stop wlan0\n  berate_ap --eap --eap-cert-subj '/O=Internet Widgits Pty Ltd/ST=Some-State/C=AU' wlan0 eth0 MyAccessPoint\n  berate_ap --eap --eap-user-file /etc/hostapd/hostapd.eap_user wlan0 eth0 MyAccessPoint\n  berate_ap --trifecta wlan0 eth0 MyAccessPoint MyPassPhrase",
+        "help": "ERROR: Failed to initialize lock"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/berate_ap",
+        "size_bytes": 71868,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable, with very long lines (797)"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/berate-ap/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/berate-ap/index.md",
+    "retrieved_at": "2026-07-14T13:04:57+00:00",
+    "sha256": "02ca1e8f954c03cd33421e139420974fd7eb720e5f68f0b85e2d8e7d3b8caa81"
+  },
+  "apt_metadata": {
+    "section": "misc",
+    "installed_size": "103",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "0.4.6+git20240824-0kali1",
+    "depends": "hostapd-mana, iproute2, iw, procps",
+    "recommends": "dnsmasq, haveged, iptables, qrencode",
+    "description": "Script for orchestrating mana rogue Wi-Fi Access Points\nThis package contains a script for orchestrating mana rogue Wi-Fi Access\nPoints. It can also handle regular hostapd AP and create AP easily.",
+    "homepage": "https://github.com/sensepost/berate_ap"
+  },
+  "tags": [
+    "offensive",
+    "berate",
+    "ap",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/berate-ap && python3 berate-ap.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/berate-ap && python3 berate-ap.py --help",
+    "cd toolboxes/berate-ap && python3 berate-ap.py --help",
+    "cd toolboxes/berate-ap && python3 berate-ap.py --help",
+    "cd toolboxes/berate-ap && python3 berate-ap.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST berate-ap --output $KFIOSA_OUTPUT_DIR/berate-ap.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST berate-ap --output $KFIOSA_OUTPUT_DIR/berate-ap.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

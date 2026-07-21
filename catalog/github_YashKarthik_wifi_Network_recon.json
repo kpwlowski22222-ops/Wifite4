@@ -1,0 +1,121 @@
+{
+  "id": "github:YashKarthik/wifi_Network_recon",
+  "kind": "external_repository",
+  "name": "wifi_Network_recon",
+  "full_name": "YashKarthik/wifi_Network_recon",
+  "owner": "YashKarthik",
+  "category": "WiFi Reconnaissance — Client Enumeration",
+  "url": "https://github.com/YashKarthik/wifi_Network_recon",
+  "summary": "Repository indexing entry for the ``wifi_Network_recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/YashKarthik__wifi_Network_recon",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "python scanner_ALL.py (then enter network IP at the input() prompt); ip.py and self_Mac.py run separately the same way"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "python scanner_ALL.py (then enter network IP at the input() prompt); ip.py and self_Mac.py run separately the same way"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "python-nmap",
+    "nmap (binary)",
+    "pandas",
+    "xlwt",
+    "requests",
+    "getmac",
+    "geocoder",
+    "sqlite3 (stdlib)"
+  ],
+  "algorithms": [
+    "nmap -sn ping sweep /24 host discovery",
+    "MAC resolution via getmac per discovered host",
+    "OUI vendor lookup via macvendors.com HTTP API",
+    "IP-based geolocation via geocoder.ip('me')",
+    "results assembled into pandas DataFrame / .xls export"
+  ],
+  "produces": [
+    "list of live host IPs on the LAN",
+    "MAC address per host",
+    "vendor/OUI string per MAC",
+    "scanner's own lat/long (not per-host)",
+    "date/time stamp per scan",
+    "pandas DataFrame and Excel .xls of the above"
+  ],
+  "capability_bucket": "client_enum",
+  "runnable": true,
+  "novelty": "none — thin wrapper. It is not 802.11/WiFi recon at all: no monitor mode, no beacon/probe/EAPOL capture, no airodump/wash/hcxtools use. It shells out to nmap -sn for post-association LAN host discovery and adds getmac + macvendors.com OCI lookup + geocoder IP-geolocation, all of which KFIOSA can do with scapy/nmap directly. The \"geolocation\" is the scanner's own IP location, not per-target.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "network",
+    "recon",
+    "yashkarthik",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifi_Network_recon && python3 wifi_Network_recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi_Network_recon && python3 wifi_Network_recon.py --help",
+    "cd toolboxes/wifi_Network_recon && python3 wifi_Network_recon.py --help",
+    "cd toolboxes/wifi_Network_recon && python3 wifi_Network_recon.py --help",
+    "cd toolboxes/wifi_Network_recon && python3 wifi_Network_recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi_Network_recon --output $KFIOSA_OUTPUT_DIR/wifi_Network_recon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi_Network_recon --output $KFIOSA_OUTPUT_DIR/wifi_Network_recon.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

@@ -1,0 +1,895 @@
+{
+  "id": "kali:unhide",
+  "kind": "kali_source_package",
+  "name": "unhide",
+  "title": "unhide",
+  "summary": "### unhide",
+  "version": "20240510-2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://www.unhide-forensics.info",
+  "repository": "https://salsa.debian.org/pkg-security-team/unhide",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install unhide"
+  },
+  "packages": [
+    {
+      "name": "unhide"
+    },
+    {
+      "name": "unhide-gui"
+    }
+  ],
+  "commands": [
+    {
+      "name": "unhide",
+      "description": "Forensic tool to find hidden processes",
+      "usage": "unhide [options] test_list",
+      "arguments": [
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "  -V          Show version and exit"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verbose",
+          "default": "don't  display",
+          "choices": null,
+          "raw": "  -v          verbose"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display this help",
+          "default": null,
+          "choices": null,
+          "raw": "  -h          display this help"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "more checks (available only with procfs, checkopendir & checkchdir commands)",
+          "default": null,
+          "choices": null,
+          "raw": "  -m          more checks (available only with procfs, checkopendir & checkchdir commands)"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use alternate sysinfo test in meta-test",
+          "default": null,
+          "choices": null,
+          "raw": "  -r          use alternate sysinfo test in meta-test"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "log result into unhide-linux.log file",
+          "default": null,
+          "choices": null,
+          "raw": "  -f          log result into unhide-linux.log file"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "same as '-f'",
+          "default": null,
+          "choices": null,
+          "raw": "  -o          same as '-f'"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "do a double check in brute test",
+          "default": null,
+          "choices": null,
+          "raw": "  -d          do a double check in brute test"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "inhibit stdout buffering of subprocesses (needs stdbuf command)",
+          "default": null,
+          "choices": null,
+          "raw": "  -u          inhibit stdout buffering of subprocesses (needs stdbuf command)"
+        },
+        {
+          "flags": [
+            "-H"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Provide a slightly human frienlier output.  This option adds ending",
+          "default": null,
+          "choices": null,
+          "raw": "     -H     Provide a slightly human frienlier output.  This option adds ending"
+        }
+      ],
+      "raw_help": "root@kali:~# unhide -h\n Unhide 20240509\n Copyright © 2010-2024 Yago Jesus & Patrick Gouin\n License GPLv3+ : GNU GPL version 3 or later\n http://www.unhide-forensics.info\n \n NOTE : This version of unhide is for systems using Linux >= 2.6 \n \n Usage: unhide [options] test_list\n \n Option :\n  -V          Show version and exit\n  -v          verbose\n  -h          display this help\n  -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n  -r          use alternate sysinfo test in meta-test\n  -f          log result into unhide-linux.log file\n  -o          same as '-f'\n  -d          do a double check in brute test\n  -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n \n Test_list :\n  Test_list is one or more of the following\n  Standard tests :\n     brute\n     proc\n     procall\n     procfs\n     quick\n     reverse\n     sys\n  Elementary tests :\n     checkbrute\n     checkchdir\n     checkgetaffinity\n     checkgetparam\n     checkgetpgid\n     checkgetprio\n     checkRRgetinterval\n     checkgetsched\n     checkgetsid\n     checkkill\n     checknoprocps\n     checkopendir\n     checkproc\n     checkquick\n     checkreaddir\n     checkreverse\n     checksysinfo\n     checksysinfo2\n     checksysinfo3",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "unhide -m -d sys procall brute reverse",
+          "template": null,
+          "original_sha256": "7a5b300f98b0188b1f542e1e0d1b7d5177aabe50eced06940fc412b85e0e9366"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Unhide 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide is for systems using Linux >= 2.6 \n\nUsage: unhide [options] test_list\n\nOption :\n   -V          Show version and exit\n   -v          verbose\n   -h          display this help\n   -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n   -r          use alternate sysinfo test in meta-test\n   -f          log result into unhide-linux.log file\n   -o          same as '-f'\n   -d          do a double check in brute test\n   -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n\nTest_list :\n   Test_list is one or more of the following\n   Standard tests :\n      brute\n      proc\n      procall\n      procfs\n      quick\n      reverse\n      sys\n   Elementary tests :\n      checkbrute\n      checkchdir\n      checkgetaffinity\n      checkgetparam\n      checkgetpgid\n      checkgetprio\n      checkRRgetinterval\n      checkgetsched\n      checkgetsid\n      checkkill\n      checknoprocps\n      checkopendir\n      checkproc\n      checkquick\n      checkreaddir\n      checkreverse\n      checksysinfo\n      checksysinfo2\n      checksysinfo3",
+        "-h": "Unhide 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide is for systems using Linux >= 2.6 \n\nUsage: unhide [options] test_list\n\nOption :\n   -V          Show version and exit\n   -v          verbose\n   -h          display this help\n   -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n   -r          use alternate sysinfo test in meta-test\n   -f          log result into unhide-linux.log file\n   -o          same as '-f'\n   -d          do a double check in brute test\n   -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n\nTest_list :\n   Test_list is one or more of the following\n   Standard tests :\n      brute\n      proc\n      procall\n      procfs\n      quick\n      reverse\n      sys\n   Elementary tests :\n      checkbrute\n      checkchdir\n      checkgetaffinity\n      checkgetparam\n      checkgetpgid\n      checkgetprio\n      checkRRgetinterval\n      checkgetsched\n      checkgetsid\n      checkkill\n      checknoprocps\n      checkopendir\n      checkproc\n      checkquick\n      checkreaddir\n      checkreverse\n      checksysinfo\n      checksysinfo2\n      checksysinfo3",
+        "help": "Unhide 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide is for systems using Linux >= 2.6 \n\nUnknown argument: help\nUsage: unhide [options] test_list\n\nOption :\n   -V          Show version and exit\n   -v          verbose\n   -h          display this help\n   -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n   -r          use alternate sysinfo test in meta-test\n   -f          log result into unhide-linux.log file\n   -o          same as '-f'\n   -d          do a double check in brute test\n   -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n\nTest_list :\n   Test_list is one or more of the following\n   Standard tests :\n      brute\n      proc\n      procall\n      procfs\n      quick\n      reverse\n      sys\n   Elementary tests :\n      checkbrute\n      checkchdir\n      checkgetaffinity\n      checkgetparam\n      checkgetpgid\n      checkgetprio\n      checkRRgetinterval\n      checkgetsched\n      checkgetsid\n      checkkill\n      checknoprocps\n      checkopendir\n      checkproc\n      checkquick\n      checkreaddir\n      checkreverse\n      checksysinfo\n      checksysinfo2\n      checksysinfo3",
+        "man": "UNHIDE(8)                   System Manager's Manual                   UNHIDE(8)\n\nNAME\n     unhide -- forensic tool to find hidden processes\n\nSYNOPSIS\n     unhide [OPTIONS] TEST_LIST\n     unhide-posix proc | sys\n\nDESCRIPTION\n     unhide is a forensic tool to find processes hidden by rootkits, Linux ker-\n     nel modules or by other techniques.  It detects hidden processes using six\n     techniques.\n\nOPTIONS\n     Options are only available for unhide-linux not for unhide-posix.\n\n     -d     Do a double check in brute test to avoid false positive.\n\n     -f     Write a log file (unhide-linux.log) in the current directory.\n\n     -h     Display help\n\n     -m     Do  more checks. As of 2012-03-17 version, this option has only ef-\n            fect for the procfs, procall, checkopendir and checkchdir tests.\n            Implies -v\n\n     -r     Use alternate version of sysinfo check in standard tests\n\n     -V     Show version and exit\n\n     -v     Be verbose, display warning  message  (default  :  don't  display).\n            This option may be repeated more than once.\n\n     -u     Do  unbuffered  write  to stdout.  This option could be useful when\n            unhide is spawned by another process (e.g. it's used by unhideGui).\n\n     -H     Provide a slightly human frienlier output.  This option adds ending\n            messages to tests and indicates when no hidden process is found.\n\nTEST_LIST\n     The checks to do consist of one or more of the following tests.\n     The standard tests are the aggregation of one or more elementary test(s).\n\n     Standard tests :\n\n     The brute technique consists of bruteforcing the all process IDs.\n     This technique is only available with version unhide-linux.\n\n     The proc technique consists of comparing /proc with the output of /bin/ps.\n\n     The procall technique combinates proc and procfs tests.\n     This technique is only available with version unhide-linux.\n\n     The procfs technique  consists  of  comparing  information  gathered  from\n     /bin/ps with information gathered by walking in the procfs.\n     With -m option, this test makes more checks, see checkchdir test.\n     This technique is only available with version unhide-linux.\n\n     The  quick  technique  combines  the  proc, procfs and sys techniques in a\n     quick way. It's about 20 times faster but may give more false positives.\n     This technique is only available with version unhide-linux.\n\n     The reverse technique consists of verifying that all threads  seen  by  ps\n     are also seen in procfs and by system calls. It is intended to verify that\n     a  rootkit has not killed a security tool (IDS or other) and make ps show-\n     ing a fake process instead.\n     This technique is only available with version unhide-linux.\n\n     The sys technique consists of comparing information gathered from  /bin/ps\n     with information gathered from system calls.\n\n     Elementary tests :\n\n     The checkbrute technique consists of bruteforcing the all process IDs.\n     This technique is only available with version unhide-linux.\n\n     The  checkchdir  technique consists of comparing information gathered from\n     /bin/ps with information gathered by making chdir() in the procfs.\n     With the -m option, it also verify that the thread appears in its  \"leader\n     process\" threads list.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetaffinity technique consists of comparing information gathered\n     from /bin/ps with the result of call  to  the  sched_getaffinity()  system\n     function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetparam  technique  consists  of comparing information gathered\n     from /bin/ps with the result of call to the sched_getparam() system  func-\n     tion.\n     This technique is only available with version unhide-linux.\n\n     The checkgetpgid technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getpgid() system function.\n     This technique is only available with version unhide-linux.\n\n     The checkgetprio technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getpriority() system function.\n     This technique is only available with version unhide-linux.\n\n     The  checkRRgetinterval  technique consists of comparing information gath-\n     ered from /bin/ps with the result of call to  the  sched_rr_get_interval()\n     system function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetsched  technique  consists  of comparing information gathered\n     from /bin/ps with the result of call to  the  sched_getscheduler()  system\n     function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetsid technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getsid() system function.\n     This technique is only available with version unhide-linux.\n\n     The checkkill technique consists of comparing  information  gathered  from\n     /bin/ps with the result of call to the kill() system function.\n     Note : no process is really killed by this test.\n     This technique is only available with version unhide-linux.\n\n     The  checknoprocps  technique consists of comparing the result of the call\n     to each of the system functions. No comparison is done  against  /proc  or\n     the output of ps.\n     This technique is only available with version unhide-linux.\n\n     The checkopendir technique consists of comparing information gathered from\n     /bin/ps with information gathered by making opendir() in the procfs.\n     This technique is only available with version unhide-linux.\n\n     The  checkproc  technique  consists  of comparing /proc with the output of\n     /bin/ps.\n     This technique is only available with version unhide-linux.\n\n     The checkquick technique combines the proc, procfs and sys techniques in a\n     quick way. It's about 20 times faster but may give more false positives.\n     This technique is only available with version unhide-linux.\n\n     The checkreaddir technique consists of comparing information gathered from\n     /bin/ps with  information  gathered  by  making  readdir()  in  /proc  and\n     /proc/pid/task.\n     This technique is only available with version unhide-linux.\n\n     The  checkreverse technique consists of verifying that all threads seen by\n     ps are also seen in procfs and by system calls. It is intended  to  verify\n     that  a  rootkit has not killed a security tool (IDS or other) and make ps\n     showing a fake process instead.\n     This technique is only available with version unhide-linux.\n\n     The checksysinfo technique consists of comparing  the  number  of  process\n     seen by /bin/ps with information obtained from sysinfo() system call.\n     This technique is only available with version unhide-linux.\n\n     The  checksysinfo2 technique is an alternate version of checksysinfo test.\n     It might (or not) work better on kernel patched for RT, preempt or latency\n     and with kernel that don't use the standard scheduler.\n     It's also invoked by standard tests when using the -r option\n     This technique is only available with version unhide-linux.\n\n   Exit status:\n     0      if OK,\n\n     1      if a hidden or fake thread is found.\n\nEXAMPLES\n     Quicker test:\n            unhide quick\n\n     Quick test:\n            unhide quick reverse\n\n     Standard test:\n            unhide sys proc\n\n     Deeper test:\n            unhide -m -d sys procall brute reverse\n\nBUGS\n     Report unhide bugs on the bug tracker on  GitHub  (https://github.com/YJe-\n     sus/Unhide/issues)\n     With  recent versions of Linux kernel (> 2.6.33), the sysinfo test may re-\n     port false positives.  It may be due to optimization in the scheduler, the\n     use of cgroup or even the use of systemd.  The use of the PREEMPT-RT patch\n     amplifies the occurrence of the problem.  This is currently under investi-\n     gation.\n\nSEE ALSO\n     unhide-tcp (8).\n\nAUTHOR\n     This manual page was written by Francois Marier (francois@debian.org)  and\n     Patrick Gouin (patrickg.github@free.fr).\n     Permission  is granted to copy, distribute and/or modify this document un-\n     der the terms of the GNU General Public License, Version 3  or  any  later\n     version published by the Free Software Foundation.\n\nLICENSE\n     License   GPLv3+:   GNU   GPL   version  3  or  later  <http://gnu.org/li-\n     censes/gpl.html>.\n     This is free software: you are free to change and redistribute it.   There\n     is NO WARRANTY, to the extent permitted by law.\n\nAdministration commands             May 2024                          UNHIDE(8)",
+        "apropos": "unhide (8)           - forensic tool to find hidden processes\nunhide-linux (8)     - forensic tool to find hidden processes\nunhide-posix (8)     - forensic tool to find hidden processes\nunhide-tcp (8)       - forensic tool to find hidden TCP/UDP ports\nunhide.rb (8)        - Scans system for hidden processes and lists any hits o...\nunhide_rb (8)        - forensic tool to find hidden processes"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/unhide",
+        "size_bytes": 47640,
+        "is_symlink": true,
+        "real_path": "/usr/sbin/unhide-linux",
+        "file_type": "symbolic link to unhide-linux"
+      }
+    },
+    {
+      "name": "unhide-linux",
+      "description": "Forensic tool to find hidden processes",
+      "usage": "unhide-linux [options] test_list",
+      "arguments": [
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "  -V          Show version and exit"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verbose",
+          "default": "don't  display",
+          "choices": null,
+          "raw": "  -v          verbose"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display this help",
+          "default": null,
+          "choices": null,
+          "raw": "  -h          display this help"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "more checks (available only with procfs, checkopendir & checkchdir commands)",
+          "default": null,
+          "choices": null,
+          "raw": "  -m          more checks (available only with procfs, checkopendir & checkchdir commands)"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use alternate sysinfo test in meta-test",
+          "default": null,
+          "choices": null,
+          "raw": "  -r          use alternate sysinfo test in meta-test"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "log result into unhide-linux.log file",
+          "default": null,
+          "choices": null,
+          "raw": "  -f          log result into unhide-linux.log file"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "same as '-f'",
+          "default": null,
+          "choices": null,
+          "raw": "  -o          same as '-f'"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "do a double check in brute test",
+          "default": null,
+          "choices": null,
+          "raw": "  -d          do a double check in brute test"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "inhibit stdout buffering of subprocesses (needs stdbuf command)",
+          "default": null,
+          "choices": null,
+          "raw": "  -u          inhibit stdout buffering of subprocesses (needs stdbuf command)"
+        },
+        {
+          "flags": [
+            "-H"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Provide a slightly human frienlier output.  This option adds ending",
+          "default": null,
+          "choices": null,
+          "raw": "     -H     Provide a slightly human frienlier output.  This option adds ending"
+        }
+      ],
+      "raw_help": "root@kali:~# unhide-linux -h\n Unhide 20240509\n Copyright © 2010-2024 Yago Jesus & Patrick Gouin\n License GPLv3+ : GNU GPL version 3 or later\n http://www.unhide-forensics.info\n \n NOTE : This version of unhide is for systems using Linux >= 2.6 \n \n Usage: unhide-linux [options] test_list\n \n Option :\n  -V          Show version and exit\n  -v          verbose\n  -h          display this help\n  -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n  -r          use alternate sysinfo test in meta-test\n  -f          log result into unhide-linux.log file\n  -o          same as '-f'\n  -d          do a double check in brute test\n  -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n \n Test_list :\n  Test_list is one or more of the following\n  Standard tests :\n     brute\n     proc\n     procall\n     procfs\n     quick\n     reverse\n     sys\n  Elementary tests :\n     checkbrute\n     checkchdir\n     checkgetaffinity\n     checkgetparam\n     checkgetpgid\n     checkgetprio\n     checkRRgetinterval\n     checkgetsched\n     checkgetsid\n     checkkill\n     checknoprocps\n     checkopendir\n     checkproc\n     checkquick\n     checkreaddir\n     checkreverse\n     checksysinfo\n     checksysinfo2\n     checksysinfo3",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Unhide 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide is for systems using Linux >= 2.6 \n\nUsage: unhide-linux [options] test_list\n\nOption :\n   -V          Show version and exit\n   -v          verbose\n   -h          display this help\n   -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n   -r          use alternate sysinfo test in meta-test\n   -f          log result into unhide-linux.log file\n   -o          same as '-f'\n   -d          do a double check in brute test\n   -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n\nTest_list :\n   Test_list is one or more of the following\n   Standard tests :\n      brute\n      proc\n      procall\n      procfs\n      quick\n      reverse\n      sys\n   Elementary tests :\n      checkbrute\n      checkchdir\n      checkgetaffinity\n      checkgetparam\n      checkgetpgid\n      checkgetprio\n      checkRRgetinterval\n      checkgetsched\n      checkgetsid\n      checkkill\n      checknoprocps\n      checkopendir\n      checkproc\n      checkquick\n      checkreaddir\n      checkreverse\n      checksysinfo\n      checksysinfo2\n      checksysinfo3",
+        "-h": "Unhide 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide is for systems using Linux >= 2.6 \n\nUsage: unhide-linux [options] test_list\n\nOption :\n   -V          Show version and exit\n   -v          verbose\n   -h          display this help\n   -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n   -r          use alternate sysinfo test in meta-test\n   -f          log result into unhide-linux.log file\n   -o          same as '-f'\n   -d          do a double check in brute test\n   -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n\nTest_list :\n   Test_list is one or more of the following\n   Standard tests :\n      brute\n      proc\n      procall\n      procfs\n      quick\n      reverse\n      sys\n   Elementary tests :\n      checkbrute\n      checkchdir\n      checkgetaffinity\n      checkgetparam\n      checkgetpgid\n      checkgetprio\n      checkRRgetinterval\n      checkgetsched\n      checkgetsid\n      checkkill\n      checknoprocps\n      checkopendir\n      checkproc\n      checkquick\n      checkreaddir\n      checkreverse\n      checksysinfo\n      checksysinfo2\n      checksysinfo3",
+        "help": "Unhide 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide is for systems using Linux >= 2.6 \n\nUnknown argument: help\nUsage: unhide-linux [options] test_list\n\nOption :\n   -V          Show version and exit\n   -v          verbose\n   -h          display this help\n   -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n   -r          use alternate sysinfo test in meta-test\n   -f          log result into unhide-linux.log file\n   -o          same as '-f'\n   -d          do a double check in brute test\n   -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n\nTest_list :\n   Test_list is one or more of the following\n   Standard tests :\n      brute\n      proc\n      procall\n      procfs\n      quick\n      reverse\n      sys\n   Elementary tests :\n      checkbrute\n      checkchdir\n      checkgetaffinity\n      checkgetparam\n      checkgetpgid\n      checkgetprio\n      checkRRgetinterval\n      checkgetsched\n      checkgetsid\n      checkkill\n      checknoprocps\n      checkopendir\n      checkproc\n      checkquick\n      checkreaddir\n      checkreverse\n      checksysinfo\n      checksysinfo2\n      checksysinfo3",
+        "man": "UNHIDE(8)                   System Manager's Manual                   UNHIDE(8)\n\nNAME\n     unhide -- forensic tool to find hidden processes\n\nSYNOPSIS\n     unhide [OPTIONS] TEST_LIST\n     unhide-posix proc | sys\n\nDESCRIPTION\n     unhide is a forensic tool to find processes hidden by rootkits, Linux ker-\n     nel modules or by other techniques.  It detects hidden processes using six\n     techniques.\n\nOPTIONS\n     Options are only available for unhide-linux not for unhide-posix.\n\n     -d     Do a double check in brute test to avoid false positive.\n\n     -f     Write a log file (unhide-linux.log) in the current directory.\n\n     -h     Display help\n\n     -m     Do  more checks. As of 2012-03-17 version, this option has only ef-\n            fect for the procfs, procall, checkopendir and checkchdir tests.\n            Implies -v\n\n     -r     Use alternate version of sysinfo check in standard tests\n\n     -V     Show version and exit\n\n     -v     Be verbose, display warning  message  (default  :  don't  display).\n            This option may be repeated more than once.\n\n     -u     Do  unbuffered  write  to stdout.  This option could be useful when\n            unhide is spawned by another process (e.g. it's used by unhideGui).\n\n     -H     Provide a slightly human frienlier output.  This option adds ending\n            messages to tests and indicates when no hidden process is found.\n\nTEST_LIST\n     The checks to do consist of one or more of the following tests.\n     The standard tests are the aggregation of one or more elementary test(s).\n\n     Standard tests :\n\n     The brute technique consists of bruteforcing the all process IDs.\n     This technique is only available with version unhide-linux.\n\n     The proc technique consists of comparing /proc with the output of /bin/ps.\n\n     The procall technique combinates proc and procfs tests.\n     This technique is only available with version unhide-linux.\n\n     The procfs technique  consists  of  comparing  information  gathered  from\n     /bin/ps with information gathered by walking in the procfs.\n     With -m option, this test makes more checks, see checkchdir test.\n     This technique is only available with version unhide-linux.\n\n     The  quick  technique  combines  the  proc, procfs and sys techniques in a\n     quick way. It's about 20 times faster but may give more false positives.\n     This technique is only available with version unhide-linux.\n\n     The reverse technique consists of verifying that all threads  seen  by  ps\n     are also seen in procfs and by system calls. It is intended to verify that\n     a  rootkit has not killed a security tool (IDS or other) and make ps show-\n     ing a fake process instead.\n     This technique is only available with version unhide-linux.\n\n     The sys technique consists of comparing information gathered from  /bin/ps\n     with information gathered from system calls.\n\n     Elementary tests :\n\n     The checkbrute technique consists of bruteforcing the all process IDs.\n     This technique is only available with version unhide-linux.\n\n     The  checkchdir  technique consists of comparing information gathered from\n     /bin/ps with information gathered by making chdir() in the procfs.\n     With the -m option, it also verify that the thread appears in its  \"leader\n     process\" threads list.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetaffinity technique consists of comparing information gathered\n     from /bin/ps with the result of call  to  the  sched_getaffinity()  system\n     function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetparam  technique  consists  of comparing information gathered\n     from /bin/ps with the result of call to the sched_getparam() system  func-\n     tion.\n     This technique is only available with version unhide-linux.\n\n     The checkgetpgid technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getpgid() system function.\n     This technique is only available with version unhide-linux.\n\n     The checkgetprio technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getpriority() system function.\n     This technique is only available with version unhide-linux.\n\n     The  checkRRgetinterval  technique consists of comparing information gath-\n     ered from /bin/ps with the result of call to  the  sched_rr_get_interval()\n     system function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetsched  technique  consists  of comparing information gathered\n     from /bin/ps with the result of call to  the  sched_getscheduler()  system\n     function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetsid technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getsid() system function.\n     This technique is only available with version unhide-linux.\n\n     The checkkill technique consists of comparing  information  gathered  from\n     /bin/ps with the result of call to the kill() system function.\n     Note : no process is really killed by this test.\n     This technique is only available with version unhide-linux.\n\n     The  checknoprocps  technique consists of comparing the result of the call\n     to each of the system functions. No comparison is done  against  /proc  or\n     the output of ps.\n     This technique is only available with version unhide-linux.\n\n     The checkopendir technique consists of comparing information gathered from\n     /bin/ps with information gathered by making opendir() in the procfs.\n     This technique is only available with version unhide-linux.\n\n     The  checkproc  technique  consists  of comparing /proc with the output of\n     /bin/ps.\n     This technique is only available with version unhide-linux.\n\n     The checkquick technique combines the proc, procfs and sys techniques in a\n     quick way. It's about 20 times faster but may give more false positives.\n     This technique is only available with version unhide-linux.\n\n     The checkreaddir technique consists of comparing information gathered from\n     /bin/ps with  information  gathered  by  making  readdir()  in  /proc  and\n     /proc/pid/task.\n     This technique is only available with version unhide-linux.\n\n     The  checkreverse technique consists of verifying that all threads seen by\n     ps are also seen in procfs and by system calls. It is intended  to  verify\n     that  a  rootkit has not killed a security tool (IDS or other) and make ps\n     showing a fake process instead.\n     This technique is only available with version unhide-linux.\n\n     The checksysinfo technique consists of comparing  the  number  of  process\n     seen by /bin/ps with information obtained from sysinfo() system call.\n     This technique is only available with version unhide-linux.\n\n     The  checksysinfo2 technique is an alternate version of checksysinfo test.\n     It might (or not) work better on kernel patched for RT, preempt or latency\n     and with kernel that don't use the standard scheduler.\n     It's also invoked by standard tests when using the -r option\n     This technique is only available with version unhide-linux.\n\n   Exit status:\n     0      if OK,\n\n     1      if a hidden or fake thread is found.\n\nEXAMPLES\n     Quicker test:\n            unhide quick\n\n     Quick test:\n            unhide quick reverse\n\n     Standard test:\n            unhide sys proc\n\n     Deeper test:\n            unhide -m -d sys procall brute reverse\n\nBUGS\n     Report unhide bugs on the bug tracker on  GitHub  (https://github.com/YJe-\n     sus/Unhide/issues)\n     With  recent versions of Linux kernel (> 2.6.33), the sysinfo test may re-\n     port false positives.  It may be due to optimization in the scheduler, the\n     use of cgroup or even the use of systemd.  The use of the PREEMPT-RT patch\n     amplifies the occurrence of the problem.  This is currently under investi-\n     gation.\n\nSEE ALSO\n     unhide-tcp (8).\n\nAUTHOR\n     This manual page was written by Francois Marier (francois@debian.org)  and\n     Patrick Gouin (patrickg.github@free.fr).\n     Permission  is granted to copy, distribute and/or modify this document un-\n     der the terms of the GNU General Public License, Version 3  or  any  later\n     version published by the Free Software Foundation.\n\nLICENSE\n     License   GPLv3+:   GNU   GPL   version  3  or  later  <http://gnu.org/li-\n     censes/gpl.html>.\n     This is free software: you are free to change and redistribute it.   There\n     is NO WARRANTY, to the extent permitted by law.\n\nAdministration commands             May 2024                          UNHIDE(8)",
+        "apropos": "unhide-linux (8)     - forensic tool to find hidden processes"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/unhide-linux",
+        "size_bytes": 47640,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b21389d8ca9087c2baaba028829e849ebda18c6d, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "unhide-posix",
+      "description": "Forensic tool to find hidden processes",
+      "usage": "unhide-posix proc | sys",
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do a double check in brute test to avoid false positive.",
+          "default": null,
+          "choices": null,
+          "raw": "     -d     Do a double check in brute test to avoid false positive."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Write a log file (unhide-linux.log) in the current directory.",
+          "default": null,
+          "choices": null,
+          "raw": "     -f     Write a log file (unhide-linux.log) in the current directory."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display help",
+          "default": null,
+          "choices": null,
+          "raw": "     -h     Display help"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do  more checks. As of 2012-03-17 version, this option has only ef-",
+          "default": null,
+          "choices": null,
+          "raw": "     -m     Do  more checks. As of 2012-03-17 version, this option has only ef-"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use alternate version of sysinfo check in standard tests",
+          "default": null,
+          "choices": null,
+          "raw": "     -r     Use alternate version of sysinfo check in standard tests"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "     -V     Show version and exit"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be verbose, display warning  message  (default  :  don't  display).",
+          "default": "don't  display",
+          "choices": null,
+          "raw": "     -v     Be verbose, display warning  message  (default  :  don't  display)."
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do  unbuffered  write  to stdout.  This option could be useful when",
+          "default": null,
+          "choices": null,
+          "raw": "     -u     Do  unbuffered  write  to stdout.  This option could be useful when"
+        },
+        {
+          "flags": [
+            "-H"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Provide a slightly human frienlier output.  This option adds ending",
+          "default": null,
+          "choices": null,
+          "raw": "     -H     Provide a slightly human frienlier output.  This option adds ending"
+        }
+      ],
+      "raw_help": "root@kali:~# unhide-posix -h\n Unhide-posix 20240509\n Copyright © 2013-2024 Yago Jesus & Patrick Gouin\n License GPLv3+ : GNU GPL version 3 or later\n http://www.unhide-forensics.info\n \n NOTE : This is legacy version of unhide, it is intended\n      for systems using Linux < 2.6 or other UNIX systems\n \n usage: unhide-posix proc | sys",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Unhide-posix 20240509\nCopyright © 2013-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This is legacy version of unhide, it is intended\n       for systems using Linux < 2.6 or other UNIX systems\n\nusage: unhide-posix proc | sys",
+        "-h": "Unhide-posix 20240509\nCopyright © 2013-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This is legacy version of unhide, it is intended\n       for systems using Linux < 2.6 or other UNIX systems\n\nusage: unhide-posix proc | sys",
+        "help": "Unhide-posix 20240509\nCopyright © 2013-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This is legacy version of unhide, it is intended\n       for systems using Linux < 2.6 or other UNIX systems\n\nusage: unhide-posix proc | sys",
+        "man": "UNHIDE(8)                   System Manager's Manual                   UNHIDE(8)\n\nNAME\n     unhide -- forensic tool to find hidden processes\n\nSYNOPSIS\n     unhide [OPTIONS] TEST_LIST\n     unhide-posix proc | sys\n\nDESCRIPTION\n     unhide is a forensic tool to find processes hidden by rootkits, Linux ker-\n     nel modules or by other techniques.  It detects hidden processes using six\n     techniques.\n\nOPTIONS\n     Options are only available for unhide-linux not for unhide-posix.\n\n     -d     Do a double check in brute test to avoid false positive.\n\n     -f     Write a log file (unhide-linux.log) in the current directory.\n\n     -h     Display help\n\n     -m     Do  more checks. As of 2012-03-17 version, this option has only ef-\n            fect for the procfs, procall, checkopendir and checkchdir tests.\n            Implies -v\n\n     -r     Use alternate version of sysinfo check in standard tests\n\n     -V     Show version and exit\n\n     -v     Be verbose, display warning  message  (default  :  don't  display).\n            This option may be repeated more than once.\n\n     -u     Do  unbuffered  write  to stdout.  This option could be useful when\n            unhide is spawned by another process (e.g. it's used by unhideGui).\n\n     -H     Provide a slightly human frienlier output.  This option adds ending\n            messages to tests and indicates when no hidden process is found.\n\nTEST_LIST\n     The checks to do consist of one or more of the following tests.\n     The standard tests are the aggregation of one or more elementary test(s).\n\n     Standard tests :\n\n     The brute technique consists of bruteforcing the all process IDs.\n     This technique is only available with version unhide-linux.\n\n     The proc technique consists of comparing /proc with the output of /bin/ps.\n\n     The procall technique combinates proc and procfs tests.\n     This technique is only available with version unhide-linux.\n\n     The procfs technique  consists  of  comparing  information  gathered  from\n     /bin/ps with information gathered by walking in the procfs.\n     With -m option, this test makes more checks, see checkchdir test.\n     This technique is only available with version unhide-linux.\n\n     The  quick  technique  combines  the  proc, procfs and sys techniques in a\n     quick way. It's about 20 times faster but may give more false positives.\n     This technique is only available with version unhide-linux.\n\n     The reverse technique consists of verifying that all threads  seen  by  ps\n     are also seen in procfs and by system calls. It is intended to verify that\n     a  rootkit has not killed a security tool (IDS or other) and make ps show-\n     ing a fake process instead.\n     This technique is only available with version unhide-linux.\n\n     The sys technique consists of comparing information gathered from  /bin/ps\n     with information gathered from system calls.\n\n     Elementary tests :\n\n     The checkbrute technique consists of bruteforcing the all process IDs.\n     This technique is only available with version unhide-linux.\n\n     The  checkchdir  technique consists of comparing information gathered from\n     /bin/ps with information gathered by making chdir() in the procfs.\n     With the -m option, it also verify that the thread appears in its  \"leader\n     process\" threads list.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetaffinity technique consists of comparing information gathered\n     from /bin/ps with the result of call  to  the  sched_getaffinity()  system\n     function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetparam  technique  consists  of comparing information gathered\n     from /bin/ps with the result of call to the sched_getparam() system  func-\n     tion.\n     This technique is only available with version unhide-linux.\n\n     The checkgetpgid technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getpgid() system function.\n     This technique is only available with version unhide-linux.\n\n     The checkgetprio technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getpriority() system function.\n     This technique is only available with version unhide-linux.\n\n     The  checkRRgetinterval  technique consists of comparing information gath-\n     ered from /bin/ps with the result of call to  the  sched_rr_get_interval()\n     system function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetsched  technique  consists  of comparing information gathered\n     from /bin/ps with the result of call to  the  sched_getscheduler()  system\n     function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetsid technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getsid() system function.\n     This technique is only available with version unhide-linux.\n\n     The checkkill technique consists of comparing  information  gathered  from\n     /bin/ps with the result of call to the kill() system function.\n     Note : no process is really killed by this test.\n     This technique is only available with version unhide-linux.\n\n     The  checknoprocps  technique consists of comparing the result of the call\n     to each of the system functions. No comparison is done  against  /proc  or\n     the output of ps.\n     This technique is only available with version unhide-linux.\n\n     The checkopendir technique consists of comparing information gathered from\n     /bin/ps with information gathered by making opendir() in the procfs.\n     This technique is only available with version unhide-linux.\n\n     The  checkproc  technique  consists  of comparing /proc with the output of\n     /bin/ps.\n     This technique is only available with version unhide-linux.\n\n     The checkquick technique combines the proc, procfs and sys techniques in a\n     quick way. It's about 20 times faster but may give more false positives.\n     This technique is only available with version unhide-linux.\n\n     The checkreaddir technique consists of comparing information gathered from\n     /bin/ps with  information  gathered  by  making  readdir()  in  /proc  and\n     /proc/pid/task.\n     This technique is only available with version unhide-linux.\n\n     The  checkreverse technique consists of verifying that all threads seen by\n     ps are also seen in procfs and by system calls. It is intended  to  verify\n     that  a  rootkit has not killed a security tool (IDS or other) and make ps\n     showing a fake process instead.\n     This technique is only available with version unhide-linux.\n\n     The checksysinfo technique consists of comparing  the  number  of  process\n     seen by /bin/ps with information obtained from sysinfo() system call.\n     This technique is only available with version unhide-linux.\n\n     The  checksysinfo2 technique is an alternate version of checksysinfo test.\n     It might (or not) work better on kernel patched for RT, preempt or latency\n     and with kernel that don't use the standard scheduler.\n     It's also invoked by standard tests when using the -r option\n     This technique is only available with version unhide-linux.\n\n   Exit status:\n     0      if OK,\n\n     1      if a hidden or fake thread is found.\n\nEXAMPLES\n     Quicker test:\n            unhide quick\n\n     Quick test:\n            unhide quick reverse\n\n     Standard test:\n            unhide sys proc\n\n     Deeper test:\n            unhide -m -d sys procall brute reverse\n\nBUGS\n     Report unhide bugs on the bug tracker on  GitHub  (https://github.com/YJe-\n     sus/Unhide/issues)\n     With  recent versions of Linux kernel (> 2.6.33), the sysinfo test may re-\n     port false positives.  It may be due to optimization in the scheduler, the\n     use of cgroup or even the use of systemd.  The use of the PREEMPT-RT patch\n     amplifies the occurrence of the problem.  This is currently under investi-\n     gation.\n\nSEE ALSO\n     unhide-tcp (8).\n\nAUTHOR\n     This manual page was written by Francois Marier (francois@debian.org)  and\n     Patrick Gouin (patrickg.github@free.fr).\n     Permission  is granted to copy, distribute and/or modify this document un-\n     der the terms of the GNU General Public License, Version 3  or  any  later\n     version published by the Free Software Foundation.\n\nLICENSE\n     License   GPLv3+:   GNU   GPL   version  3  or  later  <http://gnu.org/li-\n     censes/gpl.html>.\n     This is free software: you are free to change and redistribute it.   There\n     is NO WARRANTY, to the extent permitted by law.\n\nAdministration commands             May 2024                          UNHIDE(8)",
+        "apropos": "unhide-posix (8)     - forensic tool to find hidden processes"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/unhide-posix",
+        "size_bytes": 14576,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=13a87d068fcdbdfb06f00f2ddc7a884e28555d0d, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "unhide-tcp",
+      "description": "Forensic tool to find hidden TCP/UDP ports",
+      "usage": "unhide-tcp [options]",
+      "arguments": [
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "  -V          Show version and exit"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verbose",
+          "default": null,
+          "choices": null,
+          "raw": "  -v          verbose"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display this help",
+          "default": null,
+          "choices": null,
+          "raw": "  -h          display this help"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show fuser output for hidden ports",
+          "default": null,
+          "choices": null,
+          "raw": "  -f          show fuser output for hidden ports"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show lsof output for hidden ports",
+          "default": null,
+          "choices": null,
+          "raw": "  -l          show lsof output for hidden ports"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "log result into unhide-tcp.log file",
+          "default": null,
+          "choices": null,
+          "raw": "  -o          log result into unhide-tcp.log file"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "SHOULD be given on the command line.",
+          "takes_value": false,
+          "description": "use very quick version for server with lot of opened ports",
+          "default": null,
+          "choices": null,
+          "raw": "  -s          use very quick version for server with lot of opened ports"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use netstat instead of ss",
+          "default": null,
+          "choices": null,
+          "raw": "  -n          use netstat instead of ss"
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -h --help"
+        },
+        {
+          "flags": [
+            "--brief"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --brief"
+        },
+        {
+          "flags": [
+            "-f",
+            "--fuser"
+          ],
+          "metavar": "- user",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -f --fuser"
+        },
+        {
+          "flags": [
+            "-l",
+            "--lsof"
+          ],
+          "metavar": "- sof",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -l --lsof"
+        },
+        {
+          "flags": [
+            "-n",
+            "--netstat"
+          ],
+          "metavar": "- etstat",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -n --netstat"
+        },
+        {
+          "flags": [
+            "-s",
+            "--server"
+          ],
+          "metavar": "- erver",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -s --server"
+        },
+        {
+          "flags": [
+            "-o",
+            "--log"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -o --log"
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -V --version"
+        },
+        {
+          "flags": [
+            "-v",
+            "--verbose"
+          ],
+          "metavar": "- erbose",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -v --verbose"
+        }
+      ],
+      "raw_help": "root@kali:~# unhide-tcp -h\n Unhide-tcp 20240509\n Copyright © 2010-2024 Yago Jesus & Patrick Gouin\n License GPLv3+ : GNU GPL version 3 or later\n http://www.unhide-forensics.info\n Usage: unhide-tcp [options] \n \n Options :\n  -V          Show version and exit\n  -v          verbose\n  -h          display this help\n  -f          show fuser output for hidden ports\n  -l          show lsof output for hidden ports\n  -o          log result into unhide-tcp.log file\n  -s          use very quick version for server with lot of opened ports\n  -n          use netstat instead of ss",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Unhide-tcp 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\nUsage: unhide-tcp [options] \n\nOptions :\n   -V          Show version and exit\n   -v          verbose\n   -h          display this help\n   -f          show fuser output for hidden ports\n   -l          show lsof output for hidden ports\n   -o          log result into unhide-tcp.log file\n   -s          use very quick version for server with lot of opened ports\n   -n          use netstat instead of ss",
+        "-h": "Unhide-tcp 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\nUsage: unhide-tcp [options] \n\nOptions :\n   -V          Show version and exit\n   -v          verbose\n   -h          display this help\n   -f          show fuser output for hidden ports\n   -l          show lsof output for hidden ports\n   -o          log result into unhide-tcp.log file\n   -s          use very quick version for server with lot of opened ports\n   -n          use netstat instead of ss",
+        "help": "Unhide-tcp 20240509\nCopyright © 2010-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\nUsed options: \n[*]Starting TCP checking",
+        "man": "UNHIDE-TCP(8)               System Manager's Manual               UNHIDE-TCP(8)\n\nNAME\n     unhide-tcp -- forensic tool to find hidden TCP/UDP ports\n\nSYNOPSIS\n     unhide-tcp [options]\n\nDESCRIPTION\n     unhide-tcp  is a forensic tool that identifies TCP/UDP ports that are lis-\n     tening but are not listed by /sbin/ss (or alternatively  by  /bin/netstat)\n     through brute forcing of all TCP/UDP ports available.\n     Note1 : On FreeBSD ans OpenBSD, netstat is always used as iproute2 doesn't\n     exist  on  these  OS. In addition, on FreeBSD, sockstat is used instead of\n     fuser.  Note2 : If iproute2 is not available on the system, option  -n  or\n     -s SHOULD be given on the command line.\n\nOPTIONS\n     -h --help\n            Display help\n\n     --brief\n            Don't display warning messages, that's the default behavior.\n\n     -f --fuser\n            Display fuser output (if available) for the hidden port On FreeBSD,\n            instead  of fuser command, displays the output of the sockstat com-\n            mand for the hidden port.\n\n     -l --lsof\n            Display lsof output (if available) for the hidden port\n\n     -n --netstat\n            Use /bin/netstat instead of /sbin/ss. On system  with  many  opened\n            ports, this can slow down the test dramatically.\n\n     -s --server\n            Use  a  very  quick  strategy  of scanning. On system with a lot of\n            opened ports, it is hundreds times faster than ss  method  and  ten\n            thousands times faster than netstat method.\n\n     -o --log\n            Write  a log file (unhide-tcp-AAAA-MM-DD.log) in the current direc-\n            tory.\n\n     -V --version\n            Show version and exit\n\n     -v --verbose\n            Be verbose, display warning  message  (default  :  don't  display).\n            This option may be repeated more than once.\n\n   Exit status:\n     0      if no hidden port is found,\n\n     4      if one or more hidden TCP port(s) is(are) found,\n\n     8      if one or more hidden UDP port(s) is(are) found,\n\n     12     if one or more hidden TCP and UDP ports are found.\n\nBUGS\n     Report    unhide-tcp    bugs    on    the    bug    tracker    on   GitHub\n     (https://github.com/YJesus/Unhide/issues)\n\nSEE ALSO\n     unhide (8).\n\nAUTHOR\n     This manual page was written by Francois Marier (francois@debian.org)  and\n     Patrick Gouin (patrickg.github@free.fr).\n     Permission  is granted to copy, distribute and/or modify this document un-\n     der the terms of the GNU General Public License, Version 3  or  any  later\n     version published by the Free Software Foundation.\n\nLICENSE\n     License   GPLv3+:   GNU   GPL   version  3  or  later  <http://gnu.org/li-\n     censes/gpl.html>.\n     This is free software: you are free to change and redistribute it.   There\n     is NO WARRANTY, to the extent permitted by law.\n\nAdministration commands             May 2024                      UNHIDE-TCP(8)",
+        "apropos": "unhide-tcp (8)       - forensic tool to find hidden TCP/UDP ports"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/unhide-tcp",
+        "size_bytes": 27768,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8ea520b9c767e76f5c0200440923590bf3bf8f5f, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "unhide_rb",
+      "description": "Forensic tool to find hidden processes",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do a double check in brute test to avoid false positive.",
+          "default": null,
+          "choices": null,
+          "raw": "    -d     Do a double check in brute test to avoid false positive."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Write a log file (unhide-linux.log) in the current directory.",
+          "default": null,
+          "choices": null,
+          "raw": "    -f     Write a log file (unhide-linux.log) in the current directory."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display help",
+          "default": null,
+          "choices": null,
+          "raw": "    -h     Display help"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do  more checks. As of 2012-03-17 version, this option has only ef-",
+          "default": null,
+          "choices": null,
+          "raw": "    -m     Do  more checks. As of 2012-03-17 version, this option has only ef-"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use alternate version of sysinfo check in standard tests",
+          "default": null,
+          "choices": null,
+          "raw": "    -r     Use alternate version of sysinfo check in standard tests"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "    -V     Show version and exit"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be verbose, display warning  message  (default  :  don't  display).",
+          "default": "don't  display",
+          "choices": null,
+          "raw": "    -v     Be verbose, display warning  message  (default  :  don't  display)."
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do  unbuffered  write  to stdout.  This option could be useful when",
+          "default": null,
+          "choices": null,
+          "raw": "    -u     Do  unbuffered  write  to stdout.  This option could be useful when"
+        },
+        {
+          "flags": [
+            "-H"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Provide a slightly human frienlier output.  This option adds ending",
+          "default": null,
+          "choices": null,
+          "raw": "    -H     Provide a slightly human frienlier output.  This option adds ending"
+        }
+      ],
+      "raw_help": "root@kali:~# man unhide_rb\n UNHIDE(8)                   System Manager's Manual                   UNHIDE(8)\n \n NAME\n    unhide -- forensic tool to find hidden processes\n \n SYNOPSIS\n    unhide [OPTIONS] TEST_LIST\n    unhide-posix proc | sys\n \n DESCRIPTION\n    unhide is a forensic tool to find processes hidden by rootkits, Linux ker-\n    nel modules or by other techniques.  It detects hidden processes using six\n    techniques.\n \n OPTIONS\n    Options are only available for unhide-linux not for unhide-posix.\n \n    -d     Do a double check in brute test to avoid false positive.\n \n    -f     Write a log file (unhide-linux.log) in the current directory.\n \n    -h     Display help\n \n    -m     Do  more checks. As of 2012-03-17 version, this option has only ef-\n           fect for the procfs, procall, checkopendir and checkchdir tests.\n           Implies -v\n \n    -r     Use alternate version of sysinfo check in standard tests\n \n    -V     Show version and exit\n \n    -v     Be verbose, display warning  message  (default  :  don't  display).\n           This option may be repeated more than once.\n \n    -u     Do  unbuffered  write  to stdout.  This option could be useful when\n           unhide is spawned by another process (e.g. it's used by unhideGui).\n \n    -H     Provide a slightly human frienlier output.  This option adds ending\n           messages to tests and indicates when no hidden process is found.\n \n TEST_LIST\n    The checks to do consist of one or more of the following tests.\n    The standard tests are the aggregation of one or more elementary test(s).\n \n    Standard tests :\n \n    The brute technique consists of bruteforcing the all process IDs.\n    This technique is only available with version unhide-linux.\n \n    The proc technique consists of comparing /proc with the output of /bin/ps.\n \n    The procall technique combinates proc and procfs tests.\n    This technique is only available with version unhide-linux.\n \n    The procfs technique  consists  of  comparing  information  gathered  from\n    /bin/ps with information gathered by walking in the procfs.\n    With -m option, this test makes more checks, see checkchdir test.\n    This technique is only available with version unhide-linux.\n \n    The  quick  technique  combines  the  proc, procfs and sys techniques in a\n    quick way. It's about 20 times faster but may give more false positives.\n    This technique is only available with version unhide-linux.\n \n    The reverse technique consists of verifying that all threads  seen  by  ps\n    are also seen in procfs and by system calls. It is intended to verify that\n    a  rootkit has not killed a security tool (IDS or other) and make ps show-\n    ing a fake process instead.\n    This technique is only available with version unhide-linux.\n \n    The sys technique consists of comparing information gathered from  /bin/ps\n    with information gathered from system calls.\n \n    Elementary tests :\n \n    The checkbrute technique consists of bruteforcing the all process IDs.\n    This technique is only available with version unhide-linux.\n \n    The  checkchdir  technique consists of comparing information gathered from\n    /bin/ps with information gathered by making chdir() in the procfs.\n    With the -m option, it also verify that the thread appears in its  \"leader\n    process\" threads list.\n    This technique is only available with version unhide-linux.\n \n    The  checkgetaffinity technique consists of comparing information gathered\n    from /bin/ps with the result of call  to  the  sched_getaffinity()  system\n    function.\n    This technique is only available with version unhide-linux.\n \n    The  checkgetparam  technique  consists  of comparing information gathered\n    from /bin/ps with the result of call to the sched_getparam() system  func-\n    tion.\n    This technique is only available with version unhide-linux.\n \n    The checkgetpgid technique consists of comparing information gathered from\n    /bin/ps with the result of call to the getpgid() system function.\n    This technique is only available with version unhide-linux.\n \n    The checkgetprio technique consists of comparing information gathered from\n    /bin/ps with the result of call to the getpriority() system function.\n    This technique is only available with version unhide-linux.\n \n    The  checkRRgetinterval  technique consists of comparing information gath-\n    ered from /bin/ps with the result of call to  the  sched_rr_get_interval()\n    system function.\n    This technique is only available with version unhide-linux.\n \n    The  checkgetsched  technique  consists  of comparing information gathered\n    from /bin/ps with the result of call to  the  sched_getscheduler()  system\n    function.\n    This technique is only available with version unhide-linux.\n \n    The  checkgetsid technique consists of comparing information gathered from\n    /bin/ps with the result of call to the getsid() system function.\n    This technique is only available with version unhide-linux.\n \n    The checkkill technique consists of comparing  information  gathered  from\n    /bin/ps with the result of call to the kill() system function.\n    Note : no process is really killed by this test.\n    This technique is only available with version unhide-linux.\n \n    The  checknoprocps  technique consists of comparing the result of the call\n    to each of the system functions. No comparison is done  against  /proc  or\n    the output of ps.\n    This technique is only available with version unhide-linux.\n \n    The checkopendir technique consists of comparing information gathered from\n    /bin/ps with information gathered by making opendir() in the procfs.\n    This technique is only available with version unhide-linux.\n \n    The  checkproc  technique  consists  of comparing /proc with the output of\n    /bin/ps.\n    This technique is only available with version unhide-linux.\n \n    The checkquick technique combines the proc, procfs and sys techniques in a\n    quick way. It's about 20 times faster but may give more false positives.\n    This technique is only available with version unhide-linux.\n \n    The checkreaddir technique consists of comparing information gathered from\n    /bin/ps with  information  gathered  by  making  readdir()  in  /proc  and\n    /proc/pid/task.\n    This technique is only available with version unhide-linux.\n \n    The  checkreverse technique consists of verifying that all threads seen by\n    ps are also seen in procfs and by system calls. It is intended  to  verify\n    that  a  rootkit has not killed a security tool (IDS or other) and make ps\n    showing a fake process instead.\n    This technique is only available with version unhide-linux.\n \n    The checksysinfo technique consists of comparing  the  number  of  process\n    seen by /bin/ps with information obtained from sysinfo() system call.\n    This technique is only available with version unhide-linux.\n \n    The  checksysinfo2 technique is an alternate version of checksysinfo test.\n    It might (or not) work better on kernel patched for RT, preempt or latency\n    and with kernel that don't use the standard scheduler.\n    It's also invoked by standard tests when using the -r option\n    This technique is only available with version unhide-linux.\n \n  Exit status:\n    0      if OK,\n \n    1      if a hidden or fake thread is found.\n \n EXAMPLES\n    Quicker test:\n           unhide quick\n \n    Quick test:\n           unhide quick reverse\n \n    Standard test:\n           unhide sys proc\n \n    Deeper test:\n           unhide -m -d sys procall brute reverse\n \n BUGS\n    Report unhide bugs on the bug tracker on  GitHub  (https://github.com/YJe-\n    sus/Unhide/issues)\n    With  recent versions of Linux kernel (> 2.6.33), the sysinfo test may re-\n    port false positives.  It may be due to optimization in the scheduler, the\n    use of cgroup or even the use of systemd.  The use of the PREEMPT-RT patch\n    amplifies the occurrence of the problem.  This is currently under investi-\n    gation.\n \n SEE ALSO\n    unhide-tcp (8).\n \n AUTHOR\n    This manual page was written by Francois Marier (francois@debian.org)  and\n    Patrick Gouin (patrickg.github@free.fr).\n    Permission  is granted to copy, distribute and/or modify this document un-\n    der the terms of the GNU General Public License, Version 3  or  any  later\n    version published by the Free Software Foundation.\n \n LICENSE\n    License   GPLv3+:   GNU   GPL   version  3  or  later  <http://gnu.org/li-\n    censes/gpl.html>.\n    This is free software: you are free to change and redistribute it.   There\n    is NO WARRANTY, to the extent permitted by law.\n \n Administration commands             May 2024                          UNHIDE(8)",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rootkit"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Unhide_rb 20240509\nCopyright © 2013-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide_rb is for systems using Linux >= 2.6 \n\nWARNING : \nTL;DR : This tool is a P.O.F. (proof of fake).\n        It's not maintained any more.\n\n        DON'T USE IT for serious work.\n\n Back in time, the Dev of unhide.rb pretends that his tool, written in ruby\n do the same checks that unhide-linux, which is written in C, but is 10 times faster.\n This was evidently false:\n - unhide.rb makes less tests,\n - unhide.rb tests are less accurate,\n - unhide.rb  only outputs minimal information about hidden processes,\n - unhide.rb finds lot of false positives when processes number is high,\n - unhide.rb finds lot of false positives when there are short live processes,\n - unhide.rb doesn't log results of tests,\n - and so on.\n In order to verify assertion about speed, I backported unhide.rb to C language,\n in the more straight/dummy way:\n No optimisation, translation from line to line, exactly the same tests and treatments.\n The result is native unhide_rb.\n It is ONE THOUSAND times faster that the original ruby unhide.rb\n\n SO, DON'T RELY NEITHER ON UNHIDE.RB NOR ON UNHIDE_RB, THEY ARE JUST TOYS ! \n For a quick but quite accurate test, use the command 'unhide-linux quick reverse'\n\nScanning for hidden processes...",
+        "-h": "Unhide_rb 20240509\nCopyright © 2013-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide_rb is for systems using Linux >= 2.6 \n\nWARNING : \nTL;DR : This tool is a P.O.F. (proof of fake).\n        It's not maintained any more.\n\n        DON'T USE IT for serious work.\n\n Back in time, the Dev of unhide.rb pretends that his tool, written in ruby\n do the same checks that unhide-linux, which is written in C, but is 10 times faster.\n This was evidently false:\n - unhide.rb makes less tests,\n - unhide.rb tests are less accurate,\n - unhide.rb  only outputs minimal information about hidden processes,\n - unhide.rb finds lot of false positives when processes number is high,\n - unhide.rb finds lot of false positives when there are short live processes,\n - unhide.rb doesn't log results of tests,\n - and so on.\n In order to verify assertion about speed, I backported unhide.rb to C language,\n in the more straight/dummy way:\n No optimisation, translation from line to line, exactly the same tests and treatments.\n The result is native unhide_rb.\n It is ONE THOUSAND times faster that the original ruby unhide.rb\n\n SO, DON'T RELY NEITHER ON UNHIDE.RB NOR ON UNHIDE_RB, THEY ARE JUST TOYS ! \n For a quick but quite accurate test, use the command 'unhide-linux quick reverse'\n\nScanning for hidden processes...",
+        "help": "Unhide_rb 20240509\nCopyright © 2013-2024 Yago Jesus & Patrick Gouin\nLicense GPLv3+ : GNU GPL version 3 or later\nhttp://www.unhide-forensics.info\n\nNOTE : This version of unhide_rb is for systems using Linux >= 2.6 \n\nWARNING : \nTL;DR : This tool is a P.O.F. (proof of fake).\n        It's not maintained any more.\n\n        DON'T USE IT for serious work.\n\n Back in time, the Dev of unhide.rb pretends that his tool, written in ruby\n do the same checks that unhide-linux, which is written in C, but is 10 times faster.\n This was evidently false:\n - unhide.rb makes less tests,\n - unhide.rb tests are less accurate,\n - unhide.rb  only outputs minimal information about hidden processes,\n - unhide.rb finds lot of false positives when processes number is high,\n - unhide.rb finds lot of false positives when there are short live processes,\n - unhide.rb doesn't log results of tests,\n - and so on.\n In order to verify assertion about speed, I backported unhide.rb to C language,\n in the more straight/dummy way:\n No optimisation, translation from line to line, exactly the same tests and treatments.\n The result is native unhide_rb.\n It is ONE THOUSAND times faster that the original ruby unhide.rb\n\n SO, DON'T RELY NEITHER ON UNHIDE.RB NOR ON UNHIDE_RB, THEY ARE JUST TOYS ! \n For a quick but quite accurate test, use the command 'unhide-linux quick reverse'\n\nScanning for hidden processes...",
+        "man": "UNHIDE(8)                   System Manager's Manual                   UNHIDE(8)\n\nNAME\n     unhide -- forensic tool to find hidden processes\n\nSYNOPSIS\n     unhide [OPTIONS] TEST_LIST\n     unhide-posix proc | sys\n\nDESCRIPTION\n     unhide is a forensic tool to find processes hidden by rootkits, Linux ker-\n     nel modules or by other techniques.  It detects hidden processes using six\n     techniques.\n\nOPTIONS\n     Options are only available for unhide-linux not for unhide-posix.\n\n     -d     Do a double check in brute test to avoid false positive.\n\n     -f     Write a log file (unhide-linux.log) in the current directory.\n\n     -h     Display help\n\n     -m     Do  more checks. As of 2012-03-17 version, this option has only ef-\n            fect for the procfs, procall, checkopendir and checkchdir tests.\n            Implies -v\n\n     -r     Use alternate version of sysinfo check in standard tests\n\n     -V     Show version and exit\n\n     -v     Be verbose, display warning  message  (default  :  don't  display).\n            This option may be repeated more than once.\n\n     -u     Do  unbuffered  write  to stdout.  This option could be useful when\n            unhide is spawned by another process (e.g. it's used by unhideGui).\n\n     -H     Provide a slightly human frienlier output.  This option adds ending\n            messages to tests and indicates when no hidden process is found.\n\nTEST_LIST\n     The checks to do consist of one or more of the following tests.\n     The standard tests are the aggregation of one or more elementary test(s).\n\n     Standard tests :\n\n     The brute technique consists of bruteforcing the all process IDs.\n     This technique is only available with version unhide-linux.\n\n     The proc technique consists of comparing /proc with the output of /bin/ps.\n\n     The procall technique combinates proc and procfs tests.\n     This technique is only available with version unhide-linux.\n\n     The procfs technique  consists  of  comparing  information  gathered  from\n     /bin/ps with information gathered by walking in the procfs.\n     With -m option, this test makes more checks, see checkchdir test.\n     This technique is only available with version unhide-linux.\n\n     The  quick  technique  combines  the  proc, procfs and sys techniques in a\n     quick way. It's about 20 times faster but may give more false positives.\n     This technique is only available with version unhide-linux.\n\n     The reverse technique consists of verifying that all threads  seen  by  ps\n     are also seen in procfs and by system calls. It is intended to verify that\n     a  rootkit has not killed a security tool (IDS or other) and make ps show-\n     ing a fake process instead.\n     This technique is only available with version unhide-linux.\n\n     The sys technique consists of comparing information gathered from  /bin/ps\n     with information gathered from system calls.\n\n     Elementary tests :\n\n     The checkbrute technique consists of bruteforcing the all process IDs.\n     This technique is only available with version unhide-linux.\n\n     The  checkchdir  technique consists of comparing information gathered from\n     /bin/ps with information gathered by making chdir() in the procfs.\n     With the -m option, it also verify that the thread appears in its  \"leader\n     process\" threads list.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetaffinity technique consists of comparing information gathered\n     from /bin/ps with the result of call  to  the  sched_getaffinity()  system\n     function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetparam  technique  consists  of comparing information gathered\n     from /bin/ps with the result of call to the sched_getparam() system  func-\n     tion.\n     This technique is only available with version unhide-linux.\n\n     The checkgetpgid technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getpgid() system function.\n     This technique is only available with version unhide-linux.\n\n     The checkgetprio technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getpriority() system function.\n     This technique is only available with version unhide-linux.\n\n     The  checkRRgetinterval  technique consists of comparing information gath-\n     ered from /bin/ps with the result of call to  the  sched_rr_get_interval()\n     system function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetsched  technique  consists  of comparing information gathered\n     from /bin/ps with the result of call to  the  sched_getscheduler()  system\n     function.\n     This technique is only available with version unhide-linux.\n\n     The  checkgetsid technique consists of comparing information gathered from\n     /bin/ps with the result of call to the getsid() system function.\n     This technique is only available with version unhide-linux.\n\n     The checkkill technique consists of comparing  information  gathered  from\n     /bin/ps with the result of call to the kill() system function.\n     Note : no process is really killed by this test.\n     This technique is only available with version unhide-linux.\n\n     The  checknoprocps  technique consists of comparing the result of the call\n     to each of the system functions. No comparison is done  against  /proc  or\n     the output of ps.\n     This technique is only available with version unhide-linux.\n\n     The checkopendir technique consists of comparing information gathered from\n     /bin/ps with information gathered by making opendir() in the procfs.\n     This technique is only available with version unhide-linux.\n\n     The  checkproc  technique  consists  of comparing /proc with the output of\n     /bin/ps.\n     This technique is only available with version unhide-linux.\n\n     The checkquick technique combines the proc, procfs and sys techniques in a\n     quick way. It's about 20 times faster but may give more false positives.\n     This technique is only available with version unhide-linux.\n\n     The checkreaddir technique consists of comparing information gathered from\n     /bin/ps with  information  gathered  by  making  readdir()  in  /proc  and\n     /proc/pid/task.\n     This technique is only available with version unhide-linux.\n\n     The  checkreverse technique consists of verifying that all threads seen by\n     ps are also seen in procfs and by system calls. It is intended  to  verify\n     that  a  rootkit has not killed a security tool (IDS or other) and make ps\n     showing a fake process instead.\n     This technique is only available with version unhide-linux.\n\n     The checksysinfo technique consists of comparing  the  number  of  process\n     seen by /bin/ps with information obtained from sysinfo() system call.\n     This technique is only available with version unhide-linux.\n\n     The  checksysinfo2 technique is an alternate version of checksysinfo test.\n     It might (or not) work better on kernel patched for RT, preempt or latency\n     and with kernel that don't use the standard scheduler.\n     It's also invoked by standard tests when using the -r option\n     This technique is only available with version unhide-linux.\n\n   Exit status:\n     0      if OK,\n\n     1      if a hidden or fake thread is found.\n\nEXAMPLES\n     Quicker test:\n            unhide quick\n\n     Quick test:\n            unhide quick reverse\n\n     Standard test:\n            unhide sys proc\n\n     Deeper test:\n            unhide -m -d sys procall brute reverse\n\nBUGS\n     Report unhide bugs on the bug tracker on  GitHub  (https://github.com/YJe-\n     sus/Unhide/issues)\n     With  recent versions of Linux kernel (> 2.6.33), the sysinfo test may re-\n     port false positives.  It may be due to optimization in the scheduler, the\n     use of cgroup or even the use of systemd.  The use of the PREEMPT-RT patch\n     amplifies the occurrence of the problem.  This is currently under investi-\n     gation.\n\nSEE ALSO\n     unhide-tcp (8).\n\nAUTHOR\n     This manual page was written by Francois Marier (francois@debian.org)  and\n     Patrick Gouin (patrickg.github@free.fr).\n     Permission  is granted to copy, distribute and/or modify this document un-\n     der the terms of the GNU General Public License, Version 3  or  any  later\n     version published by the Free Software Foundation.\n\nLICENSE\n     License   GPLv3+:   GNU   GPL   version  3  or  later  <http://gnu.org/li-\n     censes/gpl.html>.\n     This is free software: you are free to change and redistribute it.   There\n     is NO WARRANTY, to the extent permitted by law.\n\nAdministration commands             May 2024                          UNHIDE(8)",
+        "apropos": "unhide_rb (8)        - forensic tool to find hidden processes"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/unhide_rb",
+        "size_bytes": 22864,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=39de822a13acf3c097d4b08fddc2fb9561c4180b, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "unhide-gui",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/unhide/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/unhide/index.md",
+    "retrieved_at": "2026-07-14T13:08:51+00:00",
+    "sha256": "61cfd9e835b07571ebab315d4bbbfcf3433fa4e2cc14966af1f0ff034b102eb7"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "172",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "20240510-2",
+    "depends": "libc6 (>= 2.38), iproute2, lsof, psmisc, procps",
+    "suggests": "rkhunter",
+    "description": "forensic tool to find hidden processes and ports\nUnhide is a forensic tool to find processes and TCP/UDP ports hidden by\nrootkits, Linux kernel modules or by other techniques. It includes two\nutilities: unhide and unhide-tcp.\n.\nunhide detects hidden processes using the following six techniques:\n* Compare /proc vs /bin/ps output\n* Compare info gathered from /bin/ps with info gathered by walking thru the\nprocfs.\n* Compare info gathered from /bin/ps with info gathered from syscalls\n(syscall scanning).\n* Full PIDs space occupation (PIDs bruteforcing)\n* Reverse search, verify that all thread seen by ps are also seen by the\nkernel (/bin/ps output vs /proc, procfs walking and syscall)\n* Quick compare /proc, procfs walking and syscall vs /bin/ps output\n.\nunhide-tcp identifies TCP/UDP ports that are listening but are not listed in\n/bin/netstat through brute forcing of all TCP/UDP ports available.\n.\nThis package can be used by rkhunter in its daily scans.\n.\nThis package is useful for network security checks, in addition to forensics\ninvestigations.",
+    "homepage": "https://www.unhide-forensics.info"
+  },
+  "tags": [
+    "offensive",
+    "unhide",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/unhide && python3 unhide.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/unhide && python3 unhide.py --help",
+    "cd toolboxes/unhide && python3 unhide.py --help",
+    "cd toolboxes/unhide && python3 unhide.py --help",
+    "cd toolboxes/unhide && python3 unhide.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST unhide --output $KFIOSA_OUTPUT_DIR/unhide.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST unhide --output $KFIOSA_OUTPUT_DIR/unhide.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

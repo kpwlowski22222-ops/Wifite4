@@ -1,0 +1,163 @@
+{
+  "id": "kali:netsed",
+  "kind": "kali_source_package",
+  "name": "netsed",
+  "title": "netsed",
+  "summary": "### netsed",
+  "version": "1.4-1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://silicone.homelinux.org/projects/netsed/",
+  "repository": "https://salsa.debian.org/debian/netsed",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large"
+  ],
+  "install": {
+    "apt": "sudo apt install netsed"
+  },
+  "packages": [
+    {
+      "name": "netsed"
+    }
+  ],
+  "commands": [
+    {
+      "name": "netsed",
+      "description": "A network stream editor.",
+      "usage": "netsed [option] proto lport rhost rport rule1 [ rule2 ... ]",
+      "arguments": [
+        {
+          "flags": [
+            "--ipv6",
+            "-6"
+          ],
+          "metavar": "or to force address resolution in IPv6",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "           --ipv6 or -6 to force address resolution in IPv6,"
+        },
+        {
+          "flags": [
+            "--ipany"
+          ],
+          "metavar": "to resolve the address in either IPv4 or IPv6.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "           --ipany to resolve the address in either IPv4 or IPv6."
+        },
+        {
+          "flags": [
+            "--help",
+            "-h"
+          ],
+          "metavar": "- or to display this usage information.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "         - --help or -h to display this usage information."
+        }
+      ],
+      "raw_help": "root@kali:~# netsed -h\n Usage: netsed [option] proto lport rhost rport rule1 [ rule2 ... ]\n \n options - can be --ipv4 or -4 to force address resolution in IPv4,\n           --ipv6 or -6 to force address resolution in IPv6,\n           --ipany to resolve the address in either IPv4 or IPv6.\n         - --help or -h to display this usage information.\n proto   - protocol specification (tcp or udp)\n lport   - local port to listen on (see README for transparent\n           traffic intercepting on some systems)\n rhost   - where connection should be forwarded (0 = use destination\n           address of incoming connection, see README)\n rport   - destination port (0 = dst port of incoming connection)\n ruleN   - replacement rules (see below)\n \n General syntax of replacement rules: s/pat1/pat2[/expire]\n \n This will replace all occurrences of pat1 with pat2 in any matching packet.\n An additional parameter, 'expire' of the form [CHAR][NUM], can be used to\n expire a rule after NUM successful substitutions during a given connection.\n The character CHAR is one of \"iIoO\", with the effect of restricting the rule\n to apply to incoming (\"iI\") or to outgoing (\"oO\") packets only, as seen from\n the client's perspective. Both of CHAR and NUM are optional.\n \n Eight-bit characters, including NULL and '/', can be applied using HTTP-like\n hex escape sequences (e.g. CRLF as %0a%0d).\n A match on '%' can be achieved by specifying '%%'.\n \n Examples:\n 's/andrew/mike/1'     - replace 'andrew' with 'mike' (only first time)\n 's/andrew/mike'       - replace all occurrences of 'andrew' with 'mike'\n 's/andrew/mike%00%00' - replace 'andrew' with 'mike\\x00\\x00'\n                         (manually padding to keep original size)\n 's/%%/%2f/20'         - replace the 20 first occurrence of '%' with '/'\n 's/andrew/mike/o'     - the server will always see 'mike', never 'andrew'\n \n 's/Rilke/Proust/o s/Proust/Rilke/i'\n                       - let Rilke travel incognito as Proust\n \n Rules are not active across packet boundaries, and they are evaluated\n from first to last, not yet expired rule, as stated on the command line.",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: netsed [option] proto lport rhost rport rule1 [ rule2 ... ]\n\n  options - can be --ipv4 or -4 to force address resolution in IPv4,\n            --ipv6 or -6 to force address resolution in IPv6,\n            --ipany to resolve the address in either IPv4 or IPv6.\n          - --help or -h to display this usage information.\n  proto   - protocol specification (tcp or udp)\n  lport   - local port to listen on (see README for transparent\n            traffic intercepting on some systems)\n  rhost   - where connection should be forwarded (0 = use destination\n            address of incoming connection, see README)\n  rport   - destination port (0 = dst port of incoming connection)\n  ruleN   - replacement rules (see below)\n\nGeneral syntax of replacement rules: s/pat1/pat2[/expire]\n\nThis will replace all occurrences of pat1 with pat2 in any matching packet.\nAn additional parameter, 'expire' of the form [CHAR][NUM], can be used to\nexpire a rule after NUM successful substitutions during a given connection.\nThe character CHAR is one of \"iIoO\", with the effect of restricting the rule\nto apply to incoming (\"iI\") or to outgoing (\"oO\") packets only, as seen from\nthe client's perspective. Both of CHAR and NUM are optional.\n\nEight-bit characters, including NULL and '/', can be applied using HTTP-like\nhex escape sequences (e.g. CRLF as %0a%0d).\nA match on '%' can be achieved by specifying '%%'.\n\nExamples:\n  's/andrew/mike/1'     - replace 'andrew' with 'mike' (only first time)\n  's/andrew/mike'       - replace all occurrences of 'andrew' with 'mike'\n  's/andrew/mike%00%00' - replace 'andrew' with 'mike\\x00\\x00'\n                          (manually padding to keep original size)\n  's/%%/%2f/20'         - replace the 20 first occurrence of '%' with '/'\n  's/andrew/mike/o'     - the server will always see 'mike', never 'andrew'\n\n  's/Rilke/Proust/o s/Proust/Rilke/i'\n                        - let Rilke travel incognito as Proust\n\nRules are not active across packet boundaries, and they are evaluated\nfrom first to last, not yet expired rule, as stated on the command line.",
+        "-h": "Usage: netsed [option] proto lport rhost rport rule1 [ rule2 ... ]\n\n  options - can be --ipv4 or -4 to force address resolution in IPv4,\n            --ipv6 or -6 to force address resolution in IPv6,\n            --ipany to resolve the address in either IPv4 or IPv6.\n          - --help or -h to display this usage information.\n  proto   - protocol specification (tcp or udp)\n  lport   - local port to listen on (see README for transparent\n            traffic intercepting on some systems)\n  rhost   - where connection should be forwarded (0 = use destination\n            address of incoming connection, see README)\n  rport   - destination port (0 = dst port of incoming connection)\n  ruleN   - replacement rules (see below)\n\nGeneral syntax of replacement rules: s/pat1/pat2[/expire]\n\nThis will replace all occurrences of pat1 with pat2 in any matching packet.\nAn additional parameter, 'expire' of the form [CHAR][NUM], can be used to\nexpire a rule after NUM successful substitutions during a given connection.\nThe character CHAR is one of \"iIoO\", with the effect of restricting the rule\nto apply to incoming (\"iI\") or to outgoing (\"oO\") packets only, as seen from\nthe client's perspective. Both of CHAR and NUM are optional.\n\nEight-bit characters, including NULL and '/', can be applied using HTTP-like\nhex escape sequences (e.g. CRLF as %0a%0d).\nA match on '%' can be achieved by specifying '%%'.\n\nExamples:\n  's/andrew/mike/1'     - replace 'andrew' with 'mike' (only first time)\n  's/andrew/mike'       - replace all occurrences of 'andrew' with 'mike'\n  's/andrew/mike%00%00' - replace 'andrew' with 'mike\\x00\\x00'\n                          (manually padding to keep original size)\n  's/%%/%2f/20'         - replace the 20 first occurrence of '%' with '/'\n  's/andrew/mike/o'     - the server will always see 'mike', never 'andrew'\n\n  's/Rilke/Proust/o s/Proust/Rilke/i'\n                        - let Rilke travel incognito as Proust\n\nRules are not active across packet boundaries, and they are evaluated\nfrom first to last, not yet expired rule, as stated on the command line.",
+        "help": "Error: not enough parameters\n\nUsage: netsed [option] proto lport rhost rport rule1 [ rule2 ... ]\n\n  use netsed -h for more information on usage.",
+        "man": "NETSED(1)                            NetSED                           NETSED(1)\n\nNAME\n     netsed - a network stream editor.\n\nSYNOPSIS\n     netsed {proto} {lport} {rhost} {rport} {rule} [rule ...]\n\nDESCRIPTION\n     netsed  is  a small and handy utility to alter, in real time, the contents\n     of packets forwarded in a network stream, or  in  a  datagram  connection.\n     When  called  with  a set of replacement rules, these rules are tested for\n     applicability to each packet entering in either direction.\n\nARGUMENTS\n     proto\n         Determines the protocol for  the  desired  connection:  \"tcp\",  \"TCP\",\n         \"udp\", or \"UDP\".\n\n     lport\n         The  local listening port for the connection. A service name, or a nu-\n         merical port value, is acceptable.\n\n     rhost\n         The remote host with whom the connection is desired.  Resolvable  host\n         names and IPv4/IPv6 addresses are equally usable.\n\n         As  a  special  case,  assigning \"0\" to rhost will insert the kernel's\n         knowledge of the targeted host address, in a situation where a netfil-\n         ter rule is redirecting traffic. This happens when running a transpar-\n         ent proxy service.\n\n     rport\n         The remote port to connect to. A service name,  or  a  numerical  port\n         value, is acceptable.\n\n         Also  here  a  value  \"0\"  will be acceptable to arrange a transparent\n         proxy service, as the kernel's tracking will provide the intended  re-\n         mote port number.\n\n     rule\n         At  least  one  replacement  rule is mandatory. The general syntax for\n         this is:\n\n             s/pat1/pat2[/flag]\n\n         The effect is to replace the text that matches pat1 with the expansion\n         of pat2. The optional parameter flag is a composite containing  a  nu-\n         merical value limiting the maximal number of times the rule can be ap-\n         plied,  or a direction semaphore indicating that the rule applies only\n         to incoming (coded as 'I' or 'i') or outgoing ('O'  or  'o')  traffic.\n         One could say that the rule expires after num occurrences.\n\n         The rules are applied in succession to all passing packets, flowing in\n         either  direction.  As  soon as a rule has been expired, it is removed\n         from the collection of active rules for the  current  connection.  Ob-\n         serve that any counter is started as the connection is initiated, run-\n         ning as long as the connection is alive.\n\n         This  holds directly for TCP connections, whereas for UDP a connection\n         is considered to consist of incoming data on fixed address  and  fixed\n         port  together  with  any response from a remote server. When no data-\n         grams have been transmitted for a period of 30 seconds, the  UPD  con-\n         nection is seen as closed.\n\n         A  single  rule is limited to act on individual packets; a pattern can\n         not match across packet boundaries.\n\n         Using HTTP-like escape sequences for hexadecimal values, all eight-bit\n         characters are viable in the patterns.  Thus  the  standard  character\n         pair  CRNL  would  code as \"%0a%0d\". In a pattern, the percentage sign\n         itself must be escaped by duplication. Thus a string  \"%%\"  is  inter-\n         preted in a pattern as a literal percentage sign.\n\nEXAMPLES\n     A handful replacement rules are handy as examples.\n\n     s/andrew/mike\n         Replace  every occurrence of the string \"andrew\" with \"mike\", in every\n         passing packet.\n\n     s/andrew/mike/1\n         Replace only the first occurrence of the string \"andrew\" for \"mike\" in\n         each packet. Any repetition is unaltered, unless a further rule speci-\n         fies some replacement.\n\n     s/andrew/mike%00%00\n         Replace in each packet every occurrence of the  string  \"andrew\"  with\n         \"mike\\x00\\x00\"  . The padding with two null bytes ensures an unaltered\n         packet length, which might be essential at times.\n\n     s/%%/%2f/20\n         Replace the first twenty occurrences of the percentage  character  '%'\n         with slashes '/'.\n\n     s/Rilke/Proust/o, s/Proust/Rilke/i\n         Let  Rilke  travel  incognito as Proust, i.e., on outgoing packets re-\n         place Rilke's real sirname by Proust, then restore it again in any in-\n         coming packet.\n\nAUTHOR\n     This text was initially compiled by  Mats  Erik  Andersson  as  a  Docbook\n     source  from the usage printout. Permission is granted to copy, distribute\n     and/or modify this document under the terms of the GNU General Public  Li-\n     cense, version 2, or of a later version.\n\nCOPYRIGHT\n     Copyright (C) 2010-2014 Mats Erik Andersson\n\nNetSED 1.2                       May 23rd, 2014                       NETSED(1)",
+        "apropos": "netsed (1)           - a network stream editor."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/netsed",
+        "size_bytes": 31080,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ed73c0616a99e4e961ed778655c5dd64b45572d4, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/netsed/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/netsed/index.md",
+    "retrieved_at": "2026-07-14T13:06:57+00:00",
+    "sha256": "6b40fb15680b5331552aad9d922d5cee1de30d69cdc63b98999f2edc93fa104e"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "53",
+    "maintainer": "Mats Erik Andersson <mats.andersson@gisladisker.se>",
+    "architecture": "amd64",
+    "version": "1.4-1",
+    "depends": "libc6 (>= 2.34)",
+    "description": "network packet-altering stream editor\nNetSED is a small and handy utility designed to alter, in real time,\nthe contents of packets forwarded through your network. It is really\nuseful for network packet alteration, forging, or manipulation.\nNetSED supports:\n.\n* black-box protocol auditing - whenever there are two or more\nproprietary boxes communicating using some undocumented protocol.\nBy enforcing changes in ongoing transmissions, you will be able\nto test if the examined application can be claimed secure;\n* fuzz generating experiments, integrity tests - whenever you do\nstability tests of an application to see how it cares for data\nintegrity;\n* other common use-cases: deceptive transfers, content filtering,\nprotocol conversion - whatever best fits your task at hand.\n.\nIt ideally complements a tool suite based on ngrep, netcat, and tcpdump.",
+    "homepage": "http://silicone.homelinux.org/projects/netsed/"
+  },
+  "tags": [
+    "offensive",
+    "netsed",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/netsed && python3 netsed.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/netsed && python3 netsed.py --help",
+    "cd toolboxes/netsed && python3 netsed.py --help",
+    "cd toolboxes/netsed && python3 netsed.py --help",
+    "cd toolboxes/netsed && python3 netsed.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST netsed --output $KFIOSA_OUTPUT_DIR/netsed.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST netsed --output $KFIOSA_OUTPUT_DIR/netsed.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

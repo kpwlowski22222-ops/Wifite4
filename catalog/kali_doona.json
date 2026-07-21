@@ -1,0 +1,245 @@
+{
+  "id": "kali:doona",
+  "kind": "kali_source_package",
+  "name": "doona",
+  "title": "doona",
+  "summary": "### doona",
+  "version": "1.0+git20190108-2",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/wireghoul/doona",
+  "repository": "https://salsa.debian.org/pkg-security-team/doona",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large"
+  ],
+  "install": {
+    "apt": "sudo apt install doona"
+  },
+  "packages": [
+    {
+      "name": "doona"
+    }
+  ],
+  "commands": [
+    {
+      "name": "doona",
+      "description": "Network fuzzer forked from bed",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "module",
+          "takes_value": true,
+          "description": "= DICT/FINGER/FTP/HTTP/HTTP_MORE/HTTP_SP/HTTP_WEBDAV/IMAP/IRC/LPD/NNTP/PJL/POP/PROXY/RTSP/SMTP/SOCKS4/SOCKS5/TFTP/WHOIS",
+          "default": null,
+          "choices": null,
+          "raw": "-m <module>   = DICT/FINGER/FTP/HTTP/HTTP_MORE/HTTP_SP/HTTP_WEBDAV/IMAP/IRC/LPD/NNTP/PJL/POP/PROXY/RTSP/SMTP/SOCKS4/SOCKS5/TFTP/WHOIS"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "int",
+          "takes_value": true,
+          "description": "= Execute a health check after every <int> fuzz cases",
+          "default": null,
+          "choices": null,
+          "raw": "-c <int>      = Execute a health check after every <int> fuzz cases"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "target",
+          "takes_value": true,
+          "description": "= Host to check (default: localhost)",
+          "default": "localhost",
+          "choices": null,
+          "raw": "-t <target>   = Host to check (default: localhost)"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "= Port to connect to (default: module specific standard port)",
+          "default": "module specific standard port",
+          "choices": null,
+          "raw": "-p <port>     = Port to connect to (default: module specific standard port)"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "timeout",
+          "takes_value": true,
+          "description": "= seconds to wait after each test (default: 2 seconds)",
+          "default": "2 seconds",
+          "choices": null,
+          "raw": "-o <timeout>  = seconds to wait after each test (default: 2 seconds)"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "index",
+          "takes_value": true,
+          "description": "= Resumes fuzzing at test case index",
+          "default": null,
+          "choices": null,
+          "raw": "-r <index>    = Resumes fuzzing at test case index"
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "= Keep trying until server passes a health check",
+          "default": null,
+          "choices": null,
+          "raw": "-k            = Keep trying until server passes a health check"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "= Dump test case to stdout (use in combination with -r)",
+          "default": null,
+          "choices": null,
+          "raw": "-d            = Dump test case to stdout (use in combination with -r)"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": "num",
+          "takes_value": true,
+          "description": "= Exit after executing <num> number of fuzz cases",
+          "default": null,
+          "choices": null,
+          "raw": "-M <num>      = Exit after executing <num> number of fuzz cases"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "= Help (this text)",
+          "default": null,
+          "choices": null,
+          "raw": "-h            = Help (this text)"
+        }
+      ],
+      "raw_help": "root@kali:~# doona -h\n \nDoona 1.0 by Wireghoul (www.justanotherhacker.com)\n \n Usage:\n \n./doona.pl -m [module] <options>\n \n-m <module>   = DICT/FINGER/FTP/HTTP/HTTP_MORE/HTTP_SP/HTTP_WEBDAV/IMAP/IRC/LPD/NNTP/PJL/POP/PROXY/RTSP/SMTP/SOCKS4/SOCKS5/TFTP/WHOIS\n-c <int>      = Execute a health check after every <int> fuzz cases\n-t <target>   = Host to check (default: localhost)\n-p <port>     = Port to connect to (default: module specific standard port)\n-o <timeout>  = seconds to wait after each test (default: 2 seconds)\n-r <index>    = Resumes fuzzing at test case index\n-k            = Keep trying until server passes a health check\n-d            = Dump test case to stdout (use in combination with -r)\n-M <num>      = Exit after executing <num> number of fuzz cases\n-h            = Help (this text)\nuse \"./doona.pl -m [module] -h\" for module specific option.\n \nOnly -m is a mandatory switch.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "doona -m HTTP -t 192.168.1.15 -M 5\n\n Doona 1.0 by Wireghoul (www.justanotherhacker.com)\n\n + Buffer overflow testing\n    1/37   [XAXAX] ......\nMax requests (5) completed, index: 5",
+          "template": null,
+          "original_sha256": "03a262cdbe7ab88e876513e40cb0d48c13fef6daff998f9d6169ea798f69f235"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "fuzz"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Doona 1.0 by Wireghoul (www.justanotherhacker.com)\n\nUsage:\n\n ./doona.pl -m [module] <options>\n\n -m <module>   = DICT/FINGER/FTP/HTTP/HTTP_MORE/HTTP_SP/HTTP_WEBDAV/IMAP/IRC/LPD/NNTP/PJL/POP/PROXY/RTSP/SMTP/SOCKS4/SOCKS5/TFTP/WHOIS\n -c <int>      = Execute a health check after every <int> fuzz cases\n -t <target>   = Host to check (default: localhost)\n -p <port>     = Port to connect to (default: module specific standard port)\n -o <timeout>  = seconds to wait after each test (default: 2 seconds)\n -r <index>    = Resumes fuzzing at test case index\n -k            = Keep trying until server passes a health check\n -d            = Dump test case to stdout (use in combination with -r)\n -M <num>      = Exit after executing <num> number of fuzz cases\n -h            = Help (this text)\n use \"./doona.pl -m [module] -h\" for module specific option.\n\n Only -m is a mandatory switch.",
+        "-h": "Doona 1.0 by Wireghoul (www.justanotherhacker.com)\n\nUsage:\n\n ./doona.pl -m [module] <options>\n\n -m <module>   = DICT/FINGER/FTP/HTTP/HTTP_MORE/HTTP_SP/HTTP_WEBDAV/IMAP/IRC/LPD/NNTP/PJL/POP/PROXY/RTSP/SMTP/SOCKS4/SOCKS5/TFTP/WHOIS\n -c <int>      = Execute a health check after every <int> fuzz cases\n -t <target>   = Host to check (default: localhost)\n -p <port>     = Port to connect to (default: module specific standard port)\n -o <timeout>  = seconds to wait after each test (default: 2 seconds)\n -r <index>    = Resumes fuzzing at test case index\n -k            = Keep trying until server passes a health check\n -d            = Dump test case to stdout (use in combination with -r)\n -M <num>      = Exit after executing <num> number of fuzz cases\n -h            = Help (this text)\n use \"./doona.pl -m [module] -h\" for module specific option.\n\n Only -m is a mandatory switch.",
+        "help": "Doona 1.0 by Wireghoul (www.justanotherhacker.com)\n\nUsage:\n\n ./doona.pl -m [module] <options>\n\n -m <module>   = DICT/FINGER/FTP/HTTP/HTTP_MORE/HTTP_SP/HTTP_WEBDAV/IMAP/IRC/LPD/NNTP/PJL/POP/PROXY/RTSP/SMTP/SOCKS4/SOCKS5/TFTP/WHOIS\n -c <int>      = Execute a health check after every <int> fuzz cases\n -t <target>   = Host to check (default: localhost)\n -p <port>     = Port to connect to (default: module specific standard port)\n -o <timeout>  = seconds to wait after each test (default: 2 seconds)\n -r <index>    = Resumes fuzzing at test case index\n -k            = Keep trying until server passes a health check\n -d            = Dump test case to stdout (use in combination with -r)\n -M <num>      = Exit after executing <num> number of fuzz cases\n -h            = Help (this text)\n use \"./doona.pl -m [module] -h\" for module specific option.\n\n Only -m is a mandatory switch.",
+        "man": "DOONA(1)                         User Commands                         DOONA(1)\n\nNAME\n     doona - Network fuzzer forked from bed\n\nSYNOPSIS\n     doona -m [module] <options>\n\nOPTIONS\n     -m <module>\n            Possible  values  for <module>: DICT, FINGER, FTP, HTTP, HTTP_MORE,\n            HTTP_SP, HTTP_WEBDAV, IMAP, IRC, LPD, NNTP, PJL, POP, PROXY,  RTSP,\n            SMTP, SOCKS4, SOCKS5, TFTP, WHOIS\n\n     -c <int>\n            Execute a health check after every <int> fuzz cases\n\n     -t <target>\n            Host to check (default: localhost)\n\n     -p <port>\n            Port to connect to (default: module specific standard port)\n\n     -o <timeout>\n            seconds to wait after each test (default: 2 seconds)\n\n     -r <index>\n            Resumes fuzzing at test case index\n\n     -k     Keep trying until server passes a health check\n\n     -d     Dump test case to stdout (use in combination with -r)\n\n     -M <num>\n            Exit after executing <num> number of fuzz cases\n\n     -h     Print help (this text).\n\n            Use \"doona -m [module] -h\" for module specific option.\n\n            Only -m is a mandatory switch.\n\ndoona                             January 2019                         DOONA(1)",
+        "apropos": "doona (1)            - Network fuzzer forked from bed"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/doona",
+        "size_bytes": 53,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/doona/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/doona/index.md",
+    "retrieved_at": "2026-07-14T13:05:27+00:00",
+    "sha256": "7912ae22038073d70164b6a4de7088cbf539015807b8af97b6c39cd8a074100c"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "128",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "all",
+    "version": "1.0+git20190108-2",
+    "depends": "perl:any",
+    "description": "Network fuzzer forked from bed\nDoona is a fork of the Bruteforce Exploit Detector Tool (BED).\nBED is a program which is designed to check daemons for\npotential buffer overflows, format string bugs etc.",
+    "homepage": "https://github.com/wireghoul/doona"
+  },
+  "tags": [
+    "offensive",
+    "doona",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/doona && python3 doona.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/doona && python3 doona.py --help",
+    "cd toolboxes/doona && python3 doona.py --help",
+    "cd toolboxes/doona && python3 doona.py --help",
+    "cd toolboxes/doona && python3 doona.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST doona --output $KFIOSA_OUTPUT_DIR/doona.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST doona --output $KFIOSA_OUTPUT_DIR/doona.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

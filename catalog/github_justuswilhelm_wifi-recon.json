@@ -1,0 +1,115 @@
+{
+  "id": "github:justuswilhelm/wifi-recon",
+  "kind": "external_repository",
+  "name": "wifi-recon",
+  "full_name": "justuswilhelm/wifi-recon",
+  "owner": "justuswilhelm",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/justuswilhelm/wifi-recon",
+  "summary": "Repository indexing entry for the ``wifi-recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/justuswilhelm__wifi-recon",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "`go install github.com/justuswilhelm/wifi-recon` then `wifi-recon -I <iface> -N <tag>` (e.g. `wifi-recon -I en0 -N home`); requires root/monitor-capable interface for tshark -I"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "`go install github.com/justuswilhelm/wifi-recon` then `wifi-recon -I <iface> -N <tag>` (e.g. `wifi-recon -I en0 -N home`); requires root/monitor-capable interface for tshark -I"
+      }
+    ]
+  },
+  "language": "Go",
+  "dependencies": [
+    "go (compiler/runtime)",
+    "tshark (wireshark CLI)",
+    "arp-scan",
+    "locateme (macOS-only binary, not on Kali)"
+  ],
+  "algorithms": [
+    "unfiltered 5-second monitor-mode pcap capture via `tshark -I -i <iface> -w - -a duration:5` (no display/capture filters — indiscriminate 802.11 frame dump)",
+    "local subnet host enumeration via `arp-scan -l` (IP/MAC/OUI table)",
+    "geolocation stamp via external `locateme -l` binary (macOS CoreLocation, not WiFi BSSID->Google API in-tree)",
+    "result aggregation: raw per-tool output files + a recon_result.json summary, filed under timestamped directory"
+  ],
+  "produces": [
+    "raw pcap file (<iface>_tshark.pcap) of 5s monitor-mode capture",
+    "arp-scan text output (IP/MAC/vendor of local-subnet hosts)",
+    "locateme geolocation text",
+    "recon_result.json summary aggregating all tool outputs/errors"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": false,
+  "novelty": "none — thin wrapper. It shells out to tshark (no in-code probe/PMKID/EAPOL/beacon parsing — just an unfiltered 5s pcap dump that airodump-ng already produces in a far more structured form), arp-scan -l (standard local host enum), and a macOS-only `locateme` binary. No custom recon algorithms; no WiFi-specific parsing, filtering, or analytics in the Go code itself. The only marginal differentiator is bundling a location stamp with the pcap, which is a weak wardrive analogue and depends on a binary absent from Kali.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "recon",
+    "justuswilhelm",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-recon --output $KFIOSA_OUTPUT_DIR/wifi-recon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-recon --output $KFIOSA_OUTPUT_DIR/wifi-recon.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "id": "kali:proxychains-ng",
+  "kind": "kali_source_package",
+  "name": "proxychains-ng",
+  "title": "proxychains-ng",
+  "summary": "### libproxychains4",
+  "version": "4.17-3.1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/rofl0r/proxychains-ng",
+  "repository": "https://salsa.debian.org/debian/proxychains-ng",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-post-exploitation",
+    "kali-tools-web"
+  ],
+  "install": {
+    "apt": "sudo apt install proxychains-ng"
+  },
+  "packages": [
+    {
+      "name": "libproxychains4"
+    },
+    {
+      "name": "proxychains4"
+    }
+  ],
+  "commands": [
+    {
+      "name": "proxychains4",
+      "description": "Redirect connections through proxy servers",
+      "usage": "proxychains4 -q -f config_file program_name [arguments]",
+      "arguments": [
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": "makes proxychains quiet - this overrides the config setting",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-q makes proxychains quiet - this overrides the config setting"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "allows one to manually specify a configfile to use",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-f allows one to manually specify a configfile to use"
+        }
+      ],
+      "raw_help": "root@kali:~# proxychains4 --help\n \n Usage:\tproxychains4 -q -f config_file program_name [arguments]\n \t-q makes proxychains quiet - this overrides the config setting\n \t-f allows one to manually specify a configfile to use\n \tfor example : proxychains telnet somehost.com\n More help in README file",
+      "examples": [],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:\tproxychains4 -q -f config_file program_name [arguments]\n\t-q makes proxychains quiet - this overrides the config setting\n\t-f allows one to manually specify a configfile to use\n\tfor example : proxychains telnet somehost.com\nMore help in README file",
+        "-h": "[proxychains] config file found: /etc/proxychains4.conf\n[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4\nproxychains: can't load process '-h'. (hint: it's probably a typo): No such file or directory",
+        "help": "[proxychains] config file found: /etc/proxychains4.conf\n[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4\nproxychains: can't load process 'help'. (hint: it's probably a typo): No such file or directory",
+        "man": "PROXYCHAINS4(1)             General Commands Manual             PROXYCHAINS4(1)\n\nNAME\n     proxychains4 - redirect connections through proxy servers\n\nSYNOPSIS\n     proxychains4 --help\n     proxychains4 [ -f configfile.conf ] <program>\n\nDESCRIPTION\n     This  program  forces  any  tcp connection made by any given tcp client to\n     follow through proxy (or proxy chain). It is a kind of proxifier.\n\n     It acts like sockscap / premeo / eborder driver (intercepts TCP calls).\n\n     This version (v4) supports SOCKS4, SOCKS5 and HTTP CONNECT proxy  servers.\n     Auth-types: socks - \"user/pass\" , http - \"basic\".\n\n   When to use it?\n     1)  When  the  only  way  to  get \"outside\" from your LAN is through proxy\n         server.\n\n     2)  When you are behind restrictive firewall which filters  outgoing  con-\n         nections to some ports.\n\n     3)  When you want to use two (or more) proxies in chain:\n         like: your_host <--> proxy1 <--> proxy2 <--> target_host\n\n     4)  When  you  want  to  \"proxify\"  some  programs  with  no proxy support\n         built-in (like telnet).\n\n     5)  When you don't want to pay for eBorder / premeo socks driver :)\n\n   Some cool features:\n     *   This program can mix different proxy types in the same chain. For  in-\n         stance:\n\n         your_host <-->socks5 <--> http <--> socks4 <--> http <--> target_host\n\n     *   Different chaining options are supported. For instance:\n\n         *   take random proxy from the list\n\n         *   chain proxies in exact order\n\n         *   chain  proxies  in  dynamic order (smart exclude dead proxies from\n             chain)\n\n     *   You can use it with any TCP client application, even network scanners.\n         Yes, yes - you can make portscan via proxy (or  chained  proxies)  for\n         example with Nmap scanner by fyodor (www.insecure.org/nmap).\n\n         proxychains  nmap  -sT  -PO  -p  80 -iR  (find some webservers through\n         proxy)\n\n     NOTE: to run suid/sgid programs(like ssh) through proxychains you have  to\n     be root\n\nFILES\n     proxychains looks for config file in following order:\n\n            file listed in environment variable PROXYCHAINS_CONF_FILE or pro-\n            vided as a -f argument to proxychains script or binary.\n\n            ./proxychains.conf\n\n            $(HOME)/.proxychains/proxychains.conf\n\n            /etc/proxychains.conf\n\n            /etc/proxychains4.conf\n\n     More information is provided in /etc/proxychains4.conf file.\n\nEXAMPLES\n     To run this program the standard way type:\n            proxychains telnet targethost.com\n\n     In  this  example,  it  will  run telnet through proxy(or chained proxies)\n     specified by proxychains.conf.\n\n     To run this program with custom configuration file:\n            proxychains -f /etc/proxychains-other.conf telnet targethost2.com\n\n     In this example, it will use a different configuration file  as  specified\n     to connect to targethost2.com host.\n\nCOPYING\n     proxychains is distributed under the GNU General Public License.  (GPL 2.0\n     or greater).\n\nSEE ALSO\n     https://github.com/rofl0r/proxychains-ng\n\nAUTHORS\n     The original author is:\n\n     Net Creature, Proxy Labs\n     <http://proxychains.sourceforge.net>\n\n     This  manual  page  was updated by Boyuan Yang for the Debian Project (and\n     may be used by others).\n\nproxychains-ng                     2019-07-11                   PROXYCHAINS4(1)",
+        "apropos": "proxychains4 (1)     - redirect connections through proxy servers"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/proxychains4",
+        "size_bytes": 14752,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=32c71ece6dad22f9f157d0dda4e9f7b51ececebc, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "proxychains4-daemon",
+      "description": "- - -",
+      "usage": "proxychains4-daemon -i listenip -p port -r remotesubnet",
+      "arguments": [],
+      "raw_help": "root@kali:~# proxychains4-daemon -h\n Proxychains-NG remote dns daemon\n --------------------------------\n usage: proxychains4-daemon -i listenip -p port -r remotesubnet\n all arguments are optional.\n by default listenip is 127.0.0.1, port 1053 and remotesubnet 224.",
+      "examples": [],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Proxychains-NG remote dns daemon\n--------------------------------\nusage: proxychains4-daemon -i listenip -p port -r remotesubnet\nall arguments are optional.\nby default listenip is 127.0.0.1, port 1053 and remotesubnet 224.",
+        "-h": "Proxychains-NG remote dns daemon\n--------------------------------\nusage: proxychains4-daemon -i listenip -p port -r remotesubnet\nall arguments are optional.\nby default listenip is 127.0.0.1, port 1053 and remotesubnet 224."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/proxychains4-daemon",
+        "size_bytes": 18672,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=770e6a0dd764feaf9e3e108e94658eb490a3b87c, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/proxychains-ng/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/proxychains-ng/index.md",
+    "retrieved_at": "2026-07-14T13:07:51+00:00",
+    "sha256": "c50309c30ea738a2c3f6549d70fc3dca0156e2cedadb6d34c80dd82a93ea975f"
+  },
+  "tags": [
+    "offensive",
+    "proxychains",
+    "ng",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/proxychains-ng && python3 proxychains-ng.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/proxychains-ng && python3 proxychains-ng.py --help",
+    "cd toolboxes/proxychains-ng && python3 proxychains-ng.py --help",
+    "cd toolboxes/proxychains-ng && python3 proxychains-ng.py --help",
+    "cd toolboxes/proxychains-ng && python3 proxychains-ng.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST proxychains-ng --output $KFIOSA_OUTPUT_DIR/proxychains-ng.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST proxychains-ng --output $KFIOSA_OUTPUT_DIR/proxychains-ng.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

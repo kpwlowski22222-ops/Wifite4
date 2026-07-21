@@ -1,0 +1,2583 @@
+{
+  "id": "kali:hcxtools",
+  "kind": "kali_source_package",
+  "name": "hcxtools",
+  "title": "hcxtools",
+  "summary": "### hcxtools",
+  "version": "7.1.0-1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/ZerBea/hcxtools",
+  "repository": "https://salsa.debian.org/pkg-security-team/hcxtools",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install hcxtools"
+  },
+  "packages": [
+    {
+      "name": "hcxtools"
+    }
+  ],
+  "commands": [
+    {
+      "name": "hcxeiutool",
+      "description": "Hcx tools set",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "input wordlist",
+          "default": null,
+          "choices": null,
+          "raw": " -i <file> : input wordlist"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output digit wordlist",
+          "default": null,
+          "choices": null,
+          "raw": " -d <file> : output digit wordlist"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output xdigit wordlist",
+          "default": null,
+          "choices": null,
+          "raw": " -x <file> : output xdigit wordlist"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output character wordlist (A-Za-z - other characters removed)",
+          "default": null,
+          "choices": null,
+          "raw": " -c <file> : output character wordlist (A-Za-z - other characters removed)"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output character wordlist (A-Za-z - other characters replaced by 0x0a)",
+          "default": null,
+          "choices": null,
+          "raw": " -s <file> : output character wordlist (A-Za-z - other characters replaced by 0x0a)"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h        : show this help"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " -v        : show version"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " --help           : show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " --version        : show version"
+        }
+      ],
+      "raw_help": "root@kali:~# hcxeiutool -h\n hcxeiutool 7.1.0 (C) 2026 ZeroBeat\n usage:\n hcxeiutool <options>\n \n options:\n -i <file> : input wordlist\n -d <file> : output digit wordlist\n -x <file> : output xdigit wordlist\n -c <file> : output character wordlist (A-Za-z - other characters removed)\n -s <file> : output character wordlist (A-Za-z - other characters replaced by 0x0a)\n           recommended option for processing with rules\n -h        : show this help\n -v        : show version\n \n --help           : show this help\n --version        : show version\n \n example:\n $ hcxdumptool -i <interface> -w dump.pcapng\n $ hcxpcapngtool -o hash.22000 -E elist dump.pcapng\n $ hcxeiutool -i elist -d digitlist -x xdigitlist -c charlist -s sclist\n $ cat elist digitlist xdigitlist charlist sclist > wordlisttmp\n $ hashcat --stdout -r <rule> charlist >> wordlisttmp\n $ hashcat --stdout -r <rule> sclist >> wordlisttmp\n $ cat wordlisttmp | sort | uniq > wordlist\n $ hashcat -m 22000 hash.22000 wordlist",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hcxeiutool 7.1.2 (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "40401514c067a1d3f5227d5bc9645924fd352f72bf4b7f8fda444fe27399d4bc"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxeiutool <options>",
+          "template": null,
+          "original_sha256": "5cbd037c3a947c19b49139369002f33d4e7b8a1b60dfc3ff764cd3dd3cbe3b55"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hcxeiutool 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxeiutool <options>\n\noptions:\n-i <file> : input wordlist\n-d <file> : output digit wordlist\n-x <file> : output xdigit wordlist\n-c <file> : output character wordlist (A-Za-z - other characters removed)\n-s <file> : output character wordlist (A-Za-z - other characters replaced by 0x0a)\n            recommended option for processing with rules\n-h        : show this help\n-v        : show version\n\n--help           : show this help\n--version        : show version\n\nexample:\n$ hcxdumptool -i <interface> -w dump.pcapng\n$ hcxpcapngtool -o hash.22000 -E elist dump.pcapng\n$ hcxeiutool -i elist -d digitlist -x xdigitlist -c charlist -s sclist\n$ cat elist digitlist xdigitlist charlist sclist > wordlisttmp\n$ hashcat --stdout -r <rule> charlist >> wordlisttmp\n$ hashcat --stdout -r <rule> sclist >> wordlisttmp\n$ cat wordlisttmp | sort | uniq > wordlist\n$ hashcat -m 22000 hash.22000 wordlist",
+        "-h": "hcxeiutool 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxeiutool <options>\n\noptions:\n-i <file> : input wordlist\n-d <file> : output digit wordlist\n-x <file> : output xdigit wordlist\n-c <file> : output character wordlist (A-Za-z - other characters removed)\n-s <file> : output character wordlist (A-Za-z - other characters replaced by 0x0a)\n            recommended option for processing with rules\n-h        : show this help\n-v        : show version\n\n--help           : show this help\n--version        : show version\n\nexample:\n$ hcxdumptool -i <interface> -w dump.pcapng\n$ hcxpcapngtool -o hash.22000 -E elist dump.pcapng\n$ hcxeiutool -i elist -d digitlist -x xdigitlist -c charlist -s sclist\n$ cat elist digitlist xdigitlist charlist sclist > wordlisttmp\n$ hashcat --stdout -r <rule> charlist >> wordlisttmp\n$ hashcat --stdout -r <rule> sclist >> wordlisttmp\n$ cat wordlisttmp | sort | uniq > wordlist\n$ hashcat -m 22000 hash.22000 wordlist",
+        "help": "no input wordlist selected",
+        "man": "HCXEIUTOOL(1)                    User Commands                    HCXEIUTOOL(1)\n\nNAME\n     hcxeiutool - hcx tools set\n\nDESCRIPTION\n     hcxeiutool 7.1.2 (C) 2026 ZeroBeat usage: hcxeiutool <options>\n\n     options:  -i  <file> : input wordlist -d <file> : output digit wordlist -x\n     <file> : output xdigit wordlist -c  <file>  :  output  character  wordlist\n     (A-Za-z  - other characters removed) -s <file> : output character wordlist\n     (A-Za-z - other characters replaced by 0x0a)\n\n            recommended option for processing with rules\n\n     -h        : show this help -v        : show version\n\n     --help           : show this help --version        : show version\n\n     example: $ hcxdumptool -i <interface> -w dump.pcapng  $  hcxpcapngtool  -o\n     hash.22000  -E  elist  dump.pcapng  $  hcxeiutool -i elist -d digitlist -x\n     xdigitlist -c charlist -s sclist $ cat elist digitlist xdigitlist charlist\n     sclist > wordlisttmp $ hashcat --stdout -r <rule> charlist >>  wordlisttmp\n     $  hashcat  --stdout  -r  <rule> sclist >> wordlisttmp $ cat wordlisttmp |\n     sort | uniq > wordlist $ hashcat -m 22000 hash.22000 wordlist\n\nhcxeiutool 7.1.2 (C) 2026 ZeroBeat June 2026                      HCXEIUTOOL(1)",
+        "apropos": "hcxeiutool (1)       - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hcxeiutool",
+        "size_bytes": 18752,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=96f6a7ebddbf8ae4d5acb3eb3b71f0f7d9ef9a70, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hcxhash2cap",
+      "description": "Hcx tools set",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output cap file",
+          "default": null,
+          "choices": null,
+          "raw": " -c <file> : output cap file"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h        : show this help"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " -v        : show version"
+        },
+        {
+          "flags": [
+            "--pmkid-eapol"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input PMKID EAPOL (22000) combi hash file",
+          "default": null,
+          "choices": null,
+          "raw": " --pmkid-eapol=<file> : input PMKID EAPOL (22000) combi hash file"
+        },
+        {
+          "flags": [
+            "--pmkid"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input deprecated PMKID (16800) hash file",
+          "default": null,
+          "choices": null,
+          "raw": " --pmkid=<file>       : input deprecated PMKID (16800) hash file"
+        },
+        {
+          "flags": [
+            "--hccapx"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input deprecated hccapx (2500) hash file",
+          "default": null,
+          "choices": null,
+          "raw": " --hccapx=<file>      : input deprecated hccapx (2500) hash file"
+        },
+        {
+          "flags": [
+            "--hccap"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input ancient hccap (2500) file",
+          "default": null,
+          "choices": null,
+          "raw": " --hccap=<file>       : input ancient hccap (2500) file"
+        },
+        {
+          "flags": [
+            "--john"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input John the Ripper WPAPSK hash file",
+          "default": null,
+          "choices": null,
+          "raw": " --john=<file>        : input John the Ripper WPAPSK hash file"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " --help               : show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " --version            : show version"
+        }
+      ],
+      "raw_help": "root@kali:~# hcxhash2cap -h\n hcxhash2cap 7.1.0 (C) 2026 ZeroBeat\n usage:\n hcxhash2cap <options>\n \n options:\n -c <file> : output cap file\n           if no cap file is selected, output will be written to single cap files\n           format: mac_sta.cap (mac_sta.cap_x)\n -h        : show this help\n -v        : show version\n \n --pmkid-eapol=<file> : input PMKID EAPOL (22000) combi hash file\n --pmkid=<file>       : input deprecated PMKID (16800) hash file\n --hccapx=<file>      : input deprecated hccapx (2500) hash file\n --hccap=<file>       : input ancient hccap (2500) file\n --john=<file>        : input John the Ripper WPAPSK hash file\n --help               : show this help\n --version            : show version\n \n Important notice:\n Conversion from a dump file to a hash file is not loss less.\n Hash files that contain EAPOL M3 MESSAGEs can't be converted back to a cap file.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hcxhash2cap 7.1.2 (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "7bcd6629860108efc3189dfc8da7b960aba23b55955a29dd3f1926ec29a3db6a"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxhash2cap <options>",
+          "template": null,
+          "original_sha256": "7385a6ec07089b4ed7bb0034977bcab53762e41403e027995920c6717870a3db"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hcxhash2cap 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxhash2cap <options>\n\noptions:\n-c <file> : output cap file\n            if no cap file is selected, output will be written to single cap files\n            format: mac_sta.cap (mac_sta.cap_x)\n-h        : show this help\n-v        : show version\n\n--pmkid-eapol=<file> : input PMKID EAPOL (22000) combi hash file\n--pmkid=<file>       : input deprecated PMKID (16800) hash file\n--hccapx=<file>      : input deprecated hccapx (2500) hash file\n--hccap=<file>       : input ancient hccap (2500) file\n--john=<file>        : input John the Ripper WPAPSK hash file\n--help               : show this help\n--version            : show version\n\nImportant notice:\nConversion from a dump file to a hash file is not loss less.\nHash files that contain EAPOL M3 MESSAGEs can't be converted back to a cap file.",
+        "-h": "hcxhash2cap 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxhash2cap <options>\n\noptions:\n-c <file> : output cap file\n            if no cap file is selected, output will be written to single cap files\n            format: mac_sta.cap (mac_sta.cap_x)\n-h        : show this help\n-v        : show version\n\n--pmkid-eapol=<file> : input PMKID EAPOL (22000) combi hash file\n--pmkid=<file>       : input deprecated PMKID (16800) hash file\n--hccapx=<file>      : input deprecated hccapx (2500) hash file\n--hccap=<file>       : input ancient hccap (2500) file\n--john=<file>        : input John the Ripper WPAPSK hash file\n--help               : show this help\n--version            : show version\n\nImportant notice:\nConversion from a dump file to a hash file is not loss less.\nHash files that contain EAPOL M3 MESSAGEs can't be converted back to a cap file.",
+        "man": "HCXHASH2CAP(1)                   User Commands                   HCXHASH2CAP(1)\n\nNAME\n     hcxhash2cap - hcx tools set\n\nDESCRIPTION\n     hcxhash2cap 7.1.2 (C) 2026 ZeroBeat usage: hcxhash2cap <options>\n\n     options: -c <file> : output cap file\n\n            if  no  cap  file is selected, output will be written to single cap\n            files format: mac_sta.cap (mac_sta.cap_x)\n\n     -h        : show this help -v        : show version\n\n     --pmkid-eapol=<file>  :  input  PMKID  EAPOL  (22000)  combi   hash   file\n     --pmkid=<file>        :  input  deprecated  PMKID  (16800) hash file --hc-\n     capx=<file>      : input deprecated hccapx (2500) hash file --hccap=<file>\n     : input ancient hccap (2500) file --john=<file>        :  input  John  the\n     Ripper  WPAPSK  hash  file --help               : show this help --version\n     : show version\n\n     Important notice: Conversion from a dump file to a hash file is  not  loss\n     less.   Hash  files that contain EAPOL M3 MESSAGEs can't be converted back\n     to a cap file.\n\nhcxhash2cap 7.1.2 (C) 2026 Zero... June 2026                     HCXHASH2CAP(1)",
+        "apropos": "hcxhash2cap (1)      - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hcxhash2cap",
+        "size_bytes": 39304,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ebfb82f66b61ec483752dd4b7b207e5acdeb39c9, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hcxhashtool",
+      "description": "Hcx tools set",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "input PMKID/EAPOL hash file",
+          "default": null,
+          "choices": null,
+          "raw": " -i <file>   : input PMKID/EAPOL hash file"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output PMKID/EAPOL hash file",
+          "default": null,
+          "choices": null,
+          "raw": " -o <file>   : output PMKID/EAPOL hash file"
+        },
+        {
+          "flags": [
+            "-E"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output ESSID list (autohex enabled)",
+          "default": null,
+          "choices": null,
+          "raw": " -E <file>   : output ESSID list (autohex enabled)"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output ESSID list (unfiltered and unsorted)",
+          "default": null,
+          "choices": null,
+          "raw": " -L <file>   : output ESSID list (unfiltered and unsorted)"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "download https://standards-oui.ieee.org/oui.txt",
+          "default": null,
+          "choices": null,
+          "raw": " -d          : download https://standards-oui.ieee.org/oui.txt"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h          : show this help"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " -v          : show version"
+        },
+        {
+          "flags": [
+            "--essid-group"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "convert to ESSID groups in working directory",
+          "default": null,
+          "choices": null,
+          "raw": " --essid-group                : convert to ESSID groups in working directory"
+        },
+        {
+          "flags": [
+            "--oui-group"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "convert to OUI groups in working directory",
+          "default": null,
+          "choices": null,
+          "raw": " --oui-group                  : convert to OUI groups in working directory"
+        },
+        {
+          "flags": [
+            "--mac-group-ap"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "convert APs to MAC groups in working directory",
+          "default": null,
+          "choices": null,
+          "raw": " --mac-group-ap               : convert APs to MAC groups in working directory"
+        },
+        {
+          "flags": [
+            "--mac-group-client"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "convert CLIENTs to MAC groups in working directory",
+          "default": null,
+          "choices": null,
+          "raw": " --mac-group-client           : convert CLIENTs to MAC groups in working directory"
+        },
+        {
+          "flags": [
+            "--type"
+          ],
+          "metavar": "= digit",
+          "takes_value": true,
+          "description": "filter by hash type",
+          "default": null,
+          "choices": null,
+          "raw": " --type=<digit>               : filter by hash type"
+        },
+        {
+          "flags": [
+            "--hcx-min"
+          ],
+          "metavar": "= digit",
+          "takes_value": true,
+          "description": "disregard hashes with occurrence lower than hcx-min/ESSID",
+          "default": null,
+          "choices": null,
+          "raw": " --hcx-min=<digit>            : disregard hashes with occurrence lower than hcx-min/ESSID"
+        },
+        {
+          "flags": [
+            "--hcx-max"
+          ],
+          "metavar": "= digit",
+          "takes_value": true,
+          "description": "disregard hashes with occurrence higher than hcx-max/ESSID",
+          "default": null,
+          "choices": null,
+          "raw": " --hcx-max=<digit>            : disregard hashes with occurrence higher than hcx-max/ESSID"
+        },
+        {
+          "flags": [
+            "--essid-len"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "filter by ESSID length",
+          "default": null,
+          "choices": null,
+          "raw": " --essid-len                  : filter by ESSID length"
+        },
+        {
+          "flags": [
+            "--essid-min"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "filter by ESSID minimum length",
+          "default": null,
+          "choices": null,
+          "raw": " --essid-min                  : filter by ESSID minimum length"
+        },
+        {
+          "flags": [
+            "--essid-max"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "filter by ESSID maximum length",
+          "default": null,
+          "choices": null,
+          "raw": " --essid-max                  : filter by ESSID maximum length"
+        },
+        {
+          "flags": [
+            "--essid"
+          ],
+          "metavar": "= ESSID",
+          "takes_value": true,
+          "description": "filter by ESSID",
+          "default": null,
+          "choices": null,
+          "raw": " --essid=<ESSID>              : filter by ESSID"
+        },
+        {
+          "flags": [
+            "--essid-part"
+          ],
+          "metavar": "= part of ESSID",
+          "takes_value": true,
+          "description": "filter by part of ESSID (case sensitive)",
+          "default": null,
+          "choices": null,
+          "raw": " --essid-part=<part of ESSID> : filter by part of ESSID (case sensitive)"
+        },
+        {
+          "flags": [
+            "--essid-partx"
+          ],
+          "metavar": "= part of ESSID",
+          "takes_value": true,
+          "description": "filter by part of ESSID (case insensitive)",
+          "default": null,
+          "choices": null,
+          "raw": " --essid-partx=<part of ESSID>: filter by part of ESSID (case insensitive)"
+        },
+        {
+          "flags": [
+            "--essid-list"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "filter by ESSID file",
+          "default": null,
+          "choices": null,
+          "raw": " --essid-list=<file>          : filter by ESSID file"
+        },
+        {
+          "flags": [
+            "--essid-regex"
+          ],
+          "metavar": "= regex",
+          "takes_value": true,
+          "description": "filter ESSID by regular expression",
+          "default": null,
+          "choices": null,
+          "raw": " --essid-regex=<regex>        : filter ESSID by regular expression"
+        },
+        {
+          "flags": [
+            "--mac-ap"
+          ],
+          "metavar": "= MAC",
+          "takes_value": true,
+          "description": "filter AP by MAC",
+          "default": null,
+          "choices": null,
+          "raw": " --mac-ap=<MAC>               : filter AP by MAC"
+        },
+        {
+          "flags": [
+            "--mac-client"
+          ],
+          "metavar": "= MAC",
+          "takes_value": true,
+          "description": "filter CLIENT by MAC",
+          "default": null,
+          "choices": null,
+          "raw": " --mac-client=<MAC>           : filter CLIENT by MAC"
+        },
+        {
+          "flags": [
+            "--mac-list"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "filter by MAC file",
+          "default": null,
+          "choices": null,
+          "raw": " --mac-list=<file>            : filter by MAC file"
+        },
+        {
+          "flags": [
+            "--mac-skiplist"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "exclude MAC from file",
+          "default": null,
+          "choices": null,
+          "raw": " --mac-skiplist=<file>        : exclude MAC from file"
+        },
+        {
+          "flags": [
+            "--oui-ap"
+          ],
+          "metavar": "= OUI",
+          "takes_value": true,
+          "description": "filter AP by OUI",
+          "default": null,
+          "choices": null,
+          "raw": " --oui-ap=<OUI>               : filter AP by OUI"
+        },
+        {
+          "flags": [
+            "--oui-client"
+          ],
+          "metavar": "= OUI",
+          "takes_value": true,
+          "description": "filter CLIENT by OUI",
+          "default": null,
+          "choices": null,
+          "raw": " --oui-client=<OUI>           : filter CLIENT by OUI"
+        },
+        {
+          "flags": [
+            "--vendor"
+          ],
+          "metavar": "= VENDOR",
+          "takes_value": true,
+          "description": "filter AP or CLIENT by (part of) VENDOR name",
+          "default": null,
+          "choices": null,
+          "raw": " --vendor=<VENDOR>            : filter AP or CLIENT by (part of) VENDOR name"
+        },
+        {
+          "flags": [
+            "--vendor-ap"
+          ],
+          "metavar": "= VENDOR",
+          "takes_value": true,
+          "description": "filter AP by (part of) VENDOR name",
+          "default": null,
+          "choices": null,
+          "raw": " --vendor-ap=<VENDOR>         : filter AP by (part of) VENDOR name"
+        },
+        {
+          "flags": [
+            "--vendor-client"
+          ],
+          "metavar": "= VENDOR",
+          "takes_value": true,
+          "description": "filter CLIENT by (part of) VENDOR name",
+          "default": null,
+          "choices": null,
+          "raw": " --vendor-client=<VENDOR>     : filter CLIENT by (part of) VENDOR name"
+        },
+        {
+          "flags": [
+            "--authorized"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "filter EAPOL pairs by status authorized (M2M3, M3M4, M1M4)",
+          "default": null,
+          "choices": null,
+          "raw": " --authorized                 : filter EAPOL pairs by status authorized (M2M3, M3M4, M1M4)"
+        },
+        {
+          "flags": [
+            "--challenge"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "filter EAPOL pairs by status CHALLENGE (M1M2, M1M2ROGUE)",
+          "default": null,
+          "choices": null,
+          "raw": " --challenge                  : filter EAPOL pairs by status CHALLENGE (M1M2, M1M2ROGUE)"
+        },
+        {
+          "flags": [
+            "--rc"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "filter EAPOL pairs by replaycount status checked",
+          "default": null,
+          "choices": null,
+          "raw": " --rc                         : filter EAPOL pairs by replaycount status checked"
+        },
+        {
+          "flags": [
+            "--rc-not"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "filter EAPOL pairs by replaycount status not checked",
+          "default": null,
+          "choices": null,
+          "raw": " --rc-not                     : filter EAPOL pairs by replaycount status not checked"
+        },
+        {
+          "flags": [
+            "--apless"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "filter EAPOL pairs by status M1M2ROGUE (M2 requested from CLIENT)",
+          "default": null,
+          "choices": null,
+          "raw": " --apless                     : filter EAPOL pairs by status M1M2ROGUE (M2 requested from CLIENT)"
+        },
+        {
+          "flags": [
+            "--info"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output detailed information about content of hash file",
+          "default": null,
+          "choices": null,
+          "raw": " --info=<file>                : output detailed information about content of hash file"
+        },
+        {
+          "flags": [
+            "--info-vendor"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output detailed information about ACCESS POINT and CLIENT VENDORs",
+          "default": null,
+          "choices": null,
+          "raw": " --info-vendor=<file>         : output detailed information about ACCESS POINT and CLIENT VENDORs"
+        },
+        {
+          "flags": [
+            "--info-vendor-ap"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output detailed information about ACCESS POINT VENDORs",
+          "default": null,
+          "choices": null,
+          "raw": " --info-vendor-ap=<file>      : output detailed information about ACCESS POINT VENDORs"
+        },
+        {
+          "flags": [
+            "--info-vendor-client"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output detailed information about CLIENT VENDORs",
+          "default": null,
+          "choices": null,
+          "raw": " --info-vendor-client=<file>  : output detailed information about CLIENT VENDORs"
+        },
+        {
+          "flags": [
+            "--psk"
+          ],
+          "metavar": "= PSK",
+          "takes_value": true,
+          "description": "pre-shared key to test",
+          "default": null,
+          "choices": null,
+          "raw": " --psk=<PSK>                  : pre-shared key to test"
+        },
+        {
+          "flags": [
+            "--pmk"
+          ],
+          "metavar": "= PMK",
+          "takes_value": true,
+          "description": "plain master key to test",
+          "default": null,
+          "choices": null,
+          "raw": " --pmk=<PMK>                  : plain master key to test"
+        },
+        {
+          "flags": [
+            "--hccapx-in"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input deprecated hccapx file",
+          "default": null,
+          "choices": null,
+          "raw": " --hccapx-in=<file>           : input deprecated hccapx file"
+        },
+        {
+          "flags": [
+            "--hccapx-out"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output to deprecated hccapx file",
+          "default": null,
+          "choices": null,
+          "raw": " --hccapx-out=<file>          : output to deprecated hccapx file"
+        },
+        {
+          "flags": [
+            "--hccap-in"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input ancient hccap file",
+          "default": null,
+          "choices": null,
+          "raw": " --hccap-in=<file>            : input ancient hccap file"
+        },
+        {
+          "flags": [
+            "--hccap-out"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output to ancient hccap file",
+          "default": null,
+          "choices": null,
+          "raw": " --hccap-out=<file>           : output to ancient hccap file"
+        },
+        {
+          "flags": [
+            "--hccap-single"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output to ancient hccap single files (MAC + count)",
+          "default": null,
+          "choices": null,
+          "raw": " --hccap-single               : output to ancient hccap single files (MAC + count)"
+        },
+        {
+          "flags": [
+            "--john"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output to deprecated john file",
+          "default": null,
+          "choices": null,
+          "raw": " --john=<file>                : output to deprecated john file"
+        },
+        {
+          "flags": [
+            "--vendorlist"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "stdout output complete OUI list sorted by OUI",
+          "default": null,
+          "choices": null,
+          "raw": " --vendorlist                 : stdout output complete OUI list sorted by OUI"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " --help                       : show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " --version                    : show version"
+        }
+      ],
+      "raw_help": "root@kali:~# hcxhashtool -h\n hcxhashtool 7.1.0 (C) 2026 ZeroBeat\n usage:\n hcxhashtool <options>\n \n options:\n -i <file>   : input PMKID/EAPOL hash file\n -o <file>   : output PMKID/EAPOL hash file\n -E <file>   : output ESSID list (autohex enabled)\n -E stdout   : output ESSID list to stdout (autohex enabled)\n -L <file>   : output ESSID list (unfiltered and unsorted)\n             useful in combination with hashcat -a9 option\n -d          : download https://standards-oui.ieee.org/oui.txt\n             and save to ~/.hcxtools/oui.txt\n             internet connection required\n -h          : show this help\n -v          : show version\n \n --essid-group                : convert to ESSID groups in working directory\n                              full advantage of reuse of PBKDF2\n                              not on old hash formats\n --oui-group                  : convert to OUI groups in working directory\n                              not on old hash formats\n --mac-group-ap               : convert APs to MAC groups in working directory\n                              not on old hash formats\n --mac-group-client           : convert CLIENTs to MAC groups in working directory\n                              not on old hash formats\n --type=<digit>               : filter by hash type\n                              bitmask:\n                               1 = PMKID\n                               2 = EAPOL\n                              default PMKID and EAPOL (1+2=3)\n --hcx-min=<digit>            : disregard hashes with occurrence lower than hcx-min/ESSID\n --hcx-max=<digit>            : disregard hashes with occurrence higher than hcx-max/ESSID\n --essid-len                  : filter by ESSID length\n                              default ESSID length: 0...32\n --essid-min                  : filter by ESSID minimum length\n                              default ESSID minimum length: 0\n --essid-max                  : filter by ESSID maximum length\n                              default ESSID maximum length: 32\n --essid=<ESSID>              : filter by ESSID\n --essid-part=<part of ESSID> : filter by part of ESSID (case sensitive)\n --essid-partx=<part of ESSID>: filter by part of ESSID (case insensitive)\n                              locale and wide characters are ignored\n --essid-list=<file>          : filter by ESSID file\n --essid-regex=<regex>        : filter ESSID by regular expression\n --mac-ap=<MAC>               : filter AP by MAC\n                              format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n --mac-client=<MAC>           : filter CLIENT by MAC\n                              format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n --mac-list=<file>            : filter by MAC file\n                              format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n --mac-skiplist=<file>        : exclude MAC from file\n                              format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n --oui-ap=<OUI>               : filter AP by OUI\n                              format: 001122, 00:11:22, 00-11-22 (hex)\n --oui-client=<OUI>           : filter CLIENT by OUI\n                              format: 001122, 00:11:22, 00-11-22 (hex)\n --vendor=<VENDOR>            : filter AP or CLIENT by (part of) VENDOR name\n --vendor-ap=<VENDOR>         : filter AP by (part of) VENDOR name\n --vendor-client=<VENDOR>     : filter CLIENT by (part of) VENDOR name\n --authorized                 : filter EAPOL pairs by status authorized (M2M3, M3M4, M1M4)\n --challenge                  : filter EAPOL pairs by status CHALLENGE (M1M2, M1M2ROGUE)\n --rc                         : filter EAPOL pairs by replaycount status checked\n --rc-not                     : filter EAPOL pairs by replaycount status not checked\n --apless                     : filter EAPOL pairs by status M1M2ROGUE (M2 requested from CLIENT)\n --info=<file>                : output detailed information about content of hash file\n                              no filter options available\n --info=stdout                : stdout output detailed information about content of hash file\n                              no filter options available\n --info-vendor=<file>         : output detailed information about ACCESS POINT and CLIENT VENDORs\n                              no filter options available\n --info-vendor-ap=<file>      : output detailed information about ACCESS POINT VENDORs\n                              no filter options available\n --info-vendor-client=<file>  : output detailed information about CLIENT VENDORs\n                              no filter options available\n --info-vendor=stdout         : stdout output detailed information about ACCESS POINT and CLIENT VENDORs\n                              no filter options available\n --info-vendor-ap=stdout      : stdout output detailed information about ACCESS POINT VENDORs\n                              no filter options available\n --info-vendor-client=stdout  : stdout output detailed information about CLIENT VENDORs\n                              no filter options available\n --psk=<PSK>                  : pre-shared key to test\n                              due to PBKDF2 calculation this is a very slow process\n                              no nonce error corrections\n --pmk=<PMK>                  : plain master key to test\n                              no nonce error corrections\n --hccapx-in=<file>           : input deprecated hccapx file\n                               MESSSAGEPAIR is taken from the hccapx source\n --hccapx-out=<file>          : output to deprecated hccapx file\n --hccap-in=<file>            : input ancient hccap file\n --hccap-out=<file>           : output to ancient hccap file\n                               MESSSAGEPAIR is calculated from the EAPOL MESSAGE\n                               due to missing information, the worst case value is calculated\n --hccap-single               : output to ancient hccap single files (MAC + count)\n --john=<file>                : output to deprecated john file\n --vendorlist                 : stdout output complete OUI list sorted by OUI\n --help                       : show this help\n --version                    : show version\n \n Important notice:\n hcxhashtool does not do NONCE ERROR CORRECTIONS\n in case of a packet loss, you get a wrong PTK",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hcxhashtool 7.1.2 (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "04aff0e9cdd76d29604ece7f654bffc428b2947a6145ab4b15b71ddec2f0609b"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxhashtool <options>",
+          "template": null,
+          "original_sha256": "1cf1710fc947c5fc21e19064338c6f8a00f0a1f28d30d29db7bc8855f038b94f"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxhashtool does not do NONCE ERROR CORRECTIONS",
+          "template": null,
+          "original_sha256": "796665a3acba6fbe9eddf8670f001f7bc7b0b979d844f8e572c228311b25fd98"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hcxhashtool 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxhashtool <options>\n\noptions:\n-i <file>   : input PMKID/EAPOL hash file\n-o <file>   : output PMKID/EAPOL hash file\n-E <file>   : output ESSID list (autohex enabled)\n-E stdout   : output ESSID list to stdout (autohex enabled)\n-L <file>   : output ESSID list (unfiltered and unsorted)\n              useful in combination with hashcat -a9 option\n-d          : download https://standards-oui.ieee.org/oui.txt\n              and save to ~/.hcxtools/oui.txt\n              internet connection required\n-h          : show this help\n-v          : show version\n\n--essid-group                : convert to ESSID groups in working directory\n                               full advantage of reuse of PBKDF2\n                               not on old hash formats\n--oui-group                  : convert to OUI groups in working directory\n                               not on old hash formats\n--mac-group-ap               : convert APs to MAC groups in working directory\n                               not on old hash formats\n--mac-group-client           : convert CLIENTs to MAC groups in working directory\n                               not on old hash formats\n--type=<digit>               : filter by hash type\n                               bitmask:\n                                1 = PMKID\n                                2 = EAPOL\n                               default PMKID and EAPOL (1+2=3)\n--hcx-min=<digit>            : disregard hashes with occurrence lower than hcx-min/ESSID\n--hcx-max=<digit>            : disregard hashes with occurrence higher than hcx-max/ESSID\n--essid-len                  : filter by ESSID length\n                               default ESSID length: 0...32\n--essid-min                  : filter by ESSID minimum length\n                               default ESSID minimum length: 0\n--essid-max                  : filter by ESSID maximum length\n                               default ESSID maximum length: 32\n--essid=<ESSID>              : filter by ESSID\n--essid-part=<part of ESSID> : filter by part of ESSID (case sensitive)\n--essid-partx=<part of ESSID>: filter by part of ESSID (case insensitive)\n                               locale and wide characters are ignored\n--essid-list=<file>          : filter by ESSID file\n--essid-regex=<regex>        : filter ESSID by regular expression\n--mac-ap=<MAC>               : filter AP by MAC\n                               format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n--mac-client=<MAC>           : filter CLIENT by MAC\n                               format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n--mac-list=<file>            : filter by MAC file\n                               format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n--mac-skiplist=<file>        : exclude MAC from file\n                               format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n--oui-ap=<OUI>               : filter AP by OUI\n                               format: 001122, 00:11:22, 00-11-22 (hex)\n--oui-client=<OUI>           : filter CLIENT by OUI\n                               format: 001122, 00:11:22, 00-11-22 (hex)\n--vendor=<VENDOR>            : filter AP or CLIENT by (part of) VENDOR name\n--vendor-ap=<VENDOR>         : filter AP by (part of) VENDOR name\n--vendor-client=<VENDOR>     : filter CLIENT by (part of) VENDOR name\n--authorized                 : filter EAPOL pairs by status authorized (M2M3, M3M4, M1M4)\n--challenge                  : filter EAPOL pairs by status CHALLENGE (M1M2, M1M2ROGUE)\n--rc                         : filter EAPOL pairs by replaycount status checked\n--rc-not                     : filter EAPOL pairs by replaycount status not checked\n--apless                     : filter EAPOL pairs by status M1M2ROGUE (M2 requested from CLIENT)\n--info=<file>                : output detailed information about content of hash file\n                               no filter options available\n--info=stdout                : stdout output detailed information about content of hash file\n                               no filter options available\n--info-vendor=<file>         : output detailed information about ACCESS POINT and CLIENT VENDORs\n                               no filter options available\n--info-vendor-ap=<file>      : output detailed information about ACCESS POINT VENDORs\n                               no filter options available\n--info-vendor-client=<file>  : output detailed information about CLIENT VENDORs\n                               no filter options available\n--info-vendor=stdout         : stdout output detailed information about ACCESS POINT and CLIENT VENDORs\n                               no filter options available\n--info-vendor-ap=stdout      : stdout output detailed information about ACCESS POINT VENDORs\n                               no filter options available\n--info-vendor-client=stdout  : stdout output detailed information about CLIENT VENDORs\n                               no filter options available\n--psk=<PSK>                  : pre-shared key to test\n                               due to PBKDF2 calculation this is a very slow process\n                               no nonce error corrections\n--pmk=<PMK>                  : plain master key to test\n                               no nonce error corrections\n--hccapx-in=<file>           : input deprecated hccapx file\n                                MESSSAGEPAIR is taken from the hccapx source\n--hccapx-out=<file>          : output to deprecated hccapx file\n--hccap-in=<file>            : input ancient hccap file\n--hccap-out=<file>           : output to ancient hccap file\n                                MESSSAGEPAIR is calculated from the EAPOL MESSAGE\n                                due to missing information, the worst case value is calculated\n--hccap-single               : output to ancient hccap single files (MAC + count)\n--john=<file>                : output to deprecated john file\n--vendorlist                 : stdout output complete OUI list sorted by OUI\n--help                       : show this help\n--version                    : show version\n\nImportant notice:\nhcxhashtool does not do NONCE ERROR CORRECTIONS\nin case of a packet loss, you get a wrong PTK",
+        "-h": "hcxhashtool 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxhashtool <options>\n\noptions:\n-i <file>   : input PMKID/EAPOL hash file\n-o <file>   : output PMKID/EAPOL hash file\n-E <file>   : output ESSID list (autohex enabled)\n-E stdout   : output ESSID list to stdout (autohex enabled)\n-L <file>   : output ESSID list (unfiltered and unsorted)\n              useful in combination with hashcat -a9 option\n-d          : download https://standards-oui.ieee.org/oui.txt\n              and save to ~/.hcxtools/oui.txt\n              internet connection required\n-h          : show this help\n-v          : show version\n\n--essid-group                : convert to ESSID groups in working directory\n                               full advantage of reuse of PBKDF2\n                               not on old hash formats\n--oui-group                  : convert to OUI groups in working directory\n                               not on old hash formats\n--mac-group-ap               : convert APs to MAC groups in working directory\n                               not on old hash formats\n--mac-group-client           : convert CLIENTs to MAC groups in working directory\n                               not on old hash formats\n--type=<digit>               : filter by hash type\n                               bitmask:\n                                1 = PMKID\n                                2 = EAPOL\n                               default PMKID and EAPOL (1+2=3)\n--hcx-min=<digit>            : disregard hashes with occurrence lower than hcx-min/ESSID\n--hcx-max=<digit>            : disregard hashes with occurrence higher than hcx-max/ESSID\n--essid-len                  : filter by ESSID length\n                               default ESSID length: 0...32\n--essid-min                  : filter by ESSID minimum length\n                               default ESSID minimum length: 0\n--essid-max                  : filter by ESSID maximum length\n                               default ESSID maximum length: 32\n--essid=<ESSID>              : filter by ESSID\n--essid-part=<part of ESSID> : filter by part of ESSID (case sensitive)\n--essid-partx=<part of ESSID>: filter by part of ESSID (case insensitive)\n                               locale and wide characters are ignored\n--essid-list=<file>          : filter by ESSID file\n--essid-regex=<regex>        : filter ESSID by regular expression\n--mac-ap=<MAC>               : filter AP by MAC\n                               format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n--mac-client=<MAC>           : filter CLIENT by MAC\n                               format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n--mac-list=<file>            : filter by MAC file\n                               format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n--mac-skiplist=<file>        : exclude MAC from file\n                               format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n--oui-ap=<OUI>               : filter AP by OUI\n                               format: 001122, 00:11:22, 00-11-22 (hex)\n--oui-client=<OUI>           : filter CLIENT by OUI\n                               format: 001122, 00:11:22, 00-11-22 (hex)\n--vendor=<VENDOR>            : filter AP or CLIENT by (part of) VENDOR name\n--vendor-ap=<VENDOR>         : filter AP by (part of) VENDOR name\n--vendor-client=<VENDOR>     : filter CLIENT by (part of) VENDOR name\n--authorized                 : filter EAPOL pairs by status authorized (M2M3, M3M4, M1M4)\n--challenge                  : filter EAPOL pairs by status CHALLENGE (M1M2, M1M2ROGUE)\n--rc                         : filter EAPOL pairs by replaycount status checked\n--rc-not                     : filter EAPOL pairs by replaycount status not checked\n--apless                     : filter EAPOL pairs by status M1M2ROGUE (M2 requested from CLIENT)\n--info=<file>                : output detailed information about content of hash file\n                               no filter options available\n--info=stdout                : stdout output detailed information about content of hash file\n                               no filter options available\n--info-vendor=<file>         : output detailed information about ACCESS POINT and CLIENT VENDORs\n                               no filter options available\n--info-vendor-ap=<file>      : output detailed information about ACCESS POINT VENDORs\n                               no filter options available\n--info-vendor-client=<file>  : output detailed information about CLIENT VENDORs\n                               no filter options available\n--info-vendor=stdout         : stdout output detailed information about ACCESS POINT and CLIENT VENDORs\n                               no filter options available\n--info-vendor-ap=stdout      : stdout output detailed information about ACCESS POINT VENDORs\n                               no filter options available\n--info-vendor-client=stdout  : stdout output detailed information about CLIENT VENDORs\n                               no filter options available\n--psk=<PSK>                  : pre-shared key to test\n                               due to PBKDF2 calculation this is a very slow process\n                               no nonce error corrections\n--pmk=<PMK>                  : plain master key to test\n                               no nonce error corrections\n--hccapx-in=<file>           : input deprecated hccapx file\n                                MESSSAGEPAIR is taken from the hccapx source\n--hccapx-out=<file>          : output to deprecated hccapx file\n--hccap-in=<file>            : input ancient hccap file\n--hccap-out=<file>           : output to ancient hccap file\n                                MESSSAGEPAIR is calculated from the EAPOL MESSAGE\n                                due to missing information, the worst case value is calculated\n--hccap-single               : output to ancient hccap single files (MAC + count)\n--john=<file>                : output to deprecated john file\n--vendorlist                 : stdout output complete OUI list sorted by OUI\n--help                       : show this help\n--version                    : show version\n\nImportant notice:\nhcxhashtool does not do NONCE ERROR CORRECTIONS\nin case of a packet loss, you get a wrong PTK",
+        "help": "no hashes loaded",
+        "man": "HCXHASHTOOL(1)                   User Commands                   HCXHASHTOOL(1)\n\nNAME\n     hcxhashtool - hcx tools set\n\nDESCRIPTION\n     hcxhashtool 7.1.2 (C) 2026 ZeroBeat usage: hcxhashtool <options>\n\n     options:  -i  <file>    : input PMKID/EAPOL hash file -o <file>   : output\n     PMKID/EAPOL hash file -E <file>   : output ESSID list (autohex enabled) -E\n     stdout   : output ESSID list to stdout (autohex  enabled)  -L  <file>    :\n     output ESSID list (unfiltered and unsorted)\n\n            useful in combination with hashcat -a9 option\n\n     -d          : download https://standards-oui.ieee.org/oui.txt\n\n            and save to ~/.hcxtools/oui.txt internet connection required\n\n     -h          : show this help -v          : show version\n\n     --essid-group                 :  convert to ESSID groups in working direc-\n     tory\n\n     full advantage of reuse of PBKDF2\n            not on old hash formats\n\n     --oui-group                  : convert to OUI groups in working directory\n\n            not on old hash formats\n\n     --mac-group-ap               : convert APs to MAC groups in working direc-\n     tory\n\n            not on old hash formats\n\n     --mac-group-client           : convert CLIENTs to MAC  groups  in  working\n     directory\n\n            not on old hash formats\n\n     --type=<digit>               : filter by hash type\n\n     bitmask:\n            1 = PMKID 2 = EAPOL\n\n            default PMKID and EAPOL (1+2=3)\n\n     --hcx-min=<digit>            : disregard hashes with occurrence lower than\n     hcx-min/ESSID  --hcx-max=<digit>            : disregard hashes with occur-\n     rence higher than hcx-max/ESSID --essid-len                  :  filter  by\n     ESSID length\n\n            default ESSID length: 0...32\n\n     --essid-min                  : filter by ESSID minimum length\n\n            default ESSID minimum length: 0\n\n     --essid-max                  : filter by ESSID maximum length\n\n            default ESSID maximum length: 32\n\n     --essid=<ESSID>               :  filter by ESSID --essid-part=<part of ES-\n     SID> : filter by part of ESSID (case sensitive) --essid-partx=<part of ES-\n     SID>: filter by part of ESSID (case insensitive)\n\n            locale and wide characters are ignored\n\n     --essid-list=<file>          : filter by ESSID file  --essid-regex=<regex>\n     : filter ESSID by regular expression --mac-ap=<MAC>               : filter\n     AP by MAC\n\n            format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n\n     --mac-client=<MAC>           : filter CLIENT by MAC\n\n            format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n\n     --mac-list=<file>            : filter by MAC file\n\n            format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n\n     --mac-skiplist=<file>        : exclude MAC from file\n\n            format: 001122334455, 00:11:22:33:44:55, 00-11-22-33-44-55 (hex)\n\n     --oui-ap=<OUI>               : filter AP by OUI\n\n            format: 001122, 00:11:22, 00-11-22 (hex)\n\n     --oui-client=<OUI>           : filter CLIENT by OUI\n\n            format: 001122, 00:11:22, 00-11-22 (hex)\n\n     --vendor=<VENDOR>             :  filter  AP  or CLIENT by (part of) VENDOR\n     name --vendor-ap=<VENDOR>         : filter AP by  (part  of)  VENDOR  name\n     --vendor-client=<VENDOR>      :  filter  CLIENT  by  (part of) VENDOR name\n     --authorized                 : filter EAPOL  pairs  by  status  authorized\n     (M2M3,  M3M4,  M1M4)  --challenge                  : filter EAPOL pairs by\n     status CHALLENGE (M1M2, M1M2ROGUE) --rc                          :  filter\n     EAPOL  pairs  by replaycount status checked --rc-not                     :\n     filter  EAPOL  pairs  by   replaycount   status   not   checked   --apless\n     :  filter  EAPOL  pairs  by  status  M1M2ROGUE  (M2 requested from CLIENT)\n     --info=<file>                : output detailed information  about  content\n     of hash file\n\n            no filter options available\n\n     --info=stdout                 :  stdout  output detailed information about\n     content of hash file\n\n            no filter options available\n\n     --info-vendor=<file>         : output detailed  information  about  ACCESS\n     POINT and CLIENT VENDORs\n\n            no filter options available\n\n     --info-vendor-ap=<file>       :  output  detailed information about ACCESS\n     POINT VENDORs\n\n            no filter options available\n\n     --info-vendor-client=<file>  : output detailed  information  about  CLIENT\n     VENDORs\n\n            no filter options available\n\n     --info-vendor=stdout          :  stdout  output detailed information about\n     ACCESS POINT and CLIENT VENDORs\n\n            no filter options available\n\n     --info-vendor-ap=stdout      : stdout output  detailed  information  about\n     ACCESS POINT VENDORs\n\n            no filter options available\n\n     --info-vendor-client=stdout   :  stdout  output detailed information about\n     CLIENT VENDORs\n\n            no filter options available\n\n     --psk=<PSK>                  : pre-shared key to test\n\n     due to PBKDF2 calculation this is a very slow process\n            no nonce error corrections\n\n     --pmk=<PMK>                  : plain master key to test\n\n            no nonce error corrections\n\n     --hccapx-in=<file>           : input deprecated hccapx file\n\n            MESSSAGEPAIR is taken from the hccapx source\n\n     --hccapx-out=<file>          : output  to  deprecated  hccapx  file  --hc-\n     cap-in=<file>             :  input  ancient  hccap file --hccap-out=<file>\n     : output to ancient hccap file\n\n     MESSSAGEPAIR is calculated from the EAPOL MESSAGE\n            due to missing information, the worst case value is calculated\n\n     --hccap-single               : output to ancient hccap single files (MAC +\n     count) --john=<file>                 :  output  to  deprecated  john  file\n     --vendorlist                  :  stdout output complete OUI list sorted by\n     OUI   --help                         :   show    this    help    --version\n     : show version\n\n     Important  notice: hcxhashtool does not do NONCE ERROR CORRECTIONS in case\n     of a packet loss, you get a wrong PTK\n\nhcxhashtool 7.1.2 (C) 2026 Zero... June 2026                     HCXHASHTOOL(1)",
+        "apropos": "hcxhashtool (1)      - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hcxhashtool",
+        "size_bytes": 72008,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=663fa55e850885bbb2df977dbda5716cfd9bbd52, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hcxpcapngtool",
+      "description": "Hcx tools set",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output WPA-PBKDF2-PMKID+EAPOL hash file (hashcat -m 22000)",
+          "default": null,
+          "choices": null,
+          "raw": " -o <file> : output WPA-PBKDF2-PMKID+EAPOL hash file (hashcat -m 22000)"
+        },
+        {
+          "flags": [
+            "-E"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker",
+          "default": null,
+          "choices": null,
+          "raw": " -E <file> : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker",
+          "default": null,
+          "choices": null,
+          "raw": " -R <file> : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker"
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output unsorted identity list to use as input wordlist for cracker",
+          "default": null,
+          "choices": null,
+          "raw": " -I <file> : output unsorted identity list to use as input wordlist for cracker"
+        },
+        {
+          "flags": [
+            "-U"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output unsorted username list to use as input wordlist for cracker",
+          "default": null,
+          "choices": null,
+          "raw": " -U <file> : output unsorted username list to use as input wordlist for cracker"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output device information list",
+          "default": null,
+          "choices": null,
+          "raw": " -D <file> : output device information list"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h        : show this help"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " -v        : show version"
+        },
+        {
+          "flags": [
+            "--all"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "convert all possible hashes instead of only the best one",
+          "default": null,
+          "choices": null,
+          "raw": " --all                              : convert all possible hashes instead of only the best one"
+        },
+        {
+          "flags": [
+            "--eapoltimeout"
+          ],
+          "metavar": "= digit",
+          "takes_value": true,
+          "description": "set EAPOL TIMEOUT (milliseconds)",
+          "default": null,
+          "choices": null,
+          "raw": " --eapoltimeout=<digit>             : set EAPOL TIMEOUT (milliseconds)"
+        },
+        {
+          "flags": [
+            "--nonce-error-corrections"
+          ],
+          "metavar": "= digit",
+          "takes_value": true,
+          "description": "set nonce error correction",
+          "default": null,
+          "choices": null,
+          "raw": " --nonce-error-corrections=<digit>  : set nonce error correction"
+        },
+        {
+          "flags": [
+            "--ignore-ie"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "do not use CIPHER and AKM information",
+          "default": null,
+          "choices": null,
+          "raw": " --ignore-ie                        : do not use CIPHER and AKM information"
+        },
+        {
+          "flags": [
+            "--max-essids"
+          ],
+          "metavar": "= digit",
+          "takes_value": true,
+          "description": "maximum allowed ESSIDs",
+          "default": null,
+          "choices": null,
+          "raw": " --max-essids=<digit>               : maximum allowed ESSIDs"
+        },
+        {
+          "flags": [
+            "--eapmd5"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output EAP MD5 CHALLENGE (hashcat -m 4800)",
+          "default": null,
+          "choices": null,
+          "raw": " --eapmd5=<file>                    : output EAP MD5 CHALLENGE (hashcat -m 4800)"
+        },
+        {
+          "flags": [
+            "--eapmd5-john"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output EAP MD5 CHALLENGE (john chap)",
+          "default": null,
+          "choices": null,
+          "raw": " --eapmd5-john=<file>               : output EAP MD5 CHALLENGE (john chap)"
+        },
+        {
+          "flags": [
+            "--eapleap"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output EAP LEAP and MSCHAPV2 CHALLENGE (hashcat -m 5500, john netntlm)",
+          "default": null,
+          "choices": null,
+          "raw": " --eapleap=<file>                   : output EAP LEAP and MSCHAPV2 CHALLENGE (hashcat -m 5500, john netntlm)"
+        },
+        {
+          "flags": [
+            "--tacacs-plus"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output TACACS PLUS v1 (hashcat -m 16100, john tacacs-plus)",
+          "default": null,
+          "choices": null,
+          "raw": " --tacacs-plus=<file>               : output TACACS PLUS v1 (hashcat -m 16100, john tacacs-plus)"
+        },
+        {
+          "flags": [
+            "--nmea-in"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input NME 0183 file",
+          "default": null,
+          "choices": null,
+          "raw": " --nmea-in=<file>                   : input NME 0183 file"
+        },
+        {
+          "flags": [
+            "--nmea-out"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output GPS data in NMEA 0183 format",
+          "default": null,
+          "choices": null,
+          "raw": " --nmea-out=<file>                  : output GPS data in NMEA 0183 format"
+        },
+        {
+          "flags": [
+            "--csv"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output ACCESS POINT information in CSV format",
+          "default": null,
+          "choices": null,
+          "raw": " --csv=<file>                       : output ACCESS POINT information in CSV format"
+        },
+        {
+          "flags": [
+            "--log"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output logfile",
+          "default": null,
+          "choices": null,
+          "raw": " --log=<file>                       : output logfile"
+        },
+        {
+          "flags": [
+            "--raw-out"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output frames in HEX ASCII",
+          "default": null,
+          "choices": null,
+          "raw": " --raw-out=<file>                   : output frames in HEX ASCII"
+        },
+        {
+          "flags": [
+            "--raw-in"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input frames in HEX ASCII",
+          "default": null,
+          "choices": null,
+          "raw": " --raw-in=<file>                    : input frames in HEX ASCII"
+        },
+        {
+          "flags": [
+            "--lts"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output BSSID list to sync with external GPS data",
+          "default": null,
+          "choices": null,
+          "raw": " --lts=<file>                       : output BSSID list to sync with external GPS data"
+        },
+        {
+          "flags": [
+            "--pmkid-client"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output WPA-(MESH/REPEATER)-PMKID hash file (hashcat -m 22000)",
+          "default": null,
+          "choices": null,
+          "raw": " --pmkid-client=<file>              : output WPA-(MESH/REPEATER)-PMKID hash file (hashcat -m 22000)"
+        },
+        {
+          "flags": [
+            "--pmkid"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output deprecated PMKID file (delimiter *)",
+          "default": null,
+          "choices": null,
+          "raw": " --pmkid=<file>                     : output deprecated PMKID file (delimiter *)"
+        },
+        {
+          "flags": [
+            "--hccapx"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output deprecated hccapx v4 file",
+          "default": null,
+          "choices": null,
+          "raw": " --hccapx=<file>                    : output deprecated hccapx v4 file"
+        },
+        {
+          "flags": [
+            "--hccap"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output deprecated hccap file",
+          "default": null,
+          "choices": null,
+          "raw": " --hccap=<file>                     : output deprecated hccap file"
+        },
+        {
+          "flags": [
+            "--john"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output deprecated PMKID/EAPOL (JtR wpapsk-opencl/wpapsk-pmk-opencl)",
+          "default": null,
+          "choices": null,
+          "raw": " --john=<file>                      : output deprecated PMKID/EAPOL (JtR wpapsk-opencl/wpapsk-pmk-opencl)"
+        },
+        {
+          "flags": [
+            "--prefix"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "convert everything to lists using this prefix (overrides single options):",
+          "default": null,
+          "choices": null,
+          "raw": " --prefix=<file>                    : convert everything to lists using this prefix (overrides single options):"
+        },
+        {
+          "flags": [
+            "--nmea"
+          ],
+          "metavar": "= file.nmea",
+          "takes_value": true,
+          "description": "output GPS data in NMEA 0183 format",
+          "default": null,
+          "choices": null,
+          "raw": "                                    --nmea=<file.nmea>         : output GPS data in NMEA 0183 format"
+        },
+        {
+          "flags": [
+            "--add-timestamp"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "add date/time and EAPOL TIME gap (time between two EAPOL MESSAGEs in nsec) to hash line",
+          "default": null,
+          "choices": null,
+          "raw": " --add-timestamp                    : add date/time and EAPOL TIME gap (time between two EAPOL MESSAGEs in nsec) to hash line"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " --help                             : show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " --version                          : show version"
+        }
+      ],
+      "raw_help": "root@kali:~# hcxpcapngtool -h\n hcxpcapngtool 7.1.0 (C) 2026 ZeroBeat\n convert pcapng, pcap and cap files to hash formats that hashcat and JtR use\n usage:\n hcxpcapngtool <options>\n hcxpcapngtool <options> input.pcapng\n hcxpcapngtool <options> *.pcapng\n hcxpcapngtool <options> *.pcap\n hcxpcapngtool <options> *.cap\n hcxpcapngtool <options> *.*\n \n short options:\n -o <file> : output WPA-PBKDF2-PMKID+EAPOL hash file (hashcat -m 22000)\n           get full advantage of reuse of PBKDF2 on PMKID and EAPOL\n -E <file> : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n           retrieved from every frame that contain an ESSID\n -R <file> : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n           retrieved from PROBEREQUEST frames only\n -I <file> : output unsorted identity list to use as input wordlist for cracker\n -U <file> : output unsorted username list to use as input wordlist for cracker\n -D <file> : output device information list\n           format MAC MANUFACTURER MODELNAME SERIALNUMBER DEVICENAME UUID ESSID\n -h        : show this help\n -v        : show version\n \n long options:\n --all                              : convert all possible hashes instead of only the best one\n                                    that can lead to much overhead hashes\n                                    use hcxhashtool to filter hashes\n                                    need hashcat --nonce-error-corrections >= 8\n --eapoltimeout=<digit>             : set EAPOL TIMEOUT (milliseconds)\n                                  : default: 5000 ms\n --nonce-error-corrections=<digit>  : set nonce error correction\n                                    warning: values > 0 can lead to uncrackable handshakes\n                                  : default: 0\n --ignore-ie                        : do not use CIPHER and AKM information\n                                    this will convert all frames regadless of\n                                    CIPHER and/OR AKM information,\n                                    and can lead to uncrackable hashes\n --max-essids=<digit>               : maximum allowed ESSIDs\n                                    default: 1 ESSID\n                                    disregard ESSID changes and take ESSID with highest ranking\n --eapmd5=<file>                    : output EAP MD5 CHALLENGE (hashcat -m 4800)\n --eapmd5-john=<file>               : output EAP MD5 CHALLENGE (john chap)\n --eapleap=<file>                   : output EAP LEAP and MSCHAPV2 CHALLENGE (hashcat -m 5500, john netntlm)\n --tacacs-plus=<file>               : output TACACS PLUS v1 (hashcat -m 16100, john tacacs-plus)\n --nmea-in=<file>                   : input NME 0183 file\n                                    to convert gpx to NMEA 0183, use GPSBabel:\n                                    gpsbabel -w -t -i gpx -f in_file.gpx -o nmea -F out_file.nmea\n --nmea-out=<file>                  : output GPS data in NMEA 0183 format\n                                    format: NMEA 0183 $GPGGA, $GPRMC, $GPWPL\n                                    to convert it to gpx, use GPSBabel:\n                                    gpsbabel -i nmea -f hcxdumptool.nmea -o gpx,gpxver=1.1 -F hcxdumptool.gpx\n                                    to display the track, open file.gpx with viking\n --csv=<file>                       : output ACCESS POINT information in CSV format\n                                    delimiter: tabulator (0x08)\n                                    columns:\n                                    YYYY-MM-DD HH:MM:SS MAC_AP ESSID ENC_TYPE CIPHER AKM COUNTRY_INFO CHANNEL RSSI GPS(DM.m) GPS(D.d) GPSFIX SATCOUNT HDOP ALTITUDE UNIT\n                                    GPS FIX:\n                                    0 = fix not available or invalid\n                                    1 = fix valid (GPS SPS mode)\n                                    2 = fix valid (differential GPS SPS Mode)\n                                    3 = not supported\n                                    4 = not supported\n                                    5 = not supported\n                                    6 = fix valid (Dead Reckoning Mode)\n                                    to convert it to other formats, use bash tools or scripting languages\n \n --log=<file>                       : output logfile\n --raw-out=<file>                   : output frames in HEX ASCII\n                                  : format: TIMESTAMP*LINKTYPE*FRAME*CHECKSUM\n --raw-in=<file>                    : input frames in HEX ASCII\n                                  : format: TIMESTAMP*LINKTYPE*FRAME*CHECKSUM\n --lts=<file>                       : output BSSID list to sync with external GPS data\n                                    format: LINUX timestamp <tab> RSSI <tab> MAC_AP <tab> ESSID\n --pmkid-client=<file>              : output WPA-(MESH/REPEATER)-PMKID hash file (hashcat -m 22000)\n --pmkid=<file>                     : output deprecated PMKID file (delimiter *)\n --hccapx=<file>                    : output deprecated hccapx v4 file\n --hccap=<file>                     : output deprecated hccap file\n --john=<file>                      : output deprecated PMKID/EAPOL (JtR wpapsk-opencl/wpapsk-pmk-opencl)\n --prefix=<file>                    : convert everything to lists using this prefix (overrides single options):\n                                     -o <file.22000>           : output PMKID/EAPOL hash file\n                                     -E <file.essid>           : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n                                     -I <file.identity>        : output unsorted identity list to use as input wordlist for cracker\n                                     -U <file.username>        : output unsorted username list to use as input wordlist for cracker\n                                    --eapmd5=<file.4800>       : output EAP MD5 CHALLENGE (hashcat -m 4800)\n                                    --eapleap=<file.5500>      : output EAP LEAP and MSCHAPV2 CHALLENGE (hashcat -m 5500, john netntlm)\n                                    --tacacs-plus=<file.16100> : output TACACS+ (hashcat -m 16100, john tacacs-plus)\n                                    --nmea=<file.nmea>         : output GPS data in NMEA 0183 format\n --add-timestamp                    : add date/time and EAPOL TIME gap (time between two EAPOL MESSAGEs in nsec) to hash line\n                                    this must be filtered out before feeding hashcat with the hash, e.g. by awk:\n                                    cat hash.hc22000 | awk '{print $1}' > hashremovedtimestamp.hc22000\n --help                             : show this help\n --version                          : show version\n bitmask of PMKID hash line (WPA*01) message pair field:\n 0: reserved\n 1: PMKID taken from AP\n 2: PMKID taken from AP possible PSKSHA256 FT using PSK\n 3: reserved\n 4: PMKID taken from CLIENT (wlan.da: possible MESH or REPEATER)\n 5: reserved\n 6: reserved\n 7: reserved\n \n bitmask of EAPOL hash line (WPA*02) message pair field:\n 2,1,0:\n000 = M1+M2, EAPOL from M2 (challenge - ANONCE from M1)\n001 = M1+M4, EAPOL from M4 (authorized) - usable if NONCE_CLIENT is not zeroed \n010 = M2+M3, EAPOL from M2 (authorized - ANONCE from M3)\n011 = M2+M3, EAPOL from M3 (authorized) - usable by option --all\n100 = M3+M4, EAPOL from M3 (authorized) - usable by option --all\n101 = M3+M4, EAPOL from M4 (authorized) - usable if NONCE_CLIENT is not zeroed\n 3: reserved\n 4: NC (set to 1) - nonce-error-corrections deactivated on M1M2ROGUE, M2M3E3 and M3M4E3\n 5: LE router detected (set to 1) - nonce-error-corrections required only on LE\n 6: BE router detected (set to 1) - nonce-error-corrections required only on BE\n 7: NC (set to 1) - nonce-error-corrections activated\n \n Do not edit, merge or convert pcapng files! This will remove optional comment fields!\n Detection of bit errors does not work on cleaned dump files!\n Do not use hcxpcapngtool in combination with third party cap/pcap/pcapng cleaning tools (except: tshark and/or Wireshark)!\n It is much better to run gzip to compress the files. Wireshark, tshark and hcxpcapngtool will understand this.\n Output is appended to existing files.\n Recommended tools to show additional 802.11 fields or to decrypt WiFi traffic: Wireshark and/or tshark\n Recommended tool to filter converted hash by several options: hcxhashtool\n Recommended tool to get default or standard PSKs: hcxpsktool\n Recommended tool to calculate wordlists based on ESSID: hcxeiutool\n Recommended tools to retrieve PSK from hash: hashcat, JtR",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hcxpcapngtool 7.1.2 (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "3fa82e9fc9c88fe4921f0cefee6fdffb3897332643fae1f9a3350ddbe078f6ba"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxpcapngtool <options>",
+          "template": null,
+          "original_sha256": "59dcb72faffdd47c405585dac10616cfa2ff64c61e67d97760ab4d41e8d98e75"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxpcapngtool <options> input.pcapng",
+          "template": null,
+          "original_sha256": "b1bcb821f5c0f6dfe7ec1284c95b313f66b3aa5e0b0084f3ba5955581a9027ab"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxpcapngtool <options> *.pcapng",
+          "template": null,
+          "original_sha256": "806e26bd491c666f0a79257b4bec64a249faf2b7708c3d652563368588cf8a07"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxpcapngtool <options> *.pcap",
+          "template": null,
+          "original_sha256": "4982b994aa3b13af01f748d21f3160fcfb2d7be9b7b1b7b4efdff4206acaeb44"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxpcapngtool <options> *.cap",
+          "template": null,
+          "original_sha256": "16cc439ea4c81acbe6309b5f13f80ed1b8b3c7d66a734370bc3991eb88ec8d5b"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxpcapngtool <options> *.*",
+          "template": null,
+          "original_sha256": "2d065dfcb6d707c9d2e9219f62e4a445e8f9135782f848890e937acca7af6007"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hcxpcapngtool 7.1.2 (C) 2026 ZeroBeat\nconvert pcapng, pcap and cap files to hash formats that hashcat and JtR use\nusage:\nhcxpcapngtool <options>\nhcxpcapngtool <options> input.pcapng\nhcxpcapngtool <options> *.pcapng\nhcxpcapngtool <options> *.pcap\nhcxpcapngtool <options> *.cap\nhcxpcapngtool <options> *.*\n\nshort options:\n-o <file> : output WPA-PBKDF2-PMKID+EAPOL hash file (hashcat -m 22000)\n            get full advantage of reuse of PBKDF2 on PMKID and EAPOL\n-E <file> : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n            retrieved from every frame that contain an ESSID\n-R <file> : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n            retrieved from PROBEREQUEST frames only\n-I <file> : output unsorted identity list to use as input wordlist for cracker\n-U <file> : output unsorted username list to use as input wordlist for cracker\n-D <file> : output device information list\n            format MAC MANUFACTURER MODELNAME SERIALNUMBER DEVICENAME UUID ESSID\n-h        : show this help\n-v        : show version\n\nlong options:\n--all                              : convert all possible hashes instead of only the best one\n                                     that can lead to much overhead hashes\n                                     use hcxhashtool to filter hashes\n                                     need hashcat --nonce-error-corrections >= 8\n--eapoltimeout=<digit>             : set EAPOL TIMEOUT (milliseconds)\n                                   : default: 5000 ms\n--nonce-error-corrections=<digit>  : set nonce error correction\n                                     warning: values > 0 can lead to uncrackable handshakes\n                                   : default: 0\n--ignore-ie                        : do not use CIPHER and AKM information\n                                     this will convert all frames regadless of\n                                     CIPHER and/OR AKM information,\n                                     and can lead to uncrackable hashes\n--max-essids=<digit>               : maximum allowed ESSIDs\n                                     default: 1 ESSID\n                                     disregard ESSID changes and take ESSID with highest ranking\n--eapmd5=<file>                    : output EAP MD5 CHALLENGE (hashcat -m 4800)\n--eapmd5-john=<file>               : output EAP MD5 CHALLENGE (john chap)\n--eapleap=<file>                   : output EAP LEAP and MSCHAPV2 CHALLENGE (hashcat -m 5500, john netntlm)\n--tacacs-plus=<file>               : output TACACS PLUS v1 (hashcat -m 16100, john tacacs-plus)\n--nmea-in=<file>                   : input NME 0183 file\n                                     to convert gpx to NMEA 0183, use GPSBabel:\n                                     gpsbabel -w -t -i gpx -f in_file.gpx -o nmea -F out_file.nmea\n--nmea-out=<file>                  : output GPS data in NMEA 0183 format\n                                     format: NMEA 0183 $GPGGA, $GPRMC, $GPWPL\n                                     to convert it to gpx, use GPSBabel:\n                                     gpsbabel -i nmea -f hcxdumptool.nmea -o gpx,gpxver=1.1 -F hcxdumptool.gpx\n                                     to display the track, open file.gpx with viking\n--csv=<file>                       : output ACCESS POINT information in CSV format\n                                     delimiter: tabulator (0x08)\n                                     columns:\n                                     YYYY-MM-DD HH:MM:SS MAC_AP ESSID ENC_TYPE CIPHER AKM COUNTRY_INFO CHANNEL RSSI GPS(DM.m) GPS(D.d) GPSFIX SATCOUNT HDOP ALTITUDE UNIT\n                                     GPS FIX:\n                                     0 = fix not available or invalid\n                                     1 = fix valid (GPS SPS mode)\n                                     2 = fix valid (differential GPS SPS Mode)\n                                     3 = not supported\n                                     4 = not supported\n                                     5 = not supported\n                                     6 = fix valid (Dead Reckoning Mode)\n                                     to convert it to other formats, use bash tools or scripting languages\n\n--log=<file>                       : output logfile\n--raw-out=<file>                   : output frames in HEX ASCII\n                                   : format: TIMESTAMP*LINKTYPE*FRAME*CHECKSUM\n--raw-in=<file>                    : input frames in HEX ASCII\n                                   : format: TIMESTAMP*LINKTYPE*FRAME*CHECKSUM\n--lts=<file>                       : output BSSID list to sync with external GPS data\n                                     format: LINUX timestamp <tab> RSSI <tab> MAC_AP <tab> ESSID\n--pmkid-client=<file>              : output WPA-(MESH/REPEATER)-PMKID hash file (hashcat -m 22000)\n--pmkid=<file>                     : output deprecated PMKID file (delimiter *)\n--hccapx=<file>                    : output deprecated hccapx v4 file\n--hccap=<file>                     : output deprecated hccap file\n--john=<file>                      : output deprecated PMKID/EAPOL (JtR wpapsk-opencl/wpapsk-pmk-opencl)\n--prefix=<file>                    : convert everything to lists using this prefix (overrides single options):\n                                      -o <file.22000>           : output PMKID/EAPOL hash file\n                                      -E <file.essid>           : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n                                      -I <file.identity>        : output unsorted identity list to use as input wordlist for cracker\n                                      -U <file.username>        : output unsorted username list to use as input wordlist for cracker\n                                     --eapmd5=<file.4800>       : output EAP MD5 CHALLENGE (hashcat -m 4800)\n                                     --eapleap=<file.5500>      : output EAP LEAP and MSCHAPV2 CHALLENGE (hashcat -m 5500, john netntlm)\n                                     --tacacs-plus=<file.16100> : output TACACS+ (hashcat -m 16100, john tacacs-plus)\n                                     --nmea=<file.nmea>         : output GPS data in NMEA 0183 format\n--add-timestamp                    : add date/time and EAPOL TIME gap (time between two EAPOL MESSAGEs in nsec) to hash line\n                                     this must be filtered out before feeding hashcat with the hash, e.g. by awk:\n                                     cat hash.hc22000 | awk '{print $1}' > hashremovedtimestamp.hc22000\n--help                             : show this help\n--version                          : show version\nbitmask of PMKID hash line (WPA*01) message pair field:\n0: reserved\n1: PMKID taken from AP\n2: PMKID taken from AP possible PSKSHA256 FT using PSK\n3: reserved\n4: PMKID taken from CLIENT (wlan.da: possible MESH or REPEATER)\n5: reserved\n6: reserved\n7: reserved\n\nbitmask of EAPOL hash line (WPA*02) message pair field:\n2,1,0:\n 000 = M1+M2, EAPOL from M2 (challenge - ANONCE from M1)\n 001 = M1+M4, EAPOL from M4 (authorized) - usable if NONCE_CLIENT is not zeroed \n 010 = M2+M3, EAPOL from M2 (authorized - ANONCE from M3)\n 011 = M2+M3, EAPOL from M3 (authorized) - usable by option --all\n 100 = M3+M4, EAPOL from M3 (authorized) - usable by option --all\n 101 = M3+M4, EAPOL from M4 (authorized) - usable if NONCE_CLIENT is not zeroed\n3: reserved\n4: NC (set to 1) - nonce-error-corrections deactivated on M1M2ROGUE, M2M3E3 and M3M4E3\n5: LE router detected (set to 1) - nonce-error-corrections required only on LE\n6: BE router detected (set to 1) - nonce-error-corrections required only on BE\n7: NC (set to 1) - nonce-error-corrections activated\n\nDo not edit, merge or convert pcapng files! This will remove optional comment fields!\nDetection of bit errors does not work on cleaned dump files!\nDo not use hcxpcapngtool in combination with third party cap/pcap/pcapng cleaning tools (except: tshark and/or Wireshark)!\nIt is much better to run gzip to compress the files. Wireshark, tshark and hcxpcapngtool will understand this.\nOutput is appended to existing files.\nRecommended tools to show additional 802.11 fields or to decrypt WiFi traffic: Wireshark and/or tshark\nRecommended tool to filter converted hash by several options: hcxhashtool\nRecommended tool to get default or standard PSKs: hcxpsktool\nRecommended tool to calculate wordlists based on ESSID: hcxeiutool\nRecommended tools to retrieve PSK from hash: hashcat, JtR",
+        "-h": "hcxpcapngtool 7.1.2 (C) 2026 ZeroBeat\nconvert pcapng, pcap and cap files to hash formats that hashcat and JtR use\nusage:\nhcxpcapngtool <options>\nhcxpcapngtool <options> input.pcapng\nhcxpcapngtool <options> *.pcapng\nhcxpcapngtool <options> *.pcap\nhcxpcapngtool <options> *.cap\nhcxpcapngtool <options> *.*\n\nshort options:\n-o <file> : output WPA-PBKDF2-PMKID+EAPOL hash file (hashcat -m 22000)\n            get full advantage of reuse of PBKDF2 on PMKID and EAPOL\n-E <file> : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n            retrieved from every frame that contain an ESSID\n-R <file> : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n            retrieved from PROBEREQUEST frames only\n-I <file> : output unsorted identity list to use as input wordlist for cracker\n-U <file> : output unsorted username list to use as input wordlist for cracker\n-D <file> : output device information list\n            format MAC MANUFACTURER MODELNAME SERIALNUMBER DEVICENAME UUID ESSID\n-h        : show this help\n-v        : show version\n\nlong options:\n--all                              : convert all possible hashes instead of only the best one\n                                     that can lead to much overhead hashes\n                                     use hcxhashtool to filter hashes\n                                     need hashcat --nonce-error-corrections >= 8\n--eapoltimeout=<digit>             : set EAPOL TIMEOUT (milliseconds)\n                                   : default: 5000 ms\n--nonce-error-corrections=<digit>  : set nonce error correction\n                                     warning: values > 0 can lead to uncrackable handshakes\n                                   : default: 0\n--ignore-ie                        : do not use CIPHER and AKM information\n                                     this will convert all frames regadless of\n                                     CIPHER and/OR AKM information,\n                                     and can lead to uncrackable hashes\n--max-essids=<digit>               : maximum allowed ESSIDs\n                                     default: 1 ESSID\n                                     disregard ESSID changes and take ESSID with highest ranking\n--eapmd5=<file>                    : output EAP MD5 CHALLENGE (hashcat -m 4800)\n--eapmd5-john=<file>               : output EAP MD5 CHALLENGE (john chap)\n--eapleap=<file>                   : output EAP LEAP and MSCHAPV2 CHALLENGE (hashcat -m 5500, john netntlm)\n--tacacs-plus=<file>               : output TACACS PLUS v1 (hashcat -m 16100, john tacacs-plus)\n--nmea-in=<file>                   : input NME 0183 file\n                                     to convert gpx to NMEA 0183, use GPSBabel:\n                                     gpsbabel -w -t -i gpx -f in_file.gpx -o nmea -F out_file.nmea\n--nmea-out=<file>                  : output GPS data in NMEA 0183 format\n                                     format: NMEA 0183 $GPGGA, $GPRMC, $GPWPL\n                                     to convert it to gpx, use GPSBabel:\n                                     gpsbabel -i nmea -f hcxdumptool.nmea -o gpx,gpxver=1.1 -F hcxdumptool.gpx\n                                     to display the track, open file.gpx with viking\n--csv=<file>                       : output ACCESS POINT information in CSV format\n                                     delimiter: tabulator (0x08)\n                                     columns:\n                                     YYYY-MM-DD HH:MM:SS MAC_AP ESSID ENC_TYPE CIPHER AKM COUNTRY_INFO CHANNEL RSSI GPS(DM.m) GPS(D.d) GPSFIX SATCOUNT HDOP ALTITUDE UNIT\n                                     GPS FIX:\n                                     0 = fix not available or invalid\n                                     1 = fix valid (GPS SPS mode)\n                                     2 = fix valid (differential GPS SPS Mode)\n                                     3 = not supported\n                                     4 = not supported\n                                     5 = not supported\n                                     6 = fix valid (Dead Reckoning Mode)\n                                     to convert it to other formats, use bash tools or scripting languages\n\n--log=<file>                       : output logfile\n--raw-out=<file>                   : output frames in HEX ASCII\n                                   : format: TIMESTAMP*LINKTYPE*FRAME*CHECKSUM\n--raw-in=<file>                    : input frames in HEX ASCII\n                                   : format: TIMESTAMP*LINKTYPE*FRAME*CHECKSUM\n--lts=<file>                       : output BSSID list to sync with external GPS data\n                                     format: LINUX timestamp <tab> RSSI <tab> MAC_AP <tab> ESSID\n--pmkid-client=<file>              : output WPA-(MESH/REPEATER)-PMKID hash file (hashcat -m 22000)\n--pmkid=<file>                     : output deprecated PMKID file (delimiter *)\n--hccapx=<file>                    : output deprecated hccapx v4 file\n--hccap=<file>                     : output deprecated hccap file\n--john=<file>                      : output deprecated PMKID/EAPOL (JtR wpapsk-opencl/wpapsk-pmk-opencl)\n--prefix=<file>                    : convert everything to lists using this prefix (overrides single options):\n                                      -o <file.22000>           : output PMKID/EAPOL hash file\n                                      -E <file.essid>           : output wordlist (autohex enabled on non ASCII characters) to use as input wordlist for cracker\n                                      -I <file.identity>        : output unsorted identity list to use as input wordlist for cracker\n                                      -U <file.username>        : output unsorted username list to use as input wordlist for cracker\n                                     --eapmd5=<file.4800>       : output EAP MD5 CHALLENGE (hashcat -m 4800)\n                                     --eapleap=<file.5500>      : output EAP LEAP and MSCHAPV2 CHALLENGE (hashcat -m 5500, john netntlm)\n                                     --tacacs-plus=<file.16100> : output TACACS+ (hashcat -m 16100, john tacacs-plus)\n                                     --nmea=<file.nmea>         : output GPS data in NMEA 0183 format\n--add-timestamp                    : add date/time and EAPOL TIME gap (time between two EAPOL MESSAGEs in nsec) to hash line\n                                     this must be filtered out before feeding hashcat with the hash, e.g. by awk:\n                                     cat hash.hc22000 | awk '{print $1}' > hashremovedtimestamp.hc22000\n--help                             : show this help\n--version                          : show version\nbitmask of PMKID hash line (WPA*01) message pair field:\n0: reserved\n1: PMKID taken from AP\n2: PMKID taken from AP possible PSKSHA256 FT using PSK\n3: reserved\n4: PMKID taken from CLIENT (wlan.da: possible MESH or REPEATER)\n5: reserved\n6: reserved\n7: reserved\n\nbitmask of EAPOL hash line (WPA*02) message pair field:\n2,1,0:\n 000 = M1+M2, EAPOL from M2 (challenge - ANONCE from M1)\n 001 = M1+M4, EAPOL from M4 (authorized) - usable if NONCE_CLIENT is not zeroed \n 010 = M2+M3, EAPOL from M2 (authorized - ANONCE from M3)\n 011 = M2+M3, EAPOL from M3 (authorized) - usable by option --all\n 100 = M3+M4, EAPOL from M3 (authorized) - usable by option --all\n 101 = M3+M4, EAPOL from M4 (authorized) - usable if NONCE_CLIENT is not zeroed\n3: reserved\n4: NC (set to 1) - nonce-error-corrections deactivated on M1M2ROGUE, M2M3E3 and M3M4E3\n5: LE router detected (set to 1) - nonce-error-corrections required only on LE\n6: BE router detected (set to 1) - nonce-error-corrections required only on BE\n7: NC (set to 1) - nonce-error-corrections activated\n\nDo not edit, merge or convert pcapng files! This will remove optional comment fields!\nDetection of bit errors does not work on cleaned dump files!\nDo not use hcxpcapngtool in combination with third party cap/pcap/pcapng cleaning tools (except: tshark and/or Wireshark)!\nIt is much better to run gzip to compress the files. Wireshark, tshark and hcxpcapngtool will understand this.\nOutput is appended to existing files.\nRecommended tools to show additional 802.11 fields or to decrypt WiFi traffic: Wireshark and/or tshark\nRecommended tool to filter converted hash by several options: hcxhashtool\nRecommended tool to get default or standard PSKs: hcxpsktool\nRecommended tool to calculate wordlists based on ESSID: hcxeiutool\nRecommended tools to retrieve PSK from hash: hashcat, JtR",
+        "help": "unsupported dump file format: help",
+        "man": "HCXPCAPNGTOOL(1)                 User Commands                 HCXPCAPNGTOOL(1)\n\nNAME\n     hcxpcapngtool - hcx tools set\n\nDESCRIPTION\n     hcxpcapngtool  7.1.2  (C) 2026 ZeroBeat convert pcapng, pcap and cap files\n     to hash formats that hashcat and JtR use  usage:  hcxpcapngtool  <options>\n     hcxpcapngtool <options> input.pcapng hcxpcapngtool <options> *.pcapng hcx-\n     pcapngtool  <options>  *.pcap  hcxpcapngtool <options> *.cap hcxpcapngtool\n     <options> *.*\n\n     short options: -o <file> : output WPA-PBKDF2-PMKID+EAPOL hash file  (hash-\n     cat -m 22000)\n\n            get full advantage of reuse of PBKDF2 on PMKID and EAPOL\n\n     -E  <file>  : output wordlist (autohex enabled on non ASCII characters) to\n     use as input wordlist for cracker\n\n            retrieved from every frame that contain an ESSID\n\n     -R <file> : output wordlist (autohex enabled on non ASCII  characters)  to\n     use as input wordlist for cracker\n\n            retrieved from PROBEREQUEST frames only\n\n     -I  <file>  :  output  unsorted identity list to use as input wordlist for\n     cracker -U <file> : output unsorted username list to use as input wordlist\n     for cracker -D <file> : output device information list\n\n            format MAC MANUFACTURER MODELNAME SERIALNUMBER DEVICENAME UUID  ES-\n            SID\n\n     -h        : show this help -v        : show version\n\n     long  options:  --all                               : convert all possible\n     hashes instead of only the best one\n\n     that can lead to much overhead hashes\n            use hcxhashtool to filter hashes need hashcat --nonce-error-correc-\n            tions >= 8\n\n     --eapoltimeout=<digit>             : set EAPOL TIMEOUT (milliseconds)\n\n            : default: 5000 ms\n\n     --nonce-error-corrections=<digit>  : set nonce error correction\n\n     warning: values > 0 can lead to uncrackable handshakes\n            : default: 0\n\n     --ignore-ie                        : do not use CIPHER and AKM information\n\n     this will convert all frames regadless of\n            CIPHER and/OR AKM information, and can lead to uncrackable hashes\n\n     --max-essids=<digit>               : maximum allowed ESSIDs\n\n     default: 1 ESSID\n            disregard ESSID changes and take ESSID with highest ranking\n\n     --eapmd5=<file>                    : output EAP MD5 CHALLENGE (hashcat  -m\n     4800)  --eapmd5-john=<file>               : output EAP MD5 CHALLENGE (john\n     chap) --eapleap=<file>                   : output EAP  LEAP  and  MSCHAPV2\n     CHALLENGE   (hashcat   -m   5500,   john   netntlm)   --tacacs-plus=<file>\n     :  output  TACACS  PLUS  v1   (hashcat   -m   16100,   john   tacacs-plus)\n     --nmea-in=<file>                   : input NME 0183 file\n\n     to convert gpx to NMEA 0183, use GPSBabel:\n            gpsbabel -w -t -i gpx -f in_file.gpx -o nmea -F out_file.nmea\n\n     --nmea-out=<file>                  : output GPS data in NMEA 0183 format\n\n     format: NMEA 0183 $GPGGA, $GPRMC, $GPWPL\n            to  convert  it  to gpx, use GPSBabel: gpsbabel -i nmea -f hcxdump-\n            tool.nmea -o  gpx,gpxver=1.1  -F  hcxdumptool.gpx  to  display  the\n            track, open file.gpx with viking\n\n     --csv=<file>                        :  output  ACCESS POINT information in\n     CSV format\n\n     delimiter: tabulator (0x08)\n            columns: YYYY-MM-DD HH:MM:SS MAC_AP ESSID ENC_TYPE CIPHER AKM COUN-\n            TRY_INFO CHANNEL RSSI GPS(DM.m) GPS(D.d) GPSFIX SATCOUNT HDOP ALTI-\n            TUDE UNIT GPS FIX: 0 = fix not available or invalid 1 =  fix  valid\n            (GPS  SPS  mode)  2 = fix valid (differential GPS SPS Mode) 3 = not\n            supported 4 = not supported 5 = not supported 6 = fix  valid  (Dead\n            Reckoning  Mode)  to convert it to other formats, use bash tools or\n            scripting languages\n\n     --log=<file>                        :  output   logfile   --raw-out=<file>\n     : output frames in HEX ASCII\n\n            : format: TIMESTAMP*LINKTYPE*FRAME*CHECKSUM\n\n     --raw-in=<file>                    : input frames in HEX ASCII\n\n            : format: TIMESTAMP*LINKTYPE*FRAME*CHECKSUM\n\n     --lts=<file>                       : output BSSID list to sync with exter-\n     nal GPS data\n\n            format: LINUX timestamp <tab> RSSI <tab> MAC_AP <tab> ESSID\n\n     --pmkid-client=<file>              : output WPA-(MESH/REPEATER)-PMKID hash\n     file (hashcat -m 22000) --pmkid=<file>                     : output depre-\n     cated PMKID file (delimiter *) --hccapx=<file>                    : output\n     deprecated hccapx v4 file --hccap=<file>                     : output dep-\n     recated  hccap file --john=<file>                      : output deprecated\n     PMKID/EAPOL    (JtR    wpapsk-opencl/wpapsk-pmk-opencl)    --prefix=<file>\n     :  convert  everything  to  lists  using this prefix (overrides single op-\n     tions):\n\n     -o <file.22000>\n            : output PMKID/EAPOL hash file\n\n     -E <file.essid>\n            : output wordlist (autohex enabled on non ASCII characters) to  use\n            as input wordlist for cracker\n\n     -I <file.identity>\n            :  output  unsorted  identity  list  to  use  as input wordlist for\n            cracker\n\n     -U <file.username>\n            : output unsorted username  list  to  use  as  input  wordlist  for\n            cracker\n\n     --eapmd5=<file.4800>\n            : output EAP MD5 CHALLENGE (hashcat -m 4800)\n\n     --eapleap=<file.5500>\n            :  output  EAP  LEAP  and MSCHAPV2 CHALLENGE (hashcat -m 5500, john\n            netntlm)\n\n     --tacacs-plus=<file.16100> : output TACACS+ (hashcat -m 16100, john\n     tacacs-plus)\n            --nmea=<file.nmea>         : output GPS data in NMEA 0183 format\n\n     --add-timestamp                    : add  date/time  and  EAPOL  TIME  gap\n     (time between two EAPOL MESSAGEs in nsec) to hash line\n\n     this must be filtered out before feeding hashcat with the hash, e.g. by\n     awk:\n            cat hash.hc22000 | awk '{print $1}' > hashremovedtimestamp.hc22000\n\n     --help                                :    show    this   help   --version\n     : show version bitmask of PMKID hash line (WPA*01) message pair field:  0:\n     reserved  1: PMKID taken from AP 2: PMKID taken from AP possible PSKSHA256\n     FT using PSK 3: reserved 4: PMKID taken  from  CLIENT  (wlan.da:  possible\n     MESH or REPEATER) 5: reserved 6: reserved 7: reserved\n\n     bitmask of EAPOL hash line (WPA*02) message pair field: 2,1,0:\n\n            000  =  M1+M2,  EAPOL  from  M2  (challenge - ANONCE from M1) 001 =\n            M1+M4, EAPOL from M4 (authorized) - usable if NONCE_CLIENT  is  not\n            zeroed 010 = M2+M3, EAPOL from M2 (authorized - ANONCE from M3) 011\n            =  M2+M3, EAPOL from M3 (authorized) - usable by option --all 100 =\n            M3+M4, EAPOL from M3 (authorized) - usable by option  --all  101  =\n            M3+M4,  EAPOL  from M4 (authorized) - usable if NONCE_CLIENT is not\n            zeroed\n\n     3: reserved 4: NC (set to  1)  -  nonce-error-corrections  deactivated  on\n     M1M2ROGUE,  M2M3E3 and M3M4E3 5: LE router detected (set to 1) - nonce-er-\n     ror-corrections required only on LE 6: BE router detected  (set  to  1)  -\n     nonce-error-corrections  required  only on BE 7: NC (set to 1) - nonce-er-\n     ror-corrections activated\n\n     Do not edit, merge or convert pcapng files! This will remove optional com-\n     ment fields!  Detection of bit errors does not work on cleaned dump files!\n     Do not use hcxpcapngtool in combination with third  party  cap/pcap/pcapng\n     cleaning  tools  (except:  tshark and/or Wireshark)!  It is much better to\n     run gzip to compress the files. Wireshark, tshark and  hcxpcapngtool  will\n     understand this.  Output is appended to existing files.  Recommended tools\n     to  show  additional  802.11  fields or to decrypt WiFi traffic: Wireshark\n     and/or tshark Recommended tool to filter converted  hash  by  several  op-\n     tions: hcxhashtool Recommended tool to get default or standard PSKs: hcxp-\n     sktool  Recommended tool to calculate wordlists based on ESSID: hcxeiutool\n     Recommended tools to retrieve PSK from hash: hashcat, JtR\n\nhcxpcapngtool 7.1.2 (C) 2026 Ze... June 2026                   HCXPCAPNGTOOL(1)",
+        "apropos": "hcxpcapngtool (1)    - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hcxpcapngtool",
+        "size_bytes": 145672,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6a681edf91c92e03ce0a86c870fe36e6b689762b, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hcxpmktool",
+      "description": "Hcx tools set",
+      "usage": "hcxpmktool <options>",
+      "arguments": [
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "hash line",
+          "takes_value": true,
+          "description": "input hashcat hash line (-m 22000)",
+          "default": null,
+          "choices": null,
+          "raw": " -l <hash line> : input hashcat hash line (-m 22000)"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "ESSID",
+          "takes_value": true,
+          "description": "input Network Name (ESSID)",
+          "default": null,
+          "choices": null,
+          "raw": " -e <ESSID>     : input Network Name (ESSID)"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "PSK",
+          "takes_value": true,
+          "description": "input Pre Shared Key (PSK) or Plain Master Key (PMK)",
+          "default": null,
+          "choices": null,
+          "raw": " -p <PSK>       : input Pre Shared Key (PSK) or Plain Master Key (PMK)"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " --help         : show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " --version      : show version"
+        }
+      ],
+      "raw_help": "root@kali:~# hcxpmktool -h\n hcxpmktool 7.1.0  (C) 2026 ZeroBeat\n usage  : hcxpmktool <options>\n \n short options:\n -l <hash line> : input hashcat hash line (-m 22000)\n -e <ESSID>     : input Network Name (ESSID)\n -p <PSK>       : input Pre Shared Key (PSK) or Plain Master Key (PMK)\n -p -           : read Pre Shared Key (PSK) from stdin\n              : small lists only\n \n long options:\n --help         : show this help\n --version      : show version\n \n exit codes:\n 0 = PSK/PMK confirmed\n 1 = ERROR occurred\n 2 = PSK/PMK unconfirmed\n \n Important notice:\n hcxpmktool does not do NONCE ERROR CORRECTIONS\n in case of a packet loss, you get a wrong PTK",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hcxpmktool 7.1.2  (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "12d3b0c3a61aad5b1d745128c65e3e5623d6fd15caafd28d9c9ba9433e66acac"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxpmktool does not do NONCE ERROR CORRECTIONS",
+          "template": null,
+          "original_sha256": "5cd69850067013df41bc794465e158821a9a9547b335c419caa3d8d6b248ed83"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hcxpmktool 7.1.2  (C) 2026 ZeroBeat\nusage  : hcxpmktool <options>\n\nshort options:\n-l <hash line> : input hashcat hash line (-m 22000)\n-e <ESSID>     : input Network Name (ESSID)\n-p <PSK>       : input Pre Shared Key (PSK) or Plain Master Key (PMK)\n-p -           : read Pre Shared Key (PSK) from stdin\n               : small lists only\n\nlong options:\n--help         : show this help\n--version      : show version\n\nexit codes:\n0 = PSK/PMK confirmed\n1 = ERROR occurred\n2 = PSK/PMK unconfirmed\n\nImportant notice:\nhcxpmktool does not do NONCE ERROR CORRECTIONS\nin case of a packet loss, you get a wrong PTK",
+        "-h": "hcxpmktool 7.1.2  (C) 2026 ZeroBeat\nusage  : hcxpmktool <options>\n\nshort options:\n-l <hash line> : input hashcat hash line (-m 22000)\n-e <ESSID>     : input Network Name (ESSID)\n-p <PSK>       : input Pre Shared Key (PSK) or Plain Master Key (PMK)\n-p -           : read Pre Shared Key (PSK) from stdin\n               : small lists only\n\nlong options:\n--help         : show this help\n--version      : show version\n\nexit codes:\n0 = PSK/PMK confirmed\n1 = ERROR occurred\n2 = PSK/PMK unconfirmed\n\nImportant notice:\nhcxpmktool does not do NONCE ERROR CORRECTIONS\nin case of a packet loss, you get a wrong PTK",
+        "man": "HCXPMKTOOL(1)                    User Commands                    HCXPMKTOOL(1)\n\nNAME\n     hcxpmktool - hcx tools set\n\nDESCRIPTION\n     hcxpmktool 7.1.2  (C) 2026 ZeroBeat usage  : hcxpmktool <options>\n\n     short options: -l <hash line> : input hashcat hash line (-m 22000) -e <ES-\n     SID>      :  input  Network Name (ESSID) -p <PSK>       : input Pre Shared\n     Key (PSK) or Plain Master Key (PMK) -p -           : read Pre  Shared  Key\n     (PSK) from stdin\n\n            : small lists only\n\n     long  options:  --help         : show this help --version      : show ver-\n     sion\n\n     exit codes: 0 = PSK/PMK confirmed 1 = ERROR occurred 2  =  PSK/PMK  uncon-\n     firmed\n\n     Important  notice:  hcxpmktool does not do NONCE ERROR CORRECTIONS in case\n     of a packet loss, you get a wrong PTK\n\nhcxpmktool 7.1.2 (C) 2026 ZeroBeat June 2026                      HCXPMKTOOL(1)",
+        "apropos": "hcxpmktool (1)       - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hcxpmktool",
+        "size_bytes": 31032,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f0f12fd1bdb83c6786a5ec3905ca7c074cd3fe2d, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hcxpottool",
+      "description": "Hcx tools set",
+      "usage": "hcxpottool <options>",
+      "arguments": [
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h                   : show this help"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " -v                   : show version"
+        },
+        {
+          "flags": [
+            "--hcpotin"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input potfile in hashcat pot file format",
+          "default": null,
+          "choices": null,
+          "raw": " --hcpotin=<file>     : input potfile in hashcat pot file format"
+        },
+        {
+          "flags": [
+            "--hcoutin"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input outfile in hashcat out file format",
+          "default": null,
+          "choices": null,
+          "raw": " --hcoutin=<file>     : input outfile in hashcat out file format"
+        },
+        {
+          "flags": [
+            "--jtrpotin"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input potfile in john pot file format",
+          "default": null,
+          "choices": null,
+          "raw": " --jtrpotin=<file>    : input potfile in john pot file format"
+        },
+        {
+          "flags": [
+            "--hcpotout"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output potfile in hashcat format",
+          "default": null,
+          "choices": null,
+          "raw": " --hcpotout=<file>    : output potfile in hashcat format"
+        },
+        {
+          "flags": [
+            "--hcpbkdf2out"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output hashcat hash file format 12000",
+          "default": null,
+          "choices": null,
+          "raw": " --hcpbkdf2out=<file> : output hashcat hash file format 12000"
+        },
+        {
+          "flags": [
+            "--jtrpbkdf2out"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output john hash file format PBKDF2-HMAC-SHA1-opencl / PBKDF2-HMAC-SHA1",
+          "default": null,
+          "choices": null,
+          "raw": " --jtrpbkdf2out=<file>: output john hash file format PBKDF2-HMAC-SHA1-opencl / PBKDF2-HMAC-SHA1"
+        },
+        {
+          "flags": [
+            "--tabout"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output tabulator separated file",
+          "default": null,
+          "choices": null,
+          "raw": " --tabout=<file>      : output tabulator separated file"
+        },
+        {
+          "flags": [
+            "--tabspout"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output tabulator separated file",
+          "default": null,
+          "choices": null,
+          "raw": " --tabspout=<file>    : output tabulator separated file"
+        },
+        {
+          "flags": [
+            "--tabnhout"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output tabulator separated file",
+          "default": null,
+          "choices": null,
+          "raw": " --tabnhout=<file>    : output tabulator separated file"
+        },
+        {
+          "flags": [
+            "--faultyout"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "output faulty lines file",
+          "default": null,
+          "choices": null,
+          "raw": " --faultyout=<file>   : output faulty lines file"
+        },
+        {
+          "flags": [
+            "--pmkoff"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable verification/calculation of plain master keyss",
+          "default": null,
+          "choices": null,
+          "raw": " --pmkoff             : disable verification/calculation of plain master keyss"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " --help               : show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " --version            : show version"
+        },
+        {
+          "flags": [
+            "--tabin"
+          ],
+          "metavar": "= file",
+          "takes_value": true,
+          "description": "input tabulator separated file",
+          "default": null,
+          "choices": null,
+          "raw": "--tabin=<file>       : input tabulator separated file"
+        }
+      ],
+      "raw_help": "root@kali:~# hcxpottool -h\n hcxpottool 7.1.0  (C) 2026 ZeroBeat\n usage  : hcxpottool <options>\n \n short options:\n -h                   : show this help\n -v                   : show version\n \n long options:\n --hcpotin=<file>     : input potfile in hashcat pot file format\n                       format: PMK*ESSID:PSK\n --hcoutin=<file>     : input outfile in hashcat out file format\n                       format: MIC/PMKID:MAC_AP:MAC_CLIENT:ESSID:PSK\n                       verify/calculate plain master keys enabled by default\n --jtrpotin=<file>    : input potfile in john pot file format\n                       format: $pbkdf2-hmac-sha1$ESSID$PMK:PSK\n --hcpotout=<file>    : output potfile in hashcat format\n                       hexified characters < 0x20\n                       hexified characters > 0x7e\n                       hexified delimiter :\n --hcpbkdf2out=<file> : output hashcat hash file format 12000\n --jtrpbkdf2out=<file>: output john hash file format PBKDF2-HMAC-SHA1-opencl / PBKDF2-HMAC-SHA1\n --tabout=<file>      : output tabulator separated file\n                       hexified characters < 0x21\n                       hexified characters > 0x7e\n --tabspout=<file>    : output tabulator separated file\n                       hexified characters < 0x20\n                       hexified characters > 0x7e\n --tabnhout=<file>    : output tabulator separated file\n                       hexified characters < 0x20\n                       use with care\n --faultyout=<file>   : output faulty lines file\n --pmkoff             : disable verification/calculation of plain master keyss\n --help               : show this help\n --version            : show version",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hcxpottool 7.1.2  (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "ac6920110b7c5ef53266e65334d6440a05c641cb1ab759547703c438f6f0b988"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hcxpottool 7.1.2  (C) 2026 ZeroBeat\nusage  : hcxpottool <options>\n\nshort options:\n-h                   : show this help\n-v                   : show version\n\nlong options:\n--hcpotin=<file>     : input potfile in hashcat pot file format\n                        format: PMK*ESSID:PSK\n--hcoutin=<file>     : input outfile in hashcat out file format\n                        format: MIC/PMKID:MAC_AP:MAC_CLIENT:ESSID:PSK\n                        verify/calculate plain master keys enabled by default\n--jtrpotin=<file>    : input potfile in john pot file format\n                        format: $pbkdf2-hmac-sha1$ESSID$PMK:PSK\n--hcpotout=<file>    : output potfile in hashcat format\n                        hexified characters < 0x20\n                        hexified characters > 0x7e\n                        hexified delimiter :\n--hcpbkdf2out=<file> : output hashcat hash file format 12000\n--jtrpbkdf2out=<file>: output john hash file format PBKDF2-HMAC-SHA1-opencl / PBKDF2-HMAC-SHA1\n--tabin=<file>       : input tabulator separated file\n                        format: PMK <tab> ESSID <tab> PSK\n                        verify/calculate plain master keys enabled by default\n--tabout=<file>      : output tabulator separated file\n                        hexified characters < 0x21\n                        hexified characters > 0x7e\n--tabspout=<file>    : output tabulator separated file\n                        hexified characters < 0x20\n                        hexified characters > 0x7e\n--tabnhout=<file>    : output tabulator separated file\n                        hexified characters < 0x20\n                        use with care\n--faultyout=<file>   : output faulty lines file\n--pmkoff             : disable verification/calculation of plain master keyss\n--help               : show this help\n--version            : show version",
+        "-h": "hcxpottool 7.1.2  (C) 2026 ZeroBeat\nusage  : hcxpottool <options>\n\nshort options:\n-h                   : show this help\n-v                   : show version\n\nlong options:\n--hcpotin=<file>     : input potfile in hashcat pot file format\n                        format: PMK*ESSID:PSK\n--hcoutin=<file>     : input outfile in hashcat out file format\n                        format: MIC/PMKID:MAC_AP:MAC_CLIENT:ESSID:PSK\n                        verify/calculate plain master keys enabled by default\n--jtrpotin=<file>    : input potfile in john pot file format\n                        format: $pbkdf2-hmac-sha1$ESSID$PMK:PSK\n--hcpotout=<file>    : output potfile in hashcat format\n                        hexified characters < 0x20\n                        hexified characters > 0x7e\n                        hexified delimiter :\n--hcpbkdf2out=<file> : output hashcat hash file format 12000\n--jtrpbkdf2out=<file>: output john hash file format PBKDF2-HMAC-SHA1-opencl / PBKDF2-HMAC-SHA1\n--tabin=<file>       : input tabulator separated file\n                        format: PMK <tab> ESSID <tab> PSK\n                        verify/calculate plain master keys enabled by default\n--tabout=<file>      : output tabulator separated file\n                        hexified characters < 0x21\n                        hexified characters > 0x7e\n--tabspout=<file>    : output tabulator separated file\n                        hexified characters < 0x20\n                        hexified characters > 0x7e\n--tabnhout=<file>    : output tabulator separated file\n                        hexified characters < 0x20\n                        use with care\n--faultyout=<file>   : output faulty lines file\n--pmkoff             : disable verification/calculation of plain master keyss\n--help               : show this help\n--version            : show version",
+        "man": "HCXPOTTOOL(1)                    User Commands                    HCXPOTTOOL(1)\n\nNAME\n     hcxpottool - hcx tools set\n\nDESCRIPTION\n     hcxpottool 7.1.2  (C) 2026 ZeroBeat usage  : hcxpottool <options>\n\n     short    options:    -h                      :    show    this   help   -v\n     : show version\n\n     long options: --hcpotin=<file>     : input potfile  in  hashcat  pot  file\n     format\n\n            format: PMK*ESSID:PSK\n\n     --hcoutin=<file>     : input outfile in hashcat out file format\n\n     format: MIC/PMKID:MAC_AP:MAC_CLIENT:ESSID:PSK\n            verify/calculate plain master keys enabled by default\n\n     --jtrpotin=<file>    : input potfile in john pot file format\n\n            format: $pbkdf2-hmac-sha1$ESSID$PMK:PSK\n\n     --hcpotout=<file>    : output potfile in hashcat format\n\n     hexified characters < 0x20\n            hexified characters > 0x7e hexified delimiter :\n\n     --hcpbkdf2out=<file>  :  output  hashcat  hash  file  format 12000 --jtrp-\n     bkdf2out=<file>: output john hash file  format  PBKDF2-HMAC-SHA1-opencl  /\n     PBKDF2-HMAC-SHA1 --tabin=<file>       : input tabulator separated file\n\n     format: PMK <tab> ESSID <tab> PSK\n            verify/calculate plain master keys enabled by default\n\n     --tabout=<file>      : output tabulator separated file\n\n     hexified characters < 0x21\n            hexified characters > 0x7e\n\n     --tabspout=<file>    : output tabulator separated file\n\n     hexified characters < 0x20\n            hexified characters > 0x7e\n\n     --tabnhout=<file>    : output tabulator separated file\n\n     hexified characters < 0x20\n            use with care\n\n     --faultyout=<file>    :  output  faulty  lines file --pmkoff             :\n     disable   verification/calculation   of   plain   master   keyss    --help\n     : show this help --version            : show version\n\nhcxpottool 7.1.2 (C) 2026 ZeroBeat June 2026                      HCXPOTTOOL(1)",
+        "apropos": "hcxpottool (1)       - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hcxpottool",
+        "size_bytes": 35128,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=de1c3f123b5c74f3d703d9b1e456b85e8f061f81, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hcxpsktool",
+      "description": "Hcx tools set",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "input PMKID/EAPOL hash file (hashcat -m 22000/22001)",
+          "default": null,
+          "choices": null,
+          "raw": " -c <file>   : input PMKID/EAPOL hash file (hashcat -m 22000/22001)"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "input EAPOL hash file (hashcat -m 2500/2501)",
+          "default": null,
+          "choices": null,
+          "raw": " -i <file>   : input EAPOL hash file (hashcat -m 2500/2501)"
+        },
+        {
+          "flags": [
+            "-j"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "input EAPOL hash file (john)",
+          "default": null,
+          "choices": null,
+          "raw": " -j <file>   : input EAPOL hash file (john)"
+        },
+        {
+          "flags": [
+            "-z"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "input PMKID hash file (hashcat -m 16800/16801 and john)",
+          "default": null,
+          "choices": null,
+          "raw": " -z <file>   : input PMKID hash file (hashcat -m 16800/16801 and john)"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "char",
+          "takes_value": true,
+          "description": "input ESSID",
+          "default": null,
+          "choices": null,
+          "raw": " -e <char>   : input ESSID"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "xdigit",
+          "takes_value": true,
+          "description": "input MAC access point",
+          "default": null,
+          "choices": null,
+          "raw": " -b <xdigit> : input MAC access point"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output PSK file",
+          "default": null,
+          "choices": null,
+          "raw": " -o <file>   : output PSK file"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h          : show this help"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " -v          : show version"
+        },
+        {
+          "flags": [
+            "--maconly"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print only candidates based on ACCESS POINT MAC",
+          "default": null,
+          "choices": null,
+          "raw": " --maconly           : print only candidates based on ACCESS POINT MAC"
+        },
+        {
+          "flags": [
+            "--noessidcombination"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "exclude ESSID combinations",
+          "default": null,
+          "choices": null,
+          "raw": " --noessidcombination: exclude ESSID combinations"
+        },
+        {
+          "flags": [
+            "--netgear"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak NETGEAR / ORBI / NTGR_VMB / ARLO_VMB / FoxtelHub candidates",
+          "default": null,
+          "choices": null,
+          "raw": " --netgear           : include weak NETGEAR / ORBI / NTGR_VMB / ARLO_VMB / FoxtelHub candidates"
+        },
+        {
+          "flags": [
+            "--spectrum"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak MySpectrumWiFi / SpectrumSetup / MyCharterWiFi candidates",
+          "default": null,
+          "choices": null,
+          "raw": " --spectrum          : include weak MySpectrumWiFi / SpectrumSetup / MyCharterWiFi candidates"
+        },
+        {
+          "flags": [
+            "--digit10"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak 10 digit candidates (INFINITUM, ALHN, INEA, VodafoneNet, VIVACOM)",
+          "default": null,
+          "choices": null,
+          "raw": " --digit10           : include weak 10 digit candidates (INFINITUM, ALHN, INEA, VodafoneNet, VIVACOM)"
+        },
+        {
+          "flags": [
+            "--phome"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak PEGATRON / Vantiva candidates (CBCI, HOME, [SP/XF]SETUP)",
+          "default": null,
+          "choices": null,
+          "raw": " --phome             : include weak PEGATRON / Vantiva candidates (CBCI, HOME, [SP/XF]SETUP)"
+        },
+        {
+          "flags": [
+            "--tenda"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak Tenda / NOVA / NOVE / BrosTrend candidates",
+          "default": null,
+          "choices": null,
+          "raw": " --tenda             : include weak Tenda / NOVA / NOVE / BrosTrend candidates"
+        },
+        {
+          "flags": [
+            "--ee"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak 5GHz-EE / BrightBox / EE / EE-BrightBox candidates",
+          "default": null,
+          "choices": null,
+          "raw": " --ee                : include weak 5GHz-EE / BrightBox / EE / EE-BrightBox candidates"
+        },
+        {
+          "flags": [
+            "--eeupper"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak EE-Hub candidates",
+          "default": null,
+          "choices": null,
+          "raw": " --eeupper           : include weak EE-Hub candidates"
+        },
+        {
+          "flags": [
+            "--alticeoptimum"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak Altice/Optimum candidates (MyAltice, MyOptimum)",
+          "default": null,
+          "choices": null,
+          "raw": " --alticeoptimum     : include weak Altice/Optimum candidates (MyAltice, MyOptimum)"
+        },
+        {
+          "flags": [
+            "--asus"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak ASUS RT-AC candidates (ASUS_XX, RT-AC)",
+          "default": null,
+          "choices": null,
+          "raw": " --asus              : include weak ASUS RT-AC candidates (ASUS_XX, RT-AC)"
+        },
+        {
+          "flags": [
+            "--weakpass"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include weak password candidates",
+          "default": null,
+          "choices": null,
+          "raw": " --weakpass          : include weak password candidates"
+        },
+        {
+          "flags": [
+            "--eudate"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include complete european dates",
+          "default": null,
+          "choices": null,
+          "raw": " --eudate            : include complete european dates"
+        },
+        {
+          "flags": [
+            "--usdate"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include complete american dates",
+          "default": null,
+          "choices": null,
+          "raw": " --usdate            : include complete american dates"
+        },
+        {
+          "flags": [
+            "--wpskeys"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include complete WPS keys",
+          "default": null,
+          "choices": null,
+          "raw": " --wpskeys           : include complete WPS keys"
+        },
+        {
+          "flags": [
+            "--egn"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include Bulgarian EGN",
+          "default": null,
+          "choices": null,
+          "raw": " --egn               : include Bulgarian EGN"
+        },
+        {
+          "flags": [
+            "--simple"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include simple pattern",
+          "default": null,
+          "choices": null,
+          "raw": " --simple            : include simple pattern"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " --help              : show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " --version           : show version"
+        }
+      ],
+      "raw_help": "root@kali:~# hcxpsktool -h\n hcxpsktool 7.1.0 (C) 2026 ZeroBeat\n usage:\n hcxpsktool <options>\n \n options:\n -c <file>   : input PMKID/EAPOL hash file (hashcat -m 22000/22001)\n -i <file>   : input EAPOL hash file (hashcat -m 2500/2501)\n -j <file>   : input EAPOL hash file (john)\n -z <file>   : input PMKID hash file (hashcat -m 16800/16801 and john)\n -e <char>   : input ESSID\n -b <xdigit> : input MAC access point\n             format: 112233445566\n -o <file>   : output PSK file\n             default: stdout\n             output list must be sorted unique!\n -h          : show this help\n -v          : show version\n \n --maconly           : print only candidates based on ACCESS POINT MAC\n --noessidcombination: exclude ESSID combinations\n --netgear           : include weak NETGEAR / ORBI / NTGR_VMB / ARLO_VMB / FoxtelHub candidates\n --spectrum          : include weak MySpectrumWiFi / SpectrumSetup / MyCharterWiFi candidates\n                     list will be > 3.3GB\n --digit10           : include weak 10 digit candidates (INFINITUM, ALHN, INEA, VodafoneNet, VIVACOM)\n                     list will be > 1GB\n --phome             : include weak PEGATRON / Vantiva candidates (CBCI, HOME, [SP/XF]SETUP)\n                     list will be > 2.9GB\n --tenda             : include weak Tenda / NOVA / NOVE / BrosTrend candidates\n --ee                : include weak 5GHz-EE / BrightBox / EE / EE-BrightBox candidates\n                     list will be > 1.4GB\n --eeupper           : include weak EE-Hub candidates\n                     list will be > 4.0GB\n --alticeoptimum     : include weak Altice/Optimum candidates (MyAltice, MyOptimum)\n                     list will be > 6.3GB\n --asus              : include weak ASUS RT-AC candidates (ASUS_XX, RT-AC)\n --weakpass          : include weak password candidates\n --eudate            : include complete european dates\n --usdate            : include complete american dates\n --wpskeys           : include complete WPS keys\n --egn               : include Bulgarian EGN\n --simple            : include simple pattern\n --help              : show this help\n --version           : show version\n \n if hcxpsktool recovered your password, you should change it immediately!",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hcxpsktool 7.1.2 (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "83f6e6a2f90af7e63df517a9e81e9b27e9f2358e87984304352c36899d8b7577"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxpsktool <options>",
+          "template": null,
+          "original_sha256": "e9a0faa384a032eb49dd15a8bf33237571fa04f66fd3e815e5e4caac0e3eade8"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hcxpsktool 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxpsktool <options>\n\noptions:\n-c <file>   : input PMKID/EAPOL hash file (hashcat -m 22000/22001)\n-i <file>   : input EAPOL hash file (hashcat -m 2500/2501)\n-j <file>   : input EAPOL hash file (john)\n-z <file>   : input PMKID hash file (hashcat -m 16800/16801 and john)\n-e <char>   : input ESSID\n-b <xdigit> : input MAC access point\n              format: 112233445566\n-o <file>   : output PSK file\n              default: stdout\n              output list must be sorted unique!\n-h          : show this help\n-v          : show version\n\n--maconly           : print only candidates based on ACCESS POINT MAC\n--noessidcombination: exclude ESSID combinations\n--netgear           : include weak NETGEAR / ORBI / NTGR_VMB / ARLO_VMB / FoxtelHub candidates\n--spectrum          : include weak MySpectrumWiFi / SpectrumSetup / MyCharterWiFi candidates\n                      list will be > 3.3GB\n--digit10           : include weak 10 digit candidates (INFINITUM, ALHN, INEA, VodafoneNet, VIVACOM)\n                      list will be > 1GB\n--phome             : include weak PEGATRON / Vantiva candidates (CBCI, HOME, [SP/XF]SETUP)\n                      list will be > 2.9GB\n--tenda             : include weak Tenda / NOVA / NOVE / BrosTrend candidates\n--ee                : include weak 5GHz-EE / BrightBox / EE / EE-BrightBox candidates\n                      list will be > 1.4GB\n--eeupper           : include weak EE-Hub candidates\n                      list will be > 4.0GB\n--alticeoptimum     : include weak Altice/Optimum candidates (MyAltice, MyOptimum)\n                      list will be > 6.3GB\n--asus              : include weak ASUS RT-AC candidates (ASUS_XX, RT-AC)\n--weakpass          : include weak password candidates\n--eudate            : include complete european dates\n--usdate            : include complete american dates\n--wpskeys           : include complete WPS keys\n--egn               : include Bulgarian EGN\n--simple            : include simple pattern\n--help              : show this help\n--version           : show version\n\nif hcxpsktool recovered your password, you should change it immediately!",
+        "-h": "hcxpsktool 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxpsktool <options>\n\noptions:\n-c <file>   : input PMKID/EAPOL hash file (hashcat -m 22000/22001)\n-i <file>   : input EAPOL hash file (hashcat -m 2500/2501)\n-j <file>   : input EAPOL hash file (john)\n-z <file>   : input PMKID hash file (hashcat -m 16800/16801 and john)\n-e <char>   : input ESSID\n-b <xdigit> : input MAC access point\n              format: 112233445566\n-o <file>   : output PSK file\n              default: stdout\n              output list must be sorted unique!\n-h          : show this help\n-v          : show version\n\n--maconly           : print only candidates based on ACCESS POINT MAC\n--noessidcombination: exclude ESSID combinations\n--netgear           : include weak NETGEAR / ORBI / NTGR_VMB / ARLO_VMB / FoxtelHub candidates\n--spectrum          : include weak MySpectrumWiFi / SpectrumSetup / MyCharterWiFi candidates\n                      list will be > 3.3GB\n--digit10           : include weak 10 digit candidates (INFINITUM, ALHN, INEA, VodafoneNet, VIVACOM)\n                      list will be > 1GB\n--phome             : include weak PEGATRON / Vantiva candidates (CBCI, HOME, [SP/XF]SETUP)\n                      list will be > 2.9GB\n--tenda             : include weak Tenda / NOVA / NOVE / BrosTrend candidates\n--ee                : include weak 5GHz-EE / BrightBox / EE / EE-BrightBox candidates\n                      list will be > 1.4GB\n--eeupper           : include weak EE-Hub candidates\n                      list will be > 4.0GB\n--alticeoptimum     : include weak Altice/Optimum candidates (MyAltice, MyOptimum)\n                      list will be > 6.3GB\n--asus              : include weak ASUS RT-AC candidates (ASUS_XX, RT-AC)\n--weakpass          : include weak password candidates\n--eudate            : include complete european dates\n--usdate            : include complete american dates\n--wpskeys           : include complete WPS keys\n--egn               : include Bulgarian EGN\n--simple            : include simple pattern\n--help              : show this help\n--version           : show version\n\nif hcxpsktool recovered your password, you should change it immediately!",
+        "help": "no hashes loaded",
+        "man": "HCXPSKTOOL(1)                    User Commands                    HCXPSKTOOL(1)\n\nNAME\n     hcxpsktool - hcx tools set\n\nDESCRIPTION\n     hcxpsktool 7.1.2 (C) 2026 ZeroBeat usage: hcxpsktool <options>\n\n     options:   -c   <file>     :  input  PMKID/EAPOL  hash  file  (hashcat  -m\n     22000/22001) -i <file>   : input EAPOL hash file (hashcat -m 2500/2501) -j\n     <file>   : input EAPOL hash file (john) -z <file>    :  input  PMKID  hash\n     file  (hashcat  -m  16800/16801  and  john)  -e  <char>   : input ESSID -b\n     <xdigit> : input MAC access point\n\n            format: 112233445566\n\n     -o <file>   : output PSK file\n\n            default: stdout output list must be sorted unique!\n\n     -h          : show this help -v          : show version\n\n     --maconly           : print only candidates  based  on  ACCESS  POINT  MAC\n     --noessidcombination: exclude ESSID combinations --netgear           : in-\n     clude  weak  NETGEAR  /  ORBI / NTGR_VMB / ARLO_VMB / FoxtelHub candidates\n     --spectrum          : include weak MySpectrumWiFi /  SpectrumSetup  /  My-\n     CharterWiFi candidates\n\n            list will be > 3.3GB\n\n     --digit10            :  include weak 10 digit candidates (INFINITUM, ALHN,\n     INEA, VodafoneNet, VIVACOM)\n\n            list will be > 1GB\n\n     --phome             : include weak PEGATRON /  Vantiva  candidates  (CBCI,\n     HOME, [SP/XF]SETUP)\n\n            list will be > 2.9GB\n\n     --tenda              : include weak Tenda / NOVA / NOVE / BrosTrend candi-\n     dates --ee                : include  weak  5GHz-EE  /  BrightBox  /  EE  /\n     EE-BrightBox candidates\n\n            list will be > 1.4GB\n\n     --eeupper           : include weak EE-Hub candidates\n\n            list will be > 4.0GB\n\n     --alticeoptimum      :  include  weak Altice/Optimum candidates (MyAltice,\n     MyOptimum)\n\n            list will be > 6.3GB\n\n     --asus              : include weak ASUS RT-AC candidates (ASUS_XX,  RT-AC)\n     --weakpass            :   include   weak   password   candidates  --eudate\n     : include complete european dates --usdate            :  include  complete\n     american  dates  --wpskeys            :  include  complete  WPS keys --egn\n     : include Bulgarian  EGN  --simple             :  include  simple  pattern\n     --help              : show this help --version           : show version\n\n     if hcxpsktool recovered your password, you should change it immediately!\n\nhcxpsktool 7.1.2 (C) 2026 ZeroBeat June 2026                      HCXPSKTOOL(1)",
+        "apropos": "hcxpsktool (1)       - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hcxpsktool",
+        "size_bytes": 180576,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4d939f3a4cfb775a8ce6c7cea94b84bd293d3b59, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hcxwltool",
+      "description": "Hcx tools set",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "input wordlist",
+          "default": null,
+          "choices": null,
+          "raw": " -i <file> : input wordlist"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "output wordlist to file",
+          "default": null,
+          "choices": null,
+          "raw": " -o <file> : output wordlist to file"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h        : show this help"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " -v        : show version"
+        },
+        {
+          "flags": [
+            "--straight"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output format untouched",
+          "default": null,
+          "choices": null,
+          "raw": " --straight       : output format untouched"
+        },
+        {
+          "flags": [
+            "--digit"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output format only digits",
+          "default": null,
+          "choices": null,
+          "raw": " --digit          : output format only digits"
+        },
+        {
+          "flags": [
+            "--xdigit"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output format only xdigits",
+          "default": null,
+          "choices": null,
+          "raw": " --xdigit         : output format only xdigits"
+        },
+        {
+          "flags": [
+            "--lower"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output format only lower",
+          "default": null,
+          "choices": null,
+          "raw": " --lower          : output format only lower"
+        },
+        {
+          "flags": [
+            "--upper"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output format only upper",
+          "default": null,
+          "choices": null,
+          "raw": " --upper          : output format only upper"
+        },
+        {
+          "flags": [
+            "--capital"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output format only capital",
+          "default": null,
+          "choices": null,
+          "raw": " --capital        : output format only capital"
+        },
+        {
+          "flags": [
+            "--length"
+          ],
+          "metavar": "= digit",
+          "takes_value": true,
+          "description": "password length (8...32)",
+          "default": null,
+          "choices": null,
+          "raw": " --length=<digit> : password length (8...32)"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help",
+          "default": null,
+          "choices": null,
+          "raw": " --help           : show this help"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " --version        : show version"
+        },
+        {
+          "flags": [
+            "--xdigit",
+            "--stdin",
+            "--format"
+          ],
+          "metavar": "sort uniq john =wpapsk-opencl john.hashfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --xdigit | sort | uniq | john --stdin --format=wpapsk-opencl john.hashfile"
+        }
+      ],
+      "raw_help": "root@kali:~# hcxwltool -h\n hcxwltool 7.1.0 (C) 2026 ZeroBeat\n usage:\n hcxwltool <options>\n \n options:\n -i <file> : input wordlist\n -o <file> : output wordlist to file\n -h        : show this help\n -v        : show version\n \n --straight       : output format untouched\n --digit          : output format only digits\n --xdigit         : output format only xdigits\n --lower          : output format only lower\n --upper          : output format only upper\n --capital        : output format only capital\n --length=<digit> : password length (8...32)\n --help           : show this help\n --version        : show version\n \n examples:\n hcxwltool -i wordlist --straight | sort | uniq | hashcat -m 22000 hashfile.hc22000\n hcxwltool -i wordlist --digit --length=10 | sort | uniq | hashcat -m 22000 hashfile.hc22000\n hcxwltool -i wordlist --digit | sort | uniq | hashcat -m 22000 hashfile.hc22000\n hcxwltool -i wordlist --xdigit | sort | uniq | john --stdin --format=wpapsk-opencl john.hashfile",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hcxwltool 7.1.2 (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "e331837f33d514855ee896b9065b2c9b8ab608fa3a9b14fe2c5e6e72d9321e72"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxwltool <options>",
+          "template": null,
+          "original_sha256": "f31c09b83ea83f41869861b01facbdc262b273e212b74ec04686320df1d3beb2"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxwltool -i wordlist --straight | sort | uniq | hashcat -m 22000 hashfile.hc22000",
+          "template": null,
+          "original_sha256": "9a8d56db3291e263f47b9ec4c2f71544ceedd667d2bc9a37676c3fdf6b5b9317"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxwltool -i wordlist --digit --length=10 | sort | uniq | hashcat -m 22000 hashfile.hc22000",
+          "template": null,
+          "original_sha256": "8a875c55bdbd115ce806d5bc0c12cc11580aecf735c4b9993aab9fd2740eed27"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxwltool -i wordlist --digit | sort | uniq | hashcat -m 22000 hashfile.hc22000",
+          "template": null,
+          "original_sha256": "38b5af5aaf0835d226c696e14244fb691093e68c38b2205e8de70fd0c2f02a5e"
+        },
+        {
+          "status": "operational_example",
+          "command": "hcxwltool -i wordlist --xdigit | sort | uniq | john --stdin --format=wpapsk-opencl john.hashfile",
+          "template": null,
+          "original_sha256": "f5026ce57df7ff43f821d5e200cd1d8125d539ef615867eb885edfc9f1993db0"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "c2"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hcxwltool 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxwltool <options>\n\noptions:\n-i <file> : input wordlist\n-o <file> : output wordlist to file\n-h        : show this help\n-v        : show version\n\n--straight       : output format untouched\n--digit          : output format only digits\n--xdigit         : output format only xdigits\n--lower          : output format only lower\n--upper          : output format only upper\n--capital        : output format only capital\n--length=<digit> : password length (8...32)\n--help           : show this help\n--version        : show version\n\nexamples:\nhcxwltool -i wordlist --straight | sort | uniq | hashcat -m 22000 hashfile.hc22000\nhcxwltool -i wordlist --digit --length=10 | sort | uniq | hashcat -m 22000 hashfile.hc22000\nhcxwltool -i wordlist --digit | sort | uniq | hashcat -m 22000 hashfile.hc22000\nhcxwltool -i wordlist --xdigit | sort | uniq | john --stdin --format=wpapsk-opencl john.hashfile",
+        "-h": "hcxwltool 7.1.2 (C) 2026 ZeroBeat\nusage:\nhcxwltool <options>\n\noptions:\n-i <file> : input wordlist\n-o <file> : output wordlist to file\n-h        : show this help\n-v        : show version\n\n--straight       : output format untouched\n--digit          : output format only digits\n--xdigit         : output format only xdigits\n--lower          : output format only lower\n--upper          : output format only upper\n--capital        : output format only capital\n--length=<digit> : password length (8...32)\n--help           : show this help\n--version        : show version\n\nexamples:\nhcxwltool -i wordlist --straight | sort | uniq | hashcat -m 22000 hashfile.hc22000\nhcxwltool -i wordlist --digit --length=10 | sort | uniq | hashcat -m 22000 hashfile.hc22000\nhcxwltool -i wordlist --digit | sort | uniq | hashcat -m 22000 hashfile.hc22000\nhcxwltool -i wordlist --xdigit | sort | uniq | john --stdin --format=wpapsk-opencl john.hashfile",
+        "man": "HCXWLTOOL(1)                     User Commands                     HCXWLTOOL(1)\n\nNAME\n     hcxwltool - hcx tools set\n\nDESCRIPTION\n     hcxwltool 7.1.2 (C) 2026 ZeroBeat usage: hcxwltool <options>\n\n     options: -i <file> : input wordlist -o <file> : output wordlist to file -h\n     : show this help -v        : show version\n\n     --straight        : output format untouched --digit          : output for-\n     mat only digits --xdigit         :  output  format  only  xdigits  --lower\n     :  output  format  only  lower --upper          : output format only upper\n     --capital        : output format only capital --length=<digit> :  password\n     length  (8...32) --help           : show this help --version        : show\n     version\n\n     examples: hcxwltool -i wordlist --straight | sort  |  uniq  |  hashcat  -m\n     22000  hashfile.hc22000 hcxwltool -i wordlist --digit --length=10 | sort |\n     uniq | hashcat -m 22000 hashfile.hc22000 hcxwltool -i wordlist  --digit  |\n     sort  |  uniq  |  hashcat  -m 22000 hashfile.hc22000 hcxwltool -i wordlist\n     --xdigit | sort | uniq | john --stdin --format=wpapsk-opencl john.hashfile\n\nhcxwltool 7.1.2 (C) 2026 ZeroBeat  June 2026                       HCXWLTOOL(1)",
+        "apropos": "hcxwltool (1)        - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hcxwltool",
+        "size_bytes": 26936,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e617e0992d97b20307d7b6e2431e61287ef2f2e1, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "whoismac",
+      "description": "Hcx tools set",
+      "usage": "whoismac <options>",
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "download https://standards-oui.ieee.org/oui/oui.txt",
+          "default": null,
+          "choices": null,
+          "raw": " -d            : download https://standards-oui.ieee.org/oui/oui.txt"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "mac",
+          "takes_value": true,
+          "description": "mac (six bytes of mac addr) or",
+          "default": null,
+          "choices": null,
+          "raw": " -m <mac>      : mac (six bytes of mac addr) or"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "hashline",
+          "takes_value": true,
+          "description": "input PMKID and/or EAPOL hashline (hashmode 22000 or 16800)",
+          "default": null,
+          "choices": null,
+          "raw": " -p <hashline> : input PMKID and/or EAPOL hashline (hashmode 22000 or 16800)"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": "hashline",
+          "takes_value": true,
+          "description": "input EAPOL hashline from potfile (hashcat <= 5.1.0)",
+          "default": null,
+          "choices": null,
+          "raw": " -P <hashline> : input EAPOL hashline from potfile (hashcat <= 5.1.0)"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "ESSID",
+          "takes_value": true,
+          "description": "input ESSID",
+          "default": null,
+          "choices": null,
+          "raw": " -e <ESSID>    : input ESSID"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": "xdigit",
+          "takes_value": true,
+          "description": "input ESSID in hex",
+          "default": null,
+          "choices": null,
+          "raw": " -x <xdigit>   : input ESSID in hex"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": "vendor",
+          "takes_value": true,
+          "description": "vendor name",
+          "default": null,
+          "choices": null,
+          "raw": " -v <vendor>   : vendor name"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "this help screen",
+          "default": null,
+          "choices": null,
+          "raw": " -h            : this help screen"
+        }
+      ],
+      "raw_help": "root@kali:~# whoismac -h\n whoismac 7.1.0 (C) 2026 ZeroBeat\n usage: whoismac <options>\n \n options:\n -d            : download https://standards-oui.ieee.org/oui/oui.txt\n             : and save to ~/.hcxtools/oui.txt\n             : internet connection required\n -m <mac>      : mac (six bytes of mac addr) or \n             : oui (fist three bytes of mac addr)\n -p <hashline> : input PMKID and/or EAPOL hashline (hashmode 22000 or 16800)\n -P <hashline> : input EAPOL hashline from potfile (hashcat <= 5.1.0)\n -e <ESSID>    : input ESSID\n -x <xdigit>   : input ESSID in hex\n -v <vendor>   : vendor name\n -h            : this help screen",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "whoismac 7.1.2 (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "950f1a9d4d9e450a006c7b7867bd0b9b2361b3b2954c68a874f177c272c9def2"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "whoismac 7.1.2 (C) 2026 ZeroBeat\nusage: whoismac <options>\n\noptions:\n-d            : download https://standards-oui.ieee.org/oui/oui.txt\n              : and save to ~/.hcxtools/oui.txt\n              : internet connection required\n-m <mac>      : mac (six bytes of mac addr) or \n              : oui (fist three bytes of mac addr)\n-p <hashline> : input PMKID and/or EAPOL hashline (hashmode 22000 or 16800)\n-P <hashline> : input EAPOL hashline from potfile (hashcat <= 5.1.0)\n-e <ESSID>    : input ESSID\n-x <xdigit>   : input ESSID in hex\n-v <vendor>   : vendor name\n-h            : this help screen",
+        "-h": "whoismac 7.1.2 (C) 2026 ZeroBeat\nusage: whoismac <options>\n\noptions:\n-d            : download https://standards-oui.ieee.org/oui/oui.txt\n              : and save to ~/.hcxtools/oui.txt\n              : internet connection required\n-m <mac>      : mac (six bytes of mac addr) or \n              : oui (fist three bytes of mac addr)\n-p <hashline> : input PMKID and/or EAPOL hashline (hashmode 22000 or 16800)\n-P <hashline> : input EAPOL hashline from potfile (hashcat <= 5.1.0)\n-e <ESSID>    : input ESSID\n-x <xdigit>   : input ESSID in hex\n-v <vendor>   : vendor name\n-h            : this help screen",
+        "help": "whoismac 7.1.2 (C) 2026 ZeroBeat\nusage: whoismac <options>\n\noptions:\n-d            : download https://standards-oui.ieee.org/oui/oui.txt\n              : and save to ~/.hcxtools/oui.txt\n              : internet connection required\n-m <mac>      : mac (six bytes of mac addr) or \n              : oui (fist three bytes of mac addr)\n-p <hashline> : input PMKID and/or EAPOL hashline (hashmode 22000 or 16800)\n-P <hashline> : input EAPOL hashline from potfile (hashcat <= 5.1.0)\n-e <ESSID>    : input ESSID\n-x <xdigit>   : input ESSID in hex\n-v <vendor>   : vendor name\n-h            : this help screen",
+        "man": "WHOISMAC(1)                      User Commands                      WHOISMAC(1)\n\nNAME\n     whoismac - hcx tools set\n\nDESCRIPTION\n     whoismac 7.1.2 (C) 2026 ZeroBeat usage: whoismac <options>\n\n     options:        -d                   :        download       https://stan-\n     dards-oui.ieee.org/oui/oui.txt\n\n            : and save to ~/.hcxtools/oui.txt : internet connection required\n\n     -m <mac>      : mac (six bytes of mac addr) or\n\n            : oui (fist three bytes of mac addr)\n\n     -p <hashline> : input PMKID  and/or  EAPOL  hashline  (hashmode  22000  or\n     16800)  -P  <hashline>  :  input  EAPOL  hashline from potfile (hashcat <=\n     5.1.0) -e <ESSID>    : input ESSID -x <xdigit>   : input ESSID in  hex  -v\n     <vendor>   : vendor name -h            : this help screen\n\n     usage: whoismac <options>\n\n     options:        -d                   :        download       https://stan-\n     dards-oui.ieee.org/oui/oui.txt\n\n            : and save to ~/.hcxtools/oui.txt : internet connection required\n\n     -m <mac>      : mac (six bytes of mac addr) or\n\n            : oui (fist three bytes of mac addr)\n\n     -p <hashline> : input PMKID  and/or  EAPOL  hashline  (hashmode  22000  or\n     16800)  -P  <hashline>  :  input  EAPOL  hashline from potfile (hashcat <=\n     5.1.0) -e <ESSID>    : input ESSID -x <xdigit>   : input ESSID in  hex  -v\n     <vendor>   : vendor name -h            : this help screen\n\nwhoismac 7.1.2 (C) 2026 ZeroBeat   June 2026                        WHOISMAC(1)",
+        "apropos": "whoismac (1)         - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/whoismac",
+        "size_bytes": 31048,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=390a61a34a4bb2fc794c9b44bb95ae4d14637f4f, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "wlancap2wpasec",
+      "description": "Hcx tools set",
+      "usage": "wlancap2wpasec <options>  [input.pcapng] [input.pcap] [input.cap] [input.pcapng.gz]...",
+      "arguments": [
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": "key",
+          "takes_value": true,
+          "description": "wpa-sec user key",
+          "default": null,
+          "choices": null,
+          "raw": " -k <key>           : wpa-sec user key"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": "url",
+          "takes_value": true,
+          "description": "set user defined URL",
+          "default": null,
+          "choices": null,
+          "raw": " -u <url>           : set user defined URL"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "seconds",
+          "takes_value": true,
+          "description": "set connection timeout",
+          "default": null,
+          "choices": null,
+          "raw": " -t <seconds>       : set connection timeout"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "email address",
+          "takes_value": true,
+          "description": "set email address, if required",
+          "default": null,
+          "choices": null,
+          "raw": " -e <email address> : set email address, if required"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "remove cap if upload was successful",
+          "default": null,
+          "choices": null,
+          "raw": " -R                 : remove cap if upload was successful"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h                 : this help"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version",
+          "default": null,
+          "choices": null,
+          "raw": " -v                 : show version"
+        }
+      ],
+      "raw_help": "root@kali:~# wlancap2wpasec -h\n wlancap2wpasec 7.1.0 (C) 2026 ZeroBeat\n usage: wlancap2wpasec <options>  [input.pcapng] [input.pcap] [input.cap] [input.pcapng.gz]...\n      wlancap2wpasec <options> *.pcapng\n      wlancap2wpasec <options> *.gz\n      wlancap2wpasec <options> *.*\n \n options:\n -k <key>           : wpa-sec user key\n -u <url>           : set user defined URL\n                    default = https://wpa-sec.stanev.org\n -t <seconds>       : set connection timeout\n                    default = 30 seconds\n -e <email address> : set email address, if required\n -R                 : remove cap if upload was successful\n -h                 : this help\n -v                 : show version\n \n Do not merge different cap files to a single cap file.\n This will lead to unexpected behaviour on ESSID changes\n or different link layer types.\n To remove unnecessary packets, run tshark:\n tshark -r input.cap -R \"(wlan.fc.type_subtype == 0x00 || wlan.fc.type_subtype == 0x02 || wlan.fc.type_subtype == 0x04 || wlan.fc.type_subtype == 0x05 || wlan.fc.type_subtype == 0x08 || eapol)\" -2 -F pcapng -w output.pcapng\n To reduce the size of the cap file, compress it with gzip:\n gzip capture.pcapng",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "wlancap2wpasec 7.1.2 (C) 2026 ZeroBeat",
+          "template": null,
+          "original_sha256": "b09f1a96d6378e035a2d81a7e4f896a850d4bc6a22b4817b34ce3a6ee121a814"
+        },
+        {
+          "status": "operational_example",
+          "command": "wlancap2wpasec <options> *.pcapng",
+          "template": null,
+          "original_sha256": "e3c7ca5fd57740d80ec301b6c72870d300bb8f5d9960ebe9abb34c30a9f8b4ce"
+        },
+        {
+          "status": "operational_example",
+          "command": "wlancap2wpasec <options> *.gz",
+          "template": null,
+          "original_sha256": "1db99b4ad2f42531f7811f078f158e8f1209aa5f7bbbb5fcc3c725240eff90ac"
+        },
+        {
+          "status": "operational_example",
+          "command": "wlancap2wpasec <options> *.*",
+          "template": null,
+          "original_sha256": "ecc94789a2c47fe90079b2a3ecf2d7a2eeefe00ba1d88cd8b1ace6c341fd70cd"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "capture"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "wlancap2wpasec 7.1.2 (C) 2026 ZeroBeat\nusage: wlancap2wpasec <options>  [input.pcapng] [input.pcap] [input.cap] [input.pcapng.gz]...\n       wlancap2wpasec <options> *.pcapng\n       wlancap2wpasec <options> *.gz\n       wlancap2wpasec <options> *.*\n\noptions:\n-k <key>           : wpa-sec user key\n-u <url>           : set user defined URL\n                     default = https://wpa-sec.stanev.org\n-t <seconds>       : set connection timeout\n                     default = 30 seconds\n-e <email address> : set email address, if required\n-R                 : remove cap if upload was successful\n-h                 : this help\n-v                 : show version\n\nDo not merge different cap files to a single cap file.\nThis will lead to unexpected behaviour on ESSID changes\nor different link layer types.\nTo remove unnecessary packets, run tshark:\ntshark -r input.cap -R \"(wlan.fc.type_subtype == 0x00 || wlan.fc.type_subtype == 0x02 || wlan.fc.type_subtype == 0x04 || wlan.fc.type_subtype == 0x05 || wlan.fc.type_subtype == 0x08 || eapol)\" -2 -F pcapng -w output.pcapng\nTo reduce the size of the cap file, compress it with gzip:\ngzip capture.pcapng",
+        "-h": "wlancap2wpasec 7.1.2 (C) 2026 ZeroBeat\nusage: wlancap2wpasec <options>  [input.pcapng] [input.pcap] [input.cap] [input.pcapng.gz]...\n       wlancap2wpasec <options> *.pcapng\n       wlancap2wpasec <options> *.gz\n       wlancap2wpasec <options> *.*\n\noptions:\n-k <key>           : wpa-sec user key\n-u <url>           : set user defined URL\n                     default = https://wpa-sec.stanev.org\n-t <seconds>       : set connection timeout\n                     default = 30 seconds\n-e <email address> : set email address, if required\n-R                 : remove cap if upload was successful\n-h                 : this help\n-v                 : show version\n\nDo not merge different cap files to a single cap file.\nThis will lead to unexpected behaviour on ESSID changes\nor different link layer types.\nTo remove unnecessary packets, run tshark:\ntshark -r input.cap -R \"(wlan.fc.type_subtype == 0x00 || wlan.fc.type_subtype == 0x02 || wlan.fc.type_subtype == 0x04 || wlan.fc.type_subtype == 0x05 || wlan.fc.type_subtype == 0x08 || eapol)\" -2 -F pcapng -w output.pcapng\nTo reduce the size of the cap file, compress it with gzip:\ngzip capture.pcapng",
+        "help": "% Total    % Received % Xferd  Average Speed  Time    Time    Time   Current\n                                 Dload  Upload  Total   Spent   Left   Speed\n\n  0      0   0      0   0      0      0      0                              0\n100    277 100     53 100    224    269   1138                              0\n100    277 100     53 100    224    269   1138                              0\n100    277 100     53 100    224    269   1138                              0",
+        "man": "WLANCAP2WPASEC(1)                User Commands                WLANCAP2WPASEC(1)\n\nNAME\n     wlancap2wpasec - hcx tools set\n\nDESCRIPTION\n     wlancap2wpasec  7.1.2  (C)  2026  ZeroBeat usage: wlancap2wpasec <options>\n     [input.pcapng] [input.pcap] [input.cap] [input.pcapng.gz]...\n\n            wlancap2wpasec <options>  *.pcapng  wlancap2wpasec  <options>  *.gz\n            wlancap2wpasec <options> *.*\n\n     options:  -k  <key>            : wpa-sec user key -u <url>           : set\n     user defined URL\n\n            default = https://wpa-sec.stanev.org\n\n     -t <seconds>       : set connection timeout\n\n            default = 30 seconds\n\n     -e <email address> : set email address, if required  -R                  :\n     remove  cap  if  upload  was  successful -h                 : this help -v\n     : show version\n\n     Do not merge different cap files to a single cap file.  This will lead  to\n     unexpected  behaviour  on ESSID changes or different link layer types.  To\n     remove  unnecessary  packets,  run  tshark:   tshark   -r   input.cap   -R\n     \"(wlan.fc.type_subtype   ==   0x00  ||  wlan.fc.type_subtype  ==  0x02  ||\n     wlan.fc.type_subtype  ==  0x04  ||   wlan.fc.type_subtype   ==   0x05   ||\n     wlan.fc.type_subtype  ==  0x08 || eapol)\" -2 -F pcapng -w output.pcapng To\n     reduce the size of  the  cap  file,  compress  it  with  gzip:  gzip  cap-\n     ture.pcapng\n\n     usage:  wlancap2wpasec  <options>  [input.pcapng] [input.pcap] [input.cap]\n     [input.pcapng.gz]...\n\n            wlancap2wpasec <options>  *.pcapng  wlancap2wpasec  <options>  *.gz\n            wlancap2wpasec <options> *.*\n\n     options:  -k  <key>            : wpa-sec user key -u <url>           : set\n     user defined URL\n\n            default = https://wpa-sec.stanev.org\n\n     -t <seconds>       : set connection timeout\n\n            default = 30 seconds\n\n     -e <email address> : set email address, if required  -R                  :\n     remove  cap  if  upload  was  successful -h                 : this help -v\n     : show version\n\n     Do not merge different cap files to a single cap file.  This will lead  to\n     unexpected  behaviour  on ESSID changes or different link layer types.  To\n     remove  unnecessary  packets,  run  tshark:   tshark   -r   input.cap   -R\n     \"(wlan.fc.type_subtype   ==   0x00  ||  wlan.fc.type_subtype  ==  0x02  ||\n     wlan.fc.type_subtype  ==  0x04  ||   wlan.fc.type_subtype   ==   0x05   ||\n     wlan.fc.type_subtype  ==  0x08 || eapol)\" -2 -F pcapng -w output.pcapng To\n     reduce the size of  the  cap  file,  compress  it  with  gzip:  gzip  cap-\n     ture.pcapng\n\nwlancap2wpasec 7.1.2 (C) 2026 Z... June 2026                  WLANCAP2WPASEC(1)",
+        "apropos": "wlancap2wpasec (1)   - hcx tools set"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/wlancap2wpasec",
+        "size_bytes": 14576,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d7b0681c1b48b105262d3640cb1faf68e0f8586c, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/hcxtools/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/hcxtools/index.md",
+    "retrieved_at": "2026-07-14T13:05:55+00:00",
+    "sha256": "f6244648be6e0731f4bcf1e7885608da2f1f1a58c7df014812afc4f7fe7f3edb"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "636",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "7.1.2-1",
+    "depends": "libc6 (>= 2.38), libcurl4t64 (>= 7.56.1), libssl3t64 (>= 3.0.0), zlib1g (>= 1:1.1.4), ieee-data",
+    "recommends": "hcxdumptool",
+    "description": "Tools for converting captures to use with hashcat or John the Ripper\nPortable solution for capturing wlan traffic and conversion to hashcat formats\n(recommended by hashcat) and to John the Ripper formats.\n.\nhcx stands for:\n- h = hash\n- c = capture, convert and calculate candidates\n- x = different hashtypes",
+    "homepage": "https://github.com/ZerBea/hcxtools"
+  },
+  "tags": [
+    "offensive",
+    "hcxtools",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/hcxtools && python3 hcxtools.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/hcxtools && python3 hcxtools.py --help",
+    "cd toolboxes/hcxtools && python3 hcxtools.py --help",
+    "cd toolboxes/hcxtools && python3 hcxtools.py --help",
+    "cd toolboxes/hcxtools && python3 hcxtools.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST hcxtools --output $KFIOSA_OUTPUT_DIR/hcxtools.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST hcxtools --output $KFIOSA_OUTPUT_DIR/hcxtools.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

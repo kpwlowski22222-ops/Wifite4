@@ -1,0 +1,1395 @@
+{
+  "id": "kali:testssl.sh",
+  "kind": "kali_source_package",
+  "name": "testssl.sh",
+  "title": "testssl.sh",
+  "summary": "### testssl.sh",
+  "version": "3.2.2+dfsg-1",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://testssl.sh/",
+  "repository": "https://salsa.debian.org/pkg-security-team/testssl.sh",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install testssl.sh"
+  },
+  "packages": [
+    {
+      "name": "testssl.sh"
+    }
+  ],
+  "commands": [
+    {
+      "name": "testssl",
+      "description": "(unknown subject)",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": "or no arg displays command line help",
+          "takes_value": false,
+          "description": "what you're looking at",
+          "default": null,
+          "choices": null,
+          "raw": "    --help                        what you're looking at"
+        },
+        {
+          "flags": [
+            "-b",
+            "--banner"
+          ],
+          "metavar": "- anner",
+          "takes_value": true,
+          "description": "displays banner + version of testssl",
+          "default": null,
+          "choices": null,
+          "raw": "    -b, --banner                  displays banner + version of testssl"
+        },
+        {
+          "flags": [
+            "-v",
+            "--version"
+          ],
+          "metavar": "- ersion",
+          "takes_value": true,
+          "description": "same as previous",
+          "default": null,
+          "choices": null,
+          "raw": "    -v, --version                 same as previous"
+        },
+        {
+          "flags": [
+            "-V",
+            "--local"
+          ],
+          "metavar": "pattern",
+          "takes_value": true,
+          "description": "pretty print all local ciphers (of openssl only). If search pattern supplied: it is an",
+          "default": null,
+          "choices": null,
+          "raw": "    -V, --local [pattern]         pretty print all local ciphers (of openssl only). If search pattern supplied: it is an"
+        },
+        {
+          "flags": [
+            "-t",
+            "--starttls"
+          ],
+          "metavar": "protocol",
+          "takes_value": true,
+          "description": "Does a run against a STARTTLS enabled service which is one of ftp, smtp, lmtp, pop3, imap,",
+          "default": null,
+          "choices": null,
+          "raw": "    -t, --starttls <protocol>     Does a run against a STARTTLS enabled service which is one of ftp, smtp, lmtp, pop3, imap,"
+        },
+        {
+          "flags": [
+            "--xmpphost"
+          ],
+          "metavar": "to_domain",
+          "takes_value": true,
+          "description": "For STARTTLS xmpp or xmpp-server checks it supplies the domainname (like SNI)",
+          "default": null,
+          "choices": null,
+          "raw": "    --xmpphost <to_domain>        For STARTTLS xmpp or xmpp-server checks it supplies the domainname (like SNI)"
+        },
+        {
+          "flags": [
+            "--mx"
+          ],
+          "metavar": "domain/host",
+          "takes_value": true,
+          "description": "Tests MX records from high to low priority (STARTTLS, port 25)",
+          "default": null,
+          "choices": null,
+          "raw": "    --mx <domain/host>            Tests MX records from high to low priority (STARTTLS, port 25)"
+        },
+        {
+          "flags": [
+            "--file",
+            "-iL"
+          ],
+          "metavar": "/ fname",
+          "takes_value": true,
+          "description": "Mass testing option: Reads one testssl.sh command line per line from <fname>.",
+          "default": null,
+          "choices": null,
+          "raw": "    --file/-iL <fname>            Mass testing option: Reads one testssl.sh command line per line from <fname>."
+        },
+        {
+          "flags": [
+            "--mode"
+          ],
+          "metavar": "serial parallel",
+          "takes_value": true,
+          "description": "Mass testing to be done serial (default) or parallel (--parallel is shortcut for the latter)",
+          "default": null,
+          "choices": null,
+          "raw": "    --mode <serial|parallel>      Mass testing to be done serial (default) or parallel (--parallel is shortcut for the latter)"
+        },
+        {
+          "flags": [
+            "--warnings"
+          ],
+          "metavar": "batch off",
+          "takes_value": true,
+          "description": "\"batch\" doesn't continue when a testing error is encountered, off continues and skips warnings",
+          "default": null,
+          "choices": null,
+          "raw": "    --warnings <batch|off>        \"batch\" doesn't continue when a testing error is encountered, off continues and skips warnings"
+        },
+        {
+          "flags": [
+            "--connect-timeout"
+          ],
+          "metavar": "seconds",
+          "takes_value": true,
+          "description": "useful to avoid hangers. Max <seconds> to wait for the TCP socket connect to return",
+          "default": null,
+          "choices": null,
+          "raw": "    --connect-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait for the TCP socket connect to return"
+        },
+        {
+          "flags": [
+            "--openssl-timeout"
+          ],
+          "metavar": "seconds",
+          "takes_value": true,
+          "description": "useful to avoid hangers. Max <seconds> to wait before openssl connect will be terminated",
+          "default": null,
+          "choices": null,
+          "raw": "    --openssl-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait before openssl connect will be terminated"
+        },
+        {
+          "flags": [
+            "-e",
+            "--each-cipher"
+          ],
+          "metavar": "- ach-cipher",
+          "takes_value": true,
+          "description": "checks each local cipher remotely",
+          "default": null,
+          "choices": null,
+          "raw": "    -e, --each-cipher             checks each local cipher remotely"
+        },
+        {
+          "flags": [
+            "-E",
+            "--cipher-per-proto"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "checks those per protocol",
+          "default": null,
+          "choices": null,
+          "raw": "    -E, --cipher-per-proto        checks those per protocol"
+        },
+        {
+          "flags": [
+            "-s",
+            "--std",
+            "--categories"
+          ],
+          "metavar": "- td",
+          "takes_value": true,
+          "description": "tests standard cipher categories by strength",
+          "default": null,
+          "choices": null,
+          "raw": "    -s, --std, --categories       tests standard cipher categories by strength"
+        },
+        {
+          "flags": [
+            "-f",
+            "--fs",
+            "--forward-secrecy"
+          ],
+          "metavar": "- s - orward-secrecy",
+          "takes_value": true,
+          "description": "checks forward secrecy settings",
+          "default": null,
+          "choices": null,
+          "raw": "    -f, --fs, --forward-secrecy   checks forward secrecy settings"
+        },
+        {
+          "flags": [
+            "-p",
+            "--protocols"
+          ],
+          "metavar": "- rotocols",
+          "takes_value": true,
+          "description": "checks TLS/SSL protocols (including ALPN/HTTP2 and SPDY)",
+          "default": null,
+          "choices": null,
+          "raw": "    -p, --protocols               checks TLS/SSL protocols (including ALPN/HTTP2 and SPDY)"
+        },
+        {
+          "flags": [
+            "-g",
+            "--grease"
+          ],
+          "metavar": "- rease",
+          "takes_value": true,
+          "description": "tests several server implementation bugs like GREASE and size limitations",
+          "default": null,
+          "choices": null,
+          "raw": "    -g, --grease                  tests several server implementation bugs like GREASE and size limitations"
+        },
+        {
+          "flags": [
+            "-S",
+            "--server-defaults"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "displays the server's default picks and certificate info",
+          "default": "picks and certificate info",
+          "choices": null,
+          "raw": "    -S, --server-defaults         displays the server's default picks and certificate info"
+        },
+        {
+          "flags": [
+            "-P",
+            "--server-preference"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "displays the server's picks: protocol+cipher",
+          "default": null,
+          "choices": null,
+          "raw": "    -P, --server-preference       displays the server's picks: protocol+cipher"
+        },
+        {
+          "flags": [
+            "-x",
+            "--single-cipher"
+          ],
+          "metavar": "pattern tests matched pattern of ciphers",
+          "takes_value": true,
+          "description": "of  ciphers",
+          "default": null,
+          "choices": null,
+          "raw": "    -x, --single-cipher <pattern> tests matched <pattern> of ciphers"
+        },
+        {
+          "flags": [
+            "-c",
+            "--client-simulation"
+          ],
+          "metavar": "- lient-simulation",
+          "takes_value": true,
+          "description": "test client simulations, see which client negotiates with cipher and protocol",
+          "default": null,
+          "choices": null,
+          "raw": "    -c, --client-simulation       test client simulations, see which client negotiates with cipher and protocol"
+        },
+        {
+          "flags": [
+            "-h",
+            "--header",
+            "--headers"
+          ],
+          "metavar": "- eader - eaders",
+          "takes_value": true,
+          "description": "tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address",
+          "default": null,
+          "choices": null,
+          "raw": "    -h, --header, --headers       tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address"
+        },
+        {
+          "flags": [
+            "-U",
+            "--vulnerable"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tests all (of the following) vulnerabilities (if applicable)",
+          "default": null,
+          "choices": null,
+          "raw": "    -U, --vulnerable              tests all (of the following) vulnerabilities (if applicable)"
+        },
+        {
+          "flags": [
+            "-H",
+            "--heartbleed"
+          ],
+          "metavar": "Checks for Heartbleed a memory leakage in",
+          "takes_value": false,
+          "description": "tests for Heartbleed vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -H, --heartbleed              tests for Heartbleed vulnerability"
+        },
+        {
+          "flags": [
+            "-I",
+            "--ccs",
+            "--ccs-injection"
+          ],
+          "metavar": "-injection",
+          "takes_value": true,
+          "description": "tests for CCS injection vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -I, --ccs, --ccs-injection    tests for CCS injection vulnerability"
+        },
+        {
+          "flags": [
+            "-T",
+            "--ticketbleed"
+          ],
+          "metavar": "Checks for Ticketbleed memory leakage in BigIP",
+          "takes_value": false,
+          "description": "tests for Ticketbleed vulnerability in BigIP loadbalancers",
+          "default": null,
+          "choices": null,
+          "raw": "    -T, --ticketbleed             tests for Ticketbleed vulnerability in BigIP loadbalancers"
+        },
+        {
+          "flags": [
+            "--BB",
+            "--robot"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tests for Return of Bleichenbacher's Oracle Threat (ROBOT) vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    --BB, --robot                 tests for Return of Bleichenbacher's Oracle Threat (ROBOT) vulnerability"
+        },
+        {
+          "flags": [
+            "--SI",
+            "--starttls-injection"
+          ],
+          "metavar": "Checks for STARTTLS",
+          "takes_value": false,
+          "description": "tests for STARTTLS injection issues",
+          "default": null,
+          "choices": null,
+          "raw": "    --SI, --starttls-injection    tests for STARTTLS injection issues"
+        },
+        {
+          "flags": [
+            "-R",
+            "--renegotiation"
+          ],
+          "metavar": "Tests renegotiation vulnerabilities. Currently there's",
+          "takes_value": false,
+          "description": "tests for renegotiation vulnerabilities",
+          "default": null,
+          "choices": null,
+          "raw": "    -R, --renegotiation           tests for renegotiation vulnerabilities"
+        },
+        {
+          "flags": [
+            "-C",
+            "--compression",
+            "--crime"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tests for CRIME vulnerability (TLS compression issue)",
+          "default": null,
+          "choices": null,
+          "raw": "    -C, --compression, --crime    tests for CRIME vulnerability (TLS compression issue)"
+        },
+        {
+          "flags": [
+            "-B",
+            "--breach"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tests for BREACH vulnerability (HTTP compression issue)",
+          "default": null,
+          "choices": null,
+          "raw": "    -B, --breach                  tests for BREACH vulnerability (HTTP compression issue)"
+        },
+        {
+          "flags": [
+            "-O",
+            "--poodle"
+          ],
+          "metavar": "Tests for SSL POODLE Padding Oracle On Downgraded Legacy En-",
+          "takes_value": false,
+          "description": "tests for POODLE (SSL) vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -O, --poodle                  tests for POODLE (SSL) vulnerability"
+        },
+        {
+          "flags": [
+            "-Z",
+            "--tls-fallback"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "checks TLS_FALLBACK_SCSV mitigation",
+          "default": null,
+          "choices": null,
+          "raw": "    -Z, --tls-fallback            checks TLS_FALLBACK_SCSV mitigation"
+        },
+        {
+          "flags": [
+            "-W",
+            "--sweet32"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tests 64 bit block ciphers (3DES, RC2 and IDEA): SWEET32 vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -W, --sweet32                 tests 64 bit block ciphers (3DES, RC2 and IDEA): SWEET32 vulnerability"
+        },
+        {
+          "flags": [
+            "-A",
+            "--beast"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tests for BEAST vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -A, --beast                   tests for BEAST vulnerability"
+        },
+        {
+          "flags": [
+            "-L",
+            "--lucky13"
+          ],
+          "metavar": "Checks for LUCKY13 vulnerability. It checks for the presence",
+          "takes_value": false,
+          "description": "tests for LUCKY13",
+          "default": null,
+          "choices": null,
+          "raw": "    -L, --lucky13                 tests for LUCKY13"
+        },
+        {
+          "flags": [
+            "-WS",
+            "--winshock"
+          ],
+          "metavar": "Checks for Winshock vulnerability. It tests",
+          "takes_value": false,
+          "description": "tests for winshock vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -WS, --winshock               tests for winshock vulnerability"
+        },
+        {
+          "flags": [
+            "-F",
+            "--freak"
+          ],
+          "metavar": "Checks for FREAK vulnerability Factoring RSA Export Keys",
+          "takes_value": false,
+          "description": "tests for FREAK vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -F, --freak                   tests for FREAK vulnerability"
+        },
+        {
+          "flags": [
+            "-J",
+            "--logjam"
+          ],
+          "metavar": "Checks for LOGJAM vulnerability by checking for DH EXPORT ci-",
+          "takes_value": false,
+          "description": "tests for LOGJAM vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -J, --logjam                  tests for LOGJAM vulnerability"
+        },
+        {
+          "flags": [
+            "-D",
+            "--drown"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tests for DROWN vulnerability",
+          "default": null,
+          "choices": null,
+          "raw": "    -D, --drown                   tests for DROWN vulnerability"
+        },
+        {
+          "flags": [
+            "-4",
+            "--rc4",
+            "--appelbaum"
+          ],
+          "metavar": "Checks which RC4 stream ciphers are being offered.",
+          "takes_value": false,
+          "description": "which RC4 ciphers are being offered?",
+          "default": null,
+          "choices": null,
+          "raw": "    -4, --rc4, --appelbaum        which RC4 ciphers are being offered?"
+        },
+        {
+          "flags": [
+            "-9",
+            "--full"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "includes tests for implementation bugs and cipher per protocol (could disappear)",
+          "default": null,
+          "choices": null,
+          "raw": "    -9, --full                    includes tests for implementation bugs and cipher per protocol (could disappear)"
+        },
+        {
+          "flags": [
+            "--bugs"
+          ],
+          "metavar": "does some workarounds for buggy servers like padding for old F5 de-",
+          "takes_value": false,
+          "description": "enables the \"-bugs\" option of s_client, needed e.g. for some buggy F5s",
+          "default": null,
+          "choices": null,
+          "raw": "    --bugs                        enables the \"-bugs\" option of s_client, needed e.g. for some buggy F5s"
+        },
+        {
+          "flags": [
+            "--assume-http"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "if protocol check fails it assumes HTTP protocol and enforces HTTP checks",
+          "default": null,
+          "choices": null,
+          "raw": "    --assume-http                 if protocol check fails it assumes HTTP protocol and enforces HTTP checks"
+        },
+        {
+          "flags": [
+            "--ssl-native"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use OpenSSL where sockets are normally used. Faster but inaccurate, avoid it if possible",
+          "default": null,
+          "choices": null,
+          "raw": "    --ssl-native                  use OpenSSL where sockets are normally used. Faster but inaccurate, avoid it if possible"
+        },
+        {
+          "flags": [
+            "--openssl"
+          ],
+          "metavar": "PATH",
+          "takes_value": true,
+          "description": "use this openssl binary (default: look in $PATH, $RUN_DIR of testssl)",
+          "default": "look in $PATH",
+          "choices": null,
+          "raw": "    --openssl <PATH>              use this openssl binary (default: look in $PATH, $RUN_DIR of testssl)"
+        },
+        {
+          "flags": [
+            "--proxy"
+          ],
+          "metavar": "host",
+          "takes_value": true,
+          "description": "port|auto>      (experimental) proxy connects via <host:port>, auto: values from $env ($http(s)_proxy)",
+          "default": null,
+          "choices": null,
+          "raw": "    --proxy <host:port|auto>      (experimental) proxy connects via <host:port>, auto: values from $env ($http(s)_proxy)"
+        },
+        {
+          "flags": [
+            "-6"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "also use IPv6. Works only with supporting OpenSSL version and IPv6 connectivity",
+          "default": null,
+          "choices": null,
+          "raw": "    -6                            also use IPv6. Works only with supporting OpenSSL version and IPv6 connectivity"
+        },
+        {
+          "flags": [
+            "--ip"
+          ],
+          "metavar": "ip",
+          "takes_value": true,
+          "description": "a) tests the supplied <ip> v4 or v6 address instead of resolving host(s) in URI",
+          "default": null,
+          "choices": null,
+          "raw": "    --ip <ip>                     a) tests the supplied <ip> v4 or v6 address instead of resolving host(s) in URI"
+        },
+        {
+          "flags": [
+            "-n",
+            "--nodns"
+          ],
+          "metavar": "- odns min none",
+          "takes_value": true,
+          "description": "if \"none\": do not try any DNS lookups, \"min\" queries A, AAAA and MX records",
+          "default": null,
+          "choices": null,
+          "raw": "    -n, --nodns <min|none>        if \"none\": do not try any DNS lookups, \"min\" queries A, AAAA and MX records"
+        },
+        {
+          "flags": [
+            "--sneaky"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "leave less traces in target logs: user agent, referer",
+          "default": null,
+          "choices": null,
+          "raw": "    --sneaky                      leave less traces in target logs: user agent, referer"
+        },
+        {
+          "flags": [
+            "--user-agent"
+          ],
+          "metavar": "user agent",
+          "takes_value": true,
+          "description": "set a custom user agent instead of the standard user agent",
+          "default": null,
+          "choices": null,
+          "raw": "    --user-agent <user agent>     set a custom user agent instead of the standard user agent"
+        },
+        {
+          "flags": [
+            "--ids-friendly"
+          ],
+          "metavar": "is a switch which may help to get",
+          "takes_value": false,
+          "description": "skips a few vulnerability checks which may cause IDSs to block the scanning IP",
+          "default": null,
+          "choices": null,
+          "raw": "    --ids-friendly                skips a few vulnerability checks which may cause IDSs to block the scanning IP"
+        },
+        {
+          "flags": [
+            "--phone-out"
+          ],
+          "metavar": "Checking for revoked certificates via CRL and OCSP is not done",
+          "takes_value": false,
+          "description": "allow to contact external servers for CRL download and querying OCSP responder",
+          "default": null,
+          "choices": null,
+          "raw": "    --phone-out                   allow to contact external servers for CRL download and querying OCSP responder"
+        },
+        {
+          "flags": [
+            "--add-ca"
+          ],
+          "metavar": "CA files CA dir",
+          "takes_value": true,
+          "description": "path to <CAdir> with *.pem or a comma separated list of CA files to include in trust check",
+          "default": null,
+          "choices": null,
+          "raw": "    --add-ca <CA files|CA dir>    path to <CAdir> with *.pem or a comma separated list of CA files to include in trust check"
+        },
+        {
+          "flags": [
+            "--mtls"
+          ],
+          "metavar": "CLIENT CERT file",
+          "takes_value": true,
+          "description": "path to <CLIENT CERT> file in PEM format containing unencrypted certificate key (beta)",
+          "default": null,
+          "choices": null,
+          "raw": "    --mtls <CLIENT CERT file>     path to <CLIENT CERT> file in PEM format containing unencrypted certificate key (beta)"
+        },
+        {
+          "flags": [
+            "--basicauth"
+          ],
+          "metavar": "user",
+          "takes_value": true,
+          "description": "pass>       provide HTTP basic auth information",
+          "default": null,
+          "choices": null,
+          "raw": "    --basicauth <user:pass>       provide HTTP basic auth information"
+        },
+        {
+          "flags": [
+            "--reqheader"
+          ],
+          "metavar": "header",
+          "takes_value": true,
+          "description": "add custom http request headers",
+          "default": null,
+          "choices": null,
+          "raw": "    --reqheader <header>          add custom http request headers"
+        },
+        {
+          "flags": [
+            "--quiet"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "don't output the banner. By doing this you acknowledge usage terms normally appearing in the banner",
+          "default": null,
+          "choices": null,
+          "raw": "    --quiet                       don't output the banner. By doing this you acknowledge usage terms normally appearing in the banner"
+        },
+        {
+          "flags": [
+            "--wide"
+          ],
+          "metavar": "Except the \"each cipher output\" all tests displays the",
+          "takes_value": false,
+          "description": "wide output for tests like RC4, BEAST. FS also with hexcode, kx, strength, RFC name",
+          "default": null,
+          "choices": null,
+          "raw": "    --wide                        wide output for tests like RC4, BEAST. FS also with hexcode, kx, strength, RFC name"
+        },
+        {
+          "flags": [
+            "--show-each"
+          ],
+          "metavar": ".",
+          "takes_value": false,
+          "description": "for wide outputs: display all ciphers tested -- not only succeeded ones",
+          "default": "it  lists  the  following parameters: hexcode",
+          "choices": null,
+          "raw": "    --show-each                   for wide outputs: display all ciphers tested -- not only succeeded ones"
+        },
+        {
+          "flags": [
+            "--mapping"
+          ],
+          "metavar": "openssl",
+          "takes_value": true,
+          "description": "openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (default)",
+          "default": null,
+          "choices": null,
+          "raw": "    --mapping <openssl|           openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (default)"
+        },
+        {
+          "flags": [
+            "--color"
+          ],
+          "metavar": "0 1 2 3",
+          "takes_value": true,
+          "description": "0: no escape or other codes,  1: b/w escape codes,  2: color (default), 3: extra color (color all ciphers)",
+          "default": null,
+          "choices": null,
+          "raw": "    --color <0|1|2|3>             0: no escape or other codes,  1: b/w escape codes,  2: color (default), 3: extra color (color all ciphers)"
+        },
+        {
+          "flags": [
+            "--colorblind"
+          ],
+          "metavar": "Swaps green and blue colors in the output so that this",
+          "takes_value": false,
+          "description": "swap green and blue in the output",
+          "default": null,
+          "choices": null,
+          "raw": "    --colorblind                  swap green and blue in the output"
+        },
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": "0-6",
+          "takes_value": true,
+          "description": "1: screen output normal but keeps debug output in /tmp/.  2-6: see \"grep -A 5 '^DEBUG=' testssl.sh\"",
+          "default": null,
+          "choices": null,
+          "raw": "    --debug <0-6>                 1: screen output normal but keeps debug output in /tmp/.  2-6: see \"grep -A 5 '^DEBUG=' testssl.sh\""
+        },
+        {
+          "flags": [
+            "--disable-rating"
+          ],
+          "metavar": "disables rating. Rating automatically gets",
+          "takes_value": false,
+          "description": "Explicitly disables the rating output",
+          "default": null,
+          "choices": null,
+          "raw": "    --disable-rating              Explicitly disables the rating output"
+        },
+        {
+          "flags": [
+            "--log",
+            "--logging"
+          ],
+          "metavar": "ging",
+          "takes_value": true,
+          "description": "logs stdout to '${NODE}-p${port}${YYYYMMDD-HHMM}.log' in current working directory (cwd)",
+          "default": null,
+          "choices": null,
+          "raw": "    --log, --logging              logs stdout to '${NODE}-p${port}${YYYYMMDD-HHMM}.log' in current working directory (cwd)"
+        },
+        {
+          "flags": [
+            "--logfile",
+            "-oL"
+          ],
+          "metavar": "logfile",
+          "takes_value": true,
+          "description": "logs stdout to 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}.log'. If 'logfile' is a dir or to a specified 'logfile'",
+          "default": null,
+          "choices": null,
+          "raw": "    --logfile|-oL <logfile>       logs stdout to 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}.log'. If 'logfile' is a dir or to a specified 'logfile'"
+        },
+        {
+          "flags": [
+            "--json"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "additional output of findings to flat JSON file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd",
+          "default": null,
+          "choices": null,
+          "raw": "    --json                        additional output of findings to flat JSON file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd"
+        },
+        {
+          "flags": [
+            "--jsonfile",
+            "-oj"
+          ],
+          "metavar": "jsonfile",
+          "takes_value": true,
+          "description": "additional output to the specified flat JSON file or directory, similar to --logfile",
+          "default": null,
+          "choices": null,
+          "raw": "    --jsonfile|-oj <jsonfile>     additional output to the specified flat JSON file or directory, similar to --logfile"
+        },
+        {
+          "flags": [
+            "--json-pretty"
+          ],
+          "metavar": "Logs",
+          "takes_value": false,
+          "description": "additional JSON structured output of findings to a file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd",
+          "default": null,
+          "choices": null,
+          "raw": "    --json-pretty                 additional JSON structured output of findings to a file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd"
+        },
+        {
+          "flags": [
+            "--jsonfile-pretty",
+            "-oJ"
+          ],
+          "metavar": "jsonfile",
+          "takes_value": true,
+          "description": "additional JSON structured output to the specified file or directory, similar to --logfile",
+          "default": null,
+          "choices": null,
+          "raw": "    --jsonfile-pretty|-oJ <jsonfile>  additional JSON structured output to the specified file or directory, similar to --logfile"
+        },
+        {
+          "flags": [
+            "--csv"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "additional output of findings to CSV file '${NODE}-p${port}${YYYYMMDD-HHMM}.csv' in cwd or directory",
+          "default": null,
+          "choices": null,
+          "raw": "    --csv                         additional output of findings to CSV file '${NODE}-p${port}${YYYYMMDD-HHMM}.csv' in cwd or directory"
+        },
+        {
+          "flags": [
+            "--csvfile",
+            "-oC"
+          ],
+          "metavar": "csvfile",
+          "takes_value": true,
+          "description": "additional output as CSV to the specified file or directory, similar to --logfile",
+          "default": null,
+          "choices": null,
+          "raw": "    --csvfile|-oC <csvfile>       additional output as CSV to the specified file or directory, similar to --logfile"
+        },
+        {
+          "flags": [
+            "--html"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "additional output as HTML to file '${NODE}-p${port}${YYYYMMDD-HHMM}.html'",
+          "default": null,
+          "choices": null,
+          "raw": "    --html                        additional output as HTML to file '${NODE}-p${port}${YYYYMMDD-HHMM}.html'"
+        },
+        {
+          "flags": [
+            "--htmlfile",
+            "-oH"
+          ],
+          "metavar": "htmlfile",
+          "takes_value": true,
+          "description": "additional output as HTML to the specified file or directory, similar to --logfile",
+          "default": null,
+          "choices": null,
+          "raw": "    --htmlfile|-oH <htmlfile>     additional output as HTML to the specified file or directory, similar to --logfile"
+        },
+        {
+          "flags": [
+            "--out",
+            "-oa",
+            "-oA",
+            "-oA",
+            "-oa"
+          ],
+          "metavar": "f F ile / fname log to a LOG JSON CSV HTML file see nmap . /",
+          "takes_value": true,
+          "description": "pretty/flat JSON.",
+          "default": null,
+          "choices": null,
+          "raw": "    --out(f,F)ile|-oa/-oA <fname> log to a LOG,JSON,CSV,HTML file (see nmap). -oA/-oa: pretty/flat JSON."
+        },
+        {
+          "flags": [
+            "--hints"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "additional hints to findings",
+          "default": null,
+          "choices": null,
+          "raw": "    --hints                       additional hints to findings"
+        },
+        {
+          "flags": [
+            "--severity"
+          ],
+          "metavar": "severity",
+          "takes_value": true,
+          "description": "severities with lower level will be filtered for CSV+JSON, possible values <LOW|MEDIUM|HIGH|CRITICAL>",
+          "default": null,
+          "choices": null,
+          "raw": "    --severity <severity>         severities with lower level will be filtered for CSV+JSON, possible values <LOW|MEDIUM|HIGH|CRITICAL>"
+        },
+        {
+          "flags": [
+            "--append"
+          ],
+          "metavar": "Normally if an output file already exists and it has a file size",
+          "takes_value": false,
+          "description": "if (non-empty) <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists, append to file. Omits any header",
+          "default": null,
+          "choices": null,
+          "raw": "    --append                      if (non-empty) <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists, append to file. Omits any header"
+        },
+        {
+          "flags": [
+            "--overwrite"
+          ],
+          "metavar": "Normally if an output file already exists and it has",
+          "takes_value": false,
+          "description": "if <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists it overwrites it without any warning",
+          "default": null,
+          "choices": null,
+          "raw": "    --overwrite                   if <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists it overwrites it without any warning"
+        },
+        {
+          "flags": [
+            "--outprefix"
+          ],
+          "metavar": "fname_prefix",
+          "takes_value": true,
+          "description": "before  '${NODE}.' above prepend <fname_prefix>",
+          "default": null,
+          "choices": null,
+          "raw": "    --outprefix <fname_prefix>    before  '${NODE}.' above prepend <fname_prefix>"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "=smtp",
+          "takes_value": true,
+          "description": "--wide --openssl=/usr/bin/openssl <URI> (short options with equal",
+          "default": null,
+          "choices": null,
+          "raw": "     -t=smtp  --wide --openssl=/usr/bin/openssl <URI> (short options with equal"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--banner  displays testssl.sh banner, including license, usage condi-",
+          "default": null,
+          "choices": null,
+          "raw": "     -b,  --banner  displays testssl.sh banner, including license, usage condi-"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "[pattern],  --local [pattern] pretty print all local ciphers supported",
+          "default": null,
+          "choices": null,
+          "raw": "     -V  [pattern],  --local [pattern] pretty print all local ciphers supported"
+        },
+        {
+          "flags": [
+            "--assuming-http"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "testssl.sh  normally does upfront an application protocol",
+          "default": null,
+          "choices": null,
+          "raw": "     --assuming-http  testssl.sh  normally does upfront an application protocol"
+        },
+        {
+          "flags": [
+            "--nodns"
+          ],
+          "metavar": "=min",
+          "takes_value": true,
+          "description": "plus --ip=proxy is useful for situations with no local DNS as",
+          "default": null,
+          "choices": null,
+          "raw": "     --nodns=min  plus --ip=proxy is useful for situations with no local DNS as"
+        },
+        {
+          "flags": [
+            "-E",
+            "--cipher-per-proto",
+            "-e",
+            "--each-cipher"
+          ],
+          "metavar": "is similar to - ach-cipher. It checks each",
+          "takes_value": true,
+          "description": "of",
+          "default": null,
+          "choices": null,
+          "raw": "     -E, --cipher-per-proto is similar to -e, --each-cipher. It checks each  of"
+        },
+        {
+          "flags": [
+            "-f",
+            "--fs",
+            "--nsa",
+            "--forward-secrecy"
+          ],
+          "metavar": "- s - orward-secrecy Checks robust forward secrecy",
+          "takes_value": true,
+          "description": "key  ex-",
+          "default": null,
+          "choices": null,
+          "raw": "     -f, --fs, --nsa, --forward-secrecy Checks robust forward secrecy  key  ex-"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--server-preference,  --preference  displays the servers preferences:",
+          "default": null,
+          "choices": null,
+          "raw": "     -P,  --server-preference,  --preference  displays the servers preferences:"
+        },
+        {
+          "flags": [
+            "-S",
+            "--server_defaults"
+          ],
+          "metavar": "displays information from the server hello s",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -S, --server_defaults displays information from the server hello(s):"
+        },
+        {
+          "flags": [
+            "-U",
+            "--vulnerable",
+            "--vulnerabilities"
+          ],
+          "metavar": "Just tests all of the following vul-",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -U, --vulnerable, --vulnerabilities Just tests all (of the following) vul-"
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--ccs,  --ccs-injection  Checks for CCS Injection which is an openssl",
+          "default": null,
+          "choices": null,
+          "raw": "     -I,  --ccs,  --ccs-injection  Checks for CCS Injection which is an openssl"
+        },
+        {
+          "flags": [
+            "--BB"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--robot  Checks  for  vulnerability to ROBOT / (Return Of Bleichen-",
+          "default": null,
+          "choices": null,
+          "raw": "     --BB,  --robot  Checks  for  vulnerability to ROBOT / (Return Of Bleichen-"
+        },
+        {
+          "flags": [
+            "-C"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--compression,  --crime Checks for CRIME (Compression Ratio Info-leak",
+          "default": null,
+          "choices": null,
+          "raw": "     -C,  --compression,  --crime Checks for CRIME (Compression Ratio Info-leak"
+        },
+        {
+          "flags": [
+            "-B"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--breach  Checks  for BREACH (Browser Reconnaissance and Exfiltration",
+          "default": null,
+          "choices": null,
+          "raw": "     -B,  --breach  Checks  for BREACH (Browser Reconnaissance and Exfiltration"
+        },
+        {
+          "flags": [
+            "-Z"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--tls-fallback Checks TLS_FALLBACK_SCSV mitigation. TLS_FALLBACK_SCSV",
+          "default": null,
+          "choices": null,
+          "raw": "     -Z,  --tls-fallback Checks TLS_FALLBACK_SCSV mitigation. TLS_FALLBACK_SCSV"
+        },
+        {
+          "flags": [
+            "-W"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--sweet32 Checks for vulnerability to SWEET32 by testing 64 bit block",
+          "default": null,
+          "choices": null,
+          "raw": "     -W,  --sweet32 Checks for vulnerability to SWEET32 by testing 64 bit block"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--drown  Checks for DROWN vulnerability (Decrypting RSA with Obsolete",
+          "default": null,
+          "choices": null,
+          "raw": "     -D,  --drown  Checks for DROWN vulnerability (Decrypting RSA with Obsolete"
+        },
+        {
+          "flags": [
+            "-A"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--beast  Checks BEAST vulnerabilities in SSL 3 and TLS 1.0 by testing",
+          "default": null,
+          "choices": null,
+          "raw": "     -A,  --beast  Checks BEAST vulnerabilities in SSL 3 and TLS 1.0 by testing"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--quiet  Normally testssl.sh displays a banner on stdout with several",
+          "default": null,
+          "choices": null,
+          "raw": "     -q,  --quiet  Normally testssl.sh displays a banner on stdout with several"
+        },
+        {
+          "flags": [
+            "--csv",
+            "-p"
+          ],
+          "metavar": "Logs additionally to a CSV file $ NODE $ port $ YYYYMMDD-HHMM .csv",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --csv Logs additionally to a CSV file ${NODE}-p${port}${YYYYMMDD-HHMM}.csv"
+        },
+        {
+          "flags": [
+            "--csvfile",
+            "-oC",
+            "--json-"
+          ],
+          "metavar": "csvfile or csvfile Similar to the aforementioned",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --csvfile <csvfile> or -oC <csvfile> Similar to the aforementioned --json-"
+        },
+        {
+          "flags": [
+            "--logfile"
+          ],
+          "metavar": ".",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --logfile."
+        },
+        {
+          "flags": [
+            "--htmlfile"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "<htmlfile>  or  -oH  <htmlfile>  Similar to the aforementioned",
+          "default": null,
+          "choices": null,
+          "raw": "     --htmlfile  <htmlfile>  or  -oH  <htmlfile>  Similar to the aforementioned"
+        },
+        {
+          "flags": [
+            "--jsonfile",
+            "--logfile",
+            "--html"
+          ],
+          "metavar": "or it logs the output in HTML format see ad-",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --jsonfile or --logfile it logs the output in HTML format (see --html) ad-"
+        },
+        {
+          "flags": [
+            "-oA",
+            "--outFile"
+          ],
+          "metavar": "filename / filename Similar to nmap it does a file",
+          "takes_value": true,
+          "description": "out-",
+          "default": null,
+          "choices": null,
+          "raw": "     -oA <filename> / --outFile <filename> Similar to nmap it does a file  out-"
+        },
+        {
+          "flags": [
+            "-oa",
+            "--outfile"
+          ],
+          "metavar": "filename / filename Does the same as the previous option",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -oa <filename> / --outfile <filename> Does the same as the previous option"
+        }
+      ],
+      "raw_help": "root@kali:~# testssl --help\n \n    \"testssl [options] <URI>\"    or    \"testssl <options>\"\n \n \"testssl <option>\", where <option> is mostly standalone and one of:\n \n    --help                        what you're looking at\n    -b, --banner                  displays banner + version of testssl\n    -v, --version                 same as previous\n    -V, --local [pattern]         pretty print all local ciphers (of openssl only). If search pattern supplied: it is an\n                                  an ignore case word pattern of cipher hexcode or any other string in its name, kx or bits\n \n \"testssl [options] <URI>\", where <URI> is:\n \n    <URI>                         host|host:port|URL|URL:port   port 443 is default, URL can only contain HTTPS as a protocol\n \n and [options] is/are:\n \n    -t, --starttls <protocol>     Does a run against a STARTTLS enabled service which is one of ftp, smtp, lmtp, pop3, imap,\n                                  xmpp, xmpp-server, telnet, ldap, nntp, sieve, postgres, mysql\n    --xmpphost <to_domain>        For STARTTLS xmpp or xmpp-server checks it supplies the domainname (like SNI)\n    --mx <domain/host>            Tests MX records from high to low priority (STARTTLS, port 25)\n    --file/-iL <fname>            Mass testing option: Reads one testssl.sh command line per line from <fname>.\n                                  Can be combined with --serial or --parallel. Implicitly turns on \"--warnings batch\".\n                                  Text format 1: Comments via # allowed, EOF signals end of <fname>\n                                  Text format 2: nmap output in greppable format (-oG), 1 port per line allowed\n    --mode <serial|parallel>      Mass testing to be done serial (default) or parallel (--parallel is shortcut for the latter)\n    --warnings <batch|off>        \"batch\" doesn't continue when a testing error is encountered, off continues and skips warnings\n    --connect-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait for the TCP socket connect to return\n    --openssl-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait before openssl connect will be terminated\n \n single check as <options>  (\"testssl URI\" does everything except -E and -g):\n    -e, --each-cipher             checks each local cipher remotely\n    -E, --cipher-per-proto        checks those per protocol\n    -s, --std, --categories       tests standard cipher categories by strength\n    -f, --fs, --forward-secrecy   checks forward secrecy settings\n    -p, --protocols               checks TLS/SSL protocols (including ALPN/HTTP2 and SPDY)\n    -g, --grease                  tests several server implementation bugs like GREASE and size limitations\n    -S, --server-defaults         displays the server's default picks and certificate info\n    -P, --server-preference       displays the server's picks: protocol+cipher\n    -x, --single-cipher <pattern> tests matched <pattern> of ciphers\n                                  (if <pattern> not a number: word match)\n    -c, --client-simulation       test client simulations, see which client negotiates with cipher and protocol\n    -h, --header, --headers       tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address\n \n    -U, --vulnerable              tests all (of the following) vulnerabilities (if applicable)\n    -H, --heartbleed              tests for Heartbleed vulnerability\n    -I, --ccs, --ccs-injection    tests for CCS injection vulnerability\n    -T, --ticketbleed             tests for Ticketbleed vulnerability in BigIP loadbalancers\n    --BB, --robot                 tests for Return of Bleichenbacher's Oracle Threat (ROBOT) vulnerability\n    --SI, --starttls-injection    tests for STARTTLS injection issues\n    -R, --renegotiation           tests for renegotiation vulnerabilities\n    -C, --compression, --crime    tests for CRIME vulnerability (TLS compression issue)\n    -B, --breach                  tests for BREACH vulnerability (HTTP compression issue)\n    -O, --poodle                  tests for POODLE (SSL) vulnerability\n    -Z, --tls-fallback            checks TLS_FALLBACK_SCSV mitigation\n    -W, --sweet32                 tests 64 bit block ciphers (3DES, RC2 and IDEA): SWEET32 vulnerability\n    -A, --beast                   tests for BEAST vulnerability\n    -L, --lucky13                 tests for LUCKY13\n    -WS, --winshock               tests for winshock vulnerability\n    -F, --freak                   tests for FREAK vulnerability\n    -J, --logjam                  tests for LOGJAM vulnerability\n    -D, --drown                   tests for DROWN vulnerability\n    -4, --rc4, --appelbaum        which RC4 ciphers are being offered?\n \n tuning / connect options (most also can be preset via environment variables):\n    -9, --full                    includes tests for implementation bugs and cipher per protocol (could disappear)\n    --bugs                        enables the \"-bugs\" option of s_client, needed e.g. for some buggy F5s\n    --assume-http                 if protocol check fails it assumes HTTP protocol and enforces HTTP checks\n    --ssl-native                  use OpenSSL where sockets are normally used. Faster but inaccurate, avoid it if possible\n    --openssl <PATH>              use this openssl binary (default: look in $PATH, $RUN_DIR of testssl)\n    --proxy <host:port|auto>      (experimental) proxy connects via <host:port>, auto: values from $env ($http(s)_proxy)\n    -6                            also use IPv6. Works only with supporting OpenSSL version and IPv6 connectivity\n    --ip <ip>                     a) tests the supplied <ip> v4 or v6 address instead of resolving host(s) in URI\n                                  b) \"one\" means: just test the first DNS returns (useful for multiple IPs)\n                                  c) \"proxy\" means: dns resolution via proxy. Needed when host has no DNS.\n    -n, --nodns <min|none>        if \"none\": do not try any DNS lookups, \"min\" queries A, AAAA and MX records\n    --sneaky                      leave less traces in target logs: user agent, referer\n    --user-agent <user agent>     set a custom user agent instead of the standard user agent\n    --ids-friendly                skips a few vulnerability checks which may cause IDSs to block the scanning IP\n    --phone-out                   allow to contact external servers for CRL download and querying OCSP responder\n    --add-ca <CA files|CA dir>    path to <CAdir> with *.pem or a comma separated list of CA files to include in trust check\n    --mtls <CLIENT CERT file>     path to <CLIENT CERT> file in PEM format containing unencrypted certificate key (beta)\n    --basicauth <user:pass>       provide HTTP basic auth information\n    --reqheader <header>          add custom http request headers\n \n output options (can also be preset via environment variables):\n    --quiet                       don't output the banner. By doing this you acknowledge usage terms normally appearing in the banner\n    --wide                        wide output for tests like RC4, BEAST. FS also with hexcode, kx, strength, RFC name\n    --show-each                   for wide outputs: display all ciphers tested -- not only succeeded ones\n    --mapping <openssl|           openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (default)\n               iana|rfc             -> use the IANA/(RFC) cipher suite name as the primary name cipher suite name form\n               no-openssl|          -> don't display the OpenSSL cipher suite name, display IANA/(RFC) names only\n               no-iana|no-rfc>      -> don't display the IANA/(RFC) cipher suite name, display OpenSSL names only\n    --color <0|1|2|3>             0: no escape or other codes,  1: b/w escape codes,  2: color (default), 3: extra color (color all ciphers)\n    --colorblind                  swap green and blue in the output\n    --debug <0-6>                 1: screen output normal but keeps debug output in /tmp/.  2-6: see \"grep -A 5 '^DEBUG=' testssl.sh\"\n    --disable-rating              Explicitly disables the rating output\n \n file output options (can also be preset via environment variables)\n    --log, --logging              logs stdout to '${NODE}-p${port}${YYYYMMDD-HHMM}.log' in current working directory (cwd)\n    --logfile|-oL <logfile>       logs stdout to 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}.log'. If 'logfile' is a dir or to a specified 'logfile'\n    --json                        additional output of findings to flat JSON file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd\n    --jsonfile|-oj <jsonfile>     additional output to the specified flat JSON file or directory, similar to --logfile\n    --json-pretty                 additional JSON structured output of findings to a file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd\n    --jsonfile-pretty|-oJ <jsonfile>  additional JSON structured output to the specified file or directory, similar to --logfile\n    --csv                         additional output of findings to CSV file '${NODE}-p${port}${YYYYMMDD-HHMM}.csv' in cwd or directory\n    --csvfile|-oC <csvfile>       additional output as CSV to the specified file or directory, similar to --logfile\n    --html                        additional output as HTML to file '${NODE}-p${port}${YYYYMMDD-HHMM}.html'\n    --htmlfile|-oH <htmlfile>     additional output as HTML to the specified file or directory, similar to --logfile\n    --out(f,F)ile|-oa/-oA <fname> log to a LOG,JSON,CSV,HTML file (see nmap). -oA/-oa: pretty/flat JSON.\n                                  \"auto\" uses '${NODE}-p${port}${YYYYMMDD-HHMM}'. If fname is a dir uses 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}'\n    --hints                       additional hints to findings\n    --severity <severity>         severities with lower level will be filtered for CSV+JSON, possible values <LOW|MEDIUM|HIGH|CRITICAL>\n    --append                      if (non-empty) <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists, append to file. Omits any header\n    --overwrite                   if <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists it overwrites it without any warning\n    --outprefix <fname_prefix>    before  '${NODE}.' above prepend <fname_prefix>\n \n \n Options requiring a value can also be called with '=' e.g. testssl.sh -t=smtp --wide --openssl=/usr/bin/openssl <URI>.\n <URI> always needs to be the last parameter.",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "\"testssl [options] <URI>\"    or    \"testssl <options>\"\n\n\"testssl <option>\", where <option> is mostly standalone and one of:\n\n     --help                        what you're looking at\n     -b, --banner                  displays banner + version of testssl\n     -v, --version                 same as previous\n     -V, --local [pattern]         pretty print all local ciphers (of openssl only). If search pattern supplied: it is an\n                                   an ignore case word pattern of cipher hexcode or any other string in its name, kx or bits\n\n\"testssl [options] <URI>\", where <URI> is:\n\n     <URI>                         host|host:port|URL|URL:port   port 443 is default, URL can only contain HTTPS as a protocol\n\n  and [options] is/are:\n\n     -t, --starttls <protocol>     Does a run against a STARTTLS enabled service which is one of ftp, smtp, lmtp, pop3, imap,\n                                   xmpp, xmpp-server, telnet, ldap, nntp, sieve, postgres, mysql\n     --xmpphost <to_domain>        For STARTTLS xmpp or xmpp-server checks it supplies the domainname (like SNI)\n     --mx <domain/host>            Tests MX records from high to low priority (STARTTLS, port 25)\n     --file/-iL <fname>            Mass testing option: Reads one testssl.sh command line per line from <fname>.\n                                   Can be combined with --serial or --parallel. Implicitly turns on \"--warnings batch\".\n                                   Text format 1: Comments via # allowed, EOF signals end of <fname>\n                                   Text format 2: nmap output in greppable format (-oG), 1 port per line allowed\n     --mode <serial|parallel>      Mass testing to be done serial (default) or parallel (--parallel is shortcut for the latter)\n     --warnings <batch|off>        \"batch\" doesn't continue when a testing error is encountered, off continues and skips warnings\n     --connect-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait for the TCP socket connect to return\n     --openssl-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait before openssl connect will be terminated\n\nsingle check as <options>  (\"testssl URI\" does everything except -E and -g):\n     -e, --each-cipher             checks each local cipher remotely\n     -E, --cipher-per-proto        checks those per protocol\n     -s, --std, --categories       tests standard cipher categories by strength\n     -f, --fs, --forward-secrecy   checks forward secrecy settings\n     -p, --protocols               checks TLS/SSL protocols (including ALPN/HTTP2 and SPDY)\n     -g, --grease                  tests several server implementation bugs like GREASE and size limitations\n     -S, --server-defaults         displays the server's default picks and certificate info\n     -P, --server-preference       displays the server's picks: protocol+cipher\n     -x, --single-cipher <pattern> tests matched <pattern> of ciphers\n                                   (if <pattern> not a number: word match)\n     -c, --client-simulation       test client simulations, see which client negotiates with cipher and protocol\n     -h, --header, --headers       tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address\n\n     -U, --vulnerable              tests all (of the following) vulnerabilities (if applicable)\n     -H, --heartbleed              tests for Heartbleed vulnerability\n     -I, --ccs, --ccs-injection    tests for CCS injection vulnerability\n     -T, --ticketbleed             tests for Ticketbleed vulnerability in BigIP loadbalancers\n     --BB, --robot                 tests for Return of Bleichenbacher's Oracle Threat (ROBOT) vulnerability\n     --SI, --starttls-injection    tests for STARTTLS injection issues\n     -R, --renegotiation           tests for renegotiation vulnerabilities\n     -C, --compression, --crime    tests for CRIME vulnerability (TLS compression issue)\n     -B, --breach                  tests for BREACH vulnerability (HTTP compression issue)\n     -O, --poodle                  tests for POODLE (SSL) vulnerability\n     -Z, --tls-fallback            checks TLS_FALLBACK_SCSV mitigation\n     -W, --sweet32                 tests 64 bit block ciphers (3DES, RC2 and IDEA): SWEET32 vulnerability\n     -A, --beast                   tests for BEAST vulnerability\n     -L, --lucky13                 tests for LUCKY13\n     -WS, --winshock               tests for winshock vulnerability\n     -F, --freak                   tests for FREAK vulnerability\n     -J, --logjam                  tests for LOGJAM vulnerability\n     -D, --drown                   tests for DROWN vulnerability\n     -4, --rc4, --appelbaum        which RC4 ciphers are being offered?\n\ntuning / connect options (most also can be preset via environment variables):\n     -9, --full                    includes tests for implementation bugs and cipher per protocol (could disappear)\n     --bugs                        enables the \"-bugs\" option of s_client, needed e.g. for some buggy F5s\n     --assume-http                 if protocol check fails it assumes HTTP protocol and enforces HTTP checks\n     --ssl-native                  use OpenSSL where sockets are normally used. Faster but inaccurate, avoid it if possible\n     --openssl <PATH>              use this openssl binary (default: look in $PATH, $RUN_DIR of testssl)\n     --proxy <host:port|auto>      (experimental) proxy connects via <host:port>, auto: values from $env ($http(s)_proxy)\n     -6                            also use IPv6. Works only with supporting OpenSSL version and IPv6 connectivity\n     --ip <ip>                     a) tests the supplied <ip> v4 or v6 address instead of resolving host(s) in URI\n                                   b) \"one\" means: just test the first DNS returns (useful for multiple IPs)\n                                   c) \"proxy\" means: dns resolution via proxy. Needed when host has no DNS.\n     -n, --nodns <min|none>        if \"none\": do not try any DNS lookups, \"min\" queries A, AAAA and MX records\n     --sneaky                      leave less traces in target logs: user agent, referer\n     --user-agent <user agent>     set a custom user agent instead of the standard user agent\n     --ids-friendly                skips a few vulnerability checks which may cause IDSs to block the scanning IP\n     --phone-out                   allow to contact external servers for CRL download and querying OCSP responder\n     --add-ca <CA files|CA dir>    path to <CAdir> with *.pem or a comma separated list of CA files to include in trust check\n     --mtls <CLIENT CERT file>     path to <CLIENT CERT> file in PEM format containing unencrypted certificate key (beta)\n     --basicauth <user:pass>       provide HTTP basic auth information\n     --reqheader <header>          add custom http request headers\n\noutput options (can also be preset via environment variables):\n     --quiet                       don't output the banner. By doing this you acknowledge usage terms normally appearing in the banner\n     --wide                        wide output for tests like RC4, BEAST. FS also with hexcode, kx, strength, RFC name\n     --show-each                   for wide outputs: display all ciphers tested -- not only succeeded ones\n     --mapping <openssl|           openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (default)\n                iana|rfc             -> use the IANA/(RFC) cipher suite name as the primary name cipher suite name form\n                no-openssl|          -> don't display the OpenSSL cipher suite name, display IANA/(RFC) names only\n                no-iana|no-rfc>      -> don't display the IANA/(RFC) cipher suite name, display OpenSSL names only\n     --color <0|1|2|3>             0: no escape or other codes,  1: b/w escape codes,  2: color (default), 3: extra color (color all ciphers)\n     --colorblind                  swap green and blue in the output\n     --debug <0-6>                 1: screen output normal but keeps debug output in /tmp/.  2-6: see \"grep -A 5 '^DEBUG=' testssl.sh\"\n     --disable-rating              Explicitly disables the rating output\n\nfile output options (can also be preset via environment variables)\n     --log, --logging              logs stdout to '${NODE}-p${port}${YYYYMMDD-HHMM}.log' in current working directory (cwd)\n     --logfile|-oL <logfile>       logs stdout to 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}.log'. If 'logfile' is a dir or to a specified 'logfile'\n     --json                        additional output of findings to flat JSON file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd\n     --jsonfile|-oj <jsonfile>     additional output to the specified flat JSON file or directory, similar to --logfile\n     --json-pretty                 additional JSON structured output of findings to a file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd\n     --jsonfile-pretty|-oJ <jsonfile>  additional JSON structured output to the specified file or directory, similar to --logfile\n     --csv                         additional output of findings to CSV file '${NODE}-p${port}${YYYYMMDD-HHMM}.csv' in cwd or directory\n     --csvfile|-oC <csvfile>       additional output as CSV to the specified file or directory, similar to --logfile\n     --html                        additional output as HTML to file '${NODE}-p${port}${YYYYMMDD-HHMM}.html'\n     --htmlfile|-oH <htmlfile>     additional output as HTML to the specified file or directory, similar to --logfile\n     --out(f,F)ile|-oa/-oA <fname> log to a LOG,JSON,CSV,HTML file (see nmap). -oA/-oa: pretty/flat JSON.\n                                   \"auto\" uses '${NODE}-p${port}${YYYYMMDD-HHMM}'. If fname is a dir uses 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}'\n     --hints                       additional hints to findings\n     --severity <severity>         severities with lower level will be filtered for CSV+JSON, possible values <LOW|MEDIUM|HIGH|CRITICAL>\n     --append                      if (non-empty) <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists, append to file. Omits any header\n     --overwrite                   if <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists it overwrites it without any warning\n     --outprefix <fname_prefix>    before  '${NODE}.' above prepend <fname_prefix>\n\n\nOptions requiring a value can also be called with '=' e.g. testssl.sh -t=smtp --wide --openssl=/usr/bin/openssl <URI>.\n<URI> always needs to be the last parameter.",
+        "-h": "\u001b[1;35mFatal error: URI missing\u001b[m",
+        "help": "tput: unknown terminfo capability 'AF'\ntput: unknown terminfo capability 'AF'\ntput: unknown terminfo capability 'AF'\ntput: unknown terminfo capability 'AF'\ntput: unknown terminfo capability 'AF'\ntput: unknown terminfo capability 'AF'\ntput: unknown terminfo capability 'AF'\ntput: unknown terminfo capability 'AF'\ntput: unknown terminfo capability 'md'\ntput: unknown terminfo capability 'md'\ntput: unknown terminfo capability 'us'\ntput: unknown terminfo capability 'mr'\ntput: unknown terminfo capability 'me'",
+        "man": "TESTSSL(1)                  General Commands Manual                  TESTSSL(1)\n\nNAME\n     testssl\n\nNAME\n     testssl.sh -- check encryption of SSL/TLS servers\n\nSYNOPSIS\n     testssl.sh [OPTIONS] <URI>, testssl.sh [OPTIONS] --file <FILE>\n\n     or\n\n     testssl.sh [BANNER OPTIONS]\n\nDESCRIPTION\n     testssl.sh  is a free command line tool which checks a server's service on\n     any port for the support of TLS/SSL ciphers, protocols as well as  crypto-\n     graphic flaws and much more.\n\n     The  output  rates findings by color (screen) or severity (file output) so\n     that you are able to tell whether something is good or bad.  The  (screen)\n     output  has  several  sections  in  which classes of checks are being per-\n     formed. To ease readability on the screen it aligns and indents the output\n     properly.\n\n     Only you see the result. You also can use it internally on your  LAN.  Ex-\n     cept DNS lookups or unless you instruct testssl.sh to check for revocation\n     of  certificates  it doesn't use any other hosts or even third parties for\n     any test.\n\nREQUIREMENTS\n     Testssl.sh is out of the box portable: it runs under any Unix-like  stack:\n     Linux,  *BSD,  MacOS X, WSL=Windows Subsystem for Linux, Cygwin and MSYS2.\n     bash is a prerequisite, also version 3 is still supported. Standard utili-\n     ties like awk, sed, tr and head are also needed. This can  be  of  a  BSD,\n     System 5 or GNU flavor whereas grep from System V is not yet supported.\n\n     Any  OpenSSL  or  LibreSSL  version is needed as a helper. Unlike previous\n     versions of testssl.sh almost every check is done via  (TCP)  sockets.  In\n     addition  statically  linked  OpenSSL binaries for major operating systems\n     are supplied in ./bin/.\n\nGENERAL\n     testssl.sh URI as the default invocation does the  so-called  default  run\n     which does a number of checks and puts out the results colorized (ANSI and\n     termcap)  on  the screen. It does every check listed below except -E which\n     are (order of appearance):\n\n     0) displays a banner (see below), does a DNS lookup also  for  further  IP\n     addresses  and does for the returned IP address a reverse lookup. Last but\n     not least a service check is being done.\n\n     1) SSL/TLS protocol check\n\n     2) standard cipher categories\n\n     3) server's cipher preferences (server order?)\n\n     4) forward secrecy: ciphers and elliptical curves\n\n     5) server defaults (certificate info, TLS extensions, session information)\n\n     6) HTTP header (if HTTP detected or being forced via --assume-http)\n\n     7) vulnerabilities\n\n     8) testing each of 370 preconfigured ciphers\n\n     9) client simulation\n\n     10) rating\n\nOPTIONS AND PARAMETERS\n     Options are either short or long options. Any long or short option requir-\n     ing a value can be called with or without an equal sign.  E.g.  testssl.sh\n     -t=smtp  --wide --openssl=/usr/bin/openssl <URI> (short options with equal\n     sign)  is  equivalent  to  testssl.sh  --starttls  smtp  --wide  --openssl\n     /usr/bin/openssl <URI> (long option without equal sign). Some command line\n     options    can    also    be   preset   via   ENV   variables.   WIDE=true\n     OPENSSL=/usr/bin/openssl testssl.sh --starttls=smtp  <URI>  would  be  the\n     equivalent to the aforementioned examples. Preference has the command line\n     over any environment variables.\n\n     <URI> or --file <FILE> always needs to be the last parameter.\n\n   BANNER OPTIONS (standalone)\n     --help (or no arg) displays command line help\n\n     -b,  --banner  displays testssl.sh banner, including license, usage condi-\n     tions, version of testssl.sh, detected openssl version, its path to it,  #\n     of ciphers of openssl, its build date and the architecture.\n\n     -v, --version same as before\n\n     -V  [pattern],  --local [pattern] pretty print all local ciphers supported\n     by openssl version. If a pattern is supplied it performs a  match  (ignore\n     case)  on  any  of the strings supplied in the wide output, see below. The\n     pattern will be searched in the any of the columns: hexcode, cipher  suite\n     name  (OpenSSL  or  IANA),  key exchange, encryption, bits. It does a word\n     pattern match for non-numbers, for number just  a  normal  match  applies.\n     Numbers  here are defined as [0-9,A-F]. This means (attention: catch) that\n     the pattern CBC is matched as non-word, but AES as word. This option  also\n     accepts --openssl=<path_to_openssl>.\n\n   INPUT PARAMETERS\n     URI  can be a hostname, an IPv4 or IPv6 address (restriction see below) or\n     an URL. IPv6 addresses need to be in square brackets. For any given  para-\n     meter port 443 is assumed unless specified by appending a colon and a port\n     number.  The  only preceding protocol specifier allowed is https. You need\n     to be aware that checks for an IP address might  not  hit  the  vhost  you\n     want. DNS resolution (A/AAAA record) is being performed unless you have an\n     /etc/hosts entry for the hostname.\n\n     --file <fname> or the equivalent -iL <fname> are mass testing options. Per\n     default  it  implicitly turns on --warnings batch unless warnings has been\n     set to off before. In its first incarnation the mass testing option  reads\n     command  lines from fname. fname consists of command lines of testssl, one\n     line per instance. Comments after # are ignored, EOF signals  the  end  of\n     fname  any subsequent lines will be ignored too. You can also supply addi-\n     tional options which will be inherited to each child, e.g.  When  invoking\n     testssl.sh  --wide  --log  --file  <fname>  . Each single line in fname is\n     parsed upon execution. If there's a conflicting  option  and  serial  mass\n     testing option is being performed the check will be aborted at the time it\n     occurs  and depending on the output option potentially leaving you with an\n     output file without footer. In parallel mode the mileage varies, likely  a\n     line won't be scanned.\n\n     Alternatively fname can be in nmap's grep(p)able output format (-oG). Only\n     open  ports  will  be considered. Multiple ports per line are allowed. The\n     ports can be different and will be tested by testssl.sh according to  com-\n     mon  practice  in  the  internet, i.e. if nmap shows in its output an open\n     port 25, automatically -t smtp will be added before the URI  whereas  port\n     465  will  be  treated  as a plain TLS/SSL port, not requiring an STARTTLS\n     SMTP handshake upfront. This is done by an internal table which correlates\n     nmap's open  port  detected  to  the  STARTTLS/plain  text  decision  from\n     testssl.sh.\n\n     Nmap's  output  always  returns IP addresses and only if there's a PTR DNS\n     record available a hostname. As it is not  checked  by  nmap  whether  the\n     hostname matches the IP (A or AAAA record), testssl.sh does this automati-\n     cally for you. If the A record of the hostname matches the IP address, the\n     hostname  is  used and not the IP address. Please keep in mind that checks\n     against an IP address might not hit the vhost you maybe were aiming at and\n     thus it may lead to different results.\n\n     A typical internal  conversion  to  testssl.sh  file  format  from  nmap's\n     grep(p)able format could look like:\n\n     10.10.12.16:443  10.10.12.16:1443  -t  smtp host.example.com:25 host.exam-\n     ple.com:443 host.example.com:631 -t  ftp  10.10.12.11:21  10.10.12.11:8443\n     Please  note  that  fname  has  to be in Unix format. DOS carriage returns\n     won't be accepted. Instead of the  command  line  switch  the  environment\n     variable FNAME will be honored too.\n\n     --mode <serial|parallel>. Mass testing to be done serial (default) or par-\n     allel (--parallel is shortcut for the latter, --serial is the opposite op-\n     tion). Per default mass testing is being run in serial mode, i.e. one line\n     after  the  other is processed and invoked. The variable MASS_TESTING_MODE\n     can be defined to be either equal serial or parallel.\n\n     --warnings <batch|off>. The warnings parameter determines  how  testssl.sh\n     will  deal  with  situations  where user input normally will be necessary.\n     There are two options. batch doesn't wait for a confirming keypress when a\n     client- or server-side problem is encountered. As of 3.0 it just then ter-\n     minates the particular scan. This is automatically chosen for mass testing\n     (--file). off just skips the warning, the confirmation but  continues  the\n     scan,  independent  whether  it makes sense or not. Please note that there\n     are conflicts where testssl.sh will still ask for confirmation  which  are\n     the  ones  which otherwise would have a drastic impact on the results. Al-\n     most any other decision will be made in the future  as  a  best  guess  by\n     testssl.sh.  The  same can be achieved by setting the environment variable\n     WARNINGS.\n\n     --connect-timeout <seconds> This is useful for socket TCP connections to a\n     node. If the node does not complete a TCP handshake (e.g.  because  it  is\n     down  or  behind  a firewall or there's an IDS or a tarpit) testssl.sh may\n     usually hang for around 2 minutes or even much more.  This  parameter  in-\n     structs  testssl.sh  to wait at most seconds for the handshake to complete\n     before giving up. This option only works if your OS has a  timeout  binary\n     installed. CONNECT_TIMEOUT is the corresponding environment variable.\n\n     --openssl-timeout <seconds> This is especially useful for all connects us-\n     ing openssl and practically useful for mass testing. It avoids the openssl\n     connect  to  hang for ~2 minutes. The expected parameter seconds instructs\n     testssl.sh to wait before the openssl connect will be terminated. The  op-\n     tion is only available if your OS has a timeout binary installed. As there\n     are  different  implementations of timeout: It automatically calls the bi-\n     nary with the right parameters. OPENSSL_TIMEOUT is the equivalent environ-\n     ment variable.\n\n     --basicauth <user:pass> This can be set to provide HTTP basic auth creden-\n     tials which are used during checks for security headers. BASICAUTH is  the\n     ENV variable you can use instead.\n\n     --reqheader <header> This can be used to add additional HTTP request head-\n     ers in the correct format Headername: headercontent. This parameter can be\n     called  multiple times if required. For example: --reqheader 'Proxy-Autho-\n     rization: Basic dGVzdHNzbDpydWxlcw==' --reqheader 'ClientID:  0xDEADBEAF'.\n     REQHEADER is the corresponding environment variable.\n\n   SPECIAL INVOCATIONS\n     -t <protocol>, --starttls <protocol> does a default run against a STARTTLS\n     enabled  protocol.  protocol  must  be one of ftp, smtp, pop3, imap, xmpp,\n     sieve, xmpp-server, telnet, ldap, irc, lmtp, nntp,  postgres,  mysql.  For\n     the  latter  four  you  need  e.g. the supplied OpenSSL or OpenSSL version\n     1.1.1. Please note: MongoDB doesn't offer a STARTTLS connection, IRC  cur-\n     rently only works with --ssl-native. irc is WIP.\n\n     --xmpphost  <jabber_domain>  is  an additional option for STARTTLS enabled\n     XMPP: It expects the jabber domain as a parameter. This is only needed  if\n     the domain is different from the URI supplied.\n\n     --mx <domain|host> tests all MX records (STARTTLS on port 25) from high to\n     low priority, one after the other.\n\n     --ip  <ip>  tests  either the supplied IPv4 or IPv6 address instead of re-\n     solving host(s) in <URI>. IPv6 addresses need to  be  supplied  in  square\n     brackets. --ip=one means: just test the first A record DNS returns (useful\n     for  multiple IPs). If -6 and --ip=one was supplied an AAAA record will be\n     picked if available. The --ip option might be also useful if you  want  to\n     resolve  the  supplied hostname to a different IP, similar as if you would\n     edit /etc/hosts or /c/Windows/System32/drivers/etc/hosts. --ip=proxy tries\n     a DNS resolution via proxy. --ip=proxy plus --nodns=min is useful for sit-\n     uations with no local DNS as there'll be no DNS timeouts  when  trying  to\n     resolve CAA, TXT and MX records.\n\n     --proxy <host>:<port> does ANY check via the specified proxy. --proxy=auto\n     inherits  the  proxy  setting  from the environment. Any hostname supplied\n     will be resolved to the first A record, if it  does  not  exist  the  AAAA\n     record is used. IPv4 and IPv6 addresses can be passed too, the latter also\n     with square bracket notation. Please note that you need a newer OpenSSL or\n     LibreSSL  version  for  IPv6  proxy functionality. In addition if you want\n     lookups via proxy you  can  specify  DNS_VIA_PROXY=true.  OCSP  revocation\n     checking  (-S  --phone-out) is not supported by OpenSSL via proxy. As sup-\n     plying a proxy is an indicator for port 80 and 443 outgoing being  blocked\n     in  your  network  an OCSP revocation check won't be performed. However if\n     IGN_OCSP_PROXY=true has been supplied it will be tried directly. Authenti-\n     cation to the proxy is not supported. Proxying via IPv6 addresses  is  not\n     supported, also no HTTPS or SOCKS proxy.\n\n     -6  does  (also)  IPv6 checks. Please note that testssl.sh doesn't perform\n     checks  on  an  IPv6  address  automatically,  because  of  two   reasons:\n     testssl.sh  does  no  connectivity checks for IPv6 and it cannot determine\n     reliably whether the OpenSSL binary you're using has  IPv6  s_client  sup-\n     port.  -6  assumes both is the case. If both conditions are met and you in\n     general prefer to test for IPv6 branches as well you can add  HAS_IPv6  to\n     your  shell environment. Besides the OpenSSL binary supplied IPv6 is known\n     to work with vanilla OpenSSL  >=  1.1.0  and  older  versions  >=1.0.2  in\n     RHEL/CentOS/FC and Gentoo.\n\n     --ssl-native  Instead of using a mixture of bash sockets and a few openssl\n     s_client connects, testssl.sh uses  the  latter  (almost)  only.  This  is\n     faster but provides less accurate results, especially for the client simu-\n     lation  and  for  cipher support. For all checks you will see a warning if\n     testssl.sh cannot tell if a particular check cannot be performed. For some\n     checks however you might end up getting false negatives without a warning.\n     Thus it is not recommended to use. It should only be used  if  you  prefer\n     speed  over  accuracy  or you know that your target has sufficient overlap\n     with the protocols and cipher provided by your openssl binary.\n\n     --openssl <path_to_openssl> testssl.sh tries first very hard to  find  the\n     binary  supplied (where the tree of testssl.sh resides, from the directory\n     where testssl.sh has been started from, etc.). If all that doesn't work it\n     falls back to openssl supplied from the OS ($PATH). With this  option  you\n     can  point  testssl.sh  to your binary of choice and override any internal\n     magic   to   find   the   openssl   binary.   (Environment   preset    via\n     OPENSSL=<path_to_openssl>).  Depending on your test parameters it could be\n     faster to pick the OpenSSL version which has a bigger overlap in terms  of\n     ciphers and protocols with the target. Also, when testing a modern server,\n     OpenSSL  3.X is faster than older OpenSSL versions, or on MacOS 18. as op-\n     posed to the provided LibreSSL version.\n\n   TUNING OPTIONS\n     --bugs does some workarounds for buggy servers like padding for old F5 de-\n     vices.  The  option  is  passed  as  -bug  to  openssl  when  needed,  see\n     s_client(1), environment preset via BUGS=\"-bugs\" (1x dash). For the socket\n     part testssl.sh has always workarounds in place to cope with broken server\n     implementations.\n\n     --assuming-http  testssl.sh  normally does upfront an application protocol\n     detection. In cases where HTTP cannot be automatically  detected  you  may\n     want  to use this option. It enforces testssl.sh not to skip HTTP specific\n     tests (HTTP header) and to run a browser based client  simulation.  Please\n     note that sometimes also the severity depends on the application protocol,\n     e.g.  SHA1  signed certificates, the lack of any SAN matches and some vul-\n     nerabilities will be punished harder when checking a web server as opposed\n     to a mail server.\n\n     -n, --nodns <min|none> tells testssl.sh which DNS lookups should  be  per-\n     formed.  min  uses  only  forward  DNS resolution (A and AAAA record or MX\n     record) and skips CAA lookups and PTR records from the IP address back  to\n     a DNS name. none performs no DNS lookups at all. For the latter you either\n     have  to supply the IP address as a target, to use --ip or have the IP ad-\n     dress in /etc/hosts. The use of the switch is only useful  if  you  either\n     can't or are not willing to perform DNS lookups. The latter can apply e.g.\n     to  some  pentests.  In  general  this option could e.g. help you to avoid\n     timeouts by DNS lookups. NODNS  is  the  environment  variable  for  this.\n     --nodns=min  plus --ip=proxy is useful for situations with no local DNS as\n     there'll be no DNS timeouts  when  trying  to  resolve  CAA,  TXT  and  MX\n     records.\n\n     --sneaky  For  HTTP  header  checks  testssl.sh  uses  normally the server\n     friendly HTTP user agent TLS tester from ${URL}.  With  this  option  your\n     traces  are  less verbose and a Firefox user agent is being used. Be aware\n     that it doesn't hide your activities. That is just not possible  (environ-\n     ment preset via SNEAKY=true).\n\n     --user-agent  <user  agent> tells testssl.sh to use the supplied HTTP user\n     agent instead of the standard user agent TLS tester from ${URL}.\n\n     --ids-friendly is a switch which may help to get  a  scan  finished  which\n     otherwise  would  be blocked by a server side IDS. This switch skips tests\n     for the following vulnerabilities: Heartbleed, CCS Injection,  Ticketbleed\n     and  ROBOT.  The  environment variable OFFENSIVE set to false will achieve\n     the same result. Please be advised that as an alternative or as a  general\n     approach you can try to apply evasion techniques by changing the variables\n     USLEEP_SND and / or USLEEP_REC and maybe MAX_WAITSOCK.\n\n     --phone-out Checking for revoked certificates via CRL and OCSP is not done\n     per  default.  This  switch instructs testssl.sh to query external -- in a\n     sense of the current run -- URIs. By using  this  switch  you  acknowledge\n     that  the check might have privacy issues, a download of several megabytes\n     (CRL file) may happen and there may be network connectivity problems while\n     contacting the endpoint which testssl.sh doesn't handle. PHONE_OUT is  the\n     environment  variable  for  this which needs to be set to true if you want\n     this.\n\n     --add-ca <CAfile> enables you to add your own  CA(s)  in  PEM  format  for\n     trust chain checks. CAfile can be a directory containing files with a .pem\n     extension,  a  single  file or multiple files as a comma separated list of\n     root CAs. Internally they will be added during runtime to all  CA  stores.\n     This  is (only) useful for internal hosts whose certificates are issued by\n     internal CAs. Alternatively ADDTL_CA_FILES is the environment variable for\n     this.\n\n   SINGLE CHECK OPTIONS\n     Any single check switch supplied as an argument prevents  testssl.sh  from\n     doing  a default run. It just takes this and if supplied other options and\n     runs them - in the order they would also appear in the default run.\n\n     -e, --each-cipher checks each of the (currently  configured)  370  ciphers\n     via  openssl  + sockets remotely on the server and reports back the result\n     in wide mode. If you want to display each cipher tested you  need  to  add\n     --show-each.  Per  default  it  lists  the  following parameters: hexcode,\n     OpenSSL cipher suite name, key exchange, encryption bits, IANA/RFC  cipher\n     suite  name. Please note the --mapping parameter changes what cipher suite\n     names you will see here and at which position. Also please note  that  the\n     bit length for the encryption is shown and not the security length, albeit\n     it'll  be  sorted  by  the  latter. For 3DES due to the Meet-in-the-Middle\n     problem the bit size of 168 bits is equivalent to the security size of 112\n     bits.\n\n     -E, --cipher-per-proto is similar to -e, --each-cipher. It checks each  of\n     the  possible ciphers, here: per protocol. If you want to display each ci-\n     pher tested you need to add --show-each. The output is sorted by  security\n     strength, it lists the encryption bits though.\n\n     -s, --std, --categories tests certain lists of cipher suites / cipher cat-\n     egories  by strength. (--standard is deprecated.) Those lists are (openssl\n     ciphers $LIST, $LIST from below:)\n\n     O   NULL encryption ciphers: 'NULL:eNULL'\n\n     O   Anonymous NULL ciphers: 'aNULL:ADH'\n\n     O   Export ciphers (w/o the preceding ones): 'EXPORT:!ADH:!NULL'\n\n     O   LOW   (64   Bit   +   DES   ciphers,    without    EXPORT    ciphers):\n         'LOW:DES:RC2:RC4:MD5:!ADH:!EXP:!NULL:!eNULL:!AECDH'\n\n     O   3DES + IDEA ciphers: '3DES:IDEA:!aNULL:!ADH:!MD5'\n\n     O   Obsoleted         CBC         ciphers:         'HIGH:MEDIUM:AES:CAMEL-\n         LIA:ARIA:!IDEA:!CHACHA20:!3DES:!RC2:!RC4:!AESCCM8:!AESCCM:!AES-\n         GCM:!ARIAGCM:!aNULL:!MD5'\n\n     O   Strong   ciphers   with   no   FS   (AEAD):    'AESGCM:CHACHA20:Camel-\n         liaGCM:AESCCM:ARIAGCM:!kEECDH:!kEDH:!kDHE:!kDHEPSK:!kECDHEPSK:!aNULL'\n\n     O   Forward   Secrecy   strong   ciphers  (AEAD):  'AESGCM:CHACHA20:Camel-\n         liaGCM:AESCCM:ARIAGCM:!kPSK:!kRSAPSK:!kRSA:!kDH:!kECDH:!aNULL'\n\n     -f, --fs, --nsa, --forward-secrecy Checks robust forward secrecy  key  ex-\n     change.  \"Robust\"  means  that  ciphers having intrinsic severe weaknesses\n     like Null Authentication or Encryption, 3DES and RC4 won't  be  considered\n     here.  There  shouldn't be the wrong impression that a secure key exchange\n     has been taking place and everything is fine when in reality  the  encryp-\n     tion  sucks.  Also  this section lists the available elliptical curves and\n     Diffie Hellman groups, as well as FFDHE groups (TLS 1.2 and TLS 1.3).\n\n     -p, --protocols checks TLS/SSL protocols SSLv2, SSLv3, TLS 1.0 through TLS\n     1.3 and for HTTP: SPDY (NPN) and ALPN, a.k.a. HTTP/2. For TLS 1.3  several\n     drafts (from 18 on) and final are supported and being tested for. Note the\n     supplied  openssl-bad  version  doesn't support TLS 1.3 . As the check for\n     TLS 1.3 will be done in sockets this normally does  not  pose  a  problem.\n     However  if a TLS-1.3-only host is encountered and to have a complete test\n     coverage  (e.g.  header  checks)  /usr/bin/openssl  (or  the  content   of\n     OPENSSL2)  is  checked  for  existence and support of TLS 1.3 and if those\n     tests succeeded it will be switched to this binary. A message will  notify\n     you.\n\n     -P,  --server-preference,  --preference  displays the servers preferences:\n     cipher order, with used openssl client: negotiated protocol and cipher. If\n     there's a cipher order enforced by the server it displays it for each pro-\n     tocol (openssl+sockets). If there's not, it displays instead which ciphers\n     from the server were picked with each protocol.\n\n     -S, --server_defaults displays information from the server hello(s):\n\n     O   Available TLS extensions,\n\n     O   TLS ticket + session ID information/capabilities,\n\n     O   session resumption capabilities,\n\n     O   Time skew relative to localhost (most  server  implementations  return\n         random values).\n\n     O   Several certificate information\n\n     O   signature algorithm,\n\n     O   key size,\n\n     O   key usage and extended key usage,\n\n     O   fingerprints and serial\n\n     O   Common Name (CN), Subject Alternative Name (SAN), Issuer,\n\n     O   Trust via hostname + chain of trust against supplied certificates\n\n     O   EV certificate detection\n\n     O   experimental \"eTLS\" detection\n\n     O   validity:  start + end time, how many days to go (warning for certifi-\n         cate lifetime >=5 years)\n\n     O   revocation info  (CRL,  OCSP,  OCSP  stapling  +  must  staple).  When\n         --phone-out  supplied it checks against the certificate issuer whether\n         the host certificate has been revoked (plain OCSP, CRL).\n\n     O   displaying DNS Certification Authority Authorization resource record\n\n     O   Certificate Transparency info (if provided by server).\n\n     For the trust chain check 5 certificate stores are provided. If  the  test\n     against  one  of  the trust stores failed, the one is being identified and\n     the reason for the failure is displayed - in addition the ones which  suc-\n     ceeded  are  displayed  too.  You  can  configure  your  own  CA  via  AD-\n     DTL_CA_FILES, see section FILES below. If the server provides no  matching\n     record  in Subject Alternative Name (SAN) but in Common Name (CN), it will\n     be indicated as this is deprecated. Also for multiple server  certificates\n     are  being  checked  for as well as for the certificate reply to a non-SNI\n     (Server Name Indication) client hello to the IP address. Regarding the TLS\n     clock skew: it displays the time difference to the client. Only a few  TLS\n     stacks   nowadays   still   support   this  and  return  the  local  clock\n     gmt_unix_time, e.g. IIS, openssl < 1.0.1f. In addition to  the  HTTP  date\n     you  could  e.g.  derive that there are different hosts where your TLS and\n     your HTTP request ended -- if the time deltas differ significantly.\n\n     -x <pattern>, --single-cipher <pattern> tests matched pattern  of  ciphers\n     against  a  server.  Patterns are similar to -V pattern , --local pattern,\n     see above about matching.\n\n     -h, --header, --headers if the service is HTTP (either by detection or  by\n     enforcing via --assume-http. It tests several HTTP headers like\n\n     O   HTTP Strict Transport Security (HSTS)\n\n     O   HTTP Public Key Pinning (HPKP)\n\n     O   Server banner\n\n     O   HTTP date+time\n\n     O   Server banner like Linux or other Unix vendor headers\n\n     O   Application banner (PHP, RoR, OWA, SharePoint, Wordpress, etc)\n\n     O   Reverse proxy headers\n\n     O   Web server modules\n\n     O   IPv4 address in header\n\n     O   Cookie (including Secure/HTTPOnly flags)\n\n     O   Decodes BIG IP F5 non-encrypted cookies\n\n     O   Security  headers  (X-Frame-Options, X-XSS-Protection, Expect-CT,... ,\n         CSP headers). Nonsense is not yet detected here.\n\n     -c, --client-simulation This simulates a handshake with a number of  stan-\n     dard clients so that you can figure out which client cannot or can connect\n     to  your  site. For the latter case the protocol, cipher and curve is dis-\n     played, also if there's Forward Secrecy. testssl.sh  uses  a  handselected\n     set  of  clients  which  are  retrieved  by the SSLlabs API. The output is\n     aligned in columns when combined with the --wide option. If you  want  the\n     full  nine  yards  of  clients  displayed  use  the  environment  variable\n     ALL_CLIENTS.\n\n     -g, --grease checks several server implementation bugs like  tolerance  to\n     size  limitations and GREASE, see RFC 8701. This check doesn't run per de-\n     fault.\n\n   VULNERABILITIES\n     -U, --vulnerable, --vulnerabilities Just tests all (of the following) vul-\n     nerabilities. The  environment  variable  VULN_THRESHLD  determines  after\n     which value a separate headline for each vulnerability is being displayed.\n     Default  is  1  which means if you check for two vulnerabilities, only the\n     general headline for vulnerabilities section is displayed --  in  addition\n     to  the vulnerability and the result. Otherwise each vulnerability or vul-\n     nerability section gets its own headline in addition to the output of  the\n     name of the vulnerability and test result. A vulnerability section is com-\n     prised  of more than one check, e.g. the renegotiation vulnerability check\n     has two checks, so has Logjam.\n\n     -H, --heartbleed Checks for Heartbleed, a memory leakage in  openssl.  Un-\n     less  the server side doesn't support the heartbeat extension it is likely\n     that this check runs into a timeout. The seconds to wait for a  reply  can\n     be adjusted with HEARTBLEED_MAX_WAITSOCK. 8 is the default.\n\n     -I,  --ccs,  --ccs-injection  Checks for CCS Injection which is an openssl\n     vulnerability. Sometimes also here the check needs to wait  for  a  reply.\n     The  predefined  timeout  of 5 seconds can be changed with the environment\n     variable CCS_MAX_WAITSOCK.\n\n     -T, --ticketbleed Checks for Ticketbleed memory leakage in BigIP  loadbal-\n     ancers.\n\n     --BB,  --robot  Checks  for  vulnerability to ROBOT / (Return Of Bleichen-\n     bacher's Oracle Threat) attack.\n\n     --SI, --starttls-injection Checks for STARTTLS  injection  vulnerabilities\n     (SMTP, IMAP, POP3 only). socat and OpenSSL >=1.1.0 is needed.\n\n     -R, --renegotiation Tests renegotiation vulnerabilities. Currently there's\n     a check for Secure Renegotiation and for Secure Client-Initiated Renegoti-\n     ation. Please be aware that vulnerable servers to the latter can likely be\n     DoSed very easily (HTTP). A check for Insecure Client-Initiated Renegotia-\n     tion is not yet implemented.\n\n     -C,  --compression,  --crime Checks for CRIME (Compression Ratio Info-leak\n     Made Easy) vulnerability in TLS. CRIME in SPDY is not  yet  being  checked\n     for.\n\n     -B,  --breach  Checks  for BREACH (Browser Reconnaissance and Exfiltration\n     via Adaptive Compression of Hypertext) vulnerability. As for this vulnera-\n     bility HTTP level compression is a prerequisite it'll  be  not  tested  if\n     HTTP  cannot  be  detected  or  the  detection  is  not enforced via --as-\n     sume-http. Please note that only the URL supplied (normally \"/\" ) is being\n     tested.\n\n     -O, --poodle Tests for SSL POODLE (Padding Oracle On Downgraded Legacy En-\n     cryption) vulnerability. It basically checks for the existence of CBC  ci-\n     phers in SSLv3.\n\n     -Z,  --tls-fallback Checks TLS_FALLBACK_SCSV mitigation. TLS_FALLBACK_SCSV\n     is basically a ciphersuite appended to the Client Hello trying to  prevent\n     protocol downgrade attacks by a Man in the Middle.\n\n     -W,  --sweet32 Checks for vulnerability to SWEET32 by testing 64 bit block\n     ciphers (3DES, RC2 and IDEA).\n\n     -F, --freak Checks for FREAK vulnerability (Factoring RSA Export Keys)  by\n     testing for EXPORT RSA ciphers\n\n     -D,  --drown  Checks for DROWN vulnerability (Decrypting RSA with Obsolete\n     and Weakened eNcryption) by checking whether the SSL 2 protocol is  avail-\n     able  at  the target. Please note that if you use the same RSA certificate\n     elsewhere you might be vulnerable too. testssl.sh doesn't check  for  this\n     but provides a helpful link @ censys.io which provides this service.\n\n     -J, --logjam Checks for LOGJAM vulnerability by checking for DH EXPORT ci-\n     phers. It also checks for \"common primes\" which are preconfigured DH keys.\n     DH keys =< 1024 Bit will be penalized. Also FFDHE groups (TLS 1.2) will be\n     displayed here.\n\n     -A,  --beast  Checks BEAST vulnerabilities in SSL 3 and TLS 1.0 by testing\n     the usage of CBC ciphers.\n\n     -L, --lucky13 Checks for LUCKY13 vulnerability. It checks for the presence\n     of CBC ciphers in TLS versions 1.0 - 1.2.\n\n     -WS, --winshock Checks for Winshock vulnerability. It tests  for  the  ab-\n     sence  of  a  lot of ciphers, some TLS extensions and ec curves which were\n     introduced later in Windows. In the end the server banner is being  looked\n     at.\n\n     -4, --rc4, --appelbaum Checks which RC4 stream ciphers are being offered.\n\n   OUTPUT OPTIONS\n     -q,  --quiet  Normally testssl.sh displays a banner on stdout with several\n     version information, usage rights and a warning.  This  option  suppresses\n     it.  Please  note that by choosing this option you acknowledge usage terms\n     and the warning normally appearing in the banner.\n\n     --wide Except the \"each cipher output\" all tests displays the  single  ci-\n     pher  name  (scheme  see below). This option enables testssl.sh to display\n     also for the following sections the same output as for  testing  each  ci-\n     phers:  BEAST,  FS,  RC4.  The client simulation has also a wide mode. The\n     difference here is restricted to a column  aligned  output  and  a  proper\n     headline. The environment variable WIDE can be used instead.\n\n     --mapping <openssl|iana|no-openssl|no-iana>\n\n     O   openssl:  use the OpenSSL cipher suite name as the primary name cipher\n         suite name form (default),\n\n     O   iana: use the IANA cipher suite name as the primary name cipher  suite\n         name form.\n\n     O   no-openssl:  don't display the OpenSSL cipher suite name, display IANA\n         names only.\n\n     O   no-iana: don't display the IANA cipher  suite  name,  display  OpenSSL\n         names only.\n\n     Please  note  that in testssl.sh 3.0 you can still use rfc instead of iana\n     and no-rfc instead of no-iana but it'll disappear after 3.0.\n\n     --show-each This is an option for all wide modes only: it displays all ci-\n     phers tested -- not only succeeded ones. SHOW_EACH_C is your friend if you\n     prefer to set this via the shell environment.\n\n     --color <0|1|2|3> determines the use of colors on the screen  and  in  the\n     log  file: 2 is the default and makes use of ANSI and termcap escape codes\n     on your terminal. 1 just uses non-colored mark-up like bold, italics,  un-\n     derline,  reverse.  0  means  no mark-up at all = no escape codes. This is\n     also what you want when you want a log file without any  escape  codes.  3\n     will  color ciphers and EC according to an internal (not yet perfect) rat-\n     ing. Setting the environment variable COLOR to the value achieves the same\n     result. Please not that OpenBSD and early FreeBSD do not support italics.\n\n     --colorblind Swaps green and blue colors in the output, so that this  per-\n     centage      of      folks     (up     to     8%     of     males,     see\n     https://en.wikipedia.org/wiki/Color_blindness) can distinguish those find-\n     ings better. COLORBLIND is the according variable if you want to set  this\n     in the environment.\n\n     --debug  <0-6>  This gives you additional output on the screen (2-6), only\n     useful for debugging. DEBUG is the according  environment  variable  which\n     you  can  use.  There are six levels (0 is the default, thus it has no ef-\n     fect):\n\n     1.  screen   output   normal   but   leaves   useful   debug   output   in\n         /tmp/testssl.XXXXXX/  . The info about the exact directory is included\n         in the screen output in the end of the run.\n\n     2.  lists more what's going on, status (high level) and connection errors,\n         a few general debug output\n\n     3.  even slightly more info: hexdumps + other info\n\n     4.  display bytes sent via sockets\n\n     5.  display bytes received via sockets\n\n     6.  whole 9 yards\n\n     --disable-rating disables rating. Rating automatically gets  disabled,  to\n     not  give a wrong or misleading grade, when not all required functions are\n     executed (e.g when checking for a single vulnerabilities).\n\n   FILE OUTPUT OPTIONS\n     --log, --logging Logs stdout also to  ${NODE}-p${port}${YYYYMMDD-HHMM}.log\n     in  current  working directory of the shell. Depending on the color output\n     option (see above) the output file will contain color and other markup es-\n     cape codes, unless you specify --color 0 too. cat and -- if properly  con-\n     figured  less -- will show the output properly formatted on your terminal.\n     The output shows a banner with the almost the same information as  on  the\n     screen.  In addition it shows the command line of the testssl.sh instance.\n     Please note that the resulting log file  is  formatted  according  to  the\n     width  of your screen while running testssl.sh. You can override the width\n     with the environment variable TERM_WIDTH.\n\n     --logfile <logfile> or -oL <logfile> Instead of the  previous  option  you\n     may  want  to  use  this one if you want to log into a directory or if you\n     rather want to specify the log file name yourself. If logfile is a  direc-\n     tory   the   output   will   put   into   logfile/${NODE}-p${port}${YYYYM-\n     MDD-HHMM}.log. If logfile is a file it will use that  file  name,  an  ab-\n     solute  path  is  also permitted here. LOGFILE is the variable you need to\n     set if you prefer to work environment variables instead. Please note  that\n     the  resulting log file is formatted according to the width of your screen\n     while running testssl.sh. You can override the width with the  environment\n     variable TERM_WIDTH.\n\n     --json   Logs   additionally   to   JSON   file   ${NODE}-p${port}${YYYYM-\n     MDD-HHMM}.json in the current working directory of the shell. The  result-\n     ing JSON file is opposed to --json-pretty flat -- which means each section\n     is  self  contained and has an identifier for each single check, the host-\n     name/IP address, the port, severity and the finding.  For  vulnerabilities\n     it  may contain a CVE and CWE entry too. The output doesn't contain a ban-\n     ner or a footer.\n\n     --jsonfile <jsonfile> or -oj <jsonfile> Instead of the previous option you\n     may want to use this one if you want to log the JSON out put into a direc-\n     tory or if you rather want to specify the log file name yourself. If json-\n     file   is   a    directory    the    output    will    put    into    log-\n     file/${NODE}-p${port}${YYYYMMDD-HHMM}.json.  Ifjsonfile  is a file it will\n     use that file name, an absolute path is also permitted here.\n\n     --json-pretty Logs  additionally  to  JSON  file  ${NODE}-p${port}${YYYYM-\n     MDD-HHMM}.json  in the current working directory of the shell. The result-\n     ing JSON file is opposed to --json non-flat -- which means  it  is  struc-\n     tured.  The  structure  contains  a  header  similar  to the banner on the\n     screen, including the  command  line,  scan  host,  openssl  binary  used,\n     testssl  version  and epoch of the start time. Then for every test section\n     of testssl.sh it contains a separate JSON object/section. Each finding has\n     a key/value pair identifier with the identifier for each single check, the\n     severity and the finding. For vulnerabilities it may contain a CVE and CWE\n     entry too. The footer lists the scan time in seconds.\n\n     --jsonfile-pretty <jsonfile> or -oJ <jsonfile> Similar  to  the  aforemen-\n     tioned  --jsonfile  or  --logfile it logs the output in pretty JSON format\n     (see --json-pretty) into a file or a directory.  For  further  explanation\n     see --jsonfile or --logfile.\n\n     --csv Logs additionally to a CSV file ${NODE}-p${port}${YYYYMMDD-HHMM}.csv\n     in  the  current  working  directory  of  the shell. The output contains a\n     header with the keys, the values are the same as in the flat  JSON  format\n     (identifier  for  each  single  check,  the hostname/IP address, the port,\n     severity, the finding and for vulnerabilities a CVE and CWE number).\n\n     --csvfile <csvfile> or -oC <csvfile> Similar to the aforementioned --json-\n     file or --logfile it logs the output in CSV format (see  --cvs)  addition-\n     ally into a file or a directory. For further explanation see --jsonfile or\n     --logfile.\n\n     --html   Logs   additionally  to  an  HTML  file  ${NODE}-p${port}${YYYYM-\n     MDD-HHMM}.html in the current working directory of the shell. It  contains\n     a 1:1 output of the console. In former versions there was a non-native op-\n     tion   to  use  \"aha\"  (Ansi  HTML  Adapter:  github.com/theZiz/aha)  like\n     testssl.sh [options] <URI> | aha >output.html. This is not necessary  any-\n     more.\n\n     --htmlfile  <htmlfile>  or  -oH  <htmlfile>  Similar to the aforementioned\n     --jsonfile or --logfile it logs the output in HTML format (see --html) ad-\n     ditionally into a file or a directory. For further explanation see --json-\n     file or --logfile.\n\n     -oA <filename> / --outFile <filename> Similar to nmap it does a file  out-\n     put  to  all  available  file formats: LOG, JSON pretty, CSV, HTML. If the\n     filename supplied is equal auto the filename  is  automatically  generated\n     using  '${NODE}-p${port}${YYYYMMDD-HHMM}.${EXT}' with the according exten-\n     sion. If a directory is provided all output files  will  put  into  <file-\n     name>/${NODE}-p${port}${YYYYMMDD-HHMM}.{log,json,csv,html}.\n\n     -oa <filename> / --outfile <filename> Does the same as the previous option\n     but uses flat JSON instead.\n\n     --hints  This option is not in use yet. This option is meant to give hints\n     how to fix a finding or at least a help to improve  something.  GIVE_HINTS\n     is the environment variable for this.\n\n     --severity  <severity>  For  CSV  and both JSON outputs this will only add\n     findings to the output file if a severity is  equal  or  higher  than  the\n     severity  value specified. Allowed are <LOW|MEDIUM|HIGH|CRITICAL>. WARN is\n     another level which translates to a client-side scanning error or problem.\n     Thus you will always see them in a file if they occur.\n\n     --append Normally, if an output file already exists and it has a file size\n     greater zero, testssl.sh will prompt you to manually remove the  file  and\n     exit  with  an error. --append however will append to this file, without a\n     header. The environment variable APPEND does the same.  Be  careful  using\n     this  switch/variable. A complementary option which overwrites an existing\n     file doesn't exist per design.\n\n     --overwrite Normally, if an output file already exists and it has  a  file\n     size  greater  zero, testssl.sh will not allow you to overwrite this file.\n     This option will do that without any  warning.  The  environment  variable\n     OVERWRITE does the same. Be careful, you have been warned!\n\n     --outprefix <fname_prefix> Prepend output filename prefix fname_prefix be-\n     fore  ${NODE}-. You can use as well the environment variable FNAME_PREFIX.\n     Using   this   any   output    files    will    be    named    <fname_pre-\n     fix>-${NODE}-p${port}${YYYYMMDD-HHMM}.<format>  when  no  file name of the\n     respective output option was specified. If you do not like  the  separator\n     '-'  you can as well supply a <fname_prefix> ending in '.', '_' or ','. In\n     this case or if you already supplied '-' no additional  '-'  will  be  ap-\n     pended to <fname_prefix>.\n\n     A few file output options can also be preset via environment variables.\n\n   COLOR RATINGS\n     Testssl.sh  makes  use  of (the eight) standard terminal colors. The color\n     scheme is as follows:\n\n     O   light red: a critical finding\n\n     O   red: a high finding\n\n     O   brown: a medium finding\n\n     O   yellow: a low finding\n\n     O   green (blue if COLORBLIND is set): something which is either  in  gen-\n         eral  a good thing or a negative result of a check which otherwise re-\n         sults in a high finding\n\n     O   light green (light blue if COLORBLIND is set) : something which is ei-\n         ther in general a very good thing or a  negative  result  of  a  check\n         which otherwise results in a critical finding\n\n     O   no  color at places where also a finding can be expected: a finding on\n         an info level\n\n     O   cyan: currently only used for --show-each or an additional hint\n\n     O   magenta: signals a warning condition, e.g. either a local lack of  ca-\n         pabilities on the client side or another problem\n\n     O   light magenta: a fatal error which either requires strict consent from\n         the  user  to continue or a condition which leaves no other choice for\n         testssl.sh to quit\n\n     What is labeled as \"light\" above appears as such  on  the  screen  but  is\n     technically  speaking \"bold\". Besides --color=3 will color ciphers accord-\n     ing to an internal and rough rating.\n\n     Markup (without any color) is used in the following manner:\n\n     O   bold: for the name of the test\n\n     O   underline + bold: for the headline of each test section\n\n     O   underline: for a sub-headline\n\n     O   italics: for strings just reflecting a value read from the server\n\n   TUNING via ENV variables and more options\n     Except the environment variables mentioned above which can replace command\n     line options here a some which cannot be set otherwise. Variables used for\n     tuning are preset with reasonable values. There should  be  no  reason  to\n     change them unless you use testssl.sh under special conditions.\n\n     O   TERM_WIDTH  is a variable which overrides the auto-determined terminal\n         width size. Setting this variable normally only makes sense if you log\n         the output to a file using the --log, --logfile or -oL option.\n\n     O   DEBUG_ALLINONE / SETX: when setting one of those  to  true  testssl.sh\n         falls  back  to  the  standard  bash  behavior,  i.e.  calling bash -x\n         testssl.sh it displays the bash debugging output not  in  an  external\n         file /tmp/testssl-<XX>.log\n\n     O   DEBUGTIME:  Profiling  option.  When  using bash's debug mode and when\n         this is set to true, it generates a  separate  text  file  with  epoch\n         times in /tmp/testssl-<XX>.time. They need to be concatenated by paste\n         /tmp/testssl-<XX>.{time,log} [comment]: # * FAST_SOCKET [comment]: # *\n         SHOW_SIGALGO [comment]: # * FAST\n\n     O   EXPERIMENTAL=true is an option which is sometimes used in the develop-\n         ment  process to make testing easier. In released versions this has no\n         effect.\n\n     O   ALL_CLIENTS=true runs a client simulation  with  all  (currently  126)\n         clients when testing HTTP.\n\n     O   UNBRACKTD_IPV6:  needs  to  be  set  to  true for some old versions of\n         OpenSSL (like from Gentoo) which don't support  [bracketed]  IPv6  ad-\n         dresses\n\n     O   NO_ENGINE:  if  you  have  problems with garbled output containing the\n         word 'engine' you might want to set this to true. It forces testssl.sh\n         not try to configure openssl's engine or a non existing one  from  li-\n         bressl\n\n     O   HEADER_MAXSLEEP:  To  wait  how long before killing the process to re-\n         trieve a service banner / HTTP header\n\n     O   MAX_WAITSOCK: It instructs testssl.sh to wait until the specified time\n         before declaring a socket connection dead. Don't  change  this  unless\n         you're absolutely sure what you're doing. Value is in seconds.\n\n     O   CCS_MAX_WAITSOCK  Is  the similar to above but applies only to the CCS\n         handshakes, for both of the two the two CCS payload. Don't change this\n         unless you're absolutely sure what you're doing. Value is in seconds.\n\n     O   HEARTBLEED_MAX_WAITSOCK Is the similar  to  MAX_WAITSOCK  but  applies\n         only  to  the  ServerHello after sending the Heartbleed payload. Don't\n         change this unless you're absolutely sure what you're doing. Value  is\n         in seconds.\n\n     O   MEASURE_TIME_FILE  For  seldom cases when you don't want the scan time\n         to be included in the output you can set this to false.\n\n     O   STARTTLS_SLEEP is per default set to 10 (seconds).  That's  the  value\n         testssl.sh  waits for a string in the STARTTLS handshake before giving\n         up.\n\n     O   MAX_PARALLEL is the maximum number of tests to run in parallel in par-\n         allel mass testing mode. The default value of 20 may be made larger on\n         systems with faster processors.\n\n     O   MAX_WAIT_TEST is the maximum time (in seconds) to wait  for  a  single\n         test  in  parallel mass testing mode to complete. The default is 1200.\n         [comment]: # USLEEP_SND [comment]: # USLEEP_REC\n\n     O   HSTS_MIN is preset to 179 (days). If you want warnings sooner or later\n         for HTTP Strict Transport Security you can change this.\n\n     O   HPKP_MIN is preset to 30 (days). If you want warnings sooner or  later\n         for HTTP Public Key Pinning you can change this\n\n     O   DAYS2WARN1 is the first threshold when you'll be warning of a certifi-\n         cate expiration of a host, preset to 60 (days). For Let's Encrypt this\n         value will be divided internally by 2.\n\n     O   DAYS2WARN2  is  the  second threshold when you'll be warning of a cer-\n         tificate expiration of a host, preset to 30 (days). For Let's  Encrypt\n         this value will be divided internally by 2.\n\n     O   TESTSSL_INSTALL_DIR   is   the   derived   installation  directory  of\n         testssl.sh. Relatively to that the bin  and  mandatory  etc  directory\n         will be looked for.\n\n     O   CA_BUNDLES_PATH:  If  you have an own set of CA bundles or you want to\n         point testssl.sh to a specific location of a CA bundle,  you  can  use\n         this  variable  to set the directory which testssl.sh will use. Please\n         note that it overrides completely the builtin path of testssl.sh which\n         means that you will only test against the bundles you point  to.  Also\n         you might want to use ~/utils/create_ca_hashes.sh to create the hashes\n         for HPKP.\n\n     O   MAX_SOCKET_FAIL:  A  number  which  tells  testssl.sh  how often a TCP\n         socket connection may fail before the program gives up and terminates.\n         The default is 2. You can increase it to a higher value  if  you  fre-\n         quently see a message like Fatal error: repeated openssl s_client con-\n         nect problem, doesn't make sense to continue.\n\n     O   MAX_OSSL_FAIL:  A  number  which tells testssl.sh how often an OpenSSL\n         s_client connect may fail before the program gives up and  terminates.\n         The  default  is  2. You can increase it to a higher value if you fre-\n         quently see a message like Fatal error: repeated TCP connect problems,\n         giving up.\n\n     O   MAX_HEADER_FAIL: A number which tells testssl.sh how often a HTTP  GET\n         request over OpenSSL may return an empty file before the program gives\n         up  and  terminates.  The default is 3. Also here you can increase the\n         threshold when you spot  messages  like  Fatal  error:  repeated  HTTP\n         header connect problems, doesn't make sense to continue.\n\n     O   OPENSSL2  can  be  used to supply an alternative openssl version. This\n         only makes sense if you want to amend the  supplied  version  in  bin/\n         which  lacks  TLS 1.3 support with a version which does not and is not\n         in /usr/bin/openssl.\n\n     O   OSSL_SHORTCUT can be set to true when you run interactively and  don't\n         want to switch automatically to /usr/bin/openssl (OPENSSL2) if you en-\n         counter a TLS 1.3-only host.\n\n   RATING\n     This  program has a near-complete implementation of SSL Labs's 'SSL Server\n     Rating   Guide    https://github.com/ssllabs/research/wiki/SSL-Server-Rat-\n     ing-Guide'.\n\n     This  is  not  a  100%  reimplementation  of the SSL Lab's SSL Server Test\n     https://www.ssllabs.com/ssltest/analyze.html, but an implementation of the\n     above rating specification, slight discrepancies may  occur.  Please  note\n     that  for  now we stick to the SSL Labs rating as good as possible. We are\n     not responsible for their rating.  Before  filing  issues  please  inspect\n     their Rating Guide.\n\n     Disclaimer:  Having  a  good grade is NOT necessarily equal to having good\n     security! Don't start a competition for the best grade, at least not with-\n     out monitoring the client handshakes and not without adding a  portion  of\n     good sense to it. Please note STARTTLS always results in a grade cap to T.\n     Anything  else  would lead to a false sense of security. Use TLS, see also\n     RFC 8314. The security of STARTTLS  is  always  client  determined,  i'.e.\n     checking  the  certificate  which for SMTP port 25 is often enough not the\n     case. Also with DANE or MTA-STS no one can test on the server side whether\n     a client makes use if it.\n\n     As of writing, these checks are missing: * GOLDENDOODLE - should be graded\n     F if vulnerable * Insecure renegotiation - should be graded F if  vulnera-\n     ble  *  Padding oracle in AES-NI CBC MAC check (CVE-2016-2107) - should be\n     graded F if vulnerable * Sleeping POODLE - should be graded F if  vulnera-\n     ble  *  Zero Length Padding Oracle (CVE-2019-1559) - should be graded F if\n     vulnerable * Zombie POODLE - should be graded F if vulnerable  *  All  re-\n     maining  old Symantec PKI certificates are distrusted - should be graded T\n     * Symantec certificates issued before June 2016 are distrusted - should be\n     graded  T  *  Anonymous  key  exchange  -  should   give   0   points   in\n     set_key_str_score()  *  Exportable key exchange - should give 40 points in\n     set_key_str_score() * Weak key (Debian  OpenSSL  Flaw)  -  should  give  0\n     points in set_key_str_score()\n\n     To  implement a new grading cap, simply call the set_grade_cap() function,\n     with the grade and a reason: bash set_grade_cap \"D\" \"Vulnerable  to  docu-\n     mentation\"   To   implement   a   new   grade  warning,  simply  call  the\n     set_grade_warning() function, with a message: bash set_grade_warning \"Doc-\n     umentation is always right\" #### Implementing a new check  which  contains\n     grade caps When implementing a new check (be it vulnerability or not) that\n     sets  grade  caps,  the  set_rating_state()  has  to  be updated (i.e. the\n     $do_mycheck variable-name has to be added to  the  loop,  and  $nr_enabled\n     if-statement has to be incremented)\n\n     The  set_rating_state() automatically disables rating, if all the required\n     checks are not enabled. This is to prevent  giving  out  a  misleading  or\n     wrong grade.\n\n     When  a new revision of the rating specification comes around, the follow-\n     ing has to be done: * New grade caps has to be either:  1.  Added  to  the\n     script  wherever relevant, or 2. Added to the above list of missing checks\n     (if above is not possible) * New grade warnings has to be  added  wherever\n     relevant * The revision output in run_rating() function has to updated\n\nEXAMPLES\n       testssl.sh testssl.sh\n\n     does  a  default  run  on  https://testssl.sh  (protocols, standard cipher\n     lists, server's cipher preferences, forward secrecy, server defaults, vul-\n     nerabilities, client simulation, and rating.\n\n           testssl.sh testssl.net:443\n\n     does the same default  run  as  above  with  the  subtle  difference  that\n     testssl.net has two IPv4 addresses. Both are tested.\n\n           testssl.sh --ip=one --wide https://testssl.net:443\n\n     does  the same checks as above, with the difference that one IP address is\n     being picked randomly. Displayed is everything where possible in wide for-\n     mat.\n\n           testssl.sh -6 https://testssl.net\n\n     As opposed to the first example it also tests the IPv6  part  --  supposed\n     you have an IPv6 network and your openssl supports IPv6 (see above).\n\n           testssl.sh -t smtp smtp.gmail.com:25\n\n     Checks  are  done  via  a STARTTLS handshake on the plain text port 25. It\n     checks every IP on smtp.gmail.com.\n\n             testssl.sh --starttls=imap imap.gmx.net:143\n\n     does the same on the plain text IMAP port.\n\n     Please note that for plain TLS-encrypted ports you must  not  specify  the\n     protocol   option  when  no  STARTTLS  handshake  is  offered:  testssl.sh\n     smtp.gmail.com:465  just  checks  the  encryption  on  the   SMTPS   port,\n     testssl.sh imap.gmx.net:993 on the IMAPS port. Also MongoDB which provides\n     TLS support without STARTTLS can be tested directly.\n\nRFCs and other standards\n     O   RFC 2246: The TLS Protocol Version 1.0\n\n     O   RFC 2595: Using TLS with IMAP, POP3 and ACAP\n\n     O   RFC 2818: HTTP Over TLS\n\n     O   RFC  2830:  Lightweight  Directory Access Protocol (v3): Extension for\n         Transport Layer Security\n\n     O   RFC 3207: SMTP Service Extension for Secure SMTP over Transport  Layer\n         Security\n\n     O   RFC 3501: INTERNET MESSAGE ACCESS PROTOCOL - VERSION 4rev1\n\n     O   RFC 4346: The Transport Layer Security (TLS) Protocol Version 1.1\n\n     O   RFC 4366: Transport Layer Security (TLS) Extensions\n\n     O   RFC  4492:  Elliptic Curve Cryptography (ECC) Cipher Suites for Trans-\n         port Layer Security (TLS)\n\n     O   RFC 5077: Transport Layer Security (TLS) Session Resumption\n\n     O   RFC 5246: The Transport Layer Security (TLS) Protocol Version 1.2\n\n     O   RFC 5280: Internet X.509 Public  Key  Infrastructure  Certificate  and\n         Certificate Revocation List (CRL) Profile\n\n     O   RFC 5321: Simple Mail Transfer Protocol\n\n     O   RFC  5746: Transport Layer Security (TLS) Renegotiation Indication Ex-\n         tension\n\n     O   RFC 5804: A Protocol for Remotely Managing Sieve Scripts\n\n     O   RFC 6066: Transport Layer Security (TLS) Extensions: Extension Defini-\n         tions\n\n     O   RFC 6101: The Secure Sockets Layer (SSL) Protocol Version 3.0\n\n     O   RFC 6120: Extensible Messaging and Presence Protocol (XMPP): Core\n\n     O   RFC 6125: Domain-Based Application Service Identity [..]\n\n     O   RFC 6797: HTTP Strict Transport Security (HSTS)\n\n     O   RFC 6961: The Transport Layer Security (TLS) Multiple Certificate Sta-\n         tus Request Extension\n\n     O   RFC 7469: Public Key Pinning Extension for HTTP (HPKP)\n\n     O   RFC 7507: TLS Fallback Signaling Cipher Suite Value  (SCSV)  for  Pre-\n         venting Protocol Downgrade Attacks\n\n     O   RFC  7627:  Transport  Layer  Security (TLS) Session Hash and Extended\n         Master Secret Extension\n\n     O   RFC 7633: X.509v3 Transport Layer Security (TLS) Feature Extension\n\n     O   RFC 7465: Prohibiting RC4 Cipher Suites\n\n     O   RFC 7685: A Transport Layer Security (TLS) ClientHello Padding  Exten-\n         sion\n\n     O   RFC 7905: ChaCha20-Poly1305 Cipher Suites for Transport Layer Security\n         (TLS)\n\n     O   RFC  7919: Negotiated Finite Field Diffie-Hellman Ephemeral Parameters\n         for Transport Layer Security\n\n     O   RFC 8143: Using Transport  Layer  Security  (TLS)  with  Network  News\n         Transfer Protocol (NNTP)\n\n     O   RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3\n\n     O   RFC  8701: Applying Generate Random Extensions And Sustain Extensibil-\n         ity (GREASE) to TLS Extensibility\n\n     O   W3C CSP: Content Security Policy Level 1-3\n\n     O   TLSWG Draft: The Transport Layer Security (TLS) Protocol Version 1.3\n\nEXIT STATUS\n     O   0 testssl.sh finished successfully without errors and without  ambigu-\n         ous results\n\n     O   1 testssl.sh has encountered exactly one ambiguous situation or an er-\n         ror during run\n\n     O   1+n  same as previous. The errors or ambiguous results are added, also\n         per IP.\n\n     O   50-200 reserved for returning a vulnerability scoring for system moni-\n         toring or a CI tools\n\n     O   242 (ERR_CHILD) Child received a signal from master\n\n     O   244 (ERR_RESOURCE) Resources testssl.sh needs couldn't be read\n\n     O   245  (ERR_CLUELESS)  Weird  state,  either  though  user  options   or\n         testssl.sh\n\n     O   246 (ERR_CONNECT) Connectivity problem\n\n     O   247 (ERR_DNSLOOKUP) Problem with resolving IP addresses or names\n\n     O   248 (ERR_OTHERCLIENT) Other client problem\n\n     O   249 (ERR_DNSBIN) Problem with DNS lookup binaries\n\n     O   250 (ERR_OSSLBIN) Problem with OpenSSL binary\n\n     O   251 (ERR_NOSUPPORT) Feature requested is not supported\n\n     O   252 (ERR_FNAMEPARSE) Input file couldn't be parsed\n\n     O   253 (ERR_FCREATE) Output file couldn't be created\n\n     O   254 (ERR_CMDLINE) Cmd line couldn't be parsed\n\n     O   255 (ERR_BASH) Bash version incorrect\n\nFILES\n     etc/*pem  are  the  certificate stores from Apple, Linux, Mozilla Firefox,\n     Windows and Java.\n\n     etc/client-simulation.txt contains client simulation data.\n\n     etc/cipher-mapping.txt provides a mandatory file with mapping from OpenSSL\n     cipher suites names to the ones from IANA / used in the RFCs.\n\n     etc/tls_data.txt provides a mandatory file for ciphers (bash sockets)  and\n     key material.\n\nAUTHORS\n     Developed by Dirk Wetter, David Cooper and many others, see CREDITS.md .\n\nCOPYRIGHT\n     Copyright  (C)  2012 Dirk Wetter. License GPLv2: Free Software Foundation,\n     Inc. This is free software: you are free to change and redistribute it un-\n     der the terms of the license, see LICENSE.\n\n     Attribution is important for the future of this project - also in the  in-\n     ternet.  Thus if you're offering a scanner based on testssl.sh as a public\n     and/or paid service in the internet you are strongly encouraged to mention\n     to your audience that you're using this program and where to get this pro-\n     gram from. That helps us to get bugfixes, other feedback and more  contri-\n     butions.\n\n     Usage WITHOUT ANY WARRANTY. USE at your OWN RISK!\n\nLIMITATION\n     All native Windows platforms emulating Linux are known to be slow.\n\nBUGS\n     Probably.   Current   known  ones  and  interface  for  filing  new  ones:\n     https://testssl.sh/bugs/ .\n\nSEE ALSO\n     ciphers(1), openssl(1), s_client(1), x509(1), verify(1), ocsp(1),  crl(1),\n     bash(1)       and      the      websites      https://testssl.sh/      and\n     https://github.com/testssl/testssl.sh/ .\n\n                                 December 2021                       TESTSSL(1)",
+        "apropos": "testssl (1)          - (unknown subject)"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/testssl",
+        "size_bytes": 1260728,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable, with very long lines (304)"
+      }
+    }
+  ],
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/testssl.sh/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/testssl.sh/index.md",
+    "retrieved_at": "2026-07-14T13:08:44+00:00",
+    "sha256": "ee7519e28c41cfc5e7b1d536dd1580d12afeb69a4eb9a504188408ec9112c4ee"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "3610",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "all",
+    "version": "3.2.2+dfsg-1",
+    "depends": "openssl, bsdextrautils, procps, bind9-dnsutils",
+    "recommends": "libengine-gost-openssl",
+    "description": "Command line tool to check TLS/SSL ciphers, protocols and cryptographic flaws\ntestssl.sh is a free command line tool which checks a server's service\non any port for the support of TLS/SSL ciphers, protocols as well as\nrecent cryptographic flaws and more.\n.\nKey features\n.\n* Clear output: you can tell easily whether anything is good or bad\n.\n* Ease of installation: It works for Linux, Darwin, FreeBSD and\nMSYS2/Cygwin out of the box: no need to install or configure\nsomething, no gems, CPAN, pip or the like.\n.\n* Flexibility: You can test any SSL/TLS enabled and STARTTLS service,\nnot only webservers at port 443\n.\n* Toolbox: Several command line options help you to run YOUR test and\nconfigure YOUR output\n.\n* Reliability: features are tested thoroughly\n.\n* Verbosity: If a particular check cannot be performed because of a\nmissing capability on your client side, you'll get a warning\n.\n* Privacy: It's only you who sees the result, not a third party\n.\n* Freedom: It's 100% open source. You can look at the code, see what's\ngoing on and you can change it. Heck, even the development is open\n(github)",
+    "homepage": "https://testssl.sh/"
+  },
+  "tags": [
+    "offensive",
+    "testssl",
+    "sh",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/testssl.sh && python3 testssl.sh.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/testssl.sh && python3 testssl.sh.py --help",
+    "cd toolboxes/testssl.sh && python3 testssl.sh.py --help",
+    "cd toolboxes/testssl.sh && python3 testssl.sh.py --help",
+    "cd toolboxes/testssl.sh && python3 testssl.sh.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST testssl.sh --output $KFIOSA_OUTPUT_DIR/testssl.sh.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST testssl.sh --output $KFIOSA_OUTPUT_DIR/testssl.sh.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

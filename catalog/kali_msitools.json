@@ -1,0 +1,720 @@
+{
+  "id": "kali:msitools",
+  "kind": "kali_source_package",
+  "name": "msitools",
+  "title": "msitools",
+  "summary": "### gir1.2-libmsi-1.0",
+  "version": "0.106+repack-3",
+  "architectures": [
+    "any",
+    "all"
+  ],
+  "homepage": "https://wiki.gnome.org/msitools",
+  "repository": "https://salsa.debian.org/debian/msitools",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install msitools"
+  },
+  "packages": [
+    {
+      "name": "gir1.2-libmsi-1.0"
+    },
+    {
+      "name": "libmsi-1.0-0"
+    },
+    {
+      "name": "libmsi-dev"
+    },
+    {
+      "name": "msitools"
+    },
+    {
+      "name": "wixl"
+    },
+    {
+      "name": "wixl-data"
+    }
+  ],
+  "commands": [
+    {
+      "name": "msibuild",
+      "description": "Build Windows Installer packages",
+      "usage": "msibuild MSIFILE [OPTION]...",
+      "arguments": [
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "name author template uuid Set summary information.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -s name [author] [template] [uuid] Set summary information."
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": "query",
+          "takes_value": true,
+          "description": "Execute SQL query/queries.",
+          "default": null,
+          "choices": null,
+          "raw": " -q query         Execute SQL query/queries."
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "table1.idt",
+          "takes_value": true,
+          "description": "Import one table into the database.",
+          "default": null,
+          "choices": null,
+          "raw": " -i table1.idt    Import one table into the database."
+        },
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": "stream file",
+          "takes_value": true,
+          "description": "Add 'stream' to storage with contents of 'file'.",
+          "default": null,
+          "choices": null,
+          "raw": " -a stream file   Add 'stream' to storage with contents of 'file'."
+        }
+      ],
+      "raw_help": "root@kali:~# msibuild -h\n Usage: msibuild MSIFILE [OPTION]...\n Options:\n -s name [author] [template] [uuid] Set summary information.\n -q query         Execute SQL query/queries.\n -i table1.idt    Import one table into the database.\n -a stream file   Add 'stream' to storage with contents of 'file'.\n \n Existing tables or streams will be overwritten. If package.msi does not exist a new file\n will be created with an empty database.",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      }
+    },
+    {
+      "name": "msidiff",
+      "description": "Compare Windows Installer packages",
+      "usage": "msidiff [OPTION]... [DIFF-OPTIONS] FROM-MSI TO-MSI",
+      "arguments": [
+        {
+          "flags": [
+            "-t",
+            "--tables"
+          ],
+          "metavar": "- ables",
+          "takes_value": true,
+          "description": "Diff MSI tables as text.  This is the default.",
+          "default": null,
+          "choices": null,
+          "raw": " -t, --tables     Diff MSI tables as text.  This is the default."
+        },
+        {
+          "flags": [
+            "-l",
+            "--list"
+          ],
+          "metavar": "- ist",
+          "takes_value": true,
+          "description": "Diff lists of files.",
+          "default": null,
+          "choices": null,
+          "raw": " -l, --list       Diff lists of files."
+        },
+        {
+          "flags": [
+            "-L",
+            "--long-list"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Diff long lists (akin to 'find -ls') of files.",
+          "default": null,
+          "choices": null,
+          "raw": " -L, --long-list  Diff long lists (akin to 'find -ls') of files."
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Print help message and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help       Print help message and exit."
+        },
+        {
+          "flags": [
+            "-v",
+            "--version"
+          ],
+          "metavar": "- ersion",
+          "takes_value": true,
+          "description": "Print version information and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " -v, --version    Print version information and exit."
+        }
+      ],
+      "raw_help": "root@kali:~# msidiff -h\n msidiff diffs contents of two MSI files.\n Usage: msidiff [OPTION]... [DIFF-OPTIONS] FROM-MSI TO-MSI\n \n Options:\n -t, --tables     Diff MSI tables as text.  This is the default.\n -l, --list       Diff lists of files.\n -L, --long-list  Diff long lists (akin to 'find -ls') of files.\n -h, --help       Print help message and exit.\n -v, --version    Print version information and exit.\n diff-options     Options passed to diff(1).  The first repeated argument of\n                  the above or the first argument starting with a '-' but not\n                  one of the above starts diff-options, the first one not\n                  starting with it ends them.  Default: -Nup for contents\n                  (in addition to -r which will always be passed), -U0 for\n                  others.\n \n More than one of -t, -l or -L may be specified.\n \n Report bugs to <https://gitlab.gnome.org/GNOME/msitools/issues>.",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      }
+    },
+    {
+      "name": "msidump",
+      "description": "Dump the tables and streams contained in Windows Installer packages",
+      "usage": "msidump [OPTION]... MSI-FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-t",
+            "--tables"
+          ],
+          "metavar": "- ables",
+          "takes_value": true,
+          "description": "Dump tables.  This is the default.",
+          "default": null,
+          "choices": null,
+          "raw": " -t, --tables         Dump tables.  This is the default."
+        },
+        {
+          "flags": [
+            "-s",
+            "--streams"
+          ],
+          "metavar": "- treams",
+          "takes_value": true,
+          "description": "Dump streams",
+          "default": null,
+          "choices": null,
+          "raw": " -s, --streams        Dump streams"
+        },
+        {
+          "flags": [
+            "-S",
+            "--signature"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Dump asn1parse of digital signature.",
+          "default": null,
+          "choices": null,
+          "raw": " -S, --signature      Dump asn1parse of digital signature."
+        },
+        {
+          "flags": [
+            "-d",
+            "--directory"
+          ],
+          "metavar": "- irectory DIR",
+          "takes_value": true,
+          "description": "Dump to given directory DIR",
+          "default": null,
+          "choices": null,
+          "raw": " -d, --directory DIR  Dump to given directory DIR"
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Print help message and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help           Print help message and exit."
+        },
+        {
+          "flags": [
+            "-v",
+            "--version"
+          ],
+          "metavar": "- ersion",
+          "takes_value": true,
+          "description": "Print version information and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " -v, --version        Print version information and exit."
+        }
+      ],
+      "raw_help": "root@kali:~# msidump -h\n msidump dumps MSI tables as idt text and streams\n Usage: msidump [OPTION]... MSI-FILE\n \n Options:\n -t, --tables         Dump tables.  This is the default.\n -s, --streams        Dump streams\n -S, --signature      Dump asn1parse of digital signature.\n -d, --directory DIR  Dump to given directory DIR\n -h, --help           Print help message and exit.\n -v, --version        Print version information and exit.\n \n More than one of -t, -s or -S may be specified.\n \n Report bugs to <https://gitlab.gnome.org/GNOME/msitools/issues>.",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      }
+    },
+    {
+      "name": "msiextract",
+      "description": "Extract the files contained in Windows Installer packages",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Show help options",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help          Show help options"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display version number",
+          "default": null,
+          "choices": null,
+          "raw": " --version           Display version number"
+        },
+        {
+          "flags": [
+            "-C",
+            "--directory"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Extract to directory",
+          "default": null,
+          "choices": null,
+          "raw": " -C, --directory     Extract to directory"
+        },
+        {
+          "flags": [
+            "-l",
+            "--list"
+          ],
+          "metavar": "- ist",
+          "takes_value": true,
+          "description": "List files only",
+          "default": null,
+          "choices": null,
+          "raw": " -l, --list          List files only"
+        }
+      ],
+      "raw_help": "root@kali:~# msiextract -h\n Usage:\n msiextract [OPTION…] MSI_FILE... - a msi files extracting tool\n \n Help Options:\n -h, --help          Show help options\n \n Application Options:\n --version           Display version number\n -C, --directory     Extract to directory\n -l, --list          List files only",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      }
+    },
+    {
+      "name": "msiinfo",
+      "description": "Display and extract information from Windows Installer packages",
+      "usage": "msiinfo SUBCOMMAND COMMAND-OPTIONS...",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Show program usage",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help        Show program usage"
+        },
+        {
+          "flags": [
+            "-v",
+            "--version"
+          ],
+          "metavar": "- ersion",
+          "takes_value": true,
+          "description": "Display program version",
+          "default": null,
+          "choices": null,
+          "raw": " -v, --version     Display program version"
+        }
+      ],
+      "raw_help": "root@kali:~# msiinfo -h\n Usage: msiinfo SUBCOMMAND COMMAND-OPTIONS...\n \n Options:\n -h, --help        Show program usage\n -v, --version     Display program version\n \n Available subcommands:\n help              Show program or subcommand usage\n streams           List streams in a .msi file\n tables            List tables in a .msi file\n extract           Extract a binary stream from an .msi file\n export            Export a table in text form from an .msi file\n suminfo           Print summary information",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      }
+    },
+    {
+      "name": "wixl",
+      "description": "Build Windows Installer packages",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Show help options",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help                          Show help options"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display version number",
+          "default": null,
+          "choices": null,
+          "raw": " --version                           Display version number"
+        },
+        {
+          "flags": [
+            "-v",
+            "--verbose"
+          ],
+          "metavar": "- erbose",
+          "takes_value": true,
+          "description": "Verbose output",
+          "default": null,
+          "choices": null,
+          "raw": " -v, --verbose                       Verbose output"
+        },
+        {
+          "flags": [
+            "-o",
+            "--output"
+          ],
+          "metavar": "- utput",
+          "takes_value": true,
+          "description": "Output file",
+          "default": null,
+          "choices": null,
+          "raw": " -o, --output                        Output file"
+        },
+        {
+          "flags": [
+            "-D",
+            "--define"
+          ],
+          "metavar": "variable = value",
+          "takes_value": false,
+          "description": "Define variable",
+          "default": null,
+          "choices": null,
+          "raw": " -D, --define                        Define variable"
+        },
+        {
+          "flags": [
+            "-a",
+            "--arch"
+          ],
+          "metavar": "- rch",
+          "takes_value": true,
+          "description": "Target architecture",
+          "default": null,
+          "choices": null,
+          "raw": " -a, --arch                          Target architecture"
+        },
+        {
+          "flags": [
+            "-I",
+            "--includedir"
+          ],
+          "metavar": "directory",
+          "takes_value": false,
+          "description": "Include directory",
+          "default": null,
+          "choices": null,
+          "raw": " -I, --includedir                    Include directory"
+        },
+        {
+          "flags": [
+            "--extdir"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "System extension directory",
+          "default": null,
+          "choices": null,
+          "raw": " --extdir                            System extension directory"
+        },
+        {
+          "flags": [
+            "--wxidir"
+          ],
+          "metavar": "directory",
+          "takes_value": false,
+          "description": "System include directory",
+          "default": null,
+          "choices": null,
+          "raw": " --wxidir                            System include directory"
+        },
+        {
+          "flags": [
+            "-E",
+            "--only-preproc"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Stop after the preprocessing stage",
+          "default": null,
+          "choices": null,
+          "raw": " -E, --only-preproc                  Stop after the preprocessing stage"
+        },
+        {
+          "flags": [
+            "--ext"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Specify an extension",
+          "default": null,
+          "choices": null,
+          "raw": " --ext                               Specify an extension"
+        }
+      ],
+      "raw_help": "root@kali:~# wixl -h\n Usage:\n wixl [OPTION…] INPUT_FILE1 [INPUT_FILE2]... - a msi building tool\n \n Help Options:\n -h, --help                          Show help options\n \n Application Options:\n --version                           Display version number\n -v, --verbose                       Verbose output\n -o, --output                        Output file\n -D, --define                        Define variable\n -a, --arch                          Target architecture\n -I, --includedir                    Include directory\n --extdir                            System extension directory\n --wxidir                            System include directory\n -E, --only-preproc                  Stop after the preprocessing stage\n --ext                               Specify an extension",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "wixl [OPTION…] INPUT_FILE1 [INPUT_FILE2]... - a msi building tool",
+          "template": null,
+          "original_sha256": "3bac40fa2c1a857e633051caea5b4d115221a001a5509e932f992763ede3f51f"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:\n  wixl [OPTION…] INPUT_FILE1 [INPUT_FILE2]... - a msi building tool\n\nHelp Options:\n  -h, --help                          Show help options\n\nApplication Options:\n  --version                           Display version number\n  -v, --verbose                       Verbose output\n  -o, --output                        Output file\n  -D, --define                        Define variable\n  -a, --arch                          Target architecture\n  -I, --includedir                    Include directory\n  --extdir                            System extension directory\n  --wxidir                            System include directory\n  -E, --only-preproc                  Stop after the preprocessing stage\n  --ext                               Specify an extension",
+        "-h": "Usage:\n  wixl [OPTION…] INPUT_FILE1 [INPUT_FILE2]... - a msi building tool\n\nHelp Options:\n  -h, --help                          Show help options\n\nApplication Options:\n  --version                           Display version number\n  -v, --verbose                       Verbose output\n  -o, --output                        Output file\n  -D, --define                        Define variable\n  -a, --arch                          Target architecture\n  -I, --includedir                    Include directory\n  --extdir                            System extension directory\n  --wxidir                            System include directory\n  -E, --only-preproc                  Stop after the preprocessing stage\n  --ext                               Specify an extension",
+        "help": "Please specify the output file.",
+        "man": "wixl(1)                     General Commands Manual                     wixl(1)\n\nNAME\n     wixl - build Windows Installer packages\n\nSYNOPSIS\n     wixl [<option> [<option> ...]] <MSI descriptor>\n\nDESCRIPTION\n     wixl builds a Windows Installer package using the given descriptor.\n\nOPTIONS\n     -h, --help\n            Print a help message and exit.\n\n     --version\n            Print version information and exit.\n\n     -v, --verbose\n            Activate verbose output.\n\n     -o, --output <file>\n            Output to file.\n\n     -D, --define <variable>=<value>\n            Define the given variable.\n\n     -a, --arch <arch>\n            Specify  the  target  architecture. arch can be one of X86 or INTEL\n            for 32-bit x86, IA64 or INTEL64 for Itanium, X64 for 64-bit x86.\n\n     -I, --includedir <directory>\n            Specify an include directory.\n\n     --wxidir <directory>\n            Specify a system include directory.\n\n     -E, --only-preproc\n            Stop after the preprocessing stage.\n\nAUTHORS\n     wixl was written by Marc-Andre Lureau for Red Hat, Inc.  This manual  page\n     was  adapted from the program usage information by Stephen Kitt <skitt@de-\n     bian.org>, for the Debian GNU/Linux system (but may be used by others). It\n     was last modified for wixl version 0.93.\n\nwixl                           December 26, 2014                        wixl(1)",
+        "apropos": "wixl (1)             - build Windows Installer packages\nwixl-heat (1)        - builds Wix XML fragments from a list of files and dire..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/wixl",
+        "size_bytes": 518456,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2d16037bd6482c7730318d4b1c9124b4b1324462, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "wixl-heat",
+      "description": "Builds Wix XML fragments from a list of files and directories",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Show help options",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help            Show help options"
+        },
+        {
+          "flags": [
+            "--directory-ref"
+          ],
+          "metavar": "directory",
+          "takes_value": false,
+          "description": "Directory Ref",
+          "default": null,
+          "choices": null,
+          "raw": " --directory-ref       Directory Ref"
+        },
+        {
+          "flags": [
+            "--component-group"
+          ],
+          "metavar": "component group",
+          "takes_value": false,
+          "description": "Component Group",
+          "default": null,
+          "choices": null,
+          "raw": " --component-group     Component Group"
+        },
+        {
+          "flags": [
+            "--var"
+          ],
+          "metavar": "variable",
+          "takes_value": false,
+          "description": "Variable for source dir",
+          "default": null,
+          "choices": null,
+          "raw": " --var                 Variable for source dir"
+        },
+        {
+          "flags": [
+            "-p",
+            "--prefix"
+          ],
+          "metavar": "- refix",
+          "takes_value": true,
+          "description": "Prefix",
+          "default": null,
+          "choices": null,
+          "raw": " -p, --prefix          Prefix"
+        },
+        {
+          "flags": [
+            "-x",
+            "--exclude"
+          ],
+          "metavar": "directory",
+          "takes_value": false,
+          "description": "Exclude prefix",
+          "default": null,
+          "choices": null,
+          "raw": " -x, --exclude         Exclude prefix"
+        },
+        {
+          "flags": [
+            "--win64"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Add Win64 Component",
+          "default": null,
+          "choices": null,
+          "raw": " --win64               Add Win64 Component"
+        }
+      ],
+      "raw_help": "root@kali:~# wixl-heat -h\n Usage:\n wixl-heat [OPTION…]\n \n Help Options:\n -h, --help            Show help options\n \n Application Options:\n --directory-ref       Directory Ref\n --component-group     Component Group\n --var                 Variable for source dir\n -p, --prefix          Prefix\n -x, --exclude         Exclude prefix\n --win64               Add Win64 Component",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "wixl-heat [OPTION…]",
+          "template": null,
+          "original_sha256": "6b5d34b803457fcafd48451a8be94cd66e37caa1319f7cffb6e2812e1fd54778"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:\n  wixl-heat [OPTION…]\n\nHelp Options:\n  -h, --help            Show help options\n\nApplication Options:\n  --directory-ref       Directory Ref\n  --component-group     Component Group\n  --var                 Variable for source dir\n  -p, --prefix          Prefix\n  -x, --exclude         Exclude prefix\n  --win64               Add Win64 Component",
+        "-h": "Usage:\n  wixl-heat [OPTION…]\n\nHelp Options:\n  -h, --help            Show help options\n\nApplication Options:\n  --directory-ref       Directory Ref\n  --component-group     Component Group\n  --var                 Variable for source dir\n  -p, --prefix          Prefix\n  -x, --exclude         Exclude prefix\n  --win64               Add Win64 Component",
+        "help": "Please specify source dir prefix",
+        "man": "wixl-heat(1)                General Commands Manual                wixl-heat(1)\n\nNAME\n     wixl-heat - builds Wix XML fragments from a list of files and directories\n\nSYNOPSIS\n     wixl-heat [<option> [<option> ...]]\n\nDESCRIPTION\n     wixl-heat  builds  an  Wix  XML fragment from a list of files given on the\n     standard input. The XML fragment is output to the standard output.\n\nOPTIONS\n     -h, --help\n            Print a help message and exit.\n\n     --directory-ref <directory>\n            Specifies the directory reference for the DirectoryRef element.\n\n     --component-group <component group>\n            Specifies the component group for the ComponentGroup element.\n\n     --var <variable>\n            Specifies the variable to use  for  the  source  directory  in  the\n            Source attribute of the File elements.\n\n     -p, --prefix <directory>\n            Specifies  the prefix in which the files are based (this is removed\n            from the resulting file names).\n\n     -x, --exclude <directory>\n            Excludes any files with the given prefix.\n\nAUTHORS\n     wixl-heat was written by Marc-Andre Lureau for Red Hat, Inc.  This  manual\n     page  was  adapted  from  the  program  usage  information by Stephen Kitt\n     <skitt@debian.org>, for the Debian GNU/Linux system (but may  be  used  by\n     others). It was last modified for wixl version 0.93.\n\nwixl                           December 26, 2014                   wixl-heat(1)",
+        "apropos": "wixl-heat (1)        - builds Wix XML fragments from a list of files and dire..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/wixl-heat",
+        "size_bytes": 31024,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=38e65ad014a375bee2cbac4bf6d854897aa4a896, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/msitools/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/msitools/index.md",
+    "retrieved_at": "2026-07-14T13:06:47+00:00",
+    "sha256": "c800b95ea590bef7dcfacbf7e8049d4965a90213eb017fe6f86642a2dc06902f"
+  },
+  "apt_metadata": {
+    "version": "0.106+repack-3",
+    "installed_size": "306",
+    "maintainer": "Stephen Kitt <skitt@debian.org>",
+    "architecture": "amd64",
+    "depends": "libc6 (>= 2.38), libgcab-1.0-0 (>= 0.4), libglib2.0-0t64 (>= 2.52.0), libmsi-1.0-0 (>= 0.93)",
+    "size": "49316",
+    "description": "Windows Installer file manipulation tool\nmsitools contains a number of programs to create, inspect and extract\nWindows Installer (.msi) files.\n.\nThe following tools are included:\n- msiinfo: inspects MSI packages\n- msibuild: builds MSI packages\n- msidiff: compares two MSI packages' contents\n- msidump: dumps raw MSI tables and stream contents\n- msiextract: extracts files contained in MSI packages",
+    "homepage": "https://wiki.gnome.org/msitools",
+    "section": "utils"
+  },
+  "tags": [
+    "offensive",
+    "msitools",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/msitools && python3 msitools.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/msitools && python3 msitools.py --help",
+    "cd toolboxes/msitools && python3 msitools.py --help",
+    "cd toolboxes/msitools && python3 msitools.py --help",
+    "cd toolboxes/msitools && python3 msitools.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msitools --output $KFIOSA_OUTPUT_DIR/msitools.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msitools --output $KFIOSA_OUTPUT_DIR/msitools.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

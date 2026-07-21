@@ -1,0 +1,178 @@
+{
+  "id": "kali:zerofree",
+  "kind": "kali_source_package",
+  "name": "zerofree",
+  "title": "zerofree",
+  "summary": "### zerofree",
+  "version": "1.1.1-1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://frippery.org/uml/",
+  "repository": "https://salsa.debian.org/debian/zerofree",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large"
+  ],
+  "install": {
+    "apt": "sudo apt install zerofree"
+  },
+  "packages": [
+    {
+      "name": "zerofree"
+    }
+  ],
+  "commands": [
+    {
+      "name": "zerofree",
+      "description": "Zero free blocks from ext2, ext3 and ext4 file-systems",
+      "usage": "zerofree [-n] [-v] [-f fillval] filesystem",
+      "arguments": [
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Perform a dry run  (do not modify the file-system);",
+          "default": null,
+          "choices": null,
+          "raw": "     -n        Perform a dry run  (do not modify the file-system);"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be  verbose:  show the number of blocks modified by zerofree (or",
+          "default": null,
+          "choices": null,
+          "raw": "     -v        Be  verbose:  show the number of blocks modified by zerofree (or"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "value",
+          "takes_value": true,
+          "description": "Specify  the  octet value to fill empty blocks with (defaults to",
+          "default": "s to",
+          "choices": null,
+          "raw": "     -f value  Specify  the  octet value to fill empty blocks with (defaults to"
+        }
+      ],
+      "raw_help": "root@kali:~# zerofree -h\n zerofree: invalid option -- 'h'\n usage: zerofree [-n] [-v] [-f fillval] filesystem",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "zerofree: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "d9537e80af41fa259d0499239918a742fd7f35c3ba5c07d94db50d564d96409a"
+        },
+        {
+          "status": "operational_example",
+          "command": "zerofree: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "af7678e21e9d792611a0fb261350a718ab095c4f56e2bc34b1b952e11b8dddac"
+        },
+        {
+          "status": "operational_example",
+          "command": "zerofree: failed to open filesystem help",
+          "template": null,
+          "original_sha256": "cc60ade7bbc6f0b49e47d50f8c71a2bcd99d76441d5df3f744a6a924300e4a1c"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "zerofree: invalid option -- '-'\nusage: zerofree [-n] [-v] [-f fillval] filesystem",
+        "-h": "zerofree: invalid option -- 'h'\nusage: zerofree [-n] [-v] [-f fillval] filesystem",
+        "help": "zerofree: failed to open filesystem help",
+        "man": "ZEROFREE(8)                 System Manager's Manual                 ZEROFREE(8)\n\nNAME\n     zerofree -- zero free blocks from ext2, ext3 and ext4 file-systems\n\nSYNOPSIS\n     zerofree [-n]  [-v]  [-f fillval]  filesystem\n\nDESCRIPTION\n     zerofree  finds  the unallocated, blocks with non-zero value content in an\n     ext2, ext3 or ext4 filesystem (e.g. /dev/hda1) and fills them with  zeroes\n     (or another octet of your choice).\n\n     Filling  unused  areas  with  zeroes is useful if the device on which this\n     file-system resides is a disk image. In this case, depending on  the  type\n     of  disk  image, a secondary utility may be able to reduce the size of the\n     disk image after zerofree has been run.\n\n     Filling unused areas may also be useful with solid-state drives (SSDs). On\n     some SSDs, filling blocks with ones (0xFF) is reported  to  trigger  Flash\n     block  erasure  by  the  firmware, possibly giving a write performance in-\n     crease.\n\n     The usual way to achieve the same result (zeroing the unallocated  blocks)\n     is  to run dd (1) to create a file full of zeroes that takes up the entire\n     free space on the drive, and then delete this file. This has  many  disad-\n     vantages, which zerofree alleviates:\n\n        *  it is slow;\n\n        *  it makes the disk image (temporarily) grow to its maximal extent;\n\n        *  it  (temporarily)  uses all free space on the disk, so other concur-\n           rent write actions may fail.\n\n     filesystem has to be unmounted or mounted read-only for zerofree to  work.\n     It  will exit with an error message if the filesystem is mounted writable.\n     To remount the root file-system readonly, you can first switch  to  single\n     user runlevel (telinit 1) then use mount -o remount,ro filesystem.\n\n     zerofree  has  been  written to be run from GNU/Linux systems installed as\n     guest OSes inside a virtual machine. In this case,  it  is  typically  run\n     from within the guest system, and a utility is then run from the host sys-\n     tem  to  shrink  disk  image (VBoxManage modifyhd --compact, provided with\n     virtualbox, is able to do that for some disk image formats).\n\n     It may however be useful in other situations: for instance it can be  used\n     to  make  it more difficult to retrieve deleted data. Beware that securely\n     deleting sensitive data is not in general an easy  task  and  usually  re-\n     quires writing several times on the deleted blocks.\n\nOPTIONS\n     -n        Perform a dry run  (do not modify the file-system);\n\n     -v        Be  verbose:  show the number of blocks modified by zerofree (or\n               that would be modified, in case the -n is used), the  number  of\n               free blocks and the total number of blocks on the filesystem;\n\n     -f value  Specify  the  octet value to fill empty blocks with (defaults to\n               0). Argument must be within the range 0 to 255.\n\nSEE ALSO\n     dd (1).\n\nAUTHOR\n     This manual page was written  by  Thibaut  Paumard  <paumard@users.source-\n     forge.net>  for the Debian system (but may be used by others).  Permission\n     is granted to copy, distribute and/or modify this document under the terms\n     of the GNU General Public License, Version 2 or  any  later  version  pub-\n     lished by the Free Software Foundation.\n\n     On Debian systems, the complete text of the GNU General Public License can\n     be found in /usr/share/common-licenses/GPL-2.\n\n                                                                    ZEROFREE(8)",
+        "apropos": "zerofree (8)         - zero free blocks from ext2, ext3 and ext4 file-systems"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/zerofree",
+        "size_bytes": 14416,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a232aeb7bad748e5bdcb6abcfae31f8803b4fcd4, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/zerofree/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/zerofree/index.md",
+    "retrieved_at": "2026-07-14T13:09:11+00:00",
+    "sha256": "9df1392f75e6c07f87608d1d735b5a54694e812f0a82692252ff863fcf984a6e"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "30",
+    "maintainer": "Thibaut Paumard <thibaut@debian.org>",
+    "architecture": "amd64",
+    "version": "1.1.1-1+b1",
+    "depends": "libc6 (>= 2.34), libext2fs2t64 (>= 1.42)",
+    "description": "zero free blocks from ext2, ext3 and ext4 file-systems\nZerofree finds the unallocated blocks with non-zero value content in\nan ext2, ext3 or ext4 file-system and fills them with zeroes\n(zerofree can also work with another value than zero). This is mostly\nuseful if the device on which this file-system resides is a disk\nimage. In this case, depending on the type of disk image, a secondary\nutility may be able to reduce the size of the disk image after\nzerofree has been run. Zerofree requires the file-system to be\nunmounted or mounted read-only.\n.\nThe usual way to achieve the same result (zeroing the unused\nblocks) is to run \"dd\" to create a file full of zeroes that takes up\nthe entire free space on the drive, and then delete this file. This\nhas many disadvantages, which zerofree alleviates:\n* it is slow;\n* it makes the disk image (temporarily) grow to its maximal extent;\n* it (temporarily) uses all free space on the disk, so other\nconcurrent write actions may fail.\n.\nZerofree has been written to be run from GNU/Linux systems installed\nas guest OSes inside a virtual machine. If this is not your case, you\nalmost certainly don't need this package. (One other use case would\nbe to erase sensitive data a little bit more securely than with a\nsimple \"rm\").",
+    "homepage": "https://frippery.org/uml/"
+  },
+  "tags": [
+    "offensive",
+    "zerofree",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/zerofree && python3 zerofree.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/zerofree && python3 zerofree.py --help",
+    "cd toolboxes/zerofree && python3 zerofree.py --help",
+    "cd toolboxes/zerofree && python3 zerofree.py --help",
+    "cd toolboxes/zerofree && python3 zerofree.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST zerofree --output $KFIOSA_OUTPUT_DIR/zerofree.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST zerofree --output $KFIOSA_OUTPUT_DIR/zerofree.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

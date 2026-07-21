@@ -1,0 +1,115 @@
+{
+  "id": "github:thomasbuilds/Spectre",
+  "kind": "external_repository",
+  "name": "Spectre",
+  "full_name": "thomasbuilds/Spectre",
+  "owner": "thomasbuilds",
+  "category": "WiFi Reconnaissance — Signal Mapping",
+  "url": "https://github.com/thomasbuilds/Spectre",
+  "summary": "Repository indexing entry for the ``Spectre`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/thomasbuilds__Spectre",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "No CLI — install APK (GitHub Releases / F-Droid / Obtainium) on an Android 12+ device and launch the app. No Linux/Kali entrypoint."
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "No CLI — install APK (GitHub Releases / F-Droid / Obtainium) on an Android 12+ device and launch the app. No Linux/Kali entrypoint."
+      }
+    ]
+  },
+  "language": "Kotlin",
+  "dependencies": [
+    "Android 12+ (API 31)",
+    "Gradle (Kotlin DSL)",
+    "Jetpack Compose / Material 3",
+    "Android system APIs (WifiManager, TelephonyManager, BluetoothLeScanner, LocationManager/GNSS)"
+  ],
+  "algorithms": [
+    "Wideband RF power reconstruction: per-emitter dBm -> linear mW, sum, back to dBm; cellular normalized to wideband-equivalent via modem RSSI or bandwidth-derived offset",
+    "Distance estimation: true ranging via Wi-Fi 802.11mc FTM and cellular timing-advance where available, else path-loss model calibrated from iBeacon measured-power field, with confidence label",
+    "LAN host discovery via TCP-connect probes, SSDP/UPnP, mDNS/DNS-SD, banner grabbing + service fingerprinting + reverse DNS",
+    "BLE GATT inspection: connect, enumerate services/characteristics, read/decode values, write writable characteristics",
+    "iBeacon broadcast (configurable UUID/major/minor/measured power)",
+    "Cellular monitoring: serving+neighbor cells across 5G/4G/3G/2G with operator/bands/RSRP/RSCP/RSSI + timing-advance distance, multi-SIM",
+    "GNSS tracking: multi-constellation, dual-frequency, C/N0, elevation/azimuth, used-in-fix, sub-satellite ground point"
+  ],
+  "produces": [
+    "Total RF exposure gauge (single summed dBm across cellular+Wi-Fi+BLE)",
+    "Per-cell: operator, identifiers, bands, RSRP/RSCP/RSSI, timing-advance distance",
+    "Per-AP: vendor, security, cipher, channel, width, RSSI, FTM or path-loss distance + confidence label",
+    "Per-BLE device: name, MAC, vendor, RSSI, address type, PHY, service UUIDs, decoded manufacturer/iBeacon data",
+    "Per-satellite: constellation, C/N0, elevation, azimuth, fix status, ground point",
+    "LAN: discovered hosts, banners, fingerprints, mDNS services"
+  ],
+  "capability_bucket": "signal_map",
+  "runnable": false,
+  "novelty": "Not an airodump-ng/wash/hcxtools/scapy wrapper — it is a compiled Kotlin Android app using Android system APIs with no monitor mode, no root, no raw packet injection. Genuinely novel elements: (1) unified cellular+Wi-Fi+BLE+GNSS observation in one app, (2) physically-correct wideband RF-exposure reconstruction via linear power summation rather than naive dBm addition, (3) multi-SIM serving/neighbor-cell monitoring, (4) confidence-labeled distance estimates that distinguish true FTM/timing-advance ranging from path-loss models. None of this overlaps with KFIOSA's Linux pcap/monitor-mode WiFi pipeline; it cannot capture handshakes or do WPS/802.11 exploitation.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "spectre",
+    "thomasbuilds",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/Spectre && python3 Spectre.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Spectre && python3 Spectre.py --help",
+    "cd toolboxes/Spectre && python3 Spectre.py --help",
+    "cd toolboxes/Spectre && python3 Spectre.py --help",
+    "cd toolboxes/Spectre && python3 Spectre.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Spectre --output $KFIOSA_OUTPUT_DIR/Spectre.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Spectre --output $KFIOSA_OUTPUT_DIR/Spectre.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

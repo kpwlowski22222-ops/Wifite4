@@ -1,0 +1,111 @@
+{
+  "id": "github:hkm/whoishere.py",
+  "kind": "external_repository",
+  "name": "whoishere.py",
+  "full_name": "hkm/whoishere.py",
+  "owner": "hkm",
+  "category": "WiFi Reconnaissance — Probe Profiling",
+  "url": "https://github.com/hkm/whoishere.py",
+  "summary": "Repository indexing entry for the ``whoishere.py`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/hkm__whoishere.py",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "python whoishere.py (reads whoishere.conf JSON: interface + pushover creds + list of {name,mac,color})"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "python whoishere.py (reads whoishere.conf JSON: interface + pushover creds + list of {name,mac,color})"
+      }
+    ]
+  },
+  "language": "Python (2.x — uses httplib)",
+  "dependencies": [
+    "python-scapy",
+    "python-netaddr (OUI lookups)",
+    "monitor-mode WiFi interface (e.g. wlan0mon)",
+    "Pushover API token + user key (optional notifications)",
+    "Python stdlib: logging/json/time/signal/urllib/unicodedata"
+  ],
+  "algorithms": [
+    "Passive probe-request sniffer via scapy sniff(iface, prn, store=0) filtering Dot11ProbeReq frames",
+    "MAC->person identity mapping against a JSON config watchlist",
+    "OUI vendor lookup via netaddr",
+    "Pushover push-notification alerting on watchlist match"
+  ],
+  "produces": [
+    "Console log of detected probe-request devices with assigned names",
+    "Pushover mobile push notifications on watchlist MAC match",
+    "OUI/vendor info per detected device"
+  ],
+  "capability_bucket": "probe_profiling",
+  "runnable": true,
+  "novelty": "The capture layer is a thin scapy Dot11ProbeReq sniffer — no new RF/parsing technique over scapy/airodump-ng. The genuinely novel piece is the identity/alerting layer: a JSON watchlist mapping MAC->human name plus Pushover push notifications to turn raw probe frames into a \"who is physically present\" presence-awareness/alerting tool, which airodump-ng/wash/hcxtools do not provide.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "whoishere",
+    "py",
+    "hkm",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/whoishere.py && python3 whoishere.py.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/whoishere.py && python3 whoishere.py.py --help",
+    "cd toolboxes/whoishere.py && python3 whoishere.py.py --help",
+    "cd toolboxes/whoishere.py && python3 whoishere.py.py --help",
+    "cd toolboxes/whoishere.py && python3 whoishere.py.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST whoishere.py --output $KFIOSA_OUTPUT_DIR/whoishere.py.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST whoishere.py --output $KFIOSA_OUTPUT_DIR/whoishere.py.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

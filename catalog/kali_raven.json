@@ -1,0 +1,195 @@
+{
+  "id": "kali:raven",
+  "kind": "kali_source_package",
+  "name": "raven",
+  "title": "raven",
+  "summary": "### raven",
+  "version": "1.1.0-1",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/gh0x0st/raven",
+  "repository": "https://salsa.debian.org/pkg-security-team/raven",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install raven"
+  },
+  "packages": [
+    {
+      "name": "raven"
+    }
+  ],
+  "commands": [
+    {
+      "name": "raven",
+      "description": "- - -",
+      "usage": "raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help            show this help message and exit"
+        },
+        {
+          "flags": [
+            "--allowed-ip"
+          ],
+          "metavar": "ALLOWED_IP",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --allowed-ip ALLOWED_IP"
+        },
+        {
+          "flags": [
+            "--upload-dir"
+          ],
+          "metavar": "UPLOAD_DIR",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --upload-dir UPLOAD_DIR"
+        },
+        {
+          "flags": [
+            "--organize-uploads"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Organize file uploads into subfolders by remote client",
+          "default": null,
+          "choices": null,
+          "raw": " --organize-uploads    Organize file uploads into subfolders by remote client"
+        }
+      ],
+      "raw_help": "root@kali:~# raven -h\n usage: raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]\n \n A lightweight file upload service used for penetration testing and incident response.\n \n positional arguments:\n lhost                 The IP address for our HTTP handler to listen on\n                       (default: listen on all interfaces)\n lport                 The port for our HTTP handler to listen on (default:\n                       8080)\n \n options:\n -h, --help            show this help message and exit\n --allowed-ip ALLOWED_IP\n                       Restrict access to our HTTP handler by IP address\n                       (optional)\n --upload-dir UPLOAD_DIR\n                       Designate the directory to save uploaded files to\n                       (default: current working directory)\n --organize-uploads    Organize file uploads into subfolders by remote client\n                       IP\n \n examples:\n Start the HTTP server on all available network interfaces, listening on port 443\n raven 0.0.0.0 443\n \n Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, and restrict access to 192.168.0.4\n raven 192.168.0.12 443 --allowed-ip 192.168.0.4\n \n Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, restrict access to 192.168.0.4, and save uploaded files to /tmp\n raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp\n \n Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, restrict access to 192.168.0.4, and save uploaded files to /tmp organized by remote client IP\n raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp --organize-uploads",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "raven 0.0.0.0 443",
+          "template": null,
+          "original_sha256": "294ad085cb0475094cade5b1f7cb81730006b9a0dcb1bcecd8d51e98ee8e700a"
+        },
+        {
+          "status": "operational_example",
+          "command": "raven 192.168.0.12 443 --allowed-ip 192.168.0.4",
+          "template": null,
+          "original_sha256": "f1f0fc5285f7203bd346957e100dadcb0dceece4432dcd19bf7f8c5223e01af1"
+        },
+        {
+          "status": "operational_example",
+          "command": "raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp",
+          "template": null,
+          "original_sha256": "672228d51995c0490097961414982308fcc950c7544994a8546937712dfdf1b2"
+        },
+        {
+          "status": "operational_example",
+          "command": "raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp --organize-uploads",
+          "template": null,
+          "original_sha256": "de2246b17ab889980b1e684405adbf8918db4d838c73534a1b67444afdfc2e15"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]\n\nA lightweight file upload service used for penetration testing and incident response.\n\npositional arguments:\n  lhost                 The IP address for our HTTP handler to listen on\n                        (default: listen on all interfaces)\n  lport                 The port for our HTTP handler to listen on (default:\n                        8080)\n\noptions:\n  -h, --help            show this help message and exit\n  --allowed-ip ALLOWED_IP\n                        Restrict access to our HTTP handler by IP address\n                        (optional)\n  --upload-dir UPLOAD_DIR\n                        Designate the directory to save uploaded files to\n                        (default: current working directory)\n  --organize-uploads    Organize file uploads into subfolders by remote client\n                        IP\n\nexamples:\n  Start the HTTP server on all available network interfaces, listening on port 443\n  raven 0.0.0.0 443\n\n  Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, and restrict access to 192.168.0.4\n  raven 192.168.0.12 443 --allowed-ip 192.168.0.4\n\n  Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, restrict access to 192.168.0.4, and save uploaded files to /tmp\n  raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp\n\n  Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, restrict access to 192.168.0.4, and save uploaded files to /tmp organized by remote client IP\n  raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp --organize-uploads",
+        "-h": "usage: raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]\n\nA lightweight file upload service used for penetration testing and incident response.\n\npositional arguments:\n  lhost                 The IP address for our HTTP handler to listen on\n                        (default: listen on all interfaces)\n  lport                 The port for our HTTP handler to listen on (default:\n                        8080)\n\noptions:\n  -h, --help            show this help message and exit\n  --allowed-ip ALLOWED_IP\n                        Restrict access to our HTTP handler by IP address\n                        (optional)\n  --upload-dir UPLOAD_DIR\n                        Designate the directory to save uploaded files to\n                        (default: current working directory)\n  --organize-uploads    Organize file uploads into subfolders by remote client\n                        IP\n\nexamples:\n  Start the HTTP server on all available network interfaces, listening on port 443\n  raven 0.0.0.0 443\n\n  Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, and restrict access to 192.168.0.4\n  raven 192.168.0.12 443 --allowed-ip 192.168.0.4\n\n  Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, restrict access to 192.168.0.4, and save uploaded files to /tmp\n  raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp\n\n  Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, restrict access to 192.168.0.4, and save uploaded files to /tmp organized by remote client IP\n  raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp --organize-uploads",
+        "help": "[!] [Errno -3] Temporary failure in name resolution"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/raven",
+        "size_bytes": 948,
+        "is_symlink": false,
+        "file_type": "Python script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/raven/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/raven/index.md",
+    "retrieved_at": "2026-07-14T13:08:00+00:00",
+    "sha256": "19b5ac90ba5fd8d7970b6a58d0b0549739966dde66dce7e411d33bb92a1ce54e"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "46",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "all",
+    "version": "1.1.0-1",
+    "depends": "python3:any",
+    "description": "Python tool that extends the capabilities of the http.server Python module\nThis package contains a Python tool that extends the capabilities of the\nhttp.server Python module by offering a self-contained file upload web server.\nWhile the common practice is to use python3 -m http.server 80 to serve files\nfor remote client downloads, Raven addresses the need for a similar solution\nwhen you need the ability to receive files from remote clients. This becomes\nespecially valuable in scenarios such as penetration testing and incident\nresponse procedures when protocols such as SMB may not be a viable option.",
+    "homepage": "https://github.com/gh0x0st/raven"
+  },
+  "tags": [
+    "offensive",
+    "raven",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/raven && python3 raven.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/raven && python3 raven.py --help",
+    "cd toolboxes/raven && python3 raven.py --help",
+    "cd toolboxes/raven && python3 raven.py --help",
+    "cd toolboxes/raven && python3 raven.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST raven --output $KFIOSA_OUTPUT_DIR/raven.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST raven --output $KFIOSA_OUTPUT_DIR/raven.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

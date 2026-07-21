@@ -1,0 +1,418 @@
+{
+  "id": "kali:miredo",
+  "kind": "kali_source_package",
+  "name": "miredo",
+  "title": "miredo",
+  "summary": "### miredo",
+  "version": "1.2.6-7.2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://www.remlab.net/miredo/",
+  "repository": "https://salsa.debian.org/debian/miredo",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-post-exploitation"
+  ],
+  "install": {
+    "apt": "sudo apt install miredo"
+  },
+  "packages": [
+    {
+      "name": "miredo"
+    },
+    {
+      "name": "miredo-server"
+    }
+  ],
+  "commands": [
+    {
+      "name": "miredo",
+      "description": "Teredo IPv6 tunneling for Unix",
+      "usage": "miredo [OPTIONS] [SERVER_NAME]",
+      "arguments": [
+        {
+          "flags": [
+            "-c",
+            "--config"
+          ],
+          "metavar": "- onfig",
+          "takes_value": true,
+          "description": "specify an configuration file",
+          "default": null,
+          "choices": null,
+          "raw": " -c, --config     specify an configuration file"
+        },
+        {
+          "flags": [
+            "-f",
+            "--foreground"
+          ],
+          "metavar": "- oreground run in the foreground",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -f, --foreground run in the foreground"
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "display this help and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help       display this help and exit"
+        },
+        {
+          "flags": [
+            "-p",
+            "--pidfile"
+          ],
+          "metavar": "- idfile",
+          "takes_value": true,
+          "description": "override the location of the PID file",
+          "default": null,
+          "choices": null,
+          "raw": " -p, --pidfile    override the location of the PID file"
+        },
+        {
+          "flags": [
+            "-u",
+            "--user"
+          ],
+          "metavar": "- ser",
+          "takes_value": true,
+          "description": "override the user to set UID to",
+          "default": null,
+          "choices": null,
+          "raw": " -u, --user       override the user to set UID to"
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": "or",
+          "takes_value": false,
+          "description": "display program version and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -V, --version    display program version and exit"
+        },
+        {
+          "flags": [
+            "-t",
+            "--chrootdir"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -t or --chrootdir"
+        }
+      ],
+      "raw_help": "root@kali:~# miredo -h\n Usage: miredo [OPTIONS] [SERVER_NAME]\n Creates a Teredo tunneling interface for encapsulation of IPv6 over UDP.\n \n -c, --config     specify an configuration file\n -f, --foreground run in the foreground\n -h, --help       display this help and exit\n -p, --pidfile    override the location of the PID file\n -u, --user       override the user to set UID to\n -V, --version    display program version and exit",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: miredo [OPTIONS] [SERVER_NAME]\nCreates a Teredo tunneling interface for encapsulation of IPv6 over UDP.\n\n  -c, --config     specify an configuration file\n  -f, --foreground run in the foreground\n  -h, --help       display this help and exit\n  -p, --pidfile    override the location of the PID file\n  -u, --user       override the user to set UID to\n  -V, --version    display program version and exit",
+        "-h": "Usage: miredo [OPTIONS] [SERVER_NAME]\nCreates a Teredo tunneling interface for encapsulation of IPv6 over UDP.\n\n  -c, --config     specify an configuration file\n  -f, --foreground run in the foreground\n  -h, --help       display this help and exit\n  -p, --pidfile    override the location of the PID file\n  -u, --user       override the user to set UID to\n  -V, --version    display program version and exit",
+        "help": "Cannot create PID file /var/run/miredo.pid:\n Resource temporarily unavailable\nPlease make sure another instance of the program is not already running.",
+        "man": "MIREDO(8)                   System Manager's Manual                   MIREDO(8)\n\nNAME\n     miredo - Teredo IPv6 tunneling for Unix\n\nSYNOPSIS\n     miredo [-c config_file] [-f] [-u user] [ -t chrootdir] [server_name]\n\nDESCRIPTON\n     Miredo  is  a  daemon program providing a Teredo tunnel service compatible\n     with the \"Teredo: Tunneling IPv6 over UDP through NATs\" Internet  proposed\n     standard  (RFC  4380). It can provide either Teredo client or Teredo relay\n     functionality.\n\n     This is mostly useful to provide IPv6 connectivity to  users  behind  NAT,\n     most  of  which  do not support IPv6 at all. Many NATs do not even support\n     proto-41 forwarding, so it is not possible to set up a 6to4  or  point-to-\n     point IPv6-over-IPv4 tunnel through them.\n\n     A  Teredo  relay is an IPv6 router which forwards IPv6 packets between the\n     IPv6 Internet and Teredo clients by encapsulating these IPv6 packets  over\n     UDP/IPv4.\n\n     A  Teredo  client  is  an  IPv6-enabled  host  which  is located behind an\n     IPv4-only Network Address Translator (a.k.a. NAT),  and  encapsulates  its\n     IPv6 traffic inside UDP over IPv4 packets.\n\n     A  Teredo  server  is  a special Teredo relay which is required for Teredo\n     clients to setup their IPv6 connectivity through Teredo. A  Teredo  server\n     must  have to global static subsequent IPv4 addresses. It receives packets\n     from Teredo clients and Teredo relays on UDP port 3544.\n\nOPTIONS\n     -c config_file or --config config_file\n            Specify an alternate configuration file for Miredo instead  of  the\n            default, /etc/miredo/miredo.conf.\n\n     -f or --foreground\n            Do not detach from the console. Run the program in the foreground.\n\n     -h or --help\n            Display some help and exit.\n\n     -t or --chrootdir\n            Specify  a  directory to use as a root after initialization is com-\n            pleted.  When used as a Teredo client, the  hostname  resolver  li-\n            brary files must be present in the chroot. The directory can safely\n            be left empty for a Teredo relay.\n\n     -u username or --user username\n            Override the user that the program will run as. By default, it runs\n            as nobody.\n\n     -V or --version\n            Display program version and license and exit.\n\n     server_name\n            This optional command argument specifies a Teredo server to use. It\n            will  override  any ServerAddress directive found in the configura-\n            tion file. It is ignored if RelayType is not set to  \"client\"  (see\n            miredo.conf).\n\nSECURITY\n     Miredo  requires  root privileges to create its IPv6 tunneling network in-\n     terface, and to set it up properly. Once its initialization  is  complete,\n     it  will setgid, chroot into an empty directory and ultimately setuid (see\n     option -u), so as to decrease the system's exposure to potential  security\n     issues.  However,  if Miredo runs as a Teredo client, it needs root privi-\n     leges when running, in order to change  the  tunneling  network  interface\n     settings automatically. To prevent possible root compromise, Miredo imple-\n     ments  priveleges  separation. The process that handles data from the net-\n     work is not privileged.\n\n     While that is not specific to nor dependent on Miredo, it should be  noted\n     that  Teredo connectivity allows anyone behind a NAT to obtain global pub-\n     lic IPv6 connectivity. It might break some corporate policy.  If  that  is\n     an  issue,  outgoing  UDP  packets  with  destination  port 3544 should be\n     blocked at the perimeter firewall.\n\nSIGNALS\n     SIGHUP Force a reload of the daemon.\n\n     SIGINT, SIGTERM Shutdown the daemon.\n\n     SIGUSR1, SIGUSR2 Do nothing, might be used in future versions.\n\nFILES\n     /etc/miredo/miredo.conf\n            The default configuration file.\n\n     /var/run/miredo.pid\n            The process-id file.\n\nSEE ALSO\n     miredo.conf(5), miredo-server(8), ipv6(7), route(8), ip(8)\n\nAUTHOR\n     Remi Denis-Courmont <remi at remlab dot net>\n\n     http://www.remlab.net/miredo/\n\nmiredo                           February 2008                        MIREDO(8)",
+        "apropos": "miredo (8)           - Teredo IPv6 tunneling for Unix\nmiredo-checkconf (8) - Miredo configuration file syntax checking tool\nmiredo.conf (5)      - configuration for Miredo"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/miredo",
+        "size_bytes": 69088,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7ce582283414d1dd16d0eefabf0f83aecec08fe9, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "miredo-checkconf",
+      "description": "Miredo configuration file syntax checking tool",
+      "usage": "miredo-checkconf [CONF_FILE]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "or - elp",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -h or --help"
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -V or --version"
+        }
+      ],
+      "raw_help": "root@kali:~# miredo-checkconf -h\n Usage: miredo-checkconf [CONF_FILE]",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: miredo-checkconf [CONF_FILE]",
+        "-h": "Usage: miredo-checkconf [CONF_FILE]",
+        "help": "Skipped overly long line 1\nServer address not specified\nFatal configuration error",
+        "man": "MIREDO-CHECKCONF(8)         System Manager's Manual         MIREDO-CHECKCONF(8)\n\nNAME\n     miredo-checkconf - Miredo configuration file syntax checking tool\n\nSYNOPSIS\n     miredo-checkconf [config_file]\n\nDESCRIPTON\n     miredo-checkconf  checks  the  syntax  of a configuration file for Miredo.\n     miredo-checkconf exits with an error code if the syntax was  found  to  be\n     incorrect, contained unused directives or if the file could not be opened.\n\nOPTIONS\n     -h or --help\n            Display some help and exit.\n\n     -V or --version\n            Display program version and exit.\n\n     config_file\n            This optional argument specifies the path to the configuration file\n            to  be  checked.  If not given, the default /etc/miredo/miredo.conf\n            will be assumed.\n\nBUGS\n     miredo-checkconf cannot check the  syntax  of  a  configuration  file  for\n     miredo-server.\n\nFILES\n     /etc/miredo/miredo.conf\n            The default configuration file.\n\nSEE ALSO\n     miredo.conf(5), miredo(8)\n\nAUTHOR\n     Remi Denis-Courmont <remi at remlab dot net>\n\n     http://www.remlab.net/miredo/\n\nmiredo                           February 2008              MIREDO-CHECKCONF(8)",
+        "apropos": "miredo-checkconf (8) - Miredo configuration file syntax checking tool"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/miredo-checkconf",
+        "size_bytes": 35856,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f73ea6576d80204ae76bdb0e8a62efb67278a8f1, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "teredo-mire",
+      "description": "Stateless Teredo IPv6 responder",
+      "usage": "teredo-mire",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "or - elp",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -h or --help"
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -V or --version"
+        }
+      ],
+      "raw_help": "root@kali:~# teredo-mire -h\n Usage: teredo-mire",
+      "examples": [],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: teredo-mire",
+        "-h": "Usage: teredo-mire",
+        "man": "TEREDO-MIRE(1)                   User Commands                   TEREDO-MIRE(1)\n\nNAME\n     teredo-mire - Stateless Teredo IPv6 responder\n\nSYNOPSIS\n     teredo-mire\n\nDESCRIPTON\n     Teredo-Mire  is a test back-end for the Teredo IPv6 tunneling protocol. It\n     listens for requests from other Teredo  clients  or  IPv6  nodes  (through\n     Teredo relays) and answers to them statelessly. Currently only ICMPv6 Echo\n     Requests (\"pings\") are handled.\n\nOPTIONS\n     -h or --help\n            Display some help and exit.\n\n     -V or --version\n            Display program version and exit.\n\nDIAGNOSTICS\n     To  contact  a  teredo-mire responder, a valid Teredo IPv6 address must be\n     determined for it. The server IPv4 address and mapped client IPv4  address\n     parts  should  both represent the IPv4 address of the host running teredo-\n     mire.  The mapped UDP port number must be  3545.  The  Teredo  prefix  and\n     Teredo flags are ignored.\n\nBUGS\n     teredo-mire uses UDP ports 3544 and 3545, and assumes it has a public IPv4\n     address.\n\n     Neither RFC 2460 nor RFC 4380 are properly implemented.\n\nSECURITY\n     teredo-mire does not require any privilege to run.\n\nSEE ALSO\n     ping6(8), miredo(8), ipv6(7)\n\nAUTHOR\n     Remi Denis-Courmont <remi at remlab dot net>\n\n     http://www.remlab.net/miredo/\n\nmiredo                           February 2008                   TEREDO-MIRE(1)",
+        "apropos": "teredo-mire (1)      - Stateless Teredo IPv6 responder"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/teredo-mire",
+        "size_bytes": 23104,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d333fbfe1bbb50c0372b1957262ceb1df9974a0b, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "miredo-server",
+      "description": "Teredo server for Unix",
+      "usage": "miredo-server [OPTIONS] [SERVER_NAME]",
+      "arguments": [
+        {
+          "flags": [
+            "-c",
+            "--config"
+          ],
+          "metavar": "- onfig",
+          "takes_value": true,
+          "description": "specify an configuration file",
+          "default": null,
+          "choices": null,
+          "raw": " -c, --config     specify an configuration file"
+        },
+        {
+          "flags": [
+            "-f",
+            "--foreground"
+          ],
+          "metavar": "- oreground run in the foreground",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -f, --foreground run in the foreground"
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "display this help and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help       display this help and exit"
+        },
+        {
+          "flags": [
+            "-p",
+            "--pidfile"
+          ],
+          "metavar": "- idfile",
+          "takes_value": true,
+          "description": "override the location of the PID file",
+          "default": null,
+          "choices": null,
+          "raw": " -p, --pidfile    override the location of the PID file"
+        },
+        {
+          "flags": [
+            "-u",
+            "--user"
+          ],
+          "metavar": "- ser",
+          "takes_value": true,
+          "description": "override the user to set UID to",
+          "default": null,
+          "choices": null,
+          "raw": " -u, --user       override the user to set UID to"
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display program version and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -V, --version    display program version and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# miredo-server -h\n Usage: miredo-server [OPTIONS] [SERVER_NAME]\n Creates a Teredo tunneling interface for encapsulation of IPv6 over UDP.\n \n -c, --config     specify an configuration file\n -f, --foreground run in the foreground\n -h, --help       display this help and exit\n -p, --pidfile    override the location of the PID file\n -u, --user       override the user to set UID to\n -V, --version    display program version and exit",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/miredo/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/miredo/index.md",
+    "retrieved_at": "2026-07-14T13:06:45+00:00",
+    "sha256": "d70238314b41eb34ff6cef52b91c3b81f3702fbc7b63d5e9b69200c6b3b83c11"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "388",
+    "maintainer": "Tomasz Buchert <tomasz@debian.org>",
+    "architecture": "amd64",
+    "version": "1.2.6-7.2",
+    "depends": "iproute2, lsb-base, libc6 (>= 2.38), libcap2 (>= 1:2.10), libjudydebian1",
+    "description": "Teredo IPv6 tunneling through NATs\nThe Teredo IPv6 tunneling protocol encapsulates IPv6 packets into UDP/IPv4\ndatagrams, to allow hosts behind NAT devices to access the IPv6 Internet.\n.\nMiredo is a Teredo client (as per RFC 4380): it can provide IPv6\nconnectivity to a dual-stack IPv6/IPv4 host even if it is located behind a\nNAT. It can also operate as a Teredo relay which forwards IPv6 packets\nbetween the IPv6 Internet and remote Teredo clients.",
+    "homepage": "http://www.remlab.net/miredo/"
+  },
+  "tags": [
+    "offensive",
+    "miredo",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/miredo && python3 miredo.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/miredo && python3 miredo.py --help",
+    "cd toolboxes/miredo && python3 miredo.py --help",
+    "cd toolboxes/miredo && python3 miredo.py --help",
+    "cd toolboxes/miredo && python3 miredo.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST miredo --output $KFIOSA_OUTPUT_DIR/miredo.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST miredo --output $KFIOSA_OUTPUT_DIR/miredo.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

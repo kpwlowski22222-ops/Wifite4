@@ -1,0 +1,115 @@
+{
+  "id": "github:iaghapour/WiFi-Reconnector",
+  "kind": "external_repository",
+  "name": "WiFi-Reconnector",
+  "full_name": "iaghapour/WiFi-Reconnector",
+  "owner": "iaghapour",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/iaghapour/WiFi-Reconnector",
+  "summary": "Repository indexing entry for the ``WiFi-Reconnector`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/iaghapour__WiFi-Reconnector",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "Run Start-Wifi-Monitor.bat (or the portable WiFi.Reconnector.exe) on Windows; stop via Stop-Wifi-Monitor.bat"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "Run Start-Wifi-Monitor.bat (or the portable WiFi.Reconnector.exe) on Windows; stop via Stop-Wifi-Monitor.bat"
+      }
+    ]
+  },
+  "language": "Batchfile (Windows .bat / packaged .exe; README claims Python)",
+  "dependencies": [
+    "Windows OS",
+    "netsh (Windows)",
+    "Python (claimed, not vendored)",
+    "no requirements.txt"
+  ],
+  "algorithms": [
+    "connection-state polling watchdog",
+    "auto-reconnect to stored Windows WiFi profile on disconnect",
+    "netsh-based saved-profile enumeration",
+    "default-gateway IP auto-detection"
+  ],
+  "produces": [
+    "connection-state status (connected/disconnected/reconnecting)",
+    "list of stored Windows WiFi profiles",
+    "default gateway IP",
+    "system-tray status indicator"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": false,
+  "novelty": "none — thin wrapper; this is a Windows connectivity watchdog, not a wireless recon tool. No packet capture, no sniffing, no airodump-ng/scapy/hcxtools usage. It shells out to Windows netsh for profile listing and reconnection. Zero overlap with KFIOSA's offensive WiFi recon pipeline.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "reconnector",
+    "iaghapour",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/WiFi-Reconnector && python3 WiFi-Reconnector.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/WiFi-Reconnector && python3 WiFi-Reconnector.py --help",
+    "cd toolboxes/WiFi-Reconnector && python3 WiFi-Reconnector.py --help",
+    "cd toolboxes/WiFi-Reconnector && python3 WiFi-Reconnector.py --help",
+    "cd toolboxes/WiFi-Reconnector && python3 WiFi-Reconnector.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WiFi-Reconnector --output $KFIOSA_OUTPUT_DIR/WiFi-Reconnector.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WiFi-Reconnector --output $KFIOSA_OUTPUT_DIR/WiFi-Reconnector.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

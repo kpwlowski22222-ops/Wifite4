@@ -1,0 +1,105 @@
+{
+  "id": "github:Kr1spyDotCom/Recon",
+  "kind": "external_repository",
+  "name": "Recon",
+  "full_name": "Kr1spyDotCom/Recon",
+  "owner": "Kr1spyDotCom",
+  "category": "WiFi Reconnaissance — Client Enumeration",
+  "url": "https://github.com/Kr1spyDotCom/Recon",
+  "summary": "Repository indexing entry for the ``Recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/Kr1spyDotCom__Recon",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "python ReconPy.py (then choose menu option 1 \"WiFi Recon\")"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "python ReconPy.py (then choose menu option 1 \"WiFi Recon\")"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "python3 stdlib only (socket, subprocess, os, re, platform, concurrent.futures)",
+    "system binaries: ping, arp / ip neighbor"
+  ],
+  "algorithms": [
+    "concurrent /24 ping sweep (ThreadPoolExecutor, 10 workers, IPs .1-.254) to populate ARP cache",
+    "ARP/neighbor-table parse via subprocess + regex (arp -a on Windows/macOS, ip neighbor on Linux)"
+  ],
+  "produces": [
+    "stdout list of responsive IPs during sweep",
+    "stdout list of (IP Address, MAC Address) pairs from the local ARP/neighbor table",
+    "ASCII banners (no structured/file output)"
+  ],
+  "capability_bucket": "client_enum",
+  "runnable": true,
+  "novelty": "none — thin wrapper. It does no 802.11/RF recon at all: no monitor mode, no airodump-ng/wash/hcxtools/scapy, no packet capture, no probe/PMKID/handshake work. It is purely a ping-sweep + ARP-table reader around OS builtins (ping, arp/ip neighbor), equivalent to `nmap -sn` or `arp -a`. Despite the name \"WiFi Recon\", the only WiFi aspect is that the host happens to be on a WiFi network; the tool sees no wireless-layer data.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "recon",
+    "kr1spydotcom",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/Recon && python3 Recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Recon && python3 Recon.py --help",
+    "cd toolboxes/Recon && python3 Recon.py --help",
+    "cd toolboxes/Recon && python3 Recon.py --help",
+    "cd toolboxes/Recon && python3 Recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Recon --output $KFIOSA_OUTPUT_DIR/Recon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Recon --output $KFIOSA_OUTPUT_DIR/Recon.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

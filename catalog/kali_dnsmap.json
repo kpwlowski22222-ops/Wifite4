@@ -1,0 +1,266 @@
+{
+  "id": "kali:dnsmap",
+  "kind": "kali_source_package",
+  "name": "dnsmap",
+  "title": "dnsmap",
+  "summary": "### dnsmap",
+  "version": "0.36-4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/resurrecting-open-source-projects/dnsmap",
+  "repository": "https://salsa.debian.org/pkg-security-team/dnsmap",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-information-gathering",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install dnsmap"
+  },
+  "packages": [
+    {
+      "name": "dnsmap"
+    }
+  ],
+  "commands": [
+    {
+      "name": "dnsmap",
+      "description": "Scan for subdomains using bruteforcing techniques",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": "wordlist-file",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -w <wordlist-file>"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "regular esults-file",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -r <regular-results-file>"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "csv-results-file",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -c <csv-results-file>"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "delay-millisecs",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -d <delay-millisecs>"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "ips-to gnore",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -i <ips-to-ignore>"
+        }
+      ],
+      "raw_help": "root@kali:~# man dnsmap\n dnsmap(1)      scan for subdomains using bruteforcing techniques      dnsmap(1)\n \n NAME\n    dnsmap - scan for subdomains using bruteforcing techniques\n \n SYNOPSIS\n    dnsmap <target-domain> [options]\n \n DESCRIPTION\n    dnsmap  scans a domain for common subdomains using a built-in or an exter-\n    nal wordlist (if specified with -w  option).  The  internal  wordlist  has\n    around  1000  words in English and Spanish as ns1, firewall, servicios and\n    smtp. So will be possible search for smtp.example.com  inside  example.com\n    automatically.   Results can be saved in CSV and human-readable format for\n    further processing. dnsmap does NOT require root privileges to be run, and\n    should NOT be run with such privileges for security reasons.\n \n    dnsmap was originally released back in 2006 and was inspired by  the  fic-\n    tional  story  \"The Thief No One Saw\" by Paul Craig, which can be found in\n    the book \"Stealing the Network - How to 0wn the Box\".\n \n    dnsmap is mainly meant to be used by  pentesters  during  the  information\n    gathering/enumeration phase of infrastructure security assessments. During\n    the  enumeration  stage,  the security consultant would typically discover\n    the target company's IP netblocks, domain names, phone numbers, etc.\n \n    Subdomain bruteforcing is another technique that should  be  used  in  the\n    enumeration stage, as it's especially useful when other domain enumeration\n    techniques  such  as zone transfers don't work (is rare to see zone trans-\n    fers being publicly allowed these days by the way).\n \n    Fun things that can happen:\n \n           1.  Finding interesting remote access  servers  (e.g.:  https://ex-\n               tranet.example.com).\n \n           2.  Finding   badly  configured  and/or  unpatched  servers  (e.g.:\n               test.example.com).\n \n           3.  Finding new domain names which will allow you to map  non-obvi-\n               ous/hard-to-find  netblocks  of  your target organization (reg-\n               istry lookups - aka whois is your friend).\n \n           4.  Sometimes you find that some bruteforced subdomains resolve  to\n               internal  IP  addresses (RFC 1918).  This is great as sometimes\n               they are real up-to-date \"A\" records which means that  it  *is*\n               possible to enumerate internal servers of a target organization\n               from  the Internet by only using standard DNS resolving (as op-\n               posed to zone transfers for instance).\n \n           5.  Discover embedded devices configured using Dynamic DNS services\n               (e.g.: IP Cameras). This method is an  alternative  to  finding\n               devices via Google hacking techniques.\n \n OPTIONS\n    -w <wordlist-file>\n           Use  an  external wordlist instead of the built-in one. You can use\n           programs as crunch or cupp to generate personalized wordlists.\n \n    -r <regular-results-file>\n           Save results to a plain text file. If a file name  isn't  supplied,\n           dnsmap  will  create  an unique filename which includes the current\n           timestamp. e.g.:  dnsmap_example_com_br_2019_11_15_214812.txt.  So,\n           you can provide a directory name only, as -r /tmp.\n \n    -c <csv-results-file>\n           Save  results  in  CSV  format in a file. If a file name isn't pro-\n           vided,   dnsmap   will    create    something    as    dnsmap_exam-\n           ple_com_br_2019_11_15_220114.csv.  This is a similar behaviour from\n           -r option.\n \n    -d <delay-millisecs>\n           Limit of random delay in milliseconds between  successive  queries.\n           Delay value is a maximum random value. e.g. if you enter 1000, each\n           DNS  request  will  be delayed a *maximum* of 1 second. By default,\n           dnsmap uses a value of 10 milliseconds of maximum delay between DNS\n           lookups. It is recommended to use the -d  (delay  in  milliseconds)\n           option  in cases where dnsmap is interfering with your online expe-\n           rience. i.e.: killing your bandwidth. If used, delay  must  be  be-\n           tween 1 and 300000 milliseconds (5 minutes).\n \n    -i <ips-to-ignore>\n           IP  addresses to ignore in the results (useful if you get obtaining\n           false positives). Use commas without spaces to separate the IP  ad-\n           dresses.  The  maximum  number  of  IPs  to  filter  is 5. Example:\n           203.0.113.10,198.51.199.65\n \n INTERNAL WORDLIST\n    The built-in wordlist is defined in src/dnsmap.h file. If needed, see  the\n    file to know all words.\n \n EXAMPLES\n    Subdomain bruteforcing using dnsmap's built-in wordlist:\n \n        $ dnsmap example.com\n \n    Subdomain bruteforcing using a user-supplied wordlist:\n \n        $ dnsmap example.com -w wordlist.txt\n \n    Subdomain  bruteforcing using the built-in wordlist and saving the results\n    to /tmp/ :\n \n        $ dnsmap example.com -r /tmp\n \n    Example of subdomain bruteforcing using the built-in wordlist, saving  the\n    results to /tmp/, and waiting a random maximum of 300 milliseconds between\n    each request:\n \n        $ dnsmap example.com -r /tmp/ -d 300\n \n    Subdomain  bruteforcing  with 0.8 seconds delay, saving results in regular\n    and CSV format, filtering 2 user-provided IP  and  using  a  user-supplied\n    wordlist:\n \n        $ dnsmap example.com -d 800 -r /tmp/ -c /tmp/ -i 10.55.206.154,10.55.24.100 -w ./wordlist_TLAs.txt\n \n BUGS\n    Currently,  dnsmap  does  not yet support parallel scanning and hence take\n    quite a long time.\n \n    New  bugs  should  be  reported  at  https://github.com/resurrecting-open-\n    source-projects/dnsmap/issues\n \n SEE ALSO\n    crunch(1), cupp(1), dnsmap-bulk(1)\n \n AUTHOR\n    dnsmap  was  originally written by \"pagvac\" in 2006. Currently it is main-\n    tained by volunteers, inside dnsmap project, at  https://github.com/resur-\n    recting-open-source-projects/dnsmap/\n \n    This manpage was written by Joao Eriberto Mota Filho.\n \n dnsmap-0.36                       25 Feb 2021                         dnsmap(1)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "dnsmap example.com -w /usr/share/wordlists/dnsmap.txt\ndnsmap 0.30 - DNS Network Mapper by pagvac (gnucitizen.org)\n\n[+] searching (sub)domains for example.com using /usr/share/wordlists/dnsmap.txt\n[+] using maximum random delay of 10 millisecond(s) between requests",
+          "template": null,
+          "original_sha256": "2fb840a029fa297af32310becfaae9abcc6b06b45a22b678e9458de6cd0d063c"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dnsmap example.com",
+          "template": null,
+          "original_sha256": "82dc7f1b2cd20369affb36d2e0313f174a10977251cbf87421cb84621cb87b17"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dnsmap example.com -w wordlist.txt",
+          "template": null,
+          "original_sha256": "f1a505d9faf481871ca5501fb5f09389dd48310aa6bc160b3e0e77ae1011c18b"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dnsmap example.com -r /tmp",
+          "template": null,
+          "original_sha256": "3ece22e8595804b53e59793eb4eb19cce065de91a97e990fdeacc2d8677b1f25"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dnsmap example.com -r /tmp/ -d 300",
+          "template": null,
+          "original_sha256": "055d3779b2be69720ed9241d90870ac4e7ebbb52ffd4b5f50cec9d01499952a2"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dnsmap example.com -d 800 -r /tmp/ -c /tmp/ -i 10.55.206.154,10.55.24.100 -w ./wordlist_TLAs.txt",
+          "template": null,
+          "original_sha256": "254dbe237dba4094cabef31e6db517718aa80a65804c1d721cfc1d8dcbf4358b"
+        },
+        {
+          "status": "operational_example",
+          "command": "dnsmap 0.36 - DNS Network Mapper",
+          "template": null,
+          "original_sha256": "d8e542b0ebda9bff910e24ea4b21758d5747fa0ed83ba1999846758298b134b2"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "dnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!",
+        "-h": "dnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!",
+        "help": "dnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!",
+        "man": "dnsmap(1)      scan for subdomains using bruteforcing techniques      dnsmap(1)\n\nNAME\n     dnsmap - scan for subdomains using bruteforcing techniques\n\nSYNOPSIS\n     dnsmap <target-domain> [options]\n\nDESCRIPTION\n     dnsmap  scans a domain for common subdomains using a built-in or an exter-\n     nal wordlist (if specified with -w  option).  The  internal  wordlist  has\n     around  1000  words in English and Spanish as ns1, firewall, servicios and\n     smtp. So will be possible search for smtp.example.com  inside  example.com\n     automatically.   Results can be saved in CSV and human-readable format for\n     further processing. dnsmap does NOT require root privileges to be run, and\n     should NOT be run with such privileges for security reasons.\n\n     dnsmap was originally released back in 2006 and was inspired by  the  fic-\n     tional  story  \"The Thief No One Saw\" by Paul Craig, which can be found in\n     the book \"Stealing the Network - How to 0wn the Box\".\n\n     dnsmap is mainly meant to be used by  pentesters  during  the  information\n     gathering/enumeration phase of infrastructure security assessments. During\n     the  enumeration  stage,  the security consultant would typically discover\n     the target company's IP netblocks, domain names, phone numbers, etc.\n\n     Subdomain bruteforcing is another technique that should  be  used  in  the\n     enumeration stage, as it's especially useful when other domain enumeration\n     techniques  such  as zone transfers don't work (is rare to see zone trans-\n     fers being publicly allowed these days by the way).\n\n     Fun things that can happen:\n\n            1.  Finding interesting remote access  servers  (e.g.:  https://ex-\n                tranet.example.com).\n\n            2.  Finding   badly  configured  and/or  unpatched  servers  (e.g.:\n                test.example.com).\n\n            3.  Finding new domain names which will allow you to map  non-obvi-\n                ous/hard-to-find  netblocks  of  your target organization (reg-\n                istry lookups - aka whois is your friend).\n\n            4.  Sometimes you find that some bruteforced subdomains resolve  to\n                internal  IP  addresses (RFC 1918).  This is great as sometimes\n                they are real up-to-date \"A\" records which means that  it  *is*\n                possible to enumerate internal servers of a target organization\n                from  the Internet by only using standard DNS resolving (as op-\n                posed to zone transfers for instance).\n\n            5.  Discover embedded devices configured using Dynamic DNS services\n                (e.g.: IP Cameras). This method is an  alternative  to  finding\n                devices via Google hacking techniques.\n\nOPTIONS\n     -w <wordlist-file>\n            Use  an  external wordlist instead of the built-in one. You can use\n            programs as crunch or cupp to generate personalized wordlists.\n\n     -r <regular-results-file>\n            Save results to a plain text file. If a file name  isn't  supplied,\n            dnsmap  will  create  an unique filename which includes the current\n            timestamp. e.g.:  dnsmap_example_com_br_2019_11_15_214812.txt.  So,\n            you can provide a directory name only, as -r /tmp.\n\n     -c <csv-results-file>\n            Save  results  in  CSV  format in a file. If a file name isn't pro-\n            vided,   dnsmap   will    create    something    as    dnsmap_exam-\n            ple_com_br_2019_11_15_220114.csv.  This is a similar behaviour from\n            -r option.\n\n     -d <delay-millisecs>\n            Limit of random delay in milliseconds between  successive  queries.\n            Delay value is a maximum random value. e.g. if you enter 1000, each\n            DNS  request  will  be delayed a *maximum* of 1 second. By default,\n            dnsmap uses a value of 10 milliseconds of maximum delay between DNS\n            lookups. It is recommended to use the -d  (delay  in  milliseconds)\n            option  in cases where dnsmap is interfering with your online expe-\n            rience. i.e.: killing your bandwidth. If used, delay  must  be  be-\n            tween 1 and 300000 milliseconds (5 minutes).\n\n     -i <ips-to-ignore>\n            IP  addresses to ignore in the results (useful if you get obtaining\n            false positives). Use commas without spaces to separate the IP  ad-\n            dresses.  The  maximum  number  of  IPs  to  filter  is 5. Example:\n            203.0.113.10,198.51.199.65\n\nINTERNAL WORDLIST\n     The built-in wordlist is defined in src/dnsmap.h file. If needed, see  the\n     file to know all words.\n\nEXAMPLES\n     Subdomain bruteforcing using dnsmap's built-in wordlist:\n\n         $ dnsmap example.com\n\n     Subdomain bruteforcing using a user-supplied wordlist:\n\n         $ dnsmap example.com -w wordlist.txt\n\n     Subdomain  bruteforcing using the built-in wordlist and saving the results\n     to /tmp/ :\n\n         $ dnsmap example.com -r /tmp\n\n     Example of subdomain bruteforcing using the built-in wordlist, saving  the\n     results to /tmp/, and waiting a random maximum of 300 milliseconds between\n     each request:\n\n         $ dnsmap example.com -r /tmp/ -d 300\n\n     Subdomain  bruteforcing  with 0.8 seconds delay, saving results in regular\n     and CSV format, filtering 2 user-provided IP  and  using  a  user-supplied\n     wordlist:\n\n         $ dnsmap example.com -d 800 -r /tmp/ -c /tmp/ -i 10.55.206.154,10.55.24.100 -w ./wordlist_TLAs.txt\n\nBUGS\n     Currently,  dnsmap  does  not yet support parallel scanning and hence take\n     quite a long time.\n\n     New  bugs  should  be  reported  at  https://github.com/resurrecting-open-\n     source-projects/dnsmap/issues\n\nSEE ALSO\n     crunch(1), cupp(1), dnsmap-bulk(1)\n\nAUTHOR\n     dnsmap  was  originally written by \"pagvac\" in 2006. Currently it is main-\n     tained by volunteers, inside dnsmap project, at  https://github.com/resur-\n     recting-open-source-projects/dnsmap/\n\n     This manpage was written by Joao Eriberto Mota Filho.\n\ndnsmap-0.36                       25 Feb 2021                         dnsmap(1)",
+        "apropos": "dnsmap (1)           - scan for subdomains using bruteforcing techniques\ndnsmap-bulk (1)      - mass scan using dnsmap"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dnsmap",
+        "size_bytes": 121520,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=1f604894d44964cd505d52d2362ba439e7c4d707, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "dnsmap-bulk",
+      "description": "Mass scan using dnsmap",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# man dnsmap-bulk\n dnsmap-bulk(1)               mass scan using dnsmap              dnsmap-bulk(1)\n \n NAME\n    dnsmap-bulk - mass scan using dnsmap\n \n SYNOPSIS\n    dnsmap-bulk <domains-file> [results-path]\n \n DESCRIPTION\n    dnsmap-bulk  is used to bruteforce several target domains in bulk fashion.\n    In other words, is possible get a list of domains from a file to scan mul-\n    tiple targets using dnsmap as backend.\n \n    WARNING: using dnsmap-bulk, dnsmap will always use  the  default  options,\n    i.e. built-in wordlist, delay = 10 ms, never ignoring IPs.\n \n OPTIONS\n    domain-file\n           A file with domains to be scanned, one per line.\n \n    results-path\n           A  path where the results will be saved. dnsmap will use the -r op-\n           tion to name files and will be created a file for each domain. This\n           item is optional and if not supplied, dnsmap won't create files.\n \n EXAMPLE\n    For bruteforcing a list of target domains in a bulk  fashion,  saving  all\n    results inside a directory:\n \n        $ dnsmap-bulk domains.txt /tmp/results/\n \n SEE ALSO\n    dnsmap(1)\n \n AUTHOR\n    dnsmap-bulk  was  originally  written by \"pagvac\" in 2006. Currently it is\n    maintained    by     volunteers,     inside     dnsmap     project,     at\n    https://github.com/resurrecting-open-source-projects/dnsmap/\n \n    This manpage was written by Joao Eriberto Mota Filho.\n \n dnsmap-bulk-0.1                   18 Nov 2019                    dnsmap-bulk(1)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "echo \"example.com\" >> domains.txt\necho \"example.org\" >> domains.txt\ndnsmap-bulk.sh domains.txt\ndnsmap 0.30 - DNS Network Mapper by pagvac (gnucitizen.org)\n\n[+] searching (sub)domains for example.com using built-in wordlist\n[+] using maximum random delay of 10 millisecond(s) between requests",
+          "template": null,
+          "original_sha256": "9df73767dce2aa386c9429db092b2c380b5391f28a72d11a4a13fc64a95db638"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "bruteforce"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "dnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!\ndnsmap 0.36 - DNS Network Mapper\n\n[+] error: entered domain is not valid!",
+        "-h": "cat: invalid option -- 'h'\nTry 'cat --help' for more information.",
+        "help": "cat: help: No such file or directory",
+        "man": "dnsmap-bulk(1)               mass scan using dnsmap              dnsmap-bulk(1)\n\nNAME\n     dnsmap-bulk - mass scan using dnsmap\n\nSYNOPSIS\n     dnsmap-bulk <domains-file> [results-path]\n\nDESCRIPTION\n     dnsmap-bulk  is used to bruteforce several target domains in bulk fashion.\n     In other words, is possible get a list of domains from a file to scan mul-\n     tiple targets using dnsmap as backend.\n\n     WARNING: using dnsmap-bulk, dnsmap will always use  the  default  options,\n     i.e. built-in wordlist, delay = 10 ms, never ignoring IPs.\n\nOPTIONS\n     domain-file\n            A file with domains to be scanned, one per line.\n\n     results-path\n            A  path where the results will be saved. dnsmap will use the -r op-\n            tion to name files and will be created a file for each domain. This\n            item is optional and if not supplied, dnsmap won't create files.\n\nEXAMPLE\n     For bruteforcing a list of target domains in a bulk  fashion,  saving  all\n     results inside a directory:\n\n         $ dnsmap-bulk domains.txt /tmp/results/\n\nSEE ALSO\n     dnsmap(1)\n\nAUTHOR\n     dnsmap-bulk  was  originally  written by \"pagvac\" in 2006. Currently it is\n     maintained    by     volunteers,     inside     dnsmap     project,     at\n     https://github.com/resurrecting-open-source-projects/dnsmap/\n\n     This manpage was written by Joao Eriberto Mota Filho.\n\ndnsmap-bulk-0.1                   18 Nov 2019                    dnsmap-bulk(1)",
+        "apropos": "dnsmap-bulk (1)      - mass scan using dnsmap"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dnsmap-bulk",
+        "size_bytes": 1085,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/dnsmap/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/dnsmap/index.md",
+    "retrieved_at": "2026-07-14T13:05:25+00:00",
+    "sha256": "ad4c3dc167edad92f81ca1eab293ff07400dd83f46d39390ae7773bf5d3a0974"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "259",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "0.36-4",
+    "depends": "libc6 (>= 2.34)",
+    "description": "DNS domain name brute forcing tool\ndnsmap scans a domain for common subdomains using a built-in or an external\nwordlist (if specified using -w option). The internal wordlist has around 1000\nwords in English and Spanish as ns1, firewall servicios and smtp. So will be\npossible search for smtp.example.com inside example.com automatically. Results\ncan be saved in CSV and human-readable format for further processing. dnsmap\ndoes NOT require root privileges to be run, and should NOT be run with such\nprivileges for security reasons.\n.\ndnsmap was originally released back in 2006 and was inspired by the fictional\nstory \"The Thief No One Saw\" by Paul Craig, which can be found in the book\n\"Stealing the Network - How to 0wn the Box\".\n.\ndnsmap is mainly meant to be used by pentesters during the information\ngathering/enumeration phase of infrastructure security assessments. During the\nenumeration stage, the security consultant would typically discover the target\ncompany's IP netblocks, domain names, phone numbers, etc.\n.\nSubdomain brute-forcing is another technique that should be used in the\nenumeration stage, as it's especially useful when other domain enumeration\ntechniques such as zone transfers don't work (I rarely see zone transfers being\npublicly allowed these days by the way).\n.\nFun things that can happen:\n.\n1) Finding interesting remote access servers\n(e.g.: https:://extranet.example.com).\n2) Finding badly configured and/or unpatched servers\n(e.g.: test.example.com).\n3) Finding new domain names which will allow you to map\nnon-obvious/hard-to-find netblocks of your target organization\n(registry lookups - aka whois is your friend).\n4) Sometimes you find that some bruteforced subdomains resolve to internal IP\naddresses (RFC 1918). This is great as sometimes they are real up-to-date\n\"A\" records which means that it is possible to enumerate internal servers\nof a target organization from the Internet by only using standard DNS\nresolving (as opposed to zone transfers for instance).\n5) Discover embedded devices configured using Dynamic DNS services\n(e.g.: IP Cameras). This method is an alternative to finding devices via\nGoogle hacking techniques.\n.\nThis package provides two possible commands: dnsmap and dnsmap-bulk.\n.\nThis program is useful for pentesters, ethical hackers and forensics experts.\nIt also can be used for security tests.",
+    "homepage": "https://github.com/resurrecting-open-source-projects/dnsmap"
+  },
+  "tags": [
+    "offensive",
+    "dnsmap",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/dnsmap && python3 dnsmap.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/dnsmap && python3 dnsmap.py --help",
+    "cd toolboxes/dnsmap && python3 dnsmap.py --help",
+    "cd toolboxes/dnsmap && python3 dnsmap.py --help",
+    "cd toolboxes/dnsmap && python3 dnsmap.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsmap --output $KFIOSA_OUTPUT_DIR/dnsmap.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsmap --output $KFIOSA_OUTPUT_DIR/dnsmap.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

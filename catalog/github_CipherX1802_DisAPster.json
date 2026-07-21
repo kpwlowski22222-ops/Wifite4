@@ -1,0 +1,126 @@
+{
+  "id": "github:CipherX1802/DisAPster",
+  "kind": "external_repository",
+  "name": "DisAPster",
+  "full_name": "CipherX1802/DisAPster",
+  "owner": "CipherX1802",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/CipherX1802/DisAPster",
+  "summary": "Repository indexing entry for the ``DisAPster`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/CipherX1802__DisAPster",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "cd CLI && ./install.sh && sudo python3 DisAPster_DeepRecon.py"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "cd CLI && ./install.sh && sudo python3 DisAPster_DeepRecon.py"
+      }
+    ]
+  },
+  "language": "Python (CLI) + Kotlin (Android APK)",
+  "dependencies": [
+    "aircrack-ng suite (airodump-ng, airmon-ng)",
+    "iw",
+    "iwconfig (wireless-tools)",
+    "wash (reaver package)",
+    "Python 3.x stdlib (re, shutil, subprocess)",
+    "reaver (referenced for display only)",
+    "hcxdumptool/hcxpcapngtool (listed optional, NOT invoked)"
+  ],
+  "algorithms": [
+    "airodump-ng broad scan with CSV parse (AP + station sections split on 'Station MAC' delimiter, 14-col AP / 6-col client schema)",
+    "airodump-ng targeted BSSID+channel locked capture",
+    "airmon-ng monitor-mode bring-up with 5-method monitor-interface detection (regex on airmon output, iw dev type, /sys/class/net/*/type==803, iwconfig Mode:Monitor, original-name fallback) for Realtek driver quirks",
+    "channel set/read with 4-method fallback chain (iwconfig ioctl, iw set freq MHz, iw set channel, ip link reset) and hardcoded 2.4/5 GHz freq<->channel tables",
+    "wash-based WPS fingerprint (version, lock state) via 7s timeout probe filtered by BSSID",
+    "pure-function WPA classifier (describe_wpa) over proto/handshake/key-derivation/crackability/KRACK/deauth-viability",
+    "PMKID capture-feasibility classifier (check_pmkid) and PMF classifier (check_pmf) — feasibility only, no capture",
+    "OUI vendor lookup via ~20-entry hardcoded prefix dict",
+    "RSSI->5-block signal bar + estimated SNR",
+    "vulnerability aggregator (CRITICAL/HIGH/MEDIUM/INFO) and dynamic attack-path recommender (WPS/PMKID/deauth+handshake/TKIP/EAP ordering)",
+    "client-to-AP association by case-insensitive BSSID matching with probe-request extraction"
+  ],
+  "produces": [
+    "per-target deep-recon report: SSID/BSSID/vendor/band/channel/max-rate/beacon count",
+    "RSSI, 5-block signal bar, estimated SNR",
+    "encryption/cipher/auth/handshake/key-derivation/PMF classification",
+    "WPS status/version/lock/attack-surface",
+    "PMKID capture-feasibility verdict",
+    "crackability + KRACK + deauth-viability assessment",
+    "EAP downgrade feasibility / open-network rogue-AP potential",
+    "associated client list (MAC/signal/packets/probes)",
+    "severity-tagged vulnerability summary",
+    "numbered recommended attack-path sequence with aircrack-ng/hashcat/reaver command references"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": true,
+  "novelty": "Mostly a thin wrapper — all raw recon is shelled out to airodump-ng (CSV parse) and wash (WPS). No native PMKID/handshake capture (hcxdumptool/hcxpcapngtool are listed but never invoked), no active deauth, no EAP credential capture, no GPS. The genuinely non-baseline work is a pure-Python heuristic analysis layer: a WPA decision-tree classifier (proto/handshake/key-derivation/KRACK/deauth-viability), PMKID-feasibility and PMF classifiers, a severity aggregator, and a context-aware attack-path recommender — i.e. structured interpretation of airodump-ng output rather than new signal collection. The robust monitor-mode/channel fallback chains (Realtek-aware) are a modest engineering novelty over naive airodump-ng wrappers. Net: an airodump-ng/wash wrapper plus a reporting/classification engine, not new recon capability.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "disapster",
+    "cipherx1802",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/DisAPster && python3 DisAPster.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/DisAPster && python3 DisAPster.py --help",
+    "cd toolboxes/DisAPster && python3 DisAPster.py --help",
+    "cd toolboxes/DisAPster && python3 DisAPster.py --help",
+    "cd toolboxes/DisAPster && python3 DisAPster.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST DisAPster --output $KFIOSA_OUTPUT_DIR/DisAPster.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST DisAPster --output $KFIOSA_OUTPUT_DIR/DisAPster.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

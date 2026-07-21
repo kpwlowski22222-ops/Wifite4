@@ -1,0 +1,287 @@
+{
+  "id": "kali:smtp-user-enum",
+  "kind": "kali_source_package",
+  "name": "smtp-user-enum",
+  "title": "smtp-user-enum",
+  "summary": "### smtp-user-enum",
+  "version": "1.2-1kali4",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "http://pentestmonkey.net/tools/user-enumeration/smtp-user-enum",
+  "repository": "https://gitlab.com/kalilinux/packages/smtp-user-enum",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-information-gathering",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install smtp-user-enum"
+  },
+  "packages": [
+    {
+      "name": "smtp-user-enum"
+    }
+  ],
+  "commands": [
+    {
+      "name": "smtp-user-enum",
+      "description": "- - -",
+      "usage": "smtp-user-enum [options] ( -u username | -U file-of-usernames ) ( -t host | -T file-of-targets )",
+      "arguments": [
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "n",
+          "takes_value": true,
+          "description": "Maximum number of processes (default: 5)",
+          "default": "5",
+          "choices": null,
+          "raw": "       -m n     Maximum number of processes (default: 5)"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": "mode",
+          "takes_value": true,
+          "description": "Method to use for username guessing EXPN, VRFY or RCPT (default: VRFY)",
+          "default": "VRFY",
+          "choices": null,
+          "raw": " \t-M mode  Method to use for username guessing EXPN, VRFY or RCPT (default: VRFY)"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": "user",
+          "takes_value": true,
+          "description": "Check if user exists on remote system",
+          "default": null,
+          "choices": null,
+          "raw": " \t-u user  Check if user exists on remote system"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "addr",
+          "takes_value": true,
+          "description": "MAIL FROM email address.  Used only in \"RCPT TO\" mode (default: user@example.com)",
+          "default": "user@example",
+          "choices": null,
+          "raw": " \t-f addr  MAIL FROM email address.  Used only in \"RCPT TO\" mode (default: user@example.com)"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": "dom",
+          "takes_value": true,
+          "description": "Domain to append to supplied user list to make email addresses (Default: none)",
+          "default": "none",
+          "choices": null,
+          "raw": "       -D dom   Domain to append to supplied user list to make email addresses (Default: none)"
+        },
+        {
+          "flags": [
+            "-U"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "File of usernames to check via smtp service",
+          "default": null,
+          "choices": null,
+          "raw": " \t-U file  File of usernames to check via smtp service"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "host",
+          "takes_value": true,
+          "description": "Server host running smtp service",
+          "default": null,
+          "choices": null,
+          "raw": " \t-t host  Server host running smtp service"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "File of hostnames running the smtp service",
+          "default": null,
+          "choices": null,
+          "raw": " \t-T file  File of hostnames running the smtp service"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "TCP port on which smtp service runs (default: 25)",
+          "default": "25",
+          "choices": null,
+          "raw": " \t-p port  TCP port on which smtp service runs (default: 25)"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Debugging output",
+          "default": null,
+          "choices": null,
+          "raw": " \t-d       Debugging output"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": "n",
+          "takes_value": true,
+          "description": "Wait a maximum of n seconds for reply (default: 5)",
+          "default": "5",
+          "choices": null,
+          "raw": " \t-w n     Wait a maximum of n seconds for reply (default: 5)"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose",
+          "default": null,
+          "choices": null,
+          "raw": " \t-v       Verbose"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "This help message",
+          "default": null,
+          "choices": null,
+          "raw": " \t-h       This help message"
+        }
+      ],
+      "raw_help": "root@kali:~# smtp-user-enum -h\n smtp-user-enum v1.2 ( http://pentestmonkey.net/tools/smtp-user-enum )\n \n Usage: smtp-user-enum [options] ( -u username | -U file-of-usernames ) ( -t host | -T file-of-targets )\n \n options are:\n       -m n     Maximum number of processes (default: 5)\n \t-M mode  Method to use for username guessing EXPN, VRFY or RCPT (default: VRFY)\n \t-u user  Check if user exists on remote system\n \t-f addr  MAIL FROM email address.  Used only in \"RCPT TO\" mode (default: user@example.com)\n       -D dom   Domain to append to supplied user list to make email addresses (Default: none)\n                Use this option when you want to guess valid email addresses instead of just usernames\n                e.g. \"-D example.com\" would guess foo@example.com, bar@example.com, etc.  Instead of \n                     simply the usernames foo and bar.\n \t-U file  File of usernames to check via smtp service\n \t-t host  Server host running smtp service\n \t-T file  File of hostnames running the smtp service\n \t-p port  TCP port on which smtp service runs (default: 25)\n \t-d       Debugging output\n \t-w n     Wait a maximum of n seconds for reply (default: 5)\n \t-v       Verbose\n \t-h       This help message\n \n Also see smtp-user-enum-user-docs.pdf from the smtp-user-enum tar ball.\n \n Examples:\n \n $ smtp-user-enum -M VRFY -U users.txt -t 10.0.0.1\n $ smtp-user-enum -M EXPN -u admin1 -t 10.0.0.1\n $ smtp-user-enum -M RCPT -U users.txt -T mail-server-ips.txt\n $ smtp-user-enum -M EXPN -D example.com -U users.txt -t 10.0.0.1",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "smtp-user-enum -M VRFY -u root -t 192.168.1.25\nStarting smtp-user-enum v1.2 ( http://pentestmonkey.net/tools/smtp-user-enum )\n\n ----------------------------------------------------------\n|                   Scan Information                       |\n ----------------------------------------------------------\n\nMode ..................... VRFY\nWorker Processes ......... 5\nTarget count ............. 1\nUsername count ........... 1\nTarget TCP port .......... 25\nQuery timeout ............ 5 secs\nTarget domain ............\n\n######## Scan started at Tue May 13 16:06:28 2014 #########\n192.168.1.25: root exists\n######## Scan completed at Tue May 13 16:06:29 2014 #########\n1 results.\n\n1 queries in 1 seconds (1.0 queries / sec)",
+          "template": null,
+          "original_sha256": "c3081aa866160189286b8a5556bc444084c6399449a31b24194d05dbdf9e934c"
+        },
+        {
+          "status": "operational_example",
+          "command": "smtp-user-enum v1.2 ( http://pentestmonkey.net/tools/smtp-user-enum )",
+          "template": null,
+          "original_sha256": "7ebe5d09cb5040cf775da9d917c707f8532b947e09683463e9b680c01bc4fbdb"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "vulnerability"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "smtp-user-enum v1.2 ( http://pentestmonkey.net/tools/smtp-user-enum )\n\nUsage: smtp-user-enum [options] ( -u username | -U file-of-usernames ) ( -t host | -T file-of-targets )\n\noptions are:\n        -m n     Maximum number of processes (default: 5)\n\t-M mode  Method to use for username guessing EXPN, VRFY or RCPT (default: VRFY)\n\t-u user  Check if user exists on remote system\n\t-f addr  MAIL FROM email address.  Used only in \"RCPT TO\" mode (default: user@example.com)\n        -D dom   Domain to append to supplied user list to make email addresses (Default: none)\n                 Use this option when you want to guess valid email addresses instead of just usernames\n                 e.g. \"-D example.com\" would guess foo@example.com, bar@example.com, etc.  Instead of \n                      simply the usernames foo and bar.\n\t-U file  File of usernames to check via smtp service\n\t-t host  Server host running smtp service\n\t-T file  File of hostnames running the smtp service\n\t-p port  TCP port on which smtp service runs (default: 25)\n\t-d       Debugging output\n\t-w n     Wait a maximum of n seconds for reply (default: 5)\n\t-v       Verbose\n\t-h       This help message\n\nAlso see smtp-user-enum-user-docs.pdf from the smtp-user-enum tar ball.\n\nExamples:\n\n$ smtp-user-enum -M VRFY -U users.txt -t 10.0.0.1\n$ smtp-user-enum -M EXPN -u admin1 -t 10.0.0.1\n$ smtp-user-enum -M RCPT -U users.txt -T mail-server-ips.txt\n$ smtp-user-enum -M EXPN -D example.com -U users.txt -t 10.0.0.1",
+        "-h": "smtp-user-enum v1.2 ( http://pentestmonkey.net/tools/smtp-user-enum )\n\nUsage: smtp-user-enum [options] ( -u username | -U file-of-usernames ) ( -t host | -T file-of-targets )\n\noptions are:\n        -m n     Maximum number of processes (default: 5)\n\t-M mode  Method to use for username guessing EXPN, VRFY or RCPT (default: VRFY)\n\t-u user  Check if user exists on remote system\n\t-f addr  MAIL FROM email address.  Used only in \"RCPT TO\" mode (default: user@example.com)\n        -D dom   Domain to append to supplied user list to make email addresses (Default: none)\n                 Use this option when you want to guess valid email addresses instead of just usernames\n                 e.g. \"-D example.com\" would guess foo@example.com, bar@example.com, etc.  Instead of \n                      simply the usernames foo and bar.\n\t-U file  File of usernames to check via smtp service\n\t-t host  Server host running smtp service\n\t-T file  File of hostnames running the smtp service\n\t-p port  TCP port on which smtp service runs (default: 25)\n\t-d       Debugging output\n\t-w n     Wait a maximum of n seconds for reply (default: 5)\n\t-v       Verbose\n\t-h       This help message\n\nAlso see smtp-user-enum-user-docs.pdf from the smtp-user-enum tar ball.\n\nExamples:\n\n$ smtp-user-enum -M VRFY -U users.txt -t 10.0.0.1\n$ smtp-user-enum -M EXPN -u admin1 -t 10.0.0.1\n$ smtp-user-enum -M RCPT -U users.txt -T mail-server-ips.txt\n$ smtp-user-enum -M EXPN -D example.com -U users.txt -t 10.0.0.1",
+        "help": "smtp-user-enum v1.2 ( http://pentestmonkey.net/tools/smtp-user-enum )\n\nUsage: smtp-user-enum [options] ( -u username | -U file-of-usernames ) ( -t host | -T file-of-targets )\n\noptions are:\n        -m n     Maximum number of processes (default: 5)\n\t-M mode  Method to use for username guessing EXPN, VRFY or RCPT (default: VRFY)\n\t-u user  Check if user exists on remote system\n\t-f addr  MAIL FROM email address.  Used only in \"RCPT TO\" mode (default: user@example.com)\n        -D dom   Domain to append to supplied user list to make email addresses (Default: none)\n                 Use this option when you want to guess valid email addresses instead of just usernames\n                 e.g. \"-D example.com\" would guess foo@example.com, bar@example.com, etc.  Instead of \n                      simply the usernames foo and bar.\n\t-U file  File of usernames to check via smtp service\n\t-t host  Server host running smtp service\n\t-T file  File of hostnames running the smtp service\n\t-p port  TCP port on which smtp service runs (default: 25)\n\t-d       Debugging output\n\t-w n     Wait a maximum of n seconds for reply (default: 5)\n\t-v       Verbose\n\t-h       This help message\n\nAlso see smtp-user-enum-user-docs.pdf from the smtp-user-enum tar ball.\n\nExamples:\n\n$ smtp-user-enum -M VRFY -U users.txt -t 10.0.0.1\n$ smtp-user-enum -M EXPN -u admin1 -t 10.0.0.1\n$ smtp-user-enum -M RCPT -U users.txt -T mail-server-ips.txt\n$ smtp-user-enum -M EXPN -D example.com -U users.txt -t 10.0.0.1"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/smtp-user-enum",
+        "size_bytes": 13078,
+        "is_symlink": false,
+        "file_type": "Perl script text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/smtp-user-enum/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/smtp-user-enum/index.md",
+    "retrieved_at": "2026-07-14T13:08:24+00:00",
+    "sha256": "5e2b06eef723b8994ca61c22522b83abf0ab3916a3ad87908e1f3e52eed9c871"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "98",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "1.2-1kali4",
+    "depends": "perl:any, libsocket-perl, libio-socket-ip-perl",
+    "description": "Username guessing tool for the SMTP service\nUsername guessing tool primarily for use against the\ndefault Solaris SMTP service. Can use either EXPN, VRFY or\nRCPT TO.",
+    "homepage": "http://pentestmonkey.net/tools/user-enumeration/smtp-user-enum"
+  },
+  "tags": [
+    "offensive",
+    "smtp",
+    "user",
+    "enum",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/smtp-user-enum && python3 smtp-user-enum.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/smtp-user-enum && python3 smtp-user-enum.py --help",
+    "cd toolboxes/smtp-user-enum && python3 smtp-user-enum.py --help",
+    "cd toolboxes/smtp-user-enum && python3 smtp-user-enum.py --help",
+    "cd toolboxes/smtp-user-enum && python3 smtp-user-enum.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST smtp-user-enum --output $KFIOSA_OUTPUT_DIR/smtp-user-enum.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST smtp-user-enum --output $KFIOSA_OUTPUT_DIR/smtp-user-enum.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

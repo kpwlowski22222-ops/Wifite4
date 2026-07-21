@@ -1,0 +1,478 @@
+{
+  "id": "kali:recoverjpeg",
+  "kind": "kali_source_package",
+  "name": "recoverjpeg",
+  "title": "recoverjpeg",
+  "summary": "### recoverjpeg",
+  "version": "2.6.3-7",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://www.rfc1149.net/devel/recoverjpeg",
+  "repository": "https://salsa.debian.org/pkg-security-team/recoverjpeg",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-recover",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install recoverjpeg"
+  },
+  "packages": [
+    {
+      "name": "recoverjpeg"
+    }
+  ],
+  "commands": [
+    {
+      "name": "recoverjpeg",
+      "description": "Recover jpeg pictures from a filesystem image",
+      "usage": "recoverjpeg [options] file|device",
+      "arguments": [
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "blocksize",
+          "takes_value": true,
+          "description": "Block size in bytes (default: 512)",
+          "default": "512",
+          "choices": null,
+          "raw": "  -b blocksize   Block size in bytes (default: 512)"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "format",
+          "takes_value": true,
+          "description": "Directory format string in printf syntax",
+          "default": null,
+          "choices": null,
+          "raw": "  -d format      Directory format string in printf syntax"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "format",
+          "takes_value": true,
+          "description": "File format string in printf syntax",
+          "default": null,
+          "choices": null,
+          "raw": "  -f format      File format string in printf syntax"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "This help message",
+          "default": null,
+          "choices": null,
+          "raw": "  -h             This help message"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "index",
+          "takes_value": true,
+          "description": "Initial picture index",
+          "default": null,
+          "choices": null,
+          "raw": "  -i index       Initial picture index"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "maxsize",
+          "takes_value": true,
+          "description": "Max jpeg file size in bytes (default: 6m)",
+          "default": "6m",
+          "choices": null,
+          "raw": "  -m maxsize     Max jpeg file size in bytes (default: 6m)"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "directory",
+          "takes_value": true,
+          "description": "Restore jpeg files into this directory",
+          "default": null,
+          "choices": null,
+          "raw": "  -o directory   Restore jpeg files into this directory"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be quiet",
+          "default": null,
+          "choices": null,
+          "raw": "  -q             Be quiet"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "readsize",
+          "takes_value": true,
+          "description": "Size of disk reads in bytes (default: 128m)",
+          "default": "128m",
+          "choices": null,
+          "raw": "  -r readsize    Size of disk reads in bytes (default: 128m)"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "cutoff",
+          "takes_value": true,
+          "description": "Minimal file size in bytes to restore",
+          "default": null,
+          "choices": null,
+          "raw": "  -s cutoff      Minimal file size in bytes to restore"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": "skipsize",
+          "takes_value": true,
+          "description": "Size to skip at the beginning",
+          "default": null,
+          "choices": null,
+          "raw": "  -S skipsize    Size to skip at the beginning"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be verbose",
+          "default": null,
+          "choices": null,
+          "raw": "  -v             Be verbose"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "  -V             Display version and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# recoverjpeg -h\n Usage: recoverjpeg [options] file|device\n Options:\n  -b blocksize   Block size in bytes (default: 512)\n  -d format      Directory format string in printf syntax\n  -f format      File format string in printf syntax\n  -h             This help message\n  -i index       Initial picture index\n  -m maxsize     Max jpeg file size in bytes (default: 6m)\n  -o directory   Restore jpeg files into this directory\n  -q             Be quiet\n  -r readsize    Size of disk reads in bytes (default: 128m)\n  -s cutoff      Minimal file size in bytes to restore\n  -S skipsize    Size to skip at the beginning\n  -v             Be verbose\n  -V             Display version and exit",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "recoverjpeg -s 1m /dev/sdc",
+          "template": null,
+          "original_sha256": "8ff80ead79318c66a072ee954b960ca8cbc13e1de0979ea49e83961d6f768a38"
+        },
+        {
+          "status": "operational_example",
+          "command": "recoverjpeg -b 1 /dev/sdb1",
+          "template": null,
+          "original_sha256": "16a044b3b2d9c0cd517022e114305f1319684179d6a491daea597d9db0228bc8"
+        },
+        {
+          "status": "operational_example",
+          "command": "recoverjpeg -b 1 -r 16m /dev/sdb1",
+          "template": null,
+          "original_sha256": "09c08bcbb5d510659861dbea21f9aa91f5d5f7b87877b654675e9739d7361969"
+        },
+        {
+          "status": "operational_example",
+          "command": "recoverjpeg: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "23cc743d86e197fee308b2dfe6394523c2a6599e9413a431ae1b913b7153aabe"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "recoverjpeg: invalid option -- '-'\nUsage: recoverjpeg [options] file|device\nOptions:\n   -b blocksize   Block size in bytes (default: 512)\n   -d format      Directory format string in printf syntax\n   -f format      File format string in printf syntax\n   -h             This help message\n   -i index       Initial picture index\n   -m maxsize     Max jpeg file size in bytes (default: 6m)\n   -o directory   Restore jpeg files into this directory\n   -q             Be quiet\n   -r readsize    Size of disk reads in bytes (default: 128m)\n   -s cutoff      Minimal file size in bytes to restore\n   -S skipsize    Size to skip at the beginning\n   -v             Be verbose\n   -V             Display version and exit",
+        "-h": "Usage: recoverjpeg [options] file|device\nOptions:\n   -b blocksize   Block size in bytes (default: 512)\n   -d format      Directory format string in printf syntax\n   -f format      File format string in printf syntax\n   -h             This help message\n   -i index       Initial picture index\n   -m maxsize     Max jpeg file size in bytes (default: 6m)\n   -o directory   Restore jpeg files into this directory\n   -q             Be quiet\n   -r readsize    Size of disk reads in bytes (default: 128m)\n   -s cutoff      Minimal file size in bytes to restore\n   -S skipsize    Size to skip at the beginning\n   -v             Be verbose\n   -V             Display version and exit",
+        "help": "Recovered files:    0        Analyzed:  0.0 MiB  \n                                                     \nRestored 0 picture",
+        "man": "RECOVERJPEG(1)                                                   RECOVERJPEG(1)\n\nNAME\n     recoverjpeg - recover jpeg pictures from a filesystem image\n\nSYNOPSIS\n     recoverjpeg [options] device\n\nDESCRIPTION\n     Recoverjpeg  tries  to identify jpeg pictures from a filesystem image.  To\n     achieve this goal, it scans the filesystem image  and  looks  for  a  jpeg\n     structure at blocks starting at 512 bytes boundaries.\n\n     Salvaged jpeg pictures are stored by default under the name imageXXXXX.jpg\n     where  XXXXX  is  a five digit number starting at zero.  If there are more\n     than 100,000 recovered pictures, recoverjpeg will start using six  figures\n     numbers  and more as soon as needed, but the 100,000 first ones will use a\n     five figures number.  Options -f and -i can override this behaviour.\n\n     recoverjpeg stores the recovered pictures into the current directory.   If\n     you want it to store them elsewhere, just go to the directory you want re-\n     coverjpeg  to  save  the  images  into  (using the cd command at the shell\n     prompt) and start recoverjpeg from there, or use the -o option.\n\n     Note that device is not necessarily a physical device.  It may also  be  a\n     file  containing a copy of the faulty device in order to reduce the actual\n     processing time and the stress imposed to an already  defective  hardware.\n     dd(1) or ddrescue(1) may be used to create such a working copy.\n\nOPTIONS\n     -h     Display an help message.\n\n     -b blocksize\n            Set  the size of blocks in bytes.  On most file systems, setting it\n            to 512 (the default) will work fine  as  any  large  file  will  be\n            stored  on  512  bytes  boundaries.   Setting  it to 1 maximize the\n            chances of finding very small files if the  filesystems  aggregates\n            them  (UFS  for  example)  at  the expense of a much longer running\n            time.\n\n     -d formatstring\n            Set the directory format string  (printf-style,  default:  use  the\n            current  directory).   When  used, 0 will be used for the 100 first\n            images, 1 for the 100 next images, and so on.  The goal of this op-\n            tion is to circumvent the directory size limit imposed by some file\n            systems.\n\n     -f formatstring\n            Set the  file  name  format  string  (printf-style,  default:  \"im-\n            age%05d.jpg\").  It is used with the image index as an integer argu-\n            ment.\n\n     -i integerindex\n            Set the initial index value for image numbering (default: 0).\n\n     -m maxsize\n            Maximum size of extract jpeg files.  If a file would be larger than\n            that, it is discarded.  The default is 6 MiB.\n\n     -o directory\n            Change  the working directory before restoring files.  Use this op-\n            tion to restore files into a directory with enough space instead of\n            the current directory.  This option can be repeated.\n\n     -q     Be quiet and do not display anything.\n\n     -r readsize\n            Set the readsize in bytes.  By default, this is 128 MiB.   Using  a\n            large readsize reduces the number of system calls but consumes more\n            memory.  The readsize will automatically be adjusted to be a multi-\n            ple  of  the system page size.  It must be greater than the maxsize\n            parameter.\n\n     -s cutoffsize\n            Set the cutoff size in bytes.  Files smaller than that will be  ig-\n            nored.\n\n     -S skipsize\n            Set  the number of bytes to skip at the beginning of the filesystem\n            image.  This can be used to resume an interrupted session, in  con-\n            junction  with -i.  The number of bytes may be rounded down to be a\n            multiple of a memory page size in order to improve performances.\n\n     -v     Be verbose and describes the process of  jpeg  identification.   By\n            default,  if  this  flag  is  not  used,  recoverjpeg  will print a\n            progress bar showing how much it has analyzed already and how  many\n            jpeg pictures have been recovered.\n\n     -V     Display program version and exit.\n\n     All  the  sizes may be suffixed by a k, m, g, or t letter to indicate KiB,\n     MiB, GiB, or TiB.  For example, 6m correspond to 6 MiB (6291456 bytes).\n\nEXAMPLES\n     Recover as many pictures as possible  from  the  memory  card  located  in\n     /dev/sdc:\n\n            recoverjpeg /dev/sdc\n\n     Do the same thing but ignore files smaller than one megabyte:\n\n            recoverjpeg -s 1m /dev/sdc\n\n     Recover  as  many pictures as possible from a crashed ReiserFS file system\n     (which does  not  necessarily  store  pictures  at  block  boundaries)  in\n     /dev/sdb1:\n\n            recoverjpeg -b 1 /dev/sdb1\n\n     Do  the  same thing in a memory constrained environment where no more than\n     16MB of RAM can be used for the operation:\n\n            recoverjpeg -b 1 -r 16m /dev/sdb1\n\nCOPYRIGHT\n     Copyright (c) 2004-2016 Samuel  Tardieu  sam@rfc1149.net.   This  is  free\n     software;  see  the  source for copying conditions.  There is NO warranty;\n     not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n     If recoverjpeg saves your day and you liked it, you are welcome to send me\n     the best rescued ones by email (please send only 800x600 versions  of  the\n     pictures)  and authorize me to put them online (indicate which contact in-\n     formation you want me to use for credits).\n\nSEE ALSO\n     recovermov(1) sort-pictures(1) remove-duplicates(1)\n\nKNOWN BUGS\n     Recoverjpeg does not include a complete jpeg parser.  You may need to  use\n     sort-pictures afterwards to identify bogus pictures.  Some pictures may be\n     corrupted  but  have  a  correct structure; in this case, the image may be\n     garbled.  There is no automated way to detect those pictures with  a  100%\n     success rate.\n\nAUTHORS\n     Samuel Tardieu sam@rfc1149.net\n\nRecoverjpeg User Manuals       November 12, 2016                 RECOVERJPEG(1)",
+        "apropos": "recoverjpeg (1)      - recover jpeg pictures from a filesystem image"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/recoverjpeg",
+        "size_bytes": 18688,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c5a40e034f75c1164e787a9843d964596dea15b5, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "recovermov",
+      "description": "Recover movies from a filesystem image",
+      "usage": "recovermov [options] file|device",
+      "arguments": [
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "blocksize",
+          "takes_value": true,
+          "description": "Block size in bytes",
+          "default": null,
+          "choices": null,
+          "raw": "  -b blocksize   Block size in bytes"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": "base_name",
+          "takes_value": true,
+          "description": "Basename of the mov files to create",
+          "default": null,
+          "choices": null,
+          "raw": "  -n base_name   Basename of the mov files to create"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "This help message",
+          "default": null,
+          "choices": null,
+          "raw": "  -h             This help message"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "index",
+          "takes_value": true,
+          "description": "Initial movie index",
+          "default": null,
+          "choices": null,
+          "raw": "  -i index       Initial movie index"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "directory",
+          "takes_value": true,
+          "description": "Restore mov files into this directory",
+          "default": null,
+          "choices": null,
+          "raw": "  -o directory   Restore mov files into this directory"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "  -V             Display version and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# recovermov -h\n Usage: recovermov [options] file|device\n Options:\n  -b blocksize   Block size in bytes\n                 (default: 512)\n  -n base_name   Basename of the mov files to create\n                 (default: \"video_\")\n  -h             This help message\n  -i index       Initial movie index\n  -o directory   Restore mov files into this directory\n  -V             Display version and exit",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "recovermov -b 1 /dev/hdb1",
+          "template": null,
+          "original_sha256": "fa276b42f2d3435e213315ba23a24e8c9392cb0cce9abc375acb57662aa01437"
+        },
+        {
+          "status": "operational_example",
+          "command": "recovermov: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "65ceebf5ca559aeb85149722bfbc81eb6c2d5d708935761fc1f9b57c0243a6ed"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "recovermov: invalid option -- '-'\nUsage: recovermov [options] file|device\nOptions:\n   -b blocksize   Block size in bytes\n                  (default: 512)\n   -n base_name   Basename of the mov files to create\n                  (default: \"video_\")\n   -h             This help message\n   -i index       Initial movie index\n   -o directory   Restore mov files into this directory\n   -V             Display version and exit",
+        "-h": "Usage: recovermov [options] file|device\nOptions:\n   -b blocksize   Block size in bytes\n                  (default: 512)\n   -n base_name   Basename of the mov files to create\n                  (default: \"video_\")\n   -h             This help message\n   -i index       Initial movie index\n   -o directory   Restore mov files into this directory\n   -V             Display version and exit",
+        "man": "RECOVERMOV(1)                                                     RECOVERMOV(1)\n\nNAME\n     recovermov - recover movies from a filesystem image\n\nSYNOPSIS\n     recovermov [options] device\n\nDESCRIPTION\n     Recovermov  tries  to  identify  mov  movies  from a filesystem image.  To\n     achieve this goal, it scans the filesystem  image  and  looks  for  a  mov\n     structure at blocks starting at 512 bytes boundaries.\n\n     recovermov stores the recovered movies into the current directory.  If you\n     want  it to store them elsewhere, just go to the directory you want recov-\n     ermov to save the movies into (using the cd command at the  shell  prompt)\n     and start recovermov from there, or use the -o option.\n\n     Note  that  device is not necessarily a physical device.  It may also be a\n     file containing a copy of the faulty device in order to reduce the  actual\n     processing  time  and the stress imposed to an already defective hardware.\n     dd(1) or ddrescue(1) may be used to create such a working copy.\n\nOPTIONS\n     -h     Display an help message.\n\n     -b blocksize\n            Set the size of blocks in bytes.  On most file systems, setting  it\n            to  512  (the  default)  will  work  fine as any large file will be\n            stored on 512 bytes boundaries.   Setting  it  to  1  maximize  the\n            chances  of  finding very small files if the filesystems aggregates\n            them (UFS for example) at the expense  of  a  much  longer  running\n            time.\n\n     -i integerindex\n            Set the initial index value for image numbering (default: 0).\n\n     -n basename\n            Basename to use to create the salvaged files.  Default is video_.\n\n     -o directory\n            Change  the working directory before restoring files.  Use this op-\n            tion to restore files into a directory with enough space instead of\n            the current directory.  This option can be repeated.\n\n     -V     Display program version and exit.\n\n     All the sizes may be suffixed by a k, m, g, or t letter to  indicate  KiB,\n     MiB, GiB, or TiB.  For example, 6m correspond to 6 MiB (6291456 bytes).\n\nEXAMPLES\n     Recover  as  many  movies  as  possible  from  the  memory card located in\n     /dev/sdc:\n\n            recovermov /dev/sdc\n\n     Recover as many movies as possible from a  crashed  ReiserFS  file  system\n     (which does not necessarily store files at block boundaries) in /dev/hdb1:\n\n            recovermov -b 1 /dev/hdb1\n\nCOPYRIGHT\n     Copyright  (c)  2010-2016  Samuel  Tardieu  sam@rfc1149.net and  Jan Funke\n     jan.funke@inf.tu-dresden.de.  This is free software; see  the  source  for\n     copying conditions.  There is NO warranty; not even for MERCHANTABILITY or\n     FITNESS FOR A PARTICULAR PURPOSE.\n\nSEE ALSO\n     recoverjpeg(1)\n\nAUTHORS\n     Jan Funke jan.funke@inf.tu-dresden.de and Samuel Tardieu sam@rfc1149.net\n\nRecovermov User Manuals        November 12, 2016                  RECOVERMOV(1)",
+        "apropos": "recovermov (1)       - recover movies from a filesystem image"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/recovermov",
+        "size_bytes": 22928,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b4c66532419ec01f7e4d8d5ccd70d985097cca77, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "remove-duplicates",
+      "description": "Remove duplicates of the same file in the current directory",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -f"
+        }
+      ],
+      "raw_help": "root@kali:~# man remove-duplicates\n REMOVE-DUPLICATES(1)                                       REMOVE-DUPLICATES(1)\n \n NAME\n    remove-duplicates  - remove duplicates of the same file in the current di-\n    rectory\n \n SYNOPSIS\n    remove-duplicate [-f]\n \n DESCRIPTION\n    Removes duplicates of the same file in the  current  directory  if  -f  is\n    given.   If  -f  is not given, duplicate will be identified twice (once in\n    every direction).\n \n OPTIONS\n    -f\n \n COPYRIGHT\n    Copyright (c) 2004-2016 Samuel  Tardieu  sam@rfc1149.net.   This  is  free\n    software;  see  the  source for copying conditions.  There is NO warranty;\n    not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n \n    If recoverjpeg saves your day and you liked it, you are welcome to send me\n    the best rescued ones by email (please send only 800x600 versions  of  the\n    pictures)  and authorize me to put them online (indicate which contact in-\n    formation you want me to use for credits).\n \n SEE ALSO\n    recoverjpeg(1) sort-pictures(1)\n \n AUTHORS\n    Samuel Tardieu sam@rfc1149.net\n \n User Manuals                   November 12, 2016           REMOVE-DUPLICATES(1)",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Removing webapps_vhosts.csv which is a copy of 2026-07-14.quark.log\nRemoving .log which is a copy of 2026-07-14.quark.log\nRemoving -h which is a copy of 2026-07-14.quark.log\nRemoving --help which is a copy of 2026-07-14.quark.log\nRemoving analysis-sorted.rule which is a copy of 2026-07-14.quark.log\nRemoving help.hcd which is a copy of 2026-07-14.quark.log\nRemoving analysis.word which is a copy of 2026-07-14.quark.log\nRemoving analysis-sorted.word which is a copy of 2026-07-14.quark.log\nRemoving .nlog which is a copy of 2026-07-14.quark.log",
+        "man": "REMOVE-DUPLICATES(1)                                       REMOVE-DUPLICATES(1)\n\nNAME\n     remove-duplicates  - remove duplicates of the same file in the current di-\n     rectory\n\nSYNOPSIS\n     remove-duplicate [-f]\n\nDESCRIPTION\n     Removes duplicates of the same file in the  current  directory  if  -f  is\n     given.   If  -f  is not given, duplicate will be identified twice (once in\n     every direction).\n\nOPTIONS\n     -f\n\nCOPYRIGHT\n     Copyright (c) 2004-2016 Samuel  Tardieu  sam@rfc1149.net.   This  is  free\n     software;  see  the  source for copying conditions.  There is NO warranty;\n     not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n     If recoverjpeg saves your day and you liked it, you are welcome to send me\n     the best rescued ones by email (please send only 800x600 versions  of  the\n     pictures)  and authorize me to put them online (indicate which contact in-\n     formation you want me to use for credits).\n\nSEE ALSO\n     recoverjpeg(1) sort-pictures(1)\n\nAUTHORS\n     Samuel Tardieu sam@rfc1149.net\n\nUser Manuals                   November 12, 2016           REMOVE-DUPLICATES(1)",
+        "apropos": "remove-duplicates (1) - remove duplicates of the same file in the current dir..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/remove-duplicates",
+        "size_bytes": 820,
+        "is_symlink": false,
+        "file_type": "Python script, ASCII text executable"
+      }
+    },
+    {
+      "name": "sort-pictures",
+      "description": "Sort pictures according to exif date",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# man sort-pictures\n SORT-PICTURES(1)                                               SORT-PICTURES(1)\n \n NAME\n    sort-pictures - sort pictures according to exif date\n \n SYNOPSIS\n    sort-pictures\n \n DESCRIPTION\n    Sort-pictures uses the exif tags in jpeg pictures recovered by recoverjpeg\n    in directories.  It creates hard links to organize sorted pictures.\n \n    Running  sort-pictures will scan the current directory for files named af-\n    ter the template image?????*.jpg (image followed by at least five  charac-\n    ters  followed  by .jpg).  A new hardlink will be created for each file in\n    one of the following directories:\n \n    * invalid The picture is an invalid JFIF file.\n \n    * small The picture size is less than 100,000 bytes.\n \n    * undated Sort-pictures was unable to determine the date  of  the  picture\n      from the exif tags.\n \n    * YYYY-MM-DD  A  directory  representing the date at which the picture was\n      taken.\n \n SEE ALSO\n    recoverjpeg(1) remove-duplicates(1)\n \n COPYRIGHT\n    Copyright (c) 2004-2016 Samuel  Tardieu  sam@rfc1149.net.   This  is  free\n    software;  see  the  source for copying conditions.  There is NO warranty;\n    not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n \n AUTHORS\n    Samuel Tardieu sam@rfc1149.net\n \n User Manuals                   November 12, 2016               SORT-PICTURES(1)",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "ln: failed to access 'image?????*.jpg': No such file or directory",
+        "-h": "ln: failed to access 'image?????*.jpg': No such file or directory",
+        "help": "ln: failed to access 'image?????*.jpg': No such file or directory",
+        "man": "SORT-PICTURES(1)                                               SORT-PICTURES(1)\n\nNAME\n     sort-pictures - sort pictures according to exif date\n\nSYNOPSIS\n     sort-pictures\n\nDESCRIPTION\n     Sort-pictures uses the exif tags in jpeg pictures recovered by recoverjpeg\n     in directories.  It creates hard links to organize sorted pictures.\n\n     Running  sort-pictures will scan the current directory for files named af-\n     ter the template image?????*.jpg (image followed by at least five  charac-\n     ters  followed  by .jpg).  A new hardlink will be created for each file in\n     one of the following directories:\n\n     * invalid The picture is an invalid JFIF file.\n\n     * small The picture size is less than 100,000 bytes.\n\n     * undated Sort-pictures was unable to determine the date  of  the  picture\n       from the exif tags.\n\n     * YYYY-MM-DD  A  directory  representing the date at which the picture was\n       taken.\n\nSEE ALSO\n     recoverjpeg(1) remove-duplicates(1)\n\nCOPYRIGHT\n     Copyright (c) 2004-2016 Samuel  Tardieu  sam@rfc1149.net.   This  is  free\n     software;  see  the  source for copying conditions.  There is NO warranty;\n     not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nAUTHORS\n     Samuel Tardieu sam@rfc1149.net\n\nUser Manuals                   November 12, 2016               SORT-PICTURES(1)",
+        "apropos": "sort-pictures (1)    - sort pictures according to exif date"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/sort-pictures",
+        "size_bytes": 974,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/recoverjpeg/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/recoverjpeg/index.md",
+    "retrieved_at": "2026-07-14T13:08:04+00:00",
+    "sha256": "fa03d6d8be37d9dad036bca5f7911790d0bdb4daffe27e210e65bb5736fb8248"
+  },
+  "apt_metadata": {
+    "section": "graphics",
+    "installed_size": "65",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "2.6.3-7",
+    "depends": "exif, imagemagick, python3, libc6 (>= 2.38), libgcc-s1 (>= 3.0), libstdc++6 (>= 13.1)",
+    "description": "recover JFIF (JPEG) pictures and MOV movies\nrecoverjpeg tries to recover JFIF (JPEG) pictures and MOV movies from\na peripheral. This may be useful if you mistakenly overwrite a partition\nor if a device such as a digital camera memory card is bogus.\n.\nThis package provides these executables: recoverjpeg, recovermov,\nremove-duplicates and sort-pictures. The remove-duplicates is useful to\nremove duplicate files found. sort-pictures can be used to sort pictures\naccording to exif date.\n.\nThis package acts as a carver (data carving) and is useful in forensics\ninvestigations.",
+    "homepage": "https://www.rfc1149.net/devel/recoverjpeg"
+  },
+  "tags": [
+    "offensive",
+    "recoverjpeg",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/recoverjpeg && python3 recoverjpeg.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/recoverjpeg && python3 recoverjpeg.py --help",
+    "cd toolboxes/recoverjpeg && python3 recoverjpeg.py --help",
+    "cd toolboxes/recoverjpeg && python3 recoverjpeg.py --help",
+    "cd toolboxes/recoverjpeg && python3 recoverjpeg.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recoverjpeg --output $KFIOSA_OUTPUT_DIR/recoverjpeg.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recoverjpeg --output $KFIOSA_OUTPUT_DIR/recoverjpeg.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

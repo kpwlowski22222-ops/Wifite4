@@ -1,0 +1,120 @@
+{
+  "id": "github:demonCoder95/wifi-recon",
+  "kind": "external_repository",
+  "name": "wifi-recon",
+  "full_name": "demonCoder95/wifi-recon",
+  "owner": "demonCoder95",
+  "category": "WiFi Reconnaissance — Beacon Parsing",
+  "url": "https://github.com/demonCoder95/wifi-recon",
+  "summary": "Repository indexing entry for the ``wifi-recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/demonCoder95__wifi-recon",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "sudo python3 analyzer.py  (hardcoded: 10s tshark capture on interface wlan1mon, output to capture-dir/pcapture, then parse + store to ap-database.db)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "sudo python3 analyzer.py  (hardcoded: 10s tshark capture on interface wlan1mon, output to capture-dir/pcapture, then parse + store to ap-database.db)"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "tshark (wireshark-common apt package)",
+    "pyfiglet (pip)",
+    "requests (pip)",
+    "python3-sqlite3 (stdlib)",
+    "wireless adapter in monitor mode (hardcoded wlan1mon)",
+    "sudo"
+  ],
+  "algorithms": [
+    "Passive 802.11 frame capture via tshark on a monitor-mode interface (fixed-duration pcap)",
+    "Beacon frame (subtype 0x0008) field extraction via tshark -Tfields: BSSID, SSID, supported/extended rates, radiotap dBm signal, ESS capability flag, RSN group/pairwise cipher, AKM auth type",
+    "Probe-response frame (subtype 0x0005) parsing for associated-client enumeration (AP MAC / AP SSID / probing client MAC)",
+    "802.11 supported-rate code to Mbps decoding (rate table mapping)",
+    "RSN cipher-suite code decoding (TKIP, AES-CCMP) and AKM auth-type decoding (PSK)",
+    "OUI vendor lookup via online macvendors.com REST API (rate-limited 1s/query)",
+    "SQLite persistence of AP records keyed by BSSID with dedup via UNIQUE constraint"
+  ],
+  "produces": [
+    "SQLite database ap-database.db (table ap_data: bssid PK, ssid, supported/extended rates in Mbps, signal dBm, transmitter type AP/STA, group cipher, pairwise cipher(s), auth type(s))",
+    "Console report of discovered APs and associated STAs",
+    "beacon-data / probe-response-data intermediate text files (deduped tshark -Tfields output)",
+    "oui-lookup.log (MAC -> vendor mapping log)"
+  ],
+  "capability_bucket": "beacon_parse",
+  "runnable": true,
+  "novelty": "none — thin wrapper. The entire pipeline is `os.system(\"tshark ...\")` calls: capture.py wraps tshark capture, frameprocessor.py wraps tshark -Tfields extraction of beacons/probe-responses with sort|uniq dedup, featureparse.py decodes the resulting text fields. airodump-ng already emits BSSID/SSID/signal/cipher/auth/OUI in a richer form with live display; this adds only (a) SQLite persistence and (b) an online macvendors.com OUI lookup (KFIOSA already has OUI enrichment). Probe-response parsing is a weaker subset of airodump-ng's client enumeration. No PMKID, no EAPOL/handshake capture, no deauth, no hidden-SSID reveal, no GPS, no channel hopping. It is a tshark-based reimplementation of basic airodump-ng output, not a new algorithm.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "recon",
+    "demoncoder95",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-recon --output $KFIOSA_OUTPUT_DIR/wifi-recon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-recon --output $KFIOSA_OUTPUT_DIR/wifi-recon.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

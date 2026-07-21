@@ -1,0 +1,126 @@
+{
+  "id": "github:momenbasel/AutoWIFI",
+  "kind": "external_repository",
+  "name": "AutoWIFI",
+  "full_name": "momenbasel/AutoWIFI",
+  "owner": "momenbasel",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/momenbasel/AutoWIFI",
+  "summary": "Repository indexing entry for the ``AutoWIFI`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/momenbasel__AutoWIFI",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "sudo autowifi  (interactive TUI); also `sudo autowifi scan -i wlan0mon -d 30`, `sudo autowifi capture -i wlan0mon -b <BSSID> -c 6 -t 120`, `sudo autowifi crack handshake.cap -w rockyou.txt [--backend hashcat]`"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "sudo autowifi  (interactive TUI); also `sudo autowifi scan -i wlan0mon -d 30`, `sudo autowifi capture -i wlan0mon -b <BSSID> -c 6 -t 120`, `sudo autowifi crack handshake.cap -w rockyou.txt [--backend hashcat]`"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "aircrack-ng suite (strictly required)",
+    "python 3.9+",
+    "rich (TUI)",
+    "hashcat (optional crack backend)",
+    "john-the-ripper (optional)",
+    "reaver",
+    "bully",
+    "hcxdumptool",
+    "hcxtools",
+    "mdk4",
+    "macchanger",
+    "tshark"
+  ],
+  "algorithms": [
+    "airodump-ng subprocess scan with signal + client tracking",
+    "WPA 4-way handshake capture via aireplay-ng deauth + airodump-ng",
+    "PMKID clientless capture via hcxdumptool/hcxtools",
+    "WPS pixie-dust and PIN brute force via reaver/bully",
+    "WEP ARP-replay / fragmentation / chopchop via aireplay-ng",
+    "cracking dispatch to aircrack-ng / hashcat / john",
+    "MCP server exposing 12 tools (scan_networks, capture_handshake, capture_pmkid, wps_pixie_dust, deauth, crack_handshake, etc.) to AI agents"
+  ],
+  "produces": [
+    "JSON/HTML/text reports of discovered networks (BSSID, ESSID, encryption, signal, WPS, clients)",
+    "captured handshake .cap files",
+    "PMKID hash files (hc22000)",
+    "cracked credentials",
+    "session state for resume"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": true,
+  "novelty": "none — thin wrapper. All recon and attack logic is subprocess calls to airodump-ng/aireplay-ng/hcxdumptool/reaver/bully/hashcat; deps.py only probes for those binaries. The only marginally non-baseline element is an MCP server interface so AI coding assistants can drive the same wrapped tools — an integration surface, not a new recon algorithm.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": true,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "autowifi",
+    "momenbasel",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --help",
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --help",
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --help",
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AutoWIFI --output $KFIOSA_OUTPUT_DIR/AutoWIFI.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AutoWIFI --output $KFIOSA_OUTPUT_DIR/AutoWIFI.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

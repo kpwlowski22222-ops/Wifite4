@@ -1,0 +1,402 @@
+{
+  "id": "kali:myrescue",
+  "kind": "kali_source_package",
+  "name": "myrescue",
+  "title": "myrescue",
+  "summary": "### myrescue",
+  "version": "0.9.8-4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://myrescue.sf.net",
+  "repository": "https://salsa.debian.org/pkg-security-team/myrescue",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-forensics",
+    "kali-tools-recover",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install myrescue"
+  },
+  "packages": [
+    {
+      "name": "myrescue"
+    }
+  ],
+  "commands": [
+    {
+      "name": "myrescue",
+      "description": "Harddisc Rescue",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "block-size",
+          "takes_value": true,
+          "description": "block size in bytes, default: 4096",
+          "default": "4096",
+          "choices": null,
+          "raw": " -b <block-size>   block size in bytes, default: 4096"
+        },
+        {
+          "flags": [
+            "-B"
+          ],
+          "metavar": "bitmap-file",
+          "takes_value": true,
+          "description": "bitmap-file, default: <output-file>.bitmap",
+          "default": "<output-file>",
+          "choices": null,
+          "raw": " -B <bitmap-file>  bitmap-file, default: <output-file>.bitmap"
+        },
+        {
+          "flags": [
+            "-A"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "abort on error",
+          "default": null,
+          "choices": null,
+          "raw": " -A                abort on error"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "skip errors (exponential-step)",
+          "default": null,
+          "choices": null,
+          "raw": " -S                skip errors (exponential-step)"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "skip blocks with <number> or more failures",
+          "default": null,
+          "choices": null,
+          "raw": " -f <number>       skip blocks with <number> or more failures"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "retry-count",
+          "takes_value": true,
+          "description": "try up to <retry-count> reads per block, default: 1",
+          "default": "1",
+          "choices": null,
+          "raw": " -r <retry-count>  try up to <retry-count> reads per block, default: 1"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "start-block",
+          "takes_value": true,
+          "description": "start block number, default: 0",
+          "default": "0",
+          "choices": null,
+          "raw": " -s <start-block>  start block number, default: 0"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "end-block",
+          "takes_value": true,
+          "description": "end block number (excl.), default: size of <input-file>",
+          "default": "size of <input-file>",
+          "choices": null,
+          "raw": " -e <end-block>    end block number (excl.), default: size of <input-file>"
+        },
+        {
+          "flags": [
+            "-G"
+          ],
+          "metavar": "range",
+          "takes_value": true,
+          "description": "only read <range> blocks around good ones",
+          "default": null,
+          "choices": null,
+          "raw": " -G <range>        only read <range> blocks around good ones"
+        },
+        {
+          "flags": [
+            "-F"
+          ],
+          "metavar": "range",
+          "takes_value": true,
+          "description": "skip <range> blocks around failed ones",
+          "default": null,
+          "choices": null,
+          "raw": " -F <range>        skip <range> blocks around failed ones"
+        },
+        {
+          "flags": [
+            "-J"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "randomly jump after reading a few sectors",
+          "default": null,
+          "choices": null,
+          "raw": " -J <number>       randomly jump after reading a few sectors"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "make -A, -S and -F avoid blocks that took long to read",
+          "default": null,
+          "choices": null,
+          "raw": " -T                make -A, -S and -F avoid blocks that took long to read"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "reverse copy direction",
+          "default": null,
+          "choices": null,
+          "raw": " -R                reverse copy direction"
+        },
+        {
+          "flags": [
+            "-U"
+          ],
+          "metavar": "dev-file",
+          "takes_value": true,
+          "description": "USB device reset after read error",
+          "default": null,
+          "choices": null,
+          "raw": " -U <dev-file>     USB device reset after read error"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": "-?",
+          "takes_value": true,
+          "description": "usage information",
+          "default": null,
+          "choices": null,
+          "raw": " -h, -?            usage information"
+        },
+        {
+          "flags": [
+            "-A",
+            "-S",
+            "-F"
+          ],
+          "metavar": "and treat such blocks as defective.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "            -A, -S and -F treat such blocks as defective."
+        }
+      ],
+      "raw_help": "root@kali:~# myrescue --help\n myrescue: invalid option -- '-'\n myrescue [<options>] <input-file> <output-file>\n options:\n -b <block-size>   block size in bytes, default: 4096\n -B <bitmap-file>  bitmap-file, default: <output-file>.bitmap\n -A                abort on error\n -S                skip errors (exponential-step)\n -f <number>       skip blocks with <number> or more failures\n -r <retry-count>  try up to <retry-count> reads per block, default: 1\n -s <start-block>  start block number, default: 0\n -e <end-block>    end block number (excl.), default: size of <input-file>\n -G <range>        only read <range> blocks around good ones\n -F <range>        skip <range> blocks around failed ones\n -J <number>       randomly jump after reading a few sectors\n -T                make -A, -S and -F avoid blocks that took long to read\n -R                reverse copy direction\n -U <dev-file>     USB device reset after read error\n                 (something like /dev/bus/usb/XXX/XXX !)\n -h, -?            usage information",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "myrescue: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "13bcbfcdc84ffea7635285638b7165017ac434a8cd383b60bdf684d8d16f8ce7"
+        },
+        {
+          "status": "operational_example",
+          "command": "myrescue [<options>] <input-file> <output-file>",
+          "template": null,
+          "original_sha256": "e9729f247313fa92de4192b48913f8b6e826b75cbde4bc69c0aa382d00af4ef4"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "myrescue: invalid option -- '-'\nmyrescue [<options>] <input-file> <output-file>\noptions:\n-b <block-size>   block size in bytes, default: 4096\n-B <bitmap-file>  bitmap-file, default: <output-file>.bitmap\n-A                abort on error\n-S                skip errors (exponential-step)\n-f <number>       skip blocks with <number> or more failures\n-r <retry-count>  try up to <retry-count> reads per block, default: 1\n-s <start-block>  start block number, default: 0\n-e <end-block>    end block number (excl.), default: size of <input-file>\n-G <range>        only read <range> blocks around good ones\n-F <range>        skip <range> blocks around failed ones\n-J <number>       randomly jump after reading a few sectors\n-T                make -A, -S and -F avoid blocks that took long to read\n-R                reverse copy direction\n-U <dev-file>     USB device reset after read error\n                  (something like /dev/bus/usb/XXX/XXX !)\n-h, -?            usage information",
+        "-h": "myrescue [<options>] <input-file> <output-file>\noptions:\n-b <block-size>   block size in bytes, default: 4096\n-B <bitmap-file>  bitmap-file, default: <output-file>.bitmap\n-A                abort on error\n-S                skip errors (exponential-step)\n-f <number>       skip blocks with <number> or more failures\n-r <retry-count>  try up to <retry-count> reads per block, default: 1\n-s <start-block>  start block number, default: 0\n-e <end-block>    end block number (excl.), default: size of <input-file>\n-G <range>        only read <range> blocks around good ones\n-F <range>        skip <range> blocks around failed ones\n-J <number>       randomly jump after reading a few sectors\n-T                make -A, -S and -F avoid blocks that took long to read\n-R                reverse copy direction\n-U <dev-file>     USB device reset after read error\n                  (something like /dev/bus/usb/XXX/XXX !)\n-h, -?            usage information",
+        "help": "myrescue [<options>] <input-file> <output-file>\noptions:\n-b <block-size>   block size in bytes, default: 4096\n-B <bitmap-file>  bitmap-file, default: <output-file>.bitmap\n-A                abort on error\n-S                skip errors (exponential-step)\n-f <number>       skip blocks with <number> or more failures\n-r <retry-count>  try up to <retry-count> reads per block, default: 1\n-s <start-block>  start block number, default: 0\n-e <end-block>    end block number (excl.), default: size of <input-file>\n-G <range>        only read <range> blocks around good ones\n-F <range>        skip <range> blocks around failed ones\n-J <number>       randomly jump after reading a few sectors\n-T                make -A, -S and -F avoid blocks that took long to read\n-R                reverse copy direction\n-U <dev-file>     USB device reset after read error\n                  (something like /dev/bus/usb/XXX/XXX !)\n-h, -?            usage information",
+        "man": "myrescue(2)                   System Calls Manual                   myrescue(2)\n\nNAME\n     myrescue - Harddisc Rescue\n\nSYNOPSIS\n     myrescue  [-b  block-size] [-B bitmap-file] [-A] [-S] [-r retry-count] [-f\n     skip-failed] [-s start-block] [-e  end-block]  [-R]  [-G  good-range]  [-F\n     failed-range]  [-T] [-J jump-after-blocks] [-U usb-device-file] input-file\n     output-file\n\nDESCRIPTION\n     myrescue is a program to rescue the still-readable  data  from  a  damaged\n     harddisk. It is similar in purpose to dd_rescue, but it can be run in mul-\n     tiple  passes  and  has options to avoid damaged areas to first handle the\n     not yet damaged part of the disk.\n\n     The program tries to copy the device blockwise to a file and keeps a table\n     (\"block bitmap\") noting whether a block has been successfully copied,  not\n     yet  handled  or  has  had errors. This block bitmap is used in successive\n     passes to only read the not yet rescued blocks.\n\n     The program has a special skip mode to handle read errors.  Usually  hard-\n     disk surface defects cover more than just one block and continuous reading\n     in defect areas can damage the surface, the heads and (by permanent recal-\n     ibration)  the  drive  mechanics. If this happens, the chances of rescuing\n     the remaining undamaged data drop dramatically. So in skip mode,  myrescue\n     tries  to get out of damaged areas quickly by exponentially increasing the\n     stepsize. The skipped blocks are marked as unhandled in the  block  bitmap\n     and can be retried later.\n\n     As  another  alternative,  the program can jump around on the disc, trying\n     random blocks to first get an overview of the damage. In case  of  regular\n     defects  (e.g.  an  entire  failed head) this can be used to determine the\n     physical disc structure and to avoid these regions in the first run.\n\n     Also there are options to avoid getting close to  already  recognized  de-\n     fects or stay in the proximity of good regions.\n\n     Finally,  the program has an option to multiply try to read a block before\n     considering it damaged.\n\nNOTE\n     This tools is no replacement for a professional data recovery service!  If\n     you do have the latter option, don't even think of using myrescue,  as  it\n     may further damage your disk. This tool is provided only for the case that\n     you  are  absolutely desperate and definitely cannot afford a professional\n     data recovery and know what you are doing.\n\n     Data recovery - whether professional or DIY - is always careful  detective\n     work.  Damaged drives deteriorate rapidly and behave nondeterministically,\n     you may not get a second chance once you made a mistake. So you have to be\n     fully aware of what you're doing and understand precisely  what's  happen-\n     ing.  If  you  are  unsure  it's probably best to stop right now and ask a\n     linux guru for assistance.\n\n     In any case do not expect too much. While complete restores have been wit-\n     nessed, you should not take them for granted. A better attitude is to con-\n     sider your data lost and be glad for any survivors that turn up.\n\n     The usual GPL disclaimer applies. Especially the NON-WARRANTY  OF  FITNESS\n     FOR  A  PARTICULAR PURPOSE. Don't blame (or sue) me if it fails to recover\n     or further damages your data.\n\n     And a final word you probably don't want to hear in  this  situation:  For\n     the future consider a routinely backup to avoid a \"next time\".\n\nOPTIONS\n     -b block-size\n            The size of the blocks (in bytes). Set this to your harddiscs error\n            detection/correction unit size. Usually this is 4096, which happens\n            to be the default.\n\n     -B bitmap-file\n            The  file  containing  the  status  table  of  all blocks. Nice (or\n            frightening...) to view with hexdump. 01 means OK;  02  means  that\n            the  block  was  OK, but took a long time to read; 00 means not yet\n            done; negative values mean the number of failed read  attempts.  If\n            not given, defaults to output-file.bitmap\n\n     -A     Abort when encountering errors.\n\n     -S     Activate  skip mode: When encountering errors increase the stepsize\n            exponentially until a readable block is found.\n\n     -f skip-failed\n            Skip blocks that have already had skip-failed failures.  Useful  to\n            avoid scratching the same block over and over again.\n\n     -r retry-count\n            The  number  of times to read a block before it is declared bad for\n            this run. (You can still retry it on the next run.) Default: 1\n\n     -s start-block\n            The number of the block to start with. Default: 0\n\n     -e end-block\n            The number of the block, where reading stops (not included!).   De-\n            fault: size of input-file divided by block-size.\n\n     -R     Reverse reading direction, i.e. from end-block (excluded) to start-\n            block\n\n     -G good-range\n            Only  try  to  read blocks within good-range blocks from an already\n            successfully read block.\n\n     -F failed-range\n            Extends -f to also skip any block within failed-range blocks  of  a\n            block to be skipped as specified by -f.\n\n     -T     Also  avoid blocks, that were successfully read, but took an unusu-\n            ally long time to read. In case of growing  defects,  these  blocks\n            can  mark  the  boundaries of defective regions. This options makes\n            -A, -S and -F treat such blocks as defective.\n\n     -J jump-after-blocks\n            Randomly jump  across  the  disc  after  reading  jump-after-blocks\n            blocks  in both directions. This might be useful to scan discs with\n            scattered defects.  In jump mode -S causes myrescue to  jump  to  a\n            new  block upon the first failed sector or upon hitting a sector to\n            be skipped as specified by -f, -G or -F.\n\n     -U usb-device-file\n            (Linux-specific feature) Perform a bus reset for the specified usb-\n            device-file after every failed read  attempt.   Certain  faulty  SD\n            cards will disappear completely from the bus after a read error oc-\n            curs and the USB reader has to be reset completely in order to con-\n            tinue.\n\n     -h, -?\n            Display usage information.\n\nRECOMMENDED PROCEDURE\n     NOTE:  In  data recovery every case needs special consideration and a spe-\n     cific approach - mindlessly running procedures is a bad idea. So  consider\n     the  following an example, keep a close eye on the process and be prepared\n     to stop and reconsider if anything unusual happens. And once again: If you\n     are feeling unsure, stop and ask someone experienced for assistance.\n\n     *      Make sure you have sufficient disk space for twice the whole parti-\n            tion (complete partition size, not just the used  amount  of  data)\n            plus  some space for the block bitmap (1 byte per block). Of course\n            this should NOT be on the damaged disc.\n\n     *      Determine the hardware block size (CRC/ECC unit) of your  harddisk.\n            This may be found out from hdparm, some entries in /proc/ide/hd? or\n            on the web. I have not yet checked whether this is possible with an\n            ioctl. If you have, please let me know.\n\n     *      Start  a  skip  mode run with one retry per block to first copy the\n            undamaged area.\n\n     *      Start a normal run with one retry per block to copy  the  remaining\n            skipped  blocks. You may try to use -f 1 to skip the damaged blocks\n            from the first run.\n\n     *      Repeat until the number of errors seems  to  have  converged.   Try\n            waiting a couple of hours between the retries.\n\n     *      Repeat this with higher retry counts and wait for convergence.\n\n     *      Make a copy of the rescued data and run fsck on it. The copy is im-\n            portant!  Running  fsck  is  risky  if blocks containing filesystem\n            structures (superblocks, directories,  inodes,  journal,  ...)  are\n            missing. Sometimes the well-meant attempt to correct the filesystem\n            can damage the image file, so always work on a copy.\n\n     *      Mount  the filesystem (if copied to a file: via loopback) and check\n            your data. If directory information has been destroyed, fsck  moves\n            unidentifiable  file  fragments  to  lost+found, so you should also\n            check this location.\n\n     It may help to try reading non-defect areas in between to allow the  drive\n     to recalibrate.\n\n     The  developers  are glad to hear about your experiences. Please post them\n     to the Experiences forum on the Sourceforge Project page. Thank you!\n\nKNOWN BUGS\n     The handling of the bitmap-file currently relies on the filesystem  seman-\n     tics,  that when lseek(2) ing beyond the end of file and then writing, the\n     space in between is filled with zero-bytes.\n\n     The block bitmap maxes out after 127 failed read attempts.\n\nAUTHORS\n     Kristof   Koehler   <kristofk@users.sourceforge.net>,    Peter    Schlaile\n     <schlaile@users.sourceforge.net>\n\nSEE ALSO\n     dd(1), dd_rescue(no manpage?)\n\n     http://www.google.de/search?q=data+recovery\n\n     http://myrescue.sourceforge.net/\n\nmyrescue 0.9.6                   February 2018                      myrescue(2)",
+        "apropos": "myrescue (2)         - Harddisc Rescue\nmyrescue-bitmap2ppm (2) - Visualisation of the block bitmap for myrescue\nmyrescue-stat (2)    - Block bitmap statistics for myrescue"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/myrescue",
+        "size_bytes": 22768,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b4b2b6851b7141a6ec77288926189dd31faf2f6b, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "myrescue-bitmap2ppm",
+      "description": "Visualisation of the block bitmap for myrescue",
+      "usage": "bitmap2ppm <bitmap-file> <width> <rows> <width> ...",
+      "arguments": [],
+      "raw_help": "root@kali:~# myrescue-bitmap2ppm -h\n usage: bitmap2ppm <bitmap-file> <width> <rows> <width> ...",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: bitmap2ppm <bitmap-file> <width> <rows> <width> ...",
+        "-h": "usage: bitmap2ppm <bitmap-file> <width> <rows> <width> ...",
+        "help": "usage: bitmap2ppm <bitmap-file> <width> <rows> <width> ...",
+        "man": "myrescue-bitmap2ppm(2)        System Calls Manual        myrescue-bitmap2ppm(2)\n\nNAME\n     myrescue-bitmap2ppm - Visualisation of the block bitmap for myrescue\n\nSYNOPSIS\n     myrescue-bitmap2ppm bitmap-file width [ rows width ] ...\n\nDESCRIPTION\n     myrescue-stat  reads a block bitmap from myrescue(1) and generates a visu-\n     alisation of each blocks condition.\n\n     The image is written to stdout in PPM(5) format. You can pipe  the  output\n     into  one of the netpbm converters or into ImageMagick(1) to convert it to\n     a more common format like PNG.\n\n     Successfully copied blocks are shown  as  green  pixels.  Yellow-green-ish\n     pixels  indicate  blocks that could be copied, but it took unusually long,\n     indicating that this area might be near-failing. Yellow blocks  have  been\n     tried  once, but could not be read, red blocks could not be read on multi-\n     ple attempts.  Black pixels indicate blocks that have not  yet  been  han-\n     dled.\n\n     The  pixels  are arranged left-to right, with the first block in the upper\n     left pixel. The width of the image must be specified on the command line -\n     just  pick any value.\n\n     In case of partially defective discs you might start by having myrescue do\n     a random jump-around scan (option -J) and continually check the visualized\n     block bitmap. If you are lucky, you might begin to see some  structure  in\n     the  image. If these structures somehow run diagonally, you can adjust the\n     width until you get vertical stripes of defective areas. What  this  means\n     depends  on  the  internal  layout  of the disc, but it could be defective\n     heads, platters, sectors, cracks, a factory workers hair, ...\n\n     Usually internally discs have different zones, so after a  few  (hundred?)\n     rows  you might see the vertical structures bend off. To adjust the image,\n     you can tell the tool to switch to a different width after a certain  num-\n     ber  of  rows.  Repeat this until you identified all zones. The last width\n     will be used up to the end of the bitmap.\n\n     The resulting image will have the maximum width necessary  to  accommodate\n     all zones. Zones with shorter widths will be padded on the right with blue\n     pixels.\n\n     You  can now use this information to manually fine-tune the myrescue calls\n     to concentrate on areas with higher probability of rescue.\n\nAUTHORS\n     Kristof Koehler <kristofk@users.sourceforge.net>\n\nSEE ALSO\n     myrescue(1), ppm(5), ImageMagick(1)\n\n     http://myrescue.sourceforge.net/\n\nmyrescue 0.9.6                   February 2018           myrescue-bitmap2ppm(2)",
+        "apropos": "myrescue-bitmap2ppm (2) - Visualisation of the block bitmap for myrescue"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/myrescue-bitmap2ppm",
+        "size_bytes": 14568,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ad15a73338a58b5c12461500db973aedc6168a0f, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "myrescue-stat",
+      "description": "Block bitmap statistics for myrescue",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-106"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "1 (2.78%)",
+          "default": null,
+          "choices": null,
+          "raw": "-106: 1 (2.78%)"
+        },
+        {
+          "flags": [
+            "-34"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "1 (2.78%)",
+          "default": null,
+          "choices": null,
+          "raw": "-34: 1 (2.78%)"
+        }
+      ],
+      "raw_help": "root@kali:~# man myrescue-stat\n myrescue-stat(2)              System Calls Manual              myrescue-stat(2)\n \n NAME\n    myrescue-stat - Block bitmap statistics for myrescue\n \n SYNOPSIS\n    myrescue-stat bitmap-file\n \n DESCRIPTION\n    myrescue-stat  reads a block bitmap from myrescue(1) and prints the number\n    and percentage of blocks for the different conditions.\n \n    Possible conditions are:\n \n    0 = Block has not yet been handled.\n \n    1 = Block was successfully copied.\n \n    2 = Block was successfully copied, but took a long time to read.\n           (This usually indicates that the block is almost dead.)\n \n    Negative values = Attempts to read the block have so far failed.\n           The absolute value indicate the number of failed read attempts.\n \n AUTHORS\n    Kristof Koehler <kristofk@users.sourceforge.net>\n \n SEE ALSO\n    myrescue(1)\n \n    http://myrescue.sourceforge.net/\n \n myrescue 0.9.6                   February 2018                 myrescue-stat(2)",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "help": "-106: 1 (2.78%)\n-34: 1 (2.78%)\n0: 30 (83.33%)\n1: 2 (5.56%)\n4: 1 (2.78%)\n8: 1 (2.78%)",
+        "man": "myrescue-stat(2)              System Calls Manual              myrescue-stat(2)\n\nNAME\n     myrescue-stat - Block bitmap statistics for myrescue\n\nSYNOPSIS\n     myrescue-stat bitmap-file\n\nDESCRIPTION\n     myrescue-stat  reads a block bitmap from myrescue(1) and prints the number\n     and percentage of blocks for the different conditions.\n\n     Possible conditions are:\n\n     0 = Block has not yet been handled.\n\n     1 = Block was successfully copied.\n\n     2 = Block was successfully copied, but took a long time to read.\n            (This usually indicates that the block is almost dead.)\n\n     Negative values = Attempts to read the block have so far failed.\n            The absolute value indicate the number of failed read attempts.\n\nAUTHORS\n     Kristof Koehler <kristofk@users.sourceforge.net>\n\nSEE ALSO\n     myrescue(1)\n\n     http://myrescue.sourceforge.net/\n\nmyrescue 0.9.6                   February 2018                 myrescue-stat(2)",
+        "apropos": "myrescue-stat (2)    - Block bitmap statistics for myrescue"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/myrescue-stat",
+        "size_bytes": 14568,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=fc17570f9721b9d4d9b7dcada0349bb54aa2f55a, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/myrescue/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/myrescue/index.md",
+    "retrieved_at": "2026-07-14T13:06:50+00:00",
+    "sha256": "f06f63ff5e0f210c6e1fda8cdb7eca40e84db2b1e72aa6c937e18a0eea354344"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "81",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "0.9.8-4",
+    "depends": "libc6 (>= 2.38)",
+    "description": "rescue data from damaged disks\nmyrescue is a program to rescue the still-readable data from a damaged\nharddisk, CD-ROM, DVD, flash drives, etc. It is similar in purpose to\ndd_rescue (or ddrescue), but it tries to quickly get out of damaged\nareas to first handle the not yet damaged part of the disk and return\nlater.\n.\nThis package is useful to recover data from any media and for forensics\ninvestigations.",
+    "homepage": "https://myrescue.sf.net"
+  },
+  "tags": [
+    "offensive",
+    "myrescue",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/myrescue && python3 myrescue.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/myrescue && python3 myrescue.py --help",
+    "cd toolboxes/myrescue && python3 myrescue.py --help",
+    "cd toolboxes/myrescue && python3 myrescue.py --help",
+    "cd toolboxes/myrescue && python3 myrescue.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST myrescue --output $KFIOSA_OUTPUT_DIR/myrescue.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST myrescue --output $KFIOSA_OUTPUT_DIR/myrescue.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

@@ -1,0 +1,226 @@
+{
+  "id": "kali:sucrack",
+  "kind": "kali_source_package",
+  "name": "sucrack",
+  "title": "sucrack",
+  "summary": "### sucrack",
+  "version": "1.2.3-8",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://labs.portcullis.co.uk/tools/sucrack/",
+  "repository": "https://salsa.debian.org/pkg-security-team/sucrack",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-passwords"
+  ],
+  "install": {
+    "apt": "sudo apt install sucrack"
+  },
+  "packages": [
+    {
+      "name": "sucrack"
+    }
+  ],
+  "commands": [
+    {
+      "name": "sucrack",
+      "description": "Is a multithreaded Linux/UNIX tool for brute-force cracking of local user accounts via su.",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print help message",
+          "default": null,
+          "choices": null,
+          "raw": "     -h     print help message"
+        },
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use ansi escape codes for nice looking statistics  (requires  --en-",
+          "default": null,
+          "choices": null,
+          "raw": "     -a     use ansi escape codes for nice looking statistics  (requires  --en-"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "seconds",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -s <seconds>"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "only print statistics if a key other than `q' is pressed",
+          "default": null,
+          "choices": null,
+          "raw": "     -c     only print statistics if a key other than `q' is pressed"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "enable rewriting of dictionary words (see rules below)",
+          "default": null,
+          "choices": null,
+          "raw": "     -r     enable rewriting of dictionary words (see rules below)"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": "num",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -w <num>"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "size",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -b <size>"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": "user",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -u <user>"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "rules",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -l <rules>"
+        }
+      ],
+      "raw_help": "root@kali:~# sucrack -h\n yah, very funny!",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "yah, very funny!",
+        "-h": "yah, very funny!",
+        "help": "yah, very funny!",
+        "man": "SUCRACK(1)                  General Commands Manual                  SUCRACK(1)\n\nNAME\n     sucrack  -  is a multithreaded Linux/UNIX tool for brute-force cracking of\n     local user accounts via su.\n\nSYNOPSIS\n     sucrack [options] wordlist\n\nDESCRIPTION\n     sucrack is a multithreaded Linux/UNIX tool brute-force cracking tool  that\n     drives  su(1)  with  referencing  a  specific  user  and uses words from a\n     wordlist as passwords. Running sucrack does not require high privileges on\n     the target system.\n\nOPTIONS\n     sucrack allows reading passwords from stdin. In that case, use '-' instead\n     of a filename as wordlist parameter.\n\n     Common options:\n\n     -h     print help message\n\n     -a     use ansi escape codes for nice looking statistics  (requires  --en-\n            able-statistics configuration flag)\n\n     -s <seconds>\n            statistics display intervall (requires --enable-statistics configu-\n            ration flag)\n\n     -c     only print statistics if a key other than `q' is pressed\n\n     -r     enable rewriting of dictionary words (see rules below)\n\n     -w <num>\n            number of threads to run with.\n\n     -b <size>\n            size of the word list buffer\n\n     -u <user>\n            user account to su to\n\n     -l <rules>\n            specify certain rules for the rewriting process\n\n     Rewriting rules:\n\n     A      Rewrite word with only upper case characters\n\n     F      Rewrite word with first character as upper case\n\n     L      Rewrite word with last character as upper case\n\n     a      Rewrite word with only lower case characters\n\n     f      Rewrite word with first character as lower case\n\n     l      Rewrite word with last character as lower case\n\n     D      Prepend each digit (0-9) to the word\n\n     d      Append each digit (0-9) to the word\n\n     e      enleet the word\n\n     x      apply all rules to a word\n\nENVIRONMENT VARIABLES\n     SUCRACK_SU_PATH\n            The path to su (usually /bin/su or /usr/bin/su)\n\n     SUCRACK_AUTH_FAILURE\n            The  message su returns on an authentication failure (like \"su: Au-\n            thentication failure\" or \"su: Sorry\")\n\n     SUCRACK_AUTH_SUCCESS\n            The message that indicates an authentication success. This  message\n            must  not  be  a  password  listed in the wordlist (default is \"SU-\n            CRACK_SUCCESS\")\n\nAUTHOR\n     Nico Leidecker <nfl@portcullis-security.com>\n            http://www.leidecker.info\n\nSEE ALSO\n     su(1)\n\n                                 Version 1.2.3                       SUCRACK(1)",
+        "apropos": "sucrack (1)          - is a multithreaded Linux/UNIX tool for brute-force cra..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/sucrack",
+        "size_bytes": 30872,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=7c8e46e09a09bf1f9738d098d2e92c43ffdb4808, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/sucrack/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/sucrack/index.md",
+    "retrieved_at": "2026-07-14T13:08:38+00:00",
+    "sha256": "e53824654dd02f8be5a88e8b54ddcaccab3fc69d5287750602b73244239bbc49"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "49",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.2.3-8",
+    "depends": "libc6 (>= 2.38)",
+    "description": "multithreaded su bruteforcer\nsucrack is a multithreaded Linux/UNIX tool for cracking local\nuser accounts via wordlist bruteforcing su. This tool comes in\nhandy when you've gained access to a low-privilege user account\nbut are allowed to su to other users. Many su implementations\nrequire a pseudo terminal to be attached in order to take the\npassword from the user. This can't be easily achieved with a\nsimple shell script. This tool, written in C, is highly\nefficient and can attempt multiple logins at the same time.",
+    "homepage": "https://labs.portcullis.co.uk/tools/sucrack/"
+  },
+  "tags": [
+    "offensive",
+    "sucrack",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/sucrack && python3 sucrack.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/sucrack && python3 sucrack.py --help",
+    "cd toolboxes/sucrack && python3 sucrack.py --help",
+    "cd toolboxes/sucrack && python3 sucrack.py --help",
+    "cd toolboxes/sucrack && python3 sucrack.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sucrack --output $KFIOSA_OUTPUT_DIR/sucrack.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sucrack --output $KFIOSA_OUTPUT_DIR/sucrack.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

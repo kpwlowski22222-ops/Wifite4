@@ -1,0 +1,258 @@
+{
+  "id": "kali:fiked",
+  "kind": "kali_source_package",
+  "name": "fiked",
+  "title": "fiked",
+  "summary": "### fiked",
+  "version": "0.0.5-1kali8",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://www.roe.ch/FakeIKEd",
+  "repository": "https://gitlab.com/kalilinux/packages/fiked",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-sniffing-spoofing"
+  ],
+  "install": {
+    "apt": "sudo apt install fiked"
+  },
+  "packages": [
+    {
+      "name": "fiked"
+    }
+  ],
+  "commands": [
+    {
+      "name": "fiked",
+      "description": "A fake IKE PSK+XAUTH daemon based on vpnc",
+      "usage": "fiked [-rdqhV] -g gw -k id:psk [-k ..] [-u user] [-l file] [-L file]",
+      "arguments": [
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "use raw socket",
+          "takes_value": true,
+          "description": "forge ip src addr to match <gateway> (disables -u)",
+          "default": null,
+          "choices": null,
+          "raw": " \t-r\tuse raw socket: forge ip src addr to match <gateway> (disables -u)"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "detach from tty and run as a daemon (implies -q)",
+          "default": null,
+          "choices": null,
+          "raw": " \t-d\tdetach from tty and run as a daemon (implies -q)"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": "is also given log to file only.",
+          "takes_value": false,
+          "description": "be quiet, don't write anything to stdout",
+          "default": null,
+          "choices": null,
+          "raw": " \t-q\tbe quiet, don't write anything to stdout"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print help and exit",
+          "default": null,
+          "choices": null,
+          "raw": " \t-h\tprint help and exit"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print version and exit",
+          "default": null,
+          "choices": null,
+          "raw": " \t-V\tprint version and exit"
+        },
+        {
+          "flags": [
+            "-g"
+          ],
+          "metavar": "gw",
+          "takes_value": true,
+          "description": "VPN gateway address to impersonate",
+          "default": null,
+          "choices": null,
+          "raw": " \t-g gw\tVPN gateway address to impersonate"
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": "i",
+          "takes_value": true,
+          "description": "k\tpre-shared key aka. group password, shared secret, prefixed",
+          "default": null,
+          "choices": null,
+          "raw": " \t-k i:k\tpre-shared key aka. group password, shared secret, prefixed"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": "user",
+          "takes_value": true,
+          "description": "drop privileges to unprivileged user account",
+          "default": null,
+          "choices": null,
+          "raw": " \t-u user\tdrop privileges to unprivileged user account"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "append results to credential log file",
+          "default": null,
+          "choices": null,
+          "raw": " \t-l file\tappend results to credential log file"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "verbous logging to file instead of stdout",
+          "default": null,
+          "choices": null,
+          "raw": " \t-L file\tverbous logging to file instead of stdout"
+        }
+      ],
+      "raw_help": "root@kali:~# fiked --help\n fiked: invalid option -- '-'\n Usage: fiked [-rdqhV] -g gw -k id:psk [-k ..] [-u user] [-l file] [-L file]\n \t-r\tuse raw socket: forge ip src addr to match <gateway> (disables -u)\n \t-d\tdetach from tty and run as a daemon (implies -q)\n \t-q\tbe quiet, don't write anything to stdout\n \t-h\tprint help and exit\n \t-V\tprint version and exit\n \t-g gw\tVPN gateway address to impersonate\n \t-k i:k\tpre-shared key aka. group password, shared secret, prefixed\n \t\twith its group/key id (first -k sets default)\n \t-u user\tdrop privileges to unprivileged user account\n \t-l file\tappend results to credential log file\n \t-L file\tverbous logging to file instead of stdout",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "fiked -g 10.0.0.1 -k group1:g3h31m -k group2:s3kr3t -l account.log",
+          "template": null,
+          "original_sha256": "185aa32869b77e15bbace54fd4304854fe53d55c4ab6c61cbbe1440433492d7a"
+        },
+        {
+          "status": "operational_example",
+          "command": "fiked -g 10.0.0.1 -k group1:g3h31m -l account.log -d -L fiked.log",
+          "template": null,
+          "original_sha256": "8757fd54088f54161101312fa6a89e44a2bdc06d18e280978482a279f802e427"
+        },
+        {
+          "status": "operational_example",
+          "command": "fiked: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "5b82f9389d4375a43898a625534419baac78f622b141e26b51dfde32d2127b1c"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "fiked: invalid option -- '-'\nUsage: fiked [-rdqhV] -g gw -k id:psk [-k ..] [-u user] [-l file] [-L file]\n\t-r\tuse raw socket: forge ip src addr to match <gateway> (disables -u)\n\t-d\tdetach from tty and run as a daemon (implies -q)\n\t-q\tbe quiet, don't write anything to stdout\n\t-h\tprint help and exit\n\t-V\tprint version and exit\n\t-g gw\tVPN gateway address to impersonate\n\t-k i:k\tpre-shared key aka. group password, shared secret, prefixed\n\t\twith its group/key id (first -k sets default)\n\t-u user\tdrop privileges to unprivileged user account\n\t-l file\tappend results to credential log file\n\t-L file\tverbous logging to file instead of stdout",
+        "-h": "Usage: fiked [-rdqhV] -g gw -k id:psk [-k ..] [-u user] [-l file] [-L file]\n\t-r\tuse raw socket: forge ip src addr to match <gateway> (disables -u)\n\t-d\tdetach from tty and run as a daemon (implies -q)\n\t-q\tbe quiet, don't write anything to stdout\n\t-h\tprint help and exit\n\t-V\tprint version and exit\n\t-g gw\tVPN gateway address to impersonate\n\t-k i:k\tpre-shared key aka. group password, shared secret, prefixed\n\t\twith its group/key id (first -k sets default)\n\t-u user\tdrop privileges to unprivileged user account\n\t-l file\tappend results to credential log file\n\t-L file\tverbous logging to file instead of stdout",
+        "help": "Usage: fiked [-rdqhV] -g gw -k id:psk [-k ..] [-u user] [-l file] [-L file]\n\t-r\tuse raw socket: forge ip src addr to match <gateway> (disables -u)\n\t-d\tdetach from tty and run as a daemon (implies -q)\n\t-q\tbe quiet, don't write anything to stdout\n\t-h\tprint help and exit\n\t-V\tprint version and exit\n\t-g gw\tVPN gateway address to impersonate\n\t-k i:k\tpre-shared key aka. group password, shared secret, prefixed\n\t\twith its group/key id (first -k sets default)\n\t-u user\tdrop privileges to unprivileged user account\n\t-l file\tappend results to credential log file\n\t-L file\tverbous logging to file instead of stdout",
+        "man": "FIKED(1)                    General Commands Manual                    FIKED(1)\n\nNAME\n     fiked - a fake IKE PSK+XAUTH daemon based on vpnc\n\nSYNOPSIS\n     fiked [-rdqhV] -g gateway -k id:secret [-u user] [-l file] [-L file]\n\nDESCRIPTION\n     Fiked impersonates a VPN gateway's IKE responder in order to capture XAUTH\n     login  credentials in insecure PSK+XAUTH setups, such as commonly found in\n     Cisco based VPN sites.\n\n     Fiked supports IKEv1 in aggressive mode, using pre-shared keys and  XAUTH.\n     Supported  algorithms are DES, 3DES, AES-128, AES-192, AES-256; MD5, SHA1;\n     and DH groups 1, 2 and 5.  IKE main mode is not supported.\n\n     To actually implement an attack against a VPN site, you have to  intercept\n     the IKE traffic to the VPN gateway and redirect it to fiked.  Your options\n     include  hostap  or  ARP  poisoning,  and  usually will require some (eg.)\n     pf(4) redirection magic, depending on the situation.\n\n     Opening a socket on 500/udp requires root privileges on most systems.\n\nOPTIONS\n     -d     Detach from TTY and run as a daemon.\n\n     -g     Impersonate gateway.  This IP address is used in the  responder  ID\n            payload, and as a source address if -r is used.\n\n     -h     Display help and exit.\n\n     -k     Use  secret  with  key/group id id as pre-shared key in phase 1 au-\n            thentication.  This option may be used multiple  times,  each  time\n            specifying  a different id, secret pair.  Fiked will use the key id\n            specified by a client to choose a matching secret, or the first one\n            if none matches.\n            Note that specifying secret's on the command line exposes  them  to\n            other users on the system.\n\n     -u     Drop  privileges  after  opening  sockets  and files by setting the\n            real, effective and stored user IDs to user and loading the  appro-\n            priate  primary and anxillary groups.  This potentially reduces the\n            impact of security vulnerabilities in fiked, because the  ISAKMP  /\n            IKE  handling code, which is most likely to be vulnerable, will not\n            be running with super user privileges.\n            If -u is not given, fiked will drop privileges  only  if  the  real\n            user  ID  is  different  from  the effective user ID (i.e. when in-\n            stalled set-user-ID root and run as a non-root user), in which case\n            the real user ID will be the new effective and stored user ID,  and\n            the group list will be left untouched.\n\n     -l     Append  captured  XAUTH  user  credentials  to  file  using  a grep\n            friendly format, including the secret, group id,  and  gateway  ad-\n            dress.\n\n     -L     Append verbous logging to file instead of just standard output.  If\n            -q is also given, log to file only.\n\n     -q     Be quiet and do not log to standard output.\n\n     -r     Forge  the  source  address on sent packets to match gateway.  This\n            uses a raw socket to send the packets.  Use  this  option  if  your\n            particular  attack  setup  does  not rewrite the packets travelling\n            from fiked back to clients.\n            Note that using -r prevents dropping privileges  if  fiked  is  in-\n            stalled  set-user-ID root, since libnet requires root privileges to\n            send packets through a raw socket.\n            This option is not available if fiked was built without libnet sup-\n            port.\n\n     -V     Display version information and exit.\n\nEXAMPLES\n     To impersonate gateway 10.0.0.1 using secrets for  group  ids  group1  and\n     group2, writing results to file account.log:\n            fiked -g 10.0.0.1 -k group1:g3h31m -k group2:s3kr3t -l account.log\n\n     The  same  with  only  one  key,  and  running as a daemon logging to file\n     fiked.log:\n            fiked -g 10.0.0.1 -k group1:g3h31m -l account.log -d -L fiked.log\n\nSEE ALSO\n     arpspoof(8), ath(4), wi(4), pf(4), iptables(8), vpnc(8)\n\nAUTHORS\n     Fiked was written by Daniel Roethlisberger <daniel@roe.ch>, based in  part\n     on vpnc by Maurice Massar, Geoffrey Keating and contributors.\n\nBUGS\n     IKE  protocol  compliance  is just good enough to attack Cisco VPN clients\n     and clones like vpnc, but nowhere near complete, secure, or error free.\n\n     Main mode is not supported.\n\n     Only a single gateway address can be specified.\n\n     Secrets can only be specified as command line arguments, which potentially\n     exposes them to other users on the system, especially on systems which  do\n     not have setproctitle(3), such as Linux.\n\n                                 4 August 2009                         FIKED(1)",
+        "apropos": "fiked (1)            - a fake IKE PSK+XAUTH daemon based on vpnc"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/fiked",
+        "size_bytes": 52432,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b5eee2ea207ac1ec7f19072afc0b8dd3f7cd1318, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/fiked/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/fiked/index.md",
+    "retrieved_at": "2026-07-14T13:05:36+00:00",
+    "sha256": "637c77334b5d6bbf18c11dce07d4134911e97f8efbb47f034c936bbc0da62cbf"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "173",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "0.0.5-1kali8+b1",
+    "depends": "libc6 (>= 2.34), libgcrypt20 (>= 1.11.1), libnet9 (>= 1.1.2.1)",
+    "description": "Cisco VPN attack tool\nFakeIKEd, or fiked for short, is a fake IKE daemon\nsupporting just enough of the standards and Cisco\nextensions to attack commonly found insecure Cisco VPN\nPSK+XAUTH based IPsec authentication setups in what could\nbe described as a semi MitM attack. Fiked can impersonate a\nVPN gateway’s IKE responder in order to capture XAUTH login\ncredentials; it doesn’t currently do the client part of\nfull MitM.",
+    "homepage": "https://www.roe.ch/FakeIKEd"
+  },
+  "tags": [
+    "offensive",
+    "fiked",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/fiked && python3 fiked.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/fiked && python3 fiked.py --help",
+    "cd toolboxes/fiked && python3 fiked.py --help",
+    "cd toolboxes/fiked && python3 fiked.py --help",
+    "cd toolboxes/fiked && python3 fiked.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fiked --output $KFIOSA_OUTPUT_DIR/fiked.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fiked --output $KFIOSA_OUTPUT_DIR/fiked.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

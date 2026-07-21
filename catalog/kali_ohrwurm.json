@@ -1,0 +1,213 @@
+{
+  "id": "kali:ohrwurm",
+  "kind": "kali_source_package",
+  "name": "ohrwurm",
+  "title": "ohrwurm",
+  "summary": "### ohrwurm",
+  "version": "0.1-1kali4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://mazzoo.de/blog/2006/08/25#ohrwurm",
+  "repository": "https://gitlab.com/kalilinux/packages/ohrwurm",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-voip",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install ohrwurm"
+  },
+  "packages": [
+    {
+      "name": "ohrwurm"
+    }
+  ],
+  "commands": [
+    {
+      "name": "ohrwurm",
+      "description": "- - -",
+      "usage": "ohrwurm -a <IP target a> -b <IP target b> [-s <randomseed>] [-e <bit error ratio in %>] [-i <interface>] [-A <RTP port a> -B <RTP port b>]",
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": "IPv4 address A in dot-decimal notation SIP phone A",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-a <IPv4 address A in dot-decimal notation> SIP phone A"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "IPv4 address B in dot-decimal notation SIP phone B",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-b <IPv4 address B in dot-decimal notation> SIP phone B"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "integer randomseed default",
+          "takes_value": true,
+          "description": "read from /dev/urandom)",
+          "default": null,
+          "choices": null,
+          "raw": " \t-s <integer> randomseed (default: read from /dev/urandom)"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "double bit error ratio in % default",
+          "takes_value": true,
+          "description": "1.230000)",
+          "default": null,
+          "choices": null,
+          "raw": " \t-e <double> bit error ratio in % (default: 1.230000)"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interfacename network interface default",
+          "takes_value": true,
+          "description": "eth0)",
+          "default": null,
+          "choices": null,
+          "raw": " \t-i <interfacename> network interface (default: eth0)"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "suppress RTCP packets default",
+          "takes_value": true,
+          "description": "dont suppress)",
+          "default": null,
+          "choices": null,
+          "raw": " \t-t suppress RTCP packets (default: dont suppress)"
+        },
+        {
+          "flags": [
+            "-B",
+            "-A"
+          ],
+          "metavar": "port number of RTP port on IP b requires",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-B <port number> of RTP port on IP b (requires -A)"
+        }
+      ],
+      "raw_help": "root@kali:~# ohrwurm -h\n ohrwurm-0.1\n \n usage: ohrwurm -a <IP target a> -b <IP target b> [-s <randomseed>] [-e <bit error ratio in %>] [-i <interface>] [-A <RTP port a> -B <RTP port b>]\n \n \t-a <IPv4 address A in dot-decimal notation> SIP phone A\n \t-b <IPv4 address B in dot-decimal notation> SIP phone B\n \t-s <integer> randomseed (default: read from /dev/urandom)\n \t-e <double> bit error ratio in % (default: 1.230000)\n \t-i <interfacename> network interface (default: eth0)\n \t-t suppress RTCP packets (default: dont suppress)\n \t-A <port number> of RTP port on IP a (requires -B)\n \t-B <port number> of RTP port on IP b (requires -A)\n \t   note: using -A and -B skips SIP sniffing, any RTP can be fuzzed",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "ohrwurm -a 192.168.1.123 -b 192.168.1.15 -A 6970 -B 6970 -i eth0\nohrwurm-0.1\nusing random seed 2978455466",
+          "template": null,
+          "original_sha256": "f21992c6dac81ed7d77fe1c11a98658a3ca0ecc009b13970fb95cceaffe81d0b"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "ohrwurm-0.1\n\nusage: ohrwurm -a <IP target a> -b <IP target b> [-s <randomseed>] [-e <bit error ratio in %>] [-i <interface>] [-A <RTP port a> -B <RTP port b>]\n\n\t-a <IPv4 address A in dot-decimal notation> SIP phone A\n\t-b <IPv4 address B in dot-decimal notation> SIP phone B\n\t-s <integer> randomseed (default: read from /dev/urandom)\n\t-e <double> bit error ratio in % (default: 1.230000)\n\t-i <interfacename> network interface (default: eth0)\n\t-t suppress RTCP packets (default: dont suppress)\n\t-A <port number> of RTP port on IP a (requires -B)\n\t-B <port number> of RTP port on IP b (requires -A)\n\t   note: using -A and -B skips SIP sniffing, any RTP can be fuzzed",
+        "-h": "ohrwurm-0.1\n\nusage: ohrwurm -a <IP target a> -b <IP target b> [-s <randomseed>] [-e <bit error ratio in %>] [-i <interface>] [-A <RTP port a> -B <RTP port b>]\n\n\t-a <IPv4 address A in dot-decimal notation> SIP phone A\n\t-b <IPv4 address B in dot-decimal notation> SIP phone B\n\t-s <integer> randomseed (default: read from /dev/urandom)\n\t-e <double> bit error ratio in % (default: 1.230000)\n\t-i <interfacename> network interface (default: eth0)\n\t-t suppress RTCP packets (default: dont suppress)\n\t-A <port number> of RTP port on IP a (requires -B)\n\t-B <port number> of RTP port on IP b (requires -A)\n\t   note: using -A and -B skips SIP sniffing, any RTP can be fuzzed",
+        "help": "ohrwurm-0.1\nERROR: no target a specified\n\nusage: ohrwurm -a <IP target a> -b <IP target b> [-s <randomseed>] [-e <bit error ratio in %>] [-i <interface>] [-A <RTP port a> -B <RTP port b>]\n\n\t-a <IPv4 address A in dot-decimal notation> SIP phone A\n\t-b <IPv4 address B in dot-decimal notation> SIP phone B\n\t-s <integer> randomseed (default: read from /dev/urandom)\n\t-e <double> bit error ratio in % (default: 1.230000)\n\t-i <interfacename> network interface (default: eth0)\n\t-t suppress RTCP packets (default: dont suppress)\n\t-A <port number> of RTP port on IP a (requires -B)\n\t-B <port number> of RTP port on IP b (requires -A)\n\t   note: using -A and -B skips SIP sniffing, any RTP can be fuzzed"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/ohrwurm",
+        "size_bytes": 18864,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4daf0b14421707e0f140d604cdc2fc657514fc5b, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/ohrwurm/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/ohrwurm/index.md",
+    "retrieved_at": "2026-07-14T13:07:07+00:00",
+    "sha256": "e31ea930b5064b57f6363050519af1fafc1b9ea3ddb51a9f4c4758fb8fced9a6"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "33",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "0.1-1kali4+b1",
+    "depends": "dsniff, libc6 (>= 2.38), libpcap0.8t64 (>= 0.9.8)",
+    "description": "RTP fuzzer\nohrwurm is a small and simple RTP fuzzer that has been\nsuccessfully tested on a small number of SIP phones.\nFeatures:\n.\n- reads SIP messages to get information of the RTP port\nnumbers\n- reading SIP can be omitted by providing the RTP port\nnumbers, sothat any RTP traffic can be fuzzed\n- RTCP traffic can be suppressed to avoid that codecs\n- learn about the \"noisy line\"\n- special care is taken to break RTP handling itself\n- the RTP payload is fuzzed with a constant BER\n- the BER is configurable\n- requires arpspoof from dsniff to do the MITM attack\n- requires both phones to be in a switched LAN (GW\noperation only works partially)",
+    "homepage": "http://mazzoo.de/blog/2006/08/25#ohrwurm"
+  },
+  "tags": [
+    "offensive",
+    "ohrwurm",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/ohrwurm && python3 ohrwurm.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ohrwurm && python3 ohrwurm.py --help",
+    "cd toolboxes/ohrwurm && python3 ohrwurm.py --help",
+    "cd toolboxes/ohrwurm && python3 ohrwurm.py --help",
+    "cd toolboxes/ohrwurm && python3 ohrwurm.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ohrwurm --output $KFIOSA_OUTPUT_DIR/ohrwurm.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ohrwurm --output $KFIOSA_OUTPUT_DIR/ohrwurm.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

@@ -1,0 +1,135 @@
+{
+  "id": "kali:rephrase",
+  "kind": "kali_source_package",
+  "name": "rephrase",
+  "title": "rephrase",
+  "summary": "### rephrase",
+  "version": "0.2-4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://www.roguedaemon.net/rephrase/",
+  "repository": "https://salsa.debian.org/pkg-security-team/rephrase",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install rephrase"
+  },
+  "packages": [
+    {
+      "name": "rephrase"
+    }
+  ],
+  "commands": [
+    {
+      "name": "rephrase",
+      "description": "Specialized passphrase recovery tool for GnuPG",
+      "usage": "rephrase <key> | --gpg-key <key> | --gpg-symmetric <encrypted_file> | --luks <block_device>",
+      "arguments": [],
+      "raw_help": "root@kali:~# rephrase -h\n rephrase (Rephrase) 0.2\n Copyright (C) 2003, 2014  Phil Lanch\n This program comes with ABSOLUTELY NO WARRANTY.\n This is free software, and you are welcome to redistribute it\n under certain conditions.  See the file COPYING for details.\n \n Usage: rephrase <key> | --gpg-key <key> | --gpg-symmetric <encrypted_file> | --luks <block_device>",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "rephrase (Rephrase) 0.2",
+          "template": null,
+          "original_sha256": "9c60dc36cc266c3b0ba9deafe491e3866a2c9ddef7890105cddd3bc4abaaaa90"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "rephrase (Rephrase) 0.2\nCopyright (C) 2003, 2014  Phil Lanch\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.  See the file COPYING for details.\n\nUsage: rephrase <key> | --gpg-key <key> | --gpg-symmetric <encrypted_file> | --luks <block_device>",
+        "-h": "rephrase (Rephrase) 0.2\nCopyright (C) 2003, 2014  Phil Lanch\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.  See the file COPYING for details.\n\nUsage: rephrase <key> | --gpg-key <key> | --gpg-symmetric <encrypted_file> | --luks <block_device>",
+        "help": "rephrase (Rephrase) 0.2\nCopyright (C) 2003, 2014  Phil Lanch\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.  See the file COPYING for details.\n\nfopen: No such device or address",
+        "man": "REPHRASE(1)                      User Commands                      REPHRASE(1)\n\nNAME\n     rephrase - Specialized passphrase recovery tool for GnuPG\n\nDESCRIPTION\n     rephrase  is  a specialized passphrase recovery tool for GnuPG. If you can\n     nearly remember your GnuPG passphrase - but not quite - then Rephrase  may\n     be able to help.\n\n     Tell  Rephrase the parts of the passphrase you know, and any number of al-\n     ternatives for the parts you're not sure about; and Rephrase will try  all\n     the  alternatives, in all possible combinations, and tell you which combi-\n     nation (if any) gives you the correct passphrase.  You could try  all  the\n     combinations yourself, of course, if there are just a handful of them; but\n     if there are more, that might be impractical.\n\n     On  the  other  hand,  if  you  need  to  try  a  huge  number of possible\n     passphrases, Rephrase might be too slow; it is far from being an efficient\n     passphrase cracker.   E.g.  Rephrase  can  try  out  about  2600  possible\n     passphrases per minute on my 1GHz Athlon (with other processes doing noth-\n     ing  very  heavy at the same time).  How many passphrases Rephrase can try\n     depends on how long you are prepared to wait!  Rephrase can reasonably  be\n     run for a long time; e.g. it *won't* use more memory the longer it runs.\n\n     It  would  be a Bad Thing to leave your passphrase (or part of it, or your\n     guesses at it) lying around on your hard drive; since a passphrase is sup-\n     posed to be an extra line of defence if an attacker obtains access to your\n     secret keyring (which you  presumably  *do*  keep  on  your  hard  drive).\n     That's  why  Rephrase keeps all the information about your passphrase that\n     you give it in secure memory (and then pipes each possible passphrase to a\n     child gpg process).  For this reason, Rephrase is likely to be more secure\n     than alternative solutions that involve  generating  a  list  of  possible\n     passphrases in a file and then testing them.\n\n     [1] For more information about GnuPG, see http://www.gnupg.org/ .\n\nUSAGE\n     rephrase <key>\n\n     where <key> is the key whose passphrase you want to recover; you can iden-\n     tify  the  key  in  any of the ways that GnuPG understands.  (To make sure\n     you're using a sensible value for <key>, you could first try\n\n         gpg --list-secret-keys <key>\n\n     which should list exactly 1 key.)\n\n     You will be prompted to enter a pattern (the pattern is not echoed to  the\n     screen  as you type it).  So what's a pattern?  Suppose you know that your\n     passphrase was something like \"super-secret\", but you're not sure  if  you\n     changed some (or all) of the \"e\"s into \"3\"s, or any of the consonants into\n     upper  case,  or  indeed  changed the \"c\" into \"k\" or \"K\" or even \"|<\", or\n     changed the \"-\" into \" \" or just omitted it.  Then you  could  enter  this\n     pattern:\n\n         (s|S)u(p|P)(e|3)(r|R)(-| |)(s|S)(e|3)(c|C|k|K|\\|<)(r|R)(e|3)(t|T)\n\n     The  pattern  is  your  passphrase - except that 4 characters have special\n     meanings.  Brackets - \"(\" and \")\" - are used to group  alternatives  wher-\n     ever  you're  not  sure  what characters are correct; \"|\" is used inside a\n     pair of brackets to separate the alternatives; and \"\\\" is used  to  escape\n     any of the 4 special characters when you need to use it literally.\n\n     Rephrase will tell you if your pattern contains a syntax error.  That hap-\n     pens  if there are unbalanced brackets (i.e. they aren't in proper pairs);\n     or if the pattern ends with \"\\\" (because then there's nothing  for  it  to\n     escape).   It  also happens (and these cases are limitations in Rephrase's\n     simple pattern parser) if you try to nest pairs of brackets; or if you try\n     to use \"|\" anywhere that's not inside a pair of brackets.\n\n     If the pattern contains no syntax errors, Rephrase will try each  possible\n     passphrase  matching  the  pattern  in turn.  If the correct passphrase is\n     found, Rephrase won't actually tell you what  it  is  (in  case  someone's\n     looking  over  your  shoulder), but will tell you a string of numbers: you\n     can work out the correct passphrase from these numbers and the pattern you\n     entered.  E.g.\n\n                2 1 2 1 2 1 1 5 1 2 2\n\n     The first number - 2 - means that at the first pair  of  brackets  in  the\n     pattern  - \"(s|S)\" - you must take the second alternative - viz. \"S\".  The\n     second number - 1 - means that at the seconds pair of brackets - \"(p|P)\" -\n     you must take the first alternative - viz. \"p\".  And so forth.  So in this\n     case the correct passphrase is \"Sup3r se|<r3T\".\n\n     If the correct passphrase is not found from the  pattern,  Rephrase  tells\n     you  so.   (Note that you will also get this result if you specified <key>\n     incorretly; how to check that the  value  of  <key>  is  OK  is  explained\n     above.)\n\n     Rephrase's  exit  status  is  0  is the passphrase is found, 1 if it's not\n     found, or other values if an error occurs.\n\nSECURITY\n     The good news is that Rephrase uses mlock() in order to keep the  informa-\n     tion  about  passphrases  that  it's given as secure as possible.  The bad\n     news is that using mlock() requires root privileges, so Rephrase needs  to\n     be  setuid  root.   However, it does drop root privileges very quickly, as\n     soon as it has called mlock().\n\n     It's also debatable whether mlock() is a proper way to  protect  sensitive\n     information.   According  to  POSIX,  mlock()ing a page guarantees that it\n     *is* in memory (useful for realtime applications), not that it *isn't*  in\n     the  swap  (useful for security applications).  Possibly an encrypted swap\n     partition (or no swap partition) is a better solution.  Anyway, GnuPG  it-\n     self uses mlock(), which makes it sensible for Rephrase to follow suit.\n\nBUGS\n     Portability  is  untested: I have only used Rephrase on a GNU/Linux system\n     (Linux 2.4.21 and Glibc 2.3.2; building with GNU Make  3.79.1,  bash  2.05\n     (as /bin/sh) and either GCC 2.95.3 or GCC 3.3).  I believe setreuid() is a\n     BSD-ism,  so it may not exist on more SysV-like systems.  There are proba-\n     bly many other issues.\n\n     If mlock() fails (probably because Rephrase is not setuid root),  Rephrase\n     refuses  to  proceed:  it would be better to issue a warning and continue,\n     since that's what GnuPG does.\n\n     Before it asks you to enter a pattern,  Rephrase  should  check  that  the\n     <key> argument does refer to exactly 1 key and that that key is available.\n\n     If  you'd  like Rephrase to be faster, then it's too slow.  (But if you're\n     happy with it, then it's fast enough.)\n\n     The standard --version and --help options are unimplemented.\n\nAUTHOR\n     This manual page was prepared by Tiago Bortoletto  Vaz  <tiago@debian.org>\n     for  the  Debian GNU/Linux system (but may be used by others). Most of the\n     text used here comes  from  the  original  README  file  by  Phil  Lanch's\n     <phil@subtle.clara.co.uk>.\n\nrephrase                         September 2009                     REPHRASE(1)",
+        "apropos": "rephrase (1)         - Specialized passphrase recovery tool for GnuPG"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/rephrase",
+        "size_bytes": 25864,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=cc6a04f06ec0ebc5cb03913bf1539e0fce7e0baa, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/rephrase/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/rephrase/index.md",
+    "retrieved_at": "2026-07-14T13:08:05+00:00",
+    "sha256": "295f2c5c7fd0a82c560470a331ba53cdfc1ace263c98ccaa8d0781f367a86caa"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "43",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "0.2-4",
+    "depends": "libc6 (>= 2.4), gnupg",
+    "description": "Specialized passphrase recovery tool for GnuPG\nIf you can nearly remember your GnuPG passphrase - but not quite - then\nRephrase may be able to help. Tell Rephrase the parts of the passphrase you\nknow, and any number of alternatives for the parts you're not sure about; and\nRephrase will try all the alternatives, in all possible combinations, and tell\nyou which combination (if any) gives you the correct passphrase.",
+    "homepage": "https://www.roguedaemon.net/rephrase/"
+  },
+  "tags": [
+    "offensive",
+    "rephrase",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/rephrase && python3 rephrase.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/rephrase && python3 rephrase.py --help",
+    "cd toolboxes/rephrase && python3 rephrase.py --help",
+    "cd toolboxes/rephrase && python3 rephrase.py --help",
+    "cd toolboxes/rephrase && python3 rephrase.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rephrase --output $KFIOSA_OUTPUT_DIR/rephrase.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rephrase --output $KFIOSA_OUTPUT_DIR/rephrase.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

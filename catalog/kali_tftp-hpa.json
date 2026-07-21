@@ -1,0 +1,611 @@
+{
+  "id": "kali:tftp-hpa",
+  "kind": "kali_source_package",
+  "name": "tftp-hpa",
+  "title": "tftp-hpa",
+  "summary": "### tftp-hpa",
+  "version": "5.3+20251209-2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://git.kernel.org/pub/scm/network/tftp/tftp-hpa.git/",
+  "repository": "https://salsa.debian.org/debian/tftp-hpa",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large"
+  ],
+  "install": {
+    "apt": "sudo apt install tftp-hpa"
+  },
+  "packages": [
+    {
+      "name": "tftp-hpa"
+    },
+    {
+      "name": "tftpd-hpa"
+    }
+  ],
+  "commands": [
+    {
+      "name": "tftp",
+      "description": "IPv4 Trivial File Transfer Protocol client",
+      "usage": "tftp [-4][-6][-v][-l][-m mode] [host [port]] [-c command]",
+      "arguments": [
+        {
+          "flags": [
+            "-4"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Connect with IPv4 only, even if IPv6 support was compiled in.",
+          "default": null,
+          "choices": null,
+          "raw": "     -4     Connect with IPv4 only, even if IPv6 support was compiled in."
+        },
+        {
+          "flags": [
+            "-6"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Connect with IPv6 only, if compiled in.",
+          "default": null,
+          "choices": null,
+          "raw": "     -6     Connect with IPv6 only, if compiled in."
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "command",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -c command"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Default to literal mode. Used to avoid special processing of ':' in",
+          "default": "to literal mode",
+          "choices": null,
+          "raw": "     -l     Default to literal mode. Used to avoid special processing of ':' in"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "mode",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -m mode"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "port",
+          "default": null,
+          "choices": null,
+          "raw": "     -R port:port"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Default to verbose mode.",
+          "default": "to verbose mode",
+          "choices": null,
+          "raw": "     -v     Default to verbose mode."
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print the version number and configuration to standard output, then",
+          "default": null,
+          "choices": null,
+          "raw": "     -V     Print the version number and configuration to standard output, then"
+        }
+      ],
+      "raw_help": "root@kali:~# tftp -h\n Usage: tftp [-4][-6][-v][-l][-m mode] [host [port]] [-c command]",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: tftp [-4][-6][-v][-l][-m mode] [host [port]] [-c command]",
+        "-h": "Usage: tftp [-4][-6][-v][-l][-m mode] [host [port]] [-c command]",
+        "help": "Error: Temporary failure in name resolution\nhelp: unknown host\ntftp>",
+        "man": "TFTP(1)                          User's Manual                          TFTP(1)\n\nNAME\n     tftp - IPv4 Trivial File Transfer Protocol client\n\nSYNOPSIS\n     tftp [ options... ] [host [port]] [-c command]\n\nDESCRIPTION\n     tftp is a client for the Trivial file Transfer Protocol, which can be used\n     to  transfer  files to and from remote machines, including some very mini-\n     malistic, usually embedded, systems.  The remote host may be specified  on\n     the command line, in which case tftp uses host as the default host for fu-\n     ture transfers (see the connect command below.)\n\nOPTIONS\n     -4     Connect with IPv4 only, even if IPv6 support was compiled in.\n\n     -6     Connect with IPv6 only, if compiled in.\n\n     -c command\n            Execute command as if it had been entered on the tftp prompt.  Must\n            be specified last on the command line.\n\n     -l     Default to literal mode. Used to avoid special processing of ':' in\n            a file name.\n\n     -m mode\n            Set  the  default transfer mode to mode.  This is usually used with\n            -c.\n\n     -R port:port\n            Force the originating port number to be in the specified  range  of\n            port numbers.\n\n     -v     Default to verbose mode.\n\n     -V     Print the version number and configuration to standard output, then\n            exit gracefully.\n\nCOMMANDS\n     Once  tftp  is running, it issues the prompt tftp> and recognizes the fol-\n     lowing commands:\n\n     ? command-name...\n\n     help command-name...\n            Print help information\n\n     ascii  Shorthand for mode ascii.\n\n     binary\n            Shorthand for mode binary.\n\n     connect host [port]\n            Set the host (and optionally port) for transfers.   Note  that  the\n            TFTP  protocol,  unlike the FTP protocol, does not maintain connec-\n            tions between transfers; thus, the connect command does  not  actu-\n            ally  create  a connection, but merely remembers what host is to be\n            used for transfers.  You do not have to use  the  connect  command;\n            the  remote  host  can  be specified as part of the get or put com-\n            mands.\n\n     get file\n     get remotefile localfile\n     get file1 file2 file3...\n            Get a file or set of files from the specified  sources.   A  remote\n            filename can be in one of two forms: a plain filename on the remote\n            host,  if  the  host has already been specified, or a string of the\n            form host:filename to specify both a host and filename at the  same\n            time.   If the latter form is used, the last hostname specified be-\n            comes the default for future transfers.   Enable  literal  mode  to\n            prevent special treatment of the ':' character (e.g. C:\\dir\\file).\n\n     literal\n            Toggle  literal  mode.  When set, this mode prevents special treat-\n            ment of ':' in filenames.\n\n     mode transfer-mode\n            Specify the mode for transfers; transfer-mode may be one  of  ascii\n            (or netascii) or binary (or octet.)  The default is ascii.\n\n     put file\n     put localfile remotefile\n     put file1 file2 file3... remote-directory\n            Put  a  file or set of files to the specified remote file or direc-\n            tory.  The destination can be in one of two forms:  a  filename  on\n            the  remote  host,  if  the  host  has already been specified, or a\n            string of the form host:filename to specify both a host  and  file-\n            name  at  the  same time.  If the latter form is used, the hostname\n            specified becomes the default for future transfers.  If the remote-\n            directory form is used, the remote host is assumed  to  be  a  UNIX\n            system  or  another  system using / as directory separator.  Enable\n            literal mode to prevent special  treatment  of  the  ':'  character\n            (e.g. C:\\dir\\file).\n\n     quit   Exit tftp.  End-of-file will also exit.\n\n     rexmt retransmission-timeout\n            Set the per-packet retransmission timeout, in seconds.\n\n     status\n            Show current status.\n\n     timeout total-transmission-timeout\n            Set the total transmission timeout, in seconds.\n\n     trace  Toggle packet tracing (a debugging feature.)\n\n     verbose\n            Toggle verbose mode.\n\nNOTES\n     The  TFTP  protocol provides no provisions for authentication or security.\n     Therefore, the remote server will probably implement some kinds of  access\n     restriction  or  firewalling.   These access restrictions are likely to be\n     site- and server-specific.\n\nAUTHOR\n     This version of tftp is maintained by H. Peter Anvin <hpa@zytor.com>.   It\n     was  derived  from, but has substantially diverged from, an OpenBSD source\n     base, with added patches by Markus Gutschke and Gero Kulhman.\n\nSEE ALSO\n     tftpd(8).\n\ntftp-hpa 5.3                      23 July 2008                          TFTP(1)",
+        "apropos": "atftpd (8)           - Trivial File Transfer Protocol Server.\nin.tftpd (8)         - Trivial File Transfer Protocol Server.\nNet::TFTP (3pm)      - TFTP Client class\npatftp (1)           - patch generator tools\ntftp (1)             - IPv4 Trivial File Transfer Protocol client"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tftp",
+        "size_bytes": 35456,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f8e11b29ad14dae4ee554d2aa9c0706ad6cfdebf, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "in.tftpd",
+      "description": "Trivial File Transfer Protocol Server.",
+      "usage": "tftpd [options] [directory]",
+      "arguments": [
+        {
+          "flags": [
+            "-t",
+            "--tftpd-timeout"
+          ],
+          "metavar": "- ftpd imeout value",
+          "takes_value": true,
+          "description": "number of second of inactivity before exiting",
+          "default": null,
+          "choices": null,
+          "raw": " -t, --tftpd-timeout <value>: number of second of inactivity before exiting"
+        },
+        {
+          "flags": [
+            "-r",
+            "--retry-timeout"
+          ],
+          "metavar": "- etry-timeout value",
+          "takes_value": true,
+          "description": "time to wait a reply before retransmition",
+          "default": null,
+          "choices": null,
+          "raw": " -r, --retry-timeout <value>: time to wait a reply before retransmition"
+        },
+        {
+          "flags": [
+            "-m",
+            "--maxthread"
+          ],
+          "metavar": "- axthread value",
+          "takes_value": true,
+          "description": "number of concurrent thread allowed",
+          "default": null,
+          "choices": null,
+          "raw": " -m, --maxthread <value>    : number of concurrent thread allowed"
+        },
+        {
+          "flags": [
+            "-v",
+            "--verbose"
+          ],
+          "metavar": "- erbose value",
+          "takes_value": true,
+          "description": "increase or set the level of output messages",
+          "default": null,
+          "choices": null,
+          "raw": " -v, --verbose [value]      : increase or set the level of output messages"
+        },
+        {
+          "flags": [
+            "--trace"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "log all sent and received packets",
+          "default": null,
+          "choices": null,
+          "raw": " --trace                    : log all sent and received packets"
+        },
+        {
+          "flags": [
+            "--no-timeout"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable 'timeout' from RFC2349",
+          "default": null,
+          "choices": null,
+          "raw": " --no-timeout               : disable 'timeout' from RFC2349"
+        },
+        {
+          "flags": [
+            "--no-tsize"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable 'tsize' from RFC2349",
+          "default": null,
+          "choices": null,
+          "raw": " --no-tsize                 : disable 'tsize' from RFC2349"
+        },
+        {
+          "flags": [
+            "--no-blksize"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable 'blksize' from RFC2348",
+          "default": null,
+          "choices": null,
+          "raw": " --no-blksize               : disable 'blksize' from RFC2348"
+        },
+        {
+          "flags": [
+            "--no-windowsize"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable 'windowsize' from RFC7440",
+          "default": null,
+          "choices": null,
+          "raw": " --no-windowsize            : disable 'windowsize' from RFC7440"
+        },
+        {
+          "flags": [
+            "--no-multicast"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable 'multicast' from RFC2090",
+          "default": null,
+          "choices": null,
+          "raw": " --no-multicast             : disable 'multicast' from RFC2090"
+        },
+        {
+          "flags": [
+            "--logfile"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "logfile to log logs to ;-) (use - for stdout)",
+          "default": null,
+          "choices": null,
+          "raw": " --logfile <file>           : logfile to log logs to ;-) (use - for stdout)"
+        },
+        {
+          "flags": [
+            "--pidfile"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "write PID to this file",
+          "default": null,
+          "choices": null,
+          "raw": " --pidfile <file>           : write PID to this file"
+        },
+        {
+          "flags": [
+            "--listen-local"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "force listen on local network address",
+          "default": null,
+          "choices": null,
+          "raw": " --listen-local             : force listen on local network address"
+        },
+        {
+          "flags": [
+            "--daemon"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "run atftpd standalone (no inetd)",
+          "default": null,
+          "choices": null,
+          "raw": " --daemon                   : run atftpd standalone (no inetd)"
+        },
+        {
+          "flags": [
+            "--no-fork"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "run as a daemon, don't fork",
+          "default": null,
+          "choices": null,
+          "raw": " --no-fork                  : run as a daemon, don't fork"
+        },
+        {
+          "flags": [
+            "--prevent-sas"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "prevent Sorcerer's Apprentice Syndrome",
+          "default": null,
+          "choices": null,
+          "raw": " --prevent-sas              : prevent Sorcerer's Apprentice Syndrome"
+        },
+        {
+          "flags": [
+            "--user"
+          ],
+          "metavar": "user .group",
+          "takes_value": true,
+          "description": "default is nobody",
+          "default": "is nobody",
+          "choices": null,
+          "raw": " --user <user[.group]>      : default is nobody"
+        },
+        {
+          "flags": [
+            "--group"
+          ],
+          "metavar": "group",
+          "takes_value": true,
+          "description": "default is nogroup",
+          "default": "is nogroup",
+          "choices": null,
+          "raw": " --group <group>            : default is nogroup"
+        },
+        {
+          "flags": [
+            "--port"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "port on which atftp listen",
+          "default": null,
+          "choices": null,
+          "raw": " --port <port>              : port on which atftp listen"
+        },
+        {
+          "flags": [
+            "--bind-address"
+          ],
+          "metavar": "IP",
+          "takes_value": true,
+          "description": "local address atftpd listen to",
+          "default": null,
+          "choices": null,
+          "raw": " --bind-address <IP>        : local address atftpd listen to"
+        },
+        {
+          "flags": [
+            "--mcast-ttl"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "ttl to used for multicast",
+          "default": null,
+          "choices": null,
+          "raw": " --mcast-ttl                : ttl to used for multicast"
+        },
+        {
+          "flags": [
+            "--mcast-addr"
+          ],
+          "metavar": "address list",
+          "takes_value": true,
+          "description": "list/range of IP address to use",
+          "default": null,
+          "choices": null,
+          "raw": " --mcast-addr <address list>: list/range of IP address to use"
+        },
+        {
+          "flags": [
+            "--mcast-port"
+          ],
+          "metavar": "port range",
+          "takes_value": true,
+          "description": "ports to use for multicast transfer",
+          "default": null,
+          "choices": null,
+          "raw": " --mcast-port <port range>  : ports to use for multicast transfer"
+        },
+        {
+          "flags": [
+            "--pcre"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "use this file for pattern replacement",
+          "default": null,
+          "choices": null,
+          "raw": " --pcre <file>              : use this file for pattern replacement"
+        },
+        {
+          "flags": [
+            "--pcre-test"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "just test pattern file, not starting server",
+          "default": null,
+          "choices": null,
+          "raw": " --pcre-test <file>         : just test pattern file, not starting server"
+        },
+        {
+          "flags": [
+            "--mtftp"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "mtftp configuration file",
+          "default": null,
+          "choices": null,
+          "raw": " --mtftp <file>             : mtftp configuration file"
+        },
+        {
+          "flags": [
+            "--mtftp-port"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "port mtftp will listen",
+          "default": null,
+          "choices": null,
+          "raw": " --mtftp-port <port>        : port mtftp will listen"
+        },
+        {
+          "flags": [
+            "--no-source-port-checking"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "violate RFC, see man page",
+          "default": null,
+          "choices": null,
+          "raw": " --no-source-port-checking  : violate RFC, see man page"
+        },
+        {
+          "flags": [
+            "--mcast-switch-client"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "switch client on first timeout, see man page",
+          "default": null,
+          "choices": null,
+          "raw": " --mcast-switch-client      : switch client on first timeout, see man page"
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print version information",
+          "default": null,
+          "choices": null,
+          "raw": " -V, --version              : print version information"
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "print this help",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help                 : print this help"
+        },
+        {
+          "flags": [
+            "--user",
+            "--group"
+          ],
+          "metavar": "and the last option will be used.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "            --user and --group, the last option will be used."
+        }
+      ],
+      "raw_help": "root@kali:~# in.tftpd -h\n Usage: tftpd [options] [directory]\n[options] may be:\n -t, --tftpd-timeout <value>: number of second of inactivity before exiting\n -r, --retry-timeout <value>: time to wait a reply before retransmition\n -m, --maxthread <value>    : number of concurrent thread allowed\n -v, --verbose [value]      : increase or set the level of output messages\n --trace                    : log all sent and received packets\n --no-timeout               : disable 'timeout' from RFC2349\n --no-tsize                 : disable 'tsize' from RFC2349\n --no-blksize               : disable 'blksize' from RFC2348\n --no-windowsize            : disable 'windowsize' from RFC7440\n --no-multicast             : disable 'multicast' from RFC2090\n --logfile <file>           : logfile to log logs to ;-) (use - for stdout)\n --pidfile <file>           : write PID to this file\n --listen-local             : force listen on local network address\n --daemon                   : run atftpd standalone (no inetd)\n --no-fork                  : run as a daemon, don't fork\n --prevent-sas              : prevent Sorcerer's Apprentice Syndrome\n --user <user[.group]>      : default is nobody\n --group <group>            : default is nogroup\n --port <port>              : port on which atftp listen\n --bind-address <IP>        : local address atftpd listen to\n --mcast-ttl                : ttl to used for multicast\n --mcast-addr <address list>: list/range of IP address to use\n --mcast-port <port range>  : ports to use for multicast transfer\n --pcre <file>              : use this file for pattern replacement\n --pcre-test <file>         : just test pattern file, not starting server\n --mtftp <file>             : mtftp configuration file\n --mtftp-port <port>        : port mtftp will listen\n --no-source-port-checking  : violate RFC, see man page\n --mcast-switch-client      : switch client on first timeout, see man page\n -V, --version              : print version information\n -h, --help                 : print this help\n \n[directory] must be a world readable/writable directories.\nBy default /tftpboot is assumed.",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "c2",
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: tftpd [options] [directory]\n [options] may be:\n  -t, --tftpd-timeout <value>: number of second of inactivity before exiting\n  -r, --retry-timeout <value>: time to wait a reply before retransmition\n  -m, --maxthread <value>    : number of concurrent thread allowed\n  -v, --verbose [value]      : increase or set the level of output messages\n  --trace                    : log all sent and received packets\n  --no-timeout               : disable 'timeout' from RFC2349\n  --no-tsize                 : disable 'tsize' from RFC2349\n  --no-blksize               : disable 'blksize' from RFC2348\n  --no-windowsize            : disable 'windowsize' from RFC7440\n  --no-multicast             : disable 'multicast' from RFC2090\n  --logfile <file>           : logfile to log logs to ;-) (use - for stdout)\n  --pidfile <file>           : write PID to this file\n  --listen-local             : force listen on local network address\n  --daemon                   : run atftpd standalone (no inetd)\n  --no-fork                  : run as a daemon, don't fork\n  --prevent-sas              : prevent Sorcerer's Apprentice Syndrome\n  --user <user[.group]>      : default is nobody\n  --group <group>            : default is nogroup\n  --port <port>              : port on which atftp listen\n  --bind-address <IP>        : local address atftpd listen to\n  --mcast-ttl                : ttl to used for multicast\n  --mcast-addr <address list>: list/range of IP address to use\n  --mcast-port <port range>  : ports to use for multicast transfer\n  --pcre <file>              : use this file for pattern replacement\n  --pcre-test <file>         : just test pattern file, not starting server\n  --mtftp <file>             : mtftp configuration file\n  --mtftp-port <port>        : port mtftp will listen\n  --no-source-port-checking  : violate RFC, see man page\n  --mcast-switch-client      : switch client on first timeout, see man page\n  -V, --version              : print version information\n  -h, --help                 : print this help\n\n [directory] must be a world readable/writable directories.\n By default /tftpboot is assumed.",
+        "-h": "Usage: tftpd [options] [directory]\n [options] may be:\n  -t, --tftpd-timeout <value>: number of second of inactivity before exiting\n  -r, --retry-timeout <value>: time to wait a reply before retransmition\n  -m, --maxthread <value>    : number of concurrent thread allowed\n  -v, --verbose [value]      : increase or set the level of output messages\n  --trace                    : log all sent and received packets\n  --no-timeout               : disable 'timeout' from RFC2349\n  --no-tsize                 : disable 'tsize' from RFC2349\n  --no-blksize               : disable 'blksize' from RFC2348\n  --no-windowsize            : disable 'windowsize' from RFC7440\n  --no-multicast             : disable 'multicast' from RFC2090\n  --logfile <file>           : logfile to log logs to ;-) (use - for stdout)\n  --pidfile <file>           : write PID to this file\n  --listen-local             : force listen on local network address\n  --daemon                   : run atftpd standalone (no inetd)\n  --no-fork                  : run as a daemon, don't fork\n  --prevent-sas              : prevent Sorcerer's Apprentice Syndrome\n  --user <user[.group]>      : default is nobody\n  --group <group>            : default is nogroup\n  --port <port>              : port on which atftp listen\n  --bind-address <IP>        : local address atftpd listen to\n  --mcast-ttl                : ttl to used for multicast\n  --mcast-addr <address list>: list/range of IP address to use\n  --mcast-port <port range>  : ports to use for multicast transfer\n  --pcre <file>              : use this file for pattern replacement\n  --pcre-test <file>         : just test pattern file, not starting server\n  --mtftp <file>             : mtftp configuration file\n  --mtftp-port <port>        : port mtftp will listen\n  --no-source-port-checking  : violate RFC, see man page\n  --mcast-switch-client      : switch client on first timeout, see man page\n  -V, --version              : print version information\n  -h, --help                 : print this help\n\n [directory] must be a world readable/writable directories.\n By default /tftpboot is assumed.",
+        "man": "ATFTPD(8)                   System Manager's Manual                   ATFTPD(8)\n\nNAME\n     atftpd - Trivial File Transfer Protocol Server.\n\nSYNOPSIS\n     atftpd [options] directory\n\nDESCRIPTION\n     atftpd  is  a  TFTP (RFC1350) server. By default it is started by inetd on\n     most systems, but may run as a stand alone daemon. This server  is  multi-\n     threaded and supports all options described in RFC2347 (option extension),\n     RFC2348  (blksize), RFC2349 (tsize and timeout) and RFC2090 (multicast op-\n     tion). It also supports mtftp as defined in the PXE specification.\n\nOPTIONS\n     This program supports both the usual GNU command line  syntax,  with  long\n     options  starting  with  two  dashes ('-') as well as short options. A de-\n     scription of the options is included below.\n\n     -t, --tftpd-timeout <value>\n            Number of seconds of inactivity before the server exits. This value\n            has meaning only when the server is started  by  inetd.  In  daemon\n            mode, the server never exits. Default is 300 seconds.\n\n     -r, --retry-timeout <value>\n            How  many  seconds  to  wait  for  a  reply before retransmitting a\n            packet. Default is 5 seconds. This can be overridden  by  the  TFTP\n            client with the 'timeout' option.\n\n     -m, --maxthread <value>\n            Maximum number of concurrent threads allowed. Default is 100.\n\n     -v, --verbose[=value]\n            Increase  or  set  the logging level. No arguments will increase by\n            one the current value. Default is LOG_NOTICE, see syslog(3) for log\n            level. Valid value range from 0 (LOG_EMERG) to 7 (LOG_DEBUG).\n\n     --trace\n            When verbose level is set to 7, this will output debug  information\n            for each packet sent or received from the network.\n\n     --no-timeout\n            disable  'timeout'  from RFC2349. This will prevent the server from\n            acknowledging the 'timeout' option requested by the client.\n\n     --no-tsize\n            disable 'tsize' from RFC2349. This will prevent the server from ac-\n            knowledging the 'tsize' option requested by the client.\n\n     --no-blksize\n            disable 'blksize' from RFC2348. This will prevent the  server  from\n            acknowledging the 'blksize' request by the client.\n\n     --no-windowsize\n            disable  'windowsize'  from  RFC7440.  This will prevent the server\n            from acknowledging the 'windowsize' request by the client.\n\n     --no-multicast\n            disable 'multicast' from RFC2090. This will prevent the server from\n            acknowledging the 'multicast' request by the client.\n\n     --logfile <logfile>\n            Log to a specific file instead of only  syslog.  'nobody'  (or  any\n            user  used  to  run  the server) must have permissions on the given\n            file. Assuming the file is /var/log/atftpd.log, simply run:  \"touch\n            /var/log/atftpd.log\"     and     then     \"chown     nobody.nogroup\n            /var/log/atftpd.log\". When  the  server  is  run  in  daemon  mode,\n            /dev/stdout  or  /dev/stderr can be used.  Specifying a single dash\n            as the filename will send logs to stdout (file descriptor 1).\n\n     --pidfile\n            Write the PID of the server to the specified file. This may be use-\n            ful when automatically starting and stopping one or  more  instance\n            of the server.\n\n     --daemon\n            Run as a daemon. Do not use this option if atftpd is started by in-\n            etd.\n\n     --no-fork\n            When  --daemon  is  specified,  this option will prevent the server\n            from forking to background. It is useful for debugging  purpose  or\n            specialized usage.\n\n     --user <user[.group]>\n            By default, the server change identity to the user nobody and group\n            nogroup. Specify an alternate user.group with this option.\n\n     --group <group>\n            Alternate  way  of specifying the group. If group is specified with\n            --user and --group, the last option will be used.\n\n     --port <number>\n            Specify the port on which atftpd listens. Useful when  --daemon  is\n            specified.  Default  is  standard  tftp  port as determined by get-\n            servbyname(3).\n\n     --bind-address <IP address>\n            Specify the IP address which atftpd binds to. Useful when  --daemon\n            is  specified.  Default  is to bind to all interfaces. Only one ad-\n            dress can be specified, the server can only listen to  one  or  all\n            interfaces.\n\n     --mcast-ttl\n            Specify  the  TTL  to  be used for multicast datagram. By default a\n            value of 1 is used. Note that TTL has a special meaning  in  multi-\n            cast as it is used to determine the scope of the packets. The value\n            of  1  means  the packets don't leave the local network, see ip(4).\n            Scope may also be determine by the address as described RFC2365.\n\n     --mcast-addr\n            Specify the IP address range to be  used  for  multicast  transfer.\n            Format   string   may   comprise   range   and   list   of  values:\n            \"239.255.0.0-31,128-132,200\".  Default value is  \"239.255.0.0-255\".\n            This address range is proposed in RFC2365 for local scope.\n\n     --mcast-port\n            Specify  the  UDP port to use for multicast transfer. Format string\n            may contain range and list of port  number:  \"1758-2000,8000-9000\".\n            default value is \"1758\".\n\n     --pcre <file>\n            Specify  a  pattern/replacement file to use. This allows one to re-\n            place requested file name based on Perl Compatible Regular  Expres-\n            sion. See README.PCRE.\n\n     --pcre-test <file>\n            Test a pattern/replacement file. When using this option, the server\n            will  not  start  as  usual  but just read file name from stdin and\n            printout the substitution.\n\n     --mtftp <file>\n            This will start a mtftp server thread for each valid entry  in  the\n            supplied file. See PXE specification for detail about mtftp. An ex-\n            ample file is provided in the source distribution.\n\n     --mtftp-port <port>\n            Port the mtftp server shall listen to for incoming request.\n\n     --no-source-port-checking\n            In  some  specific  cases  of networks using load balancer or other\n            equipment performing NAT (network address translation), some  needs\n            to  disable source port checking because port number as been trans-\n            lated. If you want to use this feature, you must know why you  need\n            it  and  the  implication.  Be  aware  that this option violate the\n            RFC1350. This option has effect only for non-multicast transfer.\n\n     --prevent-sas\n            Address the Sorcerer's Apprentice Syndrome situation  as  requested\n            by  RFC  1350.   This  RFC  requires repeated responses to a single\n            packet to be rejected. Thus a block will only get retransmitted  on\n            a timeout.  For backward compatibility, the default stays to ignore\n            this RFC.  So blocks get transmitted on every request.\n\n     --mcast-switch-client\n            This  option  allows  the server to proceed with the next multicast\n            client as soon as the current client timeout. When the current mas-\n            ter client fails to send an acknowledge (ACK) to  the  server,  the\n            server  will send an option acknowledge (OACK) to the master client\n            with the field MC (master client) set to false and send an OACK  to\n            the next multicast client with MC set to true. Without this option,\n            the  server  will retry the current master client up to 5 times and\n            then mark it done, proceeding with the next one.\n\n     -V, --version\n            Show version of program.\n\n     -h, --help\n            Show summary of options.\n\n     path   This is the root directory used by the TFTP server.  All  requested\n            files  from  a  TFTP  client  must reside in this directory. If not\n            specified, the directory defaults to /tftpboot. Since atftpd run as\n            the nobody user, the permission of the directory must be set  prop-\n            erly to allow file reading and writing.\n\nSTATS\n     Starting with release 0.2, the server collects some statistics.  Currently\n     the  server  compute system load, time between connections and some thread\n     statistics like number of file sent, received, number of abort...  To  see\n     those  stats  in  the  logs,  you  need to set --verbose=6 (LOG_NOTICE) or\n     higher.\n\nSECURITY\n     TFTP by itself has no provision for security. There is no user authentica-\n     tion and TFTP clients get access to all files within  the  specified  root\n     directory for which the server has permission.\n\n     Some  level  of security can be gained using atftp libwrap support. Adding\n     proper entry to /etc/hosts.allow and /etc/hosts.deny will restrict  access\n     to trusted hosts. Daemon name to use in these files is in.tftpd.\n\nPCRE\n     The  atftpd  server  provides  a way to dynamically replace requested file\n     name by a new one based on Perl compatible regular  expression.  Pairs  of\n     pattern/replacement are read from the specified files. Upon reception of a\n     read  request,  the server will first try to open the file name requested.\n     If it fails, then it will search for a replacement based on the content of\n     the pattern file. If this still fails, then an error will be sent  to  the\n     client. This feature is available only for read request. It makes no sense\n     doing this substitution for client writing files to the server.\n\nMTFTP\n     The  mtftp  name  refer to multicasrt tftp as define by the PXE specifica-\n     tion. See pxespec.txt for the source of the specification. Note that  this\n     is  not  the  same  as  RFC2090.  PXE compliant boot implements mtftp, not\n     RFC2090.\n\nSEE ALSO\n     inetd(8),hosts_access(5),libpcre(7), RFC1350, RFC2090,  RFC2347,  RFC2348,\n     RFC2349 and pxespec.pdf.\n\nAUTHOR\n     This  manual page was written by Remi Lefebvre <remi@debian.org> and Jean-\n     Pierre Lefebvre <helix@step.polymtl.ca>.\n\n                               December 27, 2000                      ATFTPD(8)",
+        "apropos": "in.tftpd (8)         - Trivial File Transfer Protocol Server."
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/in.tftpd",
+        "size_bytes": 80968,
+        "is_symlink": true,
+        "real_path": "/usr/sbin/atftpd",
+        "file_type": "symbolic link to atftpd"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/tftp-hpa/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/tftp-hpa/index.md",
+    "retrieved_at": "2026-07-14T13:08:44+00:00",
+    "sha256": "6396730ac763aa83108bb5f5b8f5de88f9fe83e993744bfc0d27820182c44e35"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "59",
+    "maintainer": "Chris Hofstaedtler <zeha@debian.org>",
+    "architecture": "amd64",
+    "version": "5.3+20251209-2",
+    "depends": "libc6 (>= 2.38)",
+    "description": "HPA's tftp client\nTrivial File Transfer Protocol (TFTP) is a file transfer protocol, mainly to\nserve boot images over the network to other machines (PXE).\n.\ntftp-hpa is an enhanced version of the BSD TFTP client and server. It\npossesses a number of bugfixes and enhancements over the original.\n.\nThis package contains the client.",
+    "homepage": "https://git.kernel.org/pub/scm/network/tftp/tftp-hpa.git/"
+  },
+  "tags": [
+    "offensive",
+    "tftp",
+    "hpa",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --help",
+    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --help",
+    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --help",
+    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tftp-hpa --output $KFIOSA_OUTPUT_DIR/tftp-hpa.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tftp-hpa --output $KFIOSA_OUTPUT_DIR/tftp-hpa.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

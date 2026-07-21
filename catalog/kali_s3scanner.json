@@ -1,0 +1,235 @@
+{
+  "id": "kali:s3scanner",
+  "kind": "kali_source_package",
+  "name": "s3scanner",
+  "title": "s3scanner",
+  "summary": "### s3scanner",
+  "version": "3.0.0-0kali2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/sa7mon/s3scanner",
+  "repository": "https://gitlab.com/kalilinux/packages/s3scanner",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install s3scanner"
+  },
+  "packages": [
+    {
+      "name": "s3scanner"
+    }
+  ],
+  "commands": [
+    {
+      "name": "s3scanner",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-bucket"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "string  Name of bucket to check.",
+          "default": null,
+          "choices": null,
+          "raw": " -bucket        string  Name of bucket to check."
+        },
+        {
+          "flags": [
+            "-bucket-file"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "string  File of bucket names to check.",
+          "default": null,
+          "choices": null,
+          "raw": " -bucket-file   string  File of bucket names to check."
+        },
+        {
+          "flags": [
+            "-mq"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Connect to RabbitMQ to get buckets. Requires config file key \"mq\". Default: \"false\"",
+          "default": "\"false\"",
+          "choices": null,
+          "raw": " -mq                    Connect to RabbitMQ to get buckets. Requires config file key \"mq\". Default: \"false\""
+        },
+        {
+          "flags": [
+            "-db"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Save results to a Postgres database. Requires config file key \"db.uri\". Default: \"false\"",
+          "default": "\"false\"",
+          "choices": null,
+          "raw": " -db       Save results to a Postgres database. Requires config file key \"db.uri\". Default: \"false\""
+        },
+        {
+          "flags": [
+            "-json"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print logs to stdout in JSON format instead of human-readable. Default: \"false\"",
+          "default": "\"false\"",
+          "choices": null,
+          "raw": " -json     Print logs to stdout in JSON format instead of human-readable. Default: \"false\""
+        },
+        {
+          "flags": [
+            "-enumerate"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enumerate bucket objects (can be time-consuming). Default: \"false\"",
+          "default": "\"false\"",
+          "choices": null,
+          "raw": " -enumerate           Enumerate bucket objects (can be time-consuming). Default: \"false\""
+        },
+        {
+          "flags": [
+            "-provider"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "string  Object storage provider: aws, custom, digitalocean, dreamhost, gcp, linode - custom requires config file. Default: \"aws\"",
+          "default": "\"aws\"",
+          "choices": null,
+          "raw": " -provider    string  Object storage provider: aws, custom, digitalocean, dreamhost, gcp, linode - custom requires config file. Default: \"aws\""
+        },
+        {
+          "flags": [
+            "-threads"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "int     Number of threads to scan with. Default: \"4\"",
+          "default": "\"4\"",
+          "choices": null,
+          "raw": " -threads     int     Number of threads to scan with. Default: \"4\""
+        },
+        {
+          "flags": [
+            "-verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable verbose logging. Default: \"false\"",
+          "default": "\"false\"",
+          "choices": null,
+          "raw": " -verbose     Enable verbose logging. Default: \"false\""
+        },
+        {
+          "flags": [
+            "-version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print version Default: \"false\"",
+          "default": "\"false\"",
+          "choices": null,
+          "raw": " -version     Print version Default: \"false\""
+        }
+      ],
+      "raw_help": "root@kali:~# s3scanner -h\n INPUT: (1 required)\n -bucket        string  Name of bucket to check.\n -bucket-file   string  File of bucket names to check.\n -mq                    Connect to RabbitMQ to get buckets. Requires config file key \"mq\". Default: \"false\"\n \n OUTPUT:\n -db       Save results to a Postgres database. Requires config file key \"db.uri\". Default: \"false\"\n -json     Print logs to stdout in JSON format instead of human-readable. Default: \"false\"\n \n OPTIONS:\n -enumerate           Enumerate bucket objects (can be time-consuming). Default: \"false\"\n -provider    string  Object storage provider: aws, custom, digitalocean, dreamhost, gcp, linode - custom requires config file. Default: \"aws\"\n -threads     int     Number of threads to scan with. Default: \"4\"\n \n DEBUG:\n -verbose     Enable verbose logging. Default: \"false\"\n -version     Print version Default: \"false\"\n \n If config file is required these locations will be searched for config.yml: \".\" \"/etc/s3scanner/\" \"$HOME/.s3scanner/\"",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "INPUT: (1 required)\n  -bucket        string  Name of bucket to check.\n  -bucket-file   string  File of bucket names to check.\n  -mq                    Connect to RabbitMQ to get buckets. Requires config file key \"mq\". Default: \"false\"\n\nOUTPUT:\n  -db       Save results to a Postgres database. Requires config file key \"db.uri\". Default: \"false\"\n  -json     Print logs to stdout in JSON format instead of human-readable. Default: \"false\"\n\nOPTIONS:\n  -enumerate           Enumerate bucket objects (can be time-consuming). Default: \"false\"\n  -provider    string  Object storage provider: aws, custom, digitalocean, dreamhost, gcp, linode - custom requires config file. Default: \"aws\"\n  -threads     int     Number of threads to scan with. Default: \"4\"\n\nDEBUG:\n  -verbose     Enable verbose logging. Default: \"false\"\n  -version     Print version Default: \"false\"\n\nIf config file is required these locations will be searched for config.yml: \".\" \"/etc/s3scanner/\" \"$HOME/.s3scanner/\"",
+        "-h": "INPUT: (1 required)\n  -bucket        string  Name of bucket to check.\n  -bucket-file   string  File of bucket names to check.\n  -mq                    Connect to RabbitMQ to get buckets. Requires config file key \"mq\". Default: \"false\"\n\nOUTPUT:\n  -db       Save results to a Postgres database. Requires config file key \"db.uri\". Default: \"false\"\n  -json     Print logs to stdout in JSON format instead of human-readable. Default: \"false\"\n\nOPTIONS:\n  -enumerate           Enumerate bucket objects (can be time-consuming). Default: \"false\"\n  -provider    string  Object storage provider: aws, custom, digitalocean, dreamhost, gcp, linode - custom requires config file. Default: \"aws\"\n  -threads     int     Number of threads to scan with. Default: \"4\"\n\nDEBUG:\n  -verbose     Enable verbose logging. Default: \"false\"\n  -version     Print version Default: \"false\"\n\nIf config file is required these locations will be searched for config.yml: \".\" \"/etc/s3scanner/\" \"$HOME/.s3scanner/\"",
+        "help": "time=\"2026-07-14T15:08:13+02:00\" level=error msg=\"exactly one of: -bucket, -bucket-file, -mq required\""
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/s3scanner",
+        "size_bytes": 18715840,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=0c341b3974e00d2feadd26454eec7a1ffe4d8ec5, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/s3scanner/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/s3scanner/index.md",
+    "retrieved_at": "2026-07-14T13:08:13+00:00",
+    "sha256": "bef022c56e2e11bdbfe77878fb09cf9d4edb281e72672065f34ea5b5a8fa2381"
+  },
+  "apt_metadata": {
+    "section": "misc",
+    "installed_size": "18288",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "3.0.0-0kali2",
+    "depends": "libc6 (>= 2.34)",
+    "description": "tool to find open S3 buckets and dump their contents\nThis package contains a tool to find open S3 buckets and dump their contents.\nThe features are:\n* zap Multi-threaded scanning\n* telescope Supports tons of S3-compatible APIs\n* female_detective Scans all bucket permissions to find misconfigurations\n* floppy_disk Dump bucket contents to a local folder\n* whale Docker support",
+    "homepage": "https://github.com/sa7mon/s3scanner"
+  },
+  "tags": [
+    "offensive",
+    "s3scanner",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/s3scanner && python3 s3scanner.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/s3scanner && python3 s3scanner.py --help",
+    "cd toolboxes/s3scanner && python3 s3scanner.py --help",
+    "cd toolboxes/s3scanner && python3 s3scanner.py --help",
+    "cd toolboxes/s3scanner && python3 s3scanner.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST s3scanner --output $KFIOSA_OUTPUT_DIR/s3scanner.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST s3scanner --output $KFIOSA_OUTPUT_DIR/s3scanner.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

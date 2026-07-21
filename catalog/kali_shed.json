@@ -1,0 +1,197 @@
+{
+  "id": "kali:shed",
+  "kind": "kali_source_package",
+  "name": "shed",
+  "title": "shed",
+  "summary": "### shed",
+  "version": "1.16-2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://shed.sf.net",
+  "repository": "https://salsa.debian.org/pkg-security-team/shed",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install shed"
+  },
+  "packages": [
+    {
+      "name": "shed"
+    }
+  ],
+  "commands": [
+    {
+      "name": "shed",
+      "description": "Simple hex editor with a pico-style interface",
+      "usage": "shed [OPTIONS] [FILE]",
+      "arguments": [
+        {
+          "flags": [
+            "-r",
+            "--readonly"
+          ],
+          "metavar": "/ - eadonly",
+          "takes_value": true,
+          "description": "open FILE read only",
+          "default": null,
+          "choices": null,
+          "raw": " -r / --readonly       open FILE read only"
+        },
+        {
+          "flags": [
+            "-s",
+            "--start"
+          ],
+          "metavar": "/ - tart=OFFSET",
+          "takes_value": true,
+          "description": "position cursor to offset",
+          "default": null,
+          "choices": null,
+          "raw": " -s / --start=OFFSET   position cursor to offset"
+        },
+        {
+          "flags": [
+            "-H",
+            "--hex"
+          ],
+          "metavar": "/",
+          "takes_value": true,
+          "description": "start with hex offsets",
+          "default": null,
+          "choices": null,
+          "raw": " -H / --hex            start with hex offsets"
+        },
+        {
+          "flags": [
+            "-L",
+            "--length"
+          ],
+          "metavar": "/",
+          "takes_value": true,
+          "description": "set length (for device files)",
+          "default": null,
+          "choices": null,
+          "raw": " -L / --length         set length (for device files)"
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "/ - elp",
+          "takes_value": true,
+          "description": "show help and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h / --help           show help and exit"
+        },
+        {
+          "flags": [
+            "-v",
+            "--version"
+          ],
+          "metavar": "/ - ersion",
+          "takes_value": true,
+          "description": "show version and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -v / --version        show version and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# shed -h\n usage: shed [OPTIONS] [FILE]\n \n options:\n -r / --readonly       open FILE read only\n -s / --start=OFFSET   position cursor to offset\n -H / --hex            start with hex offsets\n -L / --length         set length (for device files)\n -h / --help           show help and exit\n -v / --version        show version and exit",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: shed [OPTIONS] [FILE]\n\noptions:\n  -r / --readonly       open FILE read only\n  -s / --start=OFFSET   position cursor to offset\n  -H / --hex            start with hex offsets\n  -L / --length         set length (for device files)\n  -h / --help           show help and exit\n  -v / --version        show version and exit",
+        "-h": "usage: shed [OPTIONS] [FILE]\n\noptions:\n  -r / --readonly       open FILE read only\n  -s / --start=OFFSET   position cursor to offset\n  -H / --hex            start with hex offsets\n  -L / --length         set length (for device files)\n  -h / --help           show help and exit\n  -v / --version        show version and exit",
+        "help": "help (regular file)                                                   shed 1.16 \nX       exit  R|N   repeat  B bin edit  A ext. asc  P preview  `     endian",
+        "man": "shed(1)                     General Commands Manual                     shed(1)\n\nNAME\n     shed - simple hex editor with a pico-style interface\n\nSYNOPSIS\n     shed [OPTIONS] [FILE]\n\nDESCRIPTION\n     A simple hex editor with a pico-style interface.\n\n     Each  line of the shed display represents one byte of the file. Each lines\n     consists of the offset of that byte from the start of the file, the  ascii\n     value  of the byte, and then the byte's value in various bases. All values\n     are unsigned.\n\n     When a command asks you for input, entering a zero-length string or press-\n     ing ^C will cancel the command.  When searching,  entering  a  zero-length\n     string will use the previous search word, if one exists.\n\n     Note  that  there  is  no save key. This is because the file is not loaded\n     into memory, so when you edit it the change is made directly to disk.\n\nOPTIONS\n     -r / --readonly\n            open FILE read only\n\n     -s / --start=OFFSET\n            position cursor to offset\n\n     -H / --hex\n            start in hex mode (hex offsets etc.)\n\n     -L / --length=LENGTH\n            set length of file to LENGTH. Useful for special files  where  shed\n            cannot obtain the length with stat.\n\n     -h / --help\n            show help and exit\n\n     -v / --version\n            show version and exit\n\nKEYS\n     arrow keys\n            move cursor around\n\n     pgup / ^Y\n            cursor up 16 pgdown / ^V cursor down 16\n\n     home / ^A\n            start of line (ascii column)\n\n     end / ^E\n            end of line (binary column)\n\n     space / e\n            edit  value  at cursor. You are asked to enter the new value in the\n            format of the current column the cursor is in - eg. if you  are  in\n            the hex column, it will ask for the new value in hex.\n\n     1 / 2 / 4\n            set size of cursor in bytes, in the hex/dec/oct columns (and binary\n            if in traditional mode).\n\n     ` (backtick)\n            toggle  the  endianness of multi-byte values (when cursor size is 2\n            or 4)\n\n     s / w / ^w / f / F3\n            search. Search string is asked for in the  format  of  the  current\n            cursor  column.   In  ascii, just enter the string in ascii. In the\n            others, enter the values  separated by spaces.  eg  to  search  for\n            ABC from the decimal column you would enter \"65 66 67\" (without the\n            quotes).\n\n     ^f / ^b\n            search shortcut for forwards/backwards respectivly.\n\n     r / n / F3\n            repeat previous search\n\n     t      toggle whether offset numbers and cursor position etc are in dec or\n            hex.\n\n     b      toggle binary mode column behaviour (bit edit mode vs traditional)\n\n     d      dump to file.\n\n     j      jump  to  byte. enter a byte number, or 'top' or 'end'. Can be suf-\n            fixed with K, M or G.\n\n     a      change the mode of the ascii  column  (printable  only/c-style  ex-\n            tended chars/'man ascii' descriptions)\n\n     p      toggle 'preview' mode.\n\n     x / ^x\n            exit\n\nAUTHOR\n     Alex Sisson (alexsisson@gmail.com)\n\nHOMEPAGE\n     Check for updates at https://shed.sourceforge.net\n\nshed-1.16                         06-DEC-2023                           shed(1)",
+        "apropos": "B::Hooks::EndOfScope (3pm) - Execute code after a scope finished compilation\nB::Hooks::EndOfScope::PP (3pm) - Execute code after a scope finished compilat...\nB::Hooks::EndOfScope::XS (3pm) - Execute code after a scope finished compilat...\ngit-delete-squashed-branches (1) - Delete branches that were squashed\ngit-receive-pack (1) - Receive what is pushed into the repository\ngrub-mkpasswd-pbkdf2 (1) - generate hashed password for GRUB\njhsdb (1)            - attach to a Java process or launch a postmortem debugg...\nopenssl-namedisplay-options (1ssl) - Distinguished name display options\nSD_EVENT_FINISHED (3) - Low-level event loop operations\nshed (1)             - simple hex editor with a pico-style interface"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/shed",
+        "size_bytes": 39528,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=0769c2a1c89622b820f703755340caf5f02641df, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/shed/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/shed/index.md",
+    "retrieved_at": "2026-07-14T13:08:18+00:00",
+    "sha256": "6927a799e33b281c79a2a8f7174759323c9f5cb646ed72930e51d402d2b4aaee"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "61",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.16-2",
+    "depends": "libc6 (>= 2.38), libncurses6 (>= 6), libtinfo6 (>= 6)",
+    "description": "simple hex editor with a pico-style interface\nshed (Simple Hex Editor) is an easy application for viewing and editing\nfiles in text mode, using ncurses. The main features are:\n.\n- Displays each byte as ascii, hex, decimal, octal and binary;\n- Allows changes to be input in all of the above displayed modes,\nwith bit toggling in the binary column;\n- Simple Pico-style interface;\n- Search resource;\n- Can dump information to file;\n- Small memory requirements because file is not loaded into memory;\n- Large file support.\n.\nshed is useful in forensics investigations.",
+    "homepage": "http://shed.sf.net"
+  },
+  "tags": [
+    "offensive",
+    "shed",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/shed && python3 shed.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/shed && python3 shed.py --help",
+    "cd toolboxes/shed && python3 shed.py --help",
+    "cd toolboxes/shed && python3 shed.py --help",
+    "cd toolboxes/shed && python3 shed.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST shed --output $KFIOSA_OUTPUT_DIR/shed.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST shed --output $KFIOSA_OUTPUT_DIR/shed.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

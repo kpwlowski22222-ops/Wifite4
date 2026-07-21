@@ -1,0 +1,157 @@
+{
+  "id": "kali:crackle",
+  "kind": "kali_source_package",
+  "name": "crackle",
+  "title": "crackle",
+  "summary": "### crackle",
+  "version": "0.1~git01282014-0kali4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/mikeryan/crackle",
+  "repository": "https://gitlab.com/kalilinux/packages/crackle",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-bluetooth",
+    "kali-tools-passwords",
+    "kali-tools-wireless"
+  ],
+  "install": {
+    "apt": "sudo apt install crackle"
+  },
+  "packages": [
+    {
+      "name": "crackle"
+    }
+  ],
+  "commands": [
+    {
+      "name": "crackle",
+      "description": "- - -",
+      "usage": "crackle -i <input.pcap> [-o <output.pcap>] [-l <ltk>]",
+      "arguments": [
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be verbose",
+          "default": null,
+          "choices": null,
+          "raw": "   -v   Be verbose"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Run tests against crypto engine",
+          "default": null,
+          "choices": null,
+          "raw": "   -t   Run tests against crypto engine"
+        }
+      ],
+      "raw_help": "root@kali:~# crackle -h\n Usage: crackle -i <input.pcap> [-o <output.pcap>] [-l <ltk>]\n Cracks Bluetooth Low Energy encryption (AKA Bluetooth Smart)\n \n Major modes:  Crack TK // Decrypt with LTK\n \n Crack TK:\n \n   Input PCAP file must contain a complete pairing conversation. If any\n   packet is missing, cracking will not proceed. The PCAP file will be\n   decrypted if -o <output.pcap> is specified. If LTK exchange is in\n   the PCAP file, the LTK will be dumped to stdout.\n   \n Decrypt with LTK:\n \n   Input PCAP file must contain at least LL_ENC_REQ and LL_ENC_RSP\n   (which contain the SKD and IV). The PCAP file will be decrypted if\n   the LTK is correct.\n \n   LTK format: string of hex bytes, no separator, most-significant\n   octet to least-significant octet.\n \n   Example: -l 81b06facd90fe7a6e9bbd9cee59736a7\n \n Optional arguments:\n   -v   Be verbose\n   -t   Run tests against crypto engine\n \n Written by Mike Ryan <mikeryan@lacklustre.net>\n See web site for more info:\n   http://lacklustre.net/projects/crackle/",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "crackle -i ltk_exchange.pcap -o ltk-decrypted.pcap\n\n\n!!!\nTK found: 000000\nding ding ding, using a TK of 0! Just Cracks(tm)\n!!!\n\nWarning: packet is too short to be encrypted (1), skipping\nLTK found: 7f62c053f104a5bbe68b1d896a2ed49c\nDone, processed 712 total packets, decrypted 3",
+          "template": null,
+          "original_sha256": "64bbe71341e617e089e46cc02fa5468a23fede6324359c9a65862e643602bdbc"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: crackle -i <input.pcap> [-o <output.pcap>] [-l <ltk>]\nCracks Bluetooth Low Energy encryption (AKA Bluetooth Smart)\n\nMajor modes:  Crack TK // Decrypt with LTK\n\nCrack TK:\n\n    Input PCAP file must contain a complete pairing conversation. If any\n    packet is missing, cracking will not proceed. The PCAP file will be\n    decrypted if -o <output.pcap> is specified. If LTK exchange is in\n    the PCAP file, the LTK will be dumped to stdout.\n    \nDecrypt with LTK:\n\n    Input PCAP file must contain at least LL_ENC_REQ and LL_ENC_RSP\n    (which contain the SKD and IV). The PCAP file will be decrypted if\n    the LTK is correct.\n\n    LTK format: string of hex bytes, no separator, most-significant\n    octet to least-significant octet.\n\n    Example: -l 81b06facd90fe7a6e9bbd9cee59736a7\n\nOptional arguments:\n    -v   Be verbose\n    -t   Run tests against crypto engine\n\nWritten by Mike Ryan <mikeryan@lacklustre.net>\nSee web site for more info:\n    http://lacklustre.net/projects/crackle/",
+        "-h": "Usage: crackle -i <input.pcap> [-o <output.pcap>] [-l <ltk>]\nCracks Bluetooth Low Energy encryption (AKA Bluetooth Smart)\n\nMajor modes:  Crack TK // Decrypt with LTK\n\nCrack TK:\n\n    Input PCAP file must contain a complete pairing conversation. If any\n    packet is missing, cracking will not proceed. The PCAP file will be\n    decrypted if -o <output.pcap> is specified. If LTK exchange is in\n    the PCAP file, the LTK will be dumped to stdout.\n    \nDecrypt with LTK:\n\n    Input PCAP file must contain at least LL_ENC_REQ and LL_ENC_RSP\n    (which contain the SKD and IV). The PCAP file will be decrypted if\n    the LTK is correct.\n\n    LTK format: string of hex bytes, no separator, most-significant\n    octet to least-significant octet.\n\n    Example: -l 81b06facd90fe7a6e9bbd9cee59736a7\n\nOptional arguments:\n    -v   Be verbose\n    -t   Run tests against crypto engine\n\nWritten by Mike Ryan <mikeryan@lacklustre.net>\nSee web site for more info:\n    http://lacklustre.net/projects/crackle/",
+        "help": "Usage: crackle -i <input.pcap> [-o <output.pcap>] [-l <ltk>]\nCracks Bluetooth Low Energy encryption (AKA Bluetooth Smart)\n\nMajor modes:  Crack TK // Decrypt with LTK\n\nCrack TK:\n\n    Input PCAP file must contain a complete pairing conversation. If any\n    packet is missing, cracking will not proceed. The PCAP file will be\n    decrypted if -o <output.pcap> is specified. If LTK exchange is in\n    the PCAP file, the LTK will be dumped to stdout.\n    \nDecrypt with LTK:\n\n    Input PCAP file must contain at least LL_ENC_REQ and LL_ENC_RSP\n    (which contain the SKD and IV). The PCAP file will be decrypted if\n    the LTK is correct.\n\n    LTK format: string of hex bytes, no separator, most-significant\n    octet to least-significant octet.\n\n    Example: -l 81b06facd90fe7a6e9bbd9cee59736a7\n\nOptional arguments:\n    -v   Be verbose\n    -t   Run tests against crypto engine\n\nWritten by Mike Ryan <mikeryan@lacklustre.net>\nSee web site for more info:\n    http://lacklustre.net/projects/crackle/"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/crackle",
+        "size_bytes": 39264,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d171b336ffaad9860c76cc012a84c3c80bd6a37f, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/crackle/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/crackle/index.md",
+    "retrieved_at": "2026-07-14T13:05:12+00:00",
+    "sha256": "21cba14b6f28433d96020ff252637bcd3f5dc8f3ad3b8762380e4310cf77462e"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "54",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "0.1~git01282014-0kali4",
+    "depends": "libc6 (>= 2.34), libpcap0.8t64 (>= 0.9.8)",
+    "description": "Crack and decrypt BLE encryption\ncrackle exploits a flaw in the BLE pairing process that allows an attacker to\nguess or very quickly brute force the TK (Temporary Key). With the TK and other\ndata collected from the pairing process, the STK (Short Term Key) and later the\nLTK (Long Term Key) can be collected.\n.\nWith the STK and LTK, all communications between the master and the slave can\nbe decrypted",
+    "homepage": "https://github.com/mikeryan/crackle"
+  },
+  "tags": [
+    "offensive",
+    "crackle",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/crackle && python3 crackle.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/crackle && python3 crackle.py --help",
+    "cd toolboxes/crackle && python3 crackle.py --help",
+    "cd toolboxes/crackle && python3 crackle.py --help",
+    "cd toolboxes/crackle && python3 crackle.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST crackle --output $KFIOSA_OUTPUT_DIR/crackle.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST crackle --output $KFIOSA_OUTPUT_DIR/crackle.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

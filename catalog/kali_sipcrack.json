@@ -1,0 +1,239 @@
+{
+  "id": "kali:sipcrack",
+  "kind": "kali_source_package",
+  "name": "sipcrack",
+  "title": "sipcrack",
+  "summary": "### sipcrack",
+  "version": "0.2-4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://www.remote-exploit.org/codes_sipcrack.html",
+  "repository": "https://salsa.debian.org/debian/sipcrack",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-passwords",
+    "kali-tools-voip"
+  ],
+  "install": {
+    "apt": "sudo apt install sipcrack"
+  },
+  "packages": [
+    {
+      "name": "sipcrack"
+    }
+  ],
+  "commands": [
+    {
+      "name": "sipcrack",
+      "description": "A suite of tools to sniff and crack the digest authentications within the SIP protocol.",
+      "usage": "sipcrack [OPTIONS] [ -s | -w <wordlist> ] <dump file>",
+      "arguments": [
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "= use stdin for passwords",
+          "default": null,
+          "choices": null,
+          "raw": "      -s            = use stdin for passwords"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": "wordlist",
+          "takes_value": true,
+          "description": "= file containing all passwords to try",
+          "default": null,
+          "choices": null,
+          "raw": "      -w wordlist   = file containing all passwords to try"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "num",
+          "takes_value": true,
+          "description": "= print cracking process every n passwords (for -w)",
+          "default": null,
+          "choices": null,
+          "raw": "      -p num        = print cracking process every n passwords (for -w)"
+        }
+      ],
+      "raw_help": "root@kali:~# sipcrack -h\n \n SIPcrack 0.2 \n ----------------------------------------\n \n Usage: sipcrack [OPTIONS] [ -s | -w <wordlist> ] <dump file>\n \n      <dump file>   = file containing logins sniffed by SIPdump \n \n      Options:                                                  \n      -s            = use stdin for passwords                   \n      -w wordlist   = file containing all passwords to try      \n      -p num        = print cracking process every n passwords (for -w)\n                      (ATTENTION: slows down heavily)           \n \n * Invalid arguments",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "sniff"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "SIPcrack 0.2 \n----------------------------------------\n\nUsage: sipcrack [OPTIONS] [ -s | -w <wordlist> ] <dump file>\n\n       <dump file>   = file containing logins sniffed by SIPdump \n\n       Options:                                                  \n       -s            = use stdin for passwords                   \n       -w wordlist   = file containing all passwords to try      \n       -p num        = print cracking process every n passwords (for -w)\n                       (ATTENTION: slows down heavily)           \n\n* Invalid arguments",
+        "-h": "SIPcrack 0.2 \n----------------------------------------\n\nUsage: sipcrack [OPTIONS] [ -s | -w <wordlist> ] <dump file>\n\n       <dump file>   = file containing logins sniffed by SIPdump \n\n       Options:                                                  \n       -s            = use stdin for passwords                   \n       -w wordlist   = file containing all passwords to try      \n       -p num        = print cracking process every n passwords (for -w)\n                       (ATTENTION: slows down heavily)           \n\n* Invalid arguments",
+        "help": "SIPcrack 0.2 \n----------------------------------------\n\nUsage: sipcrack [OPTIONS] [ -s | -w <wordlist> ] <dump file>\n\n       <dump file>   = file containing logins sniffed by SIPdump \n\n       Options:                                                  \n       -s            = use stdin for passwords                   \n       -w wordlist   = file containing all passwords to try      \n       -p num        = print cracking process every n passwords (for -w)\n                       (ATTENTION: slows down heavily)           \n\n* Either -w <wordlist> or -s has to be given",
+        "man": "SIPCRACK(1)                 General Commands Manual                 SIPCRACK(1)\n\nNAME\n     sipcrack  - A suite of tools to sniff and crack the digest authentications\n     within the SIP protocol.\n\nSYNOPSIS\n     sipcrack [options] <dump_file>\n\nDESCRIPTION\n     This manual page documents briefly the sipcrack tool\n\n     Session Initiation Protocol (SIP) is a protocol developed by the IETF MMU-\n     SIC Working Group and is a proposed standard  for  initiating,  modifying,\n     and  terminating an interactive user session that involves multimedia ele-\n     ments such as video, voice, instant messaging, online games,  and  virtual\n     reality.\n\n     In November 2000, SIP was accepted as a 3GPP signaling protocol and perma-\n     nent element of the IMS architecture.  It is one of the leading signalling\n     protocols  for Voice over IP, along with H.323. In most VOIP solutions SIP\n     is used to authenticate the SIPclient.  The protocol is documented  inside\n     the RFC at www.ietf.org/rfc/rfc3261.txt\n\n     SIPcrack  is a SIP login sniffer/cracker that contains 2 programs: sipdump\n     to capture the digest authentication and sipcrack to bruteforce  the  hash\n     using a wordlist or standard input.\n     sipdump dumps SIP digest authentications. If a login is found, the sniffed\n     login is written to the dump file.  See 'sipdump -h' for options.\n     sipcrack  bruteforces  the user's password with the dump file generated by\n     sipdump. If a password is found, the sniffed and cracked login will be up-\n     dated in the dump file.\n     See 'sipcrack -h' for options.\n\nOPTIONS\n     A summary of options is included below.\n\n     -s,    Use stdin for passwords\n\n     -w wordlist,\n            file containing all passwords to try.\n\n     -p num,\n            print cracking process every n passwords (for -w)\n            (ATTENTION: slows down heavily)\n\nEXAMPLE\n     sipdump -i eth0 logins.dump\n     sipcrack -w mywordlist.txt logins.dump\n\nSEE ALSO\n     sipdump(1).\n\nAUTHOR\n     sipcrack was written by Martin J. Muench <mjm@codito.de>\n\n     This manual  page  was  written  by  Sebastian  Castillo  Builes  <castil-\n     lobuiles@gmail.com>, for the Debian project (but may be used by others).\n\n                                 April 29, 2008                     SIPCRACK(1)",
+        "apropos": "sipcrack (1)         - A suite of tools to sniff and crack the digest authent...\nsipdump (1)          - Part of SIPcrack, A suite of tools to sniff and crack ..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/sipcrack",
+        "size_bytes": 18664,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=550f175edfdabf45bee01cbfbafbc183d6cd9807, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "sipdump",
+      "description": "Part of SIPcrack, A suite of tools to sniff and crack the digest authentications within the SIP protocol.",
+      "usage": "sipdump [OPTIONS] <dump file>",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface = interface to listen on",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "      -i <interface> = interface to listen on"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "= use pcap data file",
+          "default": null,
+          "choices": null,
+          "raw": "      -p <file>      = use pcap data file"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "= enter login data manually",
+          "default": null,
+          "choices": null,
+          "raw": "      -m             = enter login data manually"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "\" filter \"",
+          "takes_value": true,
+          "description": "= set libpcap filter",
+          "default": null,
+          "choices": null,
+          "raw": "      -f \"<filter>\"  = set libpcap filter"
+        }
+      ],
+      "raw_help": "root@kali:~# sipdump -h\n \n SIPdump 0.2 \n ---------------------------------------\n \n Usage: sipdump [OPTIONS] <dump file>                           \n \n      <dump file>    = file where captured logins will be written to\n \n      Options:                                                  \n      -i <interface> = interface to listen on                   \n      -p <file>      = use pcap data file                       \n      -m             = enter login data manually                \n      -f \"<filter>\"  = set libpcap filter                       \n \n * Invalid arguments",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "capture",
+          "sniff"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "SIPdump 0.2 \n---------------------------------------\n\nUsage: sipdump [OPTIONS] <dump file>                           \n\n       <dump file>    = file where captured logins will be written to\n\n       Options:                                                  \n       -i <interface> = interface to listen on                   \n       -p <file>      = use pcap data file                       \n       -m             = enter login data manually                \n       -f \"<filter>\"  = set libpcap filter                       \n\n* Invalid arguments",
+        "-h": "SIPdump 0.2 \n---------------------------------------\n\nUsage: sipdump [OPTIONS] <dump file>                           \n\n       <dump file>    = file where captured logins will be written to\n\n       Options:                                                  \n       -i <interface> = interface to listen on                   \n       -p <file>      = use pcap data file                       \n       -m             = enter login data manually                \n       -f \"<filter>\"  = set libpcap filter                       \n\n* Invalid arguments",
+        "man": "SIPDUMP(1)                  General Commands Manual                  SIPDUMP(1)\n\nNAME\n     sipdump - Part of SIPcrack, A suite of tools to sniff and crack the digest\n     authentications within the SIP protocol.\n\nSYNOPSIS\n     sipdump [options] <dump_file>\n\nDESCRIPTION\n     This manual page documents briefly the sipdump tool\n\n     Session Initiation Protocol (SIP) is a protocol developed by the IETF MMU-\n     SIC  Working  Group  and is a proposed standard for initiating, modifying,\n     and terminating an interactive user session that involves multimedia  ele-\n     ments  such  as video, voice, instant messaging, online games, and virtual\n     reality.\n\n     In November 2000, SIP was accepted as a 3GPP signaling protocol and perma-\n     nent element of the IMS architecture.  It is one of the leading signalling\n     protocols for Voice over IP, along with H.323. In most VOIP solutions  SIP\n     is  used to authenticate the SIPclient.  The protocol is documented inside\n     the RFC at www.ietf.org/rfc/rfc3261.txt\n\n     SIPcrack is a SIP login sniffer/cracker that contains 2 programs:  sipdump\n     to  capture  the digest authentication and sipcrack to bruteforce the hash\n     using a wordlist or standard input.\n     sipdump dumps SIP digest authentications. If a login is found, the sniffed\n     login is written to the dump file.  See 'sipdump -h' for options.\n     sipcrack bruteforces the user's password with the dump file  generated  by\n     sipdump. If a password is found, the sniffed and cracked login will be up-\n     dated in the dump file.\n     See 'sipcrack -h' for options.\n\nOPTIONS\n     A summary of options is included below.\n\n     -i interface,\n            interface to listen on\n\n     -p pcap_file,\n            use pcap data file\n\n     -m,    enter login data manually\n\n     -f libpcap_filer ,\n            set libpcap filter\n\nEXAMPLE\n     sipdump -i eth0 logins.dump\n     sipcrack -w mywordlist.txt logins.dump\n\nSEE ALSO\n     sipcrack(1).\n\nAUTHOR\n     sipdump was written by Martin J. Muench <mjm@codito.de>\n\n     This  manual  page  was  written  by  Sebastian  Castillo  Builes <castil-\n     lobuiles@gmail.com>, for the Debian project (but may be used by others).\n\n                                 April 29, 2008                      SIPDUMP(1)",
+        "apropos": "sipdump (1)          - Part of SIPcrack, A suite of tools to sniff and crack ..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/sipdump",
+        "size_bytes": 30960,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=9aa083523235aa5fb6ccfc8791aa66528c73ac69, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/sipcrack/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/sipcrack/index.md",
+    "retrieved_at": "2026-07-14T13:08:23+00:00",
+    "sha256": "ed90e00c95003dd408bb964cfa6ad0e84070952e157c49b0d3c9a5b30de94f15"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "72",
+    "maintainer": "Marcio de Souza Oliveira <marciosouza@debian.org>",
+    "architecture": "amd64",
+    "version": "0.2-4+b2",
+    "depends": "libc6 (>= 2.34), libpcap0.8t64 (>= 0.9.8-3), libssl3t64 (>= 3.0.0)",
+    "suggests": "john",
+    "description": "SIP login dumper/cracker\nThe tools contained in this package offer support for pcap files,\nwordlists and many more to extract all needed information and\nbruteforce the passwords for the sniffed accounts.\n.\n* sipdump    -  Dump SIP digest authentications to a file.\n* sipcrack   -  Bruteforce the user password using the dump file\ngenerated by sipdump.",
+    "homepage": "http://www.remote-exploit.org/codes_sipcrack.html"
+  },
+  "tags": [
+    "offensive",
+    "sipcrack",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/sipcrack && python3 sipcrack.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/sipcrack && python3 sipcrack.py --help",
+    "cd toolboxes/sipcrack && python3 sipcrack.py --help",
+    "cd toolboxes/sipcrack && python3 sipcrack.py --help",
+    "cd toolboxes/sipcrack && python3 sipcrack.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sipcrack --output $KFIOSA_OUTPUT_DIR/sipcrack.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sipcrack --output $KFIOSA_OUTPUT_DIR/sipcrack.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

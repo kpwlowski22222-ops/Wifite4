@@ -1,0 +1,1174 @@
+{
+  "id": "kali:krbrelayx",
+  "kind": "kali_source_package",
+  "name": "krbrelayx",
+  "title": "krbrelayx",
+  "summary": "### krbrelayx",
+  "version": "0.0~git20260311.10b45a3-0kali1",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/dirkjanm/krbrelayx",
+  "repository": "https://gitlab.com/kalilinux/packages/krbrelayx",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install krbrelayx"
+  },
+  "packages": [
+    {
+      "name": "krbrelayx"
+    }
+  ],
+  "commands": [
+    {
+      "name": "addspn",
+      "description": "- - -",
+      "usage": "addspn.py [-h] [-u USERNAME] [-p PASSWORD] [-t TARGET] [-T TARGETTYPE]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help            show this help message and exit"
+        },
+        {
+          "flags": [
+            "-u",
+            "--user"
+          ],
+          "metavar": "- ser USERNAME",
+          "takes_value": true,
+          "description": "DOMAIN\\username for authentication",
+          "default": null,
+          "choices": null,
+          "raw": " -u, --user USERNAME   DOMAIN\\username for authentication"
+        },
+        {
+          "flags": [
+            "-p",
+            "--password"
+          ],
+          "metavar": "- assword PASSWORD",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -p, --password PASSWORD"
+        },
+        {
+          "flags": [
+            "-t",
+            "--target"
+          ],
+          "metavar": "- arget TARGET",
+          "takes_value": true,
+          "description": "Computername or username to target (FQDN or COMPUTER$",
+          "default": null,
+          "choices": null,
+          "raw": " -t, --target TARGET   Computername or username to target (FQDN or COMPUTER$"
+        },
+        {
+          "flags": [
+            "-T",
+            "--target-type"
+          ],
+          "metavar": "TARGETTYPE",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -T, --target-type TARGETTYPE"
+        },
+        {
+          "flags": [
+            "-s",
+            "--spn"
+          ],
+          "metavar": "- pn SPN",
+          "takes_value": true,
+          "description": "servicePrincipalName to add (for example:",
+          "default": null,
+          "choices": null,
+          "raw": " -s, --spn SPN         servicePrincipalName to add (for example:"
+        },
+        {
+          "flags": [
+            "-r",
+            "--remove"
+          ],
+          "metavar": "- emove",
+          "takes_value": true,
+          "description": "Remove the SPN instead of add it",
+          "default": null,
+          "choices": null,
+          "raw": " -r, --remove          Remove the SPN instead of add it"
+        },
+        {
+          "flags": [
+            "-c",
+            "--clear"
+          ],
+          "metavar": "- lear",
+          "takes_value": true,
+          "description": "Clear, i.e. remove all SPNs",
+          "default": null,
+          "choices": null,
+          "raw": " -c, --clear           Clear, i.e. remove all SPNs"
+        },
+        {
+          "flags": [
+            "-q",
+            "--query"
+          ],
+          "metavar": "- uery",
+          "takes_value": true,
+          "description": "Show the current target SPNs instead of modifying",
+          "default": null,
+          "choices": null,
+          "raw": " -q, --query           Show the current target SPNs instead of modifying"
+        },
+        {
+          "flags": [
+            "-a",
+            "--additional"
+          ],
+          "metavar": "- dditional",
+          "takes_value": true,
+          "description": "Add the SPN via the msDS-AdditionalDnsHostName",
+          "default": null,
+          "choices": null,
+          "raw": " -a, --additional      Add the SPN via the msDS-AdditionalDnsHostName"
+        },
+        {
+          "flags": [
+            "-k",
+            "--kerberos"
+          ],
+          "metavar": "- erberos",
+          "takes_value": true,
+          "description": "Use Kerberos authentication. Grabs credentials from",
+          "default": null,
+          "choices": null,
+          "raw": " -k, --kerberos        Use Kerberos authentication. Grabs credentials from"
+        },
+        {
+          "flags": [
+            "-dc-ip"
+          ],
+          "metavar": "ip address",
+          "takes_value": true,
+          "description": "IP Address of the domain controller. If omitted it",
+          "default": null,
+          "choices": null,
+          "raw": " -dc-ip ip address     IP Address of the domain controller. If omitted it"
+        },
+        {
+          "flags": [
+            "-aesKey"
+          ],
+          "metavar": "hex key",
+          "takes_value": true,
+          "description": "AES key to use for Kerberos Authentication (128 or 256",
+          "default": null,
+          "choices": null,
+          "raw": " -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256"
+        }
+      ],
+      "raw_help": "root@kali:~# addspn -h\n usage: addspn.py [-h] [-u USERNAME] [-p PASSWORD] [-t TARGET] [-T TARGETTYPE]\n                [-s SPN] [-r] [-c] [-q] [-a] [-k] [-dc-ip ip address]\n                [-aesKey hex key]\n                HOSTNAME\n \n Add an SPN to a user/computer account\n \n Required options:\n HOSTNAME              Hostname/ip or ldap://host:port connection string to\n                       connect to\n \n Main options:\n -h, --help            show this help message and exit\n -u, --user USERNAME   DOMAIN\\username for authentication\n -p, --password PASSWORD\n                       Password or LM:NTLM hash, will prompt if not specified\n -t, --target TARGET   Computername or username to target (FQDN or COMPUTER$\n                       name, if unspecified user with -u is target)\n -T, --target-type TARGETTYPE\n                       Target type (samname or hostname) If unspecified, will\n                       assume it's a hostname if there is a . in the name and\n                       a SAM name otherwise.\n -s, --spn SPN         servicePrincipalName to add (for example:\n                       http/host.domain.local or cifs/host.domain.local)\n -r, --remove          Remove the SPN instead of add it\n -c, --clear           Clear, i.e. remove all SPNs\n -q, --query           Show the current target SPNs instead of modifying\n                       anything\n -a, --additional      Add the SPN via the msDS-AdditionalDnsHostName\n                       attribute\n -k, --kerberos        Use Kerberos authentication. Grabs credentials from\n                       ccache file (KRB5CCNAME) based on target parameters.\n                       If valid credentials cannot be found, it will use the\n                       ones specified in the command line\n -dc-ip ip address     IP Address of the domain controller. If omitted it\n                       will use the domain part (FQDN) specified in the\n                       target parameter\n -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                       bits)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "addspn.py: error: -s/--spn is required when not querying (-q/--query) or clearing (--clear)",
+          "template": null,
+          "original_sha256": "d8911f5e94f4d29de7cadc2d50cd463b13430b1fc53166ec2bf8f93969d9eb9b"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: addspn.py [-h] [-u USERNAME] [-p PASSWORD] [-t TARGET] [-T TARGETTYPE]\n                 [-s SPN] [-r] [-c] [-q] [-a] [-k] [-dc-ip ip address]\n                 [-aesKey hex key]\n                 HOSTNAME\n\nAdd an SPN to a user/computer account\n\nRequired options:\n  HOSTNAME              Hostname/ip or ldap://host:port connection string to\n                        connect to\n\nMain options:\n  -h, --help            show this help message and exit\n  -u, --user USERNAME   DOMAIN\\username for authentication\n  -p, --password PASSWORD\n                        Password or LM:NTLM hash, will prompt if not specified\n  -t, --target TARGET   Computername or username to target (FQDN or COMPUTER$\n                        name, if unspecified user with -u is target)\n  -T, --target-type TARGETTYPE\n                        Target type (samname or hostname) If unspecified, will\n                        assume it's a hostname if there is a . in the name and\n                        a SAM name otherwise.\n  -s, --spn SPN         servicePrincipalName to add (for example:\n                        http/host.domain.local or cifs/host.domain.local)\n  -r, --remove          Remove the SPN instead of add it\n  -c, --clear           Clear, i.e. remove all SPNs\n  -q, --query           Show the current target SPNs instead of modifying\n                        anything\n  -a, --additional      Add the SPN via the msDS-AdditionalDnsHostName\n                        attribute\n  -k, --kerberos        Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -dc-ip ip address     IP Address of the domain controller. If omitted it\n                        will use the domain part (FQDN) specified in the\n                        target parameter\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)",
+        "-h": "usage: addspn.py [-h] [-u USERNAME] [-p PASSWORD] [-t TARGET] [-T TARGETTYPE]\n                 [-s SPN] [-r] [-c] [-q] [-a] [-k] [-dc-ip ip address]\n                 [-aesKey hex key]\n                 HOSTNAME\n\nAdd an SPN to a user/computer account\n\nRequired options:\n  HOSTNAME              Hostname/ip or ldap://host:port connection string to\n                        connect to\n\nMain options:\n  -h, --help            show this help message and exit\n  -u, --user USERNAME   DOMAIN\\username for authentication\n  -p, --password PASSWORD\n                        Password or LM:NTLM hash, will prompt if not specified\n  -t, --target TARGET   Computername or username to target (FQDN or COMPUTER$\n                        name, if unspecified user with -u is target)\n  -T, --target-type TARGETTYPE\n                        Target type (samname or hostname) If unspecified, will\n                        assume it's a hostname if there is a . in the name and\n                        a SAM name otherwise.\n  -s, --spn SPN         servicePrincipalName to add (for example:\n                        http/host.domain.local or cifs/host.domain.local)\n  -r, --remove          Remove the SPN instead of add it\n  -c, --clear           Clear, i.e. remove all SPNs\n  -q, --query           Show the current target SPNs instead of modifying\n                        anything\n  -a, --additional      Add the SPN via the msDS-AdditionalDnsHostName\n                        attribute\n  -k, --kerberos        Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -dc-ip ip address     IP Address of the domain controller. If omitted it\n                        will use the domain part (FQDN) specified in the\n                        target parameter\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)",
+        "help": "usage: addspn.py [-h] [-u USERNAME] [-p PASSWORD] [-t TARGET] [-T TARGETTYPE]\n                 [-s SPN] [-r] [-c] [-q] [-a] [-k] [-dc-ip ip address]\n                 [-aesKey hex key]\n                 HOSTNAME\naddspn.py: error: -s/--spn is required when not querying (-q/--query) or clearing (--clear)"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/addspn",
+        "size_bytes": 76,
+        "is_symlink": false,
+        "file_type": "a sh script, ASCII text executable"
+      }
+    },
+    {
+      "name": "dnstool",
+      "description": "- - -",
+      "usage": "dnstool.py [-h] [-u USERNAME] [-p PASSWORD] [--forest] [--legacy]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help            show this help message and exit"
+        },
+        {
+          "flags": [
+            "-u",
+            "--user"
+          ],
+          "metavar": "- ser USERNAME",
+          "takes_value": true,
+          "description": "DOMAIN\\username for authentication.",
+          "default": null,
+          "choices": null,
+          "raw": " -u, --user USERNAME   DOMAIN\\username for authentication."
+        },
+        {
+          "flags": [
+            "-p",
+            "--password"
+          ],
+          "metavar": "- assword PASSWORD",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -p, --password PASSWORD"
+        },
+        {
+          "flags": [
+            "--forest"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Search the ForestDnsZones instead of DomainDnsZones",
+          "default": null,
+          "choices": null,
+          "raw": " --forest              Search the ForestDnsZones instead of DomainDnsZones"
+        },
+        {
+          "flags": [
+            "--legacy"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Search the System partition (legacy DNS storage)",
+          "default": null,
+          "choices": null,
+          "raw": " --legacy              Search the System partition (legacy DNS storage)"
+        },
+        {
+          "flags": [
+            "--zone"
+          ],
+          "metavar": "ZONE",
+          "takes_value": true,
+          "description": "Zone to search in (if different than the current",
+          "default": null,
+          "choices": null,
+          "raw": " --zone ZONE           Zone to search in (if different than the current"
+        },
+        {
+          "flags": [
+            "--print-zones"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Only query all zones on the DNS server, no other",
+          "default": null,
+          "choices": null,
+          "raw": " --print-zones         Only query all zones on the DNS server, no other"
+        },
+        {
+          "flags": [
+            "--print-zones-dn"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Query and print the Distinguished Names of all zones",
+          "default": null,
+          "choices": null,
+          "raw": " --print-zones-dn      Query and print the Distinguished Names of all zones"
+        },
+        {
+          "flags": [
+            "--tcp"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use DNS over TCP",
+          "default": null,
+          "choices": null,
+          "raw": " --tcp                 use DNS over TCP"
+        },
+        {
+          "flags": [
+            "-k",
+            "--kerberos"
+          ],
+          "metavar": "- erberos",
+          "takes_value": true,
+          "description": "Use Kerberos authentication. Grabs credentials from",
+          "default": null,
+          "choices": null,
+          "raw": " -k, --kerberos        Use Kerberos authentication. Grabs credentials from"
+        },
+        {
+          "flags": [
+            "-port"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "LDAP port, default value is 389",
+          "default": "value is 389",
+          "choices": null,
+          "raw": " -port port            LDAP port, default value is 389"
+        },
+        {
+          "flags": [
+            "-force-ssl"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Force SSL when connecting to LDAP server",
+          "default": null,
+          "choices": null,
+          "raw": " -force-ssl            Force SSL when connecting to LDAP server"
+        },
+        {
+          "flags": [
+            "-dc-ip"
+          ],
+          "metavar": "ip address",
+          "takes_value": true,
+          "description": "IP Address of the domain controller. If omitted it",
+          "default": null,
+          "choices": null,
+          "raw": " -dc-ip ip address     IP Address of the domain controller. If omitted it"
+        },
+        {
+          "flags": [
+            "-dns-ip"
+          ],
+          "metavar": "ip address",
+          "takes_value": true,
+          "description": "IP Address of a DNS Server",
+          "default": null,
+          "choices": null,
+          "raw": " -dns-ip ip address    IP Address of a DNS Server"
+        },
+        {
+          "flags": [
+            "-aesKey"
+          ],
+          "metavar": "hex key",
+          "takes_value": true,
+          "description": "AES key to use for Kerberos Authentication (128 or 256",
+          "default": null,
+          "choices": null,
+          "raw": " -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256"
+        },
+        {
+          "flags": [
+            "-r",
+            "--record"
+          ],
+          "metavar": "- ecord TARGETRECORD",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -r, --record TARGETRECORD"
+        },
+        {
+          "flags": [
+            "-a",
+            "--action"
+          ],
+          "metavar": "- ction add modify query remove resurrect ldapdelete",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -a, --action {add,modify,query,remove,resurrect,ldapdelete}"
+        },
+        {
+          "flags": [
+            "-t",
+            "--type"
+          ],
+          "metavar": "- ype A",
+          "takes_value": true,
+          "description": "Record type to add (Currently only A records",
+          "default": null,
+          "choices": null,
+          "raw": " -t, --type {A}        Record type to add (Currently only A records"
+        },
+        {
+          "flags": [
+            "-d",
+            "--data"
+          ],
+          "metavar": "- ata RECORDDATA",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -d, --data RECORDDATA"
+        },
+        {
+          "flags": [
+            "--allow-multiple"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Allow multiple A records for the same name",
+          "default": null,
+          "choices": null,
+          "raw": " --allow-multiple      Allow multiple A records for the same name"
+        },
+        {
+          "flags": [
+            "--ttl"
+          ],
+          "metavar": "TTL",
+          "takes_value": true,
+          "description": "TTL for record (default: 180)",
+          "default": "180",
+          "choices": null,
+          "raw": " --ttl TTL             TTL for record (default: 180)"
+        }
+      ],
+      "raw_help": "root@kali:~# dnstool -h\n usage: dnstool.py [-h] [-u USERNAME] [-p PASSWORD] [--forest] [--legacy]\n                 [--zone ZONE] [--print-zones] [--print-zones-dn] [--tcp]\n                 [-k] [-port port] [-force-ssl] [-dc-ip ip address]\n                 [-dns-ip ip address] [-aesKey hex key] [-r TARGETRECORD]\n                 [-a {add,modify,query,remove,resurrect,ldapdelete}] [-t {A}]\n                 [-d RECORDDATA] [--allow-multiple] [--ttl TTL]\n                 HOSTNAME\n \n Query/modify DNS records for Active Directory integrated DNS via LDAP\n \n Required options:\n HOSTNAME              Hostname/ip or ldap://host:port connection string to\n                       connect to\n \n Main options:\n -h, --help            show this help message and exit\n -u, --user USERNAME   DOMAIN\\username for authentication.\n -p, --password PASSWORD\n                       Password or LM:NTLM hash, will prompt if not specified\n --forest              Search the ForestDnsZones instead of DomainDnsZones\n --legacy              Search the System partition (legacy DNS storage)\n --zone ZONE           Zone to search in (if different than the current\n                       domain)\n --print-zones         Only query all zones on the DNS server, no other\n                       modifications are made\n --print-zones-dn      Query and print the Distinguished Names of all zones\n                       on the DNS server\n --tcp                 use DNS over TCP\n -k, --kerberos        Use Kerberos authentication. Grabs credentials from\n                       ccache file (KRB5CCNAME) based on target parameters.\n                       If valid credentials cannot be found, it will use the\n                       ones specified in the command line\n -port port            LDAP port, default value is 389\n -force-ssl            Force SSL when connecting to LDAP server\n -dc-ip ip address     IP Address of the domain controller. If omitted it\n                       will use the domain part (FQDN) specified in the\n                       target parameter\n -dns-ip ip address    IP Address of a DNS Server\n -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                       bits)\n \n Record options:\n -r, --record TARGETRECORD\n                       Record to target (FQDN)\n -a, --action {add,modify,query,remove,resurrect,ldapdelete}\n                       Action to perform. Options: add (add a new record),\n                       modify (modify an existing record), query (show\n                       existing), remove (mark record for cleanup from DNS\n                       cache), delete (delete from LDAP). Default: query\n -t, --type {A}        Record type to add (Currently only A records\n                       supported)\n -d, --data RECORDDATA\n                       Record data (IP address)\n --allow-multiple      Allow multiple A records for the same name\n --ttl TTL             TTL for record (default: 180)",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: dnstool.py [-h] [-u USERNAME] [-p PASSWORD] [--forest] [--legacy]\n                  [--zone ZONE] [--print-zones] [--print-zones-dn] [--tcp]\n                  [-k] [-port port] [-force-ssl] [-dc-ip ip address]\n                  [-dns-ip ip address] [-aesKey hex key] [-r TARGETRECORD]\n                  [-a {add,modify,query,remove,resurrect,ldapdelete}] [-t {A}]\n                  [-d RECORDDATA] [--allow-multiple] [--ttl TTL]\n                  HOSTNAME\n\nQuery/modify DNS records for Active Directory integrated DNS via LDAP\n\nRequired options:\n  HOSTNAME              Hostname/ip or ldap://host:port connection string to\n                        connect to\n\nMain options:\n  -h, --help            show this help message and exit\n  -u, --user USERNAME   DOMAIN\\username for authentication.\n  -p, --password PASSWORD\n                        Password or LM:NTLM hash, will prompt if not specified\n  --forest              Search the ForestDnsZones instead of DomainDnsZones\n  --legacy              Search the System partition (legacy DNS storage)\n  --zone ZONE           Zone to search in (if different than the current\n                        domain)\n  --print-zones         Only query all zones on the DNS server, no other\n                        modifications are made\n  --print-zones-dn      Query and print the Distinguished Names of all zones\n                        on the DNS server\n  --tcp                 use DNS over TCP\n  -k, --kerberos        Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -port port            LDAP port, default value is 389\n  -force-ssl            Force SSL when connecting to LDAP server\n  -dc-ip ip address     IP Address of the domain controller. If omitted it\n                        will use the domain part (FQDN) specified in the\n                        target parameter\n  -dns-ip ip address    IP Address of a DNS Server\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)\n\nRecord options:\n  -r, --record TARGETRECORD\n                        Record to target (FQDN)\n  -a, --action {add,modify,query,remove,resurrect,ldapdelete}\n                        Action to perform. Options: add (add a new record),\n                        modify (modify an existing record), query (show\n                        existing), remove (mark record for cleanup from DNS\n                        cache), delete (delete from LDAP). Default: query\n  -t, --type {A}        Record type to add (Currently only A records\n                        supported)\n  -d, --data RECORDDATA\n                        Record data (IP address)\n  --allow-multiple      Allow multiple A records for the same name\n  --ttl TTL             TTL for record (default: 180)",
+        "-h": "usage: dnstool.py [-h] [-u USERNAME] [-p PASSWORD] [--forest] [--legacy]\n                  [--zone ZONE] [--print-zones] [--print-zones-dn] [--tcp]\n                  [-k] [-port port] [-force-ssl] [-dc-ip ip address]\n                  [-dns-ip ip address] [-aesKey hex key] [-r TARGETRECORD]\n                  [-a {add,modify,query,remove,resurrect,ldapdelete}] [-t {A}]\n                  [-d RECORDDATA] [--allow-multiple] [--ttl TTL]\n                  HOSTNAME\n\nQuery/modify DNS records for Active Directory integrated DNS via LDAP\n\nRequired options:\n  HOSTNAME              Hostname/ip or ldap://host:port connection string to\n                        connect to\n\nMain options:\n  -h, --help            show this help message and exit\n  -u, --user USERNAME   DOMAIN\\username for authentication.\n  -p, --password PASSWORD\n                        Password or LM:NTLM hash, will prompt if not specified\n  --forest              Search the ForestDnsZones instead of DomainDnsZones\n  --legacy              Search the System partition (legacy DNS storage)\n  --zone ZONE           Zone to search in (if different than the current\n                        domain)\n  --print-zones         Only query all zones on the DNS server, no other\n                        modifications are made\n  --print-zones-dn      Query and print the Distinguished Names of all zones\n                        on the DNS server\n  --tcp                 use DNS over TCP\n  -k, --kerberos        Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -port port            LDAP port, default value is 389\n  -force-ssl            Force SSL when connecting to LDAP server\n  -dc-ip ip address     IP Address of the domain controller. If omitted it\n                        will use the domain part (FQDN) specified in the\n                        target parameter\n  -dns-ip ip address    IP Address of a DNS Server\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)\n\nRecord options:\n  -r, --record TARGETRECORD\n                        Record to target (FQDN)\n  -a, --action {add,modify,query,remove,resurrect,ldapdelete}\n                        Action to perform. Options: add (add a new record),\n                        modify (modify an existing record), query (show\n                        existing), remove (mark record for cleanup from DNS\n                        cache), delete (delete from LDAP). Default: query\n  -t, --type {A}        Record type to add (Currently only A records\n                        supported)\n  -d, --data RECORDDATA\n                        Record data (IP address)\n  --allow-multiple      Allow multiple A records for the same name\n  --ttl TTL             TTL for record (default: 180)",
+        "help": "\u001b[91m[!]\u001b[0m Username must include a domain, use: DOMAIN\\username"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dnstool",
+        "size_bytes": 77,
+        "is_symlink": false,
+        "file_type": "a sh script, ASCII text executable"
+      }
+    },
+    {
+      "name": "krbrelayx",
+      "description": "- - -",
+      "usage": "krbrelayx.py [-h] [-debug] [-t TARGET] [-tf TARGETSFILE] [-w]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help            show this help message and exit"
+        },
+        {
+          "flags": [
+            "-debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Turn DEBUG output ON",
+          "default": null,
+          "choices": null,
+          "raw": " -debug                Turn DEBUG output ON"
+        },
+        {
+          "flags": [
+            "-t",
+            "--target"
+          ],
+          "metavar": "- arget TARGET",
+          "takes_value": true,
+          "description": "Target to attack, since this is Kerberos, only",
+          "default": null,
+          "choices": null,
+          "raw": " -t, --target TARGET   Target to attack, since this is Kerberos, only"
+        },
+        {
+          "flags": [
+            "-tf"
+          ],
+          "metavar": "TARGETSFILE",
+          "takes_value": true,
+          "description": "File that contains targets by hostname or full URL,",
+          "default": null,
+          "choices": null,
+          "raw": " -tf TARGETSFILE       File that contains targets by hostname or full URL,"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Watch the target file for changes and update target",
+          "default": null,
+          "choices": null,
+          "raw": " -w                    Watch the target file for changes and update target"
+        },
+        {
+          "flags": [
+            "-ip",
+            "--interface-ip"
+          ],
+          "metavar": "--interface INTERFACE_IP",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -ip, --interface-ip INTERFACE_IP"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "SMBSERVER",
+          "takes_value": true,
+          "description": "Redirect HTTP requests to a file:// path on SMBSERVER",
+          "default": null,
+          "choices": null,
+          "raw": " -r SMBSERVER          Redirect HTTP requests to a file:// path on SMBSERVER"
+        },
+        {
+          "flags": [
+            "-l",
+            "--lootdir"
+          ],
+          "metavar": "- ootdir LOOTDIR",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -l, --lootdir LOOTDIR"
+        },
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat ccache kirbi",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -f, --format {ccache,kirbi}"
+        },
+        {
+          "flags": [
+            "-codec"
+          ],
+          "metavar": "CODEC",
+          "takes_value": true,
+          "description": "Sets encoding used (codec) from the target's output",
+          "default": null,
+          "choices": null,
+          "raw": " -codec CODEC          Sets encoding used (codec) from the target's output"
+        },
+        {
+          "flags": [
+            "-no-smb2support"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable SMB2 Support",
+          "default": null,
+          "choices": null,
+          "raw": " -no-smb2support       Disable SMB2 Support"
+        },
+        {
+          "flags": [
+            "-wh",
+            "--wpad-host"
+          ],
+          "metavar": "WPAD_HOST",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -wh, --wpad-host WPAD_HOST"
+        },
+        {
+          "flags": [
+            "-wa",
+            "--wpad-auth-num"
+          ],
+          "metavar": "WPAD_AUTH_NUM",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -wa, --wpad-auth-num WPAD_AUTH_NUM"
+        },
+        {
+          "flags": [
+            "-6",
+            "--ipv6"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Listen on both IPv6 and IPv4",
+          "default": null,
+          "choices": null,
+          "raw": " -6, --ipv6            Listen on both IPv6 and IPv4"
+        },
+        {
+          "flags": [
+            "-p",
+            "--krbpass"
+          ],
+          "metavar": "PASSWORD",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -p, --krbpass PASSWORD"
+        },
+        {
+          "flags": [
+            "-hp",
+            "--krbhexpass"
+          ],
+          "metavar": "HEXPASSWORD",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -hp, --krbhexpass HEXPASSWORD"
+        },
+        {
+          "flags": [
+            "-s",
+            "--krbsalt"
+          ],
+          "metavar": "USERNAME",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -s, --krbsalt USERNAME"
+        },
+        {
+          "flags": [
+            "-hashes"
+          ],
+          "metavar": "LMHASH",
+          "takes_value": true,
+          "description": "NTHASH",
+          "default": null,
+          "choices": null,
+          "raw": " -hashes LMHASH:NTHASH"
+        },
+        {
+          "flags": [
+            "-aesKey"
+          ],
+          "metavar": "hex key",
+          "takes_value": true,
+          "description": "AES key to use for Kerberos Authentication (128 or 256",
+          "default": null,
+          "choices": null,
+          "raw": " -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256"
+        },
+        {
+          "flags": [
+            "-dc-ip"
+          ],
+          "metavar": "ip address",
+          "takes_value": true,
+          "description": "IP Address of the domain controller. If ommited it use",
+          "default": null,
+          "choices": null,
+          "raw": " -dc-ip ip address     IP Address of the domain controller. If ommited it use"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "FILE",
+          "takes_value": true,
+          "description": "File to execute on the target system. If not",
+          "default": null,
+          "choices": null,
+          "raw": " -e FILE               File to execute on the target system. If not"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "COMMAND",
+          "takes_value": true,
+          "description": "Command to execute on target system. If not specified,",
+          "default": null,
+          "choices": null,
+          "raw": " -c COMMAND            Command to execute on target system. If not specified,"
+        },
+        {
+          "flags": [
+            "--enum-local-admins"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "If relayed user is not admin, attempt SAMR lookup to",
+          "default": null,
+          "choices": null,
+          "raw": " --enum-local-admins   If relayed user is not admin, attempt SAMR lookup to"
+        },
+        {
+          "flags": [
+            "--no-dump"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not attempt to dump LDAP information",
+          "default": null,
+          "choices": null,
+          "raw": " --no-dump             Do not attempt to dump LDAP information"
+        },
+        {
+          "flags": [
+            "--no-da"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not attempt to add a Domain Admin",
+          "default": null,
+          "choices": null,
+          "raw": " --no-da               Do not attempt to add a Domain Admin"
+        },
+        {
+          "flags": [
+            "--no-acl"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable ACL attacks",
+          "default": null,
+          "choices": null,
+          "raw": " --no-acl              Disable ACL attacks"
+        },
+        {
+          "flags": [
+            "--no-validate-privs"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not attempt to enumerate privileges, assume",
+          "default": null,
+          "choices": null,
+          "raw": " --no-validate-privs   Do not attempt to enumerate privileges, assume"
+        },
+        {
+          "flags": [
+            "--escalate-user"
+          ],
+          "metavar": "ESCALATE_USER",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --escalate-user ESCALATE_USER"
+        },
+        {
+          "flags": [
+            "--add-computer"
+          ],
+          "metavar": "COMPUTERNAME",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --add-computer [COMPUTERNAME]"
+        },
+        {
+          "flags": [
+            "--delegate-access"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Delegate access on relayed computer account to the",
+          "default": null,
+          "choices": null,
+          "raw": " --delegate-access     Delegate access on relayed computer account to the"
+        },
+        {
+          "flags": [
+            "--sid"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use a SID to delegate access rather than an account",
+          "default": null,
+          "choices": null,
+          "raw": " --sid                 Use a SID to delegate access rather than an account"
+        },
+        {
+          "flags": [
+            "--dump-laps"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Attempt to dump any LAPS passwords readable by the",
+          "default": null,
+          "choices": null,
+          "raw": " --dump-laps           Attempt to dump any LAPS passwords readable by the"
+        },
+        {
+          "flags": [
+            "--dump-gmsa"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Attempt to dump any gMSA passwords readable by the",
+          "default": null,
+          "choices": null,
+          "raw": " --dump-gmsa           Attempt to dump any gMSA passwords readable by the"
+        },
+        {
+          "flags": [
+            "--dump-adcs"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Attempt to dump ADCS enrollment services and",
+          "default": null,
+          "choices": null,
+          "raw": " --dump-adcs           Attempt to dump ADCS enrollment services and"
+        },
+        {
+          "flags": [
+            "--adcs"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable AD CS relay attack",
+          "default": null,
+          "choices": null,
+          "raw": " --adcs                Enable AD CS relay attack"
+        },
+        {
+          "flags": [
+            "--template"
+          ],
+          "metavar": "TEMPLATE",
+          "takes_value": true,
+          "description": "AD CS template. Defaults to Machine or User whether",
+          "default": "s to Machine or User whether",
+          "choices": null,
+          "raw": " --template TEMPLATE   AD CS template. Defaults to Machine or User whether"
+        },
+        {
+          "flags": [
+            "--altname"
+          ],
+          "metavar": "ALTNAME",
+          "takes_value": true,
+          "description": "Subject Alternative Name to use when performing ESC1",
+          "default": null,
+          "choices": null,
+          "raw": " --altname ALTNAME     Subject Alternative Name to use when performing ESC1"
+        },
+        {
+          "flags": [
+            "-v",
+            "--victim"
+          ],
+          "metavar": "- ictim TARGET",
+          "takes_value": true,
+          "description": "Victim username or computername$, to request the",
+          "default": null,
+          "choices": null,
+          "raw": " -v, --victim TARGET   Victim username or computername$, to request the"
+        }
+      ],
+      "raw_help": "root@kali:~# krbrelayx -h\n usage: krbrelayx.py [-h] [-debug] [-t TARGET] [-tf TARGETSFILE] [-w]\n                   [-ip INTERFACE_IP] [-r SMBSERVER] [-l LOOTDIR]\n                   [-f {ccache,kirbi}] [-codec CODEC] [-no-smb2support]\n                   [-wh WPAD_HOST] [-wa WPAD_AUTH_NUM] [-6] [-p PASSWORD]\n                   [-hp HEXPASSWORD] [-s USERNAME] [-hashes LMHASH:NTHASH]\n                   [-aesKey hex key] [-dc-ip ip address] [-e FILE]\n                   [-c COMMAND] [--enum-local-admins] [--no-dump] [--no-da]\n                   [--no-acl] [--no-validate-privs]\n                   [--escalate-user ESCALATE_USER]\n                   [--add-computer [COMPUTERNAME]] [--delegate-access]\n                   [--sid] [--dump-laps] [--dump-gmsa] [--dump-adcs] [--adcs]\n                   [--template TEMPLATE] [--altname ALTNAME] [-v TARGET]\n \n Kerberos relay and unconstrained delegation abuse tool. By @_dirkjan /\n dirkjanm.io\n \n Main options:\n -h, --help            show this help message and exit\n -debug                Turn DEBUG output ON\n -t, --target TARGET   Target to attack, since this is Kerberos, only\n                       HOSTNAMES are valid. Example: smb://server:445 If\n                       unspecified, will store tickets for later use.\n -tf TARGETSFILE       File that contains targets by hostname or full URL,\n                       one per line\n -w                    Watch the target file for changes and update target\n                       list automatically (only valid with -tf)\n -ip, --interface-ip INTERFACE_IP\n                       IP address of interface to bind SMB and HTTP servers\n -r SMBSERVER          Redirect HTTP requests to a file:// path on SMBSERVER\n -l, --lootdir LOOTDIR\n                       Loot directory in which gathered loot (TGTs or dumps)\n                       will be stored (default: current directory).\n -f, --format {ccache,kirbi}\n                       Format to store tickets in. Valid: ccache (Impacket)\n                       or kirbi (Mimikatz format) default: ccache\n -codec CODEC          Sets encoding used (codec) from the target's output\n                       (default \"utf-8\"). If errors are detected, run\n                       chcp.com at the target, map the result with\n                       https://docs.python.org/2.4/lib/standard-\n                       encodings.html and then execute ntlmrelayx.py again\n                       with -codec and the corresponding codec\n -no-smb2support       Disable SMB2 Support\n -wh, --wpad-host WPAD_HOST\n                       Enable serving a WPAD file for Proxy Authentication\n                       attack, setting the proxy host to the one supplied.\n -wa, --wpad-auth-num WPAD_AUTH_NUM\n                       Prompt for authentication N times for clients without\n                       MS16-077 installed before serving a WPAD file.\n -6, --ipv6            Listen on both IPv6 and IPv4\n \n Kerberos Keys (of your account with unconstrained delegation):\n -p, --krbpass PASSWORD\n                       Account password\n -hp, --krbhexpass HEXPASSWORD\n                       Hex-encoded password\n -s, --krbsalt USERNAME\n                       Case sensitive (!) salt. Used to calculate Kerberos\n                       keys.Only required if specifying password instead of\n                       keys.\n -hashes LMHASH:NTHASH\n                       NTLM hashes, format is LMHASH:NTHASH\n -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                       bits)\n -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                       the domain part (FQDN) specified in the target\n                       parameter\n \n SMB attack options:\n -e FILE               File to execute on the target system. If not\n                       specified, hashes will be dumped (secretsdump.py must\n                       be in the same directory)\n -c COMMAND            Command to execute on target system. If not specified,\n                       hashes will be dumped (secretsdump.py must be in the\n                       same directory).\n --enum-local-admins   If relayed user is not admin, attempt SAMR lookup to\n                       see who is (only works pre Win 10 Anniversary)\n \n LDAP attack options:\n --no-dump             Do not attempt to dump LDAP information\n --no-da               Do not attempt to add a Domain Admin\n --no-acl              Disable ACL attacks\n --no-validate-privs   Do not attempt to enumerate privileges, assume\n                       permissions are granted to escalate a user via ACL\n                       attacks\n --escalate-user ESCALATE_USER\n                       Escalate privileges of this user instead of creating a\n                       new one\n --add-computer [COMPUTERNAME]\n                       Attempt to add a new computer account\n --delegate-access     Delegate access on relayed computer account to the\n                       specified account\n --sid                 Use a SID to delegate access rather than an account\n                       name\n --dump-laps           Attempt to dump any LAPS passwords readable by the\n                       user\n --dump-gmsa           Attempt to dump any gMSA passwords readable by the\n                       user\n --dump-adcs           Attempt to dump ADCS enrollment services and\n                       certificate templates info\n \n AD CS attack options:\n --adcs                Enable AD CS relay attack\n --template TEMPLATE   AD CS template. Defaults to Machine or User whether\n                       relayed account name ends with `$`. Relaying a DC\n                       should require specifying `DomainController`\n --altname ALTNAME     Subject Alternative Name to use when performing ESC1\n                       or ESC6 attacks.\n -v, --victim TARGET   Victim username or computername$, to request the\n                       correct certificate name.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "krbrelayx.py: error: unrecognized arguments: help",
+          "template": null,
+          "original_sha256": "2b5adc02630df850c2a92e0df1891a806b50f9dddfdcdaee513809700ef30fc3"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "mimikatz"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: krbrelayx.py [-h] [-debug] [-t TARGET] [-tf TARGETSFILE] [-w]\n                    [-ip INTERFACE_IP] [-r SMBSERVER] [-l LOOTDIR]\n                    [-f {ccache,kirbi}] [-codec CODEC] [-no-smb2support]\n                    [-wh WPAD_HOST] [-wa WPAD_AUTH_NUM] [-6] [-p PASSWORD]\n                    [-hp HEXPASSWORD] [-s USERNAME] [-hashes LMHASH:NTHASH]\n                    [-aesKey hex key] [-dc-ip ip address] [-e FILE]\n                    [-c COMMAND] [--enum-local-admins] [--no-dump] [--no-da]\n                    [--no-acl] [--no-validate-privs]\n                    [--escalate-user ESCALATE_USER]\n                    [--add-computer [COMPUTERNAME]] [--delegate-access]\n                    [--sid] [--dump-laps] [--dump-gmsa] [--dump-adcs] [--adcs]\n                    [--template TEMPLATE] [--altname ALTNAME] [-v TARGET]\n\nKerberos relay and unconstrained delegation abuse tool. By @_dirkjan /\ndirkjanm.io\n\nMain options:\n  -h, --help            show this help message and exit\n  -debug                Turn DEBUG output ON\n  -t, --target TARGET   Target to attack, since this is Kerberos, only\n                        HOSTNAMES are valid. Example: smb://server:445 If\n                        unspecified, will store tickets for later use.\n  -tf TARGETSFILE       File that contains targets by hostname or full URL,\n                        one per line\n  -w                    Watch the target file for changes and update target\n                        list automatically (only valid with -tf)\n  -ip, --interface-ip INTERFACE_IP\n                        IP address of interface to bind SMB and HTTP servers\n  -r SMBSERVER          Redirect HTTP requests to a file:// path on SMBSERVER\n  -l, --lootdir LOOTDIR\n                        Loot directory in which gathered loot (TGTs or dumps)\n                        will be stored (default: current directory).\n  -f, --format {ccache,kirbi}\n                        Format to store tickets in. Valid: ccache (Impacket)\n                        or kirbi (Mimikatz format) default: ccache\n  -codec CODEC          Sets encoding used (codec) from the target's output\n                        (default \"utf-8\"). If errors are detected, run\n                        chcp.com at the target, map the result with\n                        https://docs.python.org/2.4/lib/standard-\n                        encodings.html and then execute ntlmrelayx.py again\n                        with -codec and the corresponding codec\n  -no-smb2support       Disable SMB2 Support\n  -wh, --wpad-host WPAD_HOST\n                        Enable serving a WPAD file for Proxy Authentication\n                        attack, setting the proxy host to the one supplied.\n  -wa, --wpad-auth-num WPAD_AUTH_NUM\n                        Prompt for authentication N times for clients without\n                        MS16-077 installed before serving a WPAD file.\n  -6, --ipv6            Listen on both IPv6 and IPv4\n\nKerberos Keys (of your account with unconstrained delegation):\n  -p, --krbpass PASSWORD\n                        Account password\n  -hp, --krbhexpass HEXPASSWORD\n                        Hex-encoded password\n  -s, --krbsalt USERNAME\n                        Case sensitive (!) salt. Used to calculate Kerberos\n                        keys.Only required if specifying password instead of\n                        keys.\n  -hashes LMHASH:NTHASH\n                        NTLM hashes, format is LMHASH:NTHASH\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)\n  -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                        the domain part (FQDN) specified in the target\n                        parameter\n\nSMB attack options:\n  -e FILE               File to execute on the target system. If not\n                        specified, hashes will be dumped (secretsdump.py must\n                        be in the same directory)\n  -c COMMAND            Command to execute on target system. If not specified,\n                        hashes will be dumped (secretsdump.py must be in the\n                        same directory).\n  --enum-local-admins   If relayed user is not admin, attempt SAMR lookup to\n                        see who is (only works pre Win 10 Anniversary)\n\nLDAP attack options:\n  --no-dump             Do not attempt to dump LDAP information\n  --no-da               Do not attempt to add a Domain Admin\n  --no-acl              Disable ACL attacks\n  --no-validate-privs   Do not attempt to enumerate privileges, assume\n                        permissions are granted to escalate a user via ACL\n                        attacks\n  --escalate-user ESCALATE_USER\n                        Escalate privileges of this user instead of creating a\n                        new one\n  --add-computer [COMPUTERNAME]\n                        Attempt to add a new computer account\n  --delegate-access     Delegate access on relayed computer account to the\n                        specified account\n  --sid                 Use a SID to delegate access rather than an account\n                        name\n  --dump-laps           Attempt to dump any LAPS passwords readable by the\n                        user\n  --dump-gmsa           Attempt to dump any gMSA passwords readable by the\n                        user\n  --dump-adcs           Attempt to dump ADCS enrollment services and\n                        certificate templates info\n\nAD CS attack options:\n  --adcs                Enable AD CS relay attack\n  --template TEMPLATE   AD CS template. Defaults to Machine or User whether\n                        relayed account name ends with `$`. Relaying a DC\n                        should require specifying `DomainController`\n  --altname ALTNAME     Subject Alternative Name to use when performing ESC1\n                        or ESC6 attacks.\n  -v, --victim TARGET   Victim username or computername$, to request the\n                        correct certificate name.",
+        "-h": "usage: krbrelayx.py [-h] [-debug] [-t TARGET] [-tf TARGETSFILE] [-w]\n                    [-ip INTERFACE_IP] [-r SMBSERVER] [-l LOOTDIR]\n                    [-f {ccache,kirbi}] [-codec CODEC] [-no-smb2support]\n                    [-wh WPAD_HOST] [-wa WPAD_AUTH_NUM] [-6] [-p PASSWORD]\n                    [-hp HEXPASSWORD] [-s USERNAME] [-hashes LMHASH:NTHASH]\n                    [-aesKey hex key] [-dc-ip ip address] [-e FILE]\n                    [-c COMMAND] [--enum-local-admins] [--no-dump] [--no-da]\n                    [--no-acl] [--no-validate-privs]\n                    [--escalate-user ESCALATE_USER]\n                    [--add-computer [COMPUTERNAME]] [--delegate-access]\n                    [--sid] [--dump-laps] [--dump-gmsa] [--dump-adcs] [--adcs]\n                    [--template TEMPLATE] [--altname ALTNAME] [-v TARGET]\n\nKerberos relay and unconstrained delegation abuse tool. By @_dirkjan /\ndirkjanm.io\n\nMain options:\n  -h, --help            show this help message and exit\n  -debug                Turn DEBUG output ON\n  -t, --target TARGET   Target to attack, since this is Kerberos, only\n                        HOSTNAMES are valid. Example: smb://server:445 If\n                        unspecified, will store tickets for later use.\n  -tf TARGETSFILE       File that contains targets by hostname or full URL,\n                        one per line\n  -w                    Watch the target file for changes and update target\n                        list automatically (only valid with -tf)\n  -ip, --interface-ip INTERFACE_IP\n                        IP address of interface to bind SMB and HTTP servers\n  -r SMBSERVER          Redirect HTTP requests to a file:// path on SMBSERVER\n  -l, --lootdir LOOTDIR\n                        Loot directory in which gathered loot (TGTs or dumps)\n                        will be stored (default: current directory).\n  -f, --format {ccache,kirbi}\n                        Format to store tickets in. Valid: ccache (Impacket)\n                        or kirbi (Mimikatz format) default: ccache\n  -codec CODEC          Sets encoding used (codec) from the target's output\n                        (default \"utf-8\"). If errors are detected, run\n                        chcp.com at the target, map the result with\n                        https://docs.python.org/2.4/lib/standard-\n                        encodings.html and then execute ntlmrelayx.py again\n                        with -codec and the corresponding codec\n  -no-smb2support       Disable SMB2 Support\n  -wh, --wpad-host WPAD_HOST\n                        Enable serving a WPAD file for Proxy Authentication\n                        attack, setting the proxy host to the one supplied.\n  -wa, --wpad-auth-num WPAD_AUTH_NUM\n                        Prompt for authentication N times for clients without\n                        MS16-077 installed before serving a WPAD file.\n  -6, --ipv6            Listen on both IPv6 and IPv4\n\nKerberos Keys (of your account with unconstrained delegation):\n  -p, --krbpass PASSWORD\n                        Account password\n  -hp, --krbhexpass HEXPASSWORD\n                        Hex-encoded password\n  -s, --krbsalt USERNAME\n                        Case sensitive (!) salt. Used to calculate Kerberos\n                        keys.Only required if specifying password instead of\n                        keys.\n  -hashes LMHASH:NTHASH\n                        NTLM hashes, format is LMHASH:NTHASH\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)\n  -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                        the domain part (FQDN) specified in the target\n                        parameter\n\nSMB attack options:\n  -e FILE               File to execute on the target system. If not\n                        specified, hashes will be dumped (secretsdump.py must\n                        be in the same directory)\n  -c COMMAND            Command to execute on target system. If not specified,\n                        hashes will be dumped (secretsdump.py must be in the\n                        same directory).\n  --enum-local-admins   If relayed user is not admin, attempt SAMR lookup to\n                        see who is (only works pre Win 10 Anniversary)\n\nLDAP attack options:\n  --no-dump             Do not attempt to dump LDAP information\n  --no-da               Do not attempt to add a Domain Admin\n  --no-acl              Disable ACL attacks\n  --no-validate-privs   Do not attempt to enumerate privileges, assume\n                        permissions are granted to escalate a user via ACL\n                        attacks\n  --escalate-user ESCALATE_USER\n                        Escalate privileges of this user instead of creating a\n                        new one\n  --add-computer [COMPUTERNAME]\n                        Attempt to add a new computer account\n  --delegate-access     Delegate access on relayed computer account to the\n                        specified account\n  --sid                 Use a SID to delegate access rather than an account\n                        name\n  --dump-laps           Attempt to dump any LAPS passwords readable by the\n                        user\n  --dump-gmsa           Attempt to dump any gMSA passwords readable by the\n                        user\n  --dump-adcs           Attempt to dump ADCS enrollment services and\n                        certificate templates info\n\nAD CS attack options:\n  --adcs                Enable AD CS relay attack\n  --template TEMPLATE   AD CS template. Defaults to Machine or User whether\n                        relayed account name ends with `$`. Relaying a DC\n                        should require specifying `DomainController`\n  --altname ALTNAME     Subject Alternative Name to use when performing ESC1\n                        or ESC6 attacks.\n  -v, --victim TARGET   Victim username or computername$, to request the\n                        correct certificate name.",
+        "help": "usage: krbrelayx.py [-h] [-debug] [-t TARGET] [-tf TARGETSFILE] [-w]\n                    [-ip INTERFACE_IP] [-r SMBSERVER] [-l LOOTDIR]\n                    [-f {ccache,kirbi}] [-codec CODEC] [-no-smb2support]\n                    [-wh WPAD_HOST] [-wa WPAD_AUTH_NUM] [-6] [-p PASSWORD]\n                    [-hp HEXPASSWORD] [-s USERNAME] [-hashes LMHASH:NTHASH]\n                    [-aesKey hex key] [-dc-ip ip address] [-e FILE]\n                    [-c COMMAND] [--enum-local-admins] [--no-dump] [--no-da]\n                    [--no-acl] [--no-validate-privs]\n                    [--escalate-user ESCALATE_USER]\n                    [--add-computer [COMPUTERNAME]] [--delegate-access]\n                    [--sid] [--dump-laps] [--dump-gmsa] [--dump-adcs] [--adcs]\n                    [--template TEMPLATE] [--altname ALTNAME] [-v TARGET]\nkrbrelayx.py: error: unrecognized arguments: help"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/krbrelayx",
+        "size_bytes": 79,
+        "is_symlink": false,
+        "file_type": "a sh script, ASCII text executable"
+      }
+    },
+    {
+      "name": "printerbug",
+      "description": "- - -",
+      "usage": "printerbug.py [-h] [--verbose] [-target-file file]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help            show this help message and exit"
+        },
+        {
+          "flags": [
+            "--verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Switch verbosity to DEBUG",
+          "default": null,
+          "choices": null,
+          "raw": " --verbose             Switch verbosity to DEBUG"
+        },
+        {
+          "flags": [
+            "-target-file"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Use the targets in the specified file instead of the",
+          "default": null,
+          "choices": null,
+          "raw": " -target-file file     Use the targets in the specified file instead of the"
+        },
+        {
+          "flags": [
+            "-port"
+          ],
+          "metavar": "destination port",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -port [destination port]"
+        },
+        {
+          "flags": [
+            "-timeout"
+          ],
+          "metavar": "timeout",
+          "takes_value": true,
+          "description": "Specify a timeout for the TCP ping check",
+          "default": null,
+          "choices": null,
+          "raw": " -timeout timeout      Specify a timeout for the TCP ping check"
+        },
+        {
+          "flags": [
+            "-no-ping"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Specify if a TCP ping should be done before",
+          "default": null,
+          "choices": null,
+          "raw": " -no-ping              Specify if a TCP ping should be done before"
+        },
+        {
+          "flags": [
+            "-hashes"
+          ],
+          "metavar": "LMHASH",
+          "takes_value": true,
+          "description": "NTHASH",
+          "default": null,
+          "choices": null,
+          "raw": " -hashes LMHASH:NTHASH"
+        },
+        {
+          "flags": [
+            "-no-pass"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "don't ask for password (useful when proxying through",
+          "default": null,
+          "choices": null,
+          "raw": " -no-pass              don't ask for password (useful when proxying through"
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use Kerberos authentication. Grabs credentials from",
+          "default": null,
+          "choices": null,
+          "raw": " -k                    Use Kerberos authentication. Grabs credentials from"
+        },
+        {
+          "flags": [
+            "-dc-ip"
+          ],
+          "metavar": "ip address",
+          "takes_value": true,
+          "description": "IP Address of the domain controller. If omitted it",
+          "default": null,
+          "choices": null,
+          "raw": " -dc-ip ip address     IP Address of the domain controller. If omitted it"
+        },
+        {
+          "flags": [
+            "-target-ip"
+          ],
+          "metavar": "ip address",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -target-ip ip address"
+        }
+      ],
+      "raw_help": "root@kali:~# printerbug -h\n usage: printerbug.py [-h] [--verbose] [-target-file file]\n                    [-port [destination port]] [-timeout timeout] [-no-ping]\n                    [-hashes LMHASH:NTHASH] [-no-pass] [-k]\n                    [-dc-ip ip address] [-target-ip ip address]\n                    target attackerhost\n \n positional arguments:\n target                [[domain/]username[:password]@]<targetName or address>\n attackerhost          hostname to connect to\n \n options:\n -h, --help            show this help message and exit\n --verbose             Switch verbosity to DEBUG\n \n connection:\n -target-file file     Use the targets in the specified file instead of the\n                       one on the command line (you must still specify\n                       something as target name)\n -port [destination port]\n                       Destination port to connect to SMB Server\n -timeout timeout      Specify a timeout for the TCP ping check\n -no-ping              Specify if a TCP ping should be done before\n                       connectionNOT recommended since SMB timeouts default\n                       to 300 secs and the TCP ping assures connectivity to\n                       the SMB port\n \n authentication:\n -hashes LMHASH:NTHASH\n                       NTLM hashes, format is LMHASH:NTHASH\n -no-pass              don't ask for password (useful when proxying through\n                       ntlmrelayx)\n -k                    Use Kerberos authentication. Grabs credentials from\n                       ccache file (KRB5CCNAME) based on target parameters.\n                       If valid credentials cannot be found, it will use the\n                       ones specified in the command line\n -dc-ip ip address     IP Address of the domain controller. If omitted it\n                       will use the domain part (FQDN) specified in the\n                       target parameter\n -target-ip ip address\n                       IP Address of the target machine. If omitted it will\n                       use whatever was specified as target. This is useful\n                       when target is the NetBIOS name or Kerberos name and\n                       you cannot resolve it",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "printerbug.py: error: the following arguments are required: attackerhost",
+          "template": null,
+          "original_sha256": "00b3bcbf598d1d21507a174a1d56f9a06f6d7d36bf55a33ad4df5c29c78ffb8e"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: printerbug.py [-h] [--verbose] [-target-file file]\n                     [-port [destination port]] [-timeout timeout] [-no-ping]\n                     [-hashes LMHASH:NTHASH] [-no-pass] [-k]\n                     [-dc-ip ip address] [-target-ip ip address]\n                     target attackerhost\n\npositional arguments:\n  target                [[domain/]username[:password]@]<targetName or address>\n  attackerhost          hostname to connect to\n\noptions:\n  -h, --help            show this help message and exit\n  --verbose             Switch verbosity to DEBUG\n\nconnection:\n  -target-file file     Use the targets in the specified file instead of the\n                        one on the command line (you must still specify\n                        something as target name)\n  -port [destination port]\n                        Destination port to connect to SMB Server\n  -timeout timeout      Specify a timeout for the TCP ping check\n  -no-ping              Specify if a TCP ping should be done before\n                        connectionNOT recommended since SMB timeouts default\n                        to 300 secs and the TCP ping assures connectivity to\n                        the SMB port\n\nauthentication:\n  -hashes LMHASH:NTHASH\n                        NTLM hashes, format is LMHASH:NTHASH\n  -no-pass              don't ask for password (useful when proxying through\n                        ntlmrelayx)\n  -k                    Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -dc-ip ip address     IP Address of the domain controller. If omitted it\n                        will use the domain part (FQDN) specified in the\n                        target parameter\n  -target-ip ip address\n                        IP Address of the target machine. If omitted it will\n                        use whatever was specified as target. This is useful\n                        when target is the NetBIOS name or Kerberos name and\n                        you cannot resolve it",
+        "-h": "usage: printerbug.py [-h] [--verbose] [-target-file file]\n                     [-port [destination port]] [-timeout timeout] [-no-ping]\n                     [-hashes LMHASH:NTHASH] [-no-pass] [-k]\n                     [-dc-ip ip address] [-target-ip ip address]\n                     target attackerhost\n\npositional arguments:\n  target                [[domain/]username[:password]@]<targetName or address>\n  attackerhost          hostname to connect to\n\noptions:\n  -h, --help            show this help message and exit\n  --verbose             Switch verbosity to DEBUG\n\nconnection:\n  -target-file file     Use the targets in the specified file instead of the\n                        one on the command line (you must still specify\n                        something as target name)\n  -port [destination port]\n                        Destination port to connect to SMB Server\n  -timeout timeout      Specify a timeout for the TCP ping check\n  -no-ping              Specify if a TCP ping should be done before\n                        connectionNOT recommended since SMB timeouts default\n                        to 300 secs and the TCP ping assures connectivity to\n                        the SMB port\n\nauthentication:\n  -hashes LMHASH:NTHASH\n                        NTLM hashes, format is LMHASH:NTHASH\n  -no-pass              don't ask for password (useful when proxying through\n                        ntlmrelayx)\n  -k                    Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -dc-ip ip address     IP Address of the domain controller. If omitted it\n                        will use the domain part (FQDN) specified in the\n                        target parameter\n  -target-ip ip address\n                        IP Address of the target machine. If omitted it will\n                        use whatever was specified as target. This is useful\n                        when target is the NetBIOS name or Kerberos name and\n                        you cannot resolve it",
+        "help": "--- Logging error ---\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/logging/__init__.py\", line 472, in format\n    return self._format(record)\n           ~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.13/logging/__init__.py\", line 468, in _format\n    return self._fmt % values\n           ~~~~~~~~~~^~~~~~~~\nKeyError: 'identity'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/usr/lib/python3.13/logging/__init__.py\", line 1151, in emit\n    msg = self.format(record)\n  File \"/usr/lib/python3.13/logging/__init__.py\", line 999, in format\n    return fmt.format(record)\n           ~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3/dist-packages/impacket/examples/logger.py\", line 46, in format\n    return logging.Formatter.format(self, record)\n           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/logging/__init__.py\", line 715, in format\n    s = self.formatMessage(record)\n  File \"/usr/lib/python3.13/logging/__init__.py\", line 684, in formatMessage\n    return self._style.format(record)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.13/logging/__init__.py\", line 474, in format\n    raise ValueError('Formatting field not found in record: %s' % e)\nValueError: Formatting field not found in record: 'identity'\nCall stack:\n  File \"/usr/share/krbrelayx/printerbug.py\", line 253, in <module>\n    main()\n  File \"/usr/share/krbrelayx/printerbug.py\", line 164, in main\n    logging.info(version.BANNER)\nMessage: 'Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies \\n'\nArguments: ()\nusage: printerbug.py [-h] [--verbose] [-target-file file]\n                     [-port [destination port]] [-timeout timeout] [-no-ping]\n                     [-hashes LMHASH:NTHASH] [-no-pass] [-k]\n                     [-dc-ip ip address] [-target-ip ip address]\n                     target attackerhost\nprinterbug.py: error: the following arguments are required: attackerhost"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/printerbug",
+        "size_bytes": 80,
+        "is_symlink": false,
+        "file_type": "a sh script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/krbrelayx/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/krbrelayx/index.md",
+    "retrieved_at": "2026-07-14T13:06:28+00:00",
+    "sha256": "4132056db12618bc060c8a226d1c5c3f433687b3d517ef06bbb81110ebc6ae42"
+  },
+  "apt_metadata": {
+    "section": "misc",
+    "installed_size": "172",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "0.0~git20260311.10b45a3-0kali1",
+    "depends": "python3, python3-dnspython, python3-impacket, python3-ldap3",
+    "description": "Kerberos relaying and unconstrained delegation abuse toolkit\nKerberos relaying and unconstrained delegation abuse toolkit. This tool can\nadd/remove/modify Service Principal Names on accounts in AD over LDAP.",
+    "homepage": "https://github.com/dirkjanm/krbrelayx"
+  },
+  "tags": [
+    "offensive",
+    "krbrelayx",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/krbrelayx && python3 krbrelayx.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/krbrelayx && python3 krbrelayx.py --help",
+    "cd toolboxes/krbrelayx && python3 krbrelayx.py --help",
+    "cd toolboxes/krbrelayx && python3 krbrelayx.py --help",
+    "cd toolboxes/krbrelayx && python3 krbrelayx.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST krbrelayx --output $KFIOSA_OUTPUT_DIR/krbrelayx.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST krbrelayx --output $KFIOSA_OUTPUT_DIR/krbrelayx.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

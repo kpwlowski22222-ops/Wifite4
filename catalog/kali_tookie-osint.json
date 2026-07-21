@@ -1,0 +1,320 @@
+{
+  "id": "kali:tookie-osint",
+  "kind": "kali_source_package",
+  "name": "tookie-osint",
+  "title": "tookie-osint",
+  "summary": "### tookie-osint",
+  "version": "4.1fix-0kali1",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/Alfredredbird/tookie-osint",
+  "repository": "https://gitlab.com/kalilinux/packages/tookie-osint",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install tookie-osint"
+  },
+  "packages": [
+    {
+      "name": "tookie-osint"
+    }
+  ],
+  "commands": [
+    {
+      "name": "tookie-osint",
+      "description": "- - -",
+      "usage": "tookie-osint [-h] (-u USER | -U USERFILE) [-t THREADS] [-d] [-sk]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help            show this help message and exit"
+        },
+        {
+          "flags": [
+            "-u",
+            "--user"
+          ],
+          "metavar": "- ser USER",
+          "takes_value": true,
+          "description": "Username to scan",
+          "default": null,
+          "choices": null,
+          "raw": " -u, --user USER       Username to scan"
+        },
+        {
+          "flags": [
+            "-U",
+            "--userfile"
+          ],
+          "metavar": "USERFILE",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -U, --userfile USERFILE"
+        },
+        {
+          "flags": [
+            "-t",
+            "--threads"
+          ],
+          "metavar": "- hreads THREADS",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -t, --threads THREADS"
+        },
+        {
+          "flags": [
+            "-d",
+            "--debug"
+          ],
+          "metavar": "- ebug",
+          "takes_value": true,
+          "description": "Allows debugging options",
+          "default": null,
+          "choices": null,
+          "raw": " -d, --debug           Allows debugging options"
+        },
+        {
+          "flags": [
+            "-sk",
+            "--skipheaders"
+          ],
+          "metavar": "- ipheaders",
+          "takes_value": true,
+          "description": "skips using random user agents",
+          "default": null,
+          "choices": null,
+          "raw": " -sk, --skipheaders    skips using random user agents"
+        },
+        {
+          "flags": [
+            "-p",
+            "--proxy"
+          ],
+          "metavar": "- roxy PROXY",
+          "takes_value": true,
+          "description": "proxy",
+          "default": null,
+          "choices": null,
+          "raw": " -p, --proxy PROXY     proxy"
+        },
+        {
+          "flags": [
+            "-W",
+            "--webscraper"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Toggles uses the webscraper",
+          "default": null,
+          "choices": null,
+          "raw": " -W, --webscraper      Toggles uses the webscraper"
+        },
+        {
+          "flags": [
+            "-o",
+            "--output"
+          ],
+          "metavar": "- utput txt csv json",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -o, --output {txt,csv,json}"
+        },
+        {
+          "flags": [
+            "-D",
+            "--delay"
+          ],
+          "metavar": "DELAY",
+          "takes_value": true,
+          "description": "Delay webscraper should wait for the page to load",
+          "default": null,
+          "choices": null,
+          "raw": " -D, --delay DELAY     Delay webscraper should wait for the page to load"
+        },
+        {
+          "flags": [
+            "-a",
+            "--all"
+          ],
+          "metavar": "- ll",
+          "takes_value": true,
+          "description": "Show all results (positive and negative)",
+          "default": null,
+          "choices": null,
+          "raw": " -a, --all             Show all results (positive and negative)"
+        },
+        {
+          "flags": [
+            "-H",
+            "--harvest"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Webscrape data from the sites",
+          "default": null,
+          "choices": null,
+          "raw": " -H, --harvest         Webscrape data from the sites"
+        }
+      ],
+      "raw_help": "root@kali:~# tookie-osint -h\n usage: tookie-osint [-h] (-u USER | -U USERFILE) [-t THREADS] [-d] [-sk]\n                   [-p PROXY] [-W] [-o {txt,csv,json}] [-D DELAY] [-a] [-H]\n \n Username OSINT scanner\n \n options:\n -h, --help            show this help message and exit\n -u, --user USER       Username to scan\n -U, --userfile USERFILE\n                       File path to username file\n -t, --threads THREADS\n                       Threads. Defualt is 2\n -d, --debug           Allows debugging options\n -sk, --skipheaders    skips using random user agents\n -p, --proxy PROXY     proxy\n -W, --webscraper      Toggles uses the webscraper\n -o, --output {txt,csv,json}\n                       Output format (txt, csv, json)\n -D, --delay DELAY     Delay webscraper should wait for the page to load\n -a, --all             Show all results (positive and negative)\n -H, --harvest         Webscrape data from the sites\n \n Examples:\n Basic scan (default txt output):\n   tookie-osint -u alfred\n \n JSON output with 10 threads:\n   tookie-osint -u alfred -o json -t 10\n \n Scan usernames from a file:\n   tookie-osint -U users.txt -o csv\n \n Use proxy and show all results:\n   tookie-osint -u alfred -p http://127.0.0.1:8080 -a\n \n Skip random headers:\n   tookie-osint -u alfred --skipheaders\n \n Use webscraper:\n   tookie-osint -u alfred -W -H\n \n Use a user file list\n   tookie-osint -U users.txt -t 20",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "tookie-osint -u alfred",
+          "template": null,
+          "original_sha256": "8257524aedd7d5033fd895dfa6e630bb737df200a5afbad89c580a91f37509cd"
+        },
+        {
+          "status": "operational_example",
+          "command": "tookie-osint -u alfred -o json -t 10",
+          "template": null,
+          "original_sha256": "c7798417b04ae35a56286f8108c799cb7cbde79ed953e70f91d70eb58efa8031"
+        },
+        {
+          "status": "operational_example",
+          "command": "tookie-osint -U users.txt -o csv",
+          "template": null,
+          "original_sha256": "60f0ab06fd59886b108e0109de4747644479b081318e844d8f074f2ee248c45f"
+        },
+        {
+          "status": "operational_example",
+          "command": "tookie-osint -u alfred -p http://127.0.0.1:8080 -a",
+          "template": null,
+          "original_sha256": "739fd1689b7a808b0e8106774e9feb14e0f2f5d97dbf31b4b01a7a41a6335eac"
+        },
+        {
+          "status": "operational_example",
+          "command": "tookie-osint -u alfred --skipheaders",
+          "template": null,
+          "original_sha256": "6636f82c0aa11ccd7aff8b1e604a1f469e38d82afce75e21f632af183eb62ff0"
+        },
+        {
+          "status": "operational_example",
+          "command": "tookie-osint -u alfred -W -H",
+          "template": null,
+          "original_sha256": "9601ad2e9c41fd68a570ecd07eff89c2c4362af0dd18f983e0d350dd90976e55"
+        },
+        {
+          "status": "operational_example",
+          "command": "tookie-osint -U users.txt -t 20",
+          "template": null,
+          "original_sha256": "b1e30def02209133ab555e0372163308f65c0b5a21f2bccc6b16bee3ad498b74"
+        },
+        {
+          "status": "operational_example",
+          "command": "tookie-osint: error: one of the arguments -u/--user -U/--userfile is required",
+          "template": null,
+          "original_sha256": "dac958b17997a409781d9e4ee2e1480a5f6340979bd198a2ada8a7a9795af429"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "osint",
+          "scanner"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: tookie-osint [-h] (-u USER | -U USERFILE) [-t THREADS] [-d] [-sk]\n                    [-p PROXY] [-W] [-o {txt,csv,json}] [-D DELAY] [-a] [-H]\n\nUsername OSINT scanner\n\noptions:\n  -h, --help            show this help message and exit\n  -u, --user USER       Username to scan\n  -U, --userfile USERFILE\n                        File path to username file\n  -t, --threads THREADS\n                        Threads. Defualt is 2\n  -d, --debug           Allows debugging options\n  -sk, --skipheaders    skips using random user agents\n  -p, --proxy PROXY     proxy\n  -W, --webscraper      Toggles uses the webscraper\n  -o, --output {txt,csv,json}\n                        Output format (txt, csv, json)\n  -D, --delay DELAY     Delay webscraper should wait for the page to load\n  -a, --all             Show all results (positive and negative)\n  -H, --harvest         Webscrape data from the sites\n\nExamples:\n  Basic scan (default txt output):\n    tookie-osint -u alfred\n\n  JSON output with 10 threads:\n    tookie-osint -u alfred -o json -t 10\n\n  Scan usernames from a file:\n    tookie-osint -U users.txt -o csv\n\n  Use proxy and show all results:\n    tookie-osint -u alfred -p http://127.0.0.1:8080 -a\n\n  Skip random headers:\n    tookie-osint -u alfred --skipheaders\n\n  Use webscraper:\n    tookie-osint -u alfred -W -H\n\n  Use a user file list\n    tookie-osint -U users.txt -t 20",
+        "-h": "usage: tookie-osint [-h] (-u USER | -U USERFILE) [-t THREADS] [-d] [-sk]\n                    [-p PROXY] [-W] [-o {txt,csv,json}] [-D DELAY] [-a] [-H]\n\nUsername OSINT scanner\n\noptions:\n  -h, --help            show this help message and exit\n  -u, --user USER       Username to scan\n  -U, --userfile USERFILE\n                        File path to username file\n  -t, --threads THREADS\n                        Threads. Defualt is 2\n  -d, --debug           Allows debugging options\n  -sk, --skipheaders    skips using random user agents\n  -p, --proxy PROXY     proxy\n  -W, --webscraper      Toggles uses the webscraper\n  -o, --output {txt,csv,json}\n                        Output format (txt, csv, json)\n  -D, --delay DELAY     Delay webscraper should wait for the page to load\n  -a, --all             Show all results (positive and negative)\n  -H, --harvest         Webscrape data from the sites\n\nExamples:\n  Basic scan (default txt output):\n    tookie-osint -u alfred\n\n  JSON output with 10 threads:\n    tookie-osint -u alfred -o json -t 10\n\n  Scan usernames from a file:\n    tookie-osint -U users.txt -o csv\n\n  Use proxy and show all results:\n    tookie-osint -u alfred -p http://127.0.0.1:8080 -a\n\n  Skip random headers:\n    tookie-osint -u alfred --skipheaders\n\n  Use webscraper:\n    tookie-osint -u alfred -W -H\n\n  Use a user file list\n    tookie-osint -U users.txt -t 20",
+        "help": "usage: tookie-osint [-h] (-u USER | -U USERFILE) [-t THREADS] [-d] [-sk]\n                    [-p PROXY] [-W] [-o {txt,csv,json}] [-D DELAY] [-a] [-H]\ntookie-osint: error: one of the arguments -u/--user -U/--userfile is required"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tookie-osint",
+        "size_bytes": 61,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/tookie-osint/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/tookie-osint/index.md",
+    "retrieved_at": "2026-07-14T13:08:46+00:00",
+    "sha256": "155401a888f4c876097b5cc2510152532978734c9ee2b9edfc47eed647b27f04"
+  },
+  "apt_metadata": {
+    "section": "misc",
+    "installed_size": "1150",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "4.1fix-0kali1",
+    "depends": "chromium-driver, python3-colorama, python3-requests, python3-selenium, python3-webdriver-manager, python3:any",
+    "description": "OSINT information gathering tool for finding social media accounts\nTookie-osint has a simple-to-use UI and is really straightforward. The main\nidea of Tookie-osint is to discover usernames that are requested from an input.\nTookie-osint is similar to the tool called Sherlock. It discovers all the user\naccounts across different websites and Tookie-osint is successful at this task\nalmost 80% of the time.",
+    "homepage": "https://github.com/Alfredredbird/tookie-osint"
+  },
+  "tags": [
+    "offensive",
+    "tookie",
+    "osint",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/tookie-osint && python3 tookie-osint.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/tookie-osint && python3 tookie-osint.py --help",
+    "cd toolboxes/tookie-osint && python3 tookie-osint.py --help",
+    "cd toolboxes/tookie-osint && python3 tookie-osint.py --help",
+    "cd toolboxes/tookie-osint && python3 tookie-osint.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tookie-osint --output $KFIOSA_OUTPUT_DIR/tookie-osint.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tookie-osint --output $KFIOSA_OUTPUT_DIR/tookie-osint.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

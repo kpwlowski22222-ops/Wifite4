@@ -1,0 +1,119 @@
+{
+  "id": "github:edonsec/wifi-hawk",
+  "kind": "external_repository",
+  "name": "wifi-hawk",
+  "full_name": "edonsec/wifi-hawk",
+  "owner": "edonsec",
+  "category": "WiFi Reconnaissance — Probe Profiling",
+  "url": "https://github.com/edonsec/wifi-hawk",
+  "summary": "Repository indexing entry for the ``wifi-hawk`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/edonsec__wifi-hawk",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "Capture (root): ./WifiHawkCapture -i wlan0mon -d ~/wifihawk.db  |  Plot: ./WifiHawkPlot -d ~/wifihawk.db -w resources/rules/uk-router.json -o ~/ssid-map.html -v  (also accepts PCAP via scapy sniff offline=)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "Capture (root): ./WifiHawkCapture -i wlan0mon -d ~/wifihawk.db  |  Plot: ./WifiHawkPlot -d ~/wifihawk.db -w resources/rules/uk-router.json -o ~/ssid-map.html -v  (also accepts PCAP via scapy sniff offline=)"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "scapy",
+    "aircrack-ng (airmon-ng for monitor mode)",
+    "sqlite3 (stdlib)",
+    "WiGLE API account/key",
+    "Google Maps Geocoding + JavaScript API keys",
+    "python setup.py / virtualenv"
+  ],
+  "algorithms": [
+    "scapy sniff()-based 802.11 probe-request capture with lfilter packet filter",
+    "SQLite logging of probed SSID + client MAC + timestamp",
+    "WiGLE SSID-to-GPS geolocation enrichment (API lookup with caching)",
+    "UK-ISP-router SSID whitelist/rules filtering (resources/rules/uk-router.json)",
+    "Google Maps HTML plot generation from geolocated SSIDs",
+    "Offline PCAP ingestion via scapy sniff(offline=)"
+  ],
+  "produces": [
+    "SQLite database of probe requests (SSID, MAC, timestamp)",
+    "WiGLE-derived GPS coordinates per SSID",
+    "Interactive Google Map HTML (ssid-map.html)",
+    "Verbose terminal dump of coordinates"
+  ],
+  "capability_bucket": "probe_profiling",
+  "runnable": true,
+  "novelty": "Capture layer is a thin scapy wrapper (redundant vs airodump-ng probe logging). The genuinely novel part is the downstream pipeline: WiGLE SSID-to-GPS enrichment of passively observed probe requests, UK-ISP-router default-SSID whitelist filtering, and Google Maps visualization aimed at physically geolocating a target's previously-joined networks — a probe-request-driven physical-locale inference workflow not present in airodump-ng/wash/hcxtools/scapy baseline.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "hawk",
+    "edonsec",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifi-hawk && python3 wifi-hawk.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi-hawk && python3 wifi-hawk.py --help",
+    "cd toolboxes/wifi-hawk && python3 wifi-hawk.py --help",
+    "cd toolboxes/wifi-hawk && python3 wifi-hawk.py --help",
+    "cd toolboxes/wifi-hawk && python3 wifi-hawk.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-hawk --output $KFIOSA_OUTPUT_DIR/wifi-hawk.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-hawk --output $KFIOSA_OUTPUT_DIR/wifi-hawk.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

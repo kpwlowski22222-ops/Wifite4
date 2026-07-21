@@ -1,0 +1,1036 @@
+{
+  "id": "kali:ddrescue",
+  "kind": "kali_source_package",
+  "name": "ddrescue",
+  "title": "ddrescue",
+  "summary": "### ddrescue",
+  "version": "1.99.13-0kali2",
+  "architectures": [
+    "amd64",
+    "arm64"
+  ],
+  "homepage": "http://www.garloff.de/kurt/linux/ddrescue/",
+  "repository": "https://gitlab.com/kalilinux/packages/ddrescue",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-recover",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install ddrescue"
+  },
+  "packages": [
+    {
+      "name": "ddrescue"
+    }
+  ],
+  "commands": [
+    {
+      "name": "dd_rescue",
+      "description": "Data recovery and protection tool",
+      "usage": "dd_rescue [options] infile outfile",
+      "arguments": [
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": "opos",
+          "takes_value": true,
+          "description": "start position in output file (def=ipos),",
+          "default": null,
+          "choices": null,
+          "raw": "        -S opos    start position in output file (def=ipos),"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "softbs",
+          "takes_value": true,
+          "description": "block size for copy operation (def=131072, 1048576 for -d),",
+          "default": null,
+          "choices": null,
+          "raw": "        -b softbs  block size for copy operation (def=131072, 1048576 for -d),"
+        },
+        {
+          "flags": [
+            "-B"
+          ],
+          "metavar": "hardbs",
+          "takes_value": true,
+          "description": "fallback block size in case of errs (def=4096, 512 for -d),",
+          "default": null,
+          "choices": null,
+          "raw": "        -B hardbs  fallback block size in case of errs (def=4096, 512 for -d),"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "maxerr",
+          "takes_value": true,
+          "description": "exit after maxerr errors (def=0=infinite),",
+          "default": null,
+          "choices": null,
+          "raw": "        -e maxerr  exit after maxerr errors (def=0=infinite),"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "maxxfer maximum amount of data to be transferred def=0=inf",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "        -m maxxfer maximum amount of data to be transferred (def=0=inf),"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "avoid extending outfile,",
+          "default": null,
+          "choices": null,
+          "raw": "        -M         avoid extending outfile,"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "count opos from the end of outfile (eXtend),",
+          "default": null,
+          "choices": null,
+          "raw": "        -x         count opos from the end of outfile (eXtend),"
+        },
+        {
+          "flags": [
+            "-y"
+          ],
+          "metavar": "syncsz",
+          "takes_value": true,
+          "description": "frequency of fsync calls in bytes (def=512*softbs),",
+          "default": null,
+          "choices": null,
+          "raw": "        -y syncsz  frequency of fsync calls in bytes (def=512*softbs),"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "logfile name of a file to log errors and summary to def=\"\"",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "        -l logfile name of a file to log errors and summary to (def=\"\"),"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "bbfile",
+          "takes_value": true,
+          "description": "name of a file to log bad blocks numbers (def=\"\"),",
+          "default": null,
+          "choices": null,
+          "raw": "        -o bbfile  name of a file to log bad blocks numbers (def=\"\"),"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "reverse direction copy (def=forward),",
+          "default": null,
+          "choices": null,
+          "raw": "        -r         reverse direction copy (def=forward),"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "repeatedly write same block (def if infile is /dev/zero),",
+          "default": null,
+          "choices": null,
+          "raw": "        -R         repeatedly write same block (def if infile is /dev/zero),"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "truncate output file at start (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -t         truncate output file at start (def=no),"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "truncate output file at last pos (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -T         truncate output file at last pos (def=no),"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "undo writes by deleting outfile and issuing fstrim",
+          "default": null,
+          "choices": null,
+          "raw": "        -u         undo writes by deleting outfile and issuing fstrim"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "/D",
+          "takes_value": true,
+          "description": "use O_DIRECT for input/output (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -d/D       use O_DIRECT for input/output (def=no),"
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use efficient in-kernel zerocopy splice,",
+          "default": null,
+          "choices": null,
+          "raw": "        -k         use efficient in-kernel zerocopy splice,"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use fallocate to preallocate target space,",
+          "default": null,
+          "choices": null,
+          "raw": "        -P         use fallocate to preallocate target space,"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": "plug1 =par1",
+          "takes_value": true,
+          "description": "par2]][,plug2[,..]]    load plugins,",
+          "default": null,
+          "choices": null,
+          "raw": "        -L plug1[=par1[:par2]][,plug2[,..]]    load plugins,"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "abort on Write errors (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -w         abort on Write errors (def=no),"
+        },
+        {
+          "flags": [
+            "-W"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "read target block and avoid Writes if identical (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -W         read target block and avoid Writes if identical (def=no),"
+        },
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "detect zero-filled blocks and write spArsely (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -a         detect zero-filled blocks and write spArsely (def=no),"
+        },
+        {
+          "flags": [
+            "-A"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Always write blocks, zeroed if err (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -A         Always write blocks, zeroed if err (def=no),"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "interactive: ask before overwriting data (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -i         interactive: ask before overwriting data (def=no),"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "force: skip some sanity checks (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -f         force: skip some sanity checks (def=no),"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "preserve: preserve ownership, perms, times, attrs (def=no),",
+          "default": null,
+          "choices": null,
+          "raw": "        -p         preserve: preserve ownership, perms, times, attrs (def=no),"
+        },
+        {
+          "flags": [
+            "-C"
+          ],
+          "metavar": "limit",
+          "takes_value": true,
+          "description": "rateControl: avoid xfer data faster than limit B/s",
+          "default": null,
+          "choices": null,
+          "raw": "        -C limit   rateControl: avoid xfer data faster than limit B/s"
+        },
+        {
+          "flags": [
+            "-Y"
+          ],
+          "metavar": "oname",
+          "takes_value": true,
+          "description": "Secondary output file (multiple possible),",
+          "default": null,
+          "choices": null,
+          "raw": "        -Y oname   Secondary output file (multiple possible),"
+        },
+        {
+          "flags": [
+            "-F",
+            "-off",
+            "-off"
+          ],
+          "metavar": "off r/rep off w/rep ...",
+          "takes_value": true,
+          "description": "fault injection (hardbs off) r/w",
+          "default": null,
+          "choices": null,
+          "raw": "        -F off[-off]r/rep[,off[-off]w/rep[,...]]  fault injection (hardbs off) r/w"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "quiet operation,",
+          "default": null,
+          "choices": null,
+          "raw": "        -q         quiet operation,"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verbose operation,",
+          "default": null,
+          "choices": null,
+          "raw": "        -v         verbose operation,"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "0/1",
+          "takes_value": true,
+          "description": "switch off/on colors (def=auto),",
+          "default": null,
+          "choices": null,
+          "raw": "        -c 0/1     switch off/on colors (def=auto),"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display version and exit,",
+          "default": null,
+          "choices": null,
+          "raw": "        -V         display version and exit,"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display this help and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "        -h         display this help and exit."
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -h, --help"
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -V, --version"
+        },
+        {
+          "flags": [
+            "-q",
+            "--quiet"
+          ],
+          "metavar": "- uiet",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -q, --quiet"
+        },
+        {
+          "flags": [
+            "-v",
+            "--verbose"
+          ],
+          "metavar": "- erbose",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -v, --verbose"
+        },
+        {
+          "flags": [
+            "-c",
+            "--color"
+          ],
+          "metavar": "0/1 - olor=0/1",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -c 0/1, --color=0/1"
+        },
+        {
+          "flags": [
+            "-mono"
+          ],
+          "metavar": ".",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "             -mono."
+        },
+        {
+          "flags": [
+            "-f",
+            "--force"
+          ],
+          "metavar": "- orce",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -f, --force"
+        },
+        {
+          "flags": [
+            "-i",
+            "--interactive"
+          ],
+          "metavar": "- nteractive",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i, --interactive"
+        },
+        {
+          "flags": [
+            "-b",
+            "--softbs",
+            "--bs"
+          ],
+          "metavar": "softbs =softbs - s=softbs",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -b softbs, --softbs=softbs, --bs=softbs"
+        },
+        {
+          "flags": [
+            "-B",
+            "--hardbs",
+            "--block-size"
+          ],
+          "metavar": "hardbs =hardbs =hardbs",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -B hardbs, --hardbs=hardbs, --block-size=hardbs"
+        },
+        {
+          "flags": [
+            "-y",
+            "--syncfreq"
+          ],
+          "metavar": "syncsize =syncsize",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -y syncsize, --syncfreq=syncsize"
+        },
+        {
+          "flags": [
+            "-s",
+            "--ipos",
+            "--input-position"
+          ],
+          "metavar": "ipos =ipos =ipos",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -s ipos, --ipos=ipos, --input-position=ipos"
+        },
+        {
+          "flags": [
+            "-S",
+            "--opos",
+            "--output-position"
+          ],
+          "metavar": "opos =opos =opos",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -S opos, --opos=opos, --output-position=opos"
+        },
+        {
+          "flags": [
+            "-x",
+            "--extend",
+            "--append"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -x, --extend, --append"
+        },
+        {
+          "flags": [
+            "-m",
+            "--maxxfer",
+            "--max-size"
+          ],
+          "metavar": "maxxfer - axxfer=maxxfer - ax-size=maxxfer",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -m maxxfer, --maxxfer=maxxfer, --max-size=maxxfer"
+        },
+        {
+          "flags": [
+            "-M",
+            "--noextend"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -M, --noextend"
+        },
+        {
+          "flags": [
+            "-e",
+            "--maxerr"
+          ],
+          "metavar": "maxerr =maxerr",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -e maxerr, --maxerr=maxerr"
+        },
+        {
+          "flags": [
+            "-w",
+            "--abort_we"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -w, --abort_we"
+        },
+        {
+          "flags": [
+            "-A",
+            "--alwayswrite"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -A, --alwayswrite"
+        },
+        {
+          "flags": [
+            "-a",
+            "--sparse"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -a, --sparse"
+        },
+        {
+          "flags": [
+            "-W",
+            "--avoidwrite"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -W, --avoidwrite"
+        },
+        {
+          "flags": [
+            "-R",
+            "--repeat"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -R, --repeat"
+        },
+        {
+          "flags": [
+            "-u",
+            "--rmvtrim"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -u, --rmvtrim"
+        },
+        {
+          "flags": [
+            "-k",
+            "--splice"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -k, --splice"
+        },
+        {
+          "flags": [
+            "-P",
+            "--fallocate"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -P, --fallocate"
+        },
+        {
+          "flags": [
+            "-r",
+            "--reverse"
+          ],
+          "metavar": "- everse",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -r, --reverse"
+        },
+        {
+          "flags": [
+            "-p",
+            "--preserve"
+          ],
+          "metavar": "- reserve",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p, --preserve"
+        },
+        {
+          "flags": [
+            "-t",
+            "--truncate"
+          ],
+          "metavar": "- runcate",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -t, --truncate"
+        },
+        {
+          "flags": [
+            "-T",
+            "--trunclast"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -T, --trunclast"
+        },
+        {
+          "flags": [
+            "-d",
+            "--odir_in"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -d, --odir_in"
+        },
+        {
+          "flags": [
+            "-D",
+            "--odir_out"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -D, --odir_out"
+        },
+        {
+          "flags": [
+            "-l",
+            "--logfile"
+          ],
+          "metavar": "logfile - ogfile=logfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -l logfile, --logfile=logfile"
+        },
+        {
+          "flags": [
+            "-o",
+            "--bbfile"
+          ],
+          "metavar": "bbfile =bbfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -o bbfile, --bbfile=bbfile"
+        },
+        {
+          "flags": [
+            "-Y",
+            "--outfile",
+            "--of"
+          ],
+          "metavar": "ofileX =ofileX =ofileX",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -Y ofileX, --outfile=ofileX, --of=ofileX"
+        },
+        {
+          "flags": [
+            "-z",
+            "--random"
+          ],
+          "metavar": "RANDSEED =RANDSEED",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -z RANDSEED, --random=RANDSEED"
+        },
+        {
+          "flags": [
+            "-Z",
+            "--frandom"
+          ],
+          "metavar": "RANDSEED =RANDSEED",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -Z RANDSEED, --frandom=RANDSEED"
+        },
+        {
+          "flags": [
+            "-2",
+            "--shred2"
+          ],
+          "metavar": "RANDSEED =RANDSEED",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -2 RANDSEED, --shred2=RANDSEED"
+        },
+        {
+          "flags": [
+            "-3",
+            "--shred3"
+          ],
+          "metavar": "RANDSEED =RANDSEED",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -3 RANDSEED, --shred3=RANDSEED"
+        },
+        {
+          "flags": [
+            "-4",
+            "--shred4"
+          ],
+          "metavar": "RANDSEED =RANDSEED",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -4 RANDSEED, --shred4=RANDSEED"
+        },
+        {
+          "flags": [
+            "--plugins"
+          ],
+          "metavar": "=plugin1 =param1",
+          "takes_value": true,
+          "description": "param2[:..]]][,plugin2[=..][,..]]",
+          "default": null,
+          "choices": null,
+          "raw": "     --plugins=plugin1[=param1[:param2[:..]]][,plugin2[=..][,..]]"
+        }
+      ],
+      "raw_help": "root@kali:~# dd_rescue -h\n \n dd_rescue Version 1.99.13, kurt@garloff.de, GNU GPL v2/v3\n(DD_RESCUE_1_99_13)\n(compiled May 21 2025 11:21:52 by gcc (Debian 14.2.0-19) 14.2.0)\n(features: O_DIRECT dl/libfallocate fallocate splice fitrim xattr rdrnd sse2)\n dd_rescue is free software. It's protected by the terms of GNU GPL v2 or v3\n(at your option).\n dd_rescue copies data from one file (or device or pipe) to others.\n USAGE: dd_rescue [options] infile outfile\n Options: -s ipos    start position in  input file (default=0),\n        -S opos    start position in output file (def=ipos),\n        -b softbs  block size for copy operation (def=131072, 1048576 for -d),\n        -B hardbs  fallback block size in case of errs (def=4096, 512 for -d),\n        -e maxerr  exit after maxerr errors (def=0=infinite),\n        -m maxxfer maximum amount of data to be transferred (def=0=inf),\n        -M         avoid extending outfile,\n        -x         count opos from the end of outfile (eXtend),\n        -y syncsz  frequency of fsync calls in bytes (def=512*softbs),\n        -l logfile name of a file to log errors and summary to (def=\"\"),\n        -o bbfile  name of a file to log bad blocks numbers (def=\"\"),\n        -r         reverse direction copy (def=forward),\n        -R         repeatedly write same block (def if infile is /dev/zero),\n        -t         truncate output file at start (def=no),\n        -T         truncate output file at last pos (def=no),\n        -u         undo writes by deleting outfile and issuing fstrim\n        -d/D       use O_DIRECT for input/output (def=no),\n        -k         use efficient in-kernel zerocopy splice,\n        -P         use fallocate to preallocate target space,\n        -L plug1[=par1[:par2]][,plug2[,..]]    load plugins,\n        -w         abort on Write errors (def=no),\n        -W         read target block and avoid Writes if identical (def=no),\n        -a         detect zero-filled blocks and write spArsely (def=no),\n        -A         Always write blocks, zeroed if err (def=no),\n        -i         interactive: ask before overwriting data (def=no),\n        -f         force: skip some sanity checks (def=no),\n        -p         preserve: preserve ownership, perms, times, attrs (def=no),\n        -C limit   rateControl: avoid xfer data faster than limit B/s\n        -Y oname   Secondary output file (multiple possible),\n        -F off[-off]r/rep[,off[-off]w/rep[,...]]  fault injection (hardbs off) r/w\n        -q         quiet operation,\n        -v         verbose operation,\n        -c 0/1     switch off/on colors (def=auto),\n        -V         display version and exit,\n        -h         display this help and exit.\n Instead of infile, -z/Z SEED or -z/Z SEEDFILE may be specified, taking the PRNG\nfrom libc or frandom (RC4 based) as input. SEED = 0 means a time based seed;\nUsing /dev/urandom as SEEDFILE gives good pseudo random numbers.\n Likewise, -3 SEED/SEEDFILE will overwrite ofile 3 times (r,ir,0, BSI M7.15).\nWith -4 SEED/SEEDFILE you get an additional random pass (r,ir,r2,0).\nWith -2 SEED/SEEDFILE you only get one random pass (r,0).\n \n Sizes may be given in units b(=512), k(=1024), M(=1024^2) or G(1024^3) bytes\n This program is useful to rescue data in case of I/O errors, because\nit does not normally abort or truncate the output.\n It may also help data protection by securely overwriting data.\n There are plugins for compression, hashing and encryption.\n Have a look a the man page for more details and long options.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "dd_rescue -s 100 /var/log/messages -S 0 /tmp/ddrescue-out\ndd_rescue: (info): Using softbs=65536, hardbs=4096\ndd_rescue: (info) expect to copy 1766kB from /var/log/messages\ndd_rescue: (info): ipos:      1024.1k, opos:      1024.0k, xferd:      1024.0k\n                   errs:      0, errxfer:         0.0k, succxfer:      1024.0k\n             +curr.rate:  1122807kB/s, avg.rate:  1018906kB/s, avg.load:  0.0%\n             >.......................-.................<  57%  ETA:  0:00:00\ndd_rescue: (info): read /var/log/messages (1767.0k): EOF\ndd_rescue: (info): Summary for /var/log/messages -> /tmp/ddrescue-out:\ndd_rescue: (info): ipos:      1767.0k, opos:      1767.0k, xferd:      1767.0k\n                   errs:      0, errxfer:         0.0k, succxfer:      1767.0k\n             +curr.rate:   352945kB/s, avg.rate:   568151kB/s, avg.load:  0.0%\n             >.......................-................-< 100%  ETA:  0:00:00",
+          "template": null,
+          "original_sha256": "077bace36b68fef653eddde3e0040c8611b689880d964ba8987432b5940e5815"
+        },
+        {
+          "status": "operational_example",
+          "command": "dd_rescue -2 /dev/urandom -M outfile\noverwrites the file outfile twice; once  with  good  pseudo  random\nnumbers and then with zeroes.",
+          "template": null,
+          "original_sha256": "58e1f393368233051980b2551e0ac60c6f254473204380b4db07d9d162bc11be"
+        },
+        {
+          "status": "operational_example",
+          "command": "dd_rescue Version 1.99.13, kurt@garloff.de, GNU GPL v2/v3",
+          "template": null,
+          "original_sha256": "9958cb4cc7c8305c1d87013186e0c5b7e965b9ae2a50e681aa79311281c10db2"
+        },
+        {
+          "status": "operational_example",
+          "command": "dd_rescue is free software. It's protected by the terms of GNU GPL v2 or v3",
+          "template": null,
+          "original_sha256": "57e5a4714227821071de8b41b44dad97a9dea6e80d8aecc9dccf55c79b0270ba"
+        },
+        {
+          "status": "operational_example",
+          "command": "dd_rescue copies data from one file (or device or pipe) to others.",
+          "template": null,
+          "original_sha256": "08fb0706a2d1e6b6937d7535ebad911c9603bc3826baff10540087b71e8b5951"
+        },
+        {
+          "status": "operational_example",
+          "command": "dd_rescue: (info): Using softbs=128.0kiB, hardbs=4.0kiB",
+          "template": null,
+          "original_sha256": "70a99b891b6580c1375433e985db05ce447fa03c13b29852da0e9d638b1d2506"
+        },
+        {
+          "status": "operational_example",
+          "command": "dd_rescue: (fatal): both input and output files have to be specified!",
+          "template": null,
+          "original_sha256": "ad66309b3b8ebe794e93581147234b2089709d559e746642dffe0b26100be410"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "dd_rescue Version 1.99.13, kurt@garloff.de, GNU GPL v2/v3\n (DD_RESCUE_1_99_13)\n (compiled May 21 2025 11:21:52 by gcc (Debian 14.2.0-19) 14.2.0)\n (features: O_DIRECT dl/libfallocate fallocate splice fitrim xattr rdrnd avx2)\ndd_rescue is free software. It's protected by the terms of GNU GPL v2 or v3\n (at your option).\ndd_rescue copies data from one file (or device or pipe) to others.\nUSAGE: dd_rescue [options] infile outfile\nOptions: -s ipos    start position in  input file (default=0),\n         -S opos    start position in output file (def=ipos),\n         -b softbs  block size for copy operation (def=131072, 1048576 for -d),\n         -B hardbs  fallback block size in case of errs (def=4096, 512 for -d),\n         -e maxerr  exit after maxerr errors (def=0=infinite),\n         -m maxxfer maximum amount of data to be transferred (def=0=inf),\n         -M         avoid extending outfile,\n         -x         count opos from the end of outfile (eXtend),\n         -y syncsz  frequency of fsync calls in bytes (def=512*softbs),\n         -l logfile name of a file to log errors and summary to (def=\"\"),\n         -o bbfile  name of a file to log bad blocks numbers (def=\"\"),\n         -r         reverse direction copy (def=forward),\n         -R         repeatedly write same block (def if infile is /dev/zero),\n         -t         truncate output file at start (def=no),\n         -T         truncate output file at last pos (def=no),\n         -u         undo writes by deleting outfile and issuing fstrim\n         -d/D       use O_DIRECT for input/output (def=no),\n         -k         use efficient in-kernel zerocopy splice,\n         -P         use fallocate to preallocate target space,\n         -L plug1[=par1[:par2]][,plug2[,..]]    load plugins,\n         -w         abort on Write errors (def=no),\n         -W         read target block and avoid Writes if identical (def=no),\n         -a         detect zero-filled blocks and write spArsely (def=no),\n         -A         Always write blocks, zeroed if err (def=no),\n         -i         interactive: ask before overwriting data (def=no),\n         -f         force: skip some sanity checks (def=no),\n         -p         preserve: preserve ownership, perms, times, attrs (def=no),\n         -C limit   rateControl: avoid xfer data faster than limit B/s\n         -Y oname   Secondary output file (multiple possible),\n         -F off[-off]r/rep[,off[-off]w/rep[,...]]  fault injection (hardbs off) r/w\n         -q         quiet operation,\n         -v         verbose operation,\n         -c 0/1     switch off/on colors (def=auto),\n         -V         display version and exit,\n         -h         display this help and exit.\nInstead of infile, -z/Z SEED or -z/Z SEEDFILE may be specified, taking the PRNG\n from libc or frandom (RC4 based) as input. SEED = 0 means a time based seed;\n Using /dev/urandom as SEEDFILE gives good pseudo random numbers.\nLikewise, -3 SEED/SEEDFILE will overwrite ofile 3 times (r,ir,0, BSI M7.15).\n With -4 SEED/SEEDFILE you get an additional random pass (r,ir,r2,0).\n With -2 SEED/SEEDFILE you only get one random pass (r,0).\n\nSizes may be given in units b(=512), k(=1024), M(=1024^2) or G(1024^3) bytes\nThis program is useful to rescue data in case of I/O errors, because\n it does not normally abort or truncate the output.\nIt may also help data protection by securely overwriting data.\nThere are plugins for compression, hashing and encryption.\nHave a look a the man page for more details and long options.",
+        "-h": "dd_rescue Version 1.99.13, kurt@garloff.de, GNU GPL v2/v3\n (DD_RESCUE_1_99_13)\n (compiled May 21 2025 11:21:52 by gcc (Debian 14.2.0-19) 14.2.0)\n (features: O_DIRECT dl/libfallocate fallocate splice fitrim xattr rdrnd avx2)\ndd_rescue is free software. It's protected by the terms of GNU GPL v2 or v3\n (at your option).\ndd_rescue copies data from one file (or device or pipe) to others.\nUSAGE: dd_rescue [options] infile outfile\nOptions: -s ipos    start position in  input file (default=0),\n         -S opos    start position in output file (def=ipos),\n         -b softbs  block size for copy operation (def=131072, 1048576 for -d),\n         -B hardbs  fallback block size in case of errs (def=4096, 512 for -d),\n         -e maxerr  exit after maxerr errors (def=0=infinite),\n         -m maxxfer maximum amount of data to be transferred (def=0=inf),\n         -M         avoid extending outfile,\n         -x         count opos from the end of outfile (eXtend),\n         -y syncsz  frequency of fsync calls in bytes (def=512*softbs),\n         -l logfile name of a file to log errors and summary to (def=\"\"),\n         -o bbfile  name of a file to log bad blocks numbers (def=\"\"),\n         -r         reverse direction copy (def=forward),\n         -R         repeatedly write same block (def if infile is /dev/zero),\n         -t         truncate output file at start (def=no),\n         -T         truncate output file at last pos (def=no),\n         -u         undo writes by deleting outfile and issuing fstrim\n         -d/D       use O_DIRECT for input/output (def=no),\n         -k         use efficient in-kernel zerocopy splice,\n         -P         use fallocate to preallocate target space,\n         -L plug1[=par1[:par2]][,plug2[,..]]    load plugins,\n         -w         abort on Write errors (def=no),\n         -W         read target block and avoid Writes if identical (def=no),\n         -a         detect zero-filled blocks and write spArsely (def=no),\n         -A         Always write blocks, zeroed if err (def=no),\n         -i         interactive: ask before overwriting data (def=no),\n         -f         force: skip some sanity checks (def=no),\n         -p         preserve: preserve ownership, perms, times, attrs (def=no),\n         -C limit   rateControl: avoid xfer data faster than limit B/s\n         -Y oname   Secondary output file (multiple possible),\n         -F off[-off]r/rep[,off[-off]w/rep[,...]]  fault injection (hardbs off) r/w\n         -q         quiet operation,\n         -v         verbose operation,\n         -c 0/1     switch off/on colors (def=auto),\n         -V         display version and exit,\n         -h         display this help and exit.\nInstead of infile, -z/Z SEED or -z/Z SEEDFILE may be specified, taking the PRNG\n from libc or frandom (RC4 based) as input. SEED = 0 means a time based seed;\n Using /dev/urandom as SEEDFILE gives good pseudo random numbers.\nLikewise, -3 SEED/SEEDFILE will overwrite ofile 3 times (r,ir,0, BSI M7.15).\n With -4 SEED/SEEDFILE you get an additional random pass (r,ir,r2,0).\n With -2 SEED/SEEDFILE you only get one random pass (r,0).\n\nSizes may be given in units b(=512), k(=1024), M(=1024^2) or G(1024^3) bytes\nThis program is useful to rescue data in case of I/O errors, because\n it does not normally abort or truncate the output.\nIt may also help data protection by securely overwriting data.\nThere are plugins for compression, hashing and encryption.\nHave a look a the man page for more details and long options.",
+        "help": "dd_rescue: (info): Using softbs=128.0kiB, hardbs=4.0kiB\ndd_rescue: (fatal): both input and output files have to be specified!\ndd_rescue: (info): USAGE: dd_rescue [options] infile outfile\n   or: dd_rescue [options] -z/Z/2/3/4 SEED[FILE] outfile\n Use dd_rescue -h or dd_rescue --help for more information\n  or consult the man page dd_rescue(1).",
+        "man": "dd_rescue(1)           Data recovery and protection tool           dd_rescue(1)\n\nNAME\n     dd_rescue - Data recovery and protection tool\n\nSYNOPSIS\n     dd_rescue [options] infile outfile\n     dd_rescue [options] [-2/-3/-4/-z/-Z seed/seedfile] outfile\n     dd_rescue [options] [--shred2/--shred3/--shred4/--random/--frandom\n     seed/seedfile] outfile\n\nDESCRIPTION\n     dd_rescue  is  a  tool that copies data from a source (file, block device,\n     pipe, ...)  to one (or several) output file(s).\n\n     If input and output files are seekable (block devices or  regular  files),\n     dd_rescue  does  copy  with large blocks (softbs) to increase performance.\n     When a read error is encountered, dd_rescue falls back to reading  smaller\n     blocks (hardbs), to allow to recover the maximum amount of data. If blocks\n     can  still  not  be read, dd_rescue by default skips over them also in the\n     output file, avoiding to overwrite data that might have been copied  there\n     successfully  in  a  previous  run.   (Option  -A  / --alwayswrite changes\n     this.).\n\n     dd_rescue can copy in reverse direction as well, allowing  to  approach  a\n     bad  spot  from both directions. As trying to read over a bad spot of sig-\n     nificant size can take very long (and potentially cause  further  damage),\n     this  is an important optimization when recovering data. The dd_rhelp tool\n     takes advantage of this and automates data recovery.  dd_rescue  does  not\n     (by default) truncate the output file.\n\n     dd_rescue  by default reports on progress, and optionally also writes into\n     a logfile.  It has a progress bar and gives an estimate for the  remaining\n     time.  dd_rescue has a wealth of options that influence its behavior, such\n     as  the  possibility to use direct IO for input/output, to use fallocate()\n     to preallocate space for the output file, using splice copy (in kernel ze-\n     rocopy) for efficiency, looking for empty blocks to create  sparse  files,\n     or using a pseudo random number generator (PRNG) to quickly overwrite data\n     with random numbers.\n\n     The modes to overwrite partitions or files with pseudo random numbers make\n     dd_rescue  a  tool  that can be used for secure data deletion and thus not\n     just a data recovery and backup tool but also a data protection tool.\n\n     You can use \"-\" as infile or outfile, meaning stdin or stdout.  Note  that\n     this  means  that  either file is not seekable, limiting the usefulness of\n     some of dd_rescues features.\n\nOPTIONS\n     When parsing numbers, dd_rescue assumes bytes. It  accepts  the  following\n     suffixes:\n     b -- 512 size units (blocks)\n     k -- 1024 size units (binary kilobytes, kiB)\n     M -- 1024^2 size units (binary megabytes, MiB)\n     G -- 1024^3 size units (binary gigabytes, GiB)\n\n     The following options may be used to modify the behavior of dd_rescue .\n\n   General options\n     -h, --help\n             This option tells dd_rescue to output a list of options and exit.\n\n     -V, --version\n             Display version number and exit.\n\n     -q, --quiet\n             tells dd_rescue to be less verbose.\n\n     -v, --verbose\n             makes dd_rescue more verbose.\n\n     -c 0/1, --color=0/1\n             controls whether dd_rescue uses colors. By default it does, unless\n             the  terminal  type  from TERM is unknown or dumb or ends in -m or\n             -mono.\n\n     -f, --force\n             makes dd_rescue skip some sanity checks (e.g.  automatically  set-\n             ting reverse direction when input and output file are the same and\n             ipos < opos).\n\n     -i, --interactive\n             tells dd_rescue to ask before overwriting existing files.\n\n   Block sizes\n     -b softbs, --softbs=softbs, --bs=softbs\n             sets  the  (larger)  block  size  to softbs bytes.  dd_rescue will\n             transfer chunks of that size unless a read  error  is  encountered\n             (or  the  end  of  the input file or the maximum transfer size has\n             been reached).  The default value for this is 64k for buffered I/O\n             and 1M for direct I/O.\n\n     -B hardbs, --hardbs=hardbs, --block-size=hardbs\n             sets the (smaller) fallback  block  size  to  hardbs  bytes.  When\n             dd_rescue  encounters  read  errors,  it will fall back to copying\n             data in chunks of  this  size.  This  value  defaults  to  4k  for\n             buffered I/O and 512 bytes for direct I/O.\n             hardbs  should  be equal to or smaller than softbs.  If both block\n             sizes are identical, no fallback mechanism  (and  thus  no  retry)\n             will take place on read errors.\n\n     -y syncsize, --syncfreq=syncsize\n             tells  dd_rescue to call fsync() on the output file every syncsize\n             bytes (will be rounded to multiples of softbs  sized  blocks).  It\n             will  also update the progress indicator at least as often. By de-\n             fault, syncsize is set to 0, meaning that fsync() is  only  issued\n             at the end of the copy operation.\n\n   Positions and length\n     -s ipos, --ipos=ipos, --input-position=ipos\n             sets  the starting position of the infile to ipos.  Note that ipos\n             is specified in bytes (but suffixes can be used, see  above),  not\n             in  terms of softbs or hardbs sized blocks.  The default value for\n             this is 0. When reverse direction copy is used, an ipos  of  0  is\n             treated specially, meaning the end of file.\n             Negative positions result in an error message.\n\n     -S opos, --opos=opos, --output-position=opos\n             sets  the starting position of the outfile to opos.  If not speci-\n             fied, opos is set to ipos, so the file offsets in input and output\n             file are the same.  For reverse direction copy, an  explicit  opos\n             of 0 will position at the end of the output file.\n\n     -x, --extend, --append\n             changes  the interpretation of the output position to start at the\n             end of the existing output file, making appending to a file conve-\n             nient.  If the output file does not exist, an error  will  be  re-\n             ported and dd_rescue aborted.\n\n     -m maxxfer, --maxxfer=maxxfer, --max-size=maxxfer\n             specifies  the  maximum  number of bytes (suffixes apply, but it's\n             NOT counted in blocks) that dd_rescue copies. If  EOF  is  encoun-\n             tered before maxxfer bytes have been transferred, this option will\n             be silently ignored.\n\n     -M, --noextend\n             tells dd_rescue to not extend the output file. This option is par-\n             ticularly  helpful when overwriting a file with random data or ze-\n             roes for safe data destruction. If the output file does not exist,\n             an error message will be generated and the program be aborted.\n\n   Error handling\n     -e maxerr, --maxerr=maxerr\n             tells dd_rescue to exit, after maxerr read errors  have  been  en-\n             countered.  By  default,  this is set to 0, resulting in dd_rescue\n             trying to move on until it hits EOF (or maxxfer  bytes  have  been\n             transferred).\n\n     -w, --abort_we\n             makes dd_rescue abort on any write errors. By default, on reported\n             write  errors,  dd_rescue  tries  to rewrite the blocks with small\n             block size writes, so a small failure in a larger block  will  not\n             cause  the  whole  block  not to be written. Note that this may be\n             handled similarly by your Operating System  kernel  with  buffered\n             writes  without  the  user  or dd_rescue noticing; the write retry\n             logic in dd_rescue is mostly useful for direct  I/O  writes  where\n             write errors can be reliably detected.\n             Write error detection with buffered writes is unreliable; the ker-\n             nel reports success and traces of the failing writeback operations\n             later may only appear in your syslog. dd_rescue does try to notice\n             the user by calling fsync() and carefully checking the return val-\n             ues of fsync() and close() calls.\n             Note  that dd_rescue does exit if writes to the output file result\n             in the Operating System reporting that no space is left.\n\n   Sparse files and write avoidance\n     -A, --alwayswrite\n             changes the behavior of dd_rescue to write zeroes  to  the  output\n             file  when  the  input file could not be read. By default, it just\n             skips over, leaving whatever content was in the output file at the\n             file position before. The default behavior may be desired, if e.g.\n             previous copy operations may have resulted in good data  being  in\n             place;  it may be undesired if the output file may contain garbage\n             (or sensitive information) that should rather be overwritten  with\n             zeroes.\n\n     -a, --sparse\n             will  make  dd_rescue  look  for empty blocks (of at least half of\n             softbs size), i.e. blocks filled with zeroes. Rather than  writing\n             those  zeroes to the output file, it will then skip forward in the\n             output file, resulting in a sparse file, saving space in the  out-\n             put  file  system  (if it supports sparse files). Note that if the\n             output file does already exist and already has data stored at  the\n             location where zeroes are skipped over, this will result in an in-\n             complete  copy in that the output file is different from the input\n             file at the location where blocks of  zeroes  were  skipped  over.\n             dd_rescue  tries  to  detect this and issue a warning, but it does\n             not prevent this from happening\n\n     -W, --avoidwrite\n             results in dd_rescue reading a block ( softbs sized) from the out-\n             put file prior to writing it. If it is already identical with  the\n             data that would be written to it, the writes are actually avoided.\n             This option may be useful for devices, where e.g. writes should be\n             avoided  (e.g.  because  they may impact the remaining lifetime or\n             because they are very slow compared to reads).\n\n   Other optimization\n     -R, --repeat\n             tells dd_rescue to only read one block ( softbs  sized)  and  then\n             repeatedly write it to the output file.  Note that this results in\n             never  hitting  EOF  on  the  input file and should be used with a\n             limit for the transfer size (options -m or -M) or when filling  up\n             an output device completely.\n             This  option  is  automatically set, if the input file name equals\n             \"/dev/zero\".\n\n     -u, --rmvtrim\n             instructs dd_rescue to remove the output file after writing to  it\n             has  completed and issue a FITRIM on the file system that contains\n             the output file. This makes only sense if writing zeros (or random\n             numbers) as opposed to useful content from another file.  (dd_res-\n             cue  will  ask for confirmation if this is specified with a normal\n             input file and no -f (--force) is used.) This option may  be  used\n             to  ensure  that all empty blocks of a file system are filled with\n             zeros (rather than containing fragments of deleted files with pos-\n             sibly sensitive information).\n             The FITRIM ioctl (on Linux) tells the flash  storage  to  consider\n             the freed space as unused (like the fstrim tool or the discard op-\n             tion)  by  issuing  ATA TRIM commands. This will only succeed with\n             superuser privileges (but the error can otherwise  be  safely  ig-\n             nored).  This is useful to ensure full performance of flash memory\n             / SSDs. Note that FITRIM can take a while on large  file  systems,\n             especially  if  the  file systems are not mounted with the discard\n             option and have not been trimmed (with e.g. fstrim) for  a  while.\n             Not all file systems and not all flash-based storage support this.\n\n     -k, --splice\n             tells  dd_rescue to use the Linux in-kernel zerocopy splice() copy\n             operation rather than reading blocks into  a  user  space  buffer.\n             Note that this operation mode does prevent the support of a number\n             of  dd_rescue  features that can normally be used, such as falling\n             back to smaller block sizes, avoiding writes, sparse mode,  repeat\n             optimization,  reverse direction copy. A warning is issued to make\n             the user aware.\n\n     -P, --fallocate\n             results in dd_rescue  calling  fallocate()  on  the  output  file,\n             telling the file system how much space to preallocate for the out-\n             put  file.  (The size is determined by the expected last position,\n             as inferred from the input file length and maxxfer ). On file sys-\n             tems that support it, this results in them making  better  alloca-\n             tion  decisions,  avoiding  fragmentation.  (Note that it does not\n             make sense to use sparse together with fallocate().)\n             This option is only available if dd_rescue is compiled with fallo-\n             cate() support. For optimal support, it should  be  compiled  with\n             the libfallocate library.\n\n     -C rate,  --ratecontrol=rate\n             limits  the  transfer speed of dd_rescue to the rate (per second).\n             The usual suffixes are allowed.  Note that this limits the average\n             speed; the current speed may be up to twice this limit. Default is\n             unlimited. Note that you will have to use  smaller  softblocksizes\n             if you want to go below 32k (kB/s).\n\n   Misc options\n     -r, --reverse\n             tells  dd_rescue  to  copy  in reverse direction, starting at ipos\n             (with special case 0 meaning EOF) and working towards  the  begin-\n             ning of the file. This is especially helpful if the input file has\n             a  bad spot which can be extremely slow to skip over, so approach-\n             ing it from both directions saves a lot of time (and  may  prevent\n             further damage).\n             Note that dd_rescue does automatically switch to reverse direction\n             copy,  if  input and output file are identical and the input posi-\n             tion is smaller than the output position, similar to the  intelli-\n             gence that memmove() uses to prevent loss of data when overlapping\n             areas are copied. The option -f / --force does prevent this intel-\n             ligence from happening.\n\n     -p, --preserve\n             When  copying  files,  this  option  does  result in file metadata\n             (timestamps, ownership, access rights, xattrs) to be copied, simi-\n             lar to the option with the same name in the cp program.\n             Note that ACLs and xattrs will only be  copied  if  dd_rescue  has\n             been compiled with libxattr support and the library can be dynami-\n             cally loaded on the system. Also note that failing to copy the at-\n             tributes  with -p is not considered a failure and thus won't nega-\n             tively affect the exit code of dd_rescue.\n\n     -t, --truncate\n             tells dd_rescue to open the output file with O_TRUNC, resulting in\n             the output file (if it is a regular file) to  be  truncated  to  0\n             bytes before writing to it, removing all previous content that the\n             file  may  have  contained.  By default, dd_rescue does not remove\n             previous content.\n\n     -T, --trunclast\n             tells dd_rescue to truncate the output file to the highest  copied\n             position after the copy operation completed, thus ensuring there's\n             no  data  beyond  the end of the data that has been copied in this\n             run.\n\n     -d, --odir_in\n             instructs dd_rescue to open infile with  O_DIRECT,  bypassing  the\n             kernel buffers. While this option has a negative effect on perfor-\n             mance  (the  kernel does read-ahead for buffered I/O), it will re-\n             sult in errors to be detected more quickly  (kernel  won't  retry)\n             and  allows  for smaller I/O units (hardware sector size, 512bytes\n             for most hard disks).\n             O_DIRECT may not be available on all platforms.\n\n     -D, --odir_out\n             tells dd_rescue to open outfile with  O_DIRECT,  bypassing  kernel\n             buffers. This has a significant negative effect on performance, as\n             the  program  needs to wait for writes to hit the disks as opposed\n             to the asynchronous nature of buffered  writeback.   On  the  flip\n             side,  the  return  status  from  writing is reliable this way and\n             smaller I/O chunks (hardware sector size, 512bytes) are possible.\n\n   Logging\n     -l logfile, --logfile=logfile\n             Unless in quiet mode, dd_rescue does produce constant  updates  on\n             the  status  of  the  copy  operation to stderr. With this option,\n             these updates are also written to the specified logfile.  The con-\n             trol characters (to move the cursor up to overwrite  the  existing\n             status lines) are not written to the logfile.\n\n     -o bbfile, --bbfile=bbfile\n             instructs  dd_rescue to write a list of bad blocks to bbfile.  The\n             file will contain a list of numbers (ASCII), one per  line,  where\n             the  numbers  indicate the offset in terms of hardbs sized blocks.\n             The file format is  compatible  with  that  of  badblocks.   Using\n             dd_rescue  on a block device (partition) and setting hardbs to the\n             block size of a file system that you want to create, you should be\n             able to feed the bbfile to mke2fs with the option -l.\n\n   Multiple output files\n     -Y ofileX, --outfile=ofileX, --of=ofileX\n             If you want to copy data to multiple files simultaneously, you can\n             specify this option. It can be specified multiple times,  so  many\n             copies  can  be  made.  Note that these files are secondary output\n             files; they share file position with the primary output file  out-\n             file.  Errors when writing to a secondary output file are ignored.\n\n   Data protection by overwriting with random numbers\n     -z RANDSEED, --random=RANDSEED\n     -Z RANDSEED, --frandom=RANDSEED\n     -2 RANDSEED, --shred2=RANDSEED\n     -3 RANDSEED, --shred3=RANDSEED\n     -4 RANDSEED, --shred4=RANDSEED\n             When  you  want to overwrite a file, partition or disk with random\n             data, using /dev/urandom (on Linux) as input is not  a  very  good\n             idea;  the  interface  has not been designed to yield a high band-\n             width. It's better to use a user space Pseudo Random Number Gener-\n             ator (PRNG). With option -z / --random, the C  library's  PRNG  is\n             used. With -Z / --frandom and the -2/-3/-4 / --shred2/3/4 options,\n             an RC4 based PRNG is used.\n             Note that in this mode, there is no infile so the first non-option\n             argument is the output file.\n             The PRNG needs seeding; the C libraries PRNG takes a 32bit integer\n             (4  bytes);  the RC4 based PRNG takes 256 bytes. If RANDSEED is an\n             integer, the integer number will be used to seed the  C  library's\n             PRNG.  For the RC4 method, the C library's PRNG then generates the\n             256 bytes to seed it. This creates repeatable PRNG data. The RAND-\n             SEED value of 0 is special; it will create a seedval that's  based\n             on  the  current time and the process' PID and should be different\n             for multiple runs of dd_rescue .\n             If RANDSEED is not an integer, it's assumed to be a file name from\n             which the seed values can be read.  dd_rescue will read 4  or  256\n             bytes  from  the file to seed the C library's or the RC4 PRNG. For\n             good pseudo random numbers, using /dev/urandom to seed is  a  good\n             idea.\n             The modes -2/-3/-4 resp. --shred2/--shred3/--shred4 will overwrite\n             the  output file multiple times; after each pass, fsync() will en-\n             sure that the data does indeed hit the file.  The  last  pass  for\n             these modes will overwrite the file with zeroes. The rationale be-\n             hind  doing  this is to make it easier to hide that important data\n             may have been overwritten, to make it easier for intelligent stor-\n             age systems (such as SSDs) to recycle the empty blocks and to  al-\n             low  for better compression of a file system image containing such\n             data.\n             With -2 / --shred2, one pass with RC4 generated PRNG is  happening\n             and  then  zeroes  are  written. With -3 / --shred3, there are two\n             passes with RC4 PRNG generated random numbers and a zero pass; the\n             second PRNG pass writes the inverse  (bit-wise  reversed)  numbers\n             from  the first pass. -4 / --shred4 works like -3 / --shred3, with\n             an additional pass with independent random numbers as third pass.\n\n   Plugins\n     Since version 1.42, dd_rescue has an interface for plugins.  Plugins  have\n     the  ability to analyze the copied data or to transform it prior to it be-\n     ing written.\n\n     -L plugin1[=param1[:param2[:..]]][,plugin2[=..][,..]]\n     --plugins=plugin1[=param1[:param2[:..]]][,plugin2[=..][,..]]\n             loads plugins plugin1 ... and passes parameters to it. All plugins\n             should support at least the help parameter and provide information\n             on their usage.\n             Plugins may impose limits on dd_rescue. Plugins that look  at  the\n             data  can't  work with splice, as this avoids copying data to user\n             space. Also the interface currently does  not  facilitate  reverse\n             direction  copy.   Some  plugins  may  impose further restrictions\n             w.r.t. alignment of data in the file or not  using  sparse  detec-\n             tion.\n             See section PLUGINS for an overview of available plugins.\n\nPLUGINS\n   null\n     The null plugin (ddr_null) does nothing, except if you specify the [no]ln-\n     change  or  the  [no]change  options in which case the plugin indicates to\n     others that it transforms the length of the output  or  the  data  of  the\n     stream.  (With  the no prefix, it's reset to the default no-change indica-\n     tion again.)  This may be helpful for testing or to influence  which  file\n     the  hash plugin considers for reading/writing extended attributes from/to\n     and for plugins to change their behavior with respect to hole detection.\n     ddr_null_ddr also allows you to specify debug in which case  it  just  re-\n     ports the blocks that it passes on.\n\n   hash\n     When  the hash plugin (subsequently referred to as ddr_hash) is loaded, it\n     will calculate a cryptographic hash and optionally also a  HMAC  over  the\n     copied  data  and print the result at the end of the copy operations.  The\n     hash algorithm can be chosen by specifying alg[o[rithm]]=ALG where ALG  is\n     one of md5, sha1, sha256, sha224, sha512, sha384. (Specify alg=help to get\n     a list.)  To abbreviate the syntax, the alg= piece can be omitted.\n     For  backwards compatibility, the hash plugin can also be referred to with\n     the old MD5 name; it then defaults to the md5 algorithm.\n     The computed value should be identical to calling md5sum/sha256sum/...  on\n     the  target  file (unless you only write part of the file), but saves time\n     by not accessing the (possibly large) file a second time.  The hash plugin\n     handles sparse writes and arbitrary offsets fine.\n\n     multipart=CHUNKSIZE tells ddr_hash to  calculate  multiple  checksums  for\n     file chunks of CHUNKSIZE each and then combine them into a combined check-\n     sum  by  creating  a  checksum  over  the piece checksums. This is how the\n     checksum for S3 multipart objects is calculated (using the md5 hash);  the\n     output  there  is  the  combination checksum with a dash and the number of\n     parts appended.\n     Note that this feature is new in 1.99.6 and does not yet handle situations\n     cleanly, where offsets plus block sizes do not  happen  to  cleanly  align\n     with  the  CHUNKSIZE. The implementation for this will be completed later.\n     Other features like the append/prepend/hmac pieces also  don't  work  well\n     with multipart checksum calculation.\n\n     ddr_hash also supports the parameter append=STRING which appends the given\n     STRING to the output before computing the cryptographic hash. Treating the\n     STRING  as  a  shared secret, this can actually be used to protect against\n     someone not knowing the secret altering the contents (and recomputing  the\n     hash)  without  anyone  noticing. It's thus a cheap way of a cryptographic\n     signature (but with preshared secrets as opposed to public key  cryptogra-\n     phy).  Use  HMAC  for a somewhat better way to sign data with a shared se-\n     cret.\n     ddr_hash also supports prepend=STRING which is  likely  harder  to  attack\n     with  brute  force  than  an  appended  string.  Note that ddr_hash always\n     prepends multiples of the hash algorithm's block size and pads the  STRING\n     with 0 to match.\n\n     ddr_hash  can be used to compute a HMAC (Hash-based Message Authentication\n     Code) instead of the plain hash. The HMAC uses a password that's prepended\n     and transformed twice to the data which is then hashed twice.  HMAC is be-\n     lieved to protect somewhat better against extension or  collision  attacks\n     than a plain hash (with a plain prepended secret), so it's a better way to\n     authenticate data with a shared secret. (You can use append/prepend in ad-\n     dition  to  HMAC,  if  you have a need for a scheme with more than one se-\n     cret.)\n     When HMAC is enabled with one of the following parameters, both the  plain\n     hash  and  the  HMAC are computed by ddr_hash. Both are output to the con-\n     sole/log, but the HMAC is used instead of the hash value to be written  to\n     a  CHECKSUMS  file or to an extended attribute or checked against (see be-\n     low).  hmacpwd=STRING sets the shared secret (password) for computing  the\n     HMAC. Passing the secret on the command line has the disadvantage that the\n     shell  may  mistreat some bytes as special characters and that the command\n     line may be visible to all logged in users on the  system.   hmacpwdfd=INT\n     sets  a  file descriptor from with the secret (password) for HMAC computa-\n     tion will be read. Specifying  0  means  standard  input,  in  which  case\n     ddr_hash  even  prints a prompt for you ... Other numbers may be useful if\n     dd_rescue is called from another program that opens a pipe to pass the se-\n     cret.  hmacpwdnm=INNAME sets a file from which the  shared  secret  (pass-\n     word) is read. Note that all bytes (up to 2048 of them) are read and used,\n     including trailing white space, 0-bytes or newlines.\n     Please  note that the ddr_hash plugin at this point does NOT take a lot of\n     care to prevent the password/pre/appended secret from remaining in  memory\n     or  leaking into a swap/page file. (This will be improved once I look into\n     encryption plugins.)\n\n     ddr_hash accepts the parameter output , which will cause ddr_hash to  out-\n     put   the   cryptographic   hash   to  stdout  in  the  same  format  that\n     md5sum/sha256sum/... use.  You can also specify outfd=INT to have the plu-\n     gin write the hash to a different file descriptor specified by the integer\n     number INT. Note that ddr_hash always processes data in  binary  mode  and\n     correctly indicates this with a star (*) in the output generated with out-\n     put/outfd=.\n     The checksum can also be written to a file by giving the outnm=OUTNAME pa-\n     rameter.   Then   a   file   with   OUTNAME   will   be   created   and  a\n     md5sum/sha256sum/...  compatible line will be printed to the file. If  the\n     file exists and contains an entry for the file, it will be updated. If the\n     file  exists  and  does not contain an entry for the file, one will be ap-\n     pended. If OUTNAME is omitted, the file name CHECKSUMS.alg  (or  HMACS.alg\n     if  HMAC  is  enabled)  will  be used (alg is replaced by the chosen algo-\n     rithm).  If the checksum can't be written, a warning will be  printed  and\n     the exit code of dd_rescue will become non-zero.\n\n     The checksum can be validated using chknm=CHKNAME .  The file will be read\n     and ddr_hash will look for an md5sum/sha256sum/...  compatible line with a\n     matching  file  name  to  take the checksum from and compare it to the one\n     computed. If NAME is omitted, the same  default  as  described  above  (in\n     outnm=...)  will be used. You can also read the checksum from stdin if you\n     prefer by specifying the check option.\n     Note that in any case, the check is only performed after the  copy  opera-\n     tion  is  completed  -- a faulty checksum will thus NOT result in the copy\n     not taking place. However, the exit code of dd_rescue  will  indicate  the\n     error.  (If you want to avoid copying data with a broken checksum into the\n     final target, use a temporary target that you delete upon error  and  only\n     move  to  the  final  location  if dd_rescue's exit value is 0; you can of\n     course also copy to /dev/null for testing beforehand, but it might be  too\n     costly reading the input file twice.)\n     If  in  addition  to chknm (or chk_xattr ) the option chkadd is specified,\n     then a missing checksum will not be reported as error, but instead an  en-\n     try to the checksum file (or xattr) be added. A mismatch will still be re-\n     ported as error and the checksum file will not be updated.\n\n     You can store the cryptographic hash into the files by using the set_xattr\n     option.  The  hash  will be stored into the extended attribute user.check-\n     sum.ALG by default (user.hmac.ALG if HMAC is enabled), but you  can  over-\n     ride the name of the attribute by specifying set_xattr=XATTR.NAME instead.\n     If  the xattr can't be written, an error will be reported, unless you also\n     specify the fallb[ack][=CHKNAME] option. In that case, ddr_hash  tries  to\n     write  the  checksum  to  the CHKNAME checksums file. (For the default for\n     CHKNAME, see outnm= option above.)\n     chk_xattr will validate that the computed hash matches the one  read  from\n     the  extended  attribute.  The same default attribute name applies and you\n     can likewise override it with chk_xattr=XATTR.NAME .  A missing  attribute\n     is considered an error (although the same fallback is tried if you specify\n     the  fallback  option). A broken checksum is of course considered an error\n     as well, but just like with checknm=CHKNAME won't prevent  the  copy.  See\n     the discussion there.\n\n     Note  that  for output,outfd,outnm=,set_xattr ddr_hash will use the output\n     file name to attach the checksum to (be it by setting xattr  or  the  file\n     name  used  in  the  checksum  file),  unless  a plugin in the chain after\n     ddr_hash indicates that it changes the data.  In that case, it  will  warn\n     and  associate  the  checksum with the input file name, unless there's an-\n     other plugin before ddr_hash in the chain which indicates data transforma-\n     tion as well. In that case, there is no file that the  checksum  could  be\n     associated with and ddr_hash will report an error.\n     Likewise  for chknm=,check,chk_xattr ddr_hash will use the input file name\n     to get the checksum (be it by reading the xattr or by looking for the  in-\n     put  file  name  in a checksums file) unless there's a plugin in the chain\n     before ddr_hash that indicates that it changes the data. The  output  file\n     name will then be used, unless there's another plugin after ddr_hash indi-\n     cating data change as well, in which case there's no file we could get the\n     checksum for and thus an error is reported.\n\n     If  your  system supports extended attributes, those have the advantage of\n     traveling with the files; thus a rename or copy (with dd_rescue  -p)  will\n     maintain  the  checksum.  Checksum  files on the other hand can be handled\n     everywhere (including the transfer via ftp or http)  and  can  be  crypto-\n     graphically signed with PGP/GnuPG.\n\n     Please  note  that  the md5 algorithm is NOT recommended any more for good\n     protection against malicious attempts to hide data modification; it's  not\n     considered  strong  enough any more to prevent hash collisions.  sha1 is a\n     bit better, but has been broken as well as of 2017.  The recommendation is\n     to use the SHA-2 family of  hashes.   On  32bit  machines,  I'd  recommend\n     sha256,  while  on  64bit  machines,  sha512  is  faster and thus the best\n     choice.\n\n     ddr_hash also supports using the HMAC code and hashes  for  deriving  keys\n     from passwords using the PKCS5 PBKDF2 (password-based key derivation func-\n     tion) that allows you to improve the protection from mediocre passwords by\n     using  a salt and a relatively expensive key stretching operation. This is\n     only meant for testing and may be removed in the  future.  It's  thus  not\n     documented  in  this  man page. See the built-in help function for a brief\n     summary on the usage.\n\n   lzo\n     The lzo plugin allows to compress and decompress data using liblzo2.   lzo\n     is  an  algorithm  that  is faster than most other algorithms but does not\n     compress as well.  See the ddr_lzo(1) man page for more details.\n\n   crypt\n     The crypt plugin allows to encrypt and decrypt data on the fly.   It  cur-\n     rently  supports  a variety of AES ciphers.  See the ddr_crypt(1) man page\n     for more details.\n\nEXIT STATUS\n     On successful completion, dd_rescue returns an exit code of 0.  Any  other\n     exit  code indicates that the program has aborted because of an error con-\n     dition or that copying of the data has not been entirely successful.\n\nEXAMPLES\n     dd_rescue -k -P -p -t infile outfile\n            copies infile to outfile and does truncate the output file on open-\n            ing (so deleting any previous data in it), copies mode, times, own-\n            ership at the end, uses fallocate to reserve the space for the out-\n            put file and uses efficient in kernel splice copy method.\n\n     dd_rescue -A -d -D -b 512 /dev/sda /dev/sda\n            reads the contents of every sector of disk sda and writes  it  back\n            to  the  same  location.  Typical  hard  disks reallocate flaky and\n            faulty sectors on writes, so this operation may result in the  com-\n            plete  disk  being  usable again when there were errors before. Un-\n            readable blocks however will contain zeroes after this.\n\n     dd_rescue -2 /dev/urandom -M outfile\n            overwrites the file outfile twice; once  with  good  pseudo  random\n            numbers and then with zeroes.\n\n     dd_rescue -t -a image1.raw image2.raw\n            copies  a  file system image and looks for empty blocks to create a\n            sparse output file to save disk space. (If the source  file  system\n            has been used a bit, on that file system creating a large file with\n            zeroes and removing it again prior to this operation will result in\n            more   sectors   with  zeroes.   dd_rescue -u /dev/zero DUMMY  will\n            achieve this ...)\n\n     dd_rescue -ATL hash=md5:output,lzo=compress:bench,MD5:output in out.lzo\n            copies the file in to out.lzo with using lzo (lzo1x_1)  compression\n            and  calculating  an  md5  hash  (checksum)  on both files. The md5\n            hashes for both are also written to stdout  in  the  md5sum  output\n            format.   Note  that  the compress parameter to lzo is not strictly\n            required here; the plugin could  have  deduced  it  from  the  file\n            names.  This  example  shows  that you can specify multiple plugins\n            with multiple parameters; the plugins are forming a  filter  chain.\n            You can specify the same plugin multiple times.\n\n     dd_rescue -L hash=sha512:set_xattr:fallb,null=change infile /dev/null\n            reads the file infile and computes its sha512 hash. It stores it in\n            the  input file's user.checksum.sha512 attribute (and falls back to\n            writing it to CHECKSUMS.sha512 if xattrs can't  be  written).  Note\n            the  use of the null plugin with faking data change with the change\n            parameter; this causes the hash plugin to write to the  input  file\n            which  it would not normally have done. Of course this will fail if\n            you don't have the appropriate privileges to write xattrs to infile\n            nor to write the checksum to CHECKSUMS.sha512.\n\n     See also README.dd_rescue and ddr_lzo(1) to learn about the possibilities.\n\nTESTING\n     Untested code is buggy, almost always.  I happen to have  a  damaged  hard\n     disk  that I use for testing dd_rescue from time to time. But to allow for\n     automated testing of error recovery, it's better to have predictable fail-\n     ures for the program to deal with. So there is a  fault  injection  frame-\n     work.\n     Specifying  -F 5w/1,17r/3,42r/-1,80-84r/0  on the command-line will result\n     in in the 5th block (counted in hardblocksize) will  fail  to  be  written\n     once  (from  which dd_rescue should recover, as it tries a second time for\n     failed writes), block no 17 will fail to be read 3 times, block no 42 will\n     read fine once, but then fail afterwards, whereas blocks 80 through 83 are\n     completely unreadable (will fail infinite times). Note that the range  ex-\n     cludes the last block (80-84 means 4 blocks starting @ 80).\n     Block offsets are always counted in absolute positions, so starting in the\n     middle  of a file with -s or reverse copying won't affect the absolute po-\n     sition that is hit with the  fault  injection.  (This  has  changed  since\n     1.98.)\n\nBUGS/LIMITATIONS\n     The  source  code  does use the 64bit functions provided by glibc for file\n     positioning. However, your kernel might not support it, so  you  might  be\n     unable to copy partitions larger then 2GB into a file.\n     This  program  has been written using Linux and only tested on a couple of\n     Linux systems. People have reported to have successfully used it on  other\n     Un*xish systems (such as xBSD or M*cOS), but these systems get little reg-\n     ular  test coverage; so please be advised to test properly (possibly using\n     the make check test suite included with the  source  distribution)  before\n     relying on dd_rescue on non Linux based systems.\n     Currently,  the  escape sequence for moving the cursor up is hard coded in\n     the sources. It's fine for most terminal emulations (including  vt100  and\n     linux), but it should use the terminal description database instead.\n     Since  dd_rescue-1.10,  non-seekable  input or output files are supported,\n     but there's of course limitations to recover errors in such cases.\n\n     dd_rescue does not automate the recovery of faulty files or partitions  by\n     automatically  keeping  a list of copied sectors and approaching bad spots\n     from both sides. There is a helper script dd_rhelp from LAB Valentin  that\n     does this. Integration of such a mode into dd_rescue itself is non-trivial\n     and due to the complexity of the source code might not happen.\n     There  also  is  a  tool, GNU ddrescue, that is a reimplementation of this\n     tool and which contains the capabilities to automate recovery of bad files\n     in the way dd_rhelp does. It does not have the feature richness of dd_res-\n     cue, but is reported to be easier  to  operate  for  error  recovery  than\n     dd_rescue with dd_rhelp.\n\n     If your data is very valuable and you are considering sending your disk to\n     a data recovery company, you might be better off NOT trying to use imaging\n     tools  like  dd_rescue,  dd_rhelp  or GNU ddrescue. If you're unlucky, the\n     disk has suffered some mechanical damage (e.g. by  having  been  dropped),\n     and  continuing  to  use  it may make the head damage the surface further.\n     You may be able to detect this condition by quickly raising  error  counts\n     in the SMART attributes or by a clicking noise.\n\n     Please report bugs to me via email.\n\n   Data destruction considerations\n     The  modes  for  overwriting  data  with pseudo random numbers to securely\n     delete sensitive data on purpose only implement a limited number of  over-\n     writes.  While  Peter  Gutmann's  classic analysis concludes that the then\n     current hard disk technology requires more overwrites to be really secure,\n     the author believes that modern hard disk technology does not  allow  data\n     restoration  of sectors that have been overwritten with the --shred4 mode.\n     This is in compliance with the recommendations from BSI GSDS M7.15.\n     Overwriting whole partitions or disks with random numbers is a fairly safe\n     way to destroy data, unless the underlying storage device  does  too  much\n     magic.  SSDs are doing fancy stuff in their Flash Translation Layer (FTL),\n     so this tool might be insufficient to get rid of data. Use  SECURITY_ERASE\n     (use  hdparm)  there  or  --  if available -- encrypt data with AES256 and\n     safely destroy the key.  Normal hard disks have a small risk of leaking  a\n     few sectors due to reallocation of flaky sectors.\n     For  securely destroying single files, your mileage may vary. The more ad-\n     vanced your file system, the less likely dd_rescue's destruction  will  be\n     effective.   In  particular, journaling file systems may carry old data in\n     the journal.  File systems that do copy-on-write (COW) such as btrfs,  are\n     very  likely  to  have old copies of your supposedly erased file. It might\n     help somewhat to fill the file systems with zeros (dd_rescue -u  /dev/zero\n     /path/to/fs/DUMMYNAME)  to  force the file system to release and overwrite\n     non-current data after overwriting critical files with random numbers.  If\n     you can, better destroy a whole partition or disk.\n\nSEE ALSO\n     README.dd_rescue README.dd_rhelp ddr_lzo(1)\n     wipe(1) shred(1) ddrescue(1) dd(1)\n\nAUTHOR\n     Kurt Garloff <kurt@garloff.de>\n\nCREDITS\n     Many little issues were reported by Valentin LAB, the author of dd_rhelp .\n     The RC4 PRNG (frandom) is a port from Eli Billauer's kernel mode PRNG.\n     A number of recent ideas and suggestions came from Thomas.\n\nCOPYRIGHT\n     This program is protected by the GNU General Public License (GPL) v2 or v3\n     - at your option.\n\nHISTORY\n     Since version 1.10, non seekable input and output files are supported.\n     Splice copy -k is supported since 1.15.\n     A progress bar exists since 1.17.\n     Support for preallocation (fallocate) -P exists since 1.19.\n     Since 1.23, we default to -y0, enhancing performance.\n     The Pseudo Random Number modes have been started with 1.29.\n     Write avoidance -W has been implemented in 1.30\n     Multiple output files -Y have been added in 1.32.\n     Long options and man page came with 1.33.\n     Optimized sparse detection (SSE2, armv6, armv8 asm, AVX2) has been present\n     since 1.35 and been enhanced until 1.43.\n     We support copying extended attributes since 1.40 using libxattr.\n     Removing and (fs)trimming the output file's file system exists since 1.41.\n     Support  for  compilation with bionic (Android's C library) with most fea-\n     tures enabled also came with 1.41.\n     Plugins exist since 1.42, the MD5 plugin came with 1.42,  the  lzo  plugin\n     with  1.43.  1.44 renamed the MD5 plugin to hash and added support for the\n     SHA-2 family of hashes. 1.45 added SHA-1 and the ability to store and val-\n     idate checksums.\n     1.98 brought encryption and the fault injection  framework,  1.99  support\n     for  ARMv8  crypto  acceleration.   1.99.5  brought  ratecontrol.   1.99.6\n     brought S3 style multipart checksums.\n\n     Some additional information can be found on\n     http://garloff.de/kurt/linux/ddrescue/\n     LAB Valentin's dd_rhelp can be found on\n     http://www.kalysto.org/utilities/dd_rhelp/index.en.html\n\nKurt Garloff                       2017-06-23                      dd_rescue(1)",
+        "apropos": "dd_rescue (1)        - Data recovery and protection tool\nddr_crypt (1)        - Data de/encryption plugin for dd_rescue\nddr_lzo (1)          - Data de/compression plugin for dd_rescue"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dd_rescue",
+        "size_bytes": 85696,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8b0bff9a77299b3f6ec233f9d7cd590202692090, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/ddrescue/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/ddrescue/index.md",
+    "retrieved_at": "2026-07-14T13:05:17+00:00",
+    "sha256": "c5a9af9064cf6c2058b824b2a4b1ddc1b8b8ba8fbe8e6b9cc3581fabb8037515"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "411",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "1.99.13-0kali2",
+    "depends": "libc6 (>= 2.38), liblzo2-2 (>= 2.02), libssl3t64 (>= 3.0.0)",
+    "description": "data recovery and protection tool\nWhen your disk has crashed and you try to copy it over to another one,\nstandard Unix tools like cp, cat, and dd will abort on every I/O error,\ndd_rescue does not.\nIt optimizes copying by using large blocks as long as no errors occur\nand falls back to smaller blocks. It supports reverse direction copying\n(to approach a bad spot from the top), sparse copying, preallocating\nspace, splice zerocopy, and bypassing the kernel pagecache with O_DIRECT.\ndd_rescue provides safe deletion of data by overwriting files (or better\npartitions/disks) multiple times with fast random numbers.\nWith the ddr_hash plugin, it supports calculating a hash value (such as\na sha256sum) or an HMAC during copying.",
+    "homepage": "http://www.garloff.de/kurt/linux/ddrescue/"
+  },
+  "tags": [
+    "offensive",
+    "ddrescue",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/ddrescue && python3 ddrescue.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ddrescue && python3 ddrescue.py --help",
+    "cd toolboxes/ddrescue && python3 ddrescue.py --help",
+    "cd toolboxes/ddrescue && python3 ddrescue.py --help",
+    "cd toolboxes/ddrescue && python3 ddrescue.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ddrescue --output $KFIOSA_OUTPUT_DIR/ddrescue.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ddrescue --output $KFIOSA_OUTPUT_DIR/ddrescue.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

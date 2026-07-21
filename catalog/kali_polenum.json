@@ -1,0 +1,201 @@
+{
+  "id": "kali:polenum",
+  "kind": "kali_source_package",
+  "name": "polenum",
+  "title": "polenum",
+  "summary": "### polenum",
+  "version": "1.7-1",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/Wh1t3Fox/polenum/",
+  "repository": "https://salsa.debian.org/pkg-security-team/polenum",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-information-gathering",
+    "kali-tools-passwords",
+    "kali-tools-respond",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install polenum"
+  },
+  "packages": [
+    {
+      "name": "polenum"
+    }
+  ],
+  "commands": [
+    {
+      "name": "polenum",
+      "description": "Extracts the password policy from a Windows system",
+      "usage": "polenum [-h] [--username USERNAME] [--password PASSWORD]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": "  -h, --help            show this help message and exit"
+        },
+        {
+          "flags": [
+            "--username",
+            "-u"
+          ],
+          "metavar": "USERNAME",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "  --username, -u USERNAME"
+        },
+        {
+          "flags": [
+            "--password",
+            "-p"
+          ],
+          "metavar": "PASSWORD",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "  --password, -p PASSWORD"
+        },
+        {
+          "flags": [
+            "--domain",
+            "-d"
+          ],
+          "metavar": "DOMAIN",
+          "takes_value": true,
+          "description": "The domain or IP",
+          "default": null,
+          "choices": null,
+          "raw": "  --domain, -d DOMAIN   The domain or IP"
+        },
+        {
+          "flags": [
+            "--protocols"
+          ],
+          "metavar": "PROTOCOLS ...",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "  --protocols [PROTOCOLS ...]"
+        }
+      ],
+      "raw_help": "root@kali:~# polenum victim:s3cr3t@192.168.1.200 '445/SMB'\n\n[+] Attaching to 192.168.1.200 using victim:s3cr3t\n\n    [+] Trying protocol 445/SMB...\n\n[+] Found domain(s):\n\n    [+] WIN7-X86\n    [+] Builtin\n\n[+] Password Info for Domain: WIN7-X86\n\n    [+] Minimum password length: None\n    [+] Password history length: None\n    [+] Maximum password age: Not Set\n    [+] Password Complexity Flags: 000000\n\n        [+] Domain Refuse Password Change: 0\n        [+] Domain Password Store Cleartext: 0\n        [+] Domain Password Lockout Admins: 0\n        [+] Domain Password No Clear Change: 0\n        [+] Domain Password No Anon Change: 0\n        [+] Domain Password Complex: 0\n\n    [+] Minimum password age: None\n    [+] Reset Account Lockout Counter: 30 minutes\n    [+] Locked Account Duration: 30 minutes\n    [+] Account Lockout Threshold: None\n    [+] Forced Log off Time: Not Set",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "polenum victim:s3cr3t@192.168.1.200 '445/SMB'\n\n[+] Attaching to 192.168.1.200 using victim:s3cr3t\n\n    [+] Trying protocol 445/SMB...\n\n[+] Found domain(s):\n\n    [+] WIN7-X86\n    [+] Builtin\n\n[+] Password Info for Domain: WIN7-X86\n\n    [+] Minimum password length: None\n    [+] Password history length: None\n    [+] Maximum password age: Not Set\n    [+] Password Complexity Flags: 000000\n\n        [+] Domain Refuse Password Change: 0\n        [+] Domain Password Store Cleartext: 0\n        [+] Domain Password Lockout Admins: 0\n        [+] Domain Password No Clear Change: 0\n        [+] Domain Password No Anon Change: 0\n        [+] Domain Password Complex: 0\n\n    [+] Minimum password age: None\n    [+] Reset Account Lockout Counter: 30 minutes\n    [+] Locked Account Duration: 30 minutes\n    [+] Account Lockout Threshold: None\n    [+] Forced Log off Time: Not Set",
+          "template": null,
+          "original_sha256": "04610b5cbd5396e4ed7b0385c27b6898221545cc4b3ddf7243bd760170b2cbb5"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: polenum [-h] [--username USERNAME] [--password PASSWORD]\n               [--domain DOMAIN] [--protocols [PROTOCOLS ...]]\n               [enum4linux]\n\npositional arguments:\n  enum4linux            username:password@IPaddress\n\noptions:\n  -h, --help            show this help message and exit\n  --username, -u USERNAME\n                        The specified username\n  --password, -p PASSWORD\n                        The password of the user\n  --domain, -d DOMAIN   The domain or IP\n  --protocols [PROTOCOLS ...]\n                        ['139/SMB', '445/SMB']",
+        "-h": "usage: polenum [-h] [--username USERNAME] [--password PASSWORD]\n               [--domain DOMAIN] [--protocols [PROTOCOLS ...]]\n               [enum4linux]\n\npositional arguments:\n  enum4linux            username:password@IPaddress\n\noptions:\n  -h, --help            show this help message and exit\n  --username, -u USERNAME\n                        The specified username\n  --password, -p PASSWORD\n                        The password of the user\n  --domain, -d DOMAIN   The domain or IP\n  --protocols [PROTOCOLS ...]\n                        ['139/SMB', '445/SMB']",
+        "help": "/usr/lib/python3.13/getpass.py:90: GetPassWarning: Can not control echo on the terminal.\n  passwd = fallback_getpass(prompt, stream)\nWarning: Password input may be echoed.\nPassword: Traceback (most recent call last):\n  File \"/usr/lib/python3.13/getpass.py\", line 68, in unix_getpass\n    old = termios.tcgetattr(fd)     # a copy to save\ntermios.error: (25, 'Inappropriate ioctl for device')\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/usr/bin/polenum\", line 305, in <module>\n    main()\n    ~~~~^^\n  File \"/usr/bin/polenum\", line 288, in main\n    passw = getpass.getpass()\n  File \"/usr/lib/python3.13/getpass.py\", line 90, in unix_getpass\n    passwd = fallback_getpass(prompt, stream)\n  File \"/usr/lib/python3.13/getpass.py\", line 126, in fallback_getpass\n    return _raw_input(prompt, stream)\n  File \"/usr/lib/python3.13/getpass.py\", line 148, in _raw_input\n    raise EOFError\nEOFError",
+        "man": "POLENUM(1)                  General Commands Manual                  POLENUM(1)\n\nNAME\n     POLENUM - Extracts the password policy from a Windows system\n\nSYNOPSIS\n     polenum [username[:password]@]<address> [--protocols [protocol list...]]\n\nDESCRIPTION\n     This  is  a simple security-oriented tool. Aims to help system administra-\n     tors to improve security.\n\nOPTIONS\n     There are only two possible options with protocol list:\n\n     445/SMB\n            Use TCP port 445 to probe Microsoft-DS SMB file sharing.\n\n     139/SMB\n            Use NetBIOS over TCP/IP Session Service. In order use  the  session\n            service of the old NBT protocol that runs on TCP port 139.\n\nEXAMPLES\n            polenum user:password@192.168.1.13 --protocols '445/SMB'\n\n     Tries  to get the password policy of the system 192.168.1.13 by logging in\n     with the provided user name and password using SMB port 445.\n\n                                 January 6 2020                      POLENUM(1)",
+        "apropos": "polenum (1)          - Extracts the password policy from a Windows system"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/polenum",
+        "size_bytes": 11029,
+        "is_symlink": false,
+        "file_type": "Python script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/polenum/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/polenum/index.md",
+    "retrieved_at": "2026-07-14T13:07:37+00:00",
+    "sha256": "87a832569a93092f5034469553f33c19c79dd5cc085093fd23e0926b31a4750c"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "26",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "all",
+    "version": "1.7-1",
+    "depends": "python3:any, python3-impacket",
+    "description": "Extracts the password policy from a Windows system\npolenum is a Python script which uses the Impacket Library from CORE Security\nTechnologies to extract the password policy information from a windows machine.\nThis allows a non-windows (Linux, Mac OSX, BSD etc..) user to query the\npassword policy of a remote windows box without the need to have access to a\nwindows machine.",
+    "homepage": "https://github.com/Wh1t3Fox/polenum/"
+  },
+  "tags": [
+    "offensive",
+    "polenum",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/polenum && python3 polenum.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/polenum && python3 polenum.py --help",
+    "cd toolboxes/polenum && python3 polenum.py --help",
+    "cd toolboxes/polenum && python3 polenum.py --help",
+    "cd toolboxes/polenum && python3 polenum.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST polenum --output $KFIOSA_OUTPUT_DIR/polenum.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST polenum --output $KFIOSA_OUTPUT_DIR/polenum.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

@@ -1,0 +1,219 @@
+{
+  "id": "kali:gvm",
+  "kind": "kali_source_package",
+  "name": "gvm",
+  "title": "gvm",
+  "summary": "### gvm",
+  "version": "25.04.3",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://www.greenbone.net/",
+  "repository": "https://salsa.debian.org/pkg-security-team/gvm",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install gvm"
+  },
+  "packages": [
+    {
+      "name": "gvm"
+    }
+  ],
+  "commands": [
+    {
+      "name": "gvm-check-setup",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# gvm-check-setup -h\n gvm-check-setup 25.04.0\nThis script is provided and maintained by Debian and Kali.\n Test completeness and readiness of GVM-25.04.0\n Step 1: Checking OpenVAS (Scanner)... \n       OK: OpenVAS Scanner is present in version 23.45.1.\n       OK: Notus Scanner is present in version 22.7.2.\n       ERROR: No CA certificate file for Server found.\n       FIX: Run 'sudo runuser -u _gvm -- gvm-manage-certs -a -f'.\n \nERROR: Your GVM-25.04.0 installation is not yet complete!\n \n Please follow the instructions marked with FIX above and run this\n script again.\n \nIMPORTANT NOTE: this script is provided and maintained by Debian and Kali.\nIf you find any issue in this script, please report it directly to Debian or Kali",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "gvm-check-setup 25.04.0",
+          "template": null,
+          "original_sha256": "4689a415fc2680f051b375d60bafa39240f1b050990578107bf33a85023fcf61"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "scanner",
+          "vulnerability"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "gvm-check-setup 25.04.0\n This script is provided and maintained by Debian and Kali.\n  Test completeness and readiness of GVM-25.04.0\nStep 1: Checking OpenVAS (Scanner)... \n        OK: OpenVAS Scanner is present in version 23.45.1.\n        OK: Notus Scanner is present in version 22.7.2.\n        ERROR: No CA certificate file for Server found.\n        FIX: Run 'sudo runuser -u _gvm -- gvm-manage-certs -a -f'.\n\n ERROR: Your GVM-25.04.0 installation is not yet complete!\n\nPlease follow the instructions marked with FIX above and run this\nscript again.\n\n IMPORTANT NOTE: this script is provided and maintained by Debian and Kali.\n If you find any issue in this script, please report it directly to Debian or Kali",
+        "-h": "gvm-check-setup 25.04.0\n This script is provided and maintained by Debian and Kali.\n  Test completeness and readiness of GVM-25.04.0\nStep 1: Checking OpenVAS (Scanner)... \n        OK: OpenVAS Scanner is present in version 23.45.1.\n        OK: Notus Scanner is present in version 22.7.2.\n        ERROR: No CA certificate file for Server found.\n        FIX: Run 'sudo runuser -u _gvm -- gvm-manage-certs -a -f'.\n\n ERROR: Your GVM-25.04.0 installation is not yet complete!\n\nPlease follow the instructions marked with FIX above and run this\nscript again.\n\n IMPORTANT NOTE: this script is provided and maintained by Debian and Kali.\n If you find any issue in this script, please report it directly to Debian or Kali",
+        "help": "gvm-check-setup 25.04.0\n This script is provided and maintained by Debian and Kali.\n  Test completeness and readiness of GVM-25.04.0\nStep 1: Checking OpenVAS (Scanner)... \n        OK: OpenVAS Scanner is present in version 23.45.1.\n        OK: Notus Scanner is present in version 22.7.2.\n        ERROR: No CA certificate file for Server found.\n        FIX: Run 'sudo runuser -u _gvm -- gvm-manage-certs -a -f'.\n\n ERROR: Your GVM-25.04.0 installation is not yet complete!\n\nPlease follow the instructions marked with FIX above and run this\nscript again.\n\n IMPORTANT NOTE: this script is provided and maintained by Debian and Kali.\n If you find any issue in this script, please report it directly to Debian or Kali"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gvm-check-setup",
+        "size_bytes": 18940,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "gvm-setup",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# gvm-setup -h\n This script is provided and maintained by Debian and Kali.\nIf you find any issue in this script, please report it directly to Debian or Kali\n \n [>] Starting PostgreSQL service\n \n [>] Creating GVM's certificate files\n \n [>] Creating PostgreSQL database\n [i] User _gvm already exists in PostgreSQL\n [i] Database gvmd already exists in PostgreSQL\n [i] Role DBA already exists in PostgreSQL\n \n [*] Applying permissions\n GRANT ROLE\n [i] Extension uuid-ossp already exists for gvmd database\n [i] Extension pgcrypto already exists for gvmd database\n [i] Extension pg-gvm already exists for gvmd database\n [>] Migrating database\n [>] Checking for GVM admin user\n [*] Configure Feed Import Owner\n [*] Update GVM feeds\n Running as root. Switching to user '_gvm' and group '_gvm'.\n Trying to acquire lock on /var/lib/openvas/feed-update.lock\n Acquired lock on /var/lib/openvas/feed-update.lock",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "This script is provided and maintained by Debian and Kali.\n If you find any issue in this script, please report it directly to Debian or Kali\n\n\u001b[01;32m[>]\u001b[00m Starting PostgreSQL service\n* postgresql.service\n     Loaded: masked (Reason: Unit postgresql.service is masked.)\n     Active: inactive (dead)",
+        "-h": "This script is provided and maintained by Debian and Kali.\n If you find any issue in this script, please report it directly to Debian or Kali\n\n\u001b[01;32m[>]\u001b[00m Starting PostgreSQL service\n* postgresql.service\n     Loaded: masked (Reason: Unit postgresql.service is masked.)\n     Active: inactive (dead)",
+        "help": "This script is provided and maintained by Debian and Kali.\n If you find any issue in this script, please report it directly to Debian or Kali\n\n\u001b[01;32m[>]\u001b[00m Starting PostgreSQL service\n* postgresql.service\n     Loaded: masked (Reason: Unit postgresql.service is masked.)\n     Active: inactive (dead)"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gvm-setup",
+        "size_bytes": 4289,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "gvm-start",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# gvm-start -h\n [>] Please wait for the GVM services to start.\n [>]\n [>] You might need to refresh your browser once it opens.\n [>]\n [>]  Web UI (Greenbone Security Assistant): https://127.0.0.1:9392",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "vulnerability"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "\u001b[01;32m[>]\u001b[00m Please wait for the GVM services to start.\n\u001b[01;32m[>]\u001b[00m\n\u001b[01;32m[>]\u001b[00m You might need to refresh your browser once it opens.\n\u001b[01;32m[>]\u001b[00m\n\u001b[01;32m[>]\u001b[00m  Web UI (Greenbone Security Assistant): https://127.0.0.1:9392",
+        "-h": "\u001b[01;32m[>]\u001b[00m Please wait for the GVM services to start.\n\u001b[01;32m[>]\u001b[00m\n\u001b[01;32m[>]\u001b[00m You might need to refresh your browser once it opens.\n\u001b[01;32m[>]\u001b[00m\n\u001b[01;32m[>]\u001b[00m  Web UI (Greenbone Security Assistant): https://127.0.0.1:9392",
+        "help": "\u001b[01;32m[>]\u001b[00m Please wait for the GVM services to start.\n\u001b[01;32m[>]\u001b[00m\n\u001b[01;32m[>]\u001b[00m You might need to refresh your browser once it opens.\n\u001b[01;32m[>]\u001b[00m\n\u001b[01;32m[>]\u001b[00m  Web UI (Greenbone Security Assistant): https://127.0.0.1:9392"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gvm-start",
+        "size_bytes": 2376,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "gvm-stop",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# gvm-stop -h\n [>] Stopping GVM services\n * gsad.service - Greenbone Security Assistant daemon (gsad)\n    Loaded: loaded (/usr/lib/systemd/system/gsad.service; disabled; preset: disabled)\n    Active: inactive (dead)\n      Docs: man:gsad(8)\n            https://www.greenbone.net\n \n * gvmd.service - Greenbone Vulnerability Manager daemon (gvmd)\n    Loaded: loaded (/usr/lib/systemd/system/gvmd.service; disabled; preset: disabled)\n    Active: inactive (dead)\n      Docs: man:gvmd(8)\n \n Jun 17 10:50:55 kali systemd[1]: Starting gvmd.service - Greenbone Vulnerability Manager daemon (gvmd)...\n Jun 17 10:50:55 kali systemd[1]: gvmd.service: Can't open PID file '/run/gvmd/gvmd.pid' (yet?) after start: No such file or directory\n Jun 17 10:50:56 kali systemd[1]: Started gvmd.service - Greenbone Vulnerability Manager daemon (gvmd).\n Jun 17 10:51:10 kali systemd[1]: Stopping gvmd.service - Greenbone Vulnerability Manager daemon (gvmd)...\n Jun 17 10:51:10 kali systemd[1]: gvmd.service: Deactivated successfully.\n Jun 17 10:51:10 kali systemd[1]: Stopped gvmd.service - Greenbone Vulnerability Manager daemon (gvmd).\n \n * ospd-openvas.service - OSPd Wrapper for the OpenVAS Scanner (ospd-openvas)\n    Loaded: loaded (/usr/lib/systemd/system/ospd-openvas.service; disabled; preset: disabled)\n    Active: inactive (dead)\n      Docs: man:ospd-openvas(8)\n            man:openvas(8)\n \n Jun 17 10:50:55 kali systemd[1]: Starting ospd-openvas.service - OSPd Wrapper for the OpenVAS Scanner (ospd-openvas)...\n Jun 17 10:50:55 kali systemd[1]: Started ospd-openvas.service - OSPd Wrapper for the OpenVAS Scanner (ospd-openvas).\n Jun 17 10:51:10 kali systemd[1]: Stopping ospd-openvas.service - OSPd Wrapper for the OpenVAS Scanner (ospd-openvas)...\n Jun 17 10:51:10 kali systemd[1]: ospd-openvas.service: Deactivated successfully.\n Jun 17 10:51:10 kali systemd[1]: Stopped ospd-openvas.service - OSPd Wrapper for the OpenVAS Scanner (ospd-openvas).\n Jun 17 10:51:10 kali systemd[1]: ospd-openvas.service: Consumed 900ms CPU time over 15.155s wall clock time, 100.6M memory peak.\n \n * notus-scanner.service - Notus Scanner\n    Loaded: loaded (/usr/lib/systemd/system/notus-scanner.service; disabled; preset: disabled)\n    Active: inactive (dead)\n      Docs: https://github.com/greenbone/notus-scanner\n \n Jun 17 10:50:55 kali systemd[1]: Starting notus-scanner.service - Notus Scanner...\n Jun 17 10:50:55 kali systemd[1]: Started notus-scanner.service - Notus Scanner.\n Jun 17 10:50:55 kali notus-scanner[243069]: 2026-06-17 10:50:55,401 notus-scanner: INFO: (notus.scanner.daemon) Starting notus-scanner version 22.7.2.\n Jun 17 10:51:10 kali systemd[1]: Stopping notus-scanner.service - Notus Scanner...\n Jun 17 10:51:10 kali systemd[1]: notus-scanner.service: Deactivated successfully.\n Jun 17 10:51:10 kali systemd[1]: Stopped notus-scanner.service - Notus Scanner.",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "scanner",
+          "vulnerability"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "\u001b[01;32m[>]\u001b[00m Stopping GVM services\n* gsad.service - Greenbone Security Assistant daemon (gsad)\n     Loaded: loaded (/usr/lib/systemd/system/gsad.service; disabled; preset: disabled)\n     Active: inactive (dead)\n       Docs: man:gsad(8)\n             https://www.greenbone.net\n\n* gvmd.service\n     Loaded: masked (Reason: Unit gvmd.service is masked.)\n     Active: inactive (dead)\n\n* ospd-openvas.service\n     Loaded: masked (Reason: Unit ospd-openvas.service is masked.)\n     Active: inactive (dead)\n\n* notus-scanner.service - Notus Scanner\n     Loaded: loaded (/usr/lib/systemd/system/notus-scanner.service; disabled; preset: disabled)\n     Active: inactive (dead)\n       Docs: https://github.com/greenbone/notus-scanner\n\nJul 14 15:05:53 kali notus-scanner[1848327]:     )\nJul 14 15:05:53 kali notus-scanner[1848327]: notus.scanner.errors.AdvisoriesLoadingError: Can't load advisories. /var/lib/notus/products is not a directory.\nJul 14 15:05:53 kali notus-scanner[1848327]: Exception ignored in atexit callback <function exit_cleanup at 0x7f7cc9c73740>:\nJul 14 15:05:53 kali notus-scanner[1848327]: Traceback (most recent call last):\nJul 14 15:05:53 kali notus-scanner[1848327]:   File \"/usr/lib/python3/dist-packages/notus/scanner/utils.py\", line 101, in exit_cleanup\nJul 14 15:05:53 kali notus-scanner[1848327]:     sys.exit()\nJul 14 15:05:53 kali notus-scanner[1848327]: SystemExit:\nJul 14 15:05:53 kali systemd[1]: Stopping notus-scanner.service - Notus Scanner...\nJul 14 15:05:53 kali systemd[1]: notus-scanner.service: Deactivated successfully.\nJul 14 15:05:53 kali systemd[1]: Stopped notus-scanner.service - Notus Scanner.",
+        "-h": "\u001b[01;32m[>]\u001b[00m Stopping GVM services\n* gsad.service - Greenbone Security Assistant daemon (gsad)\n     Loaded: loaded (/usr/lib/systemd/system/gsad.service; disabled; preset: disabled)\n     Active: inactive (dead)\n       Docs: man:gsad(8)\n             https://www.greenbone.net\n\n* gvmd.service\n     Loaded: masked (Reason: Unit gvmd.service is masked.)\n     Active: inactive (dead)\n\n* ospd-openvas.service\n     Loaded: masked (Reason: Unit ospd-openvas.service is masked.)\n     Active: inactive (dead)\n\n* notus-scanner.service - Notus Scanner\n     Loaded: loaded (/usr/lib/systemd/system/notus-scanner.service; disabled; preset: disabled)\n     Active: inactive (dead)\n       Docs: https://github.com/greenbone/notus-scanner\n\nJul 14 15:05:53 kali notus-scanner[1848327]:     )\nJul 14 15:05:53 kali notus-scanner[1848327]: notus.scanner.errors.AdvisoriesLoadingError: Can't load advisories. /var/lib/notus/products is not a directory.\nJul 14 15:05:53 kali notus-scanner[1848327]: Exception ignored in atexit callback <function exit_cleanup at 0x7f7cc9c73740>:\nJul 14 15:05:53 kali notus-scanner[1848327]: Traceback (most recent call last):\nJul 14 15:05:53 kali notus-scanner[1848327]:   File \"/usr/lib/python3/dist-packages/notus/scanner/utils.py\", line 101, in exit_cleanup\nJul 14 15:05:53 kali notus-scanner[1848327]:     sys.exit()\nJul 14 15:05:53 kali notus-scanner[1848327]: SystemExit:\nJul 14 15:05:53 kali systemd[1]: Stopping notus-scanner.service - Notus Scanner...\nJul 14 15:05:53 kali systemd[1]: notus-scanner.service: Deactivated successfully.\nJul 14 15:05:53 kali systemd[1]: Stopped notus-scanner.service - Notus Scanner.",
+        "help": "\u001b[01;32m[>]\u001b[00m Stopping GVM services\n* gsad.service - Greenbone Security Assistant daemon (gsad)\n     Loaded: loaded (/usr/lib/systemd/system/gsad.service; disabled; preset: disabled)\n     Active: inactive (dead)\n       Docs: man:gsad(8)\n             https://www.greenbone.net\n\n* gvmd.service\n     Loaded: masked (Reason: Unit gvmd.service is masked.)\n     Active: inactive (dead)\n\n* ospd-openvas.service\n     Loaded: masked (Reason: Unit ospd-openvas.service is masked.)\n     Active: inactive (dead)\n\n* notus-scanner.service - Notus Scanner\n     Loaded: loaded (/usr/lib/systemd/system/notus-scanner.service; disabled; preset: disabled)\n     Active: inactive (dead)\n       Docs: https://github.com/greenbone/notus-scanner\n\nJul 14 15:05:53 kali notus-scanner[1848327]:     )\nJul 14 15:05:53 kali notus-scanner[1848327]: notus.scanner.errors.AdvisoriesLoadingError: Can't load advisories. /var/lib/notus/products is not a directory.\nJul 14 15:05:53 kali notus-scanner[1848327]: Exception ignored in atexit callback <function exit_cleanup at 0x7f7cc9c73740>:\nJul 14 15:05:53 kali notus-scanner[1848327]: Traceback (most recent call last):\nJul 14 15:05:53 kali notus-scanner[1848327]:   File \"/usr/lib/python3/dist-packages/notus/scanner/utils.py\", line 101, in exit_cleanup\nJul 14 15:05:53 kali notus-scanner[1848327]:     sys.exit()\nJul 14 15:05:53 kali notus-scanner[1848327]: SystemExit:\nJul 14 15:05:53 kali systemd[1]: Stopping notus-scanner.service - Notus Scanner...\nJul 14 15:05:53 kali systemd[1]: notus-scanner.service: Deactivated successfully.\nJul 14 15:05:53 kali systemd[1]: Stopped notus-scanner.service - Notus Scanner."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gvm-stop",
+        "size_bytes": 456,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/gvm/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/gvm/index.md",
+    "retrieved_at": "2026-07-14T13:05:53+00:00",
+    "sha256": "647dac1b9f2bab4f4a2d7537c5d4f43113d51f2cf394a5e048b78cbaf92af18d"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "48",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "all",
+    "version": "25.04.3",
+    "depends": "gsad (>= 24.0.0), gvmd (>= 26.12.1-2), notus-scanner (>= 22.6.0), openvas-scanner (>= 23.13.1), ospd-openvas (>= 22.9.1-2), xsltproc, psmisc, rsync",
+    "recommends": "greenbone-security-assistant (>= 22.8.0), gvm-tools (>= 23.4.0)",
+    "description": "remote network security auditor - metapackage and useful scripts\nThe Greenbone Vulnerability Manager is a modular security auditing tool,\nused for testing remote systems for vulnerabilities that should be fixed.\n.\nThis package installs all the required packages. It provides scripts to setup,\nstart and stop the GVM services.\n.\nThe tool was previously named OpenVAS.",
+    "homepage": "https://www.greenbone.net/"
+  },
+  "tags": [
+    "offensive",
+    "gvm",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/gvm && python3 gvm.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/gvm && python3 gvm.py --help",
+    "cd toolboxes/gvm && python3 gvm.py --help",
+    "cd toolboxes/gvm && python3 gvm.py --help",
+    "cd toolboxes/gvm && python3 gvm.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gvm --output $KFIOSA_OUTPUT_DIR/gvm.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gvm --output $KFIOSA_OUTPUT_DIR/gvm.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

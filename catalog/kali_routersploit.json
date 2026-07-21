@@ -1,0 +1,171 @@
+{
+  "id": "kali:routersploit",
+  "kind": "kali_source_package",
+  "name": "routersploit",
+  "title": "routersploit",
+  "summary": "### routersploit",
+  "version": "3.4.7-0kali2",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/threat9/routersploit",
+  "repository": "https://gitlab.com/kalilinux/packages/routersploit",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install routersploit"
+  },
+  "packages": [
+    {
+      "name": "routersploit"
+    }
+  ],
+  "commands": [
+    {
+      "name": "routersploit",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# routersploit -h\n /usr/bin/routersploit -m <module> -s \"<option> <value>\"",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "rsf > use exploits/multi/misfortune_cookie\nrsf (Misfortune Cookie) > show options\n\nTarget options:\n\n   Name       Current settings     Description\n   ----       ----------------     -----------\n   port       80                   Target port\n   target                          Target address e.g. http://192.168.1.1\n\n\nrsf (Misfortune Cookie) > set target 192.168.0.2\n[+] {'target': '192.168.0.2'}\nrsf (Misfortune Cookie) > check\n[-] Target is not vulnerable\nrsf (Misfortune Cookie) >",
+          "template": null,
+          "original_sha256": "6863f05f7ed90f086678b9d6ecbcb380586dae9796f33107de1823953ac8f215"
+        },
+        {
+          "status": "operational_example",
+          "command": "rsf > use scanners/autopwn\nrsf (AutoPwn) > show options\n\nTarget options:\n\n   Name       Current settings     Description\n   ----       ----------------     -----------\n   port       80                   Target port\n   target                          Target IP address e.g. 192.168.1.1\n\n\nrsf (AutoPwn) > set target 192.168.0.2\n[+] {'target': '192.168.0.2'}\nrsf (AutoPwn) > run\n[*] Running module...\n[-] exploits/fortinet/fortigate_os_backdoor is not vulnerable\n[-] exploits/belkin/n150_path_traversal is not vulnerable\n[-] exploits/belkin/g_n150_password_disclosure is not vulnerable\n[-] exploits/belkin/n750_rce is not vulnerable\n[-] exploits/belkin/g_plus_info_disclosure is not vulnerable\n[-] exploits/asus/infosvr_backdoor_rce is not vulnerable\n[-] exploits/asus/rt_n16_password_disclosure is not vulnerable\n[-] exploits/2wire/gateway_auth_bypass is not vulnerable\n[-] exploits/technicolor/tc7200_password_disclosure is not vulnerable\n[-] exploits/netgear/multi_rce is not vulnerable\n[-] exploits/netgear/n300_auth_bypass is not vulnerable\n[-] exploits/netgear/prosafe_rce is not vulnerable\n[-] exploits/asmax/ar_1004g_password_disclosure is not vulnerable\n[-] exploits/asmax/ar_804_gu_rce is not vulnerable\n[-] exploits/linksys/wap54gv3_rce is not vulnerable\n[-] exploits/linksys/1500_2500_rce is not vulnerable\n[-] exploits/multi/misfortune_cookie is not vulnerable\n[-] exploits/cisco/ucs_manager_rce is not vulnerable\n[-] exploits/dlink/dsl_2750b_info_disclosure is not vulnerable\n[-] exploits/dlink/dir_645_password_disclosure is not vulnerable\n[-] exploits/dlink/dir_300_600_615_info_disclosure is not vulnerable\n[-] exploits/dlink/dir_300_320_615_auth_bypass is not vulnerable\n[-] exploits/dlink/dwr_932_info_disclosure is not vulnerable\n[-] exploits/dlink/dns_320l_327l_rce is not vulnerable\n[-] exploits/dlink/dvg_n5402sp_path_traversal is not vulnerable\n[-] exploits/dlink/dir_300_600_rce is not vulnerable\n[-] exploits/juniper/screenos_backdoor is not vulnerable\n[-] exploits/comtrend/ct_5361t_password_disclosure is not vulnerable\n[-] Device is not vulnerable to any exploits!\n\nrsf (AutoPwn) >",
+          "template": null,
+          "original_sha256": "21ab516ae8441493207777e6c8e01d1a41eb80615acfba85825e9b2df59bd912"
+        },
+        {
+          "status": "operational_example",
+          "command": "rsf > use creds/http_basic_bruteforce\nrsf (HTTP Basic Bruteforce) > show options\n\nTarget options:\n\n   Name       Current settings     Description\n   ----       ----------------     -----------\n   port       80                   Target port\n   target                          Target IP address or file with target:port (file://)\n\n\nModule options:\n\n   Name          Current settings                                                        Description\n   ----          ----------------                                                        -----------\n   path          /                                                                       URL Path\n   usernames     admin                                                                   Username or file with usernames (file://)\n   passwords     file:///usr/share/routersploit/routersploit/wordlists/passwords.txt     Password or file with passwords (file://)\n   threads       8                                                                       Numbers of threads\n   verbosity     yes                                                                     Display authentication attempts\n\n\nrsf (HTTP Basic Bruteforce) > set target 192.168.0.2\n[+] {'target': '192.168.0.2'}\nrsf (HTTP Basic Bruteforce) > set passwords file:///usr/share/wordlists/nmap.lst\n[+] {'passwords': 'file:///usr/share/wordlists/nmap.lst'}\nrsf (HTTP Basic Bruteforce) > set verbosity no\n[+] {'verbosity': 'no'}\nrsf (HTTP Basic Bruteforce) > run\n[*] Running module...\n[*] Elapsed time:  1.97385120392 seconds\n[+] Credentials found!\n\n   Target          Port     Login     Password\n   ------          ----     -----     --------\n   192.168.0.2     80       admin     password\n\nrsf (HTTP Basic Bruteforce) >",
+          "template": null,
+          "original_sha256": "499138e5b49cf19257bde5047235e92288d34a11cc58bbcf75712a0b88b684eb"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "/usr/bin/routersploit -m <module> -s \"<option> <value>\"",
+        "-h": "/usr/bin/routersploit -m <module> -s \"<option> <value>\"",
+        "help": "\u001b[91m[-]\u001b[0m A module is required when running non-interactively"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/routersploit",
+        "size_bytes": 842,
+        "is_symlink": true,
+        "real_path": "/usr/bin/rsf.py",
+        "file_type": "symbolic link to rsf.py"
+      }
+    },
+    {
+      "name": "rsf.py",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "rsf > use scanners/autopwn\nrsf (AutoPwn) > show options\n\nTarget options:\n\n   Name       Current settings     Description\n   ----       ----------------     -----------\n   port       80                   Target port\n   target                          Target IP address e.g. 192.168.1.1\n\n\nrsf (AutoPwn) > set target 192.168.0.2\n[+] {'target': '192.168.0.2'}\nrsf (AutoPwn) > run\n[*] Running module...\n[-] exploits/fortinet/fortigate_os_backdoor is not vulnerable\n[-] exploits/belkin/n150_path_traversal is not vulnerable\n[-] exploits/belkin/g_n150_password_disclosure is not vulnerable\n[-] exploits/belkin/n750_rce is not vulnerable\n[-] exploits/belkin/g_plus_info_disclosure is not vulnerable\n[-] exploits/asus/infosvr_backdoor_rce is not vulnerable\n[-] exploits/asus/rt_n16_password_disclosure is not vulnerable\n[-] exploits/2wire/gateway_auth_bypass is not vulnerable\n[-] exploits/technicolor/tc7200_password_disclosure is not vulnerable\n[-] exploits/netgear/multi_rce is not vulnerable\n[-] exploits/netgear/n300_auth_bypass is not vulnerable\n[-] exploits/netgear/prosafe_rce is not vulnerable\n[-] exploits/asmax/ar_1004g_password_disclosure is not vulnerable\n[-] exploits/asmax/ar_804_gu_rce is not vulnerable\n[-] exploits/linksys/wap54gv3_rce is not vulnerable\n[-] exploits/linksys/1500_2500_rce is not vulnerable\n[-] exploits/multi/misfortune_cookie is not vulnerable\n[-] exploits/cisco/ucs_manager_rce is not vulnerable\n[-] exploits/dlink/dsl_2750b_info_disclosure is not vulnerable\n[-] exploits/dlink/dir_645_password_disclosure is not vulnerable\n[-] exploits/dlink/dir_300_600_615_info_disclosure is not vulnerable\n[-] exploits/dlink/dir_300_320_615_auth_bypass is not vulnerable\n[-] exploits/dlink/dwr_932_info_disclosure is not vulnerable\n[-] exploits/dlink/dns_320l_327l_rce is not vulnerable\n[-] exploits/dlink/dvg_n5402sp_path_traversal is not vulnerable\n[-] exploits/dlink/dir_300_600_rce is not vulnerable\n[-] exploits/juniper/screenos_backdoor is not vulnerable\n[-] exploits/comtrend/ct_5361t_password_disclosure is not vulnerable\n[-] Device is not vulnerable to any exploits!\n\nrsf (AutoPwn) >",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "backdoor"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "/usr/bin/rsf.py -m <module> -s \"<option> <value>\"",
+        "-h": "/usr/bin/rsf.py -m <module> -s \"<option> <value>\"",
+        "help": "\u001b[91m[-]\u001b[0m A module is required when running non-interactively"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/rsf.py",
+        "size_bytes": 842,
+        "is_symlink": false,
+        "file_type": "Python script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/routersploit/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/routersploit/index.md",
+    "retrieved_at": "2026-07-14T13:08:12+00:00",
+    "sha256": "f98a4de2b2adb8c4c5f4d1bbd3d4dc1e78fa9bee7327d75542776732cc6cbaa2"
+  },
+  "apt_metadata": {
+    "section": "misc",
+    "installed_size": "2275",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "3.4.7-0kali2",
+    "depends": "python3-paramiko, python3-pysnmp4, python3-requests, python3:any, python3-pkg-resources, python3-pycryptodome, python3-zombie-telnetlib",
+    "recommends": "python3-bluepy",
+    "description": "Exploitation Framework for Embedded Devices\nThis package contains an open-source exploitation framework dedicated to\nembedded devices. It consists of various modules that aids penetration testing\noperations:\n* exploits - modules that take advantage of identified vulnerabilities.\n* creds - modules designed to test credentials against network services.\n* scanners - modules that check if target is vulnerable to any exploit.\n* payloads - modules that are responsible for generating payloads for various\narchitectures and injection points.\n* generic - modules that perform generic attacks.",
+    "homepage": "https://github.com/threat9/routersploit"
+  },
+  "tags": [
+    "offensive",
+    "routersploit",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/routersploit && python3 routersploit.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/routersploit && python3 routersploit.py --help",
+    "cd toolboxes/routersploit && python3 routersploit.py --help",
+    "cd toolboxes/routersploit && python3 routersploit.py --help",
+    "cd toolboxes/routersploit && python3 routersploit.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST routersploit --output $KFIOSA_OUTPUT_DIR/routersploit.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST routersploit --output $KFIOSA_OUTPUT_DIR/routersploit.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

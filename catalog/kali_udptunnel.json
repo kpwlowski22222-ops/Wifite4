@@ -1,0 +1,189 @@
+{
+  "id": "kali:udptunnel",
+  "kind": "kali_source_package",
+  "name": "udptunnel",
+  "title": "udptunnel",
+  "summary": "### udptunnel",
+  "version": "1.1-12",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://www1.cs.columbia.edu/~lennox/udptunnel/",
+  "repository": "https://salsa.debian.org/debian/udptunnel",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-post-exploitation"
+  ],
+  "install": {
+    "apt": "sudo apt install udptunnel"
+  },
+  "packages": [
+    {
+      "name": "udptunnel"
+    }
+  ],
+  "commands": [
+    {
+      "name": "udptunnel",
+      "description": "Tunnel UDP packets over a TCP connection",
+      "usage": "udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]",
+      "arguments": [
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "TCP-port",
+          "takes_value": false,
+          "description": "Server mode.  Wait for TCP connections on the port.",
+          "default": null,
+          "choices": null,
+          "raw": "    -s: Server mode.  Wait for TCP connections on the port."
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "TCP-addr /TCP-port",
+          "takes_value": false,
+          "description": "Client mode.  Connect to the given address.",
+          "default": null,
+          "choices": null,
+          "raw": "    -c: Client mode.  Connect to the given address."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "RTP mode.  Connect/listen on ports N and N+1 for both UDP and TCP.",
+          "default": null,
+          "choices": null,
+          "raw": "    -r: RTP mode.  Connect/listen on ports N and N+1 for both UDP and TCP."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose mode.  Specify -v multiple times for increased verbosity.",
+          "default": null,
+          "choices": null,
+          "raw": "    -v: Verbose mode.  Specify -v multiple times for increased verbosity."
+        }
+      ],
+      "raw_help": "root@kali:~# udptunnel --help\n udptunnel: invalid option -- '-'\n Usage: udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]\n   or udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]\n    -s: Server mode.  Wait for TCP connections on the port.\n    -c: Client mode.  Connect to the given address.\n    -r: RTP mode.  Connect/listen on ports N and N+1 for both UDP and TCP.\n        Port numbers must be even.\n    -v: Verbose mode.  Specify -v multiple times for increased verbosity.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "udptunnel: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "bbd84214ae1a0eacd4582d1c5360ee58bdc83cfe280e2c27f9e1fecb73088f8d"
+        },
+        {
+          "status": "operational_example",
+          "command": "udptunnel: You must specify one of -s and -c.",
+          "template": null,
+          "original_sha256": "d12647ef767997806cff519407b29dda1a62c00e001bc99d19483ab5497d9627"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "udptunnel: invalid option -- '-'\nUsage: udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]\n    or udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]\n     -s: Server mode.  Wait for TCP connections on the port.\n     -c: Client mode.  Connect to the given address.\n     -r: RTP mode.  Connect/listen on ports N and N+1 for both UDP and TCP.\n         Port numbers must be even.\n     -v: Verbose mode.  Specify -v multiple times for increased verbosity.",
+        "-h": "Usage: udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]\n    or udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]\n     -s: Server mode.  Wait for TCP connections on the port.\n     -c: Client mode.  Connect to the given address.\n     -r: RTP mode.  Connect/listen on ports N and N+1 for both UDP and TCP.\n         Port numbers must be even.\n     -v: Verbose mode.  Specify -v multiple times for increased verbosity.",
+        "help": "udptunnel: You must specify one of -s and -c.",
+        "man": "UDPTunnel(1)                          net                          UDPTunnel(1)\n\nNAME\n     udptunnel - Tunnel UDP packets over a TCP connection\n\nSYNTAX\n     udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]\n     udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]\n\nDESCRIPTION\n     UDPTunnel is a small program which can tunnel UDP packets bi-directionally\n     over a TCP connection. Its primary purpose (and original motivation) is to\n     allow  multi-media  conferences  to  traverse a firewall which allows only\n     outgoing TCP connections.\n\nUSAGE\n     UDPTunnel can be run in two modes: a client mode and a  server  mode.  The\n     client  mode  initiates the TCP connection before relaying UDP; the server\n     waits for an incoming connection before doing so. After the TCP connection\n     is established, the behavior of the two modes is identical. If you are us-\n     ing UDPTunnel to traverse a firewall as discussed above, the client  would\n     be run inside the firewall, and the server would be run outside it.\n\nOPTIONS\n     -s TCP-port\n            Server mode: If udptunnel is invoked with the -s option, it runs in\n            server mode: the server will wait for an incoming connection on the\n            specified TCP port, and then relay UDP to and from it.\"\n\n     -c TCP-addr[/TCP-port]\n            Client mode: If udptunnel is invoked with the -c option, it runs in\n            client  mode:  it  will  open a TCP connection to the specified TCP\n            host and port, and then relay UDP on it. The TCP port may be  omit-\n            ted  in  this  case; it will default to the same port number as the\n            UDP port.\n\n     -r     RTP mode: In order to facilitate tunneling both RTP and RTCP  traf-\n            fic  for  a multi-media conference, this sets up relays on two con-\n            secutive TCP and UDP ports. All specified port numbers in this case\n            must be even. Note that both the client and the server must use the\n            -r flag for this to work; the server will not begin relaying  pack-\n            ets until both its connections have been established.\n\n     -v     Verbose  output:  This flag turns on verbose debugging output about\n            UDPTunnel's actions. It may be given multiple times. With a  single\n            -v,  information  about connection establishment is printed on UDP-\n            Tunnel's standard error stream; with a second one,  per-packet  in-\n            formation  is  also shown. Note that this latter case can produce a\n            prodigious amount of information. If this flag is not  given,  UDP-\n            Tunnel will remain silent unless an error occurs.\n\n     One of the two options -c and -s must be given; if not, it is an error.\n\n     In  all  cases,  the UDP address and port to tunnel is given after all op-\n     tions. UDPTunnel will listen to this address for packets,  and  will  send\n     received  packets on this address. The address may be a multicast address;\n     in this case, a multicast TTL should be specified,  and  tunneled  packets\n     will  be  sent with this TTL. All addresses, TCP and UDP, may be specified\n     either as an IPv4 dotted-quad address (e.g. 224.2.0.1) or as a  host  name\n     (e.g.  conrail.cs.columbia.edu). Port numbers must be in the range of 1 to\n     65535; TTLs must be in the range 0 to 255.\n\nPACKET FORMAT\n     The packets are sent on TCP using  the  obvious,  simple  format:  a  six-\n     teen-bit  length  field, in network byte order, precedes each data packet.\n     This format was proposed in early drafts of RTP for RTP-over-TCP, but  was\n     dropped from the final specification.\n\nKNOWN BUGS/ISSUES\n     UDPTunnel  does not check incoming UDP packets to verify that they are in-\n     deed coming from the address which the user specified;  it  binds  to  IN-\n     ADDR_ANY,  and accepts any UDP packet arriving on the specified port. This\n     could potentially allow denial-of-service or spoofing attacks. If  two  or\n     more  -v  options  are given, per-packet identification will be printed of\n     each packet's source address as it is received, allowing such a  situation\n     to be diagnosed.\n\n     For  multicast,  UDPTunnel  turns off packet loopback, as it has no way to\n     distinguish its own packets it sent out from packets genuinely arriving on\n     the multicast group. This means that if you are tunneling traffic from  or\n     to  a  multicast  group,  both  ends of UDPTunnel must be run on different\n     hosts than any member of the group. (In general, the only way  to  distin-\n     guish  looped  packets from packets genuinely received from other applica-\n     tions on the local host is with application-layer labeling, as RTP does.)\n\n     UDPTunnel is designed to tunnel RTP-style traffic, in  which  applications\n     send and receive UDP packets to and from the same port (or pair of ports).\n     It  does not support request/response-style traffic, in which a client re-\n     quest is sent from a transient port X to a  well-known  port  Y,  and  the\n     server's response is returned from port Y to port X.\n\n     UDPTunnel  deliberately  ignores  \"Connection  Refused\"  errors on the UDP\n     port, clearing the socket error state, so that a tunnel may be set up  be-\n     fore  conferencing  tools  are  started on both ends. This may mean that a\n     mis-typed UDP address or port is not recognized, as no error  is  printed.\n     If two or more -v options are given, a diagnostic will be printed whenever\n     the error state is cleared from the socket.\n\n     Once one endpoint of a tunnel is taken down, closing the socket, the other\n     one exits as well; to re-establish the tunnel, UDPTunnel must be restarted\n     on both sides.\n\n     IP version 6 is not supported.\n\nAUTHORS\n     UDPTunnel  was written by Jonathan Lennox <lennox@cs.columbia.edu>. It in-\n     corporates code written by Henning Schulzrinne <hgs@cs.columbia.edu>.\n\n     This manual page was written by Thomas Scheffczyk  <thomas.scheffczyk@ver-\n     waltung.uni-mainz.de>, for the Debian GNU/Linux system (but may be used by\n     others).\n\nJonathan Lennox                       1.1                          UDPTunnel(1)",
+        "apropos": "udptunnel (1)        - Tunnel UDP packets over a TCP connection"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/udptunnel",
+        "size_bytes": 18512,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a9a0f19136656cfe3426d72f1739614ffb0f2cea, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/udptunnel/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/udptunnel/index.md",
+    "retrieved_at": "2026-07-14T13:08:47+00:00",
+    "sha256": "3af0014ad3bfeb82e91687e51043721520aeec99bf8f884e2273ddff2da4d625"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "37",
+    "maintainer": "Marcos Talau <talau@debian.org>",
+    "architecture": "amd64",
+    "version": "1.1-12+b1",
+    "depends": "libc6 (>= 2.38), libnsl3 (>= 2.0)",
+    "description": "tunnel UDP packets over a TCP connection\nUDPTunnel is a small program which can tunnel UDP packets bi-directionally\nover a TCP connection. Its primary purpose (and original motivation) is to\nallow multi-media conferences to traverse a firewall which allows only\noutgoing TCP connections. UDPTunnel also can be used for security tests in\nnetworks.",
+    "homepage": "http://www1.cs.columbia.edu/~lennox/udptunnel/"
+  },
+  "tags": [
+    "offensive",
+    "udptunnel",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/udptunnel && python3 udptunnel.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/udptunnel && python3 udptunnel.py --help",
+    "cd toolboxes/udptunnel && python3 udptunnel.py --help",
+    "cd toolboxes/udptunnel && python3 udptunnel.py --help",
+    "cd toolboxes/udptunnel && python3 udptunnel.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST udptunnel --output $KFIOSA_OUTPUT_DIR/udptunnel.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST udptunnel --output $KFIOSA_OUTPUT_DIR/udptunnel.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

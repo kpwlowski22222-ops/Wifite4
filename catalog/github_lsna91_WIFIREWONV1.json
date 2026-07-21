@@ -1,0 +1,111 @@
+{
+  "id": "github:lsna91/WIFIREWONV1",
+  "kind": "external_repository",
+  "name": "WIFIREWONV1",
+  "full_name": "lsna91/WIFIREWONV1",
+  "owner": "lsna91",
+  "category": "WiFi Reconnaissance — OUI Enrichment",
+  "url": "https://github.com/lsna91/WIFIREWONV1",
+  "summary": "Repository indexing entry for the ``WIFIREWONV1`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/lsna91__WIFIREWONV1",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "Run on Bruce firmware device (ESP32/Flipper-style): load WIFIRECONv1.js via the Bruce script runner; no CLI args. Not invokable on a host OS."
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "Run on Bruce firmware device (ESP32/Flipper-style): load WIFIRECONv1.js via the Bruce script runner; no CLI args. Not invokable on a host OS."
+      }
+    ]
+  },
+  "language": "JavaScript",
+  "dependencies": [
+    "Bruce firmware JS runtime (wifi, display, keyboard built-in modules)",
+    "No external binaries — no airodump-ng/iw/nmcli/scapy/hcxtools"
+  ],
+  "algorithms": [
+    "Passive WiFi scan via platform wifi.scan() API (no monitor mode, no channel hop)",
+    "OUI vendor lookup via hardcoded 8-char MAC-prefix table (Cisco, Apple, Google, TP-Link, Netgear, etc.)",
+    "Encryption risk classification: OPEN/WEP=critical, WPA/WPA2-mixed/WAPI=warn, else=safe",
+    "Static attack-surface/mitigation reference text keyed to encryption type (e.g. PMKID attack, 4-way handshake)"
+  ],
+  "produces": [
+    "On-device display only: list view of networks grouped FLAGGED/SECURE with SSID, BSSID, encryption type, OUI vendor, risk badges [!!]/[ !]/[ v]",
+    "Detail view: protocol description, static attack-surface summary, mitigation recommendations",
+    "No file/serial/network output; RSSI and stations explicitly unavailable via API"
+  ],
+  "capability_bucket": "oui_enrich",
+  "runnable": false,
+  "novelty": "none — thin wrapper. It does not shell out to airodump-ng/wash/hcxtools/scapy; it calls the Bruce firmware's wifi.scan() and renders results with a hardcoded OUI table and static risk labels. The OUI-enrich + encryption-risk-badge logic is trivial and already covered by airodump-ng output + KFIOSA's OUI enrichment. The only distinctive aspect is the embedded display UI, which is not portable to Kali.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifirewonv1",
+    "lsna91",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/WIFIREWONV1 && python3 WIFIREWONV1.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/WIFIREWONV1 && python3 WIFIREWONV1.py --help",
+    "cd toolboxes/WIFIREWONV1 && python3 WIFIREWONV1.py --help",
+    "cd toolboxes/WIFIREWONV1 && python3 WIFIREWONV1.py --help",
+    "cd toolboxes/WIFIREWONV1 && python3 WIFIREWONV1.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WIFIREWONV1 --output $KFIOSA_OUTPUT_DIR/WIFIREWONV1.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WIFIREWONV1 --output $KFIOSA_OUTPUT_DIR/WIFIREWONV1.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

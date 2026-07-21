@@ -1,0 +1,1302 @@
+{
+  "id": "kali:vboot-utils",
+  "kind": "kali_source_package",
+  "name": "vboot-utils",
+  "title": "vboot-utils",
+  "summary": "### cgpt",
+  "version": "0~R106-15054.B+dfsg-0.1",
+  "architectures": [
+    "amd64",
+    "arm64",
+    "armel",
+    "armhf",
+    "i386"
+  ],
+  "homepage": "https://chromium.googlesource.com/chromiumos/platform/vboot_reference",
+  "repository": "https://salsa.debian.org/debian/vboot-utils",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large"
+  ],
+  "install": {
+    "apt": "sudo apt install vboot-utils"
+  },
+  "packages": [
+    {
+      "name": "cgpt"
+    },
+    {
+      "name": "vboot-kernel-utils"
+    },
+    {
+      "name": "vboot-utils"
+    }
+  ],
+  "commands": [
+    {
+      "name": "cgpt",
+      "description": "Utility to manipulate GPT partitions with Chromium OS extensions",
+      "usage": "cgpt COMMAND [OPTIONS] DRIVE",
+      "arguments": [
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "OPTION - is initiated by a command which tells cgpt the type of opera-",
+          "default": null,
+          "choices": null,
+          "raw": "     -h  OPTION - is initiated by a command which tells cgpt the type of opera-"
+        }
+      ],
+      "raw_help": "root@kali:~# cgpt -h\n \n Usage: cgpt COMMAND [OPTIONS] DRIVE\n \n Supported COMMANDs:\n \n   create           Create or reset GPT headers and tables\n   add              Add, edit or remove a partition entry\n   show             Show partition table and entries\n   repair           Repair damaged GPT headers and tables\n   boot             Edit the PMBR sector for legacy BIOSes\n   find             Locate a partition by its GUID\n   edit             Edit a drive entry\n   prioritize       Reorder the priority of all kernel partitions\n   legacy           Switch between GPT and Legacy GPT\n \n For more detailed usage, use cgpt COMMAND -h",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: cgpt COMMAND [OPTIONS] DRIVE\n\nSupported COMMANDs:\n\n    create           Create or reset GPT headers and tables\n    add              Add, edit or remove a partition entry\n    show             Show partition table and entries\n    repair           Repair damaged GPT headers and tables\n    boot             Edit the PMBR sector for legacy BIOSes\n    find             Locate a partition by its GUID\n    edit             Edit a drive entry\n    prioritize       Reorder the priority of all kernel partitions\n    legacy           Switch between GPT and Legacy GPT\n\nFor more detailed usage, use cgpt COMMAND -h",
+        "-h": "Usage: cgpt COMMAND [OPTIONS] DRIVE\n\nSupported COMMANDs:\n\n    create           Create or reset GPT headers and tables\n    add              Add, edit or remove a partition entry\n    show             Show partition table and entries\n    repair           Repair damaged GPT headers and tables\n    boot             Edit the PMBR sector for legacy BIOSes\n    find             Locate a partition by its GUID\n    edit             Edit a drive entry\n    prioritize       Reorder the priority of all kernel partitions\n    legacy           Switch between GPT and Legacy GPT\n\nFor more detailed usage, use cgpt COMMAND -h",
+        "help": "Usage: cgpt COMMAND [OPTIONS] DRIVE\n\nSupported COMMANDs:\n\n    create           Create or reset GPT headers and tables\n    add              Add, edit or remove a partition entry\n    show             Show partition table and entries\n    repair           Repair damaged GPT headers and tables\n    boot             Edit the PMBR sector for legacy BIOSes\n    find             Locate a partition by its GUID\n    edit             Edit a drive entry\n    prioritize       Reorder the priority of all kernel partitions\n    legacy           Switch between GPT and Legacy GPT\n\nFor more detailed usage, use cgpt COMMAND -h",
+        "man": "CGPT(1)                  System Administration Commands                 CGPT(1)\n\nNAME\n     cgpt - Utility to manipulate GPT partitions with Chromium OS extensions\n\nSYNOPSIS\n     cgpt COMMAND [OPTIONS] DRIVE\n\nDESCRIPTION\n     Cgpt is a tool to manipulate a GUID Partition Table from the command line.\n     Although  several  other utilities exist for the same basic purpose - some\n     with more features and a captive user interface - cgpt is unique  in  that\n     it  also  supports Chromium OS extensions. These extensions are not gener-\n     ally useful; they are specific  to  the  u-boot  firmware  found  on  some\n     Chromebooks. They may be used to change priority for kernel partitions and\n     give  other  hints to u-boot Chromebook firmware. Use this utility only to\n     manipulate a partition table for compatible Chromebooks.\n\nCOMMANDS\n     Each action performed by this program - with the notable exception of  the\n     -h  OPTION - is initiated by a command which tells cgpt the type of opera-\n     tion to perform. All available commands are described below.\n\n     create Create or reset GPT headers and tables.\n\n     add    Add, edit, or remove a partition entry.\n\n     show   Show the partition table and entries.\n\n     repair Repair damaged GPT headers and tables.\n\n     boot   Edit the PMBR sector for legacy BIOSes.\n\n            If no BOOT OPTIONS are specified, this command will just print  the\n            PMBR boot GUID.\n\n     find   Find a partition by its GUID.\n\n            If  no DRIVE is specified, this command will scan all physical dri-\n            ves for a match.\n\n     prioritize\n            Reorder the priority of all ChromeOS kernel partitions.\n\n            If no options are specified, this command will set the  lowest  ac-\n            tive kernel to priority 1 while maintaining the original order.\n\n     legacy Switch between GPT and Legacy GPT.\n\nGENERAL OPTIONS\n     The  options described in this section apply to every COMMAND supported by\n     this program.\n\n     -h     For more detailed usage, use cgpt COMMAND -h\n\nEXAMPLES\n     The following examples demonstrate valid syntax only. It is up to  you  to\n     interpret them based on the documentation in this manual.\n\n     cgpt show /dev/mmcblk0\n     cgpt create /dev/mmcblk0\n     cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0\n     cgpt add -i 1 -t data -l \"STATE\" /dev/mmcblk0\n     cgpt add -i 2 -t kernel -l \"KERN-A\" /dev/mmcblk0\n     cgpt add -i 3 -t rootfs -l \"ROOT-A\" /dev/mmcblk0\n\nAUTHOR\n     This  manual  page  was written by Karl Lenz <xorangekiller@gmail.com> for\n     the Debian project (but may be used by others).\n\nCOPYRIGHT\n     Cgpt is copyright 2010-2013, The Chromium OS Authors\n     This manual page is copyright 2014, Karl Lenz\n\n     Copying and distribution of this file, with or without  modification,  are\n     permitted  in any medium without royalty provided the copyright notice and\n     this notice are preserved.\n\n     Cgpt is provided \"as is\" with no warranty. The exact terms under which you\n     may use and (re)distribute this program are detailed in the  BSD  3-Clause\n     License,  which  is  distributed with this program in the LICENSE file. On\n     Debian systems, the complete text of the BSD 3-Clause License can be found\n     in /usr/share/common-licenses/BSD.\n\nSEE ALSO\n     parted(8), gdisk(8), gptsync(8)\n\ncgpt                              January 2014                          CGPT(1)",
+        "apropos": "cgpt (1)             - Utility to manipulate GPT partitions with Chromium OS ...\nTIOCGPTLCK (2const)  - pseudoterminal ioctls\nTIOCGPTPEER (2const) - pseudoterminal ioctls"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/cgpt",
+        "size_bytes": 67952,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c6e53eefd1d2ba2a17efc4860586980ff8b4af72, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "futility",
+      "description": "Unified firmware utility",
+      "usage": "futility [options] COMMAND [args...]",
+      "arguments": [
+        {
+          "flags": [
+            "--vb1"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use only vboot v1.0 binary formats",
+          "default": null,
+          "choices": null,
+          "raw": " --vb1        Use only vboot v1.0 binary formats"
+        },
+        {
+          "flags": [
+            "--vb21"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use only vboot v2.1 binary formats",
+          "default": null,
+          "choices": null,
+          "raw": " --vb21       Use only vboot v2.1 binary formats"
+        },
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be noisy about what's going on",
+          "default": null,
+          "choices": null,
+          "raw": " --debug      Be noisy about what's going on"
+        }
+      ],
+      "raw_help": "root@kali:~# futility --help\n \n Usage: futility [options] COMMAND [args...]\n \n This is the unified firmware utility, which will eventually replace\n most of the distinct verified boot tools formerly produced by the\n vboot_reference package.\n \n When symlinked under the name of one of those previous tools, it should\n fully implement the original behavior. It can also be invoked directly\n as futility, followed by the original name as the first argument.\n \n Global options:\n \n --vb1        Use only vboot v1.0 binary formats\n --vb21       Use only vboot v2.1 binary formats\n --debug      Be noisy about what's going on\n \n The following commands are built-in:\n \n create               Create a keypair from an RSA .pem file\n dump_fmap            Display FMAP contents from a firmware image\n dump_kernel_config   Prints the kernel command line\n gbb                  Manipulate the Google Binary Block (GBB)\n gbb_utility          Legacy name for `gbb` command\n gscvd                Create RO verification structure\n help                 Show a bit of help (you're looking at it)\n load_fmap            Replace the contents of specified FMAP areas\n pcr                  Simulate a TPM PCR extension operation\n show                 Display the content of various binary components\n sign                 Sign / resign various binary components\n update               Update system firmware\n validate_rec_mrc     Validates content of Recovery MRC cache\n vbutil_firmware      Verified boot firmware utility\n vbutil_kernel        Creates, signs, and verifies the kernel partition\n vbutil_key           Wraps RSA keys with vboot headers\n vbutil_keyblock      Creates, signs, and verifies a keyblock\n verify               Verify the signatures of various binary components. This does not verify GSCVD contents.\n version              Show the futility source revision and build date\n \n Use \"futility help COMMAND\" for more information.",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: futility [options] COMMAND [args...]\n\nThis is the unified firmware utility, which will eventually replace\nmost of the distinct verified boot tools formerly produced by the\nvboot_reference package.\n\nWhen symlinked under the name of one of those previous tools, it should\nfully implement the original behavior. It can also be invoked directly\nas futility, followed by the original name as the first argument.\n\nGlobal options:\n\n  --vb1        Use only vboot v1.0 binary formats\n  --vb21       Use only vboot v2.1 binary formats\n  --debug      Be noisy about what's going on\n\nThe following commands are built-in:\n\n  create               Create a keypair from an RSA .pem file\n  dump_fmap            Display FMAP contents from a firmware image\n  dump_kernel_config   Prints the kernel command line\n  gbb                  Manipulate the Google Binary Block (GBB)\n  gbb_utility          Legacy name for `gbb` command\n  gscvd                Create RO verification structure\n  help                 Show a bit of help (you're looking at it)\n  load_fmap            Replace the contents of specified FMAP areas\n  pcr                  Simulate a TPM PCR extension operation\n  show                 Display the content of various binary components\n  sign                 Sign / resign various binary components\n  update               Update system firmware\n  validate_rec_mrc     Validates content of Recovery MRC cache\n  vbutil_firmware      Verified boot firmware utility\n  vbutil_kernel        Creates, signs, and verifies the kernel partition\n  vbutil_key           Wraps RSA keys with vboot headers\n  vbutil_keyblock      Creates, signs, and verifies a keyblock\n  verify               Verify the signatures of various binary components. This does not verify GSCVD contents.\n  version              Show the futility source revision and build date\n\nUse \"futility help COMMAND\" for more information.",
+        "-h": "Usage: futility [options] COMMAND [args...]\n\nThis is the unified firmware utility, which will eventually replace\nmost of the distinct verified boot tools formerly produced by the\nvboot_reference package.\n\nWhen symlinked under the name of one of those previous tools, it should\nfully implement the original behavior. It can also be invoked directly\nas futility, followed by the original name as the first argument.\n\nGlobal options:\n\n  --vb1        Use only vboot v1.0 binary formats\n  --vb21       Use only vboot v2.1 binary formats\n  --debug      Be noisy about what's going on\n\nThe following commands are built-in:\n\n  create               Create a keypair from an RSA .pem file\n  dump_fmap            Display FMAP contents from a firmware image\n  dump_kernel_config   Prints the kernel command line\n  gbb                  Manipulate the Google Binary Block (GBB)\n  gbb_utility          Legacy name for `gbb` command\n  gscvd                Create RO verification structure\n  help                 Show a bit of help (you're looking at it)\n  load_fmap            Replace the contents of specified FMAP areas\n  pcr                  Simulate a TPM PCR extension operation\n  show                 Display the content of various binary components\n  sign                 Sign / resign various binary components\n  update               Update system firmware\n  validate_rec_mrc     Validates content of Recovery MRC cache\n  vbutil_firmware      Verified boot firmware utility\n  vbutil_kernel        Creates, signs, and verifies the kernel partition\n  vbutil_key           Wraps RSA keys with vboot headers\n  vbutil_keyblock      Creates, signs, and verifies a keyblock\n  verify               Verify the signatures of various binary components. This does not verify GSCVD contents.\n  version              Show the futility source revision and build date\n\nUse \"futility help COMMAND\" for more information.",
+        "help": "Usage: futility [options] COMMAND [args...]\n\nThis is the unified firmware utility, which will eventually replace\nmost of the distinct verified boot tools formerly produced by the\nvboot_reference package.\n\nWhen symlinked under the name of one of those previous tools, it should\nfully implement the original behavior. It can also be invoked directly\nas futility, followed by the original name as the first argument.\n\nGlobal options:\n\n  --vb1        Use only vboot v1.0 binary formats\n  --vb21       Use only vboot v2.1 binary formats\n  --debug      Be noisy about what's going on\n\nThe following commands are built-in:\n\n  create               Create a keypair from an RSA .pem file\n  dump_fmap            Display FMAP contents from a firmware image\n  dump_kernel_config   Prints the kernel command line\n  gbb                  Manipulate the Google Binary Block (GBB)\n  gbb_utility          Legacy name for `gbb` command\n  gscvd                Create RO verification structure\n  help                 Show a bit of help (you're looking at it)\n  load_fmap            Replace the contents of specified FMAP areas\n  pcr                  Simulate a TPM PCR extension operation\n  show                 Display the content of various binary components\n  sign                 Sign / resign various binary components\n  update               Update system firmware\n  validate_rec_mrc     Validates content of Recovery MRC cache\n  vbutil_firmware      Verified boot firmware utility\n  vbutil_kernel        Creates, signs, and verifies the kernel partition\n  vbutil_key           Wraps RSA keys with vboot headers\n  vbutil_keyblock      Creates, signs, and verifies a keyblock\n  verify               Verify the signatures of various binary components. This does not verify GSCVD contents.\n  version              Show the futility source revision and build date\n\nUse \"futility help COMMAND\" for more information.",
+        "man": "FUTILITY(1)                      User Commands                      FUTILITY(1)\n\nNAME\n     futility - Unified firmware utility\n\nSYNOPSIS\n     futility [options] COMMAND [args...]\n\nDESCRIPTION\n     futility  is  the  unified firmware utility, which will eventually replace\n     most of  the  distinct  verified  boot  tools  formerly  produced  by  the\n     vboot_reference package.\n\n     When  symlinked  under  the name of one of those previous tools, it should\n     fully implement the original behavior. It can also be invoked directly  as\n     futility, followed by the original name as the first argument.\n\n     Global options:\n\n     --vb1  Use only vboot v1.0 binary formats\n\n     --vb21\n            Use only vboot v2.1 binary formats\n\n     --debug\n            Be noisy about what's going on\n\n     The following commands are built-in:\n\n     create\n            Create a keypair from an RSA .pem file\n\n     dump_fmap\n            Display FMAP contents from a firmware image\n\n     dump_kernel_config\n            Prints the kernel command line\n\n     gbb_utility\n            Manipulate the Google Binary Block (GBB)\n\n     help   Show a bit of help (you're looking at it)\n\n     load_fmap\n            Replace the contents of specified FMAP areas\n\n     pcr    Simulate a TPM PCR extension operation\n\n     show   Display the content of various binary components\n\n     sign   Sign / resign various binary components\n\n     vbutil_firmware\n            Verified boot firmware utility\n\n     vbutil_kernel\n            Creates, signs, and verifies the kernel partition\n\n     vbutil_key\n            Wraps RSA keys with vboot headers\n\n     vbutil_keyblock\n            Creates, signs, and verifies a keyblock\n\n     verify\n            Verify the signatures of various binary components\n\n     version\n            Show the futility source revision and build date\n\n     Use \"futility help COMMAND\" for more information.\n\n     Usage: futility [options] COMMAND [args...]\n\n     This  is  the unified firmware utility, which will eventually replace most\n     of the distinct verified boot tools formerly produced by the  vboot_refer-\n     ence package.\n\n     When  symlinked  under  the name of one of those previous tools, it should\n     fully implement the original behavior. It can also be invoked directly  as\n     futility, followed by the original name as the first argument.\n\n     Global options:\n\n     --vb1  Use only vboot v1.0 binary formats\n\n     --vb21\n            Use only vboot v2.1 binary formats\n\n     --debug\n            Be noisy about what's going on\n\n     The following commands are built-in:\n\n     create\n            Create a keypair from an RSA .pem file\n\n     dump_fmap\n            Display FMAP contents from a firmware image\n\n     dump_kernel_config\n            Prints the kernel command line\n\n     gbb_utility\n            Manipulate the Google Binary Block (GBB)\n\n     help   Show a bit of help (you're looking at it)\n\n     load_fmap\n            Replace the contents of specified FMAP areas\n\n     pcr    Simulate a TPM PCR extension operation\n\n     show   Display the content of various binary components\n\n     sign   Sign / resign various binary components\n\n     vbutil_firmware\n            Verified boot firmware utility\n\n     vbutil_kernel\n            Creates, signs, and verifies the kernel partition\n\n     vbutil_key\n            Wraps RSA keys with vboot headers\n\n     vbutil_keyblock\n            Creates, signs, and verifies a keyblock\n\n     verify\n            Verify the signatures of various binary components\n\n     version\n            Show the futility source revision and build date\n\n     Use \"futility help COMMAND\" for more information.\n\nSEE ALSO\n     The full documentation for futility is maintained as a Texinfo manual.  If\n     the  info  and  futility programs are properly installed at your site, the\n     command\n\n            info futility\n\n     should give you access to the complete manual.\n\nfutility                            May 2016                        FUTILITY(1)",
+        "apropos": "futility (1)         - Unified firmware utility"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/futility",
+        "size_bytes": 293872,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=2b40a5818f75d2b8665641f24a4bf083811ac085, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "vbutil_kernel",
+      "description": "Utility to sign custom kernels to boot with Chrome OS devices",
+      "usage": "futility vbutil_kernel --pack <file> [PARAMETERS]",
+      "arguments": [
+        {
+          "flags": [
+            "--keyblock"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Keyblock in .keyblock format",
+          "default": null,
+          "choices": null,
+          "raw": "   --keyblock <file>         Keyblock in .keyblock format"
+        },
+        {
+          "flags": [
+            "--signprivate"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Private key to sign kernel data,",
+          "default": null,
+          "choices": null,
+          "raw": "   --signprivate <file>      Private key to sign kernel data,"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Kernel version",
+          "default": null,
+          "choices": null,
+          "raw": "   --version <number>        Kernel version"
+        },
+        {
+          "flags": [
+            "--vmlinuz"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Linux kernel bzImage file",
+          "default": null,
+          "choices": null,
+          "raw": "   --vmlinuz <file>          Linux kernel bzImage file"
+        },
+        {
+          "flags": [
+            "--bootloader"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Bootloader stub",
+          "default": null,
+          "choices": null,
+          "raw": "   --bootloader <file>       Bootloader stub"
+        },
+        {
+          "flags": [
+            "--config"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Command line file",
+          "default": null,
+          "choices": null,
+          "raw": "   --config <file>           Command line file"
+        },
+        {
+          "flags": [
+            "--arch"
+          ],
+          "metavar": "arch",
+          "takes_value": true,
+          "description": "Cpu architecture (default x86)",
+          "default": "x86",
+          "choices": null,
+          "raw": "   --arch <arch>             Cpu architecture (default x86)"
+        },
+        {
+          "flags": [
+            "--kloadaddr"
+          ],
+          "metavar": "address",
+          "takes_value": true,
+          "description": "Assign kernel body load address",
+          "default": null,
+          "choices": null,
+          "raw": "   --kloadaddr <address>     Assign kernel body load address"
+        },
+        {
+          "flags": [
+            "--pad"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Verification padding size in bytes",
+          "default": null,
+          "choices": null,
+          "raw": "   --pad <number>            Verification padding size in bytes"
+        },
+        {
+          "flags": [
+            "--vblockonly"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Emit just the verification blob",
+          "default": null,
+          "choices": null,
+          "raw": "   --vblockonly              Emit just the verification blob"
+        },
+        {
+          "flags": [
+            "--flags"
+          ],
+          "metavar": "NUM",
+          "takes_value": true,
+          "description": "Flags to be passed in the header",
+          "default": null,
+          "choices": null,
+          "raw": "   --flags NUM               Flags to be passed in the header"
+        },
+        {
+          "flags": [
+            "--oldblob"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Previously packed kernel blob",
+          "default": null,
+          "choices": null,
+          "raw": "   --oldblob <file>          Previously packed kernel blob"
+        },
+        {
+          "flags": [
+            "--signpubkey"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Public key to verify kernel keyblock,",
+          "default": null,
+          "choices": null,
+          "raw": "   --signpubkey <file>       Public key to verify kernel keyblock,"
+        },
+        {
+          "flags": [
+            "--verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print a more detailed report",
+          "default": null,
+          "choices": null,
+          "raw": "   --verbose                 Print a more detailed report"
+        },
+        {
+          "flags": [
+            "--minversion"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Minimum combined kernel key version",
+          "default": null,
+          "choices": null,
+          "raw": "   --minversion <number>     Minimum combined kernel key version"
+        },
+        {
+          "flags": [
+            "--vmlinuz-out"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "vmlinuz image output file",
+          "default": null,
+          "choices": null,
+          "raw": "   --vmlinuz-out <file>      vmlinuz image output file"
+        }
+      ],
+      "raw_help": "root@kali:~# vbutil_kernel --help\n \n Usage:  futility vbutil_kernel --pack <file> [PARAMETERS]\n \n Required parameters:\n   --keyblock <file>         Keyblock in .keyblock format\n   --signprivate <file>      Private key to sign kernel data,\n                               in .vbprivk format\n   --version <number>        Kernel version\n   --vmlinuz <file>          Linux kernel bzImage file\n   --bootloader <file>       Bootloader stub\n   --config <file>           Command line file\n   --arch <arch>             Cpu architecture (default x86)\n \n Optional:\n   --kloadaddr <address>     Assign kernel body load address\n   --pad <number>            Verification padding size in bytes\n   --vblockonly              Emit just the verification blob\n   --flags NUM               Flags to be passed in the header\n \n OR\n \n Usage:  futility vbutil_kernel --repack <file> [PARAMETERS]\n \n Required parameters:\n   --signprivate <file>      Private key to sign kernel data,\n                               in .vbprivk format\n   --oldblob <file>          Previously packed kernel blob\n                               (including verification blob)\n \n Optional:\n   --keyblock <file>         Keyblock in .keyblock format\n   --config <file>           New command line file\n   --version <number>        Kernel version\n   --kloadaddr <address>     Assign kernel body load address\n   --pad <number>            Verification blob size in bytes\n   --vblockonly              Emit just the verification blob\n \n OR\n \n Usage:  futility vbutil_kernel --verify <file> [PARAMETERS]\n \n Optional:\n   --signpubkey <file>       Public key to verify kernel keyblock,\n                               in .vbpubk format\n   --verbose                 Print a more detailed report\n   --keyblock <file>         Outputs the verified keyblock,\n                               in .keyblock format\n   --pad <number>            Verification padding size in bytes\n   --minversion <number>     Minimum combined kernel key version\n \n OR\n \n Usage:  futility vbutil_kernel --get-vmlinuz <file> [PARAMETERS]\n \n Required parameters:\n   --vmlinuz-out <file>      vmlinuz image output file",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:  futility vbutil_kernel --pack <file> [PARAMETERS]\n\n  Required parameters:\n    --keyblock <file>         Keyblock in .keyblock format\n    --signprivate <file>      Private key to sign kernel data,\n                                in .vbprivk format\n    --version <number>        Kernel version\n    --vmlinuz <file>          Linux kernel bzImage file\n    --bootloader <file>       Bootloader stub\n    --config <file>           Command line file\n    --arch <arch>             Cpu architecture (default x86)\n\n  Optional:\n    --kloadaddr <address>     Assign kernel body load address\n    --pad <number>            Verification padding size in bytes\n    --vblockonly              Emit just the verification blob\n    --flags NUM               Flags to be passed in the header\n\nOR\n\nUsage:  futility vbutil_kernel --repack <file> [PARAMETERS]\n\n  Required parameters:\n    --signprivate <file>      Private key to sign kernel data,\n                                in .vbprivk format\n    --oldblob <file>          Previously packed kernel blob\n                                (including verification blob)\n\n  Optional:\n    --keyblock <file>         Keyblock in .keyblock format\n    --config <file>           New command line file\n    --version <number>        Kernel version\n    --kloadaddr <address>     Assign kernel body load address\n    --pad <number>            Verification blob size in bytes\n    --vblockonly              Emit just the verification blob\n\nOR\n\nUsage:  futility vbutil_kernel --verify <file> [PARAMETERS]\n\n  Optional:\n    --signpubkey <file>       Public key to verify kernel keyblock,\n                                in .vbpubk format\n    --verbose                 Print a more detailed report\n    --keyblock <file>         Outputs the verified keyblock,\n                                in .keyblock format\n    --pad <number>            Verification padding size in bytes\n    --minversion <number>     Minimum combined kernel key version\n\nOR\n\nUsage:  futility vbutil_kernel --get-vmlinuz <file> [PARAMETERS]\n\n  Required parameters:\n    --vmlinuz-out <file>      vmlinuz image output file",
+        "-h": "Usage:  futility vbutil_kernel --pack <file> [PARAMETERS]\n\n  Required parameters:\n    --keyblock <file>         Keyblock in .keyblock format\n    --signprivate <file>      Private key to sign kernel data,\n                                in .vbprivk format\n    --version <number>        Kernel version\n    --vmlinuz <file>          Linux kernel bzImage file\n    --bootloader <file>       Bootloader stub\n    --config <file>           Command line file\n    --arch <arch>             Cpu architecture (default x86)\n\n  Optional:\n    --kloadaddr <address>     Assign kernel body load address\n    --pad <number>            Verification padding size in bytes\n    --vblockonly              Emit just the verification blob\n    --flags NUM               Flags to be passed in the header\n\nOR\n\nUsage:  futility vbutil_kernel --repack <file> [PARAMETERS]\n\n  Required parameters:\n    --signprivate <file>      Private key to sign kernel data,\n                                in .vbprivk format\n    --oldblob <file>          Previously packed kernel blob\n                                (including verification blob)\n\n  Optional:\n    --keyblock <file>         Keyblock in .keyblock format\n    --config <file>           New command line file\n    --version <number>        Kernel version\n    --kloadaddr <address>     Assign kernel body load address\n    --pad <number>            Verification blob size in bytes\n    --vblockonly              Emit just the verification blob\n\nOR\n\nUsage:  futility vbutil_kernel --verify <file> [PARAMETERS]\n\n  Optional:\n    --signpubkey <file>       Public key to verify kernel keyblock,\n                                in .vbpubk format\n    --verbose                 Print a more detailed report\n    --keyblock <file>         Outputs the verified keyblock,\n                                in .keyblock format\n    --pad <number>            Verification padding size in bytes\n    --minversion <number>     Minimum combined kernel key version\n\nOR\n\nUsage:  futility vbutil_kernel --get-vmlinuz <file> [PARAMETERS]\n\n  Required parameters:\n    --vmlinuz-out <file>      vmlinuz image output file",
+        "help": "Usage:  futility vbutil_kernel --pack <file> [PARAMETERS]\n\n  Required parameters:\n    --keyblock <file>         Keyblock in .keyblock format\n    --signprivate <file>      Private key to sign kernel data,\n                                in .vbprivk format\n    --version <number>        Kernel version\n    --vmlinuz <file>          Linux kernel bzImage file\n    --bootloader <file>       Bootloader stub\n    --config <file>           Command line file\n    --arch <arch>             Cpu architecture (default x86)\n\n  Optional:\n    --kloadaddr <address>     Assign kernel body load address\n    --pad <number>            Verification padding size in bytes\n    --vblockonly              Emit just the verification blob\n    --flags NUM               Flags to be passed in the header\n\nOR\n\nUsage:  futility vbutil_kernel --repack <file> [PARAMETERS]\n\n  Required parameters:\n    --signprivate <file>      Private key to sign kernel data,\n                                in .vbprivk format\n    --oldblob <file>          Previously packed kernel blob\n                                (including verification blob)\n\n  Optional:\n    --keyblock <file>         Keyblock in .keyblock format\n    --config <file>           New command line file\n    --version <number>        Kernel version\n    --kloadaddr <address>     Assign kernel body load address\n    --pad <number>            Verification blob size in bytes\n    --vblockonly              Emit just the verification blob\n\nOR\n\nUsage:  futility vbutil_kernel --verify <file> [PARAMETERS]\n\n  Optional:\n    --signpubkey <file>       Public key to verify kernel keyblock,\n                                in .vbpubk format\n    --verbose                 Print a more detailed report\n    --keyblock <file>         Outputs the verified keyblock,\n                                in .keyblock format\n    --pad <number>            Verification padding size in bytes\n    --minversion <number>     Minimum combined kernel key version\n\nOR\n\nUsage:  futility vbutil_kernel --get-vmlinuz <file> [PARAMETERS]\n\n  Required parameters:\n    --vmlinuz-out <file>      vmlinuz image output file",
+        "man": "VBUTIL_KERNEL(1)                 User Commands                 VBUTIL_KERNEL(1)\n\nNAME\n     vbutil_kernel  - Utility to sign custom kernels to boot with Chrome OS de-\n     vices\n\nSYNOPSIS\n     futility /usr/bin/vbutil_kernel --pack <file> [PARAMETERS]\n\nDESCRIPTION\n            Required parameters:\n\n     --keyblock <file>\n            Key block in .keyblock format\n\n     --signprivate <file>\n            Private key to sign kernel data, in .vbprivk format\n\n     --version <number>\n            Kernel version\n\n     --vmlinuz <file>\n            Linux kernel bzImage file\n\n     --bootloader <file>\n            Bootloader stub\n\n     --config <file>\n            Command line file\n\n     --arch <arch>\n            Cpu architecture (default x86)\n\n            Optional:\n\n     --kloadaddr <address>\n            Assign kernel body load address\n\n     --pad <number>\n            Verification padding size in bytes\n\n     --vblockonly\n            Emit just the verification blob\n\n     --flags NUM\n            Flags to be passed in the header\n\n     OR\n\n     Usage:  futility /usr/bin/vbutil_kernel --repack <file> [PARAMETERS]\n\n            Required parameters:\n\n     --signprivate <file>\n            Private key to sign kernel data, in .vbprivk format\n\n     --oldblob <file>\n            Previously packed kernel blob (including verification blob)\n\n            Optional:\n\n     --keyblock <file>\n            Key block in .keyblock format\n\n     --config <file>\n            New command line file\n\n     --version <number>\n            Kernel version\n\n     --kloadaddr <address>\n            Assign kernel body load address\n\n     --pad <number>\n            Verification blob size in bytes\n\n     --vblockonly\n            Emit just the verification blob\n\n     OR\n\n     Usage:  futility /usr/bin/vbutil_kernel --verify <file> [PARAMETERS]\n\n            Optional:\n\n     --signpubkey <file>\n            Public key to verify kernel keyblock, in .vbpubk format\n\n     --verbose\n            Print a more detailed report\n\n     --keyblock <file>\n            Outputs the verified key block, in .keyblock format\n\n     --pad <number>\n            Verification padding size in bytes\n\n     --minversion <number>\n            Minimum combined kernel key version\n\n     OR\n\n     Usage:  futility /usr/bin/vbutil_kernel --get-vmlinuz <file> [PARAMETERS]\n\n            Required parameters:\n\n     --vmlinuz-out <file>\n            vmlinuz image output file\n\n     Usage:  futility /usr/bin/vbutil_kernel --pack <file> [PARAMETERS]\n\n            Required parameters:\n\n     --keyblock <file>\n            Key block in .keyblock format\n\n     --signprivate <file>\n            Private key to sign kernel data, in .vbprivk format\n\n     --version <number>\n            Kernel version\n\n     --vmlinuz <file>\n            Linux kernel bzImage file\n\n     --bootloader <file>\n            Bootloader stub\n\n     --config <file>\n            Command line file\n\n     --arch <arch>\n            Cpu architecture (default x86)\n\n            Optional:\n\n     --kloadaddr <address>\n            Assign kernel body load address\n\n     --pad <number>\n            Verification padding size in bytes\n\n     --vblockonly\n            Emit just the verification blob\n\n     --flags NUM\n            Flags to be passed in the header\n\n     OR\n\n     Usage:  futility /usr/bin/vbutil_kernel --repack <file> [PARAMETERS]\n\n            Required parameters:\n\n     --signprivate <file>\n            Private key to sign kernel data, in .vbprivk format\n\n     --oldblob <file>\n            Previously packed kernel blob (including verification blob)\n\n            Optional:\n\n     --keyblock <file>\n            Key block in .keyblock format\n\n     --config <file>\n            New command line file\n\n     --version <number>\n            Kernel version\n\n     --kloadaddr <address>\n            Assign kernel body load address\n\n     --pad <number>\n            Verification blob size in bytes\n\n     --vblockonly\n            Emit just the verification blob\n\n     OR\n\n     Usage:  futility /usr/bin/vbutil_kernel --verify <file> [PARAMETERS]\n\n            Optional:\n\n     --signpubkey <file>\n            Public key to verify kernel keyblock, in .vbpubk format\n\n     --verbose\n            Print a more detailed report\n\n     --keyblock <file>\n            Outputs the verified key block, in .keyblock format\n\n     --pad <number>\n            Verification padding size in bytes\n\n     --minversion <number>\n            Minimum combined kernel key version\n\n     OR\n\n     Usage:  futility /usr/bin/vbutil_kernel --get-vmlinuz <file> [PARAMETERS]\n\n            Required parameters:\n\n     --vmlinuz-out <file>\n            vmlinuz image output file\n\nvbutil_kernel                       May 2016                   VBUTIL_KERNEL(1)",
+        "apropos": "vbutil_kernel (1)    - Utility to sign custom kernels to boot with Chrome OS ..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/vbutil_kernel",
+        "size_bytes": 293872,
+        "is_symlink": true,
+        "real_path": "/usr/bin/futility",
+        "file_type": "symbolic link to futility"
+      }
+    },
+    {
+      "name": "chromeos-tpm-recovery",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# chromeos-tpm-recovery -h\n ERROR: You must put a test image on a USB stick and boot it in recovery mode (this means Esc+Refresh+Power, *not* Ctrl-U!) to run this\n exiting",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "ERROR: You must put a test image on a USB stick and boot it in recovery mode (this means Esc+Refresh+Power, *not* Ctrl-U!) to run this\nexiting",
+        "-h": "ERROR: You must put a test image on a USB stick and boot it in recovery mode (this means Esc+Refresh+Power, *not* Ctrl-U!) to run this\nexiting",
+        "help": "ERROR: You must put a test image on a USB stick and boot it in recovery mode (this means Esc+Refresh+Power, *not* Ctrl-U!) to run this\nexiting"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/chromeos-tpm-recovery",
+        "size_bytes": 5682,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "crossystem",
+      "description": "Chrome OS firmware/system interface utility",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "--all"
+          ],
+          "metavar": "is specified prints even normally hidden fields.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "            --all is specified, prints even normally hidden fields."
+        }
+      ],
+      "raw_help": "root@kali:~# crossystem -h\n Usage:\n crossystem [--all]\n   Prints all parameters with descriptions and current values.\n   If --all is specified, prints even normally hidden fields.\n crossystem [param1 [param2 [...]]]\n   Prints the current value(s) of the parameter(s).\n crossystem [param1=value1] [param2=value2 [...]]]\n   Sets the parameter(s) to the specified value(s).\n crossystem [param1?value1] [param2?value2 [...]]]\n   Checks if the parameter(s) all contain the specified value(s).\n   Stops at the first error.\n \n Valid parameters:\n arch                     [RO/str] Platform architecture\n backup_nvram_request     [RW/int] Backup the nvram somewhere at the next boot. Cleared on success.\n battery_cutoff_request   [RW/int] Cut off battery and shutdown on next boot\n block_devmode            [RW/int] Block all use of developer mode\n clear_tpm_owner_done     [RW/int] Clear TPM owner done\n clear_tpm_owner_request  [RW/int] Clear TPM owner on next boot\n cros_debug               [RO/int] OS should allow debug features\n dbg_reset                [RW/int] Debug reset mode request\n debug_build              [RO/int] OS image built for debug features\n dev_boot_altfw           [RW/int] Enable developer mode alternate bootloader\n dev_boot_signed_only     [RW/int] Enable developer mode boot only from official kernels\n dev_boot_usb             [RW/int] Enable developer mode boot from external disk (USB/SD)\n dev_default_boot         [RW/str] Default boot from disk, altfw or usb\n dev_enable_udc           [RW/int] Enable USB Device Controller\n devsw_boot               [RO/int] Developer switch position at boot\n devsw_cur                [RO/int] Developer switch current position\n diagnostic_request       [RW/int] Request diagnostic rom run on next boot\n disable_dev_request      [RW/int] Disable virtual dev-mode on next boot\n ecfw_act                 [RO/str] Active EC firmware\n post_ec_sync_delay       [RW/int] Short delay after EC software sync (persistent, writable, eve only)\n fw_prev_result           [RO/str] Firmware result of previous boot\n fw_prev_tried            [RO/str] Firmware tried on previous boot (A or B)\n fw_result                [RW/str] Firmware result this boot\n fw_tried                 [RO/str] Firmware tried this boot (A or B)\n fw_try_count             [RW/int] Number of times to try fw_try_next\n fw_try_next              [RW/str] Firmware to try next (A or B)\n fw_vboot2                [RO/int] 1 if firmware was selected by vboot2 or 0 otherwise\n fwb_tries                [RW/int] Try firmware B count\n fwid                     [RO/str] Active firmware ID\n fwupdate_tries           [RW/int] Times to try OS firmware update (inside kern_nv)\n hwid                     [RO/str] Hardware ID\n inside_vm                [RO/int] Running in a VM?\n kern_nv                  [RO/int] Non-volatile field for kernel use\n kernel_max_rollforward   [RW/int] Max kernel version to store into TPM\n kernkey_vfy              [RO/str] Type of verification done on kernel keyblock\n loc_idx                  [RW/int] Localization index for firmware screens\n mainfw_act               [RO/str] Active main firmware\n mainfw_type              [RO/str] Active main firmware type\n minios_priority          [RW/str] miniOS image to try first (A or B)\n nvram_cleared            [RW/int] Have NV settings been lost?  Write 0 to clear\n display_request          [RW/int] Should we initialize the display at boot?\n phase_enforcement        [RO/int] Board should have full security settings applied\n recovery_reason          [RO/int] Recovery mode reason for current boot\n recovery_request         [RW/int] Recovery mode request\n recovery_subcode         [RW/int] Recovery reason subcode\n recoverysw_boot          [RO/int] Recovery switch position at boot\n recoverysw_cur           [RO/int] Recovery switch current position\n recoverysw_ec_boot       [RO/int] Recovery switch position at EC boot\n ro_fwid                  [RO/str] Read-only firmware ID\n tpm_attack               [RW/int] TPM was interrupted since this flag was cleared\n tpm_fwver                [RO/int] Firmware version stored in TPM\n tpm_kernver              [RO/int] Kernel version stored in TPM\n tpm_rebooted             [RO/int] TPM requesting repeated reboot\n tried_fwb                [RO/int] Tried firmware B before A this boot\n try_ro_sync              [RO/int] try read only software sync\n vdat_flags               [RO/int] Flags from VbSharedData\n vdat_lfdebug             [RO/str] LoadFirmware() debug data (not in print-all)\n wipeout_request          [RW/int] Firmware requested factory reset (wipeout)\n wpsw_cur                 [RO/int] Firmware write protect hardware switch current position\n \n For more information, please see:\n https://chromium.googlesource.com/chromiumos/docs/+/HEAD/os_config.md#crossystem",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "crossystem [--all]",
+          "template": null,
+          "original_sha256": "349600fda6e3fb214b14acaac329c1cbcb94997718338eb168f42661c6272a27"
+        },
+        {
+          "status": "operational_example",
+          "command": "crossystem [param1 [param2 [...]]]",
+          "template": null,
+          "original_sha256": "7dd4ddb5b6072d365487dd8e92f8cbba465492559e7069dcf89eb265f7ae3e74"
+        },
+        {
+          "status": "operational_example",
+          "command": "crossystem [param1=value1] [param2=value2 [...]]]",
+          "template": null,
+          "original_sha256": "5b26f6bb38ce7d9c6f545db463220896481377441347c3d9a41a36e938ba25d1"
+        },
+        {
+          "status": "operational_example",
+          "command": "crossystem [param1?value1] [param2?value2 [...]]]",
+          "template": null,
+          "original_sha256": "f16efbc8c1b69c068f6cd6ab9e85058c16f57ab5b684f09ee1fef6aae2ca0c92"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:\n  crossystem [--all]\n    Prints all parameters with descriptions and current values.\n    If --all is specified, prints even normally hidden fields.\n  crossystem [param1 [param2 [...]]]\n    Prints the current value(s) of the parameter(s).\n  crossystem [param1=value1] [param2=value2 [...]]]\n    Sets the parameter(s) to the specified value(s).\n  crossystem [param1?value1] [param2?value2 [...]]]\n    Checks if the parameter(s) all contain the specified value(s).\n    Stops at the first error.\n\nValid parameters:\n  arch                     [RO/str] Platform architecture\n  backup_nvram_request     [RW/int] Backup the nvram somewhere at the next boot. Cleared on success.\n  battery_cutoff_request   [RW/int] Cut off battery and shutdown on next boot\n  block_devmode            [RW/int] Block all use of developer mode\n  clear_tpm_owner_done     [RW/int] Clear TPM owner done\n  clear_tpm_owner_request  [RW/int] Clear TPM owner on next boot\n  cros_debug               [RO/int] OS should allow debug features\n  dbg_reset                [RW/int] Debug reset mode request\n  debug_build              [RO/int] OS image built for debug features\n  dev_boot_altfw           [RW/int] Enable developer mode alternate bootloader\n  dev_boot_signed_only     [RW/int] Enable developer mode boot only from official kernels\n  dev_boot_usb             [RW/int] Enable developer mode boot from external disk (USB/SD)\n  dev_default_boot         [RW/str] Default boot from disk, altfw or usb\n  dev_enable_udc           [RW/int] Enable USB Device Controller\n  devsw_boot               [RO/int] Developer switch position at boot\n  devsw_cur                [RO/int] Developer switch current position\n  diagnostic_request       [RW/int] Request diagnostic rom run on next boot\n  disable_dev_request      [RW/int] Disable virtual dev-mode on next boot\n  ecfw_act                 [RO/str] Active EC firmware\n  post_ec_sync_delay       [RW/int] Short delay after EC software sync (persistent, writable, eve only)\n  fw_prev_result           [RO/str] Firmware result of previous boot\n  fw_prev_tried            [RO/str] Firmware tried on previous boot (A or B)\n  fw_result                [RW/str] Firmware result this boot\n  fw_tried                 [RO/str] Firmware tried this boot (A or B)\n  fw_try_count             [RW/int] Number of times to try fw_try_next\n  fw_try_next              [RW/str] Firmware to try next (A or B)\n  fw_vboot2                [RO/int] 1 if firmware was selected by vboot2 or 0 otherwise\n  fwb_tries                [RW/int] Try firmware B count\n  fwid                     [RO/str] Active firmware ID\n  fwupdate_tries           [RW/int] Times to try OS firmware update (inside kern_nv)\n  hwid                     [RO/str] Hardware ID\n  inside_vm                [RO/int] Running in a VM?\n  kern_nv                  [RO/int] Non-volatile field for kernel use\n  kernel_max_rollforward   [RW/int] Max kernel version to store into TPM\n  kernkey_vfy              [RO/str] Type of verification done on kernel keyblock\n  loc_idx                  [RW/int] Localization index for firmware screens\n  mainfw_act               [RO/str] Active main firmware\n  mainfw_type              [RO/str] Active main firmware type\n  minios_priority          [RW/str] miniOS image to try first (A or B)\n  nvram_cleared            [RW/int] Have NV settings been lost?  Write 0 to clear\n  display_request          [RW/int] Should we initialize the display at boot?\n  phase_enforcement        [RO/int] Board should have full security settings applied\n  recovery_reason          [RO/int] Recovery mode reason for current boot\n  recovery_request         [RW/int] Recovery mode request\n  recovery_subcode         [RW/int] Recovery reason subcode\n  recoverysw_boot          [RO/int] Recovery switch position at boot\n  recoverysw_cur           [RO/int] Recovery switch current position\n  recoverysw_ec_boot       [RO/int] Recovery switch position at EC boot\n  ro_fwid                  [RO/str] Read-only firmware ID\n  tpm_attack               [RW/int] TPM was interrupted since this flag was cleared\n  tpm_fwver                [RO/int] Firmware version stored in TPM\n  tpm_kernver              [RO/int] Kernel version stored in TPM\n  tpm_rebooted             [RO/int] TPM requesting repeated reboot\n  tried_fwb                [RO/int] Tried firmware B before A this boot\n  try_ro_sync              [RO/int] try read only software sync\n  vdat_flags               [RO/int] Flags from VbSharedData\n  vdat_lfdebug             [RO/str] LoadFirmware() debug data (not in print-all)\n  wipeout_request          [RW/int] Firmware requested factory reset (wipeout)\n  wpsw_cur                 [RO/int] Firmware write protect hardware switch current position\n\nFor more information, please see:\nhttps://chromium.googlesource.com/chromiumos/docs/+/HEAD/os_config.md#crossystem",
+        "-h": "Usage:\n  crossystem [--all]\n    Prints all parameters with descriptions and current values.\n    If --all is specified, prints even normally hidden fields.\n  crossystem [param1 [param2 [...]]]\n    Prints the current value(s) of the parameter(s).\n  crossystem [param1=value1] [param2=value2 [...]]]\n    Sets the parameter(s) to the specified value(s).\n  crossystem [param1?value1] [param2?value2 [...]]]\n    Checks if the parameter(s) all contain the specified value(s).\n    Stops at the first error.\n\nValid parameters:\n  arch                     [RO/str] Platform architecture\n  backup_nvram_request     [RW/int] Backup the nvram somewhere at the next boot. Cleared on success.\n  battery_cutoff_request   [RW/int] Cut off battery and shutdown on next boot\n  block_devmode            [RW/int] Block all use of developer mode\n  clear_tpm_owner_done     [RW/int] Clear TPM owner done\n  clear_tpm_owner_request  [RW/int] Clear TPM owner on next boot\n  cros_debug               [RO/int] OS should allow debug features\n  dbg_reset                [RW/int] Debug reset mode request\n  debug_build              [RO/int] OS image built for debug features\n  dev_boot_altfw           [RW/int] Enable developer mode alternate bootloader\n  dev_boot_signed_only     [RW/int] Enable developer mode boot only from official kernels\n  dev_boot_usb             [RW/int] Enable developer mode boot from external disk (USB/SD)\n  dev_default_boot         [RW/str] Default boot from disk, altfw or usb\n  dev_enable_udc           [RW/int] Enable USB Device Controller\n  devsw_boot               [RO/int] Developer switch position at boot\n  devsw_cur                [RO/int] Developer switch current position\n  diagnostic_request       [RW/int] Request diagnostic rom run on next boot\n  disable_dev_request      [RW/int] Disable virtual dev-mode on next boot\n  ecfw_act                 [RO/str] Active EC firmware\n  post_ec_sync_delay       [RW/int] Short delay after EC software sync (persistent, writable, eve only)\n  fw_prev_result           [RO/str] Firmware result of previous boot\n  fw_prev_tried            [RO/str] Firmware tried on previous boot (A or B)\n  fw_result                [RW/str] Firmware result this boot\n  fw_tried                 [RO/str] Firmware tried this boot (A or B)\n  fw_try_count             [RW/int] Number of times to try fw_try_next\n  fw_try_next              [RW/str] Firmware to try next (A or B)\n  fw_vboot2                [RO/int] 1 if firmware was selected by vboot2 or 0 otherwise\n  fwb_tries                [RW/int] Try firmware B count\n  fwid                     [RO/str] Active firmware ID\n  fwupdate_tries           [RW/int] Times to try OS firmware update (inside kern_nv)\n  hwid                     [RO/str] Hardware ID\n  inside_vm                [RO/int] Running in a VM?\n  kern_nv                  [RO/int] Non-volatile field for kernel use\n  kernel_max_rollforward   [RW/int] Max kernel version to store into TPM\n  kernkey_vfy              [RO/str] Type of verification done on kernel keyblock\n  loc_idx                  [RW/int] Localization index for firmware screens\n  mainfw_act               [RO/str] Active main firmware\n  mainfw_type              [RO/str] Active main firmware type\n  minios_priority          [RW/str] miniOS image to try first (A or B)\n  nvram_cleared            [RW/int] Have NV settings been lost?  Write 0 to clear\n  display_request          [RW/int] Should we initialize the display at boot?\n  phase_enforcement        [RO/int] Board should have full security settings applied\n  recovery_reason          [RO/int] Recovery mode reason for current boot\n  recovery_request         [RW/int] Recovery mode request\n  recovery_subcode         [RW/int] Recovery reason subcode\n  recoverysw_boot          [RO/int] Recovery switch position at boot\n  recoverysw_cur           [RO/int] Recovery switch current position\n  recoverysw_ec_boot       [RO/int] Recovery switch position at EC boot\n  ro_fwid                  [RO/str] Read-only firmware ID\n  tpm_attack               [RW/int] TPM was interrupted since this flag was cleared\n  tpm_fwver                [RO/int] Firmware version stored in TPM\n  tpm_kernver              [RO/int] Kernel version stored in TPM\n  tpm_rebooted             [RO/int] TPM requesting repeated reboot\n  tried_fwb                [RO/int] Tried firmware B before A this boot\n  try_ro_sync              [RO/int] try read only software sync\n  vdat_flags               [RO/int] Flags from VbSharedData\n  vdat_lfdebug             [RO/str] LoadFirmware() debug data (not in print-all)\n  wipeout_request          [RW/int] Firmware requested factory reset (wipeout)\n  wpsw_cur                 [RO/int] Firmware write protect hardware switch current position\n\nFor more information, please see:\nhttps://chromium.googlesource.com/chromiumos/docs/+/HEAD/os_config.md#crossystem",
+        "help": "Usage:\n  crossystem [--all]\n    Prints all parameters with descriptions and current values.\n    If --all is specified, prints even normally hidden fields.\n  crossystem [param1 [param2 [...]]]\n    Prints the current value(s) of the parameter(s).\n  crossystem [param1=value1] [param2=value2 [...]]]\n    Sets the parameter(s) to the specified value(s).\n  crossystem [param1?value1] [param2?value2 [...]]]\n    Checks if the parameter(s) all contain the specified value(s).\n    Stops at the first error.\n\nValid parameters:\n  arch                     [RO/str] Platform architecture\n  backup_nvram_request     [RW/int] Backup the nvram somewhere at the next boot. Cleared on success.\n  battery_cutoff_request   [RW/int] Cut off battery and shutdown on next boot\n  block_devmode            [RW/int] Block all use of developer mode\n  clear_tpm_owner_done     [RW/int] Clear TPM owner done\n  clear_tpm_owner_request  [RW/int] Clear TPM owner on next boot\n  cros_debug               [RO/int] OS should allow debug features\n  dbg_reset                [RW/int] Debug reset mode request\n  debug_build              [RO/int] OS image built for debug features\n  dev_boot_altfw           [RW/int] Enable developer mode alternate bootloader\n  dev_boot_signed_only     [RW/int] Enable developer mode boot only from official kernels\n  dev_boot_usb             [RW/int] Enable developer mode boot from external disk (USB/SD)\n  dev_default_boot         [RW/str] Default boot from disk, altfw or usb\n  dev_enable_udc           [RW/int] Enable USB Device Controller\n  devsw_boot               [RO/int] Developer switch position at boot\n  devsw_cur                [RO/int] Developer switch current position\n  diagnostic_request       [RW/int] Request diagnostic rom run on next boot\n  disable_dev_request      [RW/int] Disable virtual dev-mode on next boot\n  ecfw_act                 [RO/str] Active EC firmware\n  post_ec_sync_delay       [RW/int] Short delay after EC software sync (persistent, writable, eve only)\n  fw_prev_result           [RO/str] Firmware result of previous boot\n  fw_prev_tried            [RO/str] Firmware tried on previous boot (A or B)\n  fw_result                [RW/str] Firmware result this boot\n  fw_tried                 [RO/str] Firmware tried this boot (A or B)\n  fw_try_count             [RW/int] Number of times to try fw_try_next\n  fw_try_next              [RW/str] Firmware to try next (A or B)\n  fw_vboot2                [RO/int] 1 if firmware was selected by vboot2 or 0 otherwise\n  fwb_tries                [RW/int] Try firmware B count\n  fwid                     [RO/str] Active firmware ID\n  fwupdate_tries           [RW/int] Times to try OS firmware update (inside kern_nv)\n  hwid                     [RO/str] Hardware ID\n  inside_vm                [RO/int] Running in a VM?\n  kern_nv                  [RO/int] Non-volatile field for kernel use\n  kernel_max_rollforward   [RW/int] Max kernel version to store into TPM\n  kernkey_vfy              [RO/str] Type of verification done on kernel keyblock\n  loc_idx                  [RW/int] Localization index for firmware screens\n  mainfw_act               [RO/str] Active main firmware\n  mainfw_type              [RO/str] Active main firmware type\n  minios_priority          [RW/str] miniOS image to try first (A or B)\n  nvram_cleared            [RW/int] Have NV settings been lost?  Write 0 to clear\n  display_request          [RW/int] Should we initialize the display at boot?\n  phase_enforcement        [RO/int] Board should have full security settings applied\n  recovery_reason          [RO/int] Recovery mode reason for current boot\n  recovery_request         [RW/int] Recovery mode request\n  recovery_subcode         [RW/int] Recovery reason subcode\n  recoverysw_boot          [RO/int] Recovery switch position at boot\n  recoverysw_cur           [RO/int] Recovery switch current position\n  recoverysw_ec_boot       [RO/int] Recovery switch position at EC boot\n  ro_fwid                  [RO/str] Read-only firmware ID\n  tpm_attack               [RW/int] TPM was interrupted since this flag was cleared\n  tpm_fwver                [RO/int] Firmware version stored in TPM\n  tpm_kernver              [RO/int] Kernel version stored in TPM\n  tpm_rebooted             [RO/int] TPM requesting repeated reboot\n  tried_fwb                [RO/int] Tried firmware B before A this boot\n  try_ro_sync              [RO/int] try read only software sync\n  vdat_flags               [RO/int] Flags from VbSharedData\n  vdat_lfdebug             [RO/str] LoadFirmware() debug data (not in print-all)\n  wipeout_request          [RW/int] Firmware requested factory reset (wipeout)\n  wpsw_cur                 [RO/int] Firmware write protect hardware switch current position\n\nFor more information, please see:\nhttps://chromium.googlesource.com/chromiumos/docs/+/HEAD/os_config.md#crossystem",
+        "man": "CROSSYSTEM(1)                    User Commands                    CROSSYSTEM(1)\n\nNAME\n     crossystem - Chrome OS firmware/system interface utility\n\nDESCRIPTION\n   Usage:\n            crossystem [--all]\n\n            Prints  all  parameters  with  descriptions and current values.  If\n            --all is specified, prints even normally hidden fields.\n\n            crossystem [param1 [param2 [...]]]\n\n            Prints the current value(s) of the parameter(s).\n\n            crossystem [param1=value1] [param2=value2 [...]]]\n\n            Sets the parameter(s) to the specified value(s).\n\n            crossystem [param1?value1] [param2?value2 [...]]]\n\n            Checks if the parameter(s) all contain the specified value(s).\n\n     Stops at the first error.  Valid parameters:\n\n     arch   Platform architecture\n\n     backup_nvram_request\n            Backup the nvram somewhere at the next boot. Cleared on success.\n\n     battery_cutoff_request\n            Cut off battery and shutdown on next boot.\n\n     block_devmode\n            Block all use of developer mode\n\n     clear_tpm_owner_request\n            Clear TPM owner on next boot\n\n     clear_tpm_owner_done\n            Clear TPM owner done\n\n     cros_debug\n            OS should allow debug features\n\n     dbg_reset\n            Debug reset mode request (writable)\n\n     debug_build\n            OS image built for debug features\n\n     dev_boot_usb\n            Enable developer mode boot from USB/SD (writable)\n\n     dev_boot_legacy\n            Enable developer mode boot Legacy OSes (writable)\n\n     dev_boot_signed_only\n            Enable developer mode boot only from official kernels (writable)\n\n     dev_default_boot\n            default boot from legacy or usb (writable)\n\n     devsw_boot\n            Developer switch position at boot\n\n     devsw_cur\n            Developer switch current position\n\n     disable_dev_request\n            Disable virtual dev-mode on next boot\n\n     ecfw_act\n            Active EC firmware\n\n     fmap_base\n            Main firmware flashmap physical address\n\n     fwb_tries\n            Try firmware B count (writable)\n\n     fw_vboot2\n            1 if firmware was selected by vboot2 or 0 otherwise\n\n     fwid   Active firmware ID\n\n     fwupdate_tries\n            Times to try OS firmware update (writable, inside kern_nv)\n\n     fw_tried\n            Firmware tried this boot (vboot2)\n\n     fw_try_count\n            Number of times to try fw_try_next (writable)\n\n     fw_try_next\n            Firmware to try next (vboot2,writable)\n\n     fw_result\n            Firmware result this boot (vboot2,writable)\n\n     fw_prev_tried\n            Firmware tried on previous boot (vboot2)\n\n     fw_prev_result\n            Firmware result of previous boot (vboot2)\n\n     hwid   Hardware ID\n\n     kern_nv\n            Non-volatile field for kernel use\n\n     kernkey_vfy\n            Type of verification done on kernel key block\n\n     loc_idx\n            Localization index for firmware screens (writable)\n\n     mainfw_act\n            Active main firmware\n\n     mainfw_type\n            Active main firmware type\n\n     nvram_cleared\n            Have NV settings been lost?  Write 0 to clear\n\n     oprom_needed\n            Should we load the VGA Option ROM at boot?\n\n     recovery_reason\n            Recovery mode reason for current boot\n\n     recovery_request\n            Recovery mode request (writable)\n\n     recovery_subcode\n            Recovery reason subcode (writable)\n\n     recoverysw_boot\n            Recovery switch position at boot\n\n     recoverysw_cur\n            Recovery switch current position\n\n     recoverysw_ec_boot\n            Recovery switch position at EC boot\n\n     ro_fwid\n            Read-only firmware ID\n\n     sw_wpsw_boot\n            Firmware write protect software setting enabled at  boot  (Baytrail\n            only)\n\n     tpm_attack\n            TPM was interrupted since this flag was cleared\n\n     tpm_fwver\n            Firmware version stored in TPM\n\n     tpm_kernver\n            Kernel version stored in TPM\n\n     tpm_rebooted\n            TPM requesting repeated reboot (vboot2)\n\n     try_ro_sync\n            try read only software sync\n\n     tried_fwb\n            Tried firmware B before A this boot\n\n     vdat_flags\n            Flags from VbSharedData\n\n     vdat_lfdebug\n            LoadFirmware() debug data (not in print-all)\n\n     vdat_lkdebug\n            LoadKernel() debug data (not in print-all)\n\n     vdat_timers\n            Timer values from VbSharedData\n\n     wipeout_request\n            Firmware requested factory reset (wipeout)\n\n     wpsw_boot\n            Firmware write protect hardware switch position at boot\n\n     wpsw_cur\n            Firmware write protect hardware switch current position\n\nSEE ALSO\n     The  full  documentation for crossystem is maintained as a Texinfo manual.\n     If the info and crossystem programs are properly installed at  your  site,\n     the command\n\n            info crossystem\n\n     should give you access to the complete manual.\n\ncrossystem                         July 2016                      CROSSYSTEM(1)",
+        "apropos": "crossystem (1)       - Chrome OS firmware/system interface utility"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/crossystem",
+        "size_bytes": 55632,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=600479def4977645bb6353c8381c8e9c24d83dad, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "dev_debug_vboot",
+      "description": "- - -",
+      "usage": "dev_debug_vboot [options] [DIRECTORY]",
+      "arguments": [
+        {
+          "flags": [
+            "-b",
+            "--bios"
+          ],
+          "metavar": "FILE - ios FILE",
+          "takes_value": true,
+          "description": "Specify the BIOS image to use",
+          "default": null,
+          "choices": null,
+          "raw": "  -b FILE, --bios FILE        Specify the BIOS image to use"
+        },
+        {
+          "flags": [
+            "-i",
+            "--image"
+          ],
+          "metavar": "FILE - mage FILE",
+          "takes_value": true,
+          "description": "Specify the disk image to use",
+          "default": null,
+          "choices": null,
+          "raw": "  -i FILE, --image FILE       Specify the disk image to use"
+        },
+        {
+          "flags": [
+            "-k",
+            "--kernel"
+          ],
+          "metavar": "FILE - ernel FILE",
+          "takes_value": true,
+          "description": "Specify the kernel partition image to use",
+          "default": null,
+          "choices": null,
+          "raw": "  -k FILE, --kernel FILE      Specify the kernel partition image to use"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Spew the detailed log to stdout",
+          "default": null,
+          "choices": null,
+          "raw": "  -v                          Spew the detailed log to stdout"
+        },
+        {
+          "flags": [
+            "-c",
+            "--cleanup"
+          ],
+          "metavar": "- leanup",
+          "takes_value": true,
+          "description": "Delete the DIRECTORY when done",
+          "default": null,
+          "choices": null,
+          "raw": "  -c, --cleanup               Delete the DIRECTORY when done"
+        },
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Print this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": "  -h, --help                  Print this help message and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# dev_debug_vboot -h\n \n Usage: dev_debug_vboot [options] [DIRECTORY]\n \n This logs as much as it can about the verified boot process. With no arguments\n it will attempt to read the current BIOS, extract the firmware keys, and use\n those keys to validate all the ChromeOS kernel partitions it can find. A\n summary output is printed on stdout, and the detailed log is copied to\n /var/log/debug_vboot_noisy.log afterwards.\n \n If a directory is given, it will attempt to use the components from that\n directory and will leave the detailed log in that directory.\n \n Options:\n \n  -b FILE, --bios FILE        Specify the BIOS image to use\n  -i FILE, --image FILE       Specify the disk image to use\n  -k FILE, --kernel FILE      Specify the kernel partition image to use\n  -v                          Spew the detailed log to stdout\n \n  -c, --cleanup               Delete the DIRECTORY when done\n \n  -h, --help                  Print this help message and exit",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: dev_debug_vboot [options] [DIRECTORY]\n\nThis logs as much as it can about the verified boot process. With no arguments\nit will attempt to read the current BIOS, extract the firmware keys, and use\nthose keys to validate all the ChromeOS kernel partitions it can find. A\nsummary output is printed on stdout, and the detailed log is copied to\n/var/log/debug_vboot_noisy.log afterwards.\n\nIf a directory is given, it will attempt to use the components from that\ndirectory and will leave the detailed log in that directory.\n\nOptions:\n\n   -b FILE, --bios FILE        Specify the BIOS image to use\n   -i FILE, --image FILE       Specify the disk image to use\n   -k FILE, --kernel FILE      Specify the kernel partition image to use\n   -v                          Spew the detailed log to stdout\n\n   -c, --cleanup               Delete the DIRECTORY when done\n\n   -h, --help                  Print this help message and exit",
+        "-h": "Usage: dev_debug_vboot [options] [DIRECTORY]\n\nThis logs as much as it can about the verified boot process. With no arguments\nit will attempt to read the current BIOS, extract the firmware keys, and use\nthose keys to validate all the ChromeOS kernel partitions it can find. A\nsummary output is printed on stdout, and the detailed log is copied to\n/var/log/debug_vboot_noisy.log afterwards.\n\nIf a directory is given, it will attempt to use the components from that\ndirectory and will leave the detailed log in that directory.\n\nOptions:\n\n   -b FILE, --bios FILE        Specify the BIOS image to use\n   -i FILE, --image FILE       Specify the disk image to use\n   -k FILE, --kernel FILE      Specify the kernel partition image to use\n   -v                          Spew the detailed log to stdout\n\n   -c, --cleanup               Delete the DIRECTORY when done\n\n   -h, --help                  Print this help message and exit",
+        "help": "help doesn't exist"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dev_debug_vboot",
+        "size_bytes": 9645,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "dumpRSAPublicKey",
+      "description": "- - -",
+      "usage": "dumpRSAPublicKey <-cert | -pub> <file>",
+      "arguments": [],
+      "raw_help": "root@kali:~# dumpRSAPublicKey -h\n Usage: dumpRSAPublicKey <-cert | -pub> <file>",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: dumpRSAPublicKey <-cert | -pub> <file>",
+        "-h": "Usage: dumpRSAPublicKey <-cert | -pub> <file>",
+        "help": "Usage: dumpRSAPublicKey <-cert | -pub> <file>"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dumpRSAPublicKey",
+        "size_bytes": 14408,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=452c5687d5c39ae6eca4083616c70d8a078100a5, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "dump_fmap",
+      "description": "- - -",
+      "usage": "futility dump_fmap [OPTIONS] FLASHIMAGE [NAME...]",
+      "arguments": [
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Extract the named sections from the file",
+          "default": null,
+          "choices": null,
+          "raw": " -x             Extract the named sections from the file"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use a human-readable format",
+          "default": null,
+          "choices": null,
+          "raw": " -h             Use a human-readable format"
+        },
+        {
+          "flags": [
+            "-H"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "With -h, display any gaps",
+          "default": null,
+          "choices": null,
+          "raw": " -H             With -h, display any gaps"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use a format easy to parse by scripts",
+          "default": null,
+          "choices": null,
+          "raw": " -p             Use a format easy to parse by scripts"
+        },
+        {
+          "flags": [
+            "-F"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use the format expected by flashrom",
+          "default": null,
+          "choices": null,
+          "raw": " -F             Use the format expected by flashrom"
+        }
+      ],
+      "raw_help": "root@kali:~# dump_fmap --help\n \n Usage:  futility dump_fmap [OPTIONS] FLASHIMAGE [NAME...]\n \n Display (and extract) the FMAP components from a BIOS image.\n \n Options:\n -x             Extract the named sections from the file\n -h             Use a human-readable format\n -H             With -h, display any gaps\n -p             Use a format easy to parse by scripts\n -F             Use the format expected by flashrom\n \n Specify one or more NAMEs to dump only those sections.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "dump_fmap: can't mmap help: Invalid argument",
+          "template": null,
+          "original_sha256": "3d76f9c099a61afee9a23b7500ba16a2c43fa9267f5c815f42f41bc61fa9f534"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:  futility dump_fmap [OPTIONS] FLASHIMAGE [NAME...]\n\nDisplay (and extract) the FMAP components from a BIOS image.\n\nOptions:\n  -x             Extract the named sections from the file\n  -h             Use a human-readable format\n  -H             With -h, display any gaps\n  -p             Use a format easy to parse by scripts\n  -F             Use the format expected by flashrom\n\nSpecify one or more NAMEs to dump only those sections.",
+        "-h": "Usage:  futility dump_fmap [OPTIONS] FLASHIMAGE [NAME...]\n\nDisplay (and extract) the FMAP components from a BIOS image.\n\nOptions:\n  -x             Extract the named sections from the file\n  -h             Use a human-readable format\n  -H             With -h, display any gaps\n  -p             Use a format easy to parse by scripts\n  -F             Use the format expected by flashrom\n\nSpecify one or more NAMEs to dump only those sections.",
+        "help": "dump_fmap: can't mmap help: Invalid argument"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dump_fmap",
+        "size_bytes": 293872,
+        "is_symlink": true,
+        "real_path": "/usr/bin/futility",
+        "file_type": "symbolic link to futility"
+      }
+    },
+    {
+      "name": "dump_kernel_config",
+      "description": "- - -",
+      "usage": "futility dump_kernel_config [--kloadaddr ADDRESS] KERNEL_PARTITION",
+      "arguments": [],
+      "raw_help": "root@kali:~# dump_kernel_config --help\n \n Usage:  futility dump_kernel_config [--kloadaddr ADDRESS] KERNEL_PARTITION",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:  futility dump_kernel_config [--kloadaddr ADDRESS] KERNEL_PARTITION",
+        "-h": "Usage:  futility dump_kernel_config [--kloadaddr ADDRESS] KERNEL_PARTITION",
+        "help": "FATAL: FindKernelConfigFromStream: not enough data to fill keyblock header"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dump_kernel_config",
+        "size_bytes": 293872,
+        "is_symlink": true,
+        "real_path": "/usr/bin/futility",
+        "file_type": "symbolic link to futility"
+      }
+    },
+    {
+      "name": "enable_dev_usb_boot",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "ERROR: Sorry, your firmware does not look like ChromeOS firmware.",
+        "-h": "ERROR: Sorry, your firmware does not look like ChromeOS firmware.",
+        "help": "ERROR: Sorry, your firmware does not look like ChromeOS firmware."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/enable_dev_usb_boot",
+        "size_bytes": 969,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "gbb_utility",
+      "description": "- - -",
+      "usage": "futility gbb_utility [-g|-s|-c] [OPTIONS] bios_file [output_file]",
+      "arguments": [
+        {
+          "flags": [
+            "-g",
+            "--get"
+          ],
+          "metavar": "- et",
+          "takes_value": true,
+          "description": "(default)\tGet (read) from bios_file, with following options:",
+          "default": null,
+          "choices": null,
+          "raw": " -g, --get   (default)\tGet (read) from bios_file, with following options:"
+        },
+        {
+          "flags": [
+            "--hwid"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Report hardware id (default).",
+          "default": null,
+          "choices": null,
+          "raw": "    --hwid          \tReport hardware id (default)."
+        },
+        {
+          "flags": [
+            "--flags"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Report header flags.",
+          "default": null,
+          "choices": null,
+          "raw": "    --flags         \tReport header flags."
+        },
+        {
+          "flags": [
+            "--digest"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Report digest of hwid (>= v1.2)",
+          "default": null,
+          "choices": null,
+          "raw": "    --digest        \tReport digest of hwid (>= v1.2)"
+        },
+        {
+          "flags": [
+            "-k",
+            "--rootkey"
+          ],
+          "metavar": "=FILE",
+          "takes_value": true,
+          "description": "File name to export Root Key.",
+          "default": null,
+          "choices": null,
+          "raw": "-k, --rootkey=FILE  \tFile name to export Root Key."
+        },
+        {
+          "flags": [
+            "-b",
+            "--bmpfv"
+          ],
+          "metavar": "- mpfv=FILE",
+          "takes_value": true,
+          "description": "File name to export Bitmap FV.",
+          "default": null,
+          "choices": null,
+          "raw": "-b, --bmpfv=FILE    \tFile name to export Bitmap FV."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "--recoverykey=FILE\tFile name to export Recovery Key.",
+          "default": null,
+          "choices": null,
+          "raw": "-r  --recoverykey=FILE\tFile name to export Recovery Key."
+        },
+        {
+          "flags": [
+            "-s",
+            "--set"
+          ],
+          "metavar": "- et",
+          "takes_value": true,
+          "description": "Set (write) to bios_file, with following options:",
+          "default": null,
+          "choices": null,
+          "raw": " -s, --set            \tSet (write) to bios_file, with following options:"
+        },
+        {
+          "flags": [
+            "-o",
+            "--output"
+          ],
+          "metavar": "- utput=FILE",
+          "takes_value": true,
+          "description": "New file name for ouptput.",
+          "default": null,
+          "choices": null,
+          "raw": "-o, --output=FILE   \tNew file name for ouptput."
+        },
+        {
+          "flags": [
+            "-c",
+            "--create"
+          ],
+          "metavar": "- reate=hwid_size rootkey_size bmpfv_size recoverykey_size",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -c, --create=hwid_size,rootkey_size,bmpfv_size,recoverykey_size"
+        }
+      ],
+      "raw_help": "root@kali:~# gbb_utility --help\n \n Usage:  futility gbb_utility [-g|-s|-c] [OPTIONS] bios_file [output_file]\n \n GET MODE:\n -g, --get   (default)\tGet (read) from bios_file, with following options:\n    --hwid          \tReport hardware id (default).\n    --flags         \tReport header flags.\n    --digest        \tReport digest of hwid (>= v1.2)\n-k, --rootkey=FILE  \tFile name to export Root Key.\n-b, --bmpfv=FILE    \tFile name to export Bitmap FV.\n-r  --recoverykey=FILE\tFile name to export Recovery Key.\n \n SET MODE:\n -s, --set            \tSet (write) to bios_file, with following options:\n-o, --output=FILE   \tNew file name for ouptput.\n    --hwid=HWID     \tThe new hardware id to be changed.\n    --flags=FLAGS   \tThe new (numeric) flags value.\n-k, --rootkey=FILE  \tFile name of new Root Key.\n-b, --bmpfv=FILE    \tFile name of new Bitmap FV.\n-r  --recoverykey=FILE\tFile name of new Recovery Key.\n \n CREATE MODE:\n -c, --create=hwid_size,rootkey_size,bmpfv_size,recoverykey_size\n                    \tCreate a GBB blob by given size list.\n SAMPLE:\n gbb_utility -g bios.bin\n gbb_utility --set --hwid='New Model' -k key.bin bios.bin newbios.bin\n gbb_utility -c 0x100,0x1000,0x03DE80,0x1000 gbb.blob",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "gbb_utility -g bios.bin",
+          "template": null,
+          "original_sha256": "82401a3d3901d07caf9f694cf9ab931608cae8aa53dd6979ddf0ba175ab3b3c0"
+        },
+        {
+          "status": "operational_example",
+          "command": "gbb_utility --set --hwid='New Model' -k key.bin bios.bin newbios.bin",
+          "template": null,
+          "original_sha256": "fba5690e790f6c6cf0c5c66bc4e20c6b7d22ad2e0053c4aa6f0df8aaa33204d6"
+        },
+        {
+          "status": "operational_example",
+          "command": "gbb_utility -c 0x100,0x1000,0x03DE80,0x1000 gbb.blob",
+          "template": null,
+          "original_sha256": "8a1852fb0975d1406c30a177489294cd571d3c221037d3f2cbb0e8f573286917"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:  futility gbb_utility [-g|-s|-c] [OPTIONS] bios_file [output_file]\n\nGET MODE:\n-g, --get   (default)\tGet (read) from bios_file, with following options:\n     --hwid          \tReport hardware id (default).\n     --flags         \tReport header flags.\n     --digest        \tReport digest of hwid (>= v1.2)\n -k, --rootkey=FILE  \tFile name to export Root Key.\n -b, --bmpfv=FILE    \tFile name to export Bitmap FV.\n -r  --recoverykey=FILE\tFile name to export Recovery Key.\n\nSET MODE:\n-s, --set            \tSet (write) to bios_file, with following options:\n -o, --output=FILE   \tNew file name for ouptput.\n     --hwid=HWID     \tThe new hardware id to be changed.\n     --flags=FLAGS   \tThe new (numeric) flags value.\n -k, --rootkey=FILE  \tFile name of new Root Key.\n -b, --bmpfv=FILE    \tFile name of new Bitmap FV.\n -r  --recoverykey=FILE\tFile name of new Recovery Key.\n\nCREATE MODE:\n-c, --create=hwid_size,rootkey_size,bmpfv_size,recoverykey_size\n                     \tCreate a GBB blob by given size list.\nSAMPLE:\n  gbb_utility -g bios.bin\n  gbb_utility --set --hwid='New Model' -k key.bin bios.bin newbios.bin\n  gbb_utility -c 0x100,0x1000,0x03DE80,0x1000 gbb.blob",
+        "-h": "Usage:  futility gbb_utility [-g|-s|-c] [OPTIONS] bios_file [output_file]\n\nGET MODE:\n-g, --get   (default)\tGet (read) from bios_file, with following options:\n     --hwid          \tReport hardware id (default).\n     --flags         \tReport header flags.\n     --digest        \tReport digest of hwid (>= v1.2)\n -k, --rootkey=FILE  \tFile name to export Root Key.\n -b, --bmpfv=FILE    \tFile name to export Bitmap FV.\n -r  --recoverykey=FILE\tFile name to export Recovery Key.\n\nSET MODE:\n-s, --set            \tSet (write) to bios_file, with following options:\n -o, --output=FILE   \tNew file name for ouptput.\n     --hwid=HWID     \tThe new hardware id to be changed.\n     --flags=FLAGS   \tThe new (numeric) flags value.\n -k, --rootkey=FILE  \tFile name of new Root Key.\n -b, --bmpfv=FILE    \tFile name of new Bitmap FV.\n -r  --recoverykey=FILE\tFile name of new Recovery Key.\n\nCREATE MODE:\n-c, --create=hwid_size,rootkey_size,bmpfv_size,recoverykey_size\n                     \tCreate a GBB blob by given size list.\nSAMPLE:\n  gbb_utility -g bios.bin\n  gbb_utility --set --hwid='New Model' -k key.bin bios.bin newbios.bin\n  gbb_utility -c 0x100,0x1000,0x03DE80,0x1000 gbb.blob",
+        "help": "ERROR: Unable to read from help: No such file or directory"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/gbb_utility",
+        "size_bytes": 293872,
+        "is_symlink": true,
+        "real_path": "/usr/bin/futility",
+        "file_type": "symbolic link to futility"
+      }
+    },
+    {
+      "name": "tpm-nvsize",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# tpm-nvsize -h\n running tpmc definespace 0xf004 0x1 0x1",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "command \"definespace\" failed with code 0x1e\nTPM_BADTAG\nThe tag value sent to for a command is invalid",
+        "-h": "command \"definespace\" failed with code 0x1e\nTPM_BADTAG\nThe tag value sent to for a command is invalid",
+        "help": "command \"definespace\" failed with code 0x1e\nTPM_BADTAG\nThe tag value sent to for a command is invalid"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tpm-nvsize",
+        "size_bytes": 1387,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "tpmc",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "tpmc: unknown command: --help",
+          "template": null,
+          "original_sha256": "0b3bc41e419246729c79fbfa4de75a867df0a5d82100b087a793186d7daf6456"
+        },
+        {
+          "status": "operational_example",
+          "command": "tpmc: unknown command: -h",
+          "template": null,
+          "original_sha256": "d639bd676d5b2eebf6c3bee008417847d0815de8b2b7771492d66f8dec8b190e"
+        },
+        {
+          "status": "operational_example",
+          "command": "tpmc mode: TPM1.2",
+          "template": null,
+          "original_sha256": "1c22a3f22304c2692dcbee710e974d27a863419f4b3b7eaa3abbcf9e949671e2"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "tpmc: unknown command: --help",
+        "-h": "tpmc: unknown command: -h",
+        "help": "tpmc mode: TPM1.2\n                   command   abbr.  description\n\n                tpmversion  tpmver  print TPM version: 1.2 or 2.0\n                  getflags    getf  read and print the value of selected flags\n                   startup     sta  issue a Startup command\n              selftestfull    test  issue a SelfTestFull command\n          continueselftest   ctest  issue a ContinueSelfTest command\n    assertphysicalpresence    ppon  assert Physical Presence\n physicalpresencecmdenable   ppcmd  turn on software PP\n                    enable     ena  enable the TPM (needs PP)\n                   disable     dis  disable the TPM (needs PP)\n                  activate     act  activate the TPM (needs PP, maybe reboot)\n                deactivate   deact  deactivate the TPM (needs PP, maybe reboot)\n                     clear     clr  clear the TPM owner (needs PP)\n               setnvlocked   setnv  set the nvLocked flag permanently (IRREVERSIBLE!)\n      lockphysicalpresence  pplock  lock (turn off) PP until reboot\n            setbgloballock   block  set the bGlobalLock until reboot\n               definespace     def  define a space (def <index> <size> <perm>). Default will overwrite if the space is defined.\n             undefinespace   undef  undefine a space (undef <index>) only succeeds when NvLocked is not set\n                     write   write  write to a space (write <index> [<byte0> <byte1> ...])\n                      read    read  read from a space (read <index> <size>)\n                   pcrread     pcr  read from a PCR (pcrread <index>)\n                 pcrextend  extend  extend a PCR (extend <index> <extend_hash>)\n              getownership    geto  print state of TPM ownership\n            getpermissions    getp  print space permissions (getp <index>)\n         getpermanentflags   getpf  print all permanent flags\n                 getrandom    rand  read bytes from RNG (rand <size>)\n           getstclearflags   getvf  print all volatile (ST_CLEAR) flags\n                    resume     res  execute TPM_Startup(ST_STATE)\n                 savestate    save  execute TPM_SaveState\n                   sendraw     raw  send a raw request and print raw response\n                getversion  getver  get TPM vendor and firmware version\n       ifxfieldupgradeinfo  ifxfui  read and print IFX field upgrade info\n            checkownerauth    chko  Check owner authorization with well-known secret"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tpmc",
+        "size_bytes": 62952,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=85cb5e0e38740e024b0f8b903ffd035f20e81d6b, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "vbutil_firmware",
+      "description": "- - -",
+      "usage": "futility vbutil_firmware <--vblock|--verify> <file> [OPTIONS]",
+      "arguments": [
+        {
+          "flags": [
+            "--keyblock"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Keyblock in .keyblock format",
+          "default": null,
+          "choices": null,
+          "raw": " --keyblock <file>           Keyblock in .keyblock format"
+        },
+        {
+          "flags": [
+            "--signprivate"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Signing private key in .vbprivk format",
+          "default": null,
+          "choices": null,
+          "raw": " --signprivate <file>        Signing private key in .vbprivk format"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Firmware version",
+          "default": null,
+          "choices": null,
+          "raw": " --version <number>          Firmware version"
+        },
+        {
+          "flags": [
+            "--fv"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Firmware volume to sign",
+          "default": null,
+          "choices": null,
+          "raw": " --fv <file>                 Firmware volume to sign"
+        },
+        {
+          "flags": [
+            "--kernelkey"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Kernel subkey in .vbpubk format",
+          "default": null,
+          "choices": null,
+          "raw": " --kernelkey <file>          Kernel subkey in .vbpubk format"
+        },
+        {
+          "flags": [
+            "--flags"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Preamble flags (defaults to 0)",
+          "default": "s to 0",
+          "choices": null,
+          "raw": " --flags <number>            Preamble flags (defaults to 0)"
+        },
+        {
+          "flags": [
+            "--signpubkey"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Signing public key in .vbpubk format",
+          "default": null,
+          "choices": null,
+          "raw": " --signpubkey <file>         Signing public key in .vbpubk format"
+        }
+      ],
+      "raw_help": "root@kali:~# vbutil_firmware --help\n \n Usage:  futility vbutil_firmware <--vblock|--verify> <file> [OPTIONS]\n \n For '--vblock <file>', required OPTIONS are:\n \n --keyblock <file>           Keyblock in .keyblock format\n --signprivate <file>        Signing private key in .vbprivk format\n --version <number>          Firmware version\n --fv <file>                 Firmware volume to sign\n --kernelkey <file>          Kernel subkey in .vbpubk format\n \n optional OPTIONS are:\n --flags <number>            Preamble flags (defaults to 0)\n \n For '--verify <file>', required OPTIONS are:\n \n --signpubkey <file>         Signing public key in .vbpubk format\n --fv <file>                 Firmware volume to verify\n \n For '--verify <file>', optional OPTIONS are:\n --kernelkey <file>          Write the kernel subkey to this file",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:  futility vbutil_firmware <--vblock|--verify> <file> [OPTIONS]\n\nFor '--vblock <file>', required OPTIONS are:\n\n  --keyblock <file>           Keyblock in .keyblock format\n  --signprivate <file>        Signing private key in .vbprivk format\n  --version <number>          Firmware version\n  --fv <file>                 Firmware volume to sign\n  --kernelkey <file>          Kernel subkey in .vbpubk format\n\noptional OPTIONS are:\n  --flags <number>            Preamble flags (defaults to 0)\n\nFor '--verify <file>', required OPTIONS are:\n\n  --signpubkey <file>         Signing public key in .vbpubk format\n  --fv <file>                 Firmware volume to verify\n\nFor '--verify <file>', optional OPTIONS are:\n  --kernelkey <file>          Write the kernel subkey to this file",
+        "-h": "Unknown option\n\nUsage:  futility vbutil_firmware <--vblock|--verify> <file> [OPTIONS]\n\nFor '--vblock <file>', required OPTIONS are:\n\n  --keyblock <file>           Keyblock in .keyblock format\n  --signprivate <file>        Signing private key in .vbprivk format\n  --version <number>          Firmware version\n  --fv <file>                 Firmware volume to sign\n  --kernelkey <file>          Kernel subkey in .vbpubk format\n\noptional OPTIONS are:\n  --flags <number>            Preamble flags (defaults to 0)\n\nFor '--verify <file>', required OPTIONS are:\n\n  --signpubkey <file>         Signing public key in .vbpubk format\n  --fv <file>                 Firmware volume to verify\n\nFor '--verify <file>', optional OPTIONS are:\n  --kernelkey <file>          Write the kernel subkey to this file",
+        "help": "Usage:  futility vbutil_firmware <--vblock|--verify> <file> [OPTIONS]\n\nFor '--vblock <file>', required OPTIONS are:\n\n  --keyblock <file>           Keyblock in .keyblock format\n  --signprivate <file>        Signing private key in .vbprivk format\n  --version <number>          Firmware version\n  --fv <file>                 Firmware volume to sign\n  --kernelkey <file>          Kernel subkey in .vbpubk format\n\noptional OPTIONS are:\n  --flags <number>            Preamble flags (defaults to 0)\n\nFor '--verify <file>', required OPTIONS are:\n\n  --signpubkey <file>         Signing public key in .vbpubk format\n  --fv <file>                 Firmware volume to verify\n\nFor '--verify <file>', optional OPTIONS are:\n  --kernelkey <file>          Write the kernel subkey to this file"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/vbutil_firmware",
+        "size_bytes": 293872,
+        "is_symlink": true,
+        "real_path": "/usr/bin/futility",
+        "file_type": "symbolic link to futility"
+      }
+    },
+    {
+      "name": "vbutil_key",
+      "description": "- - -",
+      "usage": "futility vbutil_key --pack <outfile> [PARAMETERS]",
+      "arguments": [
+        {
+          "flags": [
+            "--key"
+          ],
+          "metavar": "infile",
+          "takes_value": true,
+          "description": "RSA key file (.keyb or .pem)",
+          "default": null,
+          "choices": null,
+          "raw": "   --key <infile>              RSA key file (.keyb or .pem)"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Key version number (required for .keyb,",
+          "default": null,
+          "choices": null,
+          "raw": "   --version <number>          Key version number (required for .keyb,"
+        },
+        {
+          "flags": [
+            "--algorithm"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Signing algorithm to use with key:",
+          "default": null,
+          "choices": null,
+          "raw": "   --algorithm <number>        Signing algorithm to use with key:"
+        },
+        {
+          "flags": [
+            "--copyto"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Write a copy of the key to this file.",
+          "default": null,
+          "choices": null,
+          "raw": "   --copyto <file>             Write a copy of the key to this file."
+        }
+      ],
+      "raw_help": "root@kali:~# vbutil_key --help\n \n Usage:  futility vbutil_key --pack <outfile> [PARAMETERS]\n \n Required parameters:\n   --key <infile>              RSA key file (.keyb or .pem)\n   --version <number>          Key version number (required for .keyb,\n                                 ignored for .pem)\n   --algorithm <number>        Signing algorithm to use with key:\n                                 0 = (RSA1024 SHA1)\n                                 1 = (RSA1024 SHA256)\n                                 2 = (RSA1024 SHA512)\n                                 3 = (RSA2048 SHA1)\n                                 4 = (RSA2048 SHA256)\n                                 5 = (RSA2048 SHA512)\n                                 6 = (RSA4096 SHA1)\n                                 7 = (RSA4096 SHA256)\n                                 8 = (RSA4096 SHA512)\n                                 9 = (RSA8192 SHA1)\n                                 10 = (RSA8192 SHA256)\n                                 11 = (RSA8192 SHA512)\n                                 12 = (RSA2048 EXP3 SHA1)\n                                 13 = (RSA2048 EXP3 SHA256)\n                                 14 = (RSA2048 EXP3 SHA512)\n                                 15 = (RSA3072 EXP3 SHA1)\n                                 16 = (RSA3072 EXP3 SHA256)\n                                 17 = (RSA3072 EXP3 SHA512)\n \n OR\n \n Usage:  futility vbutil_key --unpack <infile>\n \n Optional parameters:\n   --copyto <file>             Write a copy of the key to this file.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "vbutil_key: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "598e98f471a228329596b45f93546212f6121e6f61a9bac972de02ae9405f3b9"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:  futility vbutil_key --pack <outfile> [PARAMETERS]\n\n  Required parameters:\n    --key <infile>              RSA key file (.keyb or .pem)\n    --version <number>          Key version number (required for .keyb,\n                                  ignored for .pem)\n    --algorithm <number>        Signing algorithm to use with key:\n                                  0 = (RSA1024 SHA1)\n                                  1 = (RSA1024 SHA256)\n                                  2 = (RSA1024 SHA512)\n                                  3 = (RSA2048 SHA1)\n                                  4 = (RSA2048 SHA256)\n                                  5 = (RSA2048 SHA512)\n                                  6 = (RSA4096 SHA1)\n                                  7 = (RSA4096 SHA256)\n                                  8 = (RSA4096 SHA512)\n                                  9 = (RSA8192 SHA1)\n                                  10 = (RSA8192 SHA256)\n                                  11 = (RSA8192 SHA512)\n                                  12 = (RSA2048 EXP3 SHA1)\n                                  13 = (RSA2048 EXP3 SHA256)\n                                  14 = (RSA2048 EXP3 SHA512)\n                                  15 = (RSA3072 EXP3 SHA1)\n                                  16 = (RSA3072 EXP3 SHA256)\n                                  17 = (RSA3072 EXP3 SHA512)\n\nOR\n\nUsage:  futility vbutil_key --unpack <infile>\n\n  Optional parameters:\n    --copyto <file>             Write a copy of the key to this file.",
+        "-h": "vbutil_key: invalid option -- 'h'\nFATAL: do_vbutil_key: Unknown option",
+        "help": "Must specify a mode.\n\nUsage:  futility vbutil_key --pack <outfile> [PARAMETERS]\n\n  Required parameters:\n    --key <infile>              RSA key file (.keyb or .pem)\n    --version <number>          Key version number (required for .keyb,\n                                  ignored for .pem)\n    --algorithm <number>        Signing algorithm to use with key:\n                                  0 = (RSA1024 SHA1)\n                                  1 = (RSA1024 SHA256)\n                                  2 = (RSA1024 SHA512)\n                                  3 = (RSA2048 SHA1)\n                                  4 = (RSA2048 SHA256)\n                                  5 = (RSA2048 SHA512)\n                                  6 = (RSA4096 SHA1)\n                                  7 = (RSA4096 SHA256)\n                                  8 = (RSA4096 SHA512)\n                                  9 = (RSA8192 SHA1)\n                                  10 = (RSA8192 SHA256)\n                                  11 = (RSA8192 SHA512)\n                                  12 = (RSA2048 EXP3 SHA1)\n                                  13 = (RSA2048 EXP3 SHA256)\n                                  14 = (RSA2048 EXP3 SHA512)\n                                  15 = (RSA3072 EXP3 SHA1)\n                                  16 = (RSA3072 EXP3 SHA256)\n                                  17 = (RSA3072 EXP3 SHA512)\n\nOR\n\nUsage:  futility vbutil_key --unpack <infile>\n\n  Optional parameters:\n    --copyto <file>             Write a copy of the key to this file."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/vbutil_key",
+        "size_bytes": 293872,
+        "is_symlink": true,
+        "real_path": "/usr/bin/futility",
+        "file_type": "symbolic link to futility"
+      }
+    },
+    {
+      "name": "vbutil_keyblock",
+      "description": "- - -",
+      "usage": "futility vbutil_keyblock <--pack|--unpack> <file> [OPTIONS]",
+      "arguments": [
+        {
+          "flags": [
+            "--datapubkey"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Data public key in .vbpubk format",
+          "default": null,
+          "choices": null,
+          "raw": " --datapubkey <file>         Data public key in .vbpubk format"
+        },
+        {
+          "flags": [
+            "--signprivate"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Signing private key in .vbprivk format.",
+          "default": null,
+          "choices": null,
+          "raw": " --signprivate <file>        Signing private key in .vbprivk format."
+        },
+        {
+          "flags": [
+            "--signprivate_pem"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --signprivate_pem <file>"
+        },
+        {
+          "flags": [
+            "--pem_algorithm"
+          ],
+          "metavar": "algo",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --pem_algorithm <algo>"
+        },
+        {
+          "flags": [
+            "--flags"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Specifies allowed use conditions.",
+          "default": null,
+          "choices": null,
+          "raw": " --flags <number>            Specifies allowed use conditions."
+        },
+        {
+          "flags": [
+            "--externalsigner"
+          ],
+          "metavar": "\"cmd\"",
+          "takes_value": true,
+          "description": "Use an external program cmd to calculate the signatures.",
+          "default": null,
+          "choices": null,
+          "raw": " --externalsigner \"cmd\"        Use an external program cmd to calculate the signatures."
+        },
+        {
+          "flags": [
+            "--signpubkey"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Signing public key in .vbpubk format. This is required to",
+          "default": null,
+          "choices": null,
+          "raw": " --signpubkey <file>        Signing public key in .vbpubk format. This is required to"
+        }
+      ],
+      "raw_help": "root@kali:~# vbutil_keyblock --help\n \n Usage:  futility vbutil_keyblock <--pack|--unpack> <file> [OPTIONS]\n \n For '--pack <file>', required OPTIONS are:\n --datapubkey <file>         Data public key in .vbpubk format\n \n Optional OPTIONS are:\n --signprivate <file>        Signing private key in .vbprivk format.\n OR\n --signprivate_pem <file>\n --pem_algorithm <algo>\n       Signing private key in .pem format and algorithm id.\n (If one of the above arguments is not specified, the keyblock will\n not be signed.)\n \n --flags <number>            Specifies allowed use conditions.\n --externalsigner \"cmd\"        Use an external program cmd to calculate the signatures.\n \n For '--unpack <file>', optional OPTIONS are:\n --signpubkey <file>        Signing public key in .vbpubk format. This is required to\n                               verify a signed keyblock.\n --datapubkey <file>        Write the data public key to this file.",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:  futility vbutil_keyblock <--pack|--unpack> <file> [OPTIONS]\n\nFor '--pack <file>', required OPTIONS are:\n  --datapubkey <file>         Data public key in .vbpubk format\n\nOptional OPTIONS are:\n  --signprivate <file>        Signing private key in .vbprivk format.\nOR\n  --signprivate_pem <file>\n  --pem_algorithm <algo>\n        Signing private key in .pem format and algorithm id.\n(If one of the above arguments is not specified, the keyblock will\nnot be signed.)\n\n  --flags <number>            Specifies allowed use conditions.\n  --externalsigner \"cmd\"        Use an external program cmd to calculate the signatures.\n\nFor '--unpack <file>', optional OPTIONS are:\n  --signpubkey <file>        Signing public key in .vbpubk format. This is required to\n                                verify a signed keyblock.\n  --datapubkey <file>        Write the data public key to this file.",
+        "-h": "Unknown option\n\nUsage:  futility vbutil_keyblock <--pack|--unpack> <file> [OPTIONS]\n\nFor '--pack <file>', required OPTIONS are:\n  --datapubkey <file>         Data public key in .vbpubk format\n\nOptional OPTIONS are:\n  --signprivate <file>        Signing private key in .vbprivk format.\nOR\n  --signprivate_pem <file>\n  --pem_algorithm <algo>\n        Signing private key in .pem format and algorithm id.\n(If one of the above arguments is not specified, the keyblock will\nnot be signed.)\n\n  --flags <number>            Specifies allowed use conditions.\n  --externalsigner \"cmd\"        Use an external program cmd to calculate the signatures.\n\nFor '--unpack <file>', optional OPTIONS are:\n  --signpubkey <file>        Signing public key in .vbpubk format. This is required to\n                                verify a signed keyblock.\n  --datapubkey <file>        Write the data public key to this file.",
+        "help": "Must specify a mode.\n\nUsage:  futility vbutil_keyblock <--pack|--unpack> <file> [OPTIONS]\n\nFor '--pack <file>', required OPTIONS are:\n  --datapubkey <file>         Data public key in .vbpubk format\n\nOptional OPTIONS are:\n  --signprivate <file>        Signing private key in .vbprivk format.\nOR\n  --signprivate_pem <file>\n  --pem_algorithm <algo>\n        Signing private key in .pem format and algorithm id.\n(If one of the above arguments is not specified, the keyblock will\nnot be signed.)\n\n  --flags <number>            Specifies allowed use conditions.\n  --externalsigner \"cmd\"        Use an external program cmd to calculate the signatures.\n\nFor '--unpack <file>', optional OPTIONS are:\n  --signpubkey <file>        Signing public key in .vbpubk format. This is required to\n                                verify a signed keyblock.\n  --datapubkey <file>        Write the data public key to this file."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/vbutil_keyblock",
+        "size_bytes": 293872,
+        "is_symlink": true,
+        "real_path": "/usr/bin/futility",
+        "file_type": "symbolic link to futility"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/vboot-utils/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/vboot-utils/index.md",
+    "retrieved_at": "2026-07-14T13:08:55+00:00",
+    "sha256": "c92d4fb4dd8cbd03049a2cbc0272796f2a97a43c8b424f576338f9074b7fb8c3"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "281",
+    "maintainer": "Sophie Brun <sophie@offensive-security.com>",
+    "architecture": "amd64",
+    "version": "0~R106-15054.B+dfsg-0.1",
+    "depends": "flashrom, vboot-kernel-utils, libc6 (>= 2.38), libssl3t64 (>= 3.0.0)",
+    "recommends": "cgpt, coreboot-utils",
+    "description": "Chrome OS verified u-boot utilities\nThis package contains a set of tools to deal with Chromebook internals,\nand the verified version of u-boot. Namely:\nbmpblk_font bmpblk_utility chromeos-tpm-recovery crossystem dev_debug_vboot\ndev_make_keypair dumpRSAPublicKey eficompress efidecompress enable_dev_usb_boot\nload_kernel_test pad_digest_utility signature_digest_utility tpm-nvsize\ntpm_init_temp_fix tpmc vbutil_what_key verify_data.\n.\nThe programs previously included in this package: dump_fmap dump_kernel_config\nfutility gbb_utility  vbutil_firmware vbutil_key vbutil_keyblock, are now\ngrouped in the futility program in the package vboot-kernel-utils.\n.\nMost users don't need this package, and should look for the cgpt and\nvboot-kernel-utils packages instead.",
+    "homepage": "https://chromium.googlesource.com/chromiumos/platform/vboot_reference"
+  },
+  "tags": [
+    "offensive",
+    "vboot",
+    "utils",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/vboot-utils && python3 vboot-utils.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/vboot-utils && python3 vboot-utils.py --help",
+    "cd toolboxes/vboot-utils && python3 vboot-utils.py --help",
+    "cd toolboxes/vboot-utils && python3 vboot-utils.py --help",
+    "cd toolboxes/vboot-utils && python3 vboot-utils.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST vboot-utils --output $KFIOSA_OUTPUT_DIR/vboot-utils.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST vboot-utils --output $KFIOSA_OUTPUT_DIR/vboot-utils.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

@@ -1,0 +1,216 @@
+{
+  "id": "kali:memdump",
+  "kind": "kali_source_package",
+  "name": "memdump",
+  "title": "memdump",
+  "summary": "### memdump",
+  "version": "1.01-9",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://www.porcupine.org/forensics/tct.html",
+  "repository": "https://salsa.debian.org/pkg-security-team/memdump",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install memdump"
+  },
+  "packages": [
+    {
+      "name": "memdump"
+    }
+  ],
+  "commands": [
+    {
+      "name": "memdump",
+      "description": "Memory dumper",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "read_buffer_size",
+          "takes_value": true,
+          "description": "(default 0, use the system page size)",
+          "default": "0",
+          "choices": null,
+          "raw": " -b read_buffer_size     (default 0, use the system page size)"
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "(dump kernel memory instead of physical memory)",
+          "default": null,
+          "choices": null,
+          "raw": " -k                      (dump kernel memory instead of physical memory)"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "map_file",
+          "takes_value": true,
+          "description": "(print memory map)",
+          "default": null,
+          "choices": null,
+          "raw": " -m map_file             (print memory map)"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "memory_page_size",
+          "takes_value": true,
+          "description": "(default 0, use the system page size)",
+          "default": "0",
+          "choices": null,
+          "raw": " -p memory_page_size     (default 0, use the system page size)"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "memory_dump ize",
+          "takes_value": true,
+          "description": "(default 0, dump all memory)",
+          "default": "0",
+          "choices": null,
+          "raw": " -s memory_dump-size     (default 0, dump all memory)"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "(verbose mode for debugging)",
+          "default": null,
+          "choices": null,
+          "raw": " -v                      (verbose mode for debugging)"
+        }
+      ],
+      "raw_help": "root@kali:~# memdump -h\n memdump: invalid option -- 'h'\n memdump: usage: memdump [options]\n -b read_buffer_size     (default 0, use the system page size)\n -k                      (dump kernel memory instead of physical memory)\n -m map_file             (print memory map)\n -p memory_page_size     (default 0, use the system page size)\n -s memory_dump-size     (default 0, dump all memory)\n -v                      (verbose mode for debugging)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "memdump: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "bc3013db3fbe5e5b03e4a4bbf4c41d0b19a6cb1abcec0a3fb88563bb74c91df1"
+        },
+        {
+          "status": "operational_example",
+          "command": "memdump: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "1885dad9a880e3f1437fa81bd8c8e57ac14d7ac0c2b02526f1286605f5b4c9b0"
+        },
+        {
+          "status": "operational_example",
+          "command": "memdump: too many arguments",
+          "template": null,
+          "original_sha256": "5bdc0b6f6e3a483497cfe82700129150ab28efa7984c9b5f3799ab76ef4fb98e"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "memdump: invalid option -- '-'\nmemdump: usage: memdump [options]\n  -b read_buffer_size     (default 0, use the system page size)\n  -k                      (dump kernel memory instead of physical memory)\n  -m map_file             (print memory map)\n  -p memory_page_size     (default 0, use the system page size)\n  -s memory_dump-size     (default 0, dump all memory)\n  -v                      (verbose mode for debugging)",
+        "-h": "memdump: invalid option -- 'h'\nmemdump: usage: memdump [options]\n  -b read_buffer_size     (default 0, use the system page size)\n  -k                      (dump kernel memory instead of physical memory)\n  -m map_file             (print memory map)\n  -p memory_page_size     (default 0, use the system page size)\n  -s memory_dump-size     (default 0, dump all memory)\n  -v                      (verbose mode for debugging)",
+        "help": "memdump: too many arguments\nmemdump: usage: memdump [options]\n  -b read_buffer_size     (default 0, use the system page size)\n  -k                      (dump kernel memory instead of physical memory)\n  -m map_file             (print memory map)\n  -p memory_page_size     (default 0, use the system page size)\n  -s memory_dump-size     (default 0, dump all memory)\n  -v                      (verbose mode for debugging)",
+        "man": "MEMDUMP(8)                  System Manager's Manual                  MEMDUMP(8)\n\nNAME\n     memdump - memory dumper\n\nSYNOPSIS\n     memdump [-kv] [-b buffer_size] [-d dump_size] [-m map_file] [-p page_size]\n\nDESCRIPTION\n     This  program  dumps system memory to the standard output stream, skipping\n     over holes in memory maps.  By default, the program dumps the contents  of\n     physical memory (/dev/mem).\n\n     Output  is  in  the form of a raw dump; if necessary, use the -m option to\n     capture memory layout information.\n\n     Output should be sent off-host over the network, to avoid changing all the\n     memory in the file system cache. Use netcat, stunnel, or openssl,  depend-\n     ing on your requirements.\n\n     The  size  arguments  below  understand the k (kilo) m (mega) and g (giga)\n     suffixes. Suffixes are case insensitive.\n\n     Options\n\n     -k     Attempt to dump kernel memory (/dev/kmem) rather than physical mem-\n            ory.\n\n            Warning: this can lock up the system to the point that you have  to\n            use the power switch (for example, Solaris 8 on 64-bit SPARC).\n\n            Warning: this produces bogus results on Linux 2.2 kernels.\n\n            Warning:  this  is  very slow on 64-bit machines because the entire\n            memory address range has to be searched.\n\n            Warning: kernel virtual memory mappings change frequently.  Depend-\n            ing  on  the  operating  system, mappings smaller than page_size or\n            buffer_size may be missed or may be reported incorrectly.\n\n     -b buffer_size (default: 0)\n            Number of bytes per memory read operation. By default, the  program\n            uses the page_size value.\n\n            Warning: a too large read buffer size causes memory to be missed on\n            FreeBSD or Solaris.\n\n     -s dump-size (default: 0)\n            Number  of memory bytes to dump. By default, the program runs until\n            the memory device reports an end-of-file (Linux), or until  it  has\n            dumped from /dev/mem as much memory as reported present by the ker-\n            nel (FreeBSD, Solaris), or until pointer wrap-around happens.\n\n            Warning:  a  too  large  value causes the program to spend a lot of\n            time skipping over non-existent memory on Solaris systems.\n\n            Warning: a too large value causes the program to copy  non-existent\n            data on FreeBSD systems.\n\n     -m map_file\n            Write  the memory map to map_file, one entry per line.  Specify -m-\n            to write to the standard error stream.  Each map entry consists  of\n            a  region  start  address and the first address beyond that region.\n            Addresses are separated by space, and are  printed  as  hexadecimal\n            numbers (0xhhhh).\n\n     -p page_size (default: 0)\n            Use  page_size as the memory page size. By default the program uses\n            the system page size.\n\n            Warning: a too large page size causes memory  to  be  missed  while\n            skipping over holes in memory.\n\n     -v     Enable  verbose logging for debugging purposes. Multiple -v options\n            make the program more verbose.\n\nBUGS\n     On many hardware platforms the firmware (boot  PROM,  BIOS,  etc.)   takes\n     away some memory. This memory is not accessible through /dev/mem.\n\n     This program should produce output in a format that supports structure in-\n     formation such as ELF.\n\nLICENSE\n     This software is distributed under the IBM Public License.\n\nAUTHOR\n     Wietse Venema\n     IBM T.J. Watson Research\n     P.O. Box 704\n     USA\n\n                                                                     MEMDUMP(8)",
+        "apropos": "memdump (8)          - memory dumper"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/memdump",
+        "size_bytes": 14336,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ccb4f1e8ebb6b0c550e5437a98e2049c868b0b77, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/memdump/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/memdump/index.md",
+    "retrieved_at": "2026-07-14T13:06:36+00:00",
+    "sha256": "f1af0a68512c73a867866630d14e098b2fe6a35d4aab89b090ffefefd9945c84"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "44",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.01-9",
+    "depends": "libc6 (>= 2.4)",
+    "suggests": "lime-forensics",
+    "description": "utility to dump memory contents to standard output\nProgram which dumps system memory to the standard output stream, skipping over\nholes in memory maps. By default, the program dumps the contents of physical\nmemory.\n.\nThis program will not work if CONFIG_STRICT_DEVMEM is enabled in kernel. Since\n2.6 version, several kernels are enabling this option by default.\n.\nmemdump is useful in security tests and forensics investigations.",
+    "homepage": "http://www.porcupine.org/forensics/tct.html"
+  },
+  "tags": [
+    "offensive",
+    "memdump",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/memdump && python3 memdump.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/memdump && python3 memdump.py --help",
+    "cd toolboxes/memdump && python3 memdump.py --help",
+    "cd toolboxes/memdump && python3 memdump.py --help",
+    "cd toolboxes/memdump && python3 memdump.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST memdump --output $KFIOSA_OUTPUT_DIR/memdump.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST memdump --output $KFIOSA_OUTPUT_DIR/memdump.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

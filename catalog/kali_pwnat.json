@@ -1,0 +1,222 @@
+{
+  "id": "kali:pwnat",
+  "kind": "kali_source_package",
+  "name": "pwnat",
+  "title": "pwnat",
+  "summary": "### pwnat",
+  "version": "0.3.0-0kali2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://samy.pl/pwnat/",
+  "repository": "https://gitlab.com/kalilinux/packages/pwnat",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-post-exploitation"
+  ],
+  "install": {
+    "apt": "sudo apt install pwnat"
+  },
+  "packages": [
+    {
+      "name": "pwnat"
+    }
+  ],
+  "commands": [
+    {
+      "name": "pwnat",
+      "description": "Proxy server that works behind both client and server NATs",
+      "usage": "pwnat <-s | -c> <args>",
+      "arguments": [
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "client mode (default)",
+          "default": null,
+          "choices": null,
+          "raw": " -c    client mode (default)"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "server mode",
+          "default": null,
+          "choices": null,
+          "raw": " -s    server mode"
+        },
+        {
+          "flags": [
+            "-6"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use IPv6",
+          "default": null,
+          "choices": null,
+          "raw": " -6    use IPv6"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show debug output (up to 2)",
+          "default": null,
+          "choices": null,
+          "raw": " -v    show debug output (up to 2)"
+        },
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "reuse address",
+          "default": null,
+          "choices": null,
+          "raw": " -a    reuse address"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "reuse port",
+          "default": null,
+          "choices": null,
+          "raw": " -p    reuse port"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h    show this help and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# pwnat -h\n usage: pwnat <-s | -c> <args>\n -c    client mode (default)\n       <args>: [local ip] <local port> <proxy host> [proxy port (def:2222)] <remote host> <remote port>\n -s    server mode\n       <args>: [local ip] [proxy port (def:2222)] [[allowed host]:[allowed port] ...]\n -6    use IPv6\n -v    show debug output (up to 2)\n -a    reuse address\n -p    reuse port\n -h    show this help and exit",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "pwnat -s 8080\nListening on UDP 0.0.0.0:8080",
+          "template": null,
+          "original_sha256": "d0cae086ee8a5b1b5745d9a9146fa40d0ece6451983ee584943548afe75331da"
+        },
+        {
+          "status": "operational_example",
+          "command": "pwnat -c 8000 192.168.1.202 8080 google.com 80\nListening on TCP 0.0.0.0:8000\nNew connection(1): tcp://127.0.0.1:41318 -> udp://192.168.1.202:8080",
+          "template": null,
+          "original_sha256": "4fd9802d4c99c4c0f5933d1035303ce7bea248e36b257951614163196e317982"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: pwnat <-s | -c> <args>\n  -c    client mode (default)\n        <args>: [local ip] <local port> <proxy host> [proxy port (def:2222)] <remote host> <remote port>\n  -s    server mode\n        <args>: [local ip] [proxy port (def:2222)] [[allowed host]:[allowed port] ...]\n  -6    use IPv6\n  -v    show debug output (up to 2)\n  -a    reuse address\n  -p    reuse port\n  -h    show this help and exit",
+        "-h": "usage: pwnat <-s | -c> <args>\n  -c    client mode (default)\n        <args>: [local ip] <local port> <proxy host> [proxy port (def:2222)] <remote host> <remote port>\n  -s    server mode\n        <args>: [local ip] [proxy port (def:2222)] [[allowed host]:[allowed port] ...]\n  -6    use IPv6\n  -v    show debug output (up to 2)\n  -a    reuse address\n  -p    reuse port\n  -h    show this help and exit",
+        "help": "usage: pwnat <-s | -c> <args>\n  -c    client mode (default)\n        <args>: [local ip] <local port> <proxy host> [proxy port (def:2222)] <remote host> <remote port>\n  -s    server mode\n        <args>: [local ip] [proxy port (def:2222)] [[allowed host]:[allowed port] ...]\n  -6    use IPv6\n  -v    show debug output (up to 2)\n  -a    reuse address\n  -p    reuse port\n  -h    show this help and exit",
+        "man": "untitled(1)                                                         untitled(1)\n\n            PWNAT(1)\n                   proxy  server  that works behind client+server NATs      PW-\n                   NAT(1)\n\nNAME\n     pwnat - proxy server that works behind both client and server NATs\n\nSYNOPSIS\n           ./pwnat <-s | -c> <args>\n\nDESCRIPTION\n     There  is no middle man, no proxy, no 3rd party, no UPnP required, no\n\n     spoofing, or DNS tricks.\n            The  server  does  not  need  to  know  the\n\n     client's\n            IP address before connecting.  More  importantly,  the  client  can\n            then  connect  to any host or port on any remote host or to a fixed\n            host and port decided by the server.\n\nOPTIONS\n     -c     client  mode:  <args>:  [local   ip]   <local  port>  <proxy  host>\n            [proxy port (def:2222)] <remote host> <remote port>\n\n     -s     server  mode:  <args>:  [local  ip]  [proxy port (def:2222)]  [[al-\n            lowed host]:[allowed port] ...]\n\n     -6     use IPv6\n\n     -v     show debug output (up to 2)\n\n     -h     show this help and exit\n\nEXAMPLES\n     1.     Server side allowing anyone to proxy: pwnat -s\n\n     2.     Client  wanting  to  connect to google.com:80: pwnat -c  8000  <pw-\n            nat.server.com> google.com 80\n\n     3.     browse to visit the google: http://localhost:8000\n\nREPORTING BUGS\n     To report a\n            bug    please    visit    pwnat    issues   tracking   system   at:\n            https://github.com/samyk/pwnat/issues\n\nAUTHORS\n     Written by Samy Kamkar <pwnat@samy.pl>. Tunneling portion\n            based  off of udptunnel  by  Daniel  Meekins  Contact:  dmeekins  -\n            gmail. This manual\n\n     page was written by Josenison F. da Silva\n            <nilsonfsilva@hotmail.com>  for the Debian project (but may be used\n            by others).\n\n     PWNAT 0.3\n            Abr 2022                          PWNAT(1)\n\n                                 01 April 2025                      untitled(1)",
+        "apropos": "pwnat (1)            - proxy server that works behind both client and server ..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/pwnat",
+        "size_bytes": 43568,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=939d68c55d648daee00874e0912858f82c7ff852, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/pwnat/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/pwnat/index.md",
+    "retrieved_at": "2026-07-14T13:07:50+00:00",
+    "sha256": "81777c5f70d836ab8b5787116032017470d728df003a3dfe38af30129e2cc167"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "65",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "0.3.0-0kali2",
+    "depends": "libc6 (>= 2.34)",
+    "description": "NAT to NAT client-server communication\npwnat, pronounced \"poe-nat\", is a tool that allows any\nnumber of clients behind NATs to communicate with a\nserver behind a separate NAT with *no* port forwarding\nand *no* DMZ setup on any routers in order to directly\ncommunicate with each other. The server does not need\nto know anything about the clients trying to connect.",
+    "homepage": "https://samy.pl/pwnat/"
+  },
+  "tags": [
+    "offensive",
+    "pwnat",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/pwnat && python3 pwnat.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/pwnat && python3 pwnat.py --help",
+    "cd toolboxes/pwnat && python3 pwnat.py --help",
+    "cd toolboxes/pwnat && python3 pwnat.py --help",
+    "cd toolboxes/pwnat && python3 pwnat.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pwnat --output $KFIOSA_OUTPUT_DIR/pwnat.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pwnat --output $KFIOSA_OUTPUT_DIR/pwnat.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

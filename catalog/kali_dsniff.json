@@ -1,0 +1,1375 @@
+{
+  "id": "kali:dsniff",
+  "kind": "kali_source_package",
+  "name": "dsniff",
+  "title": "dsniff",
+  "summary": "### dsniff",
+  "version": "2.5a2-1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/hackerschoice/dsniff",
+  "repository": "https://salsa.debian.org/pkg-security-team/dsniff",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-linux-nethunter",
+    "kali-tools-exploitation",
+    "kali-tools-sniffing-spoofing",
+    "kali-tools-social-engineering",
+    "kali-tools-voip",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install dsniff"
+  },
+  "packages": [
+    {
+      "name": "dsniff"
+    }
+  ],
+  "commands": [
+    {
+      "name": "arpspoof",
+      "description": "Intercept packets on a switched LAN",
+      "usage": "arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "own host both",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -c own|host|both"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "target",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -t target"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Poison  both hosts (host and target) to capture traffic in both di-",
+          "default": null,
+          "choices": null,
+          "raw": "     -r     Poison  both hosts (host and target) to capture traffic in both di-"
+        }
+      ],
+      "raw_help": "root@kali:~# arpspoof --help\n arpspoof: invalid option -- '-'\n Version: 2.5a2\n Usage: arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "arpspoof: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "0c0f1861c4b199ef5b9087e979201088550526bc8cc5ea2bc6122bfab0255951"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "arpspoof: invalid option -- '-'\nVersion: 2.5a2\nUsage: arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host",
+        "-h": "Version: 2.5a2\nUsage: arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host",
+        "help": "Version: 2.5a2\nUsage: arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host",
+        "man": "ARPSPOOF(8)                 System Manager's Manual                 ARPSPOOF(8)\n\nNAME\n     arpspoof - intercept packets on a switched LAN\n\nSYNOPSIS\n     arpspoof [-i interface] [-c own|host|both] [-t target] [-r] host\n\nDESCRIPTION\n     arpspoof  redirects  packets  from a target host (or all hosts) on the LAN\n     intended for another host on the LAN by forging ARP replies.  This  is  an\n     extremely effective way of sniffing traffic on a switch.\n\n     Kernel  IP  forwarding (or a userland program which accomplishes the same,\n     e.g. fragrouter(8)) must be turned on ahead of time.\n\nOPTIONS\n     -i interface\n            Specify the interface to use.\n\n     -c own|host|both\n            Specify which hardware address t use when restoring the arp config-\n            uration; while cleaning up, packets can be send with  the  own  ad-\n            dress as well as with the address of the host. Sending packets with\n            a   fake   hw   address   can  disrupt  connectivity  with  certain\n            switch/ap/bridge configurations, however  it  works  more  reliably\n            than  using  the  own  address,  which  is the default way arpspoof\n            cleans up afterwards.\n\n     -t target\n            Specify a particular host to ARP  poison  (if  not  specified,  all\n            hosts on the LAN). Repeat to specify multiple hosts.\n\n     -r     Poison  both hosts (host and target) to capture traffic in both di-\n            rections.  (only valid in conjuntion with -t)\n\n     host   Specify the host you wish to intercept packets for (usually the lo-\n            cal gateway).\n\nSEE ALSO\n     dsniff(8), fragrouter(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                    ARPSPOOF(8)",
+        "apropos": "arpspoof (8)         - intercept packets on a switched LAN"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/arpspoof",
+        "size_bytes": 14576,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=cbdf3cc305d2aeee8bbf8dc1e9df2d8f21ce4364, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "dnsspoof",
+      "description": "Forge replies to DNS address / pointer queries",
+      "usage": "dnsspoof [-i interface] [-f hostsfile] [expression]",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "hostsfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -f hostsfile"
+        }
+      ],
+      "raw_help": "root@kali:~# dnsspoof --help\n dnsspoof: invalid option -- '-'\n Version: 2.5a2\n Usage: dnsspoof [-i interface] [-f hostsfile] [expression]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "dnsspoof: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "5def373c3fc186262761eb67a95e5c26fae1131b4337dab58af49365684800e5"
+        },
+        {
+          "status": "operational_example",
+          "command": "dnsspoof: couldn't initialize sniffing",
+          "template": null,
+          "original_sha256": "b6a682af0786b81263e22a9f084d5b6077e9e31747ec00a8d6326803cefd9f04"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "dnsspoof: invalid option -- '-'\nVersion: 2.5a2\nUsage: dnsspoof [-i interface] [-f hostsfile] [expression]",
+        "-h": "Version: 2.5a2\nUsage: dnsspoof [-i interface] [-f hostsfile] [expression]",
+        "help": "pcap_compile: can't parse filter expression: syntax error\ndnsspoof: couldn't initialize sniffing",
+        "man": "DNSSPOOF(8)                 System Manager's Manual                 DNSSPOOF(8)\n\nNAME\n     dnsspoof - forge replies to DNS address / pointer queries\n\nSYNOPSIS\n     dnsspoof [-i interface] [-f hostsfile] [expression]\n\nDESCRIPTION\n     dnsspoof  forges replies to arbitrary DNS address / pointer queries on the\n     LAN. This is useful in bypassing hostname-based access controls, or in im-\n     plementing a variety of man-in-the-middle attacks.\n\nOPTIONS\n     -i interface\n            Specify the interface to use.\n\n     -f hostsfile\n            Specify the pathname of a file in hosts(5) format. Only  one  host-\n            name  allowed per line (no aliases), although hostnames may contain\n            wildcards (such as *.doubleclick.net).\n\n     expression\n            Specify a tcpdump(8) filter expression to select traffic to sniff.\n\n     If no hostsfile is specified, replies  will  be  forged  for  all  address\n     queries on the LAN with an answer of the local machine's IP address.\n\nFILES\n     /usr/share/dsniff/dnsspoof.hosts\n            Sample hosts file.\n\nSEE ALSO\n     dsniff(8), hosts(5)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                    DNSSPOOF(8)",
+        "apropos": "dnsspoof (8)         - forge replies to DNS address / pointer queries"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dnsspoof",
+        "size_bytes": 22776,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ea23f512a348682c44678cc20a752c7577705653, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "dsniff",
+      "description": "Password sniffer",
+      "usage": "dsniff [-cdamDNPCv] [-i interface | -p pcapfile] [-s snaplen]",
+      "arguments": [
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Half-duplex TCP stream assembly",
+          "default": null,
+          "choices": null,
+          "raw": "-c         Half-duplex TCP stream assembly"
+        },
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show duplicates",
+          "default": null,
+          "choices": null,
+          "raw": "-a         Show duplicates"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose. Show banners",
+          "default": null,
+          "choices": null,
+          "raw": "-v         Verbose. Show banners"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable debugging mode",
+          "default": null,
+          "choices": null,
+          "raw": "-d         Enable debugging mode"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable DPI. Only decode known ports.",
+          "default": null,
+          "choices": null,
+          "raw": "-D         Disable DPI. Only decode known ports."
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Force DPI also on known ports (e.g. ignore /etc/services).",
+          "default": null,
+          "choices": null,
+          "raw": "-m         Force DPI also on known ports (e.g. ignore /etc/services)."
+        },
+        {
+          "flags": [
+            "-C"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Force color output even if not a TTY (disable color: dsniff|cat)",
+          "default": null,
+          "choices": null,
+          "raw": "-C         Force color output even if not a TTY (disable color: dsniff|cat)"
+        },
+        {
+          "flags": [
+            "-N"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Resolve IP addresses to hostname",
+          "default": null,
+          "choices": null,
+          "raw": "-N         Resolve IP addresses to hostname"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable promisc mode",
+          "default": null,
+          "choices": null,
+          "raw": "-P         Enable promisc mode"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "...",
+          "takes_value": true,
+          "description": "Force a decoding method for a specific port/protocol.",
+          "default": null,
+          "choices": null,
+          "raw": "-t <...>   Force a decoding method for a specific port/protocol."
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "link",
+          "takes_value": true,
+          "description": "Specify the interface to listen on",
+          "default": null,
+          "choices": null,
+          "raw": "-i <link>  Specify the interface to listen on"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Read from pcap file",
+          "default": null,
+          "choices": null,
+          "raw": "-p <file>  Read from pcap file"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "len",
+          "takes_value": true,
+          "description": "Analyze at most the first snaplen of each TCP connection [default: 1024]",
+          "default": "1024]",
+          "choices": null,
+          "raw": "-s <len>   Analyze at most the first snaplen of each TCP connection [default: 1024]"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "services",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -f services"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": "magicfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -M magicfile"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "savefile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -r savefile"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": "fileWrite sniffed sessions to savefile rather than parsing and printing",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -w fileWrite sniffed sessions to savefile rather than parsing and printing"
+        }
+      ],
+      "raw_help": "root@kali:~# dsniff --help\n dsniff: invalid option -- '-'\n Version: 2.5a2\n Usage: dsniff [-cdamDNPCv] [-i interface | -p pcapfile] [-s snaplen]\n             [-f services] [-t trigger[,...]]\n             [pcap filter]\n-c         Half-duplex TCP stream assembly\n-a         Show duplicates\n-v         Verbose. Show banners\n-d         Enable debugging mode\n-D         Disable DPI. Only decode known ports.\n-m         Force DPI also on known ports (e.g. ignore /etc/services).\n           For example, -m will detect SSH on port 443 (https).\n-C         Force color output even if not a TTY (disable color: dsniff|cat)\n-N         Resolve IP addresses to hostname\n-P         Enable promisc mode\n-t <...>   Force a decoding method for a specific port/protocol.\n           Example: Decode IMAP on port 8143: -t 8143/tcp=imap\n-i <link>  Specify the interface to listen on\n-p <file>  Read from pcap file\n-s <len>   Analyze at most the first snaplen of each TCP connection [default: 1024]\n \nExample:\n  dsniff -i eth0 -C >log.txt",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "dsniff: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "b63fe6f771015285becc937c6d499141485a8f6335275c6456c044ec98332983"
+        },
+        {
+          "status": "operational_example",
+          "command": "dsniff -i eth0 -C >log.txt",
+          "template": null,
+          "original_sha256": "c69a3faddefc90d35c476b8c28625593f795d14c154b3cea92f84d4d56586284"
+        },
+        {
+          "status": "operational_example",
+          "command": "dsniff: nids_init: Libnids not initialized",
+          "template": null,
+          "original_sha256": "99cad08b981199ab5cb9b13499ae634c8b717c49dd8ad8934b81987eae60dde2"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "dsniff: invalid option -- '-'\nVersion: 2.5a2\nUsage: dsniff [-cdamDNPCv] [-i interface | -p pcapfile] [-s snaplen]\n              [-f services] [-t trigger[,...]]\n              [pcap filter]\n -c         Half-duplex TCP stream assembly\n -a         Show duplicates\n -v         Verbose. Show banners\n -d         Enable debugging mode\n -D         Disable DPI. Only decode known ports.\n -m         Force DPI also on known ports (e.g. ignore /etc/services).\n            For example, -m will detect SSH on port 443 (https).\n -C         Force color output even if not a TTY (disable color: dsniff|cat)\n -N         Resolve IP addresses to hostname\n -P         Enable promisc mode\n -t <...>   Force a decoding method for a specific port/protocol.\n            Example: Decode IMAP on port 8143: -t 8143/tcp=imap\n -i <link>  Specify the interface to listen on\n -p <file>  Read from pcap file\n -s <len>   Analyze at most the first snaplen of each TCP connection [default: 1024]\n\n Example:\n   dsniff -i eth0 -C >log.txt",
+        "-h": "Version: 2.5a2\nUsage: dsniff [-cdamDNPCv] [-i interface | -p pcapfile] [-s snaplen]\n              [-f services] [-t trigger[,...]]\n              [pcap filter]\n -c         Half-duplex TCP stream assembly\n -a         Show duplicates\n -v         Verbose. Show banners\n -d         Enable debugging mode\n -D         Disable DPI. Only decode known ports.\n -m         Force DPI also on known ports (e.g. ignore /etc/services).\n            For example, -m will detect SSH on port 443 (https).\n -C         Force color output even if not a TTY (disable color: dsniff|cat)\n -N         Resolve IP addresses to hostname\n -P         Enable promisc mode\n -t <...>   Force a decoding method for a specific port/protocol.\n            Example: Decode IMAP on port 8143: -t 8143/tcp=imap\n -i <link>  Specify the interface to listen on\n -p <file>  Read from pcap file\n -s <len>   Analyze at most the first snaplen of each TCP connection [default: 1024]\n\n Example:\n   dsniff -i eth0 -C >log.txt",
+        "help": "dsniff: nids_init: Libnids not initialized",
+        "man": "DSNIFF(8)                   System Manager's Manual                   DSNIFF(8)\n\nNAME\n     dsniff - password sniffer\n\nSYNOPSIS\n     dsniff [-v] [-c] [-a] [-d] [-m] [-D] [-N] [-P] [-i interface | -p pcap-\n     file] [-s snaplen] [-M magics] [-f services] [-t trigger[,...]]  [-r|-w\n     savefile] [expression]\n\nDESCRIPTION\n     dsniff  is  a password sniffer which handles FTP, Telnet, SMTP, HTTP, POP,\n     poppass, NNTP, IMAP, SNMP, LDAP, Rlogin, RIP,  OSPF,  PPTP  MS-CHAP,  NFS,\n     VRRP, YP/NIS, SOCKS, X11, CVS, IRC, AIM, ICQ, Napster, PostgreSQL, Meeting\n     Maker, Citrix ICA, Symantec pcAnywhere, NAI Sniffer, Microsoft SMB, Oracle\n     SQL*Net, Sybase and Microsoft SQL protocols.\n\n     dsniff  automatically detects and minimally parses each application proto-\n     col, only saving the interesting bits, and uses Berkeley DB as its  output\n     file  format, only logging unique authentication attempts. Full TCP/IP re-\n     assembly is provided by libnids(3).\n\n     I wrote dsniff with honest intentions - to audit my own  network,  and  to\n     demonstrate  the insecurity of cleartext network protocols.  Please do not\n     abuse this software.\n\nOPTIONS\n     -c     Perform half-duplex TCP stream reassembly, to handle asymmetrically\n            routed traffic (such as when using arpspoof(8) to intercept  client\n            traffic bound for the local gateway).\n\n     -v     Verbose. Show banners.\n\n     -a     Show all results. Otherwise dsniff tries not to show to many dupli-\n            cates.\n\n     -d     Enable debugging mode.\n\n     -m     Force  protocol  detection/DPI also on known services. For example,\n            -m will detect SSH _and_ HTTPS on port 443.\n\n     -N     Resolve IP addresses to hostnames.\n\n     -P     Enable promisc mode.\n\n     -C     Force color output even if not a tty.\n\n     -D     Disable DPI. Only decode known services (DPI is enabled by  default\n            on unknown ports).\n\n     -i interface\n            Specify the interface to listen on.\n\n     -p pcapfile\n            Rather  than  processing  the contents of packets observed upon the\n            network process the given PCAP capture file.\n\n     -s snaplen\n            Analyze at most the first snaplen bytes  of  each  TCP  connection,\n            rather than the default of 1024.\n\n     -f services\n            Load triggers from a services file. Default is to use internal.\n\n     -M magicfile\n            Load  magics from file. Default is to use internal. Can not be used\n            with -t.\n\n     -t trigger[,...]\n            Load  triggers  from   a   comma-separated   list,   specified   as\n            port/proto=service (e.g. 80/tcp=http).\n\n     -r savefile\n            Read sniffed sessions from a savefile created with the -w option.\n\n     -w fileWrite sniffed sessions to savefile rather than parsing and printing\n            them out.\n\n     expression\n            Specify a tcpdump(8) filter expression to select traffic to sniff.\n\n     On  a  hangup  signal  dsniff  will  dump  its  current  trigger  table to\n     dsniff.services.\n\nFILES\n     /usr/share/dsniff/dsniff.services\n            Default trigger table\n\n     /usr/share/dsniff/dsniff.magic\n            Network protocol magic\n\nSEE ALSO\n     arpspoof(8), libnids(3), services(5), magic(5)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\nBUGS\n     dsniff's automatic protocol detection feature  is  based  on  the  classic\n     file(1)  command  by Ian Darwin, and shares its historical limitations and\n     bugs.\n\n                                                                      DSNIFF(8)",
+        "apropos": "dsniff (8)           - password sniffer\nradsniff (8)         - dump radius protocol"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dsniff",
+        "size_bytes": 97400,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=12301f12fd8670a428629dd29a9a5d6f8bedeecf, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "filesnarf",
+      "description": "Sniff files from NFS traffic",
+      "usage": "filesnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "pcapfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p pcapfile"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "\"Versus\" mode. Invert the sense of matching, to select non-matching",
+          "default": null,
+          "choices": null,
+          "raw": "     -v     \"Versus\" mode. Invert the sense of matching, to select non-matching"
+        }
+      ],
+      "raw_help": "root@kali:~# filesnarf --help\n filesnarf: invalid option -- '-'\n Version: 2.5a2\n Usage: filesnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "filesnarf: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "c096979f3f8c1756b87d1ca11861d059c25cf0174477f617920c6832623f8c70"
+        },
+        {
+          "status": "operational_example",
+          "command": "filesnarf: listening on eth0",
+          "template": null,
+          "original_sha256": "341b84bff7907715958bc0589e19029981c1c033964e1ffb355d888933e988c5"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "filesnarf: invalid option -- '-'\nVersion: 2.5a2\nUsage: filesnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+        "-h": "Version: 2.5a2\nUsage: filesnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+        "help": "filesnarf: listening on eth0",
+        "man": "FILESNARF(8)                System Manager's Manual                FILESNARF(8)\n\nNAME\n     filesnarf - sniff files from NFS traffic\n\nSYNOPSIS\n     filesnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]\n\nDESCRIPTION\n     filesnarf  saves files sniffed from NFS traffic in the current working di-\n     rectory.\n\nOPTIONS\n     -i interface\n            Specify the interface to listen on.\n\n     -p pcapfile\n            Process packets from the specified PCAP capture file instead of the\n            network.\n\n     -v     \"Versus\" mode. Invert the sense of matching, to select non-matching\n            files.\n\n     patternSpecify regular expression for filename matching.\n\n     expression\n            Specify a tcpdump(8) filter expression to select traffic to sniff.\n\nSEE ALSO\n     dsniff(8), nfsd(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                   FILESNARF(8)",
+        "apropos": "filesnarf (8)        - sniff files from NFS traffic"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/filesnarf",
+        "size_bytes": 30952,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ab8378f913b71ac9153c5eaec018c8d020c4d65f, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "macof",
+      "description": "Flood a switched LAN with random MAC addresses",
+      "usage": "macof [-s src] [-d dst] [-e tha] [-x sport] [-y dport]",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "src Specify source IP address.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -s src Specify source IP address."
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "dst Specify destination IP address.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -d dst Specify destination IP address."
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "tha Specify target hardware address.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -e tha Specify target hardware address."
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": "sport",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -x sport"
+        },
+        {
+          "flags": [
+            "-y"
+          ],
+          "metavar": "dport",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -y dport"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": "times",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -n times"
+        }
+      ],
+      "raw_help": "root@kali:~# macof --help\n macof: invalid option -- '-'\n Version: 2.5a2\n Usage: macof [-s src] [-d dst] [-e tha] [-x sport] [-y dport]\n            [-i interface] [-n times]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "macof: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "349ce2bc1b29c0bd1794f9da405b82c495482d64c25eb633e1202188fd758451"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "macof: invalid option -- '-'\nVersion: 2.5a2\nUsage: macof [-s src] [-d dst] [-e tha] [-x sport] [-y dport]\n             [-i interface] [-n times]",
+        "-h": "Version: 2.5a2\nUsage: macof [-s src] [-d dst] [-e tha] [-x sport] [-y dport]\n             [-i interface] [-n times]",
+        "help": "Version: 2.5a2\nUsage: macof [-s src] [-d dst] [-e tha] [-x sport] [-y dport]\n             [-i interface] [-n times]",
+        "man": "MACOF(8)                    System Manager's Manual                    MACOF(8)\n\nNAME\n     macof - flood a switched LAN with random MAC addresses\n\nSYNOPSIS\n     macof [-i interface] [-s src] [-d dst] [-e tha] [-x sport] [-y dport] [-n\n     times]\n\nDESCRIPTION\n     macof  floods  the  local  network with random MAC addresses (causing some\n     switches to  fail  open  in  repeating  mode,  facilitating  sniffing).  A\n     straight C port of the original Perl Net::RawIP macof program by Ian Vitek\n     <ian.vitek@infosec.se>.\n\nOPTIONS\n     -i interface\n            Specify the interface to send on.\n\n     -s src Specify source IP address.\n\n     -d dst Specify destination IP address.\n\n     -e tha Specify target hardware address.\n\n     -x sport\n            Specify TCP source port.\n\n     -y dport\n            Specify TCP destination port.\n\n     -n times\n            Specify the number of packets to send.\n\n     Values for any options left unspecified will be generated randomly.\n\nSEE ALSO\n     dsniff(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                       MACOF(8)",
+        "apropos": "macof (8)            - flood a switched LAN with random MAC addresses"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/macof",
+        "size_bytes": 14576,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=244449e57098f55c8d779b748e3c1117cb321dbb, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "mailsnarf",
+      "description": "Sniff mail messages in Berkeley mbox format",
+      "usage": "mailsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "pcapfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p pcapfile"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "\"Versus\" mode. Invert the sense of matching, to select non-matching",
+          "default": null,
+          "choices": null,
+          "raw": "     -v     \"Versus\" mode. Invert the sense of matching, to select non-matching"
+        }
+      ],
+      "raw_help": "root@kali:~# mailsnarf --help\n mailsnarf: invalid option -- '-'\n Version: 2.5a2\n Usage: mailsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "mailsnarf: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "f8e25aceff1e1b5b44131ad49494f8d7fdd59bff26c71245984e38c5be23124c"
+        },
+        {
+          "status": "operational_example",
+          "command": "mailsnarf: listening on eth0",
+          "template": null,
+          "original_sha256": "e03b8b631643e9f72298f0469a0ccad0ef997a2c92fa7455a4c754b356af11e0"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "mailsnarf: invalid option -- '-'\nVersion: 2.5a2\nUsage: mailsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+        "-h": "Version: 2.5a2\nUsage: mailsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+        "help": "mailsnarf: listening on eth0",
+        "man": "MAILSNARF(8)                System Manager's Manual                MAILSNARF(8)\n\nNAME\n     mailsnarf - sniff mail messages in Berkeley mbox format\n\nSYNOPSIS\n     mailsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]\n\nDESCRIPTION\n     mailsnarf  outputs  e-mail  messages  sniffed from SMTP and POP traffic in\n     Berkeley mbox format, suitable for offline  browsing  with  your  favorite\n     mail reader (mail(1), pine(1), etc.).\n\nOPTIONS\n     -i interface\n            Specify the interface to listen on.\n\n     -p pcapfile\n            Process packets from the specified PCAP capture file instead of the\n            network.\n\n     -v     \"Versus\" mode. Invert the sense of matching, to select non-matching\n            messages.\n\n     patternSpecify regular expression for message header/body matching.\n\n     expression\n            Specify a tcpdump(8) filter expression to select traffic to sniff.\n\nSEE ALSO\n     dsniff(8), mail(1), pine(1)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                   MAILSNARF(8)",
+        "apropos": "mailsnarf (8)        - sniff mail messages in Berkeley mbox format"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/mailsnarf",
+        "size_bytes": 22760,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6a83defb7c9f6abe0fe40df64921128da6aafb76, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "msgsnarf",
+      "description": "Sniff chat messages",
+      "usage": "msgsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "pcapfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p pcapfile"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "\"Versus\" mode. Invert the sense of matching, to select non-matching",
+          "default": null,
+          "choices": null,
+          "raw": "     -v     \"Versus\" mode. Invert the sense of matching, to select non-matching"
+        }
+      ],
+      "raw_help": "root@kali:~# msgsnarf --help\n msgsnarf: invalid option -- '-'\n Version: 2.5a2\n Usage: msgsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "msgsnarf: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "d1b17d9b5ed1c50f97e66f496478eb00b2eb6dcf1952c93049a7ea0fe26f3d8e"
+        },
+        {
+          "status": "operational_example",
+          "command": "msgsnarf: listening on eth0",
+          "template": null,
+          "original_sha256": "f4cdc419d28098ba093354a261bfa39abb2644ef020ecba99e9cec55a181cfde"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "msgsnarf: invalid option -- '-'\nVersion: 2.5a2\nUsage: msgsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+        "-h": "Version: 2.5a2\nUsage: msgsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+        "help": "msgsnarf: listening on eth0",
+        "man": "MSGSNARF(8)                 System Manager's Manual                 MSGSNARF(8)\n\nNAME\n     msgsnarf - sniff chat messages\n\nSYNOPSIS\n     msgsnarf [-i interface | -p pcapfile] [[-v] pattern [expression]]\n\nDESCRIPTION\n     msgsnarf  records  selected messages from AOL Instant Messenger, ICQ 2000,\n     IRC, MSN Messenger, or Yahoo Messenger chat sessions.\n\nOPTIONS\n     -i interface\n            Specify the interface to listen on.\n\n     -p pcapfile\n            Process packets from the specified PCAP capture file instead of the\n            network.\n\n     -v     \"Versus\" mode. Invert the sense of matching, to select non-matching\n            messages.\n\n     patternSpecify regular expression for message matching.\n\n     expression\n            Specify a tcpdump(8) filter expression to select traffic to sniff.\n\nSEE ALSO\n     dsniff(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                    MSGSNARF(8)",
+        "apropos": "msgsnarf (8)         - sniff chat messages"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/msgsnarf",
+        "size_bytes": 22760,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=054a818cb5bc3c1339c8fdcf07d94cdf941d1ab2, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "sshmitm",
+      "description": "SSH monkey-in-the-middle",
+      "usage": "sshmitm [-d] [-I] [-p port] host [port]",
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable verbose debugging output.",
+          "default": null,
+          "choices": null,
+          "raw": "     -d     Enable verbose debugging output."
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Monitor / hijack an interactive session.",
+          "default": null,
+          "choices": null,
+          "raw": "     -I     Monitor / hijack an interactive session."
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "portSpecify the local port to listen on.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p portSpecify the local port to listen on."
+        }
+      ],
+      "raw_help": "root@kali:~# sshmitm --help\n sshmitm: invalid option -- '-'\n Version: 2.5a2\n Usage: sshmitm [-d] [-I] [-p port] host [port]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "sshmitm: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "0d170201b00d32cecbecc567a4a9323ab287cb7db006131b6a9dff83bff3c16d"
+        },
+        {
+          "status": "operational_example",
+          "command": "sshmitm: relaying to help",
+          "template": null,
+          "original_sha256": "ec3477ed7c943979cd68db3f9254ce0d388f0cc8f29ec6eb18373a6c312ccdeb"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "sshmitm: invalid option -- '-'\nVersion: 2.5a2\nUsage: sshmitm [-d] [-I] [-p port] host [port]",
+        "-h": "Version: 2.5a2\nUsage: sshmitm [-d] [-I] [-p port] host [port]",
+        "help": "sshmitm: relaying to help",
+        "man": "SSHMITM(8)                  System Manager's Manual                  SSHMITM(8)\n\nNAME\n     sshmitm - SSH monkey-in-the-middle\n\nSYNOPSIS\n     sshmitm [-d] [-I] [-p port] host [port]\n\nDESCRIPTION\n     sshmitm  proxies and sniffs SSH traffic redirected by dnsspoof(8), captur-\n     ing SSH password logins, and optionally  hijacking  interactive  sessions.\n     Only  SSH protocol version 1 is (or ever will be) supported - this program\n     is far too evil already.\n\nOPTIONS\n     -d     Enable verbose debugging output.\n\n     -I     Monitor / hijack an interactive session.\n\n     -p portSpecify the local port to listen on.\n\n     host   Specify the remote host to relay connections to.\n\n     port   Specify the remote port to relay connections to.\n\nSEE ALSO\n     dsniff(8), dnsspoof(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                     SSHMITM(8)",
+        "apropos": "sshmitm (8)          - SSH monkey-in-the-middle"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/sshmitm",
+        "size_bytes": 105592,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8b760219aa166c6c1e4bef622153df7b6344e367, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "sshow",
+      "description": "SSH traffic analysis tool",
+      "usage": "sshow [-d] [-i interface | -p pcapfile]",
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable verbose debugging output.",
+          "default": null,
+          "choices": null,
+          "raw": "     -d     Enable verbose debugging output."
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "pcapfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p pcapfile"
+        }
+      ],
+      "raw_help": "root@kali:~# sshow --help\n sshow: invalid option -- '-'\n Usage: sshow [-d] [-i interface | -p pcapfile]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "sshow: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "c0c2a78fa92e05a55642beae2bb3546cf674fe1d4b94926374318eb146d344b2"
+        },
+        {
+          "status": "operational_example",
+          "command": "sshow: nids_init: Libnids not initialized",
+          "template": null,
+          "original_sha256": "6f0b8ef132376eab766678a829b09d1c08f3bf73dba4babb243322ca7bf594f1"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "sshow: invalid option -- '-'\nUsage: sshow [-d] [-i interface | -p pcapfile]",
+        "-h": "Usage: sshow [-d] [-i interface | -p pcapfile]",
+        "help": "sshow: nids_init: Libnids not initialized",
+        "man": "SSHOW(8)                    System Manager's Manual                    SSHOW(8)\n\nNAME\n     sshow - SSH traffic analysis tool\n\nSYNOPSIS\n     sshow [-d] [-i interface | -p pcapfile] [expression]\n\nDESCRIPTION\n     sshow  analyzes encrypted SSH-1 and SSH-2 traffic, identifying authentica-\n     tion attempts, the lengths of passwords entered in  interactive  sessions,\n     and command line lengths.\n\n     The  following  advisory describes the attacks implemented by sshow in de-\n     tail:\n\n            http://www.openwall.com/advisories/OW-003-ssh-traffic-analysis.txt\n\nOPTIONS\n     -d     Enable verbose debugging output.\n\n     -i interface\n            Specify the interface to listen on.\n\n     -p pcapfile\n            Process packets from the specified PCAP capture file instead of the\n            network.\n\n     expression\n            Specify a tcpdump(8) filter expression to select traffic to sniff.\n\nSEE ALSO\n     dsniff(8), sshmitm(8)\n\nAUTHORS\n     Solar Designer <solar@openwall.com>\n     Dug Song <dugsong@monkey.org>\n\n                                                                       SSHOW(8)",
+        "apropos": "sshow (8)            - SSH traffic analysis tool"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/sshow",
+        "size_bytes": 22760,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=eaed42cef0e403d4e36f4cd9e12dea31bff33ceb, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "tcpkill",
+      "description": "Kill TCP connections on a LAN",
+      "usage": "tcpkill [-i interface] [-1..9] expression",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-1"
+          ],
+          "metavar": "...9 Specify the degree of brute force to use in killing",
+          "takes_value": true,
+          "description": "a  connection.",
+          "default": null,
+          "choices": null,
+          "raw": "     -1...9 Specify the degree of brute force to use in killing  a  connection."
+        }
+      ],
+      "raw_help": "root@kali:~# tcpkill --help\n tcpkill: invalid option -- '-'\n Version: 2.5a2\n Usage: tcpkill [-i interface] [-1..9] expression",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "tcpkill: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "b83e22667d2e0fbac60759a7eab4feef91f5e2294fa610f24a3e3a728c8f0368"
+        },
+        {
+          "status": "operational_example",
+          "command": "tcpkill: couldn't initialize sniffing",
+          "template": null,
+          "original_sha256": "8e9ef7b583870dd6e32f671642a4d9fa9ed6ae8ec78a88e3b1f9376c4bc78f47"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "tcpkill: invalid option -- '-'\nVersion: 2.5a2\nUsage: tcpkill [-i interface] [-1..9] expression",
+        "-h": "Version: 2.5a2\nUsage: tcpkill [-i interface] [-1..9] expression",
+        "help": "pcap_compile: can't parse filter expression: syntax error\ntcpkill: couldn't initialize sniffing",
+        "man": "TCPKILL(8)                  System Manager's Manual                  TCPKILL(8)\n\nNAME\n     tcpkill - kill TCP connections on a LAN\n\nSYNOPSIS\n     tcpkill [-i interface] [-1...9] expression\n\nDESCRIPTION\n     tcpkill  kills  specified in-progress TCP connections (useful for libnids-\n     based applications which require a full TCP 3-whs for TCB creation).\n\nOPTIONS\n     -i interface\n            Specify the interface to listen on.\n\n     -1...9 Specify the degree of brute force to use in killing  a  connection.\n            Fast connections may require a higher number in order to land a RST\n            in the moving receive window. Default is 3.\n\n     expression\n            Specify a tcpdump(8) filter expression to select the connections to\n            kill.\n\nSEE ALSO\n     dsniff(8), tcpnice(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                     TCPKILL(8)",
+        "apropos": "tcpkill (8)          - kill TCP connections on a LAN"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tcpkill",
+        "size_bytes": 14576,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=5f4215b6d989c96600372ea7b7359bf842cfdfda, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "tcpnice",
+      "description": "Slow down TCP connections on a LAN",
+      "usage": "tcpnice [-A] [-I] [-M] [-i interface] expression",
+      "arguments": [
+        {
+          "flags": [
+            "-A"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Inject TCP tiny window advertisements.",
+          "default": null,
+          "choices": null,
+          "raw": "     -A     Inject TCP tiny window advertisements."
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Inject ICMP source quench replies.",
+          "default": null,
+          "choices": null,
+          "raw": "     -I     Inject ICMP source quench replies."
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Inject ICMP fragmentation-needed replies with tiny next-hop MTUs.",
+          "default": null,
+          "choices": null,
+          "raw": "     -M     Inject ICMP fragmentation-needed replies with tiny next-hop MTUs."
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        }
+      ],
+      "raw_help": "root@kali:~# tcpnice --help\n tcpnice: invalid option -- '-'\n Version: 2.5a2\n Usage: tcpnice [-A] [-I] [-M] [-i interface] expression",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "tcpnice: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "56f22017a388ba01030fdfe3b873b235dd120ee5adb02b6a4eb4daf932c64378"
+        },
+        {
+          "status": "operational_example",
+          "command": "tcpnice: couldn't initialize sniffing",
+          "template": null,
+          "original_sha256": "1a7f4b37a8582f910d6c15a223888a925686eefbf988defdeb5f9355dc294a7f"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "tcpnice: invalid option -- '-'\nVersion: 2.5a2\nUsage: tcpnice [-A] [-I] [-M] [-i interface] expression",
+        "-h": "Version: 2.5a2\nUsage: tcpnice [-A] [-I] [-M] [-i interface] expression",
+        "help": "pcap_compile: can't parse filter expression: syntax error\ntcpnice: couldn't initialize sniffing",
+        "man": "TCPNICE(8)                  System Manager's Manual                  TCPNICE(8)\n\nNAME\n     tcpnice - slow down TCP connections on a LAN\n\nSYNOPSIS\n     tcpnice [-A] [-I] [-M] [-i interface] expression\n\nDESCRIPTION\n     tcpnice slows down specified TCP connections on a LAN via \"active\" traffic\n     shaping.\n\nOPTIONS\n     -A     Inject TCP tiny window advertisements.\n\n     -I     Inject ICMP source quench replies.\n\n     -M     Inject ICMP fragmentation-needed replies with tiny next-hop MTUs.\n\n     -i interface\n            Specify the interface to listen on.\n\n     expression\n            Specify a tcpdump(8) filter expression to select the connections to\n            slow down.\n\n     If no attack type is given, all attacks will be enabled.\n\nSEE ALSO\n     dsniff(8), tcpkill(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                     TCPNICE(8)",
+        "apropos": "tcpnice (8)          - slow down TCP connections on a LAN"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tcpnice",
+        "size_bytes": 14568,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e667e1441f2733eb3bd3cd6e1959761c5fc59e93, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "urlsnarf",
+      "description": "Sniff HTTP requests in Common Log Format",
+      "usage": "urlsnarf [-n] [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+      "arguments": [
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not resolve IP addresses to hostnames.",
+          "default": null,
+          "choices": null,
+          "raw": "     -n     Do not resolve IP addresses to hostnames."
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "pcapfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p pcapfile"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "\"Versus\" mode. Invert the sense of matching, to select non-matching",
+          "default": null,
+          "choices": null,
+          "raw": "     -v     \"Versus\" mode. Invert the sense of matching, to select non-matching"
+        }
+      ],
+      "raw_help": "root@kali:~# urlsnarf --help\n urlsnarf: invalid option -- '-'\n Version: 2.5a2\n Usage: urlsnarf [-n] [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "urlsnarf: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "c67f0dd28fdab7f02f6bbb74daa83acd827f7dc94ba02a7913d44fe7cf6d0dec"
+        },
+        {
+          "status": "operational_example",
+          "command": "urlsnarf: listening on eth0 [tcp port 80 or port 8080 or port 3128]",
+          "template": null,
+          "original_sha256": "f9e94567c9aab10bd68529495d933e952cfca3e9e91057fca5b0526f1bb49f77"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "urlsnarf: invalid option -- '-'\nVersion: 2.5a2\nUsage: urlsnarf [-n] [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+        "-h": "Version: 2.5a2\nUsage: urlsnarf [-n] [-i interface | -p pcapfile] [[-v] pattern [expression]]",
+        "help": "urlsnarf: listening on eth0 [tcp port 80 or port 8080 or port 3128]",
+        "man": "URLSNARF(8)                 System Manager's Manual                 URLSNARF(8)\n\nNAME\n     urlsnarf - sniff HTTP requests in Common Log Format\n\nSYNOPSIS\n     urlsnarf [-n] [-i interface | -p pcapfile]  [[-v] pattern [expression]]\n\nDESCRIPTION\n     urlsnarf outputs all requested URLs sniffed from HTTP traffic in CLF (Com-\n     mon  Log  Format,  used  by  almost all web servers), suitable for offline\n     post-processing with your favorite web log analysis tool (analog, wwwstat,\n     etc.).\n\nOPTIONS\n     -n     Do not resolve IP addresses to hostnames.\n\n     -i interface\n            Specify the interface to listen on.\n\n     -p pcapfile\n            Process packets from the specified PCAP capture file instead of the\n            network.\n\n     -v     \"Versus\" mode. Invert the sense of matching, to select non-matching\n            URLs.  Specify the interface to listen on.\n\n     patternSpecify regular expression for URL matching.\n\n     expression\n            Specify a tcpdump(8) filter expression to select traffic to sniff.\n\nSEE ALSO\n     dsniff(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                    URLSNARF(8)",
+        "apropos": "urlsnarf (8)         - sniff HTTP requests in Common Log Format"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/urlsnarf",
+        "size_bytes": 22760,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8394bf68dd416614af1a535c18ca2e0ef8bc927c, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "webmitm",
+      "description": "HTTP / HTTPS monkey-in-the-middle",
+      "usage": "webmitm [-d] [host]",
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable  debugging  mode. May be specified multiple times to greater",
+          "default": null,
+          "choices": null,
+          "raw": "     -d     Enable  debugging  mode. May be specified multiple times to greater"
+        }
+      ],
+      "raw_help": "root@kali:~# webmitm --help\n webmitm: invalid option -- '-'\n Version: 2.5a2\n Usage: webmitm [-d] [host]",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "webmitm: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "422a8a44c3d30829ec9cba90cab5f8cc2b3692051dd771b002e9b6b39c2b586e"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "webmitm: invalid option -- '-'\nVersion: 2.5a2\nUsage: webmitm [-d] [host]",
+        "-h": "Version: 2.5a2\nUsage: webmitm [-d] [host]",
+        "help": "Version: 2.5a2\nUsage: webmitm [-d] [host]",
+        "man": "WEBMITM(8)                  System Manager's Manual                  WEBMITM(8)\n\nNAME\n     webmitm - HTTP / HTTPS monkey-in-the-middle\n\nSYNOPSIS\n     webmitm [-d] [host]\n\nDESCRIPTION\n     webmitm  transparently  proxies and sniffs HTTP / HTTPS traffic redirected\n     by dnsspoof(8), capturing most \"secure\" SSL-encrypted webmail  logins  and\n     form submissions.\n\nOPTIONS\n     -d     Enable  debugging  mode. May be specified multiple times to greater\n            effect.\n\n     host   Specify a host to proxy to. If none given, only requests containing\n            an HTTP/1.1 Host: header or absolute URI will be relayed  transpar-\n            ently.\n\nFILES\n     webmitm.crt\n            SSL certificate\n\nSEE ALSO\n     dsniff(8), dnsspoof(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                     WEBMITM(8)",
+        "apropos": "webmitm (8)          - HTTP / HTTPS monkey-in-the-middle"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/webmitm",
+        "size_bytes": 101496,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=11d397e6f88c03b6d97a19cd64209ef0aafc24ba, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "webspy",
+      "description": "Display sniffed URLs in Netscape in real-time",
+      "usage": "webspy [-i interface | -p pcapfile] host",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i interface"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "pcapfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p pcapfile"
+        }
+      ],
+      "raw_help": "root@kali:~# webspy --help\n webspy: invalid option -- '-'\n Version: 2.5a2\n Usage: webspy [-i interface | -p pcapfile] host",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "webspy: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "3509b3f646db08c6815c6f73319f2440497a5b562f5803065401e6e39f2a797e"
+        },
+        {
+          "status": "operational_example",
+          "command": "webspy: unknown host",
+          "template": null,
+          "original_sha256": "19217a352a3fbd1cb489605b5633e4ee55db6f48a8aeda31be1a8129c7095d53"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation",
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "webspy: invalid option -- '-'\nVersion: 2.5a2\nUsage: webspy [-i interface | -p pcapfile] host",
+        "-h": "Version: 2.5a2\nUsage: webspy [-i interface | -p pcapfile] host",
+        "help": "webspy: unknown host",
+        "man": "WEBSPY(8)                   System Manager's Manual                   WEBSPY(8)\n\nNAME\n     webspy - display sniffed URLs in Netscape in real-time\n\nSYNOPSIS\n     webspy [-i interface | -p pcapfile] host\n\nDESCRIPTION\n     webspy sends URLs sniffed from a client to your local Netscape browser for\n     display,  updated  in  real-time  (as the target surfs, your browser surfs\n     along with them, automagically). Netscape must be running on your local  X\n     display ahead of time.\n\nOPTIONS\n     -i interface\n            Specify the interface to listen on.\n\n     -p pcapfile\n            Process packets from the specified PCAP capture file instead of the\n            network.\n\n     host   Specify the web client to spy on.\n\nSEE ALSO\n     dsniff(8)\n\nAUTHOR\n     Dug Song <dugsong@monkey.org>\n\n                                                                      WEBSPY(8)",
+        "apropos": "webspy (8)           - display sniffed URLs in Netscape in real-time"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/webspy",
+        "size_bytes": 31072,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=5835e2b6e3832a609cb13814b6d927d5b487ae57, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/dsniff/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/dsniff/index.md",
+    "retrieved_at": "2026-07-14T13:05:42+00:00",
+    "sha256": "862ccb4ed5bad0e03c4afdc0cf95bf16e79f813db437da0e69eaf70f62b5cbe1"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "582",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "2.5a2-1",
+    "depends": "libc6 (>= 2.38), libnet9 (>= 1.1.2.1), libnids1.21t64 (>= 1.23), libpcap0.8t64 (>= 0.9.8), libssl3t64 (>= 3.0.0), libtirpc3t64 (>= 1.0.2), libx11-6, libxmu6 (>= 2:1.1.3), openssl",
+    "description": "Various tools to sniff network traffic for cleartext insecurities\nThis package contains several tools to listen to and create network traffic:\n.\n* arpspoof  - Send out unrequested (and possibly forged) arp replies.\n* dnsspoof  - forge replies to arbitrary DNS address / pointer queries\non the Local Area Network.\n* dsniff    - password sniffer for several protocols.\n* filesnarf - saves selected files sniffed from NFS traffic.\n* macof     - flood the local network with random MAC addresses.\n* mailsnarf - sniffs mail on the LAN and stores it in mbox format.\n* msgsnarf  - record selected messages from different Instant Messengers.\n* sshmitm   - SSH monkey-in-the-middle. proxies and sniffs SSH traffic.\n* sshow     - SSH traffic analyser.\n* tcpkill   - kills specified in-progress TCP connections.\n* tcpnice   - slow down specified TCP connections via \"active\"\ntraffic shaping.\n* urlsnarf  - output selected URLs sniffed from HTTP traffic in CLF.\n* webmitm   - HTTP / HTTPS monkey-in-the-middle. transparently proxies.\n* webspy    - sends URLs sniffed from a client to your local browser\n(requires libx11-6 installed).\n.\nPlease do not abuse this software.",
+    "homepage": "https://github.com/hackerschoice/dsniff"
+  },
+  "tags": [
+    "offensive",
+    "dsniff",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/dsniff && python3 dsniff.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/dsniff && python3 dsniff.py --help",
+    "cd toolboxes/dsniff && python3 dsniff.py --help",
+    "cd toolboxes/dsniff && python3 dsniff.py --help",
+    "cd toolboxes/dsniff && python3 dsniff.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dsniff --output $KFIOSA_OUTPUT_DIR/dsniff.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dsniff --output $KFIOSA_OUTPUT_DIR/dsniff.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

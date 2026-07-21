@@ -1,0 +1,1357 @@
+{
+  "id": "kali:tightvnc",
+  "kind": "kali_source_package",
+  "name": "tightvnc",
+  "title": "tightvnc",
+  "summary": "### tightvncpasswd",
+  "version": "1:1.3.10-11",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://www.tightvnc.com",
+  "repository": "https://salsa.debian.org/debian-remote-team/tightvnc",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-large"
+  ],
+  "install": {
+    "apt": "sudo apt install tightvnc"
+  },
+  "packages": [
+    {
+      "name": "tightvncpasswd"
+    },
+    {
+      "name": "tightvncserver"
+    },
+    {
+      "name": "xtightvncviewer"
+    }
+  ],
+  "commands": [
+    {
+      "name": "tightvncpasswd",
+      "description": "Set passwords for VNC server",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Write   passwords   into   /tmp/$USER-vnc/passwd,   creating    the",
+          "default": null,
+          "choices": null,
+          "raw": "    -t     Write   passwords   into   /tmp/$USER-vnc/passwd,   creating    the"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Filter  mode. Read plain-text passwords from stdin, write encrypted",
+          "default": null,
+          "choices": null,
+          "raw": "    -f     Filter  mode. Read plain-text passwords from stdin, write encrypted"
+        }
+      ],
+      "raw_help": "root@kali:~# man tightvncpasswd\n vncpasswd(1)                        TightVNC                       vncpasswd(1)\n \n NAME\n    vncpasswd - set passwords for VNC server\n \n SYNOPSIS\n    vncpasswd [file]\n    vncpasswd -t\n    vncpasswd -f\n \n DESCRIPTION\n    The  vncpasswd  utility  should be used to create and change passwords for\n    the TightVNC server authentication. Xvnc uses such passwords when  started\n    with  the -rfbauth command-line option (or when started from the vncserver\n    script).\n \n    vncpasswd allows one to enter either one or two passwords. The first pass-\n    word is the primary one, the second password can be used for view-only au-\n    thentication. Xvnc will restrict mouse and keyboard input from clients who\n    authenticated with the view-only password. The vncpasswd utility asks  in-\n    teractively if it should set the second password.\n \n    The  password  file  name defaults to $HOME/.vnc/passwd unless the -t com-\n    mand-line option was used (see the OPTIONS section below). The $HOME/.vnc/\n    directory will be created if it does not exist.\n \n    Each password has to be longer than five characters (unless  the  -f  com-\n    mand-line  option  was  used,  see its description below).  Only the first\n    eight characters are significant. If the primary password  is  too  short,\n    the  program will abort. If the view-only password is too short, then only\n    the primary password will be saved.\n \n    Unless a file name was provided in the command-line explicitly, this util-\n    ity may perform certain sanity checks to prevent writing a  password  file\n    into some hazardous place.\n \n    If  at least one password was saved successfully, vncpasswd will exit with\n    status code 0. Otherwise the returned status code will be set to 1.\n \n OPTIONS\n    -t     Write   passwords   into   /tmp/$USER-vnc/passwd,   creating    the\n           /tmp/$USER-vnc/  directory  if  it does not exist, and checking the\n           permissions on that directory (the mode must be 700).  This  option\n           can help to improve security when your home partition may be shared\n           via network (e.g. when using NFS).\n \n    -f     Filter  mode. Read plain-text passwords from stdin, write encrypted\n           versions to stdout. One or two passwords  (full-control  and  view-\n           only)  can  be  supplied  in the input stream, newline terminates a\n           password.  Note that in the filter mode, short or even empty  pass-\n           words will be silently accepted.\n \n SEE ALSO\n    vncserver(1), Xvnc(1), vncviewer(1), vncconnect(1)\n \n AUTHORS\n    Original  VNC was developed in AT&T Laboratories Cambridge. TightVNC addi-\n    tions were implemented by Constantin Kaplinsky. Many other people partici-\n    pated in development, testing and support.\n \n    Man page authors:\n    Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>,\n    Tim Waugh <twaugh@redhat.com>,\n    Constantin Kaplinsky <const@tightvnc.com>\n \n                                 August 2006                      vncpasswd(1)",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Password: Password too short",
+        "-h": "Password: Password too short",
+        "help": "Password: Password too short",
+        "man": "vncpasswd(1)                        TightVNC                       vncpasswd(1)\n\nNAME\n     vncpasswd - set passwords for VNC server\n\nSYNOPSIS\n     vncpasswd [file]\n     vncpasswd -t\n     vncpasswd -f\n\nDESCRIPTION\n     The  vncpasswd  utility  should be used to create and change passwords for\n     the TightVNC server authentication. Xvnc uses such passwords when  started\n     with  the -rfbauth command-line option (or when started from the vncserver\n     script).\n\n     vncpasswd allows one to enter either one or two passwords. The first pass-\n     word is the primary one, the second password can be used for view-only au-\n     thentication. Xvnc will restrict mouse and keyboard input from clients who\n     authenticated with the view-only password. The vncpasswd utility asks  in-\n     teractively if it should set the second password.\n\n     The  password  file  name defaults to $HOME/.vnc/passwd unless the -t com-\n     mand-line option was used (see the OPTIONS section below). The $HOME/.vnc/\n     directory will be created if it does not exist.\n\n     Each password has to be longer than five characters (unless  the  -f  com-\n     mand-line  option  was  used,  see its description below).  Only the first\n     eight characters are significant. If the primary password  is  too  short,\n     the  program will abort. If the view-only password is too short, then only\n     the primary password will be saved.\n\n     Unless a file name was provided in the command-line explicitly, this util-\n     ity may perform certain sanity checks to prevent writing a  password  file\n     into some hazardous place.\n\n     If  at least one password was saved successfully, vncpasswd will exit with\n     status code 0. Otherwise the returned status code will be set to 1.\n\nOPTIONS\n     -t     Write   passwords   into   /tmp/$USER-vnc/passwd,   creating    the\n            /tmp/$USER-vnc/  directory  if  it does not exist, and checking the\n            permissions on that directory (the mode must be 700).  This  option\n            can help to improve security when your home partition may be shared\n            via network (e.g. when using NFS).\n\n     -f     Filter  mode. Read plain-text passwords from stdin, write encrypted\n            versions to stdout. One or two passwords  (full-control  and  view-\n            only)  can  be  supplied  in the input stream, newline terminates a\n            password.  Note that in the filter mode, short or even empty  pass-\n            words will be silently accepted.\n\nSEE ALSO\n     vncserver(1), Xvnc(1), vncviewer(1), vncconnect(1)\n\nAUTHORS\n     Original  VNC was developed in AT&T Laboratories Cambridge. TightVNC addi-\n     tions were implemented by Constantin Kaplinsky. Many other people partici-\n     pated in development, testing and support.\n\n     Man page authors:\n     Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>,\n     Tim Waugh <twaugh@redhat.com>,\n     Constantin Kaplinsky <const@tightvnc.com>\n\n                                  August 2006                      vncpasswd(1)",
+        "apropos": "tightvncpasswd (1)   - set passwords for VNC server"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tightvncpasswd",
+        "size_bytes": 22616,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4b96464a1f9e41abfa0a7e40fa80009ae2a22ce5, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "Xtightvnc",
+      "description": "An X server providing VNC connectivity",
+      "usage": "X [:<display>] [option]",
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": "#",
+          "takes_value": true,
+          "description": "mouse acceleration (pixels)",
+          "default": null,
+          "choices": null,
+          "raw": " -a #                   mouse acceleration (pixels)"
+        },
+        {
+          "flags": [
+            "-ac"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable access control restrictions",
+          "default": null,
+          "choices": null,
+          "raw": " -ac                    disable access control restrictions"
+        },
+        {
+          "flags": [
+            "-audit"
+          ],
+          "metavar": "int",
+          "takes_value": true,
+          "description": "set audit trail level",
+          "default": null,
+          "choices": null,
+          "raw": " -audit int             set audit trail level"
+        },
+        {
+          "flags": [
+            "-auth"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "select authorization file",
+          "default": null,
+          "choices": null,
+          "raw": " -auth file             select authorization file"
+        },
+        {
+          "flags": [
+            "-bs"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable any backing store support",
+          "default": null,
+          "choices": null,
+          "raw": " -bs                    disable any backing store support"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "turns off key-click",
+          "default": null,
+          "choices": null,
+          "raw": " -c                     turns off key-click"
+        },
+        {
+          "flags": [
+            "-cc"
+          ],
+          "metavar": "int",
+          "takes_value": true,
+          "description": "default color visual class",
+          "default": "color visual class",
+          "choices": null,
+          "raw": " -cc int                default color visual class"
+        },
+        {
+          "flags": [
+            "-co"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "color database file",
+          "default": null,
+          "choices": null,
+          "raw": " -co file               color database file"
+        },
+        {
+          "flags": [
+            "-core"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "generate core dump on fatal error",
+          "default": null,
+          "choices": null,
+          "raw": " -core                  generate core dump on fatal error"
+        },
+        {
+          "flags": [
+            "-dpi"
+          ],
+          "metavar": "int",
+          "takes_value": true,
+          "description": "screen resolution in dots per inch",
+          "default": null,
+          "choices": null,
+          "raw": " -dpi int               screen resolution in dots per inch"
+        },
+        {
+          "flags": [
+            "-deferglyphs"
+          ],
+          "metavar": "none all 16 defer loading of no all 16-bit glyphs",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -deferglyphs [none|all|16] defer loading of [no|all|16-bit] glyphs"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "#",
+          "takes_value": true,
+          "description": "bell base (0-100)",
+          "default": null,
+          "choices": null,
+          "raw": " -f #                   bell base (0-100)"
+        },
+        {
+          "flags": [
+            "-fc"
+          ],
+          "metavar": "string",
+          "takes_value": true,
+          "description": "cursor font",
+          "default": null,
+          "choices": null,
+          "raw": " -fc string             cursor font"
+        },
+        {
+          "flags": [
+            "-fn"
+          ],
+          "metavar": "string",
+          "takes_value": true,
+          "description": "default font name",
+          "default": "font name",
+          "choices": null,
+          "raw": " -fn string             default font name"
+        },
+        {
+          "flags": [
+            "-fp"
+          ],
+          "metavar": "string",
+          "takes_value": true,
+          "description": "default font path",
+          "default": "font path",
+          "choices": null,
+          "raw": " -fp string             default font path"
+        },
+        {
+          "flags": [
+            "-help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "prints message with these options",
+          "default": null,
+          "choices": null,
+          "raw": " -help                  prints message with these options"
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "ignore all remaining arguments",
+          "default": null,
+          "choices": null,
+          "raw": " -I                     ignore all remaining arguments"
+        },
+        {
+          "flags": [
+            "-ld"
+          ],
+          "metavar": "int",
+          "takes_value": true,
+          "description": "limit data space to N Kb",
+          "default": null,
+          "choices": null,
+          "raw": " -ld int                limit data space to N Kb"
+        },
+        {
+          "flags": [
+            "-lf"
+          ],
+          "metavar": "int",
+          "takes_value": true,
+          "description": "limit number of open files to N",
+          "default": null,
+          "choices": null,
+          "raw": " -lf int                limit number of open files to N"
+        },
+        {
+          "flags": [
+            "-ls"
+          ],
+          "metavar": "int",
+          "takes_value": true,
+          "description": "limit stack space to N Kb",
+          "default": null,
+          "choices": null,
+          "raw": " -ls int                limit stack space to N Kb"
+        },
+        {
+          "flags": [
+            "-nolock"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable the locking mechanism",
+          "default": null,
+          "choices": null,
+          "raw": " -nolock                disable the locking mechanism"
+        },
+        {
+          "flags": [
+            "-logo"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "enable logo in screen saver",
+          "default": null,
+          "choices": null,
+          "raw": " -logo                  enable logo in screen saver"
+        },
+        {
+          "flags": [
+            "-nolisten"
+          ],
+          "metavar": "string",
+          "takes_value": true,
+          "description": "don't listen on protocol",
+          "default": null,
+          "choices": null,
+          "raw": " -nolisten string       don't listen on protocol"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "#",
+          "takes_value": true,
+          "description": "screen-saver pattern duration (minutes)",
+          "default": null,
+          "choices": null,
+          "raw": " -p #                   screen-saver pattern duration (minutes)"
+        },
+        {
+          "flags": [
+            "-pn"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "accept failure to listen on all ports",
+          "default": null,
+          "choices": null,
+          "raw": " -pn                    accept failure to listen on all ports"
+        },
+        {
+          "flags": [
+            "-nopn"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "reject failure to listen on all ports",
+          "default": null,
+          "choices": null,
+          "raw": " -nopn                  reject failure to listen on all ports"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "turns off auto-repeat",
+          "default": null,
+          "choices": null,
+          "raw": " -r                     turns off auto-repeat"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "#",
+          "takes_value": true,
+          "description": "screen-saver timeout (minutes)",
+          "default": null,
+          "choices": null,
+          "raw": " -s #                   screen-saver timeout (minutes)"
+        },
+        {
+          "flags": [
+            "-su"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable any save under support",
+          "default": null,
+          "choices": null,
+          "raw": " -su                    disable any save under support"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "#",
+          "takes_value": true,
+          "description": "mouse threshold (pixels)",
+          "default": null,
+          "choices": null,
+          "raw": " -t #                   mouse threshold (pixels)"
+        },
+        {
+          "flags": [
+            "-terminate"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "terminate at server reset",
+          "default": null,
+          "choices": null,
+          "raw": " -terminate             terminate at server reset"
+        },
+        {
+          "flags": [
+            "-to"
+          ],
+          "metavar": "#",
+          "takes_value": true,
+          "description": "connection time out",
+          "default": null,
+          "choices": null,
+          "raw": " -to #                  connection time out"
+        },
+        {
+          "flags": [
+            "-tst"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable testing extensions",
+          "default": null,
+          "choices": null,
+          "raw": " -tst                   disable testing extensions"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "screen-saver without video blanking",
+          "default": null,
+          "choices": null,
+          "raw": " -v                     screen-saver without video blanking"
+        },
+        {
+          "flags": [
+            "-wm"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "WhenMapped default backing-store",
+          "default": "backing-store",
+          "choices": null,
+          "raw": " -wm                    WhenMapped default backing-store"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": "string",
+          "takes_value": true,
+          "description": "loads named extension at init time",
+          "default": null,
+          "choices": null,
+          "raw": " -x string              loads named extension at init time"
+        },
+        {
+          "flags": [
+            "-query"
+          ],
+          "metavar": "host-name",
+          "takes_value": true,
+          "description": "contact named host for XDMCP",
+          "default": null,
+          "choices": null,
+          "raw": " -query host-name       contact named host for XDMCP"
+        },
+        {
+          "flags": [
+            "-broadcast"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "broadcast for XDMCP",
+          "default": null,
+          "choices": null,
+          "raw": " -broadcast             broadcast for XDMCP"
+        },
+        {
+          "flags": [
+            "-indirect"
+          ],
+          "metavar": "host-name",
+          "takes_value": true,
+          "description": "contact named host for indirect XDMCP",
+          "default": null,
+          "choices": null,
+          "raw": " -indirect host-name    contact named host for indirect XDMCP"
+        },
+        {
+          "flags": [
+            "-port"
+          ],
+          "metavar": "port-num",
+          "takes_value": true,
+          "description": "UDP port number to send messages to",
+          "default": null,
+          "choices": null,
+          "raw": " -port port-num         UDP port number to send messages to"
+        },
+        {
+          "flags": [
+            "-once"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Terminate server after one session",
+          "default": null,
+          "choices": null,
+          "raw": " -once                  Terminate server after one session"
+        },
+        {
+          "flags": [
+            "-class"
+          ],
+          "metavar": "display",
+          "takes_value": true,
+          "description": "specify display class to send in manage",
+          "default": null,
+          "choices": null,
+          "raw": " -class display-class   specify display class to send in manage"
+        },
+        {
+          "flags": [
+            "-cookie"
+          ],
+          "metavar": "xdm-auth-bits",
+          "takes_value": true,
+          "description": "specify the magic cookie for XDMCP",
+          "default": null,
+          "choices": null,
+          "raw": " -cookie xdm-auth-bits  specify the magic cookie for XDMCP"
+        },
+        {
+          "flags": [
+            "-displayID"
+          ],
+          "metavar": "display-id",
+          "takes_value": true,
+          "description": "manufacturer display ID for request",
+          "default": null,
+          "choices": null,
+          "raw": " -displayID display-id  manufacturer display ID for request"
+        },
+        {
+          "flags": [
+            "-geometry"
+          ],
+          "metavar": "WxH",
+          "takes_value": true,
+          "description": "set framebuffer width & height",
+          "default": null,
+          "choices": null,
+          "raw": " -geometry WxH          set framebuffer width & height"
+        },
+        {
+          "flags": [
+            "-depth"
+          ],
+          "metavar": "D",
+          "takes_value": true,
+          "description": "set framebuffer depth",
+          "default": null,
+          "choices": null,
+          "raw": " -depth D               set framebuffer depth"
+        },
+        {
+          "flags": [
+            "-pixelformat"
+          ],
+          "metavar": "format",
+          "takes_value": true,
+          "description": "set pixel format (BGRnnn or RGBnnn)",
+          "default": null,
+          "choices": null,
+          "raw": " -pixelformat format    set pixel format (BGRnnn or RGBnnn)"
+        },
+        {
+          "flags": [
+            "-udpinputport"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "UDP port for keyboard/pointer data",
+          "default": null,
+          "choices": null,
+          "raw": " -udpinputport port     UDP port for keyboard/pointer data"
+        },
+        {
+          "flags": [
+            "-rfbport"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "TCP port for RFB protocol",
+          "default": null,
+          "choices": null,
+          "raw": " -rfbport port          TCP port for RFB protocol"
+        },
+        {
+          "flags": [
+            "-rfbwait"
+          ],
+          "metavar": "time",
+          "takes_value": true,
+          "description": "max time in ms to wait for RFB client",
+          "default": null,
+          "choices": null,
+          "raw": " -rfbwait time          max time in ms to wait for RFB client"
+        },
+        {
+          "flags": [
+            "-nocursor"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "don't put up a cursor",
+          "default": null,
+          "choices": null,
+          "raw": " -nocursor              don't put up a cursor"
+        },
+        {
+          "flags": [
+            "-rfbauth"
+          ],
+          "metavar": "passwd-file",
+          "takes_value": true,
+          "description": "use authentication on RFB protocol",
+          "default": null,
+          "choices": null,
+          "raw": " -rfbauth passwd-file   use authentication on RFB protocol"
+        },
+        {
+          "flags": [
+            "-httpd"
+          ],
+          "metavar": "dir",
+          "takes_value": true,
+          "description": "serve files via HTTP from here",
+          "default": null,
+          "choices": null,
+          "raw": " -httpd dir             serve files via HTTP from here"
+        },
+        {
+          "flags": [
+            "-httpport"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "port for HTTP",
+          "default": null,
+          "choices": null,
+          "raw": " -httpport port         port for HTTP"
+        },
+        {
+          "flags": [
+            "-deferupdate"
+          ],
+          "metavar": "time",
+          "takes_value": true,
+          "description": "time in ms to defer updates (default 40)",
+          "default": "40",
+          "choices": null,
+          "raw": " -deferupdate time      time in ms to defer updates (default 40)"
+        },
+        {
+          "flags": [
+            "-economictranslate"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "less memory-hungry translation",
+          "default": null,
+          "choices": null,
+          "raw": " -economictranslate     less memory-hungry translation"
+        },
+        {
+          "flags": [
+            "-lazytight"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disable \"gradient\" filter in tight encoding",
+          "default": null,
+          "choices": null,
+          "raw": " -lazytight             disable \"gradient\" filter in tight encoding"
+        },
+        {
+          "flags": [
+            "-desktop"
+          ],
+          "metavar": "name",
+          "takes_value": true,
+          "description": "VNC desktop name (default x11)",
+          "default": "x11",
+          "choices": null,
+          "raw": " -desktop name          VNC desktop name (default x11)"
+        },
+        {
+          "flags": [
+            "-alwaysshared"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "always treat new clients as shared",
+          "default": null,
+          "choices": null,
+          "raw": " -alwaysshared          always treat new clients as shared"
+        },
+        {
+          "flags": [
+            "-nevershared"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "never treat new clients as shared",
+          "default": null,
+          "choices": null,
+          "raw": " -nevershared           never treat new clients as shared"
+        },
+        {
+          "flags": [
+            "-dontdisconnect"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "don't disconnect existing clients when a new non-shared",
+          "default": null,
+          "choices": null,
+          "raw": " -dontdisconnect        don't disconnect existing clients when a new non-shared"
+        },
+        {
+          "flags": [
+            "-viewonly"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "let clients only to view the desktop",
+          "default": null,
+          "choices": null,
+          "raw": " -viewonly              let clients only to view the desktop"
+        },
+        {
+          "flags": [
+            "-localhost"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "only allow connections from localhost",
+          "default": null,
+          "choices": null,
+          "raw": " -localhost             only allow connections from localhost"
+        },
+        {
+          "flags": [
+            "-interface"
+          ],
+          "metavar": "ipaddr",
+          "takes_value": true,
+          "description": "only bind to specified interface address",
+          "default": null,
+          "choices": null,
+          "raw": " -interface ipaddr      only bind to specified interface address"
+        },
+        {
+          "flags": [
+            "-inetd"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Xvnc is launched by inetd",
+          "default": null,
+          "choices": null,
+          "raw": " -inetd                 Xvnc is launched by inetd"
+        },
+        {
+          "flags": [
+            "-compatiblekbd"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "set META key = ALT key as in the original VNC",
+          "default": null,
+          "choices": null,
+          "raw": " -compatiblekbd         set META key = ALT key as in the original VNC"
+        },
+        {
+          "flags": [
+            "-version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "report Xvnc version on stderr",
+          "default": null,
+          "choices": null,
+          "raw": " -version               report Xvnc version on stderr"
+        }
+      ],
+      "raw_help": "root@kali:~# Xtightvnc -h\n Unrecognized option: -h\n use: X [:<display>] [option]\n -a #                   mouse acceleration (pixels)\n -ac                    disable access control restrictions\n -audit int             set audit trail level\n -auth file             select authorization file\n bc                     enable bug compatibility\n -bs                    disable any backing store support\n -c                     turns off key-click\n c #                    key-click volume (0-100)\n -cc int                default color visual class\n -co file               color database file\n -core                  generate core dump on fatal error\n -dpi int               screen resolution in dots per inch\n -deferglyphs [none|all|16] defer loading of [no|all|16-bit] glyphs\n -f #                   bell base (0-100)\n -fc string             cursor font\n -fn string             default font name\n -fp string             default font path\n -help                  prints message with these options\n -I                     ignore all remaining arguments\n -ld int                limit data space to N Kb\n -lf int                limit number of open files to N\n -ls int                limit stack space to N Kb\n -nolock                disable the locking mechanism\n -logo                  enable logo in screen saver\n nologo                 disable logo in screen saver\n -nolisten string       don't listen on protocol\n -p #                   screen-saver pattern duration (minutes)\n -pn                    accept failure to listen on all ports\n -nopn                  reject failure to listen on all ports\n -r                     turns off auto-repeat\n r                      turns on auto-repeat \n -s #                   screen-saver timeout (minutes)\n -su                    disable any save under support\n -t #                   mouse threshold (pixels)\n -terminate             terminate at server reset\n -to #                  connection time out\n -tst                   disable testing extensions\n ttyxx                  server started from init on /dev/ttyxx\n v                      video blanking for screen-saver\n -v                     screen-saver without video blanking\n -wm                    WhenMapped default backing-store\n -x string              loads named extension at init time \n -query host-name       contact named host for XDMCP\n -broadcast             broadcast for XDMCP\n -indirect host-name    contact named host for indirect XDMCP\n -port port-num         UDP port number to send messages to\n -once                  Terminate server after one session\n -class display-class   specify display class to send in manage\n -cookie xdm-auth-bits  specify the magic cookie for XDMCP\n -displayID display-id  manufacturer display ID for request\n -geometry WxH          set framebuffer width & height\n -depth D               set framebuffer depth\n -pixelformat format    set pixel format (BGRnnn or RGBnnn)\n -udpinputport port     UDP port for keyboard/pointer data\n -rfbport port          TCP port for RFB protocol\n -rfbwait time          max time in ms to wait for RFB client\n -nocursor              don't put up a cursor\n -rfbauth passwd-file   use authentication on RFB protocol\n -httpd dir             serve files via HTTP from here\n -httpport port         port for HTTP\n -deferupdate time      time in ms to defer updates (default 40)\n -economictranslate     less memory-hungry translation\n -lazytight             disable \"gradient\" filter in tight encoding\n -desktop name          VNC desktop name (default x11)\n -alwaysshared          always treat new clients as shared\n -nevershared           never treat new clients as shared\n -dontdisconnect        don't disconnect existing clients when a new non-shared\n                      connection comes in (refuse new connection instead)\n -viewonly              let clients only to view the desktop\n -localhost             only allow connections from localhost\n -interface ipaddr      only bind to specified interface address\n -inetd                 Xvnc is launched by inetd\n -compatiblekbd         set META key = ALT key as in the original VNC\n -version               report Xvnc version on stderr",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Unrecognized option: --help\nuse: X [:<display>] [option]\n-a #                   mouse acceleration (pixels)\n-ac                    disable access control restrictions\n-audit int             set audit trail level\n-auth file             select authorization file\nbc                     enable bug compatibility\n-bs                    disable any backing store support\n-c                     turns off key-click\nc #                    key-click volume (0-100)\n-cc int                default color visual class\n-co file               color database file\n-core                  generate core dump on fatal error\n-dpi int               screen resolution in dots per inch\n-deferglyphs [none|all|16] defer loading of [no|all|16-bit] glyphs\n-f #                   bell base (0-100)\n-fc string             cursor font\n-fn string             default font name\n-fp string             default font path\n-help                  prints message with these options\n-I                     ignore all remaining arguments\n-ld int                limit data space to N Kb\n-lf int                limit number of open files to N\n-ls int                limit stack space to N Kb\n-nolock                disable the locking mechanism\n-logo                  enable logo in screen saver\nnologo                 disable logo in screen saver\n-nolisten string       don't listen on protocol\n-p #                   screen-saver pattern duration (minutes)\n-pn                    accept failure to listen on all ports\n-nopn                  reject failure to listen on all ports\n-r                     turns off auto-repeat\nr                      turns on auto-repeat \n-s #                   screen-saver timeout (minutes)\n-su                    disable any save under support\n-t #                   mouse threshold (pixels)\n-terminate             terminate at server reset\n-to #                  connection time out\n-tst                   disable testing extensions\nttyxx                  server started from init on /dev/ttyxx\nv                      video blanking for screen-saver\n-v                     screen-saver without video blanking\n-wm                    WhenMapped default backing-store\n-x string              loads named extension at init time \n-query host-name       contact named host for XDMCP\n-broadcast             broadcast for XDMCP\n-indirect host-name    contact named host for indirect XDMCP\n-port port-num         UDP port number to send messages to\n-once                  Terminate server after one session\n-class display-class   specify display class to send in manage\n-cookie xdm-auth-bits  specify the magic cookie for XDMCP\n-displayID display-id  manufacturer display ID for request\n-geometry WxH          set framebuffer width & height\n-depth D               set framebuffer depth\n-pixelformat format    set pixel format (BGRnnn or RGBnnn)\n-udpinputport port     UDP port for keyboard/pointer data\n-rfbport port          TCP port for RFB protocol\n-rfbwait time          max time in ms to wait for RFB client\n-nocursor              don't put up a cursor\n-rfbauth passwd-file   use authentication on RFB protocol\n-httpd dir             serve files via HTTP from here\n-httpport port         port for HTTP\n-deferupdate time      time in ms to defer updates (default 40)\n-economictranslate     less memory-hungry translation\n-lazytight             disable \"gradient\" filter in tight encoding\n-desktop name          VNC desktop name (default x11)\n-alwaysshared          always treat new clients as shared\n-nevershared           never treat new clients as shared\n-dontdisconnect        don't disconnect existing clients when a new non-shared\n                       connection comes in (refuse new connection instead)\n-viewonly              let clients only to view the desktop\n-localhost             only allow connections from localhost\n-interface ipaddr      only bind to specified interface address\n-inetd                 Xvnc is launched by inetd\n-compatiblekbd         set META key = ALT key as in the original VNC\n-version               report Xvnc version on stderr",
+        "-h": "Unrecognized option: -h\nuse: X [:<display>] [option]\n-a #                   mouse acceleration (pixels)\n-ac                    disable access control restrictions\n-audit int             set audit trail level\n-auth file             select authorization file\nbc                     enable bug compatibility\n-bs                    disable any backing store support\n-c                     turns off key-click\nc #                    key-click volume (0-100)\n-cc int                default color visual class\n-co file               color database file\n-core                  generate core dump on fatal error\n-dpi int               screen resolution in dots per inch\n-deferglyphs [none|all|16] defer loading of [no|all|16-bit] glyphs\n-f #                   bell base (0-100)\n-fc string             cursor font\n-fn string             default font name\n-fp string             default font path\n-help                  prints message with these options\n-I                     ignore all remaining arguments\n-ld int                limit data space to N Kb\n-lf int                limit number of open files to N\n-ls int                limit stack space to N Kb\n-nolock                disable the locking mechanism\n-logo                  enable logo in screen saver\nnologo                 disable logo in screen saver\n-nolisten string       don't listen on protocol\n-p #                   screen-saver pattern duration (minutes)\n-pn                    accept failure to listen on all ports\n-nopn                  reject failure to listen on all ports\n-r                     turns off auto-repeat\nr                      turns on auto-repeat \n-s #                   screen-saver timeout (minutes)\n-su                    disable any save under support\n-t #                   mouse threshold (pixels)\n-terminate             terminate at server reset\n-to #                  connection time out\n-tst                   disable testing extensions\nttyxx                  server started from init on /dev/ttyxx\nv                      video blanking for screen-saver\n-v                     screen-saver without video blanking\n-wm                    WhenMapped default backing-store\n-x string              loads named extension at init time \n-query host-name       contact named host for XDMCP\n-broadcast             broadcast for XDMCP\n-indirect host-name    contact named host for indirect XDMCP\n-port port-num         UDP port number to send messages to\n-once                  Terminate server after one session\n-class display-class   specify display class to send in manage\n-cookie xdm-auth-bits  specify the magic cookie for XDMCP\n-displayID display-id  manufacturer display ID for request\n-geometry WxH          set framebuffer width & height\n-depth D               set framebuffer depth\n-pixelformat format    set pixel format (BGRnnn or RGBnnn)\n-udpinputport port     UDP port for keyboard/pointer data\n-rfbport port          TCP port for RFB protocol\n-rfbwait time          max time in ms to wait for RFB client\n-nocursor              don't put up a cursor\n-rfbauth passwd-file   use authentication on RFB protocol\n-httpd dir             serve files via HTTP from here\n-httpport port         port for HTTP\n-deferupdate time      time in ms to defer updates (default 40)\n-economictranslate     less memory-hungry translation\n-lazytight             disable \"gradient\" filter in tight encoding\n-desktop name          VNC desktop name (default x11)\n-alwaysshared          always treat new clients as shared\n-nevershared           never treat new clients as shared\n-dontdisconnect        don't disconnect existing clients when a new non-shared\n                       connection comes in (refuse new connection instead)\n-viewonly              let clients only to view the desktop\n-localhost             only allow connections from localhost\n-interface ipaddr      only bind to specified interface address\n-inetd                 Xvnc is launched by inetd\n-compatiblekbd         set META key = ALT key as in the original VNC\n-version               report Xvnc version on stderr",
+        "help": "Unrecognized option: help\nuse: X [:<display>] [option]\n-a #                   mouse acceleration (pixels)\n-ac                    disable access control restrictions\n-audit int             set audit trail level\n-auth file             select authorization file\nbc                     enable bug compatibility\n-bs                    disable any backing store support\n-c                     turns off key-click\nc #                    key-click volume (0-100)\n-cc int                default color visual class\n-co file               color database file\n-core                  generate core dump on fatal error\n-dpi int               screen resolution in dots per inch\n-deferglyphs [none|all|16] defer loading of [no|all|16-bit] glyphs\n-f #                   bell base (0-100)\n-fc string             cursor font\n-fn string             default font name\n-fp string             default font path\n-help                  prints message with these options\n-I                     ignore all remaining arguments\n-ld int                limit data space to N Kb\n-lf int                limit number of open files to N\n-ls int                limit stack space to N Kb\n-nolock                disable the locking mechanism\n-logo                  enable logo in screen saver\nnologo                 disable logo in screen saver\n-nolisten string       don't listen on protocol\n-p #                   screen-saver pattern duration (minutes)\n-pn                    accept failure to listen on all ports\n-nopn                  reject failure to listen on all ports\n-r                     turns off auto-repeat\nr                      turns on auto-repeat \n-s #                   screen-saver timeout (minutes)\n-su                    disable any save under support\n-t #                   mouse threshold (pixels)\n-terminate             terminate at server reset\n-to #                  connection time out\n-tst                   disable testing extensions\nttyxx                  server started from init on /dev/ttyxx\nv                      video blanking for screen-saver\n-v                     screen-saver without video blanking\n-wm                    WhenMapped default backing-store\n-x string              loads named extension at init time \n-query host-name       contact named host for XDMCP\n-broadcast             broadcast for XDMCP\n-indirect host-name    contact named host for indirect XDMCP\n-port port-num         UDP port number to send messages to\n-once                  Terminate server after one session\n-class display-class   specify display class to send in manage\n-cookie xdm-auth-bits  specify the magic cookie for XDMCP\n-displayID display-id  manufacturer display ID for request\n-geometry WxH          set framebuffer width & height\n-depth D               set framebuffer depth\n-pixelformat format    set pixel format (BGRnnn or RGBnnn)\n-udpinputport port     UDP port for keyboard/pointer data\n-rfbport port          TCP port for RFB protocol\n-rfbwait time          max time in ms to wait for RFB client\n-nocursor              don't put up a cursor\n-rfbauth passwd-file   use authentication on RFB protocol\n-httpd dir             serve files via HTTP from here\n-httpport port         port for HTTP\n-deferupdate time      time in ms to defer updates (default 40)\n-economictranslate     less memory-hungry translation\n-lazytight             disable \"gradient\" filter in tight encoding\n-desktop name          VNC desktop name (default x11)\n-alwaysshared          always treat new clients as shared\n-nevershared           never treat new clients as shared\n-dontdisconnect        don't disconnect existing clients when a new non-shared\n                       connection comes in (refuse new connection instead)\n-viewonly              let clients only to view the desktop\n-localhost             only allow connections from localhost\n-interface ipaddr      only bind to specified interface address\n-inetd                 Xvnc is launched by inetd\n-compatiblekbd         set META key = ALT key as in the original VNC\n-version               report Xvnc version on stderr",
+        "man": "Xvnc(1)                             TightVNC                            Xvnc(1)\n\nNAME\n     Xvnc - an X server providing VNC connectivity\n\nSYNOPSIS\n     Xvnc   [:display]  [-geometry  widthxheight]  [-depth depth] [-pixelformat\n            rgbNNN|bgrNNN] [-udpinputport port] [-rfbport port] [-rfbwait time]\n            [-nocursor] [-rfbauth passwd-file] [-httpd  dir]  [-httpport  port]\n            [-deferupdate  time]  [-economictranslate]  [-lazytight]  [-desktop\n            name] [-alwaysshared] [-nevershared] [-dontdisconnect]  [-viewonly]\n            [-localhost]  [-interface  ipaddr] [-inetd] [-compatiblekbd] [X-op-\n            tions...]\n\nDESCRIPTION\n     Xvnc is a VNC (Virtual Network Computing) server. It acts like an X server\n     with a virtual display. The display can be seen by a VNC  viewer  applica-\n     tion,  which may be running on a different machine: see vncviewer(1). Xvnc\n     is built inside the source code tree of XFree86, and shares  many  options\n     with it.\n\n     Normally,  you  don't  need  to  start Xvnc manually; use the vncserver(1)\n     wrapper script instead. This script sets reasonable defaults for Xvnc ses-\n     sion, checks many error conditions etc.\n\n     Please read the BUGS section if you plan to use VNC on an  untrusted  net-\n     work.\n\nOPTIONS\n     Xvnc  supports many standard X server options and a number of VNC-specific\n     options. To see what standard X server options are supported, please  look\n     at  the  Xvnc -help output and read the Xserver(1) manual page for details\n     on those options.\n\n     The VNC-specific options are as follows:\n\n     -geometry widthxheight\n            Set desktop width and height.\n\n     -depth depth\n            Set the colour depth of the visual to provide, in bits  per  pixel.\n            Must be a value between 8 and 32.\n\n     -pixelformat rgbNNN|bgrNNN\n            Set  colour format for pixels representation. The viewer can do the\n            conversion to any other pixel format, but it is faster if the depth\n            and pixel format of the server is the same as the equivalent values\n            on the viewer display.\n\n     -udpinputport port\n            UDP port for keyboard/pointer data.\n\n     -rfbport port\n            TCP port for RFB protocol. The RFB protocol is used for  communica-\n            tion between VNC server and clients.\n\n     -rfbwait time\n            Maximum  time,  in  milliseconds,  to  wait  for an RFB client (VNC\n            viewer).\n\n     -nocursor\n            Don't put up a pointer cursor on the desktop.\n\n     -rfbauth passwd-file\n            Use authentication on RFB protocol from  the  specified  file.  The\n            passwd-file can be created using the vncpasswd(1) utility.\n\n     -httpd dir\n            Serve  files  via  HTTP protocol from the specified directory. Nor-\n            mally, Java viewer classes are stored in such directory.\n\n     -httpport port\n            TCP port on which Xvnc should listen for incoming HTTP  connections\n            (to allow access to the desktop from any Java-capable browser).\n\n     -deferupdate time\n            Time  in milliseconds, to defer screen updates (default 40). Defer-\n            ring updates helps to coalesce many small desktop  changes  into  a\n            few larger updates thus saving network bandwidth.\n\n     -economictranslate\n            Use less memory-hungry pixel format translation.\n\n     -lazytight\n            Disable  the  \"gradient\"  filter  in  Tight encoding (TightVNC-spe-\n            cific).  The \"gradient\" filter often helps to improve data compres-\n            sion ratios, but may slow down the server performance. Please  note\n            that  this filter is never used when a client enables JPEG compres-\n            sion in the Tight encoding.\n\n     -desktop name\n            Set VNC desktop name (\"x11\" by default).\n\n     -alwaysshared\n            Always treat new  clients  as  shared,  never  disconnect  existing\n            client on a new client connection.\n\n     -nevershared\n            Never  treat new clients as shared, do not allow several simultane-\n            ous client connections.\n\n     -dontdisconnect\n            Don't disconnect existing clients when a new non-shared  connection\n            comes in, refuse new connection instead.\n\n     -viewonly\n            Don't  accept  keboard and pointer events from clients. All clients\n            will be able to see the desktop but won't be able to control it.\n\n     -localhost\n            Only allow loopback connections from localhost. This option is use-\n            ful in conjunction with SSH tunneling.\n\n     -interface ipaddr\n            Listen for client connections only on the  network  interface  with\n            given ipaddr.\n\n     -inetd\n            Xvnc is launched by inetd. This option causes Xvnc to redirect net-\n            work input/output to stdin/stdout.\n\n     -compatiblekbd\n            Set META and ALT keys to the same X modifier flag, as in the origi-\n            nal version of Xvnc by AT&T labs (TightVNC-specific).\n\nBUGS\n     There are many security problems in current Xvnc implementation. It's rec-\n     ommended to restrict network access to Xvnc servers from untrusted network\n     addresses.  Probably,  the best way to secure Xvnc server is to allow only\n     loopback connections from the server machine (the -localhost  option)  and\n     to  use SSH tunneling for remote access to the Xvnc server. For details on\n     SSH        tunneling,         see         <URL:http://www.cl.cam.ac.uk/Re-\n     search/DTG/attarchive/vnc/sshvnc.html> .\n\nSEE ALSO\n     vncserver(1), vncviewer(1), vncpasswd(1), vncconnect(1), sshd(1)\n\nAUTHORS\n     Original  VNC was developed in AT&T Laboratories Cambridge. TightVNC addi-\n     tions were implemented by Constantin Kaplinsky. Many other people partici-\n     pated in development, testing and support.\n\n     Man page authors:\n     Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>,\n     Tim Waugh <twaugh@redhat.com>,\n     Constantin Kaplinsky <const@tightvnc.com>\n\n                                  August 2006                           Xvnc(1)",
+        "apropos": "Xtightvnc (1)        - an X server providing VNC connectivity\nxtightvncviewer (1)  - an X viewer client for VNC"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/Xtightvnc",
+        "size_bytes": 1804008,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b18b8aa8b19447b5a250c105e2a5852a661226bf, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "tightvncconnect",
+      "description": "Connect a VNC server to a VNC viewer",
+      "usage": "tightvncconnect [-display Xvnc-display] host[:port]",
+      "arguments": [],
+      "raw_help": "root@kali:~# tightvncconnect -h\n usage: tightvncconnect [-display Xvnc-display] host[:port]\n Tells Xvnc to connect to a listening VNC viewer on the given host and port",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "tightvncconnect: unable to open display \"\"",
+          "template": null,
+          "original_sha256": "4b1da1d54348ea7a93e54b74c1ff578ae117a7a38d7bd72e0728f110bb09aa83"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: tightvncconnect [-display Xvnc-display] host[:port]\nTells Xvnc to connect to a listening VNC viewer on the given host and port",
+        "-h": "usage: tightvncconnect [-display Xvnc-display] host[:port]\nTells Xvnc to connect to a listening VNC viewer on the given host and port",
+        "help": "tightvncconnect: unable to open display \"\"",
+        "man": "vncconnect(1)                       TightVNC                      vncconnect(1)\n\nNAME\n     vncconnect - connect a VNC server to a VNC viewer\n\nSYNOPSIS\n     vncconnect [-display Xvnc-display] host[:port]\n\nDESCRIPTION\n     Tells  Xvnc(1)  to connect to a listening VNC viewer on the given host and\n     port.\n\nSEE ALSO\n     vncviewer(1), vncserver(1), Xvnc(1), vncpasswd(1)\n\nAUTHORS\n     Original VNC was developed in AT&T Laboratories Cambridge. TightVNC  addi-\n     tions were implemented by Constantin Kaplinsky. Many other people partici-\n     pated in development, testing and support.\n\n     Man page authors:\n     Tim Waugh <twaugh@redhat.com>,\n     Constantin Kaplinsky <const@tightvnc.com>\n\n                                  August 2006                     vncconnect(1)",
+        "apropos": "tightvncconnect (1)  - connect a VNC server to a VNC viewer"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tightvncconnect",
+        "size_bytes": 14576,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=150ccf94cde430c8e6ec7b5173a2cc94f1928048, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "tightvncserver",
+      "description": "A wrapper to launch an X server for VNC.",
+      "usage": "tightvncserver [<OPTIONS>] [:<DISPLAY#>]",
+      "arguments": [
+        {
+          "flags": [
+            "-name"
+          ],
+          "metavar": "DESKTOP-NAME",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "       -name <DESKTOP-NAME>"
+        },
+        {
+          "flags": [
+            "-depth"
+          ],
+          "metavar": "DEPTH",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "       -depth <DEPTH>"
+        },
+        {
+          "flags": [
+            "-geometry"
+          ],
+          "metavar": "WIDTH x HEIGHT",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "       -geometry <WIDTH>x<HEIGHT>"
+        },
+        {
+          "flags": [
+            "-httpport"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "       -httpport number"
+        },
+        {
+          "flags": [
+            "-basehttpport"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "       -basehttpport number"
+        },
+        {
+          "flags": [
+            "-alwaysshared"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "       -alwaysshared"
+        },
+        {
+          "flags": [
+            "-nevershared"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "       -nevershared"
+        },
+        {
+          "flags": [
+            "-pixelformat"
+          ],
+          "metavar": "rgb NNN",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "       -pixelformat rgb<NNN>"
+        },
+        {
+          "flags": [
+            "-clean"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -clean"
+        },
+        {
+          "flags": [
+            "-kill"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display",
+          "default": null,
+          "choices": null,
+          "raw": "     -kill :display"
+        },
+        {
+          "flags": [
+            "-help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Prints a short usage notice to stderr.",
+          "default": null,
+          "choices": null,
+          "raw": "     -help  Prints a short usage notice to stderr."
+        }
+      ],
+      "raw_help": "root@kali:~# tightvncserver -h\n TightVNC Server version 1.3.10\n \n Usage: tightvncserver [<OPTIONS>] [:<DISPLAY#>]\n      tightvncserver -kill :<DISPLAY#>\n \n <OPTIONS> are Xtightvnc options, or:\n \n       -name <DESKTOP-NAME>\n       -depth <DEPTH>\n       -geometry <WIDTH>x<HEIGHT>\n       -httpport number\n       -basehttpport number\n       -alwaysshared\n       -nevershared\n       -pixelformat rgb<NNN>\n       -pixelformat bgr<NNN>\n \n See vncserver and Xtightvnc manual pages for more information.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "tightvncserver -kill :<DISPLAY#>",
+          "template": null,
+          "original_sha256": "0d017044148b260d03c9e34855eca395957307e679e0bbbb9a1249472e0550e1"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "TightVNC Server version 1.3.10\n\nUsage: tightvncserver [<OPTIONS>] [:<DISPLAY#>]\n       tightvncserver -kill :<DISPLAY#>\n\n<OPTIONS> are Xtightvnc options, or:\n\n        -name <DESKTOP-NAME>\n        -depth <DEPTH>\n        -geometry <WIDTH>x<HEIGHT>\n        -httpport number\n        -basehttpport number\n        -alwaysshared\n        -nevershared\n        -pixelformat rgb<NNN>\n        -pixelformat bgr<NNN>\n\nSee vncserver and Xtightvnc manual pages for more information.",
+        "-h": "TightVNC Server version 1.3.10\n\nUsage: tightvncserver [<OPTIONS>] [:<DISPLAY#>]\n       tightvncserver -kill :<DISPLAY#>\n\n<OPTIONS> are Xtightvnc options, or:\n\n        -name <DESKTOP-NAME>\n        -depth <DEPTH>\n        -geometry <WIDTH>x<HEIGHT>\n        -httpport number\n        -basehttpport number\n        -alwaysshared\n        -nevershared\n        -pixelformat rgb<NNN>\n        -pixelformat bgr<NNN>\n\nSee vncserver and Xtightvnc manual pages for more information.",
+        "help": "You will require a password to access your desktops.\n\nPassword: Password too short",
+        "man": "vncserver(1)                        TightVNC                       vncserver(1)\n\nNAME\n     vncserver - a wrapper to launch an X server for VNC.\n\nSYNOPSIS\n     vncserver [:display] [-geometry widthxheight] [-depth depth] [-pixelformat\n     rgbNNN|bgrNNN]  [-name desktop-name] [ -httpport int ] [ -basehttpport int\n     ] [ -alwaysshared ] [ -nevershared ] [Xvnc-options...]\n\n     vncserver [ -clean ] -kill :display\n\n     vncserver -help\n\nDESCRIPTION\n     vncserver is a wrapper script for Xvnc, the free X server for VNC (Virtual\n     Network Computing). It provides all capabilities of a standard  X  server,\n     but  does  not  connect  to a display for itself.  Instead, Xvnc creates a\n     virtual desktop you can view or control remotely using a VNC viewer.\n\nOPTIONS\n     You can add Xvnc options at the command line. They will be  added  to  the\n     invocation  of Xvnc without changes. The options provided by the vncserver\n     itself are as follows:\n\n     :display\n            The display number to use. If omitted, the next free display number\n            is used.\n\n     -geometry widthxheight\n            Set desktop width and height.\n\n     -depth depth\n            Set the colour depth of the visual to provide, in bits  per  pixel.\n            Must be a value between 8 and 32.\n\n     -pixelformat rgbNNN|bgrNNN\n            Set  colour format for pixels representation. The viewer can do the\n            conversion to any other pixel format, but it is faster if the depth\n            and pixel format of the server is the same as the equivalent values\n            on the viewer display.\n\n     -name string\n            This specifies the name of the desktop.\n\n     -clean\n            This option can be used in conjunction with\n\n     -kill :display\n            Stops the session running on the specified display.\n\n     -nevershared\n            Never allow shared desktops.\n\n     -alwaysshared\n            Always allow shared desktops.\n\n     -basehttpport int\n            The base http port to use for the java client applet (you  have  to\n            install the tightvnc-java package to make this work). The real port\n            number will be port = base + display num.\n\n     -httpport int\n            The  http  port  to use for the java client applet (you have to in-\n            stall the tightvnc-java package to make this work).\n\n     -help  Prints a short usage notice to stderr.\n\nEXAMPLES\n     vncserver\n            Invokes Xvnc on the next available display and  with  suitable  de-\n            faults.\n\n     vncserver :1\n            Invokes Xvnc on display :1.\n\n     vncserver -geometry 800x600 -depth 16 :1\n            Invokes  Xvnc on display :1 with desktop size of 800x600 pixels and\n            color depth of 16 bits per pixel.\n\n     vncserver -kill :1\n            Shuts down Xvnc server on display :1.\n\nFILES\n     /etc/tightvncserver.conf\n            System-wide configuration file of TightVNC Server.\n\n     $HOME/.vnc/tightvncserver.conf\n            User configuration file of TightVNC Server.  Its  setting  override\n            system-wide configuration.\n\nSEE ALSO\n     Xvnc(1), vncviewer(1), vncpasswd(1), vncconnect(1)\n\nAUTHORS\n     Original  VNC was developed in AT&T Laboratories Cambridge. TightVNC addi-\n     tions were implemented by Constantin Kaplinsky. Many other people partici-\n     pated in development, testing and support.\n\n     Man page authors:\n     Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>,\n     Tim Waugh <twaugh@redhat.com>,\n     Constantin Kaplinsky <const@tightvnc.com>\n\n                                  August 2006                      vncserver(1)",
+        "apropos": "tightvncserver (1)   - a wrapper to launch an X server for VNC."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/tightvncserver",
+        "size_bytes": 20291,
+        "is_symlink": false,
+        "file_type": "Perl script text executable"
+      }
+    },
+    {
+      "name": "xtightvncviewer",
+      "description": "An X viewer client for VNC",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Prints a short usage notice to stderr.",
+          "default": null,
+          "choices": null,
+          "raw": "    -help  Prints a short usage notice to stderr."
+        },
+        {
+          "flags": [
+            "-listen"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -listen"
+        },
+        {
+          "flags": [
+            "-via"
+          ],
+          "metavar": "gateway",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -via gateway"
+        },
+        {
+          "flags": [
+            "-shared"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -shared"
+        },
+        {
+          "flags": [
+            "-noshared"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -noshared"
+        },
+        {
+          "flags": [
+            "-viewonly"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -viewonly"
+        },
+        {
+          "flags": [
+            "-fullscreen"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -fullscreen"
+        },
+        {
+          "flags": [
+            "-noraiseonbeep"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -noraiseonbeep"
+        },
+        {
+          "flags": [
+            "-passwd"
+          ],
+          "metavar": "passwd-file",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -passwd passwd-file"
+        },
+        {
+          "flags": [
+            "-encodings"
+          ],
+          "metavar": "encoding-list",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -encodings encoding-list"
+        },
+        {
+          "flags": [
+            "-bgr233"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -bgr233"
+        },
+        {
+          "flags": [
+            "-owncmap"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -owncmap"
+        },
+        {
+          "flags": [
+            "-truecolour",
+            "-truecolor"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -truecolour, -truecolor"
+        },
+        {
+          "flags": [
+            "-depth"
+          ],
+          "metavar": "depth",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -depth depth"
+        },
+        {
+          "flags": [
+            "-compresslevel"
+          ],
+          "metavar": "level",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -compresslevel level"
+        },
+        {
+          "flags": [
+            "-quality"
+          ],
+          "metavar": "level",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -quality level"
+        },
+        {
+          "flags": [
+            "-nojpeg"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -nojpeg"
+        },
+        {
+          "flags": [
+            "-nocursorshape"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -nocursorshape"
+        },
+        {
+          "flags": [
+            "-x11cursor"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -x11cursor"
+        },
+        {
+          "flags": [
+            "-autopass"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -autopass"
+        }
+      ],
+      "raw_help": "root@kali:~# man xtightvncviewer\n vncviewer(1)                        TightVNC                       vncviewer(1)\n \n NAME\n    vncviewer - an X viewer client for VNC\n \n SYNOPSIS\n    vncviewer [options] [host][:display]\n    vncviewer [options] [host][::port]\n    vncviewer [options] -listen [display]\n    vncviewer -help\n \n DESCRIPTION\n    vncviewer  is  an Xt-based client application for the VNC (Virtual Network\n    Computing) system. It can connect to any  VNC-compatible  server  such  as\n    Xvnc or WinVNC, allowing you to control desktop environment of a different\n    machine.\n \n    You  can  use  F8 to display a pop-up utility menu. Press F8 twice to pass\n    single F8 to the remote side.\n \n OPTIONS\n    -help  Prints a short usage notice to stderr.\n \n    -listen\n           Make the viewer listen on port 5500+display for reverse connections\n           from a server. WinVNC supports reverse connections using  the  \"Add\n           New  Client\" menu option, or the -connect command line option. Xvnc\n           requires the use of the helper program vncconnect.\n \n    -via gateway\n           Automatically create encrypted TCP tunnel to  the  gateway  machine\n           before   connection,  connect  to  the  host  through  that  tunnel\n           (TightVNC-specific). By default, this option invokes SSH local port\n           forwarding, assuming that SSH client  binary  can  be  accessed  as\n           /usr/bin/ssh.  Note  that  when using the -via option, the host ma-\n           chine name should be specified as known  to  the  gateway  machine,\n           e.g.   \"localhost\"  denotes  the  gateway,  not  the  machine where\n           vncviewer was launched. See the ENVIRONMENT section below  for  the\n           information on configuring the -via option.\n \n    -shared\n           When  connecting, specify that a shared connection is requested. In\n           TightVNC, this is the default mode, allowing you to share the desk-\n           top with other clients already using it.\n \n    -noshared\n           When connecting, specify that the session may not be  shared.  This\n           would either disconnect other connected clients or refuse your con-\n           nection, depending on the server configuration.\n \n    -viewonly\n           Disable  transfer  of  mouse and keyboard events from the client to\n           the server.\n \n    -fullscreen\n           Start in full-screen  mode.  Please  be  aware  that  operating  in\n           full-screen  mode  may  confuse  X window managers. Typically, such\n           conflicts cause incorrect handling  of  input  focus  or  make  the\n           viewer  window disappear mysteriously. See the grabKeyboard setting\n           in the RESOURCES section below for a method to  solve  input  focus\n           problem.\n \n    -noraiseonbeep\n           By  default,  the viewer shows and raises its window on remote beep\n           (bell) event. This option disables  such  behaviour  (TightVNC-spe-\n           cific).\n \n    -passwd passwd-file\n           File  from  which  to  get  the  password (as generated by the vnc-\n           passwd(1) program). This option affects only the standard  VNC  au-\n           thentication.\n \n    -encodings encoding-list\n           TightVNC  supports  several different compression methods to encode\n           screen updates; this option specifies a set of them to use in order\n           of preference. Encodings are specified separated with  spaces,  and\n           must  thus  be  enclosed  in  quotes if more than one is specified.\n           Available encodings, in default order for a remote connection,  are\n           \"copyrect tight hextile zlib corre rre raw\". For a local connection\n           (to  the  same  machine), the default order to try is \"raw copyrect\n           tight hextile zlib corre rre\". Raw encoding is always assumed as  a\n           last  option  if no other encoding can be used for some reason. For\n           more information on encodings, see the section ENCODINGS below.\n \n    -bgr233\n           Always use the BGR233 format to encode  pixel  data.  This  reduces\n           network  traffic,  but  colors may be represented inaccurately. The\n           bgr233 format is an 8-bit \"true color\" format, with 2 bits blue,  3\n           bits green, and 3 bits red.\n \n    -owncmap\n           Try to use a PseudoColor visual and a private colormap. This allows\n           the VNC server to control the colormap.\n \n    -truecolour, -truecolor\n           Try to use a TrueColor visual.\n \n    -depth depth\n           On an X server which supports multiple TrueColor visuals of differ-\n           ent  depths,  attempt to use the specified one (in bits per pixel);\n           if successful, this depth will be requested from the VNC server.\n \n    -compresslevel level\n           Use specified compression level (0..9) for \"tight\" and  \"zlib\"  en-\n           codings  (TightVNC-specific).  Level 1 uses minimum of CPU time and\n           achieves weak compression ratios, while level 9  offers  best  com-\n           pression but is slow in terms of CPU time consumption on the server\n           side.  Use  high levels with very slow network connections, and low\n           levels when working over high-speed LANs. It's not  recommended  to\n           use compression level 0, reasonable choices start from the level 1.\n \n    -quality level\n           Use  the specified JPEG quality level (0..9) for the \"tight\" encod-\n           ing (TightVNC-specific). Quality level 0 denotes bad image  quality\n           but  very  impressive compression ratios, while level 9 offers very\n           good image quality at  lower  compression  ratios.  Note  that  the\n           \"tight\"  encoder  uses  JPEG to encode only those screen areas that\n           look suitable for lossy compression, so quality level  0  does  not\n           always mean unacceptable image quality.\n \n    -nojpeg\n           Disable  lossy  JPEG  compression  in Tight encoding (TightVNC-spe-\n           cific).  Disabling JPEG compression is not a good idea  in  typical\n           cases,  as  that  makes the Tight encoder less efficient. You might\n           want to use this option if it's  absolutely  necessary  to  achieve\n           perfect image quality (see also the -quality option).\n \n    -nocursorshape\n           Disable  cursor  shape  updates, protocol extensions used to handle\n           remote cursor movements locally on the client  side  (TightVNC-spe-\n           cific).  Using  cursor  shape  updates decreases delays with remote\n           cursor movements, and can improve bandwidth usage dramatically.\n \n    -x11cursor\n           Use a real X11 cursor with X-style cursor shape updates, instead of\n           drawing the remote cursor on the framebuffer. This option also dis-\n           ables the dot cursor, and disables cursor position updates in  non-\n           fullscreen mode.\n \n    -autopass\n           Read a plain-text password from stdin. This option affects only the\n           standard VNC authentication.\n \n ENCODINGS\n    The  server  supplies  information  in  whatever  format is desired by the\n    client, in order to make the client as easy as possible to implement.   If\n    the  client  represents itself as able to use multiple formats, the server\n    will choose one.\n \n    Pixel format refers to the representation of an individual pixel. The most\n    common formats are 24 and 16 bit \"true-color\"  values,  and  8-bit  \"color\n    map\"  representations, where an arbitrary map converts the color number to\n    RGB values.\n \n    Encoding refers to how a rectangle of pixels are sent (all pixel  informa-\n    tion in VNC is sent as rectangles). All rectangles come with a header giv-\n    ing  the  location  and size of the rectangle and an encoding type used by\n    the data which follows. These types are listed below.\n \n    Raw    The raw  encoding  simply  sends  width*height  pixel  values.  All\n           clients are required to support this encoding type. Raw is also the\n           fastest  when the server and viewer are on the same machine, as the\n           connection speed is essentially infinite and raw encoding minimizes\n           processing time.\n \n    CopyRect\n           The Copy Rectangle encoding is efficient when  something  is  being\n           moved; the only data sent is the location of a rectangle from which\n           data  should be copied to the current location. Copyrect could also\n           be used to efficiently transmit a repeated pattern.\n \n    RRE    The Rise-and-Run-length-Encoding  is  basically  a  2D  version  of\n           run-length  encoding (RLE). In this encoding, a sequence of identi-\n           cal pixels are compressed to a single value and  repeat  count.  In\n           VNC, this is implemented with a background color, and then specifi-\n           cations of an arbitrary number of subrectangles and color for each.\n           This is an efficient encoding for large blocks of constant color.\n \n    CoRRE  This  is a minor variation on RRE, using a maximum of 255x255 pixel\n           rectangles. This allows for single-byte values to be used, reducing\n           packet size. This is in general more efficient, because the savings\n           from sending 1-byte values generally outweighs the losses from  the\n           (relatively  rare)  cases  where very large regions are painted the\n           same color.\n \n    Hextile\n           Here, rectangles are split up in to 16x16 tiles, which are sent  in\n           a predetermined order. The data within the tiles is sent either raw\n           or as a variant on RRE. Hextile encoding is usually the best choice\n           for  using  in  high-speed  network environments (e.g. Ethernet lo-\n           cal-area networks).\n \n    Zlib   Zlib is a very simple encoding that uses zlib library  to  compress\n           raw  pixel  data. This encoding achieves good compression, but con-\n           sumes a lot of CPU time. Support for this encoding is provided  for\n           compatibility  with VNC servers that might not understand Tight en-\n           coding which is more efficient than Zlib in  nearly  all  real-life\n           situations.\n \n    Tight  Like  Zlib  encoding,  Tight encoding uses zlib library to compress\n           the pixel data, but it pre-processes data to  maximize  compression\n           ratios,  and  to minimize CPU usage on compression. Also, JPEG com-\n           pression may be used to encode color-rich screen areas (see the de-\n           scription of -quality and -nojpeg options above). Tight encoding is\n           usually the best  choice  for  low-bandwidth  network  environments\n           (e.g. slow modem connections).\n \n RESOURCES\n    X  resources  that  vncviewer  knows  about,  aside from the normal Xt re-\n    sources, are as follows:\n \n    shareDesktop\n           Equivalent of -shared/-noshared options. Default true.\n \n    viewOnly\n           Equivalent of -viewonly option. Default false.\n \n    fullScreen\n           Equivalent of -fullscreen option. Default false.\n \n    grabKeyboard\n           Grab keyboard in full-screen mode. This can help to solve  problems\n           with losing keyboard focus. Default false.\n \n    raiseOnBeep\n           Equivalent  of  -noraiseonbeep  option,  when set to false. Default\n           true.\n \n    passwordFile\n           Equivalent of -passwd option.\n \n    passwordDialog\n           Whether to use a dialog box to get the password (true)  or  get  it\n           from  the  tty  (false). Irrelevant if passwordFile is set. Default\n           false.\n \n    encodings\n           Equivalent of -encodings option.\n \n    compressLevel\n           Equivalent of -compresslevel option (TightVNC-specific).\n \n    qualityLevel\n           Equivalent of -quality option (TightVNC-specific).\n \n    enableJPEG\n           Equivalent of -nojpeg option, when set to false. Default true.\n \n    useRemoteCursor\n           Equivalent  of   -nocursorshape   option,   when   set   to   false\n           (TightVNC-specific). Default true.\n \n    useBGR233\n           Equivalent of -bgr233 option. Default false.\n \n    nColours\n           When  using  BGR233,  try to allocate this many \"exact\" colors from\n           the BGR233 color cube. When using a shared colormap,  setting  this\n           resource  lower  leaves more colors for other X clients. Irrelevant\n           when using truecolor. Default is 256 (i.e. all of them).\n \n    useSharedColours\n           If the number of \"exact\" BGR233 colors  successfully  allocated  is\n           less  than 256 then the rest are filled in using the \"nearest\" col-\n           ors available. This resource says whether to only use  the  \"exact\"\n           BGR233  colors  for  this purpose, or whether to use other clients'\n           \"shared\" colors as well. Default true (i.e. use other clients' col-\n           ors).\n \n    forceOwnCmap\n           Equivalent of -owncmap option. Default false.\n \n    forceTrueColour\n           Equivalent of -truecolour option. Default false.\n \n    requestedDepth\n           Equivalent of -depth option.\n \n    useSharedMemory\n           Use MIT shared memory extension if on the same  machine  as  the  X\n           server. Default true.\n \n    wmDecorationWidth, wmDecorationHeight\n           The  total width and height taken up by window manager decorations.\n           This is used to calculate the maximum size of the VNC  viewer  win-\n           dow.  Default is width 4, height 24.\n \n    bumpScrollTime, bumpScrollPixels\n           When  in  full screen mode and the VNC desktop is bigger than the X\n           display, scrolling happens whenever the mouse hits the edge of  the\n           screen.  The  maximum speed of scrolling is bumpScrollPixels pixels\n           every bumpScrollTime milliseconds. The actual  speed  of  scrolling\n           will be slower than this, of course, depending on how fast your ma-\n           chine is.  Default 20 pixels every 25 milliseconds.\n \n    popupButtonCount\n           The  number of buttons in the popup window. See the README file for\n           more information on how to customize the buttons.\n \n    debug  For debugging. Default false.\n \n    rawDelay, copyRectDelay\n           For debugging, see the README file for details. Default 0 (off).\n \n ENVIRONMENT\n    When started with the -via option, vncviewer reads the  VNC_VIA_CMD  envi-\n    ronment  variable,  expands patterns beginning with the \"%\" character, and\n    executes result as a command assuming that it would create TCP tunnel that\n    should be used for VNC connection. If not set, this  environment  variable\n    defaults to \"/usr/bin/ssh -f -L %L:%H:%R %G sleep 20\".\n \n    The  following  patterns  are recognized in the VNC_VIA_CMD (note that all\n    the patterns %G, %H, %L and %R must be present in the command template):\n \n    %%     A literal \"%\";\n \n    %G     gateway host name;\n \n    %H     remote VNC host name, as known to the gateway;\n \n    %L     local TCP port number;\n \n    %R     remote TCP port number.\n \n SEE ALSO\n    vncserver(1), Xvnc(1), vncpasswd(1), vncconnect(1), ssh(1)\n \n AUTHORS\n    Original VNC was developed in AT&T Laboratories Cambridge. TightVNC  addi-\n    tions were implemented by Constantin Kaplinsky. Many other people partici-\n    pated in development, testing and support.\n \n    Man page authors:\n    Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>,\n    Terran Melconian <terran@consistent.org>,\n    Tim Waugh <twaugh@redhat.com>,\n    Constantin Kaplinsky <const@tightvnc.com>\n \n                                 August 2006                      vncviewer(1)",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Error: Can't open display:",
+        "-h": "Error: Can't open display:",
+        "help": "Error: Can't open display:",
+        "man": "vncviewer(1)                        TightVNC                       vncviewer(1)\n\nNAME\n     vncviewer - an X viewer client for VNC\n\nSYNOPSIS\n     vncviewer [options] [host][:display]\n     vncviewer [options] [host][::port]\n     vncviewer [options] -listen [display]\n     vncviewer -help\n\nDESCRIPTION\n     vncviewer  is  an Xt-based client application for the VNC (Virtual Network\n     Computing) system. It can connect to any  VNC-compatible  server  such  as\n     Xvnc or WinVNC, allowing you to control desktop environment of a different\n     machine.\n\n     You  can  use  F8 to display a pop-up utility menu. Press F8 twice to pass\n     single F8 to the remote side.\n\nOPTIONS\n     -help  Prints a short usage notice to stderr.\n\n     -listen\n            Make the viewer listen on port 5500+display for reverse connections\n            from a server. WinVNC supports reverse connections using  the  \"Add\n            New  Client\" menu option, or the -connect command line option. Xvnc\n            requires the use of the helper program vncconnect.\n\n     -via gateway\n            Automatically create encrypted TCP tunnel to  the  gateway  machine\n            before   connection,  connect  to  the  host  through  that  tunnel\n            (TightVNC-specific). By default, this option invokes SSH local port\n            forwarding, assuming that SSH client  binary  can  be  accessed  as\n            /usr/bin/ssh.  Note  that  when using the -via option, the host ma-\n            chine name should be specified as known  to  the  gateway  machine,\n            e.g.   \"localhost\"  denotes  the  gateway,  not  the  machine where\n            vncviewer was launched. See the ENVIRONMENT section below  for  the\n            information on configuring the -via option.\n\n     -shared\n            When  connecting, specify that a shared connection is requested. In\n            TightVNC, this is the default mode, allowing you to share the desk-\n            top with other clients already using it.\n\n     -noshared\n            When connecting, specify that the session may not be  shared.  This\n            would either disconnect other connected clients or refuse your con-\n            nection, depending on the server configuration.\n\n     -viewonly\n            Disable  transfer  of  mouse and keyboard events from the client to\n            the server.\n\n     -fullscreen\n            Start in full-screen  mode.  Please  be  aware  that  operating  in\n            full-screen  mode  may  confuse  X window managers. Typically, such\n            conflicts cause incorrect handling  of  input  focus  or  make  the\n            viewer  window disappear mysteriously. See the grabKeyboard setting\n            in the RESOURCES section below for a method to  solve  input  focus\n            problem.\n\n     -noraiseonbeep\n            By  default,  the viewer shows and raises its window on remote beep\n            (bell) event. This option disables  such  behaviour  (TightVNC-spe-\n            cific).\n\n     -passwd passwd-file\n            File  from  which  to  get  the  password (as generated by the vnc-\n            passwd(1) program). This option affects only the standard  VNC  au-\n            thentication.\n\n     -encodings encoding-list\n            TightVNC  supports  several different compression methods to encode\n            screen updates; this option specifies a set of them to use in order\n            of preference. Encodings are specified separated with  spaces,  and\n            must  thus  be  enclosed  in  quotes if more than one is specified.\n            Available encodings, in default order for a remote connection,  are\n            \"copyrect tight hextile zlib corre rre raw\". For a local connection\n            (to  the  same  machine), the default order to try is \"raw copyrect\n            tight hextile zlib corre rre\". Raw encoding is always assumed as  a\n            last  option  if no other encoding can be used for some reason. For\n            more information on encodings, see the section ENCODINGS below.\n\n     -bgr233\n            Always use the BGR233 format to encode  pixel  data.  This  reduces\n            network  traffic,  but  colors may be represented inaccurately. The\n            bgr233 format is an 8-bit \"true color\" format, with 2 bits blue,  3\n            bits green, and 3 bits red.\n\n     -owncmap\n            Try to use a PseudoColor visual and a private colormap. This allows\n            the VNC server to control the colormap.\n\n     -truecolour, -truecolor\n            Try to use a TrueColor visual.\n\n     -depth depth\n            On an X server which supports multiple TrueColor visuals of differ-\n            ent  depths,  attempt to use the specified one (in bits per pixel);\n            if successful, this depth will be requested from the VNC server.\n\n     -compresslevel level\n            Use specified compression level (0..9) for \"tight\" and  \"zlib\"  en-\n            codings  (TightVNC-specific).  Level 1 uses minimum of CPU time and\n            achieves weak compression ratios, while level 9  offers  best  com-\n            pression but is slow in terms of CPU time consumption on the server\n            side.  Use  high levels with very slow network connections, and low\n            levels when working over high-speed LANs. It's not  recommended  to\n            use compression level 0, reasonable choices start from the level 1.\n\n     -quality level\n            Use  the specified JPEG quality level (0..9) for the \"tight\" encod-\n            ing (TightVNC-specific). Quality level 0 denotes bad image  quality\n            but  very  impressive compression ratios, while level 9 offers very\n            good image quality at  lower  compression  ratios.  Note  that  the\n            \"tight\"  encoder  uses  JPEG to encode only those screen areas that\n            look suitable for lossy compression, so quality level  0  does  not\n            always mean unacceptable image quality.\n\n     -nojpeg\n            Disable  lossy  JPEG  compression  in Tight encoding (TightVNC-spe-\n            cific).  Disabling JPEG compression is not a good idea  in  typical\n            cases,  as  that  makes the Tight encoder less efficient. You might\n            want to use this option if it's  absolutely  necessary  to  achieve\n            perfect image quality (see also the -quality option).\n\n     -nocursorshape\n            Disable  cursor  shape  updates, protocol extensions used to handle\n            remote cursor movements locally on the client  side  (TightVNC-spe-\n            cific).  Using  cursor  shape  updates decreases delays with remote\n            cursor movements, and can improve bandwidth usage dramatically.\n\n     -x11cursor\n            Use a real X11 cursor with X-style cursor shape updates, instead of\n            drawing the remote cursor on the framebuffer. This option also dis-\n            ables the dot cursor, and disables cursor position updates in  non-\n            fullscreen mode.\n\n     -autopass\n            Read a plain-text password from stdin. This option affects only the\n            standard VNC authentication.\n\nENCODINGS\n     The  server  supplies  information  in  whatever  format is desired by the\n     client, in order to make the client as easy as possible to implement.   If\n     the  client  represents itself as able to use multiple formats, the server\n     will choose one.\n\n     Pixel format refers to the representation of an individual pixel. The most\n     common formats are 24 and 16 bit \"true-color\"  values,  and  8-bit  \"color\n     map\"  representations, where an arbitrary map converts the color number to\n     RGB values.\n\n     Encoding refers to how a rectangle of pixels are sent (all pixel  informa-\n     tion in VNC is sent as rectangles). All rectangles come with a header giv-\n     ing  the  location  and size of the rectangle and an encoding type used by\n     the data which follows. These types are listed below.\n\n     Raw    The raw  encoding  simply  sends  width*height  pixel  values.  All\n            clients are required to support this encoding type. Raw is also the\n            fastest  when the server and viewer are on the same machine, as the\n            connection speed is essentially infinite and raw encoding minimizes\n            processing time.\n\n     CopyRect\n            The Copy Rectangle encoding is efficient when  something  is  being\n            moved; the only data sent is the location of a rectangle from which\n            data  should be copied to the current location. Copyrect could also\n            be used to efficiently transmit a repeated pattern.\n\n     RRE    The Rise-and-Run-length-Encoding  is  basically  a  2D  version  of\n            run-length  encoding (RLE). In this encoding, a sequence of identi-\n            cal pixels are compressed to a single value and  repeat  count.  In\n            VNC, this is implemented with a background color, and then specifi-\n            cations of an arbitrary number of subrectangles and color for each.\n            This is an efficient encoding for large blocks of constant color.\n\n     CoRRE  This  is a minor variation on RRE, using a maximum of 255x255 pixel\n            rectangles. This allows for single-byte values to be used, reducing\n            packet size. This is in general more efficient, because the savings\n            from sending 1-byte values generally outweighs the losses from  the\n            (relatively  rare)  cases  where very large regions are painted the\n            same color.\n\n     Hextile\n            Here, rectangles are split up in to 16x16 tiles, which are sent  in\n            a predetermined order. The data within the tiles is sent either raw\n            or as a variant on RRE. Hextile encoding is usually the best choice\n            for  using  in  high-speed  network environments (e.g. Ethernet lo-\n            cal-area networks).\n\n     Zlib   Zlib is a very simple encoding that uses zlib library  to  compress\n            raw  pixel  data. This encoding achieves good compression, but con-\n            sumes a lot of CPU time. Support for this encoding is provided  for\n            compatibility  with VNC servers that might not understand Tight en-\n            coding which is more efficient than Zlib in  nearly  all  real-life\n            situations.\n\n     Tight  Like  Zlib  encoding,  Tight encoding uses zlib library to compress\n            the pixel data, but it pre-processes data to  maximize  compression\n            ratios,  and  to minimize CPU usage on compression. Also, JPEG com-\n            pression may be used to encode color-rich screen areas (see the de-\n            scription of -quality and -nojpeg options above). Tight encoding is\n            usually the best  choice  for  low-bandwidth  network  environments\n            (e.g. slow modem connections).\n\nRESOURCES\n     X  resources  that  vncviewer  knows  about,  aside from the normal Xt re-\n     sources, are as follows:\n\n     shareDesktop\n            Equivalent of -shared/-noshared options. Default true.\n\n     viewOnly\n            Equivalent of -viewonly option. Default false.\n\n     fullScreen\n            Equivalent of -fullscreen option. Default false.\n\n     grabKeyboard\n            Grab keyboard in full-screen mode. This can help to solve  problems\n            with losing keyboard focus. Default false.\n\n     raiseOnBeep\n            Equivalent  of  -noraiseonbeep  option,  when set to false. Default\n            true.\n\n     passwordFile\n            Equivalent of -passwd option.\n\n     passwordDialog\n            Whether to use a dialog box to get the password (true)  or  get  it\n            from  the  tty  (false). Irrelevant if passwordFile is set. Default\n            false.\n\n     encodings\n            Equivalent of -encodings option.\n\n     compressLevel\n            Equivalent of -compresslevel option (TightVNC-specific).\n\n     qualityLevel\n            Equivalent of -quality option (TightVNC-specific).\n\n     enableJPEG\n            Equivalent of -nojpeg option, when set to false. Default true.\n\n     useRemoteCursor\n            Equivalent  of   -nocursorshape   option,   when   set   to   false\n            (TightVNC-specific). Default true.\n\n     useBGR233\n            Equivalent of -bgr233 option. Default false.\n\n     nColours\n            When  using  BGR233,  try to allocate this many \"exact\" colors from\n            the BGR233 color cube. When using a shared colormap,  setting  this\n            resource  lower  leaves more colors for other X clients. Irrelevant\n            when using truecolor. Default is 256 (i.e. all of them).\n\n     useSharedColours\n            If the number of \"exact\" BGR233 colors  successfully  allocated  is\n            less  than 256 then the rest are filled in using the \"nearest\" col-\n            ors available. This resource says whether to only use  the  \"exact\"\n            BGR233  colors  for  this purpose, or whether to use other clients'\n            \"shared\" colors as well. Default true (i.e. use other clients' col-\n            ors).\n\n     forceOwnCmap\n            Equivalent of -owncmap option. Default false.\n\n     forceTrueColour\n            Equivalent of -truecolour option. Default false.\n\n     requestedDepth\n            Equivalent of -depth option.\n\n     useSharedMemory\n            Use MIT shared memory extension if on the same  machine  as  the  X\n            server. Default true.\n\n     wmDecorationWidth, wmDecorationHeight\n            The  total width and height taken up by window manager decorations.\n            This is used to calculate the maximum size of the VNC  viewer  win-\n            dow.  Default is width 4, height 24.\n\n     bumpScrollTime, bumpScrollPixels\n            When  in  full screen mode and the VNC desktop is bigger than the X\n            display, scrolling happens whenever the mouse hits the edge of  the\n            screen.  The  maximum speed of scrolling is bumpScrollPixels pixels\n            every bumpScrollTime milliseconds. The actual  speed  of  scrolling\n            will be slower than this, of course, depending on how fast your ma-\n            chine is.  Default 20 pixels every 25 milliseconds.\n\n     popupButtonCount\n            The  number of buttons in the popup window. See the README file for\n            more information on how to customize the buttons.\n\n     debug  For debugging. Default false.\n\n     rawDelay, copyRectDelay\n            For debugging, see the README file for details. Default 0 (off).\n\nENVIRONMENT\n     When started with the -via option, vncviewer reads the  VNC_VIA_CMD  envi-\n     ronment  variable,  expands patterns beginning with the \"%\" character, and\n     executes result as a command assuming that it would create TCP tunnel that\n     should be used for VNC connection. If not set, this  environment  variable\n     defaults to \"/usr/bin/ssh -f -L %L:%H:%R %G sleep 20\".\n\n     The  following  patterns  are recognized in the VNC_VIA_CMD (note that all\n     the patterns %G, %H, %L and %R must be present in the command template):\n\n     %%     A literal \"%\";\n\n     %G     gateway host name;\n\n     %H     remote VNC host name, as known to the gateway;\n\n     %L     local TCP port number;\n\n     %R     remote TCP port number.\n\nSEE ALSO\n     vncserver(1), Xvnc(1), vncpasswd(1), vncconnect(1), ssh(1)\n\nAUTHORS\n     Original VNC was developed in AT&T Laboratories Cambridge. TightVNC  addi-\n     tions were implemented by Constantin Kaplinsky. Many other people partici-\n     pated in development, testing and support.\n\n     Man page authors:\n     Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>,\n     Terran Melconian <terran@consistent.org>,\n     Tim Waugh <twaugh@redhat.com>,\n     Constantin Kaplinsky <const@tightvnc.com>\n\n                                  August 2006                      vncviewer(1)",
+        "apropos": "xtightvncviewer (1)  - an X viewer client for VNC"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/xtightvncviewer",
+        "size_bytes": 123672,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=54fcffefe14a0eb2f364dcb4fd14d3cfd21ca3f1, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/tightvnc/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/tightvnc/index.md",
+    "retrieved_at": "2026-07-14T13:08:45+00:00",
+    "sha256": "7efc516d0b2684940b86089fbac3d8a264f6d43b49156923cb478175f3f69da4"
+  },
+  "tags": [
+    "offensive",
+    "tightvnc",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/tightvnc && python3 tightvnc.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/tightvnc && python3 tightvnc.py --help",
+    "cd toolboxes/tightvnc && python3 tightvnc.py --help",
+    "cd toolboxes/tightvnc && python3 tightvnc.py --help",
+    "cd toolboxes/tightvnc && python3 tightvnc.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tightvnc --output $KFIOSA_OUTPUT_DIR/tightvnc.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tightvnc --output $KFIOSA_OUTPUT_DIR/tightvnc.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

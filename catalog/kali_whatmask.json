@@ -1,0 +1,143 @@
+{
+  "id": "kali:whatmask",
+  "kind": "kali_source_package",
+  "name": "whatmask",
+  "title": "whatmask",
+  "summary": "### whatmask",
+  "version": "1.2-0kali1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://www.laffeycomputer.com/whatmask.html",
+  "repository": "https://gitlab.com/kalilinux/packages/whatmask",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install whatmask"
+  },
+  "packages": [
+    {
+      "name": "whatmask"
+    }
+  ],
+  "commands": [
+    {
+      "name": "whatmask",
+      "description": "Subnet mask notation conversion tool.",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# man whatmask\n Whatmask(1)                         Network                         Whatmask(1)\n \n NAME\n    whatmask - Subnet mask notation conversion tool.\n \n SYNTAX\n    whatmask <netmask or ip/netmask>\n    see the Examples section below\n \n DESCRIPTION\n    Whatmask is a small C program that will help you with network settings.\n \n    Whatmask can work in two modes.  The first mode is to invoke Whatmask with\n    only  a  subnet mask as the argument. In this mode Whatmask will echo back\n    the subnet mask in four formats, plus the number of useable  addresses  in\n    the range.\n \n    Netmask Notations supported:\n     Name                  Example\n \n     CIDR                         /24\n     Netmask            255.255.255.0\n     Netmask (hex)         0xffffff00\n     Wildcard Bits           0.0.0.255\n \n    The  above  notations are all identical.  CIDR notation commonly has a \"/\"\n    in front of the number (representing the number of  bits).   Whatmask  can\n    accept these notations with or without a slash. This notation is used more\n    and  more recently. A lot of popular routers and software support this no-\n    tation.\n \n    Netmask notation is pretty much the standard old-school way of  doing  it.\n    It is supported by most systems (Un*x, Win, Mac, etc.).\n \n    Netmask  (Hex)  is the hexadecimal representation of the netmask. Many im-\n    plementations of ifconfig use this notation\n \n    Wildcard Bits are similar to the netmask, but they are the logical not  of\n    the netmask. This notation is used by a number of popular routers (and no-\n    body knows why...).\n \n    To  use  Whatmask  in the first mode simply type \"whatmask <notation>\" The\n    notation can be in any of the four formats and Whatmask will automagically\n    figure out what it is and display all four notations.\n \n    To use Whatmask in its second mode execute Whatmask with  any  ip  address\n    within  the subnet, followed by a slash ('/'), followed by the subnet mask\n    in any format. (e.g. 192.168.0.23/255.255.255.224, or 192.168.0.23/27) Put\n    no spaces in the argument.\n \n    Whatmask will echo back the following:\n \n    - The netmask in the following formats: CIDR, Netmask, Netmask (Hex),\n    Wildcard Bits\n \n    - The Network Address\n \n    - The Broadcast Address\n \n    - The number of Usable IP Addresses\n \n    - The First Usable IP Address\n \n    - The Last Usable IP Address\n \n           (Whatmask assumes that the Broadcast address is the highest address\n           in the subnet. This is the most common configuration.)\n \n OPTIONS\n    <no options> see above and below for usage.\n \n EXAMPLES\n    Examples of how Whatmask works:\n \n         myhost> whatmask /26\n \n         ---------------------------------------------\n                 TCP/IP SUBNET MASK EQUIVALENTS\n         ---------------------------------------------\n         CIDR = .....................: /26\n         Netmask = ..................: 255.255.255.192\n         Netmask (hex) = ............: 0xffffffc0\n         Wildcard Bits = ............: 0.0.0.63\n         Usable IP Addresses = ......: 62\n \n         myhost> whatmask 255.255.192.0\n \n         ---------------------------------------------\n                 TCP/IP SUBNET MASK EQUIVALENTS\n         ---------------------------------------------\n         CIDR = .....................: /18\n         Netmask = ..................: 255.255.192.0\n         Netmask (hex) = ............: 0xffffc000\n         Wildcard Bits = ............: 0.0.63.255\n         Usable IP Addresses = ......: 16,382\n \n         myhost> whatmask 0xffffffe0\n \n         ---------------------------------------------\n                 TCP/IP SUBNET MASK EQUIVALENTS\n         ---------------------------------------------\n         CIDR = .....................: /27\n         Netmask = ..................: 255.255.255.224\n         Netmask (hex) = ............: 0xffffffe0\n         Wildcard Bits = ............: 0.0.0.31\n         Usable IP Addresses = ......: 30\n \n         myhost> whatmask 0.0.0.31\n \n         ---------------------------------------------\n                 TCP/IP SUBNET MASK EQUIVALENTS\n         ---------------------------------------------\n         CIDR = .....................: /27\n         Netmask = ..................: 255.255.255.224\n         Netmask (hex) = ............: 0xffffffe0\n         Wildcard Bits = ............: 0.0.0.31\n         Usable IP Addresses = ......: 30\n \n         myhost> whatmask 192.168.165.23/19\n \n         ------------------------------------------------\n                      TCP/IP NETWORK INFORMATION\n         ------------------------------------------------\n         IP Entered = ..................: 192.168.165.23\n         CIDR = ........................: /19\n         Netmask = .....................: 255.255.224.0\n         Netmask (hex) = ...............: 0xffffe000\n         Wildcard Bits = ...............: 0.0.31.255\n         ------------------------------------------------\n         Network Address = .............: 192.168.160.0\n         Broadcast Address = ...........: 192.168.191.255\n         Usable IP Addresses = .........: 8,190\n         First Usable IP Address = .....: 192.168.160.1\n         Last Usable IP Address = ......: 192.168.191.254\n \n         myhost> whatmask 192.168.0.13/255.255.255.0\n \n         ------------------------------------------------\n                      TCP/IP NETWORK INFORMATION\n         ------------------------------------------------\n         IP Entered = ..................: 192.168.0.13\n         CIDR = ........................: /24\n         Netmask = .....................: 255.255.255.0\n         Netmask (hex) = ...............: 0xffffff00\n         Wildcard Bits = ...............: 0.0.0.255\n         ------------------------------------------------\n         Network Address = .............: 192.168.0.0\n         Broadcast Address = ...........: 192.168.0.255\n         Usable IP Addresses = .........: 254\n         First Usable IP Address = .....: 192.168.0.1\n         Last Usable IP Address = ......: 192.168.0.254\n \n         myhost> whatmask 192.168.0.113/0xffffffe0\n \n         ------------------------------------------------\n                      TCP/IP NETWORK INFORMATION\n         ------------------------------------------------\n         IP Entered = ..................: 192.168.0.113\n         CIDR = ........................: /27\n         Netmask = .....................: 255.255.255.224\n         Netmask (hex) = ...............: 0xffffffe0\n         Wildcard Bits = ...............: 0.0.0.31\n         ------------------------------------------------\n         Network Address = .............: 192.168.0.96\n         Broadcast Address = ...........: 192.168.0.127\n         Usable IP Addresses = .........: 30\n         First Usable IP Address = .....: 192.168.0.97\n         Last Usable IP Address = ......: 192.168.0.126\n \n         myhost> whatmask 192.168.0.169/0.0.0.127\n \n         ------------------------------------------------\n                      TCP/IP NETWORK INFORMATION\n         ------------------------------------------------\n         IP Entered = ..................: 192.168.0.169\n         CIDR = ........................: /25\n         Netmask = .....................: 255.255.255.128\n         Netmask (hex) = ...............: 0xffffff80\n         Wildcard Bits = ...............: 0.0.0.127\n         ------------------------------------------------\n         Network Address = .............: 192.168.0.128\n         Broadcast Address = ...........: 192.168.0.255\n         Usable IP Addresses = .........: 126\n         First Usable IP Address = .....: 192.168.0.129\n         Last Usable IP Address = ......: 192.168.0.254\n \n BUGS\n    Report bugs to <software@laffeycomputer.com>\n \n CONTRIBUTORS\n    Original code:\n           Joe Laffey <software@laffeycomputer.com>\n \n    Assistance with Manpage and Packaging:\n           David Wirch <kuma@linuxboxen.org>\n \n    Many thanks to the beta testers and users who sent in valuable feedback!\n \n UPDATES\n    Official Whatmask website:\n           http://www.laffeycomputer.com/whatmask.html\n \n LAFFEY Computer Imaging           Nov 14, 2003                      Whatmask(1)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "whatmask: \"--help\" is not a valid subnet mask or wildcard bit mask!",
+          "template": null,
+          "original_sha256": "4c5fbb17139dc14faf543c46e4a71d31968f2af218116cd3ffcf242a4676cefc"
+        },
+        {
+          "status": "operational_example",
+          "command": "whatmask: \"-h\" is not a valid subnet mask or wildcard bit mask!",
+          "template": null,
+          "original_sha256": "51aacf0d924d09ea0f4140fc6879bbc6e7302d1ae01f443140e19f39370b9a7b"
+        },
+        {
+          "status": "operational_example",
+          "command": "whatmask: \"help\" is not a valid subnet mask or wildcard bit mask!",
+          "template": null,
+          "original_sha256": "12fb774031656b167d8e460d8708d59c3fff90b2a6c05f1c9bff0a397ef85ffa"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "whatmask: \"--help\" is not a valid subnet mask or wildcard bit mask!",
+        "-h": "whatmask: \"-h\" is not a valid subnet mask or wildcard bit mask!",
+        "help": "whatmask: \"help\" is not a valid subnet mask or wildcard bit mask!",
+        "man": "Whatmask(1)                         Network                         Whatmask(1)\n\nNAME\n     whatmask - Subnet mask notation conversion tool.\n\nSYNTAX\n     whatmask <netmask or ip/netmask>\n     see the Examples section below\n\nDESCRIPTION\n     Whatmask is a small C program that will help you with network settings.\n\n     Whatmask can work in two modes.  The first mode is to invoke Whatmask with\n     only  a  subnet mask as the argument. In this mode Whatmask will echo back\n     the subnet mask in four formats, plus the number of useable  addresses  in\n     the range.\n\n     Netmask Notations supported:\n      Name                  Example\n\n      CIDR                         /24\n      Netmask            255.255.255.0\n      Netmask (hex)         0xffffff00\n      Wildcard Bits           0.0.0.255\n\n     The  above  notations are all identical.  CIDR notation commonly has a \"/\"\n     in front of the number (representing the number of  bits).   Whatmask  can\n     accept these notations with or without a slash. This notation is used more\n     and  more recently. A lot of popular routers and software support this no-\n     tation.\n\n     Netmask notation is pretty much the standard old-school way of  doing  it.\n     It is supported by most systems (Un*x, Win, Mac, etc.).\n\n     Netmask  (Hex)  is the hexadecimal representation of the netmask. Many im-\n     plementations of ifconfig use this notation\n\n     Wildcard Bits are similar to the netmask, but they are the logical not  of\n     the netmask. This notation is used by a number of popular routers (and no-\n     body knows why...).\n\n     To  use  Whatmask  in the first mode simply type \"whatmask <notation>\" The\n     notation can be in any of the four formats and Whatmask will automagically\n     figure out what it is and display all four notations.\n\n     To use Whatmask in its second mode execute Whatmask with  any  ip  address\n     within  the subnet, followed by a slash ('/'), followed by the subnet mask\n     in any format. (e.g. 192.168.0.23/255.255.255.224, or 192.168.0.23/27) Put\n     no spaces in the argument.\n\n     Whatmask will echo back the following:\n\n     - The netmask in the following formats: CIDR, Netmask, Netmask (Hex),\n     Wildcard Bits\n\n     - The Network Address\n\n     - The Broadcast Address\n\n     - The number of Usable IP Addresses\n\n     - The First Usable IP Address\n\n     - The Last Usable IP Address\n\n            (Whatmask assumes that the Broadcast address is the highest address\n            in the subnet. This is the most common configuration.)\n\nOPTIONS\n     <no options> see above and below for usage.\n\nEXAMPLES\n     Examples of how Whatmask works:\n\n          myhost> whatmask /26\n\n          ---------------------------------------------\n                  TCP/IP SUBNET MASK EQUIVALENTS\n          ---------------------------------------------\n          CIDR = .....................: /26\n          Netmask = ..................: 255.255.255.192\n          Netmask (hex) = ............: 0xffffffc0\n          Wildcard Bits = ............: 0.0.0.63\n          Usable IP Addresses = ......: 62\n\n          myhost> whatmask 255.255.192.0\n\n          ---------------------------------------------\n                  TCP/IP SUBNET MASK EQUIVALENTS\n          ---------------------------------------------\n          CIDR = .....................: /18\n          Netmask = ..................: 255.255.192.0\n          Netmask (hex) = ............: 0xffffc000\n          Wildcard Bits = ............: 0.0.63.255\n          Usable IP Addresses = ......: 16,382\n\n          myhost> whatmask 0xffffffe0\n\n          ---------------------------------------------\n                  TCP/IP SUBNET MASK EQUIVALENTS\n          ---------------------------------------------\n          CIDR = .....................: /27\n          Netmask = ..................: 255.255.255.224\n          Netmask (hex) = ............: 0xffffffe0\n          Wildcard Bits = ............: 0.0.0.31\n          Usable IP Addresses = ......: 30\n\n          myhost> whatmask 0.0.0.31\n\n          ---------------------------------------------\n                  TCP/IP SUBNET MASK EQUIVALENTS\n          ---------------------------------------------\n          CIDR = .....................: /27\n          Netmask = ..................: 255.255.255.224\n          Netmask (hex) = ............: 0xffffffe0\n          Wildcard Bits = ............: 0.0.0.31\n          Usable IP Addresses = ......: 30\n\n          myhost> whatmask 192.168.165.23/19\n\n          ------------------------------------------------\n                       TCP/IP NETWORK INFORMATION\n          ------------------------------------------------\n          IP Entered = ..................: 192.168.165.23\n          CIDR = ........................: /19\n          Netmask = .....................: 255.255.224.0\n          Netmask (hex) = ...............: 0xffffe000\n          Wildcard Bits = ...............: 0.0.31.255\n          ------------------------------------------------\n          Network Address = .............: 192.168.160.0\n          Broadcast Address = ...........: 192.168.191.255\n          Usable IP Addresses = .........: 8,190\n          First Usable IP Address = .....: 192.168.160.1\n          Last Usable IP Address = ......: 192.168.191.254\n\n          myhost> whatmask 192.168.0.13/255.255.255.0\n\n          ------------------------------------------------\n                       TCP/IP NETWORK INFORMATION\n          ------------------------------------------------\n          IP Entered = ..................: 192.168.0.13\n          CIDR = ........................: /24\n          Netmask = .....................: 255.255.255.0\n          Netmask (hex) = ...............: 0xffffff00\n          Wildcard Bits = ...............: 0.0.0.255\n          ------------------------------------------------\n          Network Address = .............: 192.168.0.0\n          Broadcast Address = ...........: 192.168.0.255\n          Usable IP Addresses = .........: 254\n          First Usable IP Address = .....: 192.168.0.1\n          Last Usable IP Address = ......: 192.168.0.254\n\n          myhost> whatmask 192.168.0.113/0xffffffe0\n\n          ------------------------------------------------\n                       TCP/IP NETWORK INFORMATION\n          ------------------------------------------------\n          IP Entered = ..................: 192.168.0.113\n          CIDR = ........................: /27\n          Netmask = .....................: 255.255.255.224\n          Netmask (hex) = ...............: 0xffffffe0\n          Wildcard Bits = ...............: 0.0.0.31\n          ------------------------------------------------\n          Network Address = .............: 192.168.0.96\n          Broadcast Address = ...........: 192.168.0.127\n          Usable IP Addresses = .........: 30\n          First Usable IP Address = .....: 192.168.0.97\n          Last Usable IP Address = ......: 192.168.0.126\n\n          myhost> whatmask 192.168.0.169/0.0.0.127\n\n          ------------------------------------------------\n                       TCP/IP NETWORK INFORMATION\n          ------------------------------------------------\n          IP Entered = ..................: 192.168.0.169\n          CIDR = ........................: /25\n          Netmask = .....................: 255.255.255.128\n          Netmask (hex) = ...............: 0xffffff80\n          Wildcard Bits = ...............: 0.0.0.127\n          ------------------------------------------------\n          Network Address = .............: 192.168.0.128\n          Broadcast Address = ...........: 192.168.0.255\n          Usable IP Addresses = .........: 126\n          First Usable IP Address = .....: 192.168.0.129\n          Last Usable IP Address = ......: 192.168.0.254\n\nBUGS\n     Report bugs to <software@laffeycomputer.com>\n\nCONTRIBUTORS\n     Original code:\n            Joe Laffey <software@laffeycomputer.com>\n\n     Assistance with Manpage and Packaging:\n            David Wirch <kuma@linuxboxen.org>\n\n     Many thanks to the beta testers and users who sent in valuable feedback!\n\nUPDATES\n     Official Whatmask website:\n            http://www.laffeycomputer.com/whatmask.html\n\nLAFFEY Computer Imaging           Nov 14, 2003                      Whatmask(1)",
+        "apropos": "whatmask (1)         - Subnet mask notation conversion tool."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/whatmask",
+        "size_bytes": 22520,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e7b8d65895f607fb5ccb59e8c7cebd8606a0ea09, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/whatmask/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/whatmask/index.md",
+    "retrieved_at": "2026-07-14T13:09:01+00:00",
+    "sha256": "6d1f910248852c4ea1d4ca4e739164b3a24ad5cc66a5900959d8a56366d56378"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "40",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "1.2-0kali1",
+    "depends": "libc6 (>= 2.7)",
+    "description": "helper for network settings\nThis package contains a small C program that will help you with network\nsettings.\nWhatmask can work in two modes.\nThe first mode is to invoke Whatmask with only a subnet mask as the argument.\nIn this mode Whatmask will echo back the subnet mask in four formats, plus the\nnumber of useable addresses in the range.\nThe second mode is to invoke Whatmask with any ip address within the subnet,\nfollowed by a slash ('/'), followed by the subnet mask in any format. Whatmask\nwill echo back the following:\n- The netmask in the following formats: CIDR, Netmask, Netmask (Hex)\nWildcard Bits\n- The Network Address\n- The Broadcast Address\n- The number of Usable IP Addresses\n- The First Usable IP Address\n- The Last Usable IP Address",
+    "homepage": "http://www.laffeycomputer.com/whatmask.html"
+  },
+  "tags": [
+    "offensive",
+    "whatmask",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/whatmask && python3 whatmask.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/whatmask && python3 whatmask.py --help",
+    "cd toolboxes/whatmask && python3 whatmask.py --help",
+    "cd toolboxes/whatmask && python3 whatmask.py --help",
+    "cd toolboxes/whatmask && python3 whatmask.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST whatmask --output $KFIOSA_OUTPUT_DIR/whatmask.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST whatmask --output $KFIOSA_OUTPUT_DIR/whatmask.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

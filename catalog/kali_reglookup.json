@@ -1,0 +1,396 @@
+{
+  "id": "kali:reglookup",
+  "kind": "kali_source_package",
+  "name": "reglookup",
+  "title": "reglookup",
+  "summary": "### libregfi-dev",
+  "version": "1.0.1+svn296-2",
+  "architectures": [
+    "any",
+    "all"
+  ],
+  "homepage": "https://web.archive.org/web/20240804024044/http://projects.sentinelchicken.org/reglookup/",
+  "repository": "https://salsa.debian.org/pkg-security-team/reglookup",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-detect",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install reglookup"
+  },
+  "packages": [
+    {
+      "name": "libregfi-dev"
+    },
+    {
+      "name": "libregfi1t64"
+    },
+    {
+      "name": "python3-pyregfi"
+    },
+    {
+      "name": "reglookup"
+    },
+    {
+      "name": "reglookup-doc"
+    }
+  ],
+  "commands": [
+    {
+      "name": "reglookup",
+      "description": "Windows NT+ registry reader/lookup tool",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "prefix-filter",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -p prefix-filter"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "type-filter",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -t type-filter"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enables the printing of a column header row. (default)",
+          "default": null,
+          "choices": null,
+          "raw": "    -h     Enables the printing of a column header row. (default)"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Printed  values inherit the timestamp of their parent key, which is",
+          "default": null,
+          "choices": null,
+          "raw": "    -i     Printed  values inherit the timestamp of their parent key, which is"
+        },
+        {
+          "flags": [
+            "-H"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disables the printing of a column header row.",
+          "default": null,
+          "choices": null,
+          "raw": "    -H     Disables the printing of a column header row."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Adds five additional columns to output containing information  from",
+          "default": null,
+          "choices": null,
+          "raw": "    -s     Adds five additional columns to output containing information  from"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disables the printing of security descriptor information. (default)",
+          "default": null,
+          "choices": null,
+          "raw": "    -S     Disables the printing of security descriptor information. (default)"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose output.",
+          "default": null,
+          "choices": null,
+          "raw": "    -v     Verbose output."
+        }
+      ],
+      "raw_help": "root@kali:~# man reglookup\n reglookup(1)                                                       reglookup(1)\n \n NAME\n    reglookup - Windows NT+ registry reader/lookup tool\n \n SYNOPSIS\n    reglookup [options] registry-file\n \n DESCRIPTION\n    reglookup is designed to read windows registry elements and print them out\n    to stdout in a CSV-like format. It has filtering options to narrow the fo-\n    cus  of the output. This tool is designed to work with on Windows NT-based\n    registries.\n \n OPTIONS\n    reglookup accepts the following parameters:\n \n    -p prefix-filter\n           Specify a path prefix filter. Only keys/values under this  registry\n           path will be output.\n \n    -t type-filter\n           Specify a type filter. Only elements which match this registry data\n           type  will  be printed. Acceptable values are: NONE, SZ, EXPAND_SZ,\n           BINARY, DWORD,  DWORD_BE,  LINK,  MULTI_SZ,  RSRC_LIST,  RSRC_DESC,\n           RSRC_REQ_LIST, QWORD and KEY .\n \n    -h     Enables the printing of a column header row. (default)\n \n    -i     Printed  values inherit the timestamp of their parent key, which is\n           printed along with them. Note that this timestamp is not  necessar-\n           ily  meaningful  for  any given value values because timestamps are\n           saved on keys only and you cannot tell which value has  been  modi-\n           fied  since  a  change to any value of a given key would update the\n           time stamp.\n \n    -H     Disables the printing of a column header row.\n \n    -s     Adds five additional columns to output containing information  from\n           key  security  descriptors and rarely used fields. The columns are:\n           owner, group, sacl, dacl, class.  (This feature's  output  has  not\n           been extensively tested.)\n \n    -S     Disables the printing of security descriptor information. (default)\n \n    -v     Verbose output.\n \n    registry-file\n           Required  argument.  Specifies the location of the registry file to\n           read. The system registry files should  be  found  under:  %System-\n           Root%/system32/config.\n \n OUTPUT\n    reglookup  generates  comma-separated values (CSV) and writes them to std-\n    out. The format is designed to simplify parsing algorithms of other  tools\n    by  quoting  CSV  special  characters  using  a common hexadecimal format.\n    Specifically, special characters or non-ascii bytes are converted to \"%XX\"\n    where XX is the hexadecimal value for the byte.\n \n    The number of columns or fields in each line is fixed for a given  run  of\n    the program, but may vary based on the command line options provided.  See\n    the  header  line  for  information on which fields are available and what\n    they contain.\n \n    Some fields in some lines may contain sub-fields which require  additional\n    delimiters.  If  these  sub-delimiters occur in these sub-fields, they are\n    also encoded in the same way as commas or other  special  characters  are.\n    Currently,  the  second,  third, and fourth level delimiters are \"|\", \":\",\n    and \" \", respectively. These are particularly important to  take  note  of\n    when  security  attributes  are printed. Please note that these delimiters\n    may occur in fields that are not sub-delimited, and should not  be  inter-\n    preted as special.\n \n    Security  attributes  of  registry  keys have a complex structure which is\n    outlined here. Each key will generally have an associated ACL (Access Con-\n    trol List), which is made up of ACEs (Access Control Entries). Each ACE is\n    delimited by the secondary delimiter  mentioned  above,  \"|\".  The  fields\n    within an ACE are delimited by the third-level delimiter, \":\", and consist\n    of  a SID, the ACE type (ALLOW, DENY, etc), a list of access rights, and a\n    list of flags. The last two fields are delimited by the  fourth-level  de-\n    limiter  \"  \". These final lists are simply human-readable interpretations\n    of bits. The access rights abbreviations are listed below along with their\n    Microsoft-assigned names:\n \n          QRY_VAL        KEY_QUERY_VALUE\n          SET_VAL        KEY_SET_VALUE\n          CREATE_KEY     KEY_CREATE_SUB_KEY\n          ENUM_KEYS      KEY_ENUMERATE_SUB_KEYS\n          NOTIFY         KEY_NOTIFY\n          CREATE_LNK     KEY_CREATE_LINK\n          WOW64_64       KEY_WOW64_64KEY\n          WOW64_32       KEY_WOW64_32KEY\n          DELETE         DELETE\n          R_CONT         READ_CONTROL\n          W_DAC          WRITE_DAC\n          W_OWNER        WRITE_OWNER\n          SYNC      SYNCHRONIZE\n          SYS_SEC        ACCESS_SYSTEM_SECURITY\n          MAX_ALLWD      MAXIMUM_ALLOWED\n          GEN_A          GENERIC_ALL\n          GEN_X          GENERIC_EXECUTE\n          GEN_W          GENERIC_WRITE\n          GEN_R          GENERIC_READ\n \n    And the meaning of each flag is:\n \n          OI   Object Inherit\n          CI   Container Inherit\n          NP   Non-Propagate\n          IO   Inherit Only\n          IA   Inherited ACE\n \n    Please see the following references for more information:\n \n            http://msdn2.microsoft.com/en-gb/library/ms724878.aspx\n            http://msdn2.microsoft.com/en-gb/library/aa374892.aspx\n            http://msdn2.microsoft.com/en-us/library/aa772242.aspx\n            http://support.microsoft.com/kb/220167\n \n    Note that some of the bits listed above have either not been allocated  by\n    Microsoft,  or  simply aren't documented. If any bits are set in the above\n    two fields that aren't recognized, a hexadecimal representation of all  of\n    these  mystery  bits  will be included in the output. For instance, if the\n    lowest bit and third lowest bit were not recognized while being  set,  the\n    number \"0x5\" would be included as an element in the list.\n \n    While  the  ACL/ACE  output  format  is mostly stable at this point, minor\n    changes may be introduced in future versions.\n \n EXAMPLES\n    To read and print the contents of an entire system registry file:\n \n         reglookup /mnt/win/c/WINNT/system32/config/system\n \n    To limit the output to just those entries under the Services key:\n \n         reglookup -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system\n \n    To limit the output to all registry values of type BINARY:\n \n         reglookup -t BINARY /mnt/win/c/WINNT/system32/config/system\n \n    And to limit the output to BINARY values under the Services key:\n \n         reglookup -t BINARY -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system\n \n BUGS\n    This program has been smoke-tested against  most  current  Windows  target\n    platforms,  but  a  comprehensive  test  suite has not yet been developed.\n    (Please report results to the development mailing list  if  you  encounter\n    any bugs. Sample registry files and/or patches are greatly appreciated.)\n \n    The SID conversions haven't been carefully checked for accuracy.\n \n    The  MTIME  conversions appear correctly produce the stored UTC timestamp.\n    However, due to the periodicity of registry writes, and the complexity  of\n    the  conversion,  a small amount of error (on the order of seconds) may be\n    possible. The documentation available online from Microsoft on this  field\n    is very poor.\n \n    For   more  information  on  registry  format  details,  see:  http://sen-\n    tinelchicken.com/research/registry_format/\n \n CREDITS\n    This program was initially based on editreg.c by Richard  Sharpe.  It  has\n    since  been rewritten to use a modified version the regfio library written\n    by Gerald Carter. Heavy modifications to the library and the original com-\n    mand line interface have been done by Timothy D. Morgan.\n \n    Please see source code for a full list of copyrights.\n \n LICENSE\n    Please see the file \"LICENSE\" included with this software distribution.\n \n    This program is distributed in the hope that it will be useful, but  WITH-\n    OUT  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License  ver-\n    sion 3 for more details.\n \n SEE ALSO\n    reglookup-timeline(1) reglookup-recover(1)\n \n File Conversion Utilities        7 October 2025                    reglookup(1)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "reglookup -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system",
+          "template": null,
+          "original_sha256": "ee3ddcf2b6992e35ebebe78c16b2d2e0b1b7f9ca3df21c7d14d67b9caa67750c"
+        },
+        {
+          "status": "operational_example",
+          "command": "reglookup -t BINARY /mnt/win/c/WINNT/system32/config/system",
+          "template": null,
+          "original_sha256": "596249c003353bebc811c3b84d34cfccd2d2f4d4e15baca0aefa44193d06b1cb"
+        },
+        {
+          "status": "operational_example",
+          "command": "reglookup -t BINARY -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system",
+          "template": null,
+          "original_sha256": "7db0b9a5282cc9d99667de59f98753c776367ecb09d7ed0a28ef3c5432f7a6b2"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "ERROR: Failed to open hive.  Error returned: No such file or directory\nERROR: Couldn't open registry file: --help",
+        "-h": "ERROR: Failed to open hive.  Error returned: No such file or directory\nERROR: Couldn't open registry file: -h",
+        "help": "ERROR: Failed to create REGFI_FILE structure.",
+        "man": "reglookup(1)                                                       reglookup(1)\n\nNAME\n     reglookup - Windows NT+ registry reader/lookup tool\n\nSYNOPSIS\n     reglookup [options] registry-file\n\nDESCRIPTION\n     reglookup is designed to read windows registry elements and print them out\n     to stdout in a CSV-like format. It has filtering options to narrow the fo-\n     cus  of the output. This tool is designed to work with on Windows NT-based\n     registries.\n\nOPTIONS\n     reglookup accepts the following parameters:\n\n     -p prefix-filter\n            Specify a path prefix filter. Only keys/values under this  registry\n            path will be output.\n\n     -t type-filter\n            Specify a type filter. Only elements which match this registry data\n            type  will  be printed. Acceptable values are: NONE, SZ, EXPAND_SZ,\n            BINARY, DWORD,  DWORD_BE,  LINK,  MULTI_SZ,  RSRC_LIST,  RSRC_DESC,\n            RSRC_REQ_LIST, QWORD and KEY .\n\n     -h     Enables the printing of a column header row. (default)\n\n     -i     Printed  values inherit the timestamp of their parent key, which is\n            printed along with them. Note that this timestamp is not  necessar-\n            ily  meaningful  for  any given value values because timestamps are\n            saved on keys only and you cannot tell which value has  been  modi-\n            fied  since  a  change to any value of a given key would update the\n            time stamp.\n\n     -H     Disables the printing of a column header row.\n\n     -s     Adds five additional columns to output containing information  from\n            key  security  descriptors and rarely used fields. The columns are:\n            owner, group, sacl, dacl, class.  (This feature's  output  has  not\n            been extensively tested.)\n\n     -S     Disables the printing of security descriptor information. (default)\n\n     -v     Verbose output.\n\n     registry-file\n            Required  argument.  Specifies the location of the registry file to\n            read. The system registry files should  be  found  under:  %System-\n            Root%/system32/config.\n\nOUTPUT\n     reglookup  generates  comma-separated values (CSV) and writes them to std-\n     out. The format is designed to simplify parsing algorithms of other  tools\n     by  quoting  CSV  special  characters  using  a common hexadecimal format.\n     Specifically, special characters or non-ascii bytes are converted to \"%XX\"\n     where XX is the hexadecimal value for the byte.\n\n     The number of columns or fields in each line is fixed for a given  run  of\n     the program, but may vary based on the command line options provided.  See\n     the  header  line  for  information on which fields are available and what\n     they contain.\n\n     Some fields in some lines may contain sub-fields which require  additional\n     delimiters.  If  these  sub-delimiters occur in these sub-fields, they are\n     also encoded in the same way as commas or other  special  characters  are.\n     Currently,  the  second,  third, and fourth level delimiters are \"|\", \":\",\n     and \" \", respectively. These are particularly important to  take  note  of\n     when  security  attributes  are printed. Please note that these delimiters\n     may occur in fields that are not sub-delimited, and should not  be  inter-\n     preted as special.\n\n     Security  attributes  of  registry  keys have a complex structure which is\n     outlined here. Each key will generally have an associated ACL (Access Con-\n     trol List), which is made up of ACEs (Access Control Entries). Each ACE is\n     delimited by the secondary delimiter  mentioned  above,  \"|\".  The  fields\n     within an ACE are delimited by the third-level delimiter, \":\", and consist\n     of  a SID, the ACE type (ALLOW, DENY, etc), a list of access rights, and a\n     list of flags. The last two fields are delimited by the  fourth-level  de-\n     limiter  \"  \". These final lists are simply human-readable interpretations\n     of bits. The access rights abbreviations are listed below along with their\n     Microsoft-assigned names:\n\n           QRY_VAL        KEY_QUERY_VALUE\n           SET_VAL        KEY_SET_VALUE\n           CREATE_KEY     KEY_CREATE_SUB_KEY\n           ENUM_KEYS      KEY_ENUMERATE_SUB_KEYS\n           NOTIFY         KEY_NOTIFY\n           CREATE_LNK     KEY_CREATE_LINK\n           WOW64_64       KEY_WOW64_64KEY\n           WOW64_32       KEY_WOW64_32KEY\n           DELETE         DELETE\n           R_CONT         READ_CONTROL\n           W_DAC          WRITE_DAC\n           W_OWNER        WRITE_OWNER\n           SYNC      SYNCHRONIZE\n           SYS_SEC        ACCESS_SYSTEM_SECURITY\n           MAX_ALLWD      MAXIMUM_ALLOWED\n           GEN_A          GENERIC_ALL\n           GEN_X          GENERIC_EXECUTE\n           GEN_W          GENERIC_WRITE\n           GEN_R          GENERIC_READ\n\n     And the meaning of each flag is:\n\n           OI   Object Inherit\n           CI   Container Inherit\n           NP   Non-Propagate\n           IO   Inherit Only\n           IA   Inherited ACE\n\n     Please see the following references for more information:\n\n             http://msdn2.microsoft.com/en-gb/library/ms724878.aspx\n             http://msdn2.microsoft.com/en-gb/library/aa374892.aspx\n             http://msdn2.microsoft.com/en-us/library/aa772242.aspx\n             http://support.microsoft.com/kb/220167\n\n     Note that some of the bits listed above have either not been allocated  by\n     Microsoft,  or  simply aren't documented. If any bits are set in the above\n     two fields that aren't recognized, a hexadecimal representation of all  of\n     these  mystery  bits  will be included in the output. For instance, if the\n     lowest bit and third lowest bit were not recognized while being  set,  the\n     number \"0x5\" would be included as an element in the list.\n\n     While  the  ACL/ACE  output  format  is mostly stable at this point, minor\n     changes may be introduced in future versions.\n\nEXAMPLES\n     To read and print the contents of an entire system registry file:\n\n          reglookup /mnt/win/c/WINNT/system32/config/system\n\n     To limit the output to just those entries under the Services key:\n\n          reglookup -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system\n\n     To limit the output to all registry values of type BINARY:\n\n          reglookup -t BINARY /mnt/win/c/WINNT/system32/config/system\n\n     And to limit the output to BINARY values under the Services key:\n\n          reglookup -t BINARY -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system\n\nBUGS\n     This program has been smoke-tested against  most  current  Windows  target\n     platforms,  but  a  comprehensive  test  suite has not yet been developed.\n     (Please report results to the development mailing list  if  you  encounter\n     any bugs. Sample registry files and/or patches are greatly appreciated.)\n\n     The SID conversions haven't been carefully checked for accuracy.\n\n     The  MTIME  conversions appear correctly produce the stored UTC timestamp.\n     However, due to the periodicity of registry writes, and the complexity  of\n     the  conversion,  a small amount of error (on the order of seconds) may be\n     possible. The documentation available online from Microsoft on this  field\n     is very poor.\n\n     For   more  information  on  registry  format  details,  see:  http://sen-\n     tinelchicken.com/research/registry_format/\n\nCREDITS\n     This program was initially based on editreg.c by Richard  Sharpe.  It  has\n     since  been rewritten to use a modified version the regfio library written\n     by Gerald Carter. Heavy modifications to the library and the original com-\n     mand line interface have been done by Timothy D. Morgan.\n\n     Please see source code for a full list of copyrights.\n\nLICENSE\n     Please see the file \"LICENSE\" included with this software distribution.\n\n     This program is distributed in the hope that it will be useful, but  WITH-\n     OUT  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n     FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License  ver-\n     sion 3 for more details.\n\nSEE ALSO\n     reglookup-timeline(1) reglookup-recover(1)\n\nFile Conversion Utilities        7 October 2025                    reglookup(1)",
+        "apropos": "reglookup (1)        - Windows NT+ registry reader/lookup tool\nreglookup-recover (1) - Windows NT+ registry deleted data recovery tool\nreglookup-timeline (1) - Windows NT+ registry MTIME timeline generator"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/reglookup",
+        "size_bytes": 30992,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8d5402b38044a8b83932a9d1aa17e13a03fba4ec, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "reglookup-recover",
+      "description": "Windows NT+ registry deleted data recovery tool",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose output.",
+          "default": null,
+          "choices": null,
+          "raw": "    -v     Verbose output."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enables the printing of a column header row. (default)",
+          "default": null,
+          "choices": null,
+          "raw": "    -h     Enables the printing of a column header row. (default)"
+        },
+        {
+          "flags": [
+            "-H"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disables the printing of a column header row.",
+          "default": null,
+          "choices": null,
+          "raw": "    -H     Disables the printing of a column header row."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display cells which could not  be  interpreted  as  valid  registry",
+          "default": null,
+          "choices": null,
+          "raw": "    -l     Display cells which could not  be  interpreted  as  valid  registry"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do  not  display cells which could not be interpreted as valid reg-",
+          "default": null,
+          "choices": null,
+          "raw": "    -L     Do  not  display cells which could not be interpreted as valid reg-"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display raw cell contents for cells which were interpreted  as  in-",
+          "default": null,
+          "choices": null,
+          "raw": "    -r     Display raw cell contents for cells which were interpreted  as  in-"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not display raw cell contents for cells which  were  interpreted",
+          "default": null,
+          "choices": null,
+          "raw": "    -R     Do not display raw cell contents for cells which  were  interpreted"
+        }
+      ],
+      "raw_help": "root@kali:~# man reglookup-recover\n reglookup(1)                                                       reglookup(1)\n \n NAME\n    reglookup-recover - Windows NT+ registry deleted data recovery tool\n \n SYNOPSIS\n    reglookup-recover [options] registry-file\n \n DESCRIPTION\n    reglookup-recover  attempts  to  scour a Windows registry hive for deleted\n    data structures and outputs those found in a CSV-like format.\n \n OPTIONS\n    reglookup-recover accepts the following parameters:\n \n    -v     Verbose output.\n \n    -h     Enables the printing of a column header row. (default)\n \n    -H     Disables the printing of a column header row.\n \n    -l     Display cells which could not  be  interpreted  as  valid  registry\n           structures at the end of the output.\n \n    -L     Do  not  display cells which could not be interpreted as valid reg-\n           istry structures. This is the default behavior.\n \n    -r     Display raw cell contents for cells which were interpreted  as  in-\n           tact  data  structures.  This  additional output will appear on the\n           same line as the interpreted data.\n \n    -R     Do not display raw cell contents for cells which  were  interpreted\n           as intact data structures. This is the default behavior.\n \n    registry-file\n           Required  argument.  Specifies the location of the registry file to\n           read. The system registry files should  be  found  under:  %System-\n           Root%/system32/config.\n \n OUTPUT\n    reglookup-recover generates a comma-separated values (CSV) like output and\n    writes  it  to  stdout.  For more information on the syntax of the general\n    format, see reglookup(1).\n \n    This tool is new and the output format, particularly the included columns,\n    may change in future revisions. When  this  format  stablizes,  additional\n    documentation will be included here.\n \n EXAMPLES\n    To dump the recoverable contents of a system registry hive:\n \n         reglookup-recover /mnt/win/c/WINDOWS/system32/config/system\n \n    Extract  all  available unallocated data, including unparsable unallocated\n    space and the raw data associated with parsed  cells  in  a  user-specific\n    registry:\n \n         reglookup-recover -r -l '/mnt/win/c/Documents and Settings/user/NTUSER.DAT'\n \n BUGS\n    This  program  has  been  smoke-tested against most current Windows target\n    platforms, but a comprehensive test suite  has  not  yet  been  developed.\n    (Please  report  results  to the development mailing list if you encounter\n    any bugs. Sample registry files and/or patches are greatly appreciated.)\n \n    This program is new as of RegLookup release 0.9.0 and should be considered\n    unstable.\n \n    For more information on registry format details  and  the  recovery  algo-\n    rithm, see:\n \n    http://sentinelchicken.com/research/registry_format/           http://sen-\n    tinelchicken.com/research/registry_recovery/\n \n CREDITS\n    This program was written by Timothy D. Morgan.\n \n LICENSE\n    Please see the file \"LICENSE\" included with this software distribution.\n \n    This program is distributed in the hope that it will be useful, but  WITH-\n    OUT  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License  ver-\n    sion 3 for more details.\n \n SEE ALSO\n    reglookup-timeline(1) reglookup-recover(1)\n \n File Conversion Utilities        7 October 2025                    reglookup(1)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "reglookup-recover -r -l '/mnt/win/c/Documents and Settings/user/NTUSER.DAT'",
+          "template": null,
+          "original_sha256": "c48830514678afdaf8b78cf7c2073663e061a80ba0cd202d4cba52f1f733b147"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "ERROR: Failed to open hive.  Error returned: No such file or directory\nERROR: Couldn't open registry file: --help",
+        "-h": "ERROR: Failed to open hive.  Error returned: No such file or directory\nERROR: Couldn't open registry file: -h",
+        "help": "ERROR: Failed to create REGFI_FILE structure.",
+        "man": "reglookup(1)                                                       reglookup(1)\n\nNAME\n     reglookup-recover - Windows NT+ registry deleted data recovery tool\n\nSYNOPSIS\n     reglookup-recover [options] registry-file\n\nDESCRIPTION\n     reglookup-recover  attempts  to  scour a Windows registry hive for deleted\n     data structures and outputs those found in a CSV-like format.\n\nOPTIONS\n     reglookup-recover accepts the following parameters:\n\n     -v     Verbose output.\n\n     -h     Enables the printing of a column header row. (default)\n\n     -H     Disables the printing of a column header row.\n\n     -l     Display cells which could not  be  interpreted  as  valid  registry\n            structures at the end of the output.\n\n     -L     Do  not  display cells which could not be interpreted as valid reg-\n            istry structures. This is the default behavior.\n\n     -r     Display raw cell contents for cells which were interpreted  as  in-\n            tact  data  structures.  This  additional output will appear on the\n            same line as the interpreted data.\n\n     -R     Do not display raw cell contents for cells which  were  interpreted\n            as intact data structures. This is the default behavior.\n\n     registry-file\n            Required  argument.  Specifies the location of the registry file to\n            read. The system registry files should  be  found  under:  %System-\n            Root%/system32/config.\n\nOUTPUT\n     reglookup-recover generates a comma-separated values (CSV) like output and\n     writes  it  to  stdout.  For more information on the syntax of the general\n     format, see reglookup(1).\n\n     This tool is new and the output format, particularly the included columns,\n     may change in future revisions. When  this  format  stablizes,  additional\n     documentation will be included here.\n\nEXAMPLES\n     To dump the recoverable contents of a system registry hive:\n\n          reglookup-recover /mnt/win/c/WINDOWS/system32/config/system\n\n     Extract  all  available unallocated data, including unparsable unallocated\n     space and the raw data associated with parsed  cells  in  a  user-specific\n     registry:\n\n          reglookup-recover -r -l '/mnt/win/c/Documents and Settings/user/NTUSER.DAT'\n\nBUGS\n     This  program  has  been  smoke-tested against most current Windows target\n     platforms, but a comprehensive test suite  has  not  yet  been  developed.\n     (Please  report  results  to the development mailing list if you encounter\n     any bugs. Sample registry files and/or patches are greatly appreciated.)\n\n     This program is new as of RegLookup release 0.9.0 and should be considered\n     unstable.\n\n     For more information on registry format details  and  the  recovery  algo-\n     rithm, see:\n\n     http://sentinelchicken.com/research/registry_format/           http://sen-\n     tinelchicken.com/research/registry_recovery/\n\nCREDITS\n     This program was written by Timothy D. Morgan.\n\nLICENSE\n     Please see the file \"LICENSE\" included with this software distribution.\n\n     This program is distributed in the hope that it will be useful, but  WITH-\n     OUT  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n     FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License  ver-\n     sion 3 for more details.\n\nSEE ALSO\n     reglookup-timeline(1) reglookup-recover(1)\n\nFile Conversion Utilities        7 October 2025                    reglookup(1)",
+        "apropos": "reglookup-recover (1) - Windows NT+ registry deleted data recovery tool"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/reglookup-recover",
+        "size_bytes": 30992,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=581be4e5ce48cc48fc3660a72987c7f53177897f, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "reglookup-timeline",
+      "description": "Windows NT+ registry MTIME timeline generator",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# reglookup-timeline -h\n MTIME,FILE,PATH",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "ERROR: Failed to open hive.  Error returned: No such file or directory\nERROR: Couldn't open registry file: --help",
+        "-h": "ERROR: Failed to open hive.  Error returned: No such file or directory\nERROR: Couldn't open registry file: -h",
+        "help": "ERROR: Failed to create REGFI_FILE structure.",
+        "man": "reglookup-timeline(1)                                     reglookup-timeline(1)\n\nNAME\n     reglookup-timeline - Windows NT+ registry MTIME timeline generator\n\nSYNOPSIS\n     reglookup-timeline [-H] registry-file [registry-file ...]\n\nDESCRIPTION\n     This  script is a wrapper for reglookup(1), and reads one or more registry\n     files to produce an MTIME-sorted output. This  is  helpful  when  building\n     timelines for forensic investigations.\n\nPARAMETERS\n     reglookup-timeline  accepts  one  or  more registry file names. All of the\n     provided registries will be parsed using reglookup(1). The -H  option  may\n     be used to omit the header line.\n\nOUTPUT\n     reglookup-timeline  generates  a  comma-separated  values (CSV) compatible\n     format to stdout. While the output of reglookup-timeline and  reglookup(1)\n     differ in the columns returned, the base format is the same.\n\n     Currently,  reglookup-timeline  returns  three  columns:  MTIME, FILE, and\n     PATH. Only rows representing registry keys are returned, since MTIMEs  are\n     not stored for values. The FILE column indicates which registry file (pro-\n     vided  as an argument) the key came from. Finally, the PATH field contains\n     the full registry path to the key. Records are returned sorted in  ascend-\n     ing order based on the MTIME column.\n\nBUGS\n     This  script  is  new, and as such it's interface may change significantly\n     over the next few revisions. In particular, additional  command  line  op-\n     tions will likely be added, and the output of the script may be altered in\n     minor ways.\n\n     It  is  very  difficult  to  find documentation on what precise operations\n     cause the MTIMEs to be updated. Basic  experimentation  indicates  that  a\n     key's  stamp  is updated anytime an immediate sub-value or sub-key is cre-\n     ated, renamed, deleted, or it's value is modified. If this MTIME  data  is\n     critical  to an investigation, any conclusions should be validated through\n     experimentation in a controlled lab environment.\n\n     This software should be considered unstable at this time.\n\nCREDITS\n     This script was written by Timothy D. Morgan based on suggestions from Uwe\n     Danz.\n\n     Please see source code for a full list of copyrights.\n\nLICENSE\n     Please see the file \"LICENSE\" included with this software distribution.\n\n     This program is distributed in the hope that it will be useful, but  WITH-\n     OUT  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n     FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License  ver-\n     sion 3 for more details.\n\nSEE ALSO\n     reglookup(1) reglookup-recover(1)\n\nFile Conversion Utilities        7 October 2025           reglookup-timeline(1)",
+        "apropos": "reglookup-timeline (1) - Windows NT+ registry MTIME timeline generator"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/reglookup-timeline",
+        "size_bytes": 1531,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/reglookup/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/reglookup/index.md",
+    "retrieved_at": "2026-07-14T13:08:05+00:00",
+    "sha256": "eb667a8d73207d7f13dfabbc5b8e1a362377a390c40be1c9dbaf278cfaeb65cd"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "87",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.0.1+svn296-2",
+    "depends": "libc6 (>= 2.34), libregfi1t64 (>= 1.0.1), libtalloc2 (>= 2.0.4~git20101213)",
+    "description": "utility to analysis for Windows NT-based registry\nRegLookup is a system to direct analysis of Windows NT-based registry\nfiles providing command line tools, a C API, and a Python module for\naccessing registry data structures. The project has a focus on providing\ntools for digital forensics investigations (though is useful for many\npurposes), and includes algorithms for retrieving deleted data structures\nfrom registry hives.\n.\nCurrently the program allows one to read an entire registry and output it\nin a (mostly) standardized, quoted format. It also provides features for\nfiltering of results based on registry path and data type. The package\nprovides the following commands: reglookup, reglookup-recover and\nreglookup-timeline.",
+    "homepage": "https://web.archive.org/web/20240804024044/http://projects.sentinelchicken.org/reglookup/"
+  },
+  "tags": [
+    "offensive",
+    "reglookup",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/reglookup && python3 reglookup.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/reglookup && python3 reglookup.py --help",
+    "cd toolboxes/reglookup && python3 reglookup.py --help",
+    "cd toolboxes/reglookup && python3 reglookup.py --help",
+    "cd toolboxes/reglookup && python3 reglookup.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST reglookup --output $KFIOSA_OUTPUT_DIR/reglookup.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST reglookup --output $KFIOSA_OUTPUT_DIR/reglookup.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

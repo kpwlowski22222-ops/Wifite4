@@ -1,0 +1,129 @@
+{
+  "id": "kali:ollydbg",
+  "kind": "kali_source_package",
+  "name": "ollydbg",
+  "title": "ollydbg",
+  "summary": "### ollydbg",
+  "version": "1.10-1kali5",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "http://www.ollydbg.de/",
+  "repository": "https://gitlab.com/kalilinux/packages/ollydbg",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond",
+    "kali-tools-reverse-engineering",
+    "kali-tools-windows-resources"
+  ],
+  "install": {
+    "apt": "sudo apt install ollydbg"
+  },
+  "packages": [
+    {
+      "name": "ollydbg"
+    }
+  ],
+  "commands": [
+    {
+      "name": "ollydbg",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# ollydbg -h\n ┏━(Message from Kali developers)\n ┃\n ┃ You may need to install the wine32 package first:\n ┃  # dpkg --add-architecture i386 && apt update && apt -y install wine32\n ┃\n ┗━\n Application could not be started, or no application associated with the specified file.\n ShellExecuteEx failed:",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\nerror: XDG_RUNTIME_DIR is invalid or not set in the environment.\n0078:err:winediag:nodrv_CreateWindow Application tried to create a window, but no driver could be loaded.\n0078:err:winediag:nodrv_CreateWindow L\"The explorer process failed to start.\"\n0078:err:systray:initialize_systray Could not create tray window",
+        "-h": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\nerror: XDG_RUNTIME_DIR is invalid or not set in the environment.\n0078:err:winediag:nodrv_CreateWindow Application tried to create a window, but no driver could be loaded.\n0078:err:winediag:nodrv_CreateWindow L\"The explorer process failed to start.\"\n0078:err:systray:initialize_systray Could not create tray window",
+        "help": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\nerror: XDG_RUNTIME_DIR is invalid or not set in the environment.\n0078:err:winediag:nodrv_CreateWindow Application tried to create a window, but no driver could be loaded.\n0078:err:winediag:nodrv_CreateWindow L\"The explorer process failed to start.\"\n0078:err:systray:initialize_systray Could not create tray window"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/ollydbg",
+        "size_bytes": 99,
+        "is_symlink": false,
+        "file_type": "a sh script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/ollydbg/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/ollydbg/index.md",
+    "retrieved_at": "2026-07-14T13:07:26+00:00",
+    "sha256": "63e2fd836c0e2a5df5393a8911caa6f6666e43ec516fd5667535727985142e5d"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "2562",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "1.10-1kali5",
+    "depends": "wine, kali-defaults (>= 2019.3.6)",
+    "description": "32-bit assembler level analysing debugger\nOllyDbg is a 32-bit assembler level analysing debugger for\nMicrosoft Windows. Emphasis on binary code analysis makes\nit particularly useful in cases where source is\nunavailable.",
+    "homepage": "http://www.ollydbg.de/"
+  },
+  "tags": [
+    "offensive",
+    "ollydbg",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/ollydbg && python3 ollydbg.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ollydbg && python3 ollydbg.py --help",
+    "cd toolboxes/ollydbg && python3 ollydbg.py --help",
+    "cd toolboxes/ollydbg && python3 ollydbg.py --help",
+    "cd toolboxes/ollydbg && python3 ollydbg.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ollydbg --output $KFIOSA_OUTPUT_DIR/ollydbg.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ollydbg --output $KFIOSA_OUTPUT_DIR/ollydbg.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

@@ -1,0 +1,115 @@
+{
+  "id": "github:coderkrupal/Wavescout-wifi_recon",
+  "kind": "external_repository",
+  "name": "Wavescout-wifi_recon",
+  "full_name": "coderkrupal/Wavescout-wifi_recon",
+  "owner": "coderkrupal",
+  "category": "WiFi Reconnaissance — Beacon Parsing",
+  "url": "https://github.com/coderkrupal/Wavescout-wifi_recon",
+  "summary": "Repository indexing entry for the ``Wavescout-wifi_recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/coderkrupal__Wavescout-wifi_recon",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "sudo airmon-ng start wlan0 && sudo python3 main.py"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "sudo airmon-ng start wlan0 && sudo python3 main.py"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "python3",
+    "scapy",
+    "rich",
+    "aircrack-ng (airmon-ng)",
+    "iw"
+  ],
+  "algorithms": [
+    "passive 802.11 beacon-frame sniffer via scapy.sniff on monitor interface",
+    "AP enumeration from Dot11Beacon + Dot11Elt (BSSID/SSID/channel/crypto via network_stats())",
+    "dBm signal extraction from Dot11 packets",
+    "trivial encryption-risk classifier (open/WEP/hidden-SSID flags)",
+    "monitor-interface auto-detect via `iw dev`"
+  ],
+  "produces": [
+    "in-memory dict of discovered APs: SSID, BSSID, channel, encryption/crypto, signal dBm",
+    "per-AP risk-flag list (OPEN NETWORK / CRITICAL: WEP / Hidden SSID)",
+    "refreshing rich-formatted terminal table (every 5s)"
+  ],
+  "capability_bucket": "beacon_parse",
+  "runnable": true,
+  "novelty": "none — thin scapy wrapper. It reimplements airodump-ng's basic AP-listing view (BSSID/SSID/channel/encryption/signal) in pure scapy with a rich-table UI and a ~6-line risk classifier. No PMKID/handshake/probe/GPS/deauth/hidden-SSID-reveal; hidden SSIDs are merely labelled, not revealed. The analyzer is three string-contains checks. Redundant vs airodump-ng for AP enumeration.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wavescout",
+    "wifi",
+    "recon",
+    "coderkrupal",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
+    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
+    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
+    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wavescout-wifi_recon --output $KFIOSA_OUTPUT_DIR/Wavescout-wifi_recon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wavescout-wifi_recon --output $KFIOSA_OUTPUT_DIR/Wavescout-wifi_recon.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

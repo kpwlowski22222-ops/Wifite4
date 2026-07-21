@@ -1,0 +1,109 @@
+{
+  "id": "github:xransum/phantex",
+  "kind": "external_repository",
+  "name": "phantex",
+  "full_name": "xransum/phantex",
+  "owner": "xransum",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/xransum/phantex",
+  "summary": "Repository indexing entry for the ``phantex`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/xransum__phantex",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "flask --app phantex.app:create_app run (or: uv run flask --app phantex.app:create_app run); web UI at http://localhost:5000"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "flask --app phantex.app:create_app run (or: uv run flask --app phantex.app:create_app run); web UI at http://localhost:5000"
+      }
+    ]
+  },
+  "language": "Python (with JavaScript/CSS/HTML frontend built via Vite)",
+  "dependencies": [
+    "python>=3.11",
+    "Flask",
+    "bluez",
+    "hcitool (classic BT scan)",
+    "uv or pip",
+    "node/npm + Vite (frontend build)"
+  ],
+  "algorithms": [
+    "BLE passive scan (no root)",
+    "classic Bluetooth scan via hcitool (may need CAP_NET_RAW)",
+    "WiFi recon: NOT IMPLEMENTED (/wte 'Coming soon')"
+  ],
+  "produces": [
+    "Web dashboard listing nearby Bluetooth devices at /bt",
+    "no structured/logged WiFi output — none implemented"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": true,
+  "novelty": "none — thin wrapper. Bluetooth side just shells out to hcitool/bluez; the WiFi recon surface advertised in the description does not exist in the codebase yet (marked Coming soon), so it offers zero capability beyond the airodump-ng/wash/hcxtools/scapy baseline KFIOSA already uses.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "phantex",
+    "xransum",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/phantex && python3 phantex.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantex --output $KFIOSA_OUTPUT_DIR/phantex.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantex --output $KFIOSA_OUTPUT_DIR/phantex.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

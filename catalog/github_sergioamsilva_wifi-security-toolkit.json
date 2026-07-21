@@ -1,0 +1,145 @@
+{
+  "id": "github:sergioamsilva/wifi-security-toolkit",
+  "kind": "external_repository",
+  "name": "wifi-security-toolkit",
+  "full_name": "sergioamsilva/wifi-security-toolkit",
+  "owner": "sergioamsilva",
+  "category": "WiFi Reconnaissance — Probe Profiling",
+  "url": "https://github.com/sergioamsilva/wifi-security-toolkit",
+  "summary": "Repository indexing entry for the ``wifi-security-toolkit`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/sergioamsilva__wifi-security-toolkit",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "sudo python3 <script>.py --iface wlan1 [--output ...]; e.g. `sudo python3 02_recon/04_probe_analyzer.py --iface wlan1 --output room.json`; monitor setup via `sudo python3 01_setup/02_setup_monitor.py start wlan1 --channel 6`; run all from repo root so shared wifi_utils.py resolves."
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "sudo python3 <script>.py --iface wlan1 [--output ...]; e.g. `sudo python3 02_recon/04_probe_analyzer.py --iface wlan1 --output room.json`; monitor setup via `sudo python3 01_setup/02_setup_monitor.py start wlan1 --channel 6`; run all from repo root so shared wifi_utils.py resolves."
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "python3-scapy",
+    "reaver (for WPS Pixie Dust)",
+    "aircrack-ng suite (monitor mode / iw via system calls)",
+    "wireshark/manuf OUI file at /usr/share/wireshark/manuf",
+    "gpsd (optional, for wardrive)",
+    "WiGLE API key (optional, geolocation enrichment)",
+    "monitor-mode-capable Wi-Fi adapter (Alfa recommended)"
+  ],
+  "algorithms": [
+    "Scapy frame classifier (mgmt/control/data subtype tally)",
+    "Beacon-based AP discovery + channel/encryption mapping",
+    "Probe-request PNL extraction per client (preferred SSID list)",
+    "MAC randomization detection (locally-administered bit)",
+    "OUI vendor fingerprinting via wireshark manuf DB",
+    "Hidden-SSID reveal by passive sniff of probe-response/association",
+    "Beacon fingerprinting (Wi-Fi gen, WPS, PMF, cipher suites)",
+    "KARMA attack detection (AP answering arbitrary directed probes)",
+    "GPS wardrive logging to WiGLE-1.4 CSV",
+    "Client<->AP association tracking in real time",
+    "RSSI Geiger-counter physical device locator",
+    "Per-channel congestion survey",
+    "WPA2 4-way handshake passive capture (EAPOL M1-M4)",
+    "PMKID extraction from EAPOL M1 (no client needed)",
+    "Deauth injection to force reconnection",
+    "Fake AP / beacon flood",
+    "Evil Twin AP generation",
+    "Channel Switch Announcement (CSA) forged-frame attack",
+    "WPS Pixie Dust via reaver wrapper",
+    "PCAP -> hashcat -m 22000 conversion",
+    "IE fingerprinting for OS detection surviving MAC randomization",
+    "Probe timeline ASCII visualization (wake/sleep cycles)",
+    "PNL cross-correlation across devices to identify same owner",
+    "WiGLE API SSID geolocation enrichment",
+    "WIDS sensor (deauth flood, evil twin, probe flood, MAC churn)",
+    "WPS vulnerability scanner + exploitability rating",
+    "WPA3/SAE/OWE + transition-mode downgrade detector",
+    "PMF (802.11w) mandate detector",
+    "802.1X/EAP enterprise clear-text identity extraction",
+    "Markdown report generation merging JSON outputs"
+  ],
+  "produces": [
+    "JSON: clients, PNLs, AP maps, handshakes, fingerprints",
+    ".pcap raw 802.11 captures with EAPOL frames",
+    "hashcat -m 22000 crackable hash files",
+    "WiGLE-1.4 CSV (BSSID, SSID, channel, encryption, GPS coords)",
+    "Markdown merged report",
+    "Terminal/ASCII real-time visualizations (timeline, frame classifier, probe analyzer)"
+  ],
+  "capability_bucket": "probe_profiling",
+  "runnable": true,
+  "novelty": "Not a thin airodump-ng wrapper — it is pure-Scapy and reimplements frame parsing in wifi_utils.py. Genuinely novel vs the airodump-ng/wash/hcxtools/scapy baseline: (1) PNL cross-correlation across devices to infer common ownership, (2) IE-fingerprint OS identification that survives MAC randomization, (3) KARMA detection (APs responding to any directed probe), (4) RSSI Geiger-counter physical locator, (5) probe-timeline ASCII visualization of device wake/sleep cycles, (6) integrated WIDS for deauth/evil-twin/probe-flood/MAC-churn, (7) WPA3-transition-mode downgrade and PMF-mandate detectors, (8) 802.1X clear-text EAP-identity extraction. However, the bread-and-butter recon (AP scan, client list, hidden-SSID reveal, handshake/PMKID capture, WPS scan, wardrive CSV) substantially overlaps airodump-ng/wash/hcxtools — those modules are redundant with the existing KFIOSA baseline; the distinguishing value is the analysis/correlation/detection layer.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": true,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "security",
+    "toolkit",
+    "sergioamsilva",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-security-toolkit --output $KFIOSA_OUTPUT_DIR/wifi-security-toolkit.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-security-toolkit --output $KFIOSA_OUTPUT_DIR/wifi-security-toolkit.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

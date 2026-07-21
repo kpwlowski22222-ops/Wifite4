@@ -1,0 +1,144 @@
+{
+  "id": "kali:email2phonenumber",
+  "kind": "kali_source_package",
+  "name": "email2phonenumber",
+  "title": "email2phonenumber",
+  "summary": "### email2phonenumber",
+  "version": "0~git20220216-0kali2",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/martinvigo/email2phonenumber",
+  "repository": "https://gitlab.com/kalilinux/packages/email2phonenumber",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install email2phonenumber"
+  },
+  "packages": [
+    {
+      "name": "email2phonenumber"
+    }
+  ],
+  "commands": [
+    {
+      "name": "email2phonenumber",
+      "description": "- - -",
+      "usage": "email2phonenumber.py [-h] {scrape,generate,bruteforce} ...",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help            show this help message and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# email2phonenumber -h\n usage: email2phonenumber.py [-h] {scrape,generate,bruteforce} ...\n \n An OSINT tool to find phone numbers associated to email addresses\n \n positional arguments:\n {scrape,generate,bruteforce}\n                       commands\n   scrape              scrape online services for phone number digits\n   generate            generate all valid phone numbers based on NANPA's\n                       public records\n   bruteforce          bruteforce using online services to find the phone\n                       number\n \n options:\n -h, --help            show this help message and exit",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "email2phonenumber.py: error: argument {scrape,generate,bruteforce}: invalid choice: 'help' (choose from 'scrape', 'generate', 'bruteforce')",
+          "template": null,
+          "original_sha256": "f08fc5f9a580ad1df1b368a9923d93a1c7388c22147ef7d93ead00c954e13d52"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: email2phonenumber.py [-h] {scrape,generate,bruteforce} ...\n\nAn OSINT tool to find phone numbers associated to email addresses\n\npositional arguments:\n  {scrape,generate,bruteforce}\n                        commands\n    scrape              scrape online services for phone number digits\n    generate            generate all valid phone numbers based on NANPA's\n                        public records\n    bruteforce          bruteforce using online services to find the phone\n                        number\n\noptions:\n  -h, --help            show this help message and exit",
+        "-h": "usage: email2phonenumber.py [-h] {scrape,generate,bruteforce} ...\n\nAn OSINT tool to find phone numbers associated to email addresses\n\npositional arguments:\n  {scrape,generate,bruteforce}\n                        commands\n    scrape              scrape online services for phone number digits\n    generate            generate all valid phone numbers based on NANPA's\n                        public records\n    bruteforce          bruteforce using online services to find the phone\n                        number\n\noptions:\n  -h, --help            show this help message and exit",
+        "help": "usage: email2phonenumber.py [-h] {scrape,generate,bruteforce} ...\nemail2phonenumber.py: error: argument {scrape,generate,bruteforce}: invalid choice: 'help' (choose from 'scrape', 'generate', 'bruteforce')"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/email2phonenumber",
+        "size_bytes": 82,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/email2phonenumber/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/email2phonenumber/index.md",
+    "retrieved_at": "2026-07-14T13:05:31+00:00",
+    "sha256": "e1b30b0724294338815192e552a502b00a484f413437e9ac483f87a9e007b878"
+  },
+  "apt_metadata": {
+    "section": "misc",
+    "installed_size": "72",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "0~git20220216-0kali2",
+    "depends": "python3:any, python3-bs4, python3-certifi, python3-chardet, python3-idna, python3-requests, python3-soupsieve, python3-urllib3",
+    "description": "OSINT tool to obtain a target's phone number by having their email address\nThis package contains an OSINT tool that allows you to obtain a target's phone\nnumber just by having their email address.\n.\nThis tool helps automate discovering someone's phone number by abusing\npassword reset design weaknesses and publicly available data. It supports 3\nmain functions:\n.\n* \"scrape\" - scrapes websites for phone number digits by initiating\npassword reset using the target's email address.\n* \"generate\" - creates a list of valid phone numbers based on the country's\nPhone Numbering Plan publicly available information.\n* \"bruteforce\" - iterates over a list of phone numbers and initiates\npassword reset on different websites to obtain associated masked emails\nand correlate it to the victim's one.",
+    "homepage": "https://github.com/martinvigo/email2phonenumber"
+  },
+  "tags": [
+    "offensive",
+    "email2phonenumber",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/email2phonenumber && python3 email2phonenumber.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/email2phonenumber && python3 email2phonenumber.py --help",
+    "cd toolboxes/email2phonenumber && python3 email2phonenumber.py --help",
+    "cd toolboxes/email2phonenumber && python3 email2phonenumber.py --help",
+    "cd toolboxes/email2phonenumber && python3 email2phonenumber.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST email2phonenumber --output $KFIOSA_OUTPUT_DIR/email2phonenumber.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST email2phonenumber --output $KFIOSA_OUTPUT_DIR/email2phonenumber.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

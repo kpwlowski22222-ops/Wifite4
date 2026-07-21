@@ -1,0 +1,131 @@
+{
+  "id": "github:n3twork5/xharvester",
+  "kind": "external_repository",
+  "name": "xharvester",
+  "full_name": "n3twork5/xharvester",
+  "owner": "n3twork5",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/n3twork5/xharvester",
+  "summary": "Repository indexing entry for the ``xharvester`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/n3twork5__xharvester",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "sudo ./xharvester (Linux/macOS); python xharvester (Windows, as Admin); tsu ./xharvester (Termux)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "sudo ./xharvester (Linux/macOS); python xharvester (Windows, as Admin); tsu ./xharvester (Termux)"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "aircrack-ng suite (airmon-ng/airodump-ng/aireplay-ng/aircrack-ng)",
+    "reaver",
+    "hostapd",
+    "dnsmasq",
+    "iptables",
+    "iwconfig",
+    "scapy",
+    "netifaces",
+    "colorama",
+    "requests",
+    "numpy",
+    "bleak",
+    "pyrtlsdr",
+    "python-can",
+    "pymodbus",
+    "python-snap7",
+    "dbus-python/pydbus/PyGObject (Linux)"
+  ],
+  "algorithms": [
+    "WiFi interface discovery via iwconfig parsing",
+    "monitor-mode toggle via airmon-ng check kill + start",
+    "network scan via airodump-ng --output-format csv + CSV parse for BSSID/ESSID/channel/signal/encryption",
+    "client enumeration via airodump-ng --bssid --channel + station-CSV parse",
+    "deauth via aireplay-ng -0",
+    "handshake capture via airodump-ng --write pcap + aircrack-ng verification loop",
+    "WPS PIN brute-force via reaver -i -b -vv -L -N",
+    "evil-twin AP via hostapd conf broadcast",
+    "dictionary crack via aircrack-ng -w wordlist handshake.cap"
+  ],
+  "produces": [
+    "/tmp/airodump_scan-01.csv (network scan, deleted after parse)",
+    "/tmp/client_enum-01.csv (client list, deleted after parse)",
+    "/tmp/xharvester_captures/handshake_<BSSID>-01.cap (PCAP handshake)",
+    "/tmp/evil_twin.conf (hostapd config)",
+    "reports/wifi_security_report_<timestamp>.txt (text report)",
+    "WPS PIN / WPA PSK strings parsed from reaver stdout",
+    "cracked PSK from aircrack-ng 'KEY FOUND!' line"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": true,
+  "novelty": "none — thin wrapper. Every WiFi capability is a subprocess call to airodump-ng/aireplay-ng/aircrack-ng/reaver/hostapd that KFIOSA already uses. No PMKID (hcxdumptool/hcxpcapngtool never invoked), no wash/WPS scan (wps_enabled flag is never populated), no GPS/wardrive tagging, no probe-request sniffing, no hidden-SSID reveal (hidden SSIDs only relabeled \"Hidden_<last5>\" with no deauth+beacon reveal), no EAPOL monitor, no beacon/probe parsing beyond airodump CSV fields. The only added value is a TTY menu, cross-platform install scripts, and a text report generator.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": true,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "xharvester",
+    "n3twork5",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/xharvester && python3 xharvester.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/xharvester && python3 xharvester.py --help",
+    "cd toolboxes/xharvester && python3 xharvester.py --help",
+    "cd toolboxes/xharvester && python3 xharvester.py --help",
+    "cd toolboxes/xharvester && python3 xharvester.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST xharvester --output $KFIOSA_OUTPUT_DIR/xharvester.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST xharvester --output $KFIOSA_OUTPUT_DIR/xharvester.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

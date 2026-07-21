@@ -1,0 +1,485 @@
+{
+  "id": "kali:hivex",
+  "kind": "kali_source_package",
+  "name": "hivex",
+  "title": "hivex",
+  "summary": "### libhivex-bin",
+  "version": "1.3.24-2.1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://libguestfs.org/",
+  "repository": "https://salsa.debian.org/libvirt-team/hivex",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install hivex"
+  },
+  "packages": [
+    {
+      "name": "libhivex-bin"
+    },
+    {
+      "name": "libhivex-dev"
+    },
+    {
+      "name": "libhivex-ocaml"
+    },
+    {
+      "name": "libhivex-ocaml-dev"
+    },
+    {
+      "name": "libhivex0"
+    },
+    {
+      "name": "libwin-hivex-perl"
+    },
+    {
+      "name": "python3-hivex"
+    },
+    {
+      "name": "ruby-hivex"
+    }
+  ],
+  "commands": [
+    {
+      "name": "hivexget",
+      "description": "Get subkey from a Windows Registry binary \"hive\" file",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# man hivexget\n hivexget(1)                     Windows Registry                    hivexget(1)\n \n NAME\n    hivexget - Get subkey from a Windows Registry binary \"hive\" file\n \n SYNOPSIS\n     hivexget hivefile '\\Path\\To\\SubKey'\n \n     hivexget hivefile '\\Path\\To\\SubKey' name\n \n NOTE\n    This  is a low-level tool.  For a more convenient way to navigate the Win-\n    dows Registry in  Windows  virtual  machines,  see  virt-win-reg(1).   For\n    proper regedit formatting, use hivexregedit(1).\n \n DESCRIPTION\n    This  program  navigates through a Windows Registry binary \"hive\" file and\n    extracts either all the (key, value) data pairs stored in that  subkey  or\n    just the single named data item.\n \n    In the first form:\n \n     hivexget hivefile '\\Path\\To\\SubKey'\n \n    \"hivefile\"  is some Windows Registry binary hive, and \"\\Path\\To\\Subkey\" is\n    a path within that hive.  NB the path is relative to the top of this hive,\n    and is not the full path as you would use in Windows (eg.  \"HKEY_LOCAL_MA-\n    CHINE\\SYSTEM\" is not a valid path).\n \n    If the subkey exists, then the output lists all data pairs under this sub-\n    key, in a format similar to \"regedit\" in Windows.\n \n    In the second form:\n \n     hivexget hivefile '\\Path\\To\\SubKey' name\n \n    \"hivefile\"  and path are as above.  \"name\" is the name of the value of in-\n    terest (use \"@\" for the default value).\n \n    The corresponding data item is printed \"raw\" (ie. no processing or  escap-\n    ing) except:\n \n    1.  If  it's  a string we will convert it from Windows UTF-16 to UTF-8, if\n        this conversion is possible.  The string  is  printed  with  a  single\n        trailing newline.\n \n    2.  If  it's a multiple-string value, each string is printed on a separate\n        line.\n \n    3.  If it's a numeric value, it is printed as a decimal number.\n \n SEE ALSO\n    hivex(3),  hivexml(1),   hivexsh(1),   hivexregedit(1),   virt-win-reg(1),\n    guestfs(3), <http://libguestfs.org/>, virt-cat(1), virt-edit(1).\n \n AUTHORS\n    Richard W.M. Jones (\"rjones at redhat dot com\")\n \n COPYRIGHT\n    Copyright (C) 2009 Red Hat Inc.\n \n    This  program  is  free software; you can redistribute it and/or modify it\n    under the terms of the GNU General Public License as published by the Free\n    Software Foundation; either version 2 of the License, or (at your  option)\n    any later version.\n \n    This  program is distributed in the hope that it will be useful, but WITH-\n    OUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  or\n    FITNESS  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n    more details.\n \n    You should have received a copy of the GNU General  Public  License  along\n    with this program; if not, write to the Free Software Foundation, Inc., 51\n    Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n \n hivex-1.3.24                       2026-04-26                       hivexget(1)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hivexget hivefile path [key]",
+          "template": null,
+          "original_sha256": "51763177d37ca09fce56e2f598e9972ef3aa9e0a7d451d9ae151cef5842d0ed5"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hivexget hivefile path [key]",
+        "-h": "hivexget hivefile path [key]",
+        "help": "hivexget hivefile path [key]",
+        "man": "hivexget(1)                     Windows Registry                    hivexget(1)\n\nNAME\n     hivexget - Get subkey from a Windows Registry binary \"hive\" file\n\nSYNOPSIS\n      hivexget hivefile '\\Path\\To\\SubKey'\n\n      hivexget hivefile '\\Path\\To\\SubKey' name\n\nNOTE\n     This  is a low-level tool.  For a more convenient way to navigate the Win-\n     dows Registry in  Windows  virtual  machines,  see  virt-win-reg(1).   For\n     proper regedit formatting, use hivexregedit(1).\n\nDESCRIPTION\n     This  program  navigates through a Windows Registry binary \"hive\" file and\n     extracts either all the (key, value) data pairs stored in that  subkey  or\n     just the single named data item.\n\n     In the first form:\n\n      hivexget hivefile '\\Path\\To\\SubKey'\n\n     \"hivefile\"  is some Windows Registry binary hive, and \"\\Path\\To\\Subkey\" is\n     a path within that hive.  NB the path is relative to the top of this hive,\n     and is not the full path as you would use in Windows (eg.  \"HKEY_LOCAL_MA-\n     CHINE\\SYSTEM\" is not a valid path).\n\n     If the subkey exists, then the output lists all data pairs under this sub-\n     key, in a format similar to \"regedit\" in Windows.\n\n     In the second form:\n\n      hivexget hivefile '\\Path\\To\\SubKey' name\n\n     \"hivefile\"  and path are as above.  \"name\" is the name of the value of in-\n     terest (use \"@\" for the default value).\n\n     The corresponding data item is printed \"raw\" (ie. no processing or  escap-\n     ing) except:\n\n     1.  If  it's  a string we will convert it from Windows UTF-16 to UTF-8, if\n         this conversion is possible.  The string  is  printed  with  a  single\n         trailing newline.\n\n     2.  If  it's a multiple-string value, each string is printed on a separate\n         line.\n\n     3.  If it's a numeric value, it is printed as a decimal number.\n\nSEE ALSO\n     hivex(3),  hivexml(1),   hivexsh(1),   hivexregedit(1),   virt-win-reg(1),\n     guestfs(3), <http://libguestfs.org/>, virt-cat(1), virt-edit(1).\n\nAUTHORS\n     Richard W.M. Jones (\"rjones at redhat dot com\")\n\nCOPYRIGHT\n     Copyright (C) 2009 Red Hat Inc.\n\n     This  program  is  free software; you can redistribute it and/or modify it\n     under the terms of the GNU General Public License as published by the Free\n     Software Foundation; either version 2 of the License, or (at your  option)\n     any later version.\n\n     This  program is distributed in the hope that it will be useful, but WITH-\n     OUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  or\n     FITNESS  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n     more details.\n\n     You should have received a copy of the GNU General  Public  License  along\n     with this program; if not, write to the Free Software Foundation, Inc., 51\n     Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n\nhivex-1.3.24                       2026-06-17                       hivexget(1)",
+        "apropos": "hivexget (1)         - Get subkey from a Windows Registry binary \"hive\" file"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hivexget",
+        "size_bytes": 1035,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "hivexml",
+      "description": "Convert Windows Registry binary \"hive\" into XML",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable lots of debug messages.  If you find a Registry file that  this",
+          "default": null,
+          "choices": null,
+          "raw": "    -d  Enable lots of debug messages.  If you find a Registry file that  this"
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Keep going even if we find errors in the Registry  file.   This  skips",
+          "default": null,
+          "choices": null,
+          "raw": "    -k  Keep going even if we find errors in the Registry  file.   This  skips"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use heuristics to tolerate certain levels of corruption within hives.",
+          "default": null,
+          "choices": null,
+          "raw": "    -u  Use heuristics to tolerate certain levels of corruption within hives."
+        }
+      ],
+      "raw_help": "root@kali:~# man hivexml\n hivexml(1)                      Windows Registry                     hivexml(1)\n \n NAME\n    hivexml - Convert Windows Registry binary \"hive\" into XML\n \n SYNOPSIS\n     hivexml [-dk] hivefile > output.xml\n \n DESCRIPTION\n    This  program converts a single Windows Registry binary \"hive\" file into a\n    self-describing XML format.\n \n OPTIONS\n    -d  Enable lots of debug messages.  If you find a Registry file that  this\n        program  cannot parse, please enable this option and post the complete\n        output and the Registry file in your bug report.\n \n    -k  Keep going even if we find errors in the Registry  file.   This  skips\n        over any parts of the Registry that we cannot read.\n \n    -u  Use heuristics to tolerate certain levels of corruption within hives.\n \n        This  is  unsafe but may allow to export/merge valid keys/values in an\n        othewise corrupted hive.\n \n SEE ALSO\n    hivex(3),  hivexget(1),  hivexsh(1),   hivexregedit(1),   virt-win-reg(1),\n    guestfs(3), <http://libguestfs.org/>, virt-cat(1), virt-edit(1).\n \n AUTHORS\n    Richard W.M. Jones (\"rjones at redhat dot com\")\n \n COPYRIGHT\n    Copyright (C) 2009 Red Hat Inc.\n \n    This  program  is  free software; you can redistribute it and/or modify it\n    under the terms of the GNU General Public License as published by the Free\n    Software Foundation; either version 2 of the License, or (at your  option)\n    any later version.\n \n    This  program is distributed in the hope that it will be useful, but WITH-\n    OUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  or\n    FITNESS  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n    more details.\n \n    You should have received a copy of the GNU General  Public  License  along\n    with this program; if not, write to the Free Software Foundation, Inc., 51\n    Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n \n hivex-1.3.24                       2026-04-26                        hivexml(1)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hivexml: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "4a4e43b9cdb4f7cfcd79866cf77b8ff537f78c0244efc3229380707f7145da35"
+        },
+        {
+          "status": "operational_example",
+          "command": "hivexml [-dk] regfile > output.xml",
+          "template": null,
+          "original_sha256": "6f47cde92e587fa32b8f823d7b56e4e05439abacb2a9444736165edc7b7d7be0"
+        },
+        {
+          "status": "operational_example",
+          "command": "hivexml: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "b01b2d03341312d1a8cdc31741792dbc58131f0be139b6ce5711d6aec1e323c9"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hivexml: invalid option -- '-'\nhivexml [-dk] regfile > output.xml",
+        "-h": "hivexml: invalid option -- 'h'\nhivexml [-dk] regfile > output.xml",
+        "help": "hivex_open: help: Invalid argument",
+        "man": "hivexml(1)                      Windows Registry                     hivexml(1)\n\nNAME\n     hivexml - Convert Windows Registry binary \"hive\" into XML\n\nSYNOPSIS\n      hivexml [-dk] hivefile > output.xml\n\nDESCRIPTION\n     This  program converts a single Windows Registry binary \"hive\" file into a\n     self-describing XML format.\n\nOPTIONS\n     -d  Enable lots of debug messages.  If you find a Registry file that  this\n         program  cannot parse, please enable this option and post the complete\n         output and the Registry file in your bug report.\n\n     -k  Keep going even if we find errors in the Registry  file.   This  skips\n         over any parts of the Registry that we cannot read.\n\n     -u  Use heuristics to tolerate certain levels of corruption within hives.\n\n         This  is  unsafe but may allow to export/merge valid keys/values in an\n         othewise corrupted hive.\n\nSEE ALSO\n     hivex(3),  hivexget(1),  hivexsh(1),   hivexregedit(1),   virt-win-reg(1),\n     guestfs(3), <http://libguestfs.org/>, virt-cat(1), virt-edit(1).\n\nAUTHORS\n     Richard W.M. Jones (\"rjones at redhat dot com\")\n\nCOPYRIGHT\n     Copyright (C) 2009 Red Hat Inc.\n\n     This  program  is  free software; you can redistribute it and/or modify it\n     under the terms of the GNU General Public License as published by the Free\n     Software Foundation; either version 2 of the License, or (at your  option)\n     any later version.\n\n     This  program is distributed in the hope that it will be useful, but WITH-\n     OUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  or\n     FITNESS  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n     more details.\n\n     You should have received a copy of the GNU General  Public  License  along\n     with this program; if not, write to the Free Software Foundation, Inc., 51\n     Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n\nhivex-1.3.24                       2026-06-17                        hivexml(1)",
+        "apropos": "hivexml (1)          - Convert Windows Registry binary \"hive\" into XML"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hivexml",
+        "size_bytes": 23264,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=9e4ab56f34738e9b608fc389231e64f2981b687c, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hivexsh",
+      "description": "Windows Registry hive shell",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable lots of debug messages.  If you find a Registry file that  this",
+          "default": null,
+          "choices": null,
+          "raw": "    -d  Enable lots of debug messages.  If you find a Registry file that  this"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "filename",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "    -f filename"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use heuristics to tolerate certain levels of corruption within hives.",
+          "default": null,
+          "choices": null,
+          "raw": "    -u  Use heuristics to tolerate certain levels of corruption within hives."
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "If this option is given, then writes are  allowed  to  the  hive  (see",
+          "default": null,
+          "choices": null,
+          "raw": "    -w  If this option is given, then writes are  allowed  to  the  hive  (see"
+        }
+      ],
+      "raw_help": "root@kali:~# man hivexsh\n hivexsh(1)                      Windows Registry                     hivexsh(1)\n \n NAME\n    hivexsh - Windows Registry hive shell\n \n SYNOPSIS\n     hivexsh [-options] [hivefile]\n \n DESCRIPTION\n    This  program  provides  a  simple  shell  for navigating Windows Registry\n    'hive' files.  It uses the hivex library for access to these binary files.\n \n    Firstly you will need to provide a hive file from a Windows operating sys-\n    tem.  The hive files are usually located  in  \"C:\\Windows\\System32\\Config\"\n    and have names like \"software\", \"system\" etc (without any file extension).\n    For  more  information  about  hive files, read hivex(3).  For information\n    about downloading files from virtual machines, read virt-cat(1) and guest-\n    fish(1).\n \n    You can provide the name of the hive file to examine on the command  line.\n    For example:\n \n     hivexsh software\n \n    Or  you can start \"hivexsh\" without any arguments, and immediately use the\n    \"load\" command to load a hive:\n \n     $ hivexsh\n \n     Welcome to hivexsh, the hivex interactive shell for examining\n     Windows Registry binary hive files.\n \n     Type: 'help' for help with commands\n           'quit' to quit the shell\n \n     > load software\n     software\\>\n \n    Navigate through the hive's keys using the \"cd\" command,  as  if  it  con-\n    tained  a filesystem, and use \"ls\" to list the subkeys of the current key.\n    Other commands are listed below.\n \n OPTIONS\n    -d  Enable lots of debug messages.  If you find a Registry file that  this\n        program  cannot parse, please enable this option and post the complete\n        output and the Registry hive file in your bug report.\n \n    -f filename\n        Read commands from \"filename\" instead of stdin.  To  write  a  hivexsh\n        script, use:\n \n         #!/usr/bin/hivexsh -f\n \n    -u  Use heuristics to tolerate certain levels of corruption within hives.\n \n        This  is  unsafe but may allow to export/merge valid keys/values in an\n        othewise corrupted hive.\n \n    -w  If this option is given, then writes are  allowed  to  the  hive  (see\n        \"commit\"  command  below,  and  the  discussion  of modifying hives in\n        \"WRITING TO HIVE FILES\" in hivex(3)).\n \n        Important Note: Even if you specify this option, nothing is written to\n        a hive unless you call the \"commit\" command.  If you  exit  the  shell\n        without committing, all changes will be discarded.\n \n        If this option is not given, then write commands are disabled.\n \n COMMANDS\n    add name\n        Add  a  subkey named \"name\" below the current node.  The name may con-\n        tain spaces and punctuation  characters,  and  does  not  need  to  be\n        quoted.\n \n        The new key will have no subkeys and no values (see \"setval\").\n \n        There  must  be no existing subkey called \"name\", or this command will\n        fail.  To replace an existing subkey, delete it first like this:\n \n         cd name\n         del\n \n    cd path\n        Change to the subkey \"path\".  Use Windows-style backslashes  to  sepa-\n        rate  path elements, and start with a backslash in order to start from\n        the root of the hive.  For example:\n \n         cd \\Classes\\*\n \n        moves from the root node, to the \"Classes\" node, to the \"*\" node.   If\n        you were already at the root node, you could do this instead:\n \n         cd Classes\\*\n \n        or even:\n \n         cd Classes\n         cd *\n \n        Path elements (node names) are matched case insensitively, and charac-\n        ters like space, \"*\", and \"?\" have no special significance.\n \n        \"cd ..\" may be used to go to the parent directory.\n \n        \"cd\" without any arguments prints the current path.\n \n        Be  careful with \"cd \\\" since the readline library has an undocumented\n        behaviour where it will think the final backslash  is  a  continuation\n        (it  reads the next line of input and appends it).  Put a single space\n        after the backslash.\n \n    close | unload\n        Close the currently loaded hive.\n \n        If you modified the hive, all uncommitted writes  are  lost  when  you\n        call  this command (or if the shell exits).  You have to call \"commit\"\n        to write changes.\n \n    commit [newfile]\n        Commit changes to the hive.  If the optional  \"newfile\"  parameter  is\n        supplied,  then  the  hive  is written to that file, else the original\n        file is overwritten.\n \n        Note that you have to specify the \"-w\" flag, otherwise no  writes  are\n        allowed.\n \n    del Delete the current node and everything beneath it.  The current direc-\n        tory is moved up one level (as if you did \"cd ..\") after this command.\n \n        You cannot delete the root node.\n \n    exit | quit\n        Exit the shell.\n \n    load hivefile\n        Load  the binary hive named \"hivefile\".  The currently loaded hive, if\n        any, is closed.  The current directory is changed  back  to  the  root\n        node.\n \n    ls  List  the subkeys of the current hive Registry key.  Note this command\n        does not take any arguments.\n \n    lsval [key]\n        List the (key, value) pairs of the current hive Registry key.   If  no\n        argument  is  given  then all pairs are displayed.  If \"key\" is given,\n        then the value of the named key is displayed.  If \"@\" is  given,  then\n        the value of the default key is displayed.\n \n    setval nrvals\n        This  command replaces all (key, value) pairs at the current node with\n        the values in subsequent input.  \"nrvals\" is the number of values (ie.\n        (key, value) pairs), and any existing values at this node are deleted.\n        So \"setval 0\" just deletes any values at the current node.\n \n        The command reads 2 * nrvals lines of input, with each pair  of  lines\n        of input corresponding to a key and a value to add.\n \n        For  example, the following setval command replaces whatever is at the\n        current node with two (key, value) pairs.  The default key is  set  to\n        the  UTF16-LE-encoded  string \"abcd\".  The other value is named \"ANum-\n        ber\" and is a little-endian DWORD 0x12345678.\n \n         setval 2\n         @\n         string:abcd\n         ANumber\n         dword:12345678\n \n        The first line of each pair is the key (the special key \"@\" means  the\n        default key, but you can also use a blank line).\n \n        The  second line of each pair is the value, which has a special format\n        \"type:value\" with possible types summarized in the table below:\n \n         none                 No data is stored, and the type is set to 0.\n \n         string:abc           \"abc\" is stored as a UTF16-LE-encoded\n                              string (type 1).  Note that only 7 bit\n                              ASCII strings are supported as input.\n \n         expandstring:...     Same as string but with type 2.\n \n         dword:0x01234567     A DWORD (type 4) with the hex value\n                              0x01234567.  You can also use decimal\n                              or octal numbers here.\n \n         qword:0x0123456789abcdef\n                              A QWORD (type 11) with the hex value\n                              0x0123456789abcdef.  You can also use\n                              decimal or octal numbers here.\n \n         hex:<type>:<hexbytes>\n         hex:1:41,00,42,00,43,00,44,00,00,00\n                              This is the generic way to enter any\n                              value.  <type> is the integer value type.\n                              <hexbytes> is a list of pairs of hex\n                              digits which are treated as bytes.\n                              (Any non-hex-digits here are ignored,\n                              so you can separate bytes with commas\n                              or spaces if you want).\n \n EXAMPLE\n     $ guestfish --ro -i Windows7\n     ><fs> download win:c:\\windows\\system32\\config\\software software\n     ><fs> quit\n \n     $ hivexsh software\n \n     Welcome to hivexsh, the hivex interactive shell for examining\n     Windows Registry binary hive files.\n \n     Type: 'help' for help with commands\n           'quit' to quit the shell\n \n     software\\> ls\n     ATI Technologies\n     Classes\n     Clients\n     Intel\n     Microsoft\n     ODBC\n     Policies\n     RegisteredApplications\n     Sonic\n     Wow6432Node\n     software\\> quit\n \n SEE ALSO\n    hivex(3),   hivexget(1),    hivexml(1),    virt-win-reg(1),    guestfs(3),\n    <http://libguestfs.org/>, virt-cat(1), virt-edit(1).\n \n AUTHORS\n    Richard W.M. Jones (\"rjones at redhat dot com\")\n \n COPYRIGHT\n    Copyright (C) 2009-2010 Red Hat Inc.\n \n    This  program  is  free software; you can redistribute it and/or modify it\n    under the terms of the GNU General Public License as published by the Free\n    Software Foundation; either version 2 of the License, or (at your  option)\n    any later version.\n \n    This  program is distributed in the hope that it will be useful, but WITH-\n    OUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  or\n    FITNESS  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n    more details.\n \n    You should have received a copy of the GNU General  Public  License  along\n    with this program; if not, write to the Free Software Foundation, Inc., 51\n    Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n \n hivex-1.3.24                       2026-04-26                        hivexsh(1)",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hivexsh: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "ebe062c9e805134c60657985021c925657272d7dfb5f1a4159ffb4620d6fcbde"
+        },
+        {
+          "status": "operational_example",
+          "command": "hivexsh [-dfwu] [hivefile]",
+          "template": null,
+          "original_sha256": "779cef12576de1cc4dfda09e80363c573a589f7a5c9007cc1911feef7b4a233e"
+        },
+        {
+          "status": "operational_example",
+          "command": "hivexsh: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "ba4ab5387a691f443c1bbf391bce6c7f401e770dd82adfb331d8c832f10449b1"
+        },
+        {
+          "status": "operational_example",
+          "command": "hivexsh: failed to open hive file: help: Invalid argument",
+          "template": null,
+          "original_sha256": "16444c4cf73ca4b4a5478086f9f631921dadfae1b10557323ccfc02a0ad671d3"
+        },
+        {
+          "status": "operational_example",
+          "command": "hivexsh option '-d' and attach the complete output _and_ the hive file",
+          "template": null,
+          "original_sha256": "f057a0eb3292fc266a69662ee28e7a1f4e99dba96bc3138b44fb5251faffca2f"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "hivexsh: invalid option -- '-'\nhivexsh [-dfwu] [hivefile]",
+        "-h": "hivexsh: invalid option -- 'h'\nhivexsh [-dfwu] [hivefile]",
+        "help": "hivexsh: failed to open hive file: help: Invalid argument\n\nIf you think this file is a valid Windows binary hive file (_not_\na regedit *.reg file) then please run this command again using the\nhivexsh option '-d' and attach the complete output _and_ the hive file\nwhich fails into a bug report at https://bugzilla.redhat.com/",
+        "man": "hivexsh(1)                      Windows Registry                     hivexsh(1)\n\nNAME\n     hivexsh - Windows Registry hive shell\n\nSYNOPSIS\n      hivexsh [-options] [hivefile]\n\nDESCRIPTION\n     This  program  provides  a  simple  shell  for navigating Windows Registry\n     'hive' files.  It uses the hivex library for access to these binary files.\n\n     Firstly you will need to provide a hive file from a Windows operating sys-\n     tem.  The hive files are usually located  in  \"C:\\Windows\\System32\\Config\"\n     and have names like \"software\", \"system\" etc (without any file extension).\n     For  more  information  about  hive files, read hivex(3).  For information\n     about downloading files from virtual machines, read virt-cat(1) and guest-\n     fish(1).\n\n     You can provide the name of the hive file to examine on the command  line.\n     For example:\n\n      hivexsh software\n\n     Or  you can start \"hivexsh\" without any arguments, and immediately use the\n     \"load\" command to load a hive:\n\n      $ hivexsh\n\n      Welcome to hivexsh, the hivex interactive shell for examining\n      Windows Registry binary hive files.\n\n      Type: 'help' for help with commands\n            'quit' to quit the shell\n\n      > load software\n      software\\>\n\n     Navigate through the hive's keys using the \"cd\" command,  as  if  it  con-\n     tained  a filesystem, and use \"ls\" to list the subkeys of the current key.\n     Other commands are listed below.\n\nOPTIONS\n     -d  Enable lots of debug messages.  If you find a Registry file that  this\n         program  cannot parse, please enable this option and post the complete\n         output and the Registry hive file in your bug report.\n\n     -f filename\n         Read commands from \"filename\" instead of stdin.  To  write  a  hivexsh\n         script, use:\n\n          #!/usr/bin/hivexsh -f\n\n     -u  Use heuristics to tolerate certain levels of corruption within hives.\n\n         This  is  unsafe but may allow to export/merge valid keys/values in an\n         othewise corrupted hive.\n\n     -w  If this option is given, then writes are  allowed  to  the  hive  (see\n         \"commit\"  command  below,  and  the  discussion  of modifying hives in\n         \"WRITING TO HIVE FILES\" in hivex(3)).\n\n         Important Note: Even if you specify this option, nothing is written to\n         a hive unless you call the \"commit\" command.  If you  exit  the  shell\n         without committing, all changes will be discarded.\n\n         If this option is not given, then write commands are disabled.\n\nCOMMANDS\n     add name\n         Add  a  subkey named \"name\" below the current node.  The name may con-\n         tain spaces and punctuation  characters,  and  does  not  need  to  be\n         quoted.\n\n         The new key will have no subkeys and no values (see \"setval\").\n\n         There  must  be no existing subkey called \"name\", or this command will\n         fail.  To replace an existing subkey, delete it first like this:\n\n          cd name\n          del\n\n     cd path\n         Change to the subkey \"path\".  Use Windows-style backslashes  to  sepa-\n         rate  path elements, and start with a backslash in order to start from\n         the root of the hive.  For example:\n\n          cd \\Classes\\*\n\n         moves from the root node, to the \"Classes\" node, to the \"*\" node.   If\n         you were already at the root node, you could do this instead:\n\n          cd Classes\\*\n\n         or even:\n\n          cd Classes\n          cd *\n\n         Path elements (node names) are matched case insensitively, and charac-\n         ters like space, \"*\", and \"?\" have no special significance.\n\n         \"cd ..\" may be used to go to the parent directory.\n\n         \"cd\" without any arguments prints the current path.\n\n         Be  careful with \"cd \\\" since the readline library has an undocumented\n         behaviour where it will think the final backslash  is  a  continuation\n         (it  reads the next line of input and appends it).  Put a single space\n         after the backslash.\n\n     close | unload\n         Close the currently loaded hive.\n\n         If you modified the hive, all uncommitted writes  are  lost  when  you\n         call  this command (or if the shell exits).  You have to call \"commit\"\n         to write changes.\n\n     commit [newfile]\n         Commit changes to the hive.  If the optional  \"newfile\"  parameter  is\n         supplied,  then  the  hive  is written to that file, else the original\n         file is overwritten.\n\n         Note that you have to specify the \"-w\" flag, otherwise no  writes  are\n         allowed.\n\n     del Delete the current node and everything beneath it.  The current direc-\n         tory is moved up one level (as if you did \"cd ..\") after this command.\n\n         You cannot delete the root node.\n\n     exit | quit\n         Exit the shell.\n\n     load hivefile\n         Load  the binary hive named \"hivefile\".  The currently loaded hive, if\n         any, is closed.  The current directory is changed  back  to  the  root\n         node.\n\n     ls  List  the subkeys of the current hive Registry key.  Note this command\n         does not take any arguments.\n\n     lsval [key]\n         List the (key, value) pairs of the current hive Registry key.   If  no\n         argument  is  given  then all pairs are displayed.  If \"key\" is given,\n         then the value of the named key is displayed.  If \"@\" is  given,  then\n         the value of the default key is displayed.\n\n     setval nrvals\n         This  command replaces all (key, value) pairs at the current node with\n         the values in subsequent input.  \"nrvals\" is the number of values (ie.\n         (key, value) pairs), and any existing values at this node are deleted.\n         So \"setval 0\" just deletes any values at the current node.\n\n         The command reads 2 * nrvals lines of input, with each pair  of  lines\n         of input corresponding to a key and a value to add.\n\n         For  example, the following setval command replaces whatever is at the\n         current node with two (key, value) pairs.  The default key is  set  to\n         the  UTF16-LE-encoded  string \"abcd\".  The other value is named \"ANum-\n         ber\" and is a little-endian DWORD 0x12345678.\n\n          setval 2\n          @\n          string:abcd\n          ANumber\n          dword:12345678\n\n         The first line of each pair is the key (the special key \"@\" means  the\n         default key, but you can also use a blank line).\n\n         The  second line of each pair is the value, which has a special format\n         \"type:value\" with possible types summarized in the table below:\n\n          none                 No data is stored, and the type is set to 0.\n\n          string:abc           \"abc\" is stored as a UTF16-LE-encoded\n                               string (type 1).  Note that only 7 bit\n                               ASCII strings are supported as input.\n\n          expandstring:...     Same as string but with type 2.\n\n          dword:0x01234567     A DWORD (type 4) with the hex value\n                               0x01234567.  You can also use decimal\n                               or octal numbers here.\n\n          qword:0x0123456789abcdef\n                               A QWORD (type 11) with the hex value\n                               0x0123456789abcdef.  You can also use\n                               decimal or octal numbers here.\n\n          hex:<type>:<hexbytes>\n          hex:1:41,00,42,00,43,00,44,00,00,00\n                               This is the generic way to enter any\n                               value.  <type> is the integer value type.\n                               <hexbytes> is a list of pairs of hex\n                               digits which are treated as bytes.\n                               (Any non-hex-digits here are ignored,\n                               so you can separate bytes with commas\n                               or spaces if you want).\n\nEXAMPLE\n      $ guestfish --ro -i Windows7\n      ><fs> download win:c:\\windows\\system32\\config\\software software\n      ><fs> quit\n\n      $ hivexsh software\n\n      Welcome to hivexsh, the hivex interactive shell for examining\n      Windows Registry binary hive files.\n\n      Type: 'help' for help with commands\n            'quit' to quit the shell\n\n      software\\> ls\n      ATI Technologies\n      Classes\n      Clients\n      Intel\n      Microsoft\n      ODBC\n      Policies\n      RegisteredApplications\n      Sonic\n      Wow6432Node\n      software\\> quit\n\nSEE ALSO\n     hivex(3),   hivexget(1),    hivexml(1),    virt-win-reg(1),    guestfs(3),\n     <http://libguestfs.org/>, virt-cat(1), virt-edit(1).\n\nAUTHORS\n     Richard W.M. Jones (\"rjones at redhat dot com\")\n\nCOPYRIGHT\n     Copyright (C) 2009-2010 Red Hat Inc.\n\n     This  program  is  free software; you can redistribute it and/or modify it\n     under the terms of the GNU General Public License as published by the Free\n     Software Foundation; either version 2 of the License, or (at your  option)\n     any later version.\n\n     This  program is distributed in the hope that it will be useful, but WITH-\n     OUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  or\n     FITNESS  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n     more details.\n\n     You should have received a copy of the GNU General  Public  License  along\n     with this program; if not, write to the Free Software Foundation, Inc., 51\n     Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n\nhivex-1.3.24                       2026-06-17                        hivexsh(1)",
+        "apropos": "hivexsh (1)          - Windows Registry hive shell"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hivexsh",
+        "size_bytes": 35672,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a6350c771aaca9c1b7bd6fa895d3ef237e2f3116, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "hivexregedit",
+      "description": "Merge and export Registry changes from regedit-format files.",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --help"
+        },
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --debug"
+        },
+        {
+          "flags": [
+            "--merge"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --merge"
+        },
+        {
+          "flags": [
+            "--export"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --export"
+        },
+        {
+          "flags": [
+            "--prefix"
+          ],
+          "metavar": "prefix",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --prefix prefix"
+        },
+        {
+          "flags": [
+            "--encoding"
+          ],
+          "metavar": "UTF-16LE ASCII",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --encoding UTF-16LE|ASCII"
+        },
+        {
+          "flags": [
+            "--unsafe-printable-strings"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --unsafe-printable-strings"
+        },
+        {
+          "flags": [
+            "--unsafe"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --unsafe"
+        },
+        {
+          "flags": [
+            "--max-depth"
+          ],
+          "metavar": "depth",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "   --max-depth depth"
+        }
+      ],
+      "raw_help": "root@kali:~# hivexregedit -h\n Usage:\n    hivexregedit --merge [--prefix prefix] [--encoding enc] \\\n            hivefile [regfile]\n \n    hivexregedit --export [--prefix prefix] hivefile key > regfile\n \n Options:\n   --help\n       Display help.\n \n   --debug\n       Enable debugging in the hivex library. This is useful for diagnosing\n       bugs and also malformed hive files.\n \n   --merge\n        hivexregedit --merge [--prefix prefix] [--encoding enc] \\\n                hivefile [regfile]\n \n       Merge \"regfile\" (a regedit-format text file) into the hive\n       \"hivefile\". If \"regfile\" is omitted, then the program reads from\n       standard input. (Also you can give multiple input files).\n \n       \"--prefix\" specifies the Windows Registry prefix. It is almost\n       always necessary to use this when dealing with real hive files.\n \n       \"--encoding\" specifies the encoding for unmarked strings in the\n       input. It defaults to \"UTF-16LE\" which should work for recent\n       versions of Windows. Another possibility is to use \"ASCII\".\n \n   --export\n        hivexregedit --export [--prefix prefix] hivefile key > regfile\n \n       \"key\" is a path within the hive \"hivefile\". (The key should not\n       contain any prefix and should be quoted to defend backslashes from\n       the shell). The key is exported, recursively, to standard output in\n       the textual regedit format.\n \n       \"--prefix\" specifies the Windows Registry prefix. It is almost\n       always necessary to use this when dealing with real hive files.\n \n   --prefix prefix\n       Hive files and Windows Registry key names are indirectly related.\n       For example, inside the software hive, all keys are stored relative\n       to \"HKEY_LOCAL_MACHINE\\SOFTWARE\". Thus\n       \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\" appears in the hive file as\n       \"\\Microsoft\".\n \n       The hive format itself does not store this prefix, so you have to\n       supply it based on outside knowledge. (virt-win-reg(1), amongst\n       other things, already knows about this).\n \n       Usually it is sufficient to pass the parameter \"--prefix\n       'HKEY_LOCAL_MACHINE\\SOFTWARE'\" or similar when doing merges and\n       exports.\n \n   --encoding UTF-16LE|ASCII\n       When merging (only), you may need to specify the encoding for\n       strings to be used in the hive file. This is explained in detail in\n       \"ENCODING STRINGS\" in Win::Hivex::Regedit(3).\n \n       The default is to use UTF-16LE, which should work with recent\n       versions of Windows.\n \n   --unsafe-printable-strings\n       When exporting (only), assume strings are UTF-16LE and print them as\n       strings instead of hex sequences. Remove the final zero codepoint\n       from strings if present.\n \n       This is unsafe and does not preserve the fidelity of strings in the\n       original hive for various reasons:\n \n       *   Assumes the original encoding is UTF-16LE. ASCII strings and\n           strings in other encodings will be corrupted by this\n           transformation.\n \n       *   Assumes that everything which has type 1 or 2 is really a string\n           and that everything else is not a string, but the type field in\n           real hives is not reliable.\n \n       *   Loses information about whether a zero codepoint followed the\n           string in the hive or not.\n \n       This all happens because the hive itself contains no information\n       about how strings are encoded (see \"ENCODING STRINGS\" in\n       Win::Hivex::Regedit(3)).\n \n       You should only use this option for quick hacking and debugging of\n       the hive contents, and never use it if the output is going to be\n       passed into another program or stored in another hive.\n \n   --unsafe\n       Use heuristics to tolerate certain levels of corruption within\n       hives.\n \n       This is unsafe but may allow to export/merge valid keys/values in an\n       othewise corrupted hive.\n \n   --max-depth depth\n       Limits the recursion depth of the export. For example, an export\n       with a max depth of 1 will only include values directly under the\n       specified key/prefix. A max depth of 0 will return no values.\n \n       Exports include all child keys by default (fully recursive), which\n       may take a while if the registry hive is large / bloated. This\n       behavior can also be achieved by providing a negative max depth.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "hivexregedit --merge [--prefix prefix] [--encoding enc] \\",
+          "template": null,
+          "original_sha256": "4b07a59312d2353f3672424318dc49cdaa3a9af1af6bb6d09278adc27e2b4b14"
+        },
+        {
+          "status": "operational_example",
+          "command": "hivexregedit --export [--prefix prefix] hivefile key > regfile",
+          "template": null,
+          "original_sha256": "6d15ef7c0112b84feaefdaffc5073b330437474bbf5a6e8970def21cdaa52965"
+        },
+        {
+          "status": "operational_example",
+          "command": "hivexregedit: use --merge or --export, see the manpage for help",
+          "template": null,
+          "original_sha256": "bea5cd6b7caff3bed7ee832561ef0415c71c7b2ec7873819d054b7fe412e7c82"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage:\n     hivexregedit --merge [--prefix prefix] [--encoding enc] \\\n             hivefile [regfile]\n\n     hivexregedit --export [--prefix prefix] hivefile key > regfile\n\nOptions:\n    --help\n        Display help.\n\n    --debug\n        Enable debugging in the hivex library. This is useful for diagnosing\n        bugs and also malformed hive files.\n\n    --merge\n         hivexregedit --merge [--prefix prefix] [--encoding enc] \\\n                 hivefile [regfile]\n\n        Merge \"regfile\" (a regedit-format text file) into the hive\n        \"hivefile\". If \"regfile\" is omitted, then the program reads from\n        standard input. (Also you can give multiple input files).\n\n        \"--prefix\" specifies the Windows Registry prefix. It is almost\n        always necessary to use this when dealing with real hive files.\n\n        \"--encoding\" specifies the encoding for unmarked strings in the\n        input. It defaults to \"UTF-16LE\" which should work for recent\n        versions of Windows. Another possibility is to use \"ASCII\".\n\n    --export\n         hivexregedit --export [--prefix prefix] hivefile key > regfile\n\n        \"key\" is a path within the hive \"hivefile\". (The key should not\n        contain any prefix and should be quoted to defend backslashes from\n        the shell). The key is exported, recursively, to standard output in\n        the textual regedit format.\n\n        \"--prefix\" specifies the Windows Registry prefix. It is almost\n        always necessary to use this when dealing with real hive files.\n\n    --prefix prefix\n        Hive files and Windows Registry key names are indirectly related.\n        For example, inside the software hive, all keys are stored relative\n        to \"HKEY_LOCAL_MACHINE\\SOFTWARE\". Thus\n        \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\" appears in the hive file as\n        \"\\Microsoft\".\n\n        The hive format itself does not store this prefix, so you have to\n        supply it based on outside knowledge. (virt-win-reg(1), amongst\n        other things, already knows about this).\n\n        Usually it is sufficient to pass the parameter \"--prefix\n        'HKEY_LOCAL_MACHINE\\SOFTWARE'\" or similar when doing merges and\n        exports.\n\n    --encoding UTF-16LE|ASCII\n        When merging (only), you may need to specify the encoding for\n        strings to be used in the hive file. This is explained in detail in\n        \"ENCODING STRINGS\" in Win::Hivex::Regedit(3).\n\n        The default is to use UTF-16LE, which should work with recent\n        versions of Windows.\n\n    --unsafe-printable-strings\n        When exporting (only), assume strings are UTF-16LE and print them as\n        strings instead of hex sequences. Remove the final zero codepoint\n        from strings if present.\n\n        This is unsafe and does not preserve the fidelity of strings in the\n        original hive for various reasons:\n\n        *   Assumes the original encoding is UTF-16LE. ASCII strings and\n            strings in other encodings will be corrupted by this\n            transformation.\n\n        *   Assumes that everything which has type 1 or 2 is really a string\n            and that everything else is not a string, but the type field in\n            real hives is not reliable.\n\n        *   Loses information about whether a zero codepoint followed the\n            string in the hive or not.\n\n        This all happens because the hive itself contains no information\n        about how strings are encoded (see \"ENCODING STRINGS\" in\n        Win::Hivex::Regedit(3)).\n\n        You should only use this option for quick hacking and debugging of\n        the hive contents, and never use it if the output is going to be\n        passed into another program or stored in another hive.\n\n    --unsafe\n        Use heuristics to tolerate certain levels of corruption within\n        hives.\n\n        This is unsafe but may allow to export/merge valid keys/values in an\n        othewise corrupted hive.\n\n    --max-depth depth\n        Limits the recursion depth of the export. For example, an export\n        with a max depth of 1 will only include values directly under the\n        specified key/prefix. A max depth of 0 will return no values.\n\n        Exports include all child keys by default (fully recursive), which\n        may take a while if the registry hive is large / bloated. This\n        behavior can also be achieved by providing a negative max depth.",
+        "-h": "Usage:\n     hivexregedit --merge [--prefix prefix] [--encoding enc] \\\n             hivefile [regfile]\n\n     hivexregedit --export [--prefix prefix] hivefile key > regfile\n\nOptions:\n    --help\n        Display help.\n\n    --debug\n        Enable debugging in the hivex library. This is useful for diagnosing\n        bugs and also malformed hive files.\n\n    --merge\n         hivexregedit --merge [--prefix prefix] [--encoding enc] \\\n                 hivefile [regfile]\n\n        Merge \"regfile\" (a regedit-format text file) into the hive\n        \"hivefile\". If \"regfile\" is omitted, then the program reads from\n        standard input. (Also you can give multiple input files).\n\n        \"--prefix\" specifies the Windows Registry prefix. It is almost\n        always necessary to use this when dealing with real hive files.\n\n        \"--encoding\" specifies the encoding for unmarked strings in the\n        input. It defaults to \"UTF-16LE\" which should work for recent\n        versions of Windows. Another possibility is to use \"ASCII\".\n\n    --export\n         hivexregedit --export [--prefix prefix] hivefile key > regfile\n\n        \"key\" is a path within the hive \"hivefile\". (The key should not\n        contain any prefix and should be quoted to defend backslashes from\n        the shell). The key is exported, recursively, to standard output in\n        the textual regedit format.\n\n        \"--prefix\" specifies the Windows Registry prefix. It is almost\n        always necessary to use this when dealing with real hive files.\n\n    --prefix prefix\n        Hive files and Windows Registry key names are indirectly related.\n        For example, inside the software hive, all keys are stored relative\n        to \"HKEY_LOCAL_MACHINE\\SOFTWARE\". Thus\n        \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\" appears in the hive file as\n        \"\\Microsoft\".\n\n        The hive format itself does not store this prefix, so you have to\n        supply it based on outside knowledge. (virt-win-reg(1), amongst\n        other things, already knows about this).\n\n        Usually it is sufficient to pass the parameter \"--prefix\n        'HKEY_LOCAL_MACHINE\\SOFTWARE'\" or similar when doing merges and\n        exports.\n\n    --encoding UTF-16LE|ASCII\n        When merging (only), you may need to specify the encoding for\n        strings to be used in the hive file. This is explained in detail in\n        \"ENCODING STRINGS\" in Win::Hivex::Regedit(3).\n\n        The default is to use UTF-16LE, which should work with recent\n        versions of Windows.\n\n    --unsafe-printable-strings\n        When exporting (only), assume strings are UTF-16LE and print them as\n        strings instead of hex sequences. Remove the final zero codepoint\n        from strings if present.\n\n        This is unsafe and does not preserve the fidelity of strings in the\n        original hive for various reasons:\n\n        *   Assumes the original encoding is UTF-16LE. ASCII strings and\n            strings in other encodings will be corrupted by this\n            transformation.\n\n        *   Assumes that everything which has type 1 or 2 is really a string\n            and that everything else is not a string, but the type field in\n            real hives is not reliable.\n\n        *   Loses information about whether a zero codepoint followed the\n            string in the hive or not.\n\n        This all happens because the hive itself contains no information\n        about how strings are encoded (see \"ENCODING STRINGS\" in\n        Win::Hivex::Regedit(3)).\n\n        You should only use this option for quick hacking and debugging of\n        the hive contents, and never use it if the output is going to be\n        passed into another program or stored in another hive.\n\n    --unsafe\n        Use heuristics to tolerate certain levels of corruption within\n        hives.\n\n        This is unsafe but may allow to export/merge valid keys/values in an\n        othewise corrupted hive.\n\n    --max-depth depth\n        Limits the recursion depth of the export. For example, an export\n        with a max depth of 1 will only include values directly under the\n        specified key/prefix. A max depth of 0 will return no values.\n\n        Exports include all child keys by default (fully recursive), which\n        may take a while if the registry hive is large / bloated. This\n        behavior can also be achieved by providing a negative max depth.",
+        "help": "hivexregedit: use --merge or --export, see the manpage for help",
+        "man": "hivexregedit(1)                 Windows Registry                hivexregedit(1)\n\nNAME\n     hivexregedit  -  Merge  and  export  Registry  changes from regedit-format\n     files.\n\nSYNOPSIS\n      hivexregedit --merge [--prefix prefix] [--encoding enc] \\\n              hivefile [regfile]\n\n      hivexregedit --export [--prefix prefix] hivefile key > regfile\n\nDESCRIPTION\n     Please note hivexregedit is a low-level tool for manipulating  hive  files\n     directly.  To merge or export registry changes to Windows virtual machines\n     it's better to use virt-win-reg(1).\n\n     Given  a  local  binary (\"hive\") file, there are two modes.  \"--merge\" im-\n     ports (merges) changes from a regedit-format file into the  hive.   It  is\n     similar to using the \"/s\" switch in Windows regedit.exe.\n\n     \"--export\" exports a Registry key (recursively) into the regedit format.\n\n   ENCODING\n     \"hivexregedit\"  expects that regedit files have already been re-encoded in\n     the local encoding.  Usually on Linux hosts, this means UTF-8  with  Unix-\n     style  line  endings.   Since  Windows regedit files are often in UTF-16LE\n     with Windows-style line endings, you may need to re-encode the whole  file\n     before or after processing.\n\n     To  re-encode  a  file  from Windows format to Linux (before processing it\n     with the \"--merge\" option), you would do something like this:\n\n      iconv -f utf-16le -t utf-8 < win.reg | dos2unix > linux.reg\n\n     To go in the opposite direction, after using \"--export\" and before sending\n     the file to a Windows user, do something like this:\n\n      unix2dos < linux.reg | iconv -f utf-8 -t utf-16le > win.reg\n\n     For more information about encoding, see Win::Hivex::Regedit(3).\n\n     If you are unsure about the current encoding,  use  the  file(1)  command.\n     Recent  versions  of Windows regedit.exe produce a UTF-16LE file with Win-\n     dows-style (CRLF) line endings, like this:\n\n      $ file software.reg\n      software.reg: Little-endian UTF-16 Unicode text, with very long lines,\n      with CRLF line terminators\n\n     This file would need conversion before you could \"--merge\" it.\n\n   SHELL QUOTING\n     Be careful when passing  parameters  containing  \"\\\"  (backslash)  in  the\n     shell.  Usually you will have to use 'single quotes' or double backslashes\n     (but not both) to protect them from the shell.\n\n   CurrentControlSet etc.\n     Registry  keys  like \"CurrentControlSet\" don't really exist in the Windows\n     Registry at the level of the hive file, and therefore  you  cannot  modify\n     these.\n\n     \"CurrentControlSet\" is usually an alias for \"ControlSet001\".  In some cir-\n     cumstances  it might refer to another control set.  The way to find out is\n     to look at the \"HKLM\\SYSTEM\\Select\" key:\n\n      $ hivexregedit --export SYSTEM '\\Select'\n      [\\Select]\n      \"Current\"=dword:00000001\n      \"Default\"=dword:00000001\n      \"Failed\"=dword:00000000\n      \"LastKnownGood\"=dword:00000002\n\n     \"Current\" is the one which Windows will choose when it boots.\n\n     Similarly, other \"Current...\" keys in the path may need to be replaced.\n\nEXAMPLE\n      $ virt-cat WindowsGuest /Windows/System32/config/software > software.hive\n      $ hivexregedit --export \\\n          --prefix 'HKEY_LOCAL_MACHINE\\SOFTWARE' \\\n          software.hive '\\Microsoft' > ms-keys.reg\n\n      $ hivexregedit --merge system.hive \\\n          --prefix 'HKEY_LOCAL_MACHINE\\SYSTEM' additions.reg\n\nOPTIONS\n     --help\n         Display help.\n\n     --debug\n         Enable debugging in the hivex library.  This is useful for  diagnosing\n         bugs and also malformed hive files.\n\n     --merge\n          hivexregedit --merge [--prefix prefix] [--encoding enc] \\\n                  hivefile [regfile]\n\n         Merge \"regfile\" (a regedit-format text file) into the hive \"hivefile\".\n         If  \"regfile\"  is omitted, then the program reads from standard input.\n         (Also you can give multiple input files).\n\n         \"--prefix\" specifies the Windows Registry prefix.  It is almost always\n         necessary to use this when dealing with real hive files.\n\n         \"--encoding\" specifies the encoding for unmarked strings in the input.\n         It defaults to \"UTF-16LE\" which should work  for  recent  versions  of\n         Windows.  Another possibility is to use \"ASCII\".\n\n     --export\n          hivexregedit --export [--prefix prefix] hivefile key > regfile\n\n         \"key\"  is a path within the hive \"hivefile\".  (The key should not con-\n         tain any prefix and should be quoted to defend  backslashes  from  the\n         shell).   The  key is exported, recursively, to standard output in the\n         textual regedit format.\n\n         \"--prefix\" specifies the Windows Registry prefix.  It is almost always\n         necessary to use this when dealing with real hive files.\n\n     --prefix prefix\n         Hive files and Windows Registry key names are indirectly related.  For\n         example, inside the software hive, all keys  are  stored  relative  to\n         \"HKEY_LOCAL_MACHINE\\SOFTWARE\".   Thus \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Mi-\n         crosoft\" appears in the hive file as \"\\Microsoft\".\n\n         The hive format itself does not store this prefix, so you have to sup-\n         ply it based on outside knowledge.   (virt-win-reg(1),  amongst  other\n         things, already knows about this).\n\n         Usually  it  is  sufficient  to pass the parameter \"--prefix 'HKEY_LO-\n         CAL_MACHINE\\SOFTWARE'\" or similar when doing merges and exports.\n\n     --encoding UTF-16LE|ASCII\n         When merging (only), you may need to specify the encoding for  strings\n         to be used in the hive file.  This is explained in detail in \"ENCODING\n         STRINGS\" in Win::Hivex::Regedit(3).\n\n         The default is to use UTF-16LE, which should work with recent versions\n         of Windows.\n\n     --unsafe-printable-strings\n         When  exporting  (only), assume strings are UTF-16LE and print them as\n         strings instead of hex sequences.  Remove  the  final  zero  codepoint\n         from strings if present.\n\n         This  is  unsafe  and does not preserve the fidelity of strings in the\n         original hive for various reasons:\n\n         *   Assumes the original encoding  is  UTF-16LE.   ASCII  strings  and\n             strings  in  other encodings will be corrupted by this transforma-\n             tion.\n\n         *   Assumes that everything which has type 1 or 2 is really  a  string\n             and  that  everything  else is not a string, but the type field in\n             real hives is not reliable.\n\n         *   Loses information about whether  a  zero  codepoint  followed  the\n             string in the hive or not.\n\n         This all happens because the hive itself contains no information about\n         how    strings    are    encoded    (see    \"ENCODING    STRINGS\"   in\n         Win::Hivex::Regedit(3)).\n\n         You should only use this option for quick hacking and debugging of the\n         hive contents, and never use it if the output is going  to  be  passed\n         into another program or stored in another hive.\n\n     --unsafe\n         Use heuristics to tolerate certain levels of corruption within hives.\n\n         This  is  unsafe but may allow to export/merge valid keys/values in an\n         othewise corrupted hive.\n\n     --max-depth depth\n         Limits the recursion depth of the export. For example, an export  with\n         a max depth of 1 will only include values directly under the specified\n         key/prefix. A max depth of 0 will return no values.\n\n         Exports include all child keys by default (fully recursive), which may\n         take  a  while if the registry hive is large / bloated.  This behavior\n         can also be achieved by providing a negative max depth.\n\nSEE ALSO\n     virt-win-reg(1),   Win::Hivex::Regedit(3),   Win::Hivex(3),    hivexsh(1),\n     dos2unix(1), unix2dos(1), iconv(1), <http://libguestfs.org/>.\n\nAUTHOR\n     Richard W.M. Jones <http://people.redhat.com/~rjones/>\n\nCOPYRIGHT\n     Copyright (C) 2010 Red Hat Inc.\n\n     This  program  is  free software; you can redistribute it and/or modify it\n     under the terms of the GNU General Public License as published by the Free\n     Software Foundation; either version 2 of the License, or (at your  option)\n     any later version.\n\n     This  program is distributed in the hope that it will be useful, but WITH-\n     OUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  or\n     FITNESS  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n     more details.\n\n     You should have received a copy of the GNU General  Public  License  along\n     with  this  program;  if not, write to the Free Software Foundation, Inc.,\n     675 Mass Ave, Cambridge, MA 02139, USA.\n\nhivex-1.3.24                       2026-06-17                   hivexregedit(1)",
+        "apropos": "hivexregedit (1)     - Merge and export Registry changes from regedit-format ..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/hivexregedit",
+        "size_bytes": 11193,
+        "is_symlink": false,
+        "file_type": "Perl script text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/hivex/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/hivex/index.md",
+    "retrieved_at": "2026-07-14T13:05:57+00:00",
+    "sha256": "a4c4cee495c7df4b27a74f00f59452a169406de91a3d3d0199ffa66bf262f1c1"
+  },
+  "tags": [
+    "offensive",
+    "hivex",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/hivex && python3 hivex.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/hivex && python3 hivex.py --help",
+    "cd toolboxes/hivex && python3 hivex.py --help",
+    "cd toolboxes/hivex && python3 hivex.py --help",
+    "cd toolboxes/hivex && python3 hivex.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST hivex --output $KFIOSA_OUTPUT_DIR/hivex.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST hivex --output $KFIOSA_OUTPUT_DIR/hivex.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

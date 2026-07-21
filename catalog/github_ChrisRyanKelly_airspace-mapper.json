@@ -1,0 +1,111 @@
+{
+  "id": "github:ChrisRyanKelly/airspace-mapper",
+  "kind": "external_repository",
+  "name": "airspace-mapper",
+  "full_name": "ChrisRyanKelly/airspace-mapper",
+  "owner": "ChrisRyanKelly",
+  "category": "WiFi Reconnaissance — GPS Wardrive",
+  "url": "https://github.com/ChrisRyanKelly/airspace-mapper",
+  "summary": "Repository indexing entry for the ``airspace-mapper`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/ChrisRyanKelly__airspace-mapper",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "python3 airspace_map.py handshakes.22000 signal_log.tsv gps_track.gpx --export-gpx"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "python3 airspace_map.py handshakes.22000 signal_log.tsv gps_track.gpx --export-gpx"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "python3 (>=3.8, stdlib only: sys, os, json, csv, xml.etree.ElementTree, datetime, dataclasses, typing)",
+    "oui.csv (IEEE MAC-vendor prefix database, operator-supplied)",
+    "input artifacts: .22000 handshake file (from hcxtools/hcxdumptool), .tsv signal log, .gpx GPS track (Kismet/gpsd)"
+  ],
+  "algorithms": [
+    ".22000 WPA*02* hash-line parser: splits on '*', extracts AP MAC (parts[3]) and hex-decoded SSID (parts[5]), dedups by ssid_mac key",
+    "OUI vendor lookup: first-6-hex MAC prefix matched against oui.csv, vendor-name normalization with 'Unknown' fallback",
+    "strongest-signal-per-MAC correlation from TSV (timestamp\\tsignal\\mac), default -100 dBm",
+    "GPS timestamp correlation: linear nearest-fix search over sorted GPX trkpt/wpt, accepts match only within +/-300s (5 min) of earliest TSV timestamp per MAC",
+    "de-duplication + metadata normalization across hash/signal/GPS/vendor sources",
+    "GPX waypoint export with SSID name, MAC/vendor/signal description"
+  ],
+  "produces": [
+    "airspace_analysis_YYYYMMDD_HHMMSS.json (per-target: ssid, ap_mac, vendor, signal dBm, hash_line, lat/lon)",
+    "waypoints_YYYYMMDD_HHMMSS.gpx (geospatial waypoints for mapping tools, optional via --export-gpx)",
+    "console summary with target counts and output filenames"
+  ],
+  "capability_bucket": "gps_wardrive",
+  "runnable": true,
+  "novelty": "Not an airodump-ng wrapper — it does no sniffing at all. It is a pure offline fusion/enrichment layer over artifacts KFIOSA already produces: it joins hcxtools .22000 hashes with a signal TSV and a GPX track and emits one vendor-enriched, signal-prioritized, GPS-located triage JSON. airodump-ng+gpsd can GPS-tag live captures but does not correlate already-captured handshake hashes with per-MAC strongest-signal and OUI vendor into a single cracking-priority dataset; hcxtools emits raw hashes without geo/vendor context. The GPS-by-±5min-timestamp nearest-fix matcher and the signal-priority triage view are the genuinely new bits. Modest scope (2 files, stdlib-only) and the algorithms are simple string/tsv/xml parsing, but the composition is a real (if small) enrichment stage rather than a shell-out to existing tools.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "airspace",
+    "mapper",
+    "chrisryankelly",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/airspace-mapper && python3 airspace-mapper.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/airspace-mapper && python3 airspace-mapper.py --help",
+    "cd toolboxes/airspace-mapper && python3 airspace-mapper.py --help",
+    "cd toolboxes/airspace-mapper && python3 airspace-mapper.py --help",
+    "cd toolboxes/airspace-mapper && python3 airspace-mapper.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST airspace-mapper --output $KFIOSA_OUTPUT_DIR/airspace-mapper.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST airspace-mapper --output $KFIOSA_OUTPUT_DIR/airspace-mapper.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

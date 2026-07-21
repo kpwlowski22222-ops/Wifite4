@@ -1,0 +1,158 @@
+{
+  "id": "kali:winregfs",
+  "kind": "kali_source_package",
+  "name": "winregfs",
+  "title": "winregfs",
+  "summary": "### winregfs",
+  "version": "0.8-1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://codeberg.org/jbruchon/winregfs",
+  "repository": "https://salsa.debian.org/pkg-security-team/winregfs",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install winregfs"
+  },
+  "packages": [
+    {
+      "name": "winregfs"
+    }
+  ],
+  "commands": [
+    {
+      "name": "fsck.winregfs",
+      "description": "Check a Windows registry file",
+      "usage": "fsck.winregfs [options] hivename",
+      "arguments": [],
+      "raw_help": "root@kali:~# fsck.winregfs -h\n Windows Registry Hive File Checker 0.8 (2021-09.15)\n \n Usage: fsck.winregfs [options] hivename",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Windows Registry Hive File Checker 0.8 (2021-09.15)\n\nUsage: fsck.winregfs [options] hivename",
+        "-h": "Windows Registry Hive File Checker 0.8 (2021-09.15)\n\nUsage: fsck.winregfs [options] hivename",
+        "help": "Error: couldn't open help",
+        "man": "winregfs(8)                 System Manager's Manual                 winregfs(8)\n\nNAME\n     fsck.winregfs - Check a Windows registry file\n\nSYNOPSIS\n     fsck.winregfs [-v] hivefile\n\nDESCRIPTION\n     fsck.winregfs  scans  a Windows registry hive file for problems that indi-\n     cate the hive has been damaged by hardware or software issues. If  the  -v\n     option  is  specified,  the program will output detailed information about\n     the problems it finds.\n\nLIMITATIONS\n     fsck.winregfs works by recursively reading the key and value  data  struc-\n     tures  in  the  registry  hive. Currently it does not read the actual data\n     stored in a value, and due to the nature of the ntreg library's interfaces\n     the checks are currently limited to reporting that errors exist;  the  de-\n     tails of the error conditions encountered are not broken down in the final\n     output.\n\nSEE ALSO\n     mount.winregfs(8)\n\nfsck.winregfs                     10 Jul 2021                       winregfs(8)",
+        "apropos": "fsck.winregfs (8)    - Check a Windows registry file"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/fsck.winregfs",
+        "size_bytes": 34880,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=d58285ef5e915b8f92f920eee8aee8d22172731d, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "mount.winregfs",
+      "description": "Windows registry FUSE filesystem",
+      "usage": "mount.winregfs [-o ro] [fuse_options] hivename mountpoint",
+      "arguments": [],
+      "raw_help": "root@kali:~# mount.winregfs -h\n Windows Registry Filesystem 0.8 (2021-09.15)\n \n Usage: mount.winregfs [-o ro] [fuse_options] hivename mountpoint",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Windows Registry Filesystem 0.8 (2021-09.15)\n\nUsage: mount.winregfs [-o ro] [fuse_options] hivename mountpoint",
+        "-h": "Windows Registry Filesystem 0.8 (2021-09.15)\n\nUsage: mount.winregfs [-o ro] [fuse_options] hivename mountpoint",
+        "help": "Windows Registry Filesystem 0.8 (2021-09.15)\n\nUsage: mount.winregfs [-o ro] [fuse_options] hivename mountpoint",
+        "man": "winregfs(8)                 System Manager's Manual                 winregfs(8)\n\nNAME\n     winregfs - Windows registry FUSE filesystem\n\nSYNOPSIS\n     mount.winregfs [fuse_options[,...]]  hivefile mountpoint\n\nDESCRIPTION\n     winregfs  is a FUSE-based filesystem driver that enables accessing of Win-\n     dows registry hive files as ordinary filesystems. Registry hive file edit-\n     ing can be performed with ordinary shell scripts  and  command-line  tools\n     once mounted.\n\n     Registry  values are shown as files with a file extension corresponding to\n     the data type of the value. These are  generally  named  after  the  REG_*\n     types  seen in the Windows registry editor. For example, dw is a DWORD, sz\n     is a string, esz is an expanding string, bin is a raw  binary  value,  and\n     msz  is a multi-line string. Types different from the \"standard\" types may\n     appear in rare instances.\n\n     Because registry keys and values can have forward slashes in their  names,\n     there  is a special word _SLASH_ that is used in place of any real slashes\n     and is converted back-and-forth automatically.\n\n     Opening a value's name without the extension is supported, but you  should\n     always use the extension if possible to avoid ambiguity issues.\n\nKNOWN ISSUES\n     winregfs  does not currently support writing value data greater than 8,192\n     bytes (8 KiB) in size. If such a write occurs, the data will be  truncated\n     and  an  error  will be returned. Unicode data is not currently supported,\n     partly due to a lack of support in the ntreg library.\n\n     Incorrect or unrecognized structures in a registry  file  may  cause  this\n     program  to  crash.  It  is  not recommended for use on important data and\n     while most operations generally work as expected, you use it at  your  own\n     risk. Please report any bugs you encounter.\n\n     winregfs  loads the entire hive file into one large chunk of memory.  This\n     is a side effect of adopting the low-level registry library from the  pro-\n     gram chntpw. There is a silent delay as the hive is loaded and if the file\n     is  large enough there is a chance of failure due to being unable to allo-\n     cate enough contiguous memory. Changing this behavior is a very  difficult\n     task due to how the ntreg library works with the data.\n\nSEE ALSO\n     fusermount(8), fsck.winregfs(8)\n\nmount.winregfs                    10 Mar 2021                       winregfs(8)",
+        "apropos": "mount.winregfs (8)   - Windows registry FUSE filesystem"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/mount.winregfs",
+        "size_bytes": 51744,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6c3310de3cfe865debf55f2cdd12efaf01a6cbe5, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/winregfs/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/winregfs/index.md",
+    "retrieved_at": "2026-07-14T13:09:05+00:00",
+    "sha256": "c512d719b09b38f7f8c366888369d2a2e8546aca3c82dee2c2e588618cd1f4ff"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "106",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "0.8-2",
+    "depends": "libc6 (>= 2.34), libfuse3-4 (>= 3.17.2)",
+    "description": "Windows registry FUSE filesystem\nWinregfs is a FUSE-based filesystem driver that enables accessing of Windows\nregistry hive files as ordinary filesystems. Registry hive file editing can\nbe performed with ordinary shell scripts and command-line tools once mounted.\n.\nfsck.winregfs scans a Windows registry hive file for problems that indicate\nthe hive has been damaged by hardware or software issues, reading recursively\nthe  key  and  value  data structures in the registry hive.\n.\nThis package provides mount.winregfs and fsck.winregfs commands.\nWinregfs is useful for pentesters, ethical hackers and forensics experts.",
+    "homepage": "https://codeberg.org/jbruchon/winregfs"
+  },
+  "tags": [
+    "offensive",
+    "winregfs",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/winregfs && python3 winregfs.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/winregfs && python3 winregfs.py --help",
+    "cd toolboxes/winregfs && python3 winregfs.py --help",
+    "cd toolboxes/winregfs && python3 winregfs.py --help",
+    "cd toolboxes/winregfs && python3 winregfs.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST winregfs --output $KFIOSA_OUTPUT_DIR/winregfs.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST winregfs --output $KFIOSA_OUTPUT_DIR/winregfs.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

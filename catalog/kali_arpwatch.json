@@ -1,0 +1,505 @@
+{
+  "id": "kali:arpwatch",
+  "kind": "kali_source_package",
+  "name": "arpwatch",
+  "title": "arpwatch",
+  "summary": "### arpwatch",
+  "version": "2.1a15-10",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://ee.lbl.gov/",
+  "repository": "https://salsa.debian.org/pkg-security-team/arpwatch",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large"
+  ],
+  "install": {
+    "apt": "sudo apt install arpwatch"
+  },
+  "packages": [
+    {
+      "name": "arpwatch"
+    }
+  ],
+  "commands": [
+    {
+      "name": "arp2ethers",
+      "description": "Convert arpwatch address database to ethers file format",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# man arp2ethers\n ARP2ETHERS(8)               System Manager's Manual               ARP2ETHERS(8)\n \n NAME\n    arp2ethers - convert arpwatch address database to ethers file format\n \n SYNOPSIS\n    arp2ethers [ arp.dat file ]\n \n DESCRIPTION\n    arp2ethers converts the file /var/lib/arpwatch/arp.dat (or the file speci-\n    fied  on  the  command  line)  into  ethers(5)  format on stdout.  Usually\n    arp.dat is an ethernet/ip database file  generated  by  arpwatch(8).   The\n    arpwatch  daemon  in Debian will create different arp.dat depending on its\n    configuration. All of them will be available at /var/lib/arpwatch/.\n \n FILES\n    /var/lib/arpwatch - default directory for arp.dat\n    arp.dat - ethernet/ip address database\n \n SEE ALSO\n    arpwatch(8), ethers(5), rarp(8), arp(8),\n \n BUGS\n    Please send bug reports to arpwatch@ee.lbl.gov.\n \n AUTHORS\n    Original version by Craig Leres of the Lawrence Berkeley National  Labora-\n    tory Network Research Group, University of California, Berkeley, CA.\n \n    Modified for the Debian Project by Peter Kelemen, with additions from Erik\n    Warmelink.\n \n    The current version is available via anonymous ftp:\n \n           ftp://ftp.ee.lbl.gov/arpwatch.tar.gz\n \n    This manual page was contributed by Hugo Graumann.\n \n                                                                 ARP2ETHERS(8)",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Cannot read file --help",
+        "-h": "Cannot read file -h",
+        "help": "Cannot read file help",
+        "man": "ARP2ETHERS(8)               System Manager's Manual               ARP2ETHERS(8)\n\nNAME\n     arp2ethers - convert arpwatch address database to ethers file format\n\nSYNOPSIS\n     arp2ethers [ arp.dat file ]\n\nDESCRIPTION\n     arp2ethers converts the file /var/lib/arpwatch/arp.dat (or the file speci-\n     fied  on  the  command  line)  into  ethers(5)  format on stdout.  Usually\n     arp.dat is an ethernet/ip database file  generated  by  arpwatch(8).   The\n     arpwatch  daemon  in Debian will create different arp.dat depending on its\n     configuration. All of them will be available at /var/lib/arpwatch/.\n\nFILES\n     /var/lib/arpwatch - default directory for arp.dat\n     arp.dat - ethernet/ip address database\n\nSEE ALSO\n     arpwatch(8), ethers(5), rarp(8), arp(8),\n\nBUGS\n     Please send bug reports to arpwatch@ee.lbl.gov.\n\nAUTHORS\n     Original version by Craig Leres of the Lawrence Berkeley National  Labora-\n     tory Network Research Group, University of California, Berkeley, CA.\n\n     Modified for the Debian Project by Peter Kelemen, with additions from Erik\n     Warmelink.\n\n     The current version is available via anonymous ftp:\n\n            ftp://ftp.ee.lbl.gov/arpwatch.tar.gz\n\n     This manual page was contributed by Hugo Graumann.\n\n                                                                  ARP2ETHERS(8)",
+        "apropos": "arp2ethers (8)       - convert arpwatch address database to ethers file format"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/arp2ethers",
+        "size_bytes": 1897,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "arpfetch",
+      "description": "Obtain ethernet/ip address pairings via snmp",
+      "usage": "arpfetch host cname",
+      "arguments": [],
+      "raw_help": "root@kali:~# arpfetch -h\n usage: arpfetch host cname",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: arpfetch host cname",
+        "-h": "usage: arpfetch host cname",
+        "help": "usage: arpfetch host cname",
+        "man": "ARPFETCH(8)                 System Manager's Manual                 ARPFETCH(8)\n\nNAME\n     arpfetch - obtain ethernet/ip address pairings via snmp\n\nSYNOPSIS\n     arpfetch host cname\n\nDESCRIPTION\n     arpfetch  gets  pairings  between ip addresses and the ethernet address of\n     the corresponding network card. These pairings are  retrieved  from  other\n     network  entities,  like  routers, by the SNMP protocol using snmpwalk(1).\n     Mostly, this program is an agent that is used to get data for  arpsnmp(8).\n     This  fetching  of address mappings can be further automated by use of bi-\n     hourly(8).\n\n     Both command arguments must be present for proper operation.  The host ar-\n     gument is the hostname of the network entity being queried and  the  cname\n     argument is the SNMP community name of the network entity.\n\n     The  information  is  presented on stdout in a format compatible with arp-\n     snmp(8) and arpwatch(8).\n\n     Further information about SNMP  can  be  found  in  snmpcmd(1)  and  vari-\n     ables(5).\n\nSEE ALSO\n     arpsnmp(8), arpwatch(8), bihourly(8), snmpwalk(1), snmpcmd(1),\n     variables(5)\n\nBUGS\n     Please send bug reports to arpwatch@ee.lbl.gov.\n\nAUTHORS\n     Craig  Leres of the Lawrence Berkeley National Laboratory Network Research\n     Group, University of California, Berkeley, CA.\n\n     The current version is available via anonymous ftp:\n\n            ftp://ftp.ee.lbl.gov/arpwatch.tar.gz\n\n     This manual page was contributed by Hugo Graumann.\n\n                                                                    ARPFETCH(8)",
+        "apropos": "arpfetch (8)         - obtain ethernet/ip address pairings via snmp"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/arpfetch",
+        "size_bytes": 643,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "arpsnmp",
+      "description": "Keep track of ethernet/ip address pairings",
+      "usage": "arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+      "arguments": [],
+      "raw_help": "root@kali:~# arpsnmp -h\n Version 2.1a15\n usage: arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Version 2.1a15\nusage: arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+        "-h": "Version 2.1a15\nusage: arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+        "man": "ARPSNMP(8)                  System Manager's Manual                  ARPSNMP(8)\n\nNAME\n     arpsnmp - keep track of ethernet/ip address pairings\n\nSYNOPSIS\n     arpsnmp [ -d ]\n             [ -f datafile ]\n             [ -s sendmail_path ]\n             [ -m addr ]\n             file [ ...  ]\n\nDESCRIPTION\n     Arpsnmp  keeps track for ethernet/ip address pairings. It syslogs activity\n     and reports certain changes via email.  Arpsnmp reads information  from  a\n     file (usually generated by snmpwalk(8)).\n\n     The  -d  flag is used enable debugging. This also inhibits mailing the re-\n     ports.  Instead, they are sent to stderr.\n\n     The -f flag is used to set the ethernet/ip address database filename.  The\n     default is arp.dat.\n\n     (Debian) The -s flag is used to specify the path to the sendmail  program.\n     Any  program  that  takes  the option -odi and then text from stdin can be\n     substituted. This is useful for redirecting reports to log  files  instead\n     of mail.\n\n     (Debian)  The -m option is used to specify the e-mail address to which re-\n     ports will be sent.  By default, reports are sent to root on the local ma-\n     chine.\n\n     Note that an empty arp.dat file must be created before the first time  you\n     run arpsnmp.\n\nREPORT MESSAGES\n     (See the arpwatch(1) man page for details on the report messages generated\n     by arpsnmp(1).)\n\nFILES\n     /var/lib/arpwatch - default directory\n     IFNAME.dat - ethernet/ip address database observed on interface IFNAME\n     ethercodes.db - vendor ethernet block list\n\nSEE ALSO\n     arpwatch(8), snmpwalk(8), arp(8)\n\nAUTHORS\n     Craig  Leres of the Lawrence Berkeley National Laboratory Network Research\n     Group, University of California, Berkeley, CA.\n\n     The current version is available via anonymous ftp:\n\n            ftp://ftp.ee.lbl.gov/arpwatch.tar.gz\n\nBUGS\n     Please send bug reports to arpwatch@ee.lbl.gov.\n\n     Attempts are made to suppress DECnet flip flops  but  they  aren't  always\n     successful.\n\n4th Berkeley Distribution      17 September 2000                     ARPSNMP(8)",
+        "apropos": "arpsnmp (8)          - keep track of ethernet/ip address pairings"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/arpsnmp",
+        "size_bytes": 35192,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ea71ec2a24a0ba40b7c1c32ddf4c4b14aebf1f78, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "arpwatch",
+      "description": "Keep track of ethernet/ip address pairings",
+      "usage": "arpwatch [-dN] [-f datafile] [-F \"filter\" ][-i interface] [-n net[/width]] [-r file] [-s sendmail_path] [-p] [-a] [-m addr] [-u username] [-Q] [-z ignorenet/ignoremask]",
+      "arguments": [],
+      "raw_help": "root@kali:~# arpwatch -h\n Version 2.1a15\n usage: arpwatch [-dN] [-f datafile] [-F \"filter\" ][-i interface] [-n net[/width]] [-r file] [-s sendmail_path] [-p] [-a] [-m addr] [-u username] [-Q] [-z ignorenet/ignoremask]",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Version 2.1a15\nusage: arpwatch [-dN] [-f datafile] [-F \"filter\" ][-i interface] [-n net[/width]] [-r file] [-s sendmail_path] [-p] [-a] [-m addr] [-u username] [-Q] [-z ignorenet/ignoremask]",
+        "-h": "Version 2.1a15\nusage: arpwatch [-dN] [-f datafile] [-F \"filter\" ][-i interface] [-n net[/width]] [-r file] [-s sendmail_path] [-p] [-a] [-m addr] [-u username] [-Q] [-z ignorenet/ignoremask]",
+        "help": "Version 2.1a15\nusage: arpwatch [-dN] [-f datafile] [-F \"filter\" ][-i interface] [-n net[/width]] [-r file] [-s sendmail_path] [-p] [-a] [-m addr] [-u username] [-Q] [-z ignorenet/ignoremask]",
+        "man": "ARPWATCH(8)                 System Manager's Manual                 ARPWATCH(8)\n\nNAME\n     arpwatch - keep track of ethernet/ip address pairings\n\nSYNOPSIS\n     arpwatch [ -dN ]\n             [ -f datafile ]\n             [ -i interface ]\n             [ -n net[/width ]]\n             [ -r file ]\n             [ -F filter ]\n             [ -s sendmail_path ]\n             [ -p ]\n             [ -a ]\n             [ -m addr ]\n             [ -u username ]\n             [ -Q ]\n             [ -z ignorenet/ignoremask ]\n\nDESCRIPTION\n     Arpwatch keeps track for ethernet/ip address pairings. It syslogs activity\n     and  reports  certain  changes via email.  Arpwatch uses pcap(3) to listen\n     for arp packets on a local ethernet interface.\n\n     The -d flag is used enable debugging. This also inhibits forking into  the\n     background and emailing the reports. Instead, they are sent to stderr.\n\n     The -f flag is used to set the ethernet/ip address database filename.  The\n     default is arp.dat.\n\n     The -i flag is used to override the default interface.\n\n     The  -n  flag  specifies  additional local networks. This can be useful to\n     avoid \"bogon\" warnings when there is more than one network running on  the\n     same wire. If the optional width is not specified, the default netmask for\n     the network's class is used.\n\n     The -N flag disables reporting any bogons.\n\n     The  -r  flag is used to specify a savefile (perhaps created by tcpdump(1)\n     or pcapture(1)) to read from instead of reading from the network. In  this\n     case, arpwatch does not fork.\n\n     (Debian)  The -F option is used to specify a pcap filter, which provides a\n     generic way of ignoring specific packets.  The applied pcap filter will be\n     \"(arp or rarp) and not vlan and (filter)\".   See  pcap-filter(7)  for  the\n     syntax of that string.\n\n     (Debian)  The -s flag is used to specify the path to the sendmail program.\n     Any program that takes the option -odi and then text  from  stdin  can  be\n     substituted.  This  is useful for redirecting reports to log files instead\n     of mail.\n\n     (Debian) The -p flag disables promiscuous operation.  ARP  broadcasts  get\n     through  hubs without having the interface in promiscuous mode, while sav-\n     ing considerable resources that would be wasted on processing gigabytes of\n     non-broadcast traffic.  OTOH, setting promiscuous mode does not mean  get-\n     ting 100% traffic that would concern arpwatch .  YMMV.\n\n     (Debian)  -a  By  default, arpwatch only logs bogons but otherwise ignores\n     them. If this option is specified, arpwatch will perform normal processing\n     with bogon packets and send reports about detected events. This option can\n     be combined with -N to disable the report of  the  packet  being  a  bogon\n     (processing will still be done).\n\n     (Debian)  The -m option is used to specify the e-mail address to which re-\n     ports will be sent.  By default, reports are sent to root on the local ma-\n     chine.\n\n     (Debian) The -u flag instructs arpwatch to drop root privileges and change\n     the UID to username and GID to the primary group of username  .   This  is\n     recommended for security reasons, but username has to have write access to\n     the default directory.\n\n     (Debian) The -Q flags prevents arpwatch from sending reports by mail.\n\n     (Debian)  The  -z  option is used to set a range of ip addresses to ignore\n     (such as a DHCP range).  Both the ignorenet and the ignoremask are  speci-\n     fied in numbers-and-dots notation and separated from each other by a slash\n     (/).  Specifying the ignoremask by subnet length is not supported.  If the\n     ignoremask   is   omitted,   255.255.255.255   is  assumed.   Example:  -z\n     192.168.10.0/255.255.255.0\n\n     Note that an empty arp.dat file must be created before the first time  you\n     run arpwatch.\n\nREPORT MESSAGES\n     Here's  a  quick list of the report messages generated by arpwatch(1) (and\n     arpsnmp(1)):\n\n     new activity\n            This ethernet/ip address pair has been used for the first time  six\n            months or more.\n\n     new station\n            The ethernet address has not been seen before.\n\n     flip flop\n            The  ethernet  address  has changed from the most recently seen ad-\n            dress to the second most recently seen address.  (If either the old\n            or new ethernet address is a DECnet address and it is less than  24\n            hours, the email version of the report is suppressed.)\n\n     changed ethernet address\n            The host switched to a new ethernet address.\n\nSYSLOG MESSAGES\n     Here are some of the syslog messages; note that messages that are reported\n     are also sysloged.\n\n     ethernet broadcast\n            The mac ethernet address of the host is a broadcast address.\n\n     ip broadcast\n            The ip address of the host is a broadcast address.\n\n     bogon  The source ip address is not local to the local subnet.\n\n     ethernet broadcast\n            The source mac or arp ethernet address was all ones or all zeros.\n\n     ethernet mismatch\n            The source mac ethernet address didn't match the address inside the\n            arp packet.\n\n     reused old ethernet address\n            The  ethernet  address  has changed from the most recently seen ad-\n            dress to the third (or greater) least recently seen address.  (This\n            is similar to a flip flop.)\n\n     suppressed DECnet flip flop\n            A \"flip flop\" report was suppressed because  one  of  the  two  ad-\n            dresses was a DECnet address.\n\nFILES\n     /var/lib/arpwatch - default directory\n     IFNAME.dat - ethernet/ip address database observed on interface IFNAME\n     ethercodes.db - vendor ethernet block list\n\nSEE ALSO\n     arpsnmp(8), arp(8), bpf(4), tcpdump(1), pcapture(1), pcap(3)\n\nAUTHORS\n     Craig  Leres of the Lawrence Berkeley National Laboratory Network Research\n     Group, University of California, Berkeley, CA.\n\n     The current version is available via anonymous ftp:\n\n            ftp://ftp.ee.lbl.gov/arpwatch.tar.gz\n\nBUGS\n     Please send bug reports to arpwatch@ee.lbl.gov.\n\n     Attempts are made to suppress DECnet flip flops  but  they  aren't  always\n     successful.\n\n     Most error messages are posted using syslog.\n\n4th Berkeley Distribution        8 October 2000                     ARPWATCH(8)",
+        "apropos": "arp2ethers (8)       - convert arpwatch address database to ethers file format\narpwatch (8)         - keep track of ethernet/ip address pairings\nmassagevendor (8)    - convert the ethernet vendor codes master list to arpwa..."
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/arpwatch",
+        "size_bytes": 39288,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3703ba893eba22a7f90651d0b6f3cb341cd1cad2, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "bihourly",
+      "description": "Track ethernet/ip address pairs",
+      "usage": "arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+      "arguments": [],
+      "raw_help": "root@kali:~# bihourly -h\n cat: list: No such file or directory\n cat: cname: No such file or directory\n WARNING: tempfile is deprecated; consider using mktemp instead.\n Version 2.1a15\n usage: arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "cat: list: No such file or directory\ncat: cname: No such file or directory\nWARNING: tempfile is deprecated; consider using mktemp instead.\nVersion 2.1a15\nusage: arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+        "-h": "cat: list: No such file or directory\ncat: cname: No such file or directory\nWARNING: tempfile is deprecated; consider using mktemp instead.\nVersion 2.1a15\nusage: arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+        "help": "cat: list: No such file or directory\ncat: cname: No such file or directory\nWARNING: tempfile is deprecated; consider using mktemp instead.\nVersion 2.1a15\nusage: arpsnmp [-d] [-m addr ] [-f datafile] [-s sendmail_path] file [...]",
+        "man": "BIHOURLY(8)                 System Manager's Manual                 BIHOURLY(8)\n\nNAME\n     bihourly - track ethernet/ip address pairs\n\nSYNOPSIS\n     bihourly\n\nDESCRIPTION\n     bihourly is a script that automates the operation of arpsnmp(8) by execut-\n     ing  arpfetch(8)  on a series of hostnames and then sending the results to\n     arpsnmp(8) for analysis.\n\n     The result is a report of the current pairings between  ip  addresses  and\n     the  corresponding ethernet address of the network hardware as reported by\n     snmpwalk(8).  Activity is logged and noted changes are reported by email.\n\n     In its working directory bihourly expects a file named list which contains\n     a space separated list of hostnames to be queried and a file  named  cname\n     which holds the SNMP community name by which to query these hosts.\n\n     Contrary to the name, bihourly does not run twice every hour. It runs once\n     each  time  it is invoked. For repeated operation bihourly must be invoked\n     on a periodic basis by a program like cron(1).\n\nFILES\n     /var/lib/arpwatch - default working directory\n     list - file containing names of hosts to query\n     cname - file containing the SNMP community name by which to query\n\nSEE ALSO\n     arpsnmp(8), arpfetch(8), snmpwalk(8), cron(8)\n\nBUGS\n     Please send bug reports to arpwatch@ee.lbl.gov.\n\nAUTHORS\n     Craig Leres of the Lawrence Berkeley National Laboratory Network  Research\n     Group, University of California, Berkeley, CA.\n\n     The current version is available via anonymous ftp:\n\n            ftp://ftp.ee.lbl.gov/arpwatch.tar.gz\n\n     This manual page was contributed by Hugo Graumann.\n\n                                                                    BIHOURLY(8)",
+        "apropos": "bihourly (8)         - track ethernet/ip address pairs"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/bihourly",
+        "size_bytes": 767,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "massagevendor",
+      "description": "Convert the ethernet vendor codes master list to arpwatch format",
+      "usage": "sed [OPTION]... {script-only-if-no-other-script} [input-file]...",
+      "arguments": [
+        {
+          "flags": [
+            "-n",
+            "--quiet",
+            "--silent"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -n, --quiet, --silent"
+        },
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --debug"
+        },
+        {
+          "flags": [
+            "-e",
+            "--expression"
+          ],
+          "metavar": "script - xpression=script",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -e script, --expression=script"
+        },
+        {
+          "flags": [
+            "-f",
+            "--file"
+          ],
+          "metavar": "script ile - ile=script ile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -f script-file, --file=script-file"
+        },
+        {
+          "flags": [
+            "--follow-symlinks"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --follow-symlinks"
+        },
+        {
+          "flags": [
+            "-i",
+            "--in-place"
+          ],
+          "metavar": "SUFFIX - n-place =SUFFIX",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -i[SUFFIX], --in-place[=SUFFIX]"
+        },
+        {
+          "flags": [
+            "-l",
+            "--line-length"
+          ],
+          "metavar": "N - ine ength=N",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -l N, --line-length=N"
+        },
+        {
+          "flags": [
+            "--posix"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --posix"
+        },
+        {
+          "flags": [
+            "-E",
+            "-r",
+            "--regexp-extended"
+          ],
+          "metavar": "- egexp-extended",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -E, -r, --regexp-extended"
+        },
+        {
+          "flags": [
+            "-s",
+            "--separate"
+          ],
+          "metavar": "- eparate",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -s, --separate"
+        },
+        {
+          "flags": [
+            "--sandbox"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --sandbox"
+        },
+        {
+          "flags": [
+            "-u",
+            "--unbuffered"
+          ],
+          "metavar": "- nbuffered",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -u, --unbuffered"
+        },
+        {
+          "flags": [
+            "-z",
+            "--null-data"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -z, --null-data"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display this help and exit",
+          "default": null,
+          "choices": null,
+          "raw": "     --help     display this help and exit"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output version information and exit",
+          "default": null,
+          "choices": null,
+          "raw": "     --version  output version information and exit"
+        },
+        {
+          "flags": [
+            "--null-data"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "--null-data"
+        },
+        {
+          "flags": [
+            "--quiet",
+            "--silent"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "--quiet, --silent"
+        },
+        {
+          "flags": [
+            "--separate"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "--separate"
+        },
+        {
+          "flags": [
+            "--unbuffered"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "--unbuffered"
+        },
+        {
+          "flags": [
+            "-e",
+            "--expression",
+            "-f",
+            "--file"
+          ],
+          "metavar": "- xpression or - ile option is given then the first",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "-e, --expression, -f, or --file option is given, then the first"
+        }
+      ],
+      "raw_help": "root@kali:~# massagevendor -h\n sed: invalid option -- 'h'\n Usage: sed [OPTION]... {script-only-if-no-other-script} [input-file]...\n \n -n, --quiet, --silent\n                suppress automatic printing of pattern space\n     --debug\n                annotate program execution\n -e script, --expression=script\n                add the script to the commands to be executed\n -f script-file, --file=script-file\n                add the contents of script-file to the commands to be executed\n --follow-symlinks\n                follow symlinks when processing in place\n -i[SUFFIX], --in-place[=SUFFIX]\n                edit files in place (makes backup if SUFFIX supplied)\n -l N, --line-length=N\n                specify the desired line-wrap length for the `l' command\n --posix\n                disable all GNU extensions.\n -E, -r, --regexp-extended\n                use extended regular expressions in the script\n                (for portability use POSIX -E).\n -s, --separate\n                consider files as separate rather than as a single,\n                continuous long stream.\n     --sandbox\n                operate in sandbox mode (disable e/r/w commands).\n -u, --unbuffered\n                load minimal amounts of data from the input files and flush\n                the output buffers more often\n -z, --null-data\n                separate lines by NUL characters\n     --help     display this help and exit\n     --version  output version information and exit\n \n If no -e, --expression, -f, or --file option is given, then the first\n non-option argument is taken as the sed script to interpret.  All\n remaining arguments are names of input files; if no input files are\n specified, then the standard input is read.\n \n GNU sed home page: <https://www.gnu.org/software/sed/>.\n General help using GNU software: <https://www.gnu.org/gethelp/>.",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "(for portability use POSIX -E).\n           add the contents of script-file to the commands to be executed *also*            add the script to the commands to be executed\n           annotate program execution\n           consider files as separate rather than as a single,\n           continuous long stream.\n           disable all GNU extensions.\n           edit files in place (makes backup if SUFFIX supplied)\n           follow symlinks when processing in place\n           load minimal amounts of data from the input files and flush\n           operate in sandbox mode (disable e/r/w commands).\n           separate lines by NUL characters\n           specify the desired line-wrap length for the `l' command\n           suppress automatic printing of pattern space\n           the output buffers more often\n           use extended regular expressions in the script\n *also*  *also*  *also* \n sed [OPTION]... {script-only-if-no-other-script} [input-file]...\n, --line-length=N\n--debug\n--help     display this help and exit\n--null-data\n--quiet, --silent\n--sandbox\n--separate\n--unbuffered\n--version  output version information and exit\n-e, --expression, -f, or --file option is given, then the first\nUFFIX], --in-place[=SUFFIX]\ncript, --expression=script\ncript-file, --file=script-file\nd home page: <https://www.gnu.org/software/sed/>.\ne bug reports to: <bug-sed@gnu.org>.\ne-r, --regexp-extended\nied, then the standard input is read.\ning arguments are names of input files; if no input files are\nl help using GNU software: <https://www.gnu.org/gethelp/>.\nllow-symlinks\nsix\ntion argument is taken as the sed script to interpret.  All",
+        "-h": "sed: invalid option -- 'h'\nUsage: sed [OPTION]... {script-only-if-no-other-script} [input-file]...\n\n  -n, --quiet, --silent\n                 suppress automatic printing of pattern space\n      --debug\n                 annotate program execution\n  -e script, --expression=script\n                 add the script to the commands to be executed\n  -f script-file, --file=script-file\n                 add the contents of script-file to the commands to be executed\n  --follow-symlinks\n                 follow symlinks when processing in place\n  -i[SUFFIX], --in-place[=SUFFIX]\n                 edit files in place (makes backup if SUFFIX supplied)\n  -l N, --line-length=N\n                 specify the desired line-wrap length for the `l' command\n  --posix\n                 disable all GNU extensions.\n  -E, -r, --regexp-extended\n                 use extended regular expressions in the script\n                 (for portability use POSIX -E).\n  -s, --separate\n                 consider files as separate rather than as a single,\n                 continuous long stream.\n      --sandbox\n                 operate in sandbox mode (disable e/r/w commands).\n  -u, --unbuffered\n                 load minimal amounts of data from the input files and flush\n                 the output buffers more often\n  -z, --null-data\n                 separate lines by NUL characters\n      --help     display this help and exit\n      --version  output version information and exit\n\nIf no -e, --expression, -f, or --file option is given, then the first\nnon-option argument is taken as the sed script to interpret.  All\nremaining arguments are names of input files; if no input files are\nspecified, then the standard input is read.\n\nGNU sed home page: <https://www.gnu.org/software/sed/>.\nGeneral help using GNU software: <https://www.gnu.org/gethelp/>.",
+        "help": "sed: can't read help: No such file or directory",
+        "man": "MASSAGEVENDOR(8)            System Manager's Manual            MASSAGEVENDOR(8)\n\nNAME\n     massagevendor  - convert the ethernet vendor codes master list to arpwatch\n     format\n\nSYNOPSIS\n     massagevendor vendorfile\n\nDESCRIPTION\n     massagevendor is a program that converts a text file  containing  ethernet\n     vendor codes into a format suitable for use by arpwatch(8) and arpsnmp(8).\n     The  input  vendorfile  is a master text file containing vendor codes. The\n     output is sent to stdout.  Each line of the vendorfile is expected to have\n     a six digit hexadecimal vendor code followed by  spaces  followed  by  the\n     name of the manufacturer.\n\n     All ethernet devices have a unique identifier which includes a vendor code\n     specifying the manufacturer of the device. In normal operation arpwatch(8)\n     and  arpsnmp(8)  use  the  file ethercodes.dat to report this vendor code.\n     massagevendor is used to generate the ethercodes.dat file from text  files\n     containing these vendor codes.\n\n     Locations  where an ethernet vendor codes master text file can be obtained\n     are given below.\n\nFILES\n     /usr/share/arpwatch - default location of the ethernet vendor list\n     ethercodes.dat - file containing the list of ethernet vendor codes\n\nSEE ALSO\n     arpwatch(8), arpsnmp(8)\n\nNOTES\n     Sources for ethernet vendor codes seen in the wild are\n\n            http://map-ne.com/Ethernet/vendor.html\n            ftp://ftp.cavebear.com/pub/Ethernet.txt\n            http://www.cavebear.com/CaveBear/Ethernet/vendor.html\n\n     Useful for comparison or completeness are the\n     ethernet vendor codes as assigned\n     by the IEEE which can be found at\n\n            http://standards.ieee.org/regauth/oui/oui.txt\n\nBUGS\n     Please send bug reports to arpwatch@ee.lbl.gov.\n\nAUTHORS\n     Craig Leres of the Lawrence Berkeley National Laboratory Network  Research\n     Group, University of California, Berkeley, CA.\n\n     The current version is available via anonymous ftp:\n\n            ftp://ftp.ee.lbl.gov/arpwatch.tar.gz\n\n     This manual page was contributed by Hugo Graumann.\n\n                                                               MASSAGEVENDOR(8)",
+        "apropos": "massagevendor (8)    - convert the ethernet vendor codes master list to arpwa..."
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/massagevendor",
+        "size_bytes": 719,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/arpwatch/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/arpwatch/index.md",
+    "retrieved_at": "2026-07-14T13:04:55+00:00",
+    "sha256": "f51f7056df2ffb0328e082bc51ab0ae7822d8c80c7783a0da8cdcac8b5aba8b2"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "159",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "2.1a15-11",
+    "depends": "gawk, systemd | systemd-standalone-sysusers | systemd-sysusers, systemd | systemd-standalone-tmpfiles | systemd-tmpfiles, libc6 (>= 2.38), libpcap0.8t64 (>= 0.9.8)",
+    "recommends": "ieee-data",
+    "description": "Ethernet/FDDI station activity monitor\nArpwatch maintains a database of Ethernet MAC addresses seen on the\nnetwork, with their associated IP pairs.  Alerts the system administrator\nvia e-mail if any change happens, such as new station/activity,\nflip-flops, changed and re-used old addresses.\n.\nIf you want to maintain a list authorized MAC addresses manually, take a look\nat the arpalert package which may fit your needs better.",
+    "homepage": "https://ee.lbl.gov/"
+  },
+  "tags": [
+    "offensive",
+    "arpwatch",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/arpwatch && python3 arpwatch.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/arpwatch && python3 arpwatch.py --help",
+    "cd toolboxes/arpwatch && python3 arpwatch.py --help",
+    "cd toolboxes/arpwatch && python3 arpwatch.py --help",
+    "cd toolboxes/arpwatch && python3 arpwatch.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST arpwatch --output $KFIOSA_OUTPUT_DIR/arpwatch.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST arpwatch --output $KFIOSA_OUTPUT_DIR/arpwatch.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

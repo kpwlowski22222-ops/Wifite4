@@ -1,0 +1,124 @@
+{
+  "id": "github:bad-antics/nullsec-pineapple-suite",
+  "kind": "external_repository",
+  "name": "nullsec-pineapple-suite",
+  "full_name": "bad-antics/nullsec-pineapple-suite",
+  "owner": "bad-antics",
+  "category": "WiFi Reconnaissance — Rogue AP / Pineapple",
+  "url": "https://github.com/bad-antics/nullsec-pineapple-suite",
+  "summary": "Repository indexing entry for the ``nullsec-pineapple-suite`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/bad-antics__nullsec-pineapple-suite",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "git clone https://github.com/bad-antics/nullsec-pineapple-suite && cd nullsec-pineapple-suite && ./install.sh  (Pineapple-side installer; per-payload execution via Pineapple payload menu; restore.sh for factory-reset recovery)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "git clone https://github.com/bad-antics/nullsec-pineapple-suite && cd nullsec-pineapple-suite && ./install.sh  (Pineapple-side installer; per-payload execution via Pineapple payload menu; restore.sh for factory-reset recovery)"
+      }
+    ]
+  },
+  "language": "Shell",
+  "dependencies": [
+    "aircrack-ng suite (airodump-ng, aireplay-ng)",
+    "hcxdumptool",
+    "reaver",
+    "nmap",
+    "WiFi Pineapple Pager firmware 1.0+ + external monitor-mode adapter (Hak5 MK7AC)",
+    "lib/nullsec-iface.sh (bundled interface autodetection)"
+  ],
+  "algorithms": [
+    "probe-request capture/analysis (ProbeHunter)",
+    "hidden/cloaked SSID discovery (HiddenNetFinder)",
+    "client device tracking across networks over time (ClientTracker)",
+    "OUI/vendor lookup (VendorHunt)",
+    "RSSI signal-strength tracking over time (SignalTracker)",
+    "5 GHz network enumeration (5GHzHunter)",
+    "WPS-enabled network discovery (WPSScanner)",
+    "WPA3/SAE network scanning (WAP3Scanner)",
+    "Hotspot 2.0 / Passpoint discovery (PasspointScanner)",
+    "channel utilization / interference analysis (SpectrumAnalyzer)",
+    "temporal AP/client appear-disappear activity mapping (WiFiTimeline)",
+    "WiFi-based OS/device fingerprinting (DeviceFingerprint)",
+    "network topology mapping via nmap (NetworkMapper)",
+    "social-relationship mapping via device proximity (SocialMapper)",
+    "Bluetooth/BLE device discovery (BluetoothScanner)"
+  ],
+  "produces": [
+    "loot/capture files under /mmc/nullsec/{loot,captures/handshakes,captures/eap,logs/ids}",
+    "recon survey logs and per-payload reports (formats unspecified in README; underlying tools emit airodump-ng CSV/pcap and hcxdumptool pcap)",
+    "scheduled task entries and IDS logs on the Pineapple"
+  ],
+  "capability_bucket": "pineapple",
+  "runnable": false,
+  "novelty": "None algorithmically — these are ~150-line shell wrappers orchestrating airodump-ng, hcxdumptool, reaver, and nmap. The only non-trivial original work is Pineapple-platform orchestration: a shared interface-autodetection lib (lib/nullsec-iface.sh), curated Pineapple-specific loot/log path layout, and a couple of higher-level composite workflows (temporal WiFiTimeline activity mapping, SocialMapper proximity-graphing, DroneHunter) that combine baseline tools rather than implement new recon math.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "nullsec",
+    "pineapple",
+    "suite",
+    "bad-antics",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --help",
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --help",
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --help",
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nullsec-pineapple-suite --output $KFIOSA_OUTPUT_DIR/nullsec-pineapple-suite.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nullsec-pineapple-suite --output $KFIOSA_OUTPUT_DIR/nullsec-pineapple-suite.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

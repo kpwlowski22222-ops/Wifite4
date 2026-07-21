@@ -1,0 +1,251 @@
+{
+  "id": "kali:rtpinsertsound",
+  "kind": "kali_source_package",
+  "name": "rtpinsertsound",
+  "title": "rtpinsertsound",
+  "summary": "### rtpinsertsound",
+  "version": "3.0-1kali4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://www.hackingvoip.com/sec_tools.html",
+  "repository": "https://gitlab.com/kalilinux/packages/rtpinsertsound",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-voip",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install rtpinsertsound"
+  },
+  "packages": [
+    {
+      "name": "rtpinsertsound"
+    }
+  ],
+  "commands": [
+    {
+      "name": "rtpinsertsound",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": "source RTP IPv4 addr",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-a source RTP IPv4 addr"
+        },
+        {
+          "flags": [
+            "-A"
+          ],
+          "metavar": "source RTP port",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-A source RTP port"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "destination RTP IPv4 addr",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-b destination RTP IPv4 addr"
+        },
+        {
+          "flags": [
+            "-B"
+          ],
+          "metavar": "destination RTP port",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-B destination RTP port"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "spoof factor - amount by which to",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-f spoof factor - amount by which to:"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "interface e.g. eth0",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-i interface (e.g. eth0)"
+        },
+        {
+          "flags": [
+            "-j"
+          ],
+          "metavar": "jitter factor - the reception of a legitimate RTP",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-j jitter factor - the reception of a legitimate RTP"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "seconds to pause between setup and injection",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-p seconds to pause between setup and injection"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": "help - print this usage",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-h help - print this usage"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": "verbose output mode",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-v verbose output mode"
+        }
+      ],
+      "raw_help": "root@kali:~# rtpinsertsound -h\n \n rtpinsertsound - Version 2.0\n                October 10, 2006\nUsage:\nMandatory -\n \tpathname of file whose audio is to be mixed into the\n \t    targeted live audio stream. If the file extension is\n \t    .wav, then the file must be a standard Microsoft\n \t    RIFF formatted WAVE file meeting these constraints:\n \t      1) header 'chunks' must be in one of two sequences:\n \t           RIFF, fmt, fact, data\n \t             or\n \t           RIFF, fmt, data\n \t      2) Compression Code = 1 (PCM/Uncompressed)\n \t      3) Number of Channels = 1 (mono)\n \t      4) Sample Rate (Hz) = 8000\n \t      5) Significant Bits/Sample =\n \t              signed,   linear 16-bit or\n \t              unsigned, linear  8-bit\n \t    If the file name does not specify a .wav extension,\n \t    then the file is presumed to be a tcpdump formatted\n \t    file with a sequence of, exclusively, G.711 u-law\n \t    RTP/UDP/IP/ETHERNET messages\n \t    Note: Yep, the format is referred to as 'tcpdump'\n \t          even though this file must contain udp messages\nOptional -\n \t-a source RTP IPv4 addr\n \t-A source RTP port\n \t-b destination RTP IPv4 addr\n \t-B destination RTP port\n \t-f spoof factor - amount by which to:\n \t     a) increment the RTP hdr sequence number obtained\n \t        from the ith legitimate packet to produce the\n \t        RTP hdr sequence number for the ith spoofed packet\n \t     b) multiply the RTP payload length and add that\n \t        product to the RTP hdr timestamp obtained from\n \t        the ith legitimate packet to produce the RTP hdr\n \t        timestamp for the ith spoofed packet\n \t     c) increment the IP hdr ID number obtained from the\n \t        ith legitimate packet to produce the IP hdr ID\n \t        number for the ith spoofed packet\n \t   [ range: +/- 1000, default: 2 ]\n \t-i interface (e.g. eth0)\n \t-j jitter factor - the reception of a legitimate RTP\n \t     packet in the target audio stream enables the output\n \t     of the next spoofed packet. This factor determines\n \t     when that spoofed packet is actually transmitted.\n \t     The factor relates how close to the next legitimate\n \t     packet you'd actually like the enabled spoofed packet\n \t     to be transmitted. For example, -j 10 means 10% of\n \t     the codec's transmission interval. If the transmission\n \t     interval = 20,000 usec (i.e. G.711), then delay the\n \t     output of the spoofed RTP packet until the time-of-day\n \t     is within 2000 usec (i.e. 10%) of the time the next\n \t     legitimate RTP packet is expected. In other words,\n \t     delay 100% minus the jitter factor, or 18,000 usec\n \t     in this example. The smaller the jitter factor, the\n \t     greater the risk you run of not outputting the current\n \t     spoofed packet before the next legitimate RTP packet\n \t     is received. Therefore, a factor > 10 is advised.\n \t   [ range: 0 - 80, default: 80 = output spoof ASAP ]\n \t-p seconds to pause between setup and injection\n \t-h help - print this usage\n \t-v verbose output mode\n \n Note: If you are running the tool from a host with multiple\n     ethernet interfaces which are up, be forewarned that\n     the order those interfaces appear in your route table\n     and the networks accessible from those interfaces might\n     compel Linux to output spoofed audio packets to an\n     interface different than the one stipulated by you on\n     command line. This should not affect the tool unless\n     those spoofed packets arrive back at the host through\n     the interface you have specified on the command line\n     (e.g. the interfaces have connectivity through a hub).",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "rtpinsertsound /usr/share/rtpinsertsound/stapler.wav -v\nTargeting interface eth0\nlibfindrtp_find_rtp(): using pcap filter \"ip\".",
+          "template": null,
+          "original_sha256": "4a0f6a30245c45b438853e6a6382a6269028dcb796c9915bf2863129443c7cc7"
+        },
+        {
+          "status": "operational_example",
+          "command": "rtpinsertsound - Version 2.0",
+          "template": null,
+          "original_sha256": "3806fe0d45e1ec6b3e338ee00871f779a8af0da8e44df9b0c2f51905c23d4d9e"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "payload",
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "rtpinsertsound - Version 2.0\n                 October 10, 2006\n Usage:\n Mandatory -\n\tpathname of file whose audio is to be mixed into the\n\t    targeted live audio stream. If the file extension is\n\t    .wav, then the file must be a standard Microsoft\n\t    RIFF formatted WAVE file meeting these constraints:\n\t      1) header 'chunks' must be in one of two sequences:\n\t           RIFF, fmt, fact, data\n\t             or\n\t           RIFF, fmt, data\n\t      2) Compression Code = 1 (PCM/Uncompressed)\n\t      3) Number of Channels = 1 (mono)\n\t      4) Sample Rate (Hz) = 8000\n\t      5) Significant Bits/Sample =\n\t              signed,   linear 16-bit or\n\t              unsigned, linear  8-bit\n\t    If the file name does not specify a .wav extension,\n\t    then the file is presumed to be a tcpdump formatted\n\t    file with a sequence of, exclusively, G.711 u-law\n\t    RTP/UDP/IP/ETHERNET messages\n\t    Note: Yep, the format is referred to as 'tcpdump'\n\t          even though this file must contain udp messages\n Optional -\n\t-a source RTP IPv4 addr\n\t-A source RTP port\n\t-b destination RTP IPv4 addr\n\t-B destination RTP port\n\t-f spoof factor - amount by which to:\n\t     a) increment the RTP hdr sequence number obtained\n\t        from the ith legitimate packet to produce the\n\t        RTP hdr sequence number for the ith spoofed packet\n\t     b) multiply the RTP payload length and add that\n\t        product to the RTP hdr timestamp obtained from\n\t        the ith legitimate packet to produce the RTP hdr\n\t        timestamp for the ith spoofed packet\n\t     c) increment the IP hdr ID number obtained from the\n\t        ith legitimate packet to produce the IP hdr ID\n\t        number for the ith spoofed packet\n\t   [ range: +/- 1000, default: 2 ]\n\t-i interface (e.g. eth0)\n\t-j jitter factor - the reception of a legitimate RTP\n\t     packet in the target audio stream enables the output\n\t     of the next spoofed packet. This factor determines\n\t     when that spoofed packet is actually transmitted.\n\t     The factor relates how close to the next legitimate\n\t     packet you'd actually like the enabled spoofed packet\n\t     to be transmitted. For example, -j 10 means 10% of\n\t     the codec's transmission interval. If the transmission\n\t     interval = 20,000 usec (i.e. G.711), then delay the\n\t     output of the spoofed RTP packet until the time-of-day\n\t     is within 2000 usec (i.e. 10%) of the time the next\n\t     legitimate RTP packet is expected. In other words,\n\t     delay 100% minus the jitter factor, or 18,000 usec\n\t     in this example. The smaller the jitter factor, the\n\t     greater the risk you run of not outputting the current\n\t     spoofed packet before the next legitimate RTP packet\n\t     is received. Therefore, a factor > 10 is advised.\n\t   [ range: 0 - 80, default: 80 = output spoof ASAP ]\n\t-p seconds to pause between setup and injection\n\t-h help - print this usage\n\t-v verbose output mode\n\nNote: If you are running the tool from a host with multiple\n      ethernet interfaces which are up, be forewarned that\n      the order those interfaces appear in your route table\n      and the networks accessible from those interfaces might\n      compel Linux to output spoofed audio packets to an\n      interface different than the one stipulated by you on\n      command line. This should not affect the tool unless\n      those spoofed packets arrive back at the host through\n      the interface you have specified on the command line\n      (e.g. the interfaces have connectivity through a hub).",
+        "-h": "rtpinsertsound - Version 2.0\n                 October 10, 2006\n Usage:\n Mandatory -\n\tpathname of file whose audio is to be mixed into the\n\t    targeted live audio stream. If the file extension is\n\t    .wav, then the file must be a standard Microsoft\n\t    RIFF formatted WAVE file meeting these constraints:\n\t      1) header 'chunks' must be in one of two sequences:\n\t           RIFF, fmt, fact, data\n\t             or\n\t           RIFF, fmt, data\n\t      2) Compression Code = 1 (PCM/Uncompressed)\n\t      3) Number of Channels = 1 (mono)\n\t      4) Sample Rate (Hz) = 8000\n\t      5) Significant Bits/Sample =\n\t              signed,   linear 16-bit or\n\t              unsigned, linear  8-bit\n\t    If the file name does not specify a .wav extension,\n\t    then the file is presumed to be a tcpdump formatted\n\t    file with a sequence of, exclusively, G.711 u-law\n\t    RTP/UDP/IP/ETHERNET messages\n\t    Note: Yep, the format is referred to as 'tcpdump'\n\t          even though this file must contain udp messages\n Optional -\n\t-a source RTP IPv4 addr\n\t-A source RTP port\n\t-b destination RTP IPv4 addr\n\t-B destination RTP port\n\t-f spoof factor - amount by which to:\n\t     a) increment the RTP hdr sequence number obtained\n\t        from the ith legitimate packet to produce the\n\t        RTP hdr sequence number for the ith spoofed packet\n\t     b) multiply the RTP payload length and add that\n\t        product to the RTP hdr timestamp obtained from\n\t        the ith legitimate packet to produce the RTP hdr\n\t        timestamp for the ith spoofed packet\n\t     c) increment the IP hdr ID number obtained from the\n\t        ith legitimate packet to produce the IP hdr ID\n\t        number for the ith spoofed packet\n\t   [ range: +/- 1000, default: 2 ]\n\t-i interface (e.g. eth0)\n\t-j jitter factor - the reception of a legitimate RTP\n\t     packet in the target audio stream enables the output\n\t     of the next spoofed packet. This factor determines\n\t     when that spoofed packet is actually transmitted.\n\t     The factor relates how close to the next legitimate\n\t     packet you'd actually like the enabled spoofed packet\n\t     to be transmitted. For example, -j 10 means 10% of\n\t     the codec's transmission interval. If the transmission\n\t     interval = 20,000 usec (i.e. G.711), then delay the\n\t     output of the spoofed RTP packet until the time-of-day\n\t     is within 2000 usec (i.e. 10%) of the time the next\n\t     legitimate RTP packet is expected. In other words,\n\t     delay 100% minus the jitter factor, or 18,000 usec\n\t     in this example. The smaller the jitter factor, the\n\t     greater the risk you run of not outputting the current\n\t     spoofed packet before the next legitimate RTP packet\n\t     is received. Therefore, a factor > 10 is advised.\n\t   [ range: 0 - 80, default: 80 = output spoof ASAP ]\n\t-p seconds to pause between setup and injection\n\t-h help - print this usage\n\t-v verbose output mode\n\nNote: If you are running the tool from a host with multiple\n      ethernet interfaces which are up, be forewarned that\n      the order those interfaces appear in your route table\n      and the networks accessible from those interfaces might\n      compel Linux to output spoofed audio packets to an\n      interface different than the one stipulated by you on\n      command line. This should not affect the tool unless\n      those spoofed packets arrive back at the host through\n      the interface you have specified on the command line\n      (e.g. the interfaces have connectivity through a hub)."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/rtpinsertsound",
+        "size_bytes": 48040,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=09ae5f36a42ac6a4a5fa900484566703ad81dd88, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/rtpinsertsound/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/rtpinsertsound/index.md",
+    "retrieved_at": "2026-07-14T13:08:13+00:00",
+    "sha256": "8cca5168d47710d4777dd56c45f7be490fdd32ab1d4daad4fab13e8ed63010a3"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "239",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "3.0-1kali4+b1",
+    "depends": "libc6 (>= 2.38), libnet9 (>= 1.1.2.1), libpcap0.8t64 (>= 0.9.8)",
+    "description": "Inserts audio into a specified stream\nA tool to insert audio into a specified audio (i.e. RTP)\nstream was created in the August - September 2006 timeframe.\nThe tool is named rtpinsertsound. It was tested on a Linux\nRed Hat Fedora Core 4 platform (Pentium IV, 2.5 GHz), but\nit is expected this tool will successfully build and execute\non a variety of Linux distributions.",
+    "homepage": "http://www.hackingvoip.com/sec_tools.html"
+  },
+  "tags": [
+    "offensive",
+    "rtpinsertsound",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/rtpinsertsound && python3 rtpinsertsound.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/rtpinsertsound && python3 rtpinsertsound.py --help",
+    "cd toolboxes/rtpinsertsound && python3 rtpinsertsound.py --help",
+    "cd toolboxes/rtpinsertsound && python3 rtpinsertsound.py --help",
+    "cd toolboxes/rtpinsertsound && python3 rtpinsertsound.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtpinsertsound --output $KFIOSA_OUTPUT_DIR/rtpinsertsound.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtpinsertsound --output $KFIOSA_OUTPUT_DIR/rtpinsertsound.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

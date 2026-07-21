@@ -1,0 +1,235 @@
+{
+  "id": "kali:dc3dd",
+  "kind": "kali_source_package",
+  "name": "dc3dd",
+  "title": "dc3dd",
+  "summary": "### dc3dd",
+  "version": "7.3.1-4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://sourceforge.net/projects/dc3dd/",
+  "repository": "https://salsa.debian.org/pkg-security-team/dc3dd",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install dc3dd"
+  },
+  "packages": [
+    {
+      "name": "dc3dd"
+    }
+  ],
+  "commands": [
+    {
+      "name": "dc3dd",
+      "description": "Convert and copy a file",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-DDEFAULT_OUTPUT_FILE_SIZE"
+          ],
+          "metavar": "followed by the desired",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t                     -DDEFAULT_OUTPUT_FILE_SIZE followed by the desired"
+        },
+        {
+          "flags": [
+            "-DDEFAULT_HASH_SHA256",
+            "-DDEFAULT_HASH_SHA512"
+          ],
+          "metavar": "and .",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t                     -DDEFAULT_HASH_SHA256, and -DDEFAULT_HASH_SHA512."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display this help and exit",
+          "default": null,
+          "choices": null,
+          "raw": "     --help     display this help and exit"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output version information and exit",
+          "default": null,
+          "choices": null,
+          "raw": "     --version  output version information and exit"
+        },
+        {
+          "flags": [
+            "--flags"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display compile-time flags and exit",
+          "default": null,
+          "choices": null,
+          "raw": "     --flags    display compile-time flags and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# dc3dd --help\n ------\n usage:\n ------\n \n \tdc3dd [OPTION 1] [OPTION 2] ... [OPTION N]\n \n \t\t*or*\n \n \tdc3dd [HELP OPTION]\n \n \twhere each OPTION is selected from the basic or advanced\n \toptions listed below, or HELP OPTION is selected from the\n \thelp options listed below.\n \n --------------\n basic options:\n --------------\n \n \tif=DEVICE or FILE    Read input from a device or a file (see note #1\n \t                     below for how to read from standard input). This\n \t                     option can only be used once and cannot be\n \t                     combined with ifs=, pat=, or tpat=.\n \tifs=BASE.FMT         Read input from a set of files with base name\n \t                     BASE and sequential file name extensions\n \t                     conforming to the format specifier FMT (see note\n \t                     #4 below for how to specify FMT). This option\n \t                     can only be used once and cannot be combined with\n \t                     if=, pat=, or tpat=.\n \tof=FILE or DEVICE    Write output to a file or device (see note #2\n \t                     below for how to write to standard output). This\n \t                     option can be used more than once (see note #3\n \t                     below for how to generate multiple outputs).\n \thof=FILE or DEVICE   Write output to a file or device, hash the\n \t                     output bytes, and verify by comparing the output\n \t                     hash(es) to the input hash(es). This option can\n \t                     be used more than once (see note #3 below for\n \t                     how to generate multiple outputs).\n \tofs=BASE.FMT         Write output to a set of files with base name BASE\n \t                     and sequential file name extensions generated from\n \t                     the format specifier FMT (see note #4 below for\n \t                     how to specify FMT). This option can be used more\n \t                     than once (see note #3 below for how to generate\n \t                     multiple outputs). Specify the maximum size of\n \t                     each file in the set using ofsz=.\n \thofs=BASE.FMT        Write output to a set of files with base name BASE\n \t                     and sequential file name extensions generated from\n \t                     the format specifier FMT (see note #4 below for\n \t                     how to specify FMT). Hash the output files and\n \t                     verify by comparing the output hash(es) to the\n \t                     input hash(es). This option can be used more than\n \t                     once (see note #3 below for how to generate\n \t                     multiple outputs). Specify the maximum size of\n \t                     each file in the set using ofsz=.\n \tofsz=BYTES           Set the maximum size of each file in the sets of\n \t                     files specified using ofs= or hofs= to\n \t                     BYTES (see note #5 below). A default value for\n \t                     this option may be set at compile time using\n \t                     -DDEFAULT_OUTPUT_FILE_SIZE followed by the desired\n \t                     value in BYTES.\n \thash=ALGORITHM       Compute an ALGORITHM hash of the input and also\n \t                     of any outputs specified using hof=, hofs=,\n \t                     or fhod=, where ALGORITHM is one of md5, sha1,\n \t                     sha256, or sha512. This option may be used once\n \t                     for each supported ALGORITHM. Alternatively,\n \t                     hashing can be activated at compile time using one\n \t                     or more of -DDEFAULT_HASH_MD5,-DDEFAULT_HASH_SHA1,\n \t                     -DDEFAULT_HASH_SHA256, and -DDEFAULT_HASH_SHA512.\n \tlog=FILE             Log I/O statistcs, diagnostics, and total hashes\n \t                     of input and output to FILE. If hlog= is not\n \t                     specified, piecewise hashes of multiple file\n \t                     input and output are also logged to FILE. This\n \t                     option can be used more than once to generate\n \t                     multiple logs.\n \thlog=FILE            Log total hashes and piecewise hashes to FILE.\n \t                     This option can be used more than once to generate\n \t                     multiple logs.\n \tmlog=FILE            Create hash log that is easier for machine to read\n \n -----------------\n advanced options:\n -----------------\n \n \tfhod=DEVICE          The same as hof=DEVICE, with additional\n \t                     hashing of the entire output DEVICE. This option\n \t                     can be used more than once (see note #3 below\n \t                     for how to generate multiple outputs).\n \trec=off              By default, zeros are written to the output(s) in\n \t                     place of bad sectors when the input is a device.\n \t                     Use this option to cause the program to instead\n \t                     exit when a bad sector is encountered.\n \twipe=DEVICE          Wipe DEVICE by writing zeros (default) or a\n \t                     pattern specified by pat= or tpat=.\n \thwipe=DEVICE         Wipe DEVICE by writing zeros (default) or a\n \t                     pattern specified by pat= or tpat=. Verify\n \t                     DEVICE after writing it by hashing it and\n \t                     comparing the hash(es) to the input hash(es).\n \tpat=HEX              Use pattern as input, writing HEX to every byte\n \t                     of the output. This option can only be used once\n \t                     and cannot be combined with if=, ifs=, or\n \t                     tpat=.\n \ttpat=TEXT            Use text pattern as input, writing the string TEXT\n \t                     repeatedly to the output. This option can only be\n \t                     used once and cannot be combined with if=, ifs=,\n \t                     or pat=.\n \tcnt=SECTORS          Read only SECTORS input sectors. Must be used\n \t                     with pat= or tpat= if not using the pattern with\n \t                     wipe= or hwipe= to wipe a device.\n \tiskip=SECTORS        Skip SECTORS sectors at start of the input device\n \t                     or file.\n \toskip=SECTORS        Skip SECTORS sectors at start of the output\n \t                     file. Specifying oskip= automatically \n \t                     sets app=on.\n \tapp=on               Do not overwrite an output file specified with\n \t                     of= if it already exists, appending output instead.\n \tssz=BYTES            Unconditionally use BYTES (see note #5 below) bytes\n \t                     for sector size. If ssz= is not specified,\n \t                     sector size is determined by probing the device;\n \t                     if the probe fails or the target is not a device,\n \t                     a sector size of 512 bytes is assumed.\n \tbufsz=BYTES          Set the size of the internal byte buffers to BYTES\n \t                     (see note #5 below). This effectively sets the\n \t                     maximum number of bytes that may be read at a time\n \t                     from the input. BYTES must be a multiple of sector\n \t                     size. Use this option to fine-tune performance.\n \tverb=on              Activate verbose reporting, where sectors in/out\n \t                     are reported for each file in sets of files\n \t                     specified using ifs=, ofs=, or hofs=.\n \t                     Alternatively, verbose reporting may be activated\n \t                     at compile time using -DDEFAULT_VERBOSE_REPORTING.\n \tnwspc=on             Activate compact reporting, where the use\n \t                     of white space to divide log output into\n \t                     logical sections is suppressed. Alternatively,\n \t                     compact reporting may be activated at compile\n \t                     time using -DDEFAULT_COMPACT_REPORTING.\n \tb10=on               Activate base 10 bytes reporting, where the\n \t                     progress display reports 1000 bytes instead\n \t                     of 1024 bytes as 1 KB. Alternatively, base 10\n \t                     bytes reporting may be activated at compile\n \t                     time using -DDEFAULT_BASE_TEN_BYTES_REPORTING.\n \tcorruptoutput=on     For verification testing and demonstration\n \t                     purposes, corrupt the output file(s) with extra\n \t                     bytes so a hash mismatch is guaranteed.\n \n -------------\n help options:\n -------------\n \n     --help     display this help and exit\n     --version  output version information and exit\n     --flags    display compile-time flags and exit\n \n ------\n notes:\n ------\n \n 1. To read from stdin, do not specify if=, ifs=, pat=, or tpat=.\n 2. To write to stdout, do not specify of=, hof=, ofs=, hofs=, fhod=,\n  wipe=, or hwipe=.\n 3. To write to multiple outputs specify more than one of of=, hof=, ofs=,\n  hofs=, or fhod=, in any combination.\n 4. FMT is a pattern for a sequence of file extensions that can be numerical\n  starting at zero, numerical starting at one, or alphabetical. Specify FMT\n  by using a series of zeros, ones, or a's, respectively. The number of\n  characters used indicates the desired length of the extensions.\n  For example, a FMT specifier of 0000 indicates four character\n  numerical extensions starting with 0000.\n 5. BYTES may be followed by the following multiplicative suffixes:\n  c (1), w (2), b (512), kB (1000), K (1024), MB (1000*1000),\n  M (1024*1024), GB (1000*1000*1000), G (1024*1024*1024), and\n  so on for T, P, E, Z, and Y.\n 6. Consider using cnt=, iskip= and oskip= to work around\n  unreadable sectors if error recovery fails.\n 7. Sending an interrupt (e.g., CTRL+C) to dc3dd will cause\n  the program to report the work completed at the time\n  the interrupt is received and then exit.\n dc3dd completed at 2026-06-17 10:37:00 -0400",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "dc3dd if=/var/log/messages of=/tmp/dc3dd hash=sha512\n\ndc3dd 7.2.646 started at 2018-12-01 13:37:20 -0500\ncompiled options:\ncommand line: dc3dd if=/var/log/messages of=/tmp/dc3dd hash=sha512\nsector size: 512 bytes (assumed)\n    42015925 bytes ( 40 M ) copied ( 100% ),    0 s, 185 M/s\n\ninput results for file `/var/log/messages':\n   82062 sectors + 181 bytes in\n   2dd19a4fd6bdebddf2ce754f4b09f7914b7cb7433efc5b8678ff437d9e13857995815c2b63ae4722a6d4c143347458497fb6b1b4a1ef4e4fd3c5d9cd08111f16 (sha512)\n\noutput results for file `/tmp/dc3dd':\n   82062 sectors + 181 bytes out\n\ndc3dd completed at 2018-12-01 13:37:21 -0500",
+          "template": null,
+          "original_sha256": "96682b7c0f6c53695e6b1c617526048ada900dd872e5a40672bbd05f305aae0d"
+        },
+        {
+          "status": "operational_example",
+          "command": "dc3dd [OPTION 1] [OPTION 2] ... [OPTION N]",
+          "template": null,
+          "original_sha256": "f85ce5d29734d2abe39083a1f45145c354b7d827db6b200bcc2dd6c73da38a21"
+        },
+        {
+          "status": "operational_example",
+          "command": "dc3dd [HELP OPTION]",
+          "template": null,
+          "original_sha256": "5bd563b2a62fce616283f8a4cbea63086ea9e48473adf8f189105d6d4252a3d8"
+        },
+        {
+          "status": "operational_example",
+          "command": "dc3dd completed at 2026-07-14 15:05:17 +0200",
+          "template": null,
+          "original_sha256": "6d0881691b40cbd621e3cd971040bf1e475c5a491977bd880d0d1ca0d303eb96"
+        },
+        {
+          "status": "operational_example",
+          "command": "dc3dd: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "6f4c777813a63c3b79cb3aee4130057204c0b62ec6f5b008ae8ce759ceee3787"
+        },
+        {
+          "status": "operational_example",
+          "command": "dc3dd failed at 2026-07-14 15:05:17 +0200",
+          "template": null,
+          "original_sha256": "0dacca4631ca1bbab7b01c45c17cd5c068636de342b3040761d8f8ae647a4f96"
+        },
+        {
+          "status": "operational_example",
+          "command": "dc3dd 7.2.646 started at 2026-07-14 15:05:17 +0200",
+          "template": null,
+          "original_sha256": "6d9e18f7f5893229ebee5f035a27374401ff6a9d02ec7862afe488fd25d5325b"
+        },
+        {
+          "status": "operational_example",
+          "command": "dc3dd aborted at 2026-07-14 15:05:17 +0200",
+          "template": null,
+          "original_sha256": "d7bb46d9817e4238edd6f8879c041966d292cdda944f7b9c46ebae1244dee20e"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "------\nusage:\n------\n\n\tdc3dd [OPTION 1] [OPTION 2] ... [OPTION N]\n\n\t\t*or*\n\n\tdc3dd [HELP OPTION]\n\n\twhere each OPTION is selected from the basic or advanced\n\toptions listed below, or HELP OPTION is selected from the\n\thelp options listed below.\n\n--------------\nbasic options:\n--------------\n\n\tif=DEVICE or FILE    Read input from a device or a file (see note #1\n\t                     below for how to read from standard input). This\n\t                     option can only be used once and cannot be\n\t                     combined with ifs=, pat=, or tpat=.\n\tifs=BASE.FMT         Read input from a set of files with base name\n\t                     BASE and sequential file name extensions\n\t                     conforming to the format specifier FMT (see note\n\t                     #4 below for how to specify FMT). This option\n\t                     can only be used once and cannot be combined with\n\t                     if=, pat=, or tpat=.\n\tof=FILE or DEVICE    Write output to a file or device (see note #2\n\t                     below for how to write to standard output). This\n\t                     option can be used more than once (see note #3\n\t                     below for how to generate multiple outputs).\n\thof=FILE or DEVICE   Write output to a file or device, hash the\n\t                     output bytes, and verify by comparing the output\n\t                     hash(es) to the input hash(es). This option can\n\t                     be used more than once (see note #3 below for\n\t                     how to generate multiple outputs).\n\tofs=BASE.FMT         Write output to a set of files with base name BASE\n\t                     and sequential file name extensions generated from\n\t                     the format specifier FMT (see note #4 below for\n\t                     how to specify FMT). This option can be used more\n\t                     than once (see note #3 below for how to generate\n\t                     multiple outputs). Specify the maximum size of\n\t                     each file in the set using ofsz=.\n\thofs=BASE.FMT        Write output to a set of files with base name BASE\n\t                     and sequential file name extensions generated from\n\t                     the format specifier FMT (see note #4 below for\n\t                     how to specify FMT). Hash the output files and\n\t                     verify by comparing the output hash(es) to the\n\t                     input hash(es). This option can be used more than\n\t                     once (see note #3 below for how to generate\n\t                     multiple outputs). Specify the maximum size of\n\t                     each file in the set using ofsz=.\n\tofsz=BYTES           Set the maximum size of each file in the sets of\n\t                     files specified using ofs= or hofs= to\n\t                     BYTES (see note #5 below). A default value for\n\t                     this option may be set at compile time using\n\t                     -DDEFAULT_OUTPUT_FILE_SIZE followed by the desired\n\t                     value in BYTES.\n\thash=ALGORITHM       Compute an ALGORITHM hash of the input and also\n\t                     of any outputs specified using hof=, hofs=,\n\t                     or fhod=, where ALGORITHM is one of md5, sha1,\n\t                     sha256, or sha512. This option may be used once\n\t                     for each supported ALGORITHM. Alternatively,\n\t                     hashing can be activated at compile time using one\n\t                     or more of -DDEFAULT_HASH_MD5,-DDEFAULT_HASH_SHA1,\n\t                     -DDEFAULT_HASH_SHA256, and -DDEFAULT_HASH_SHA512.\n\tlog=FILE             Log I/O statistcs, diagnostics, and total hashes\n\t                     of input and output to FILE. If hlog= is not\n\t                     specified, piecewise hashes of multiple file\n\t                     input and output are also logged to FILE. This\n\t                     option can be used more than once to generate\n\t                     multiple logs.\n\thlog=FILE            Log total hashes and piecewise hashes to FILE.\n\t                     This option can be used more than once to generate\n\t                     multiple logs.\n\tmlog=FILE            Create hash log that is easier for machine to read\n\n-----------------\nadvanced options:\n-----------------\n\n\tfhod=DEVICE          The same as hof=DEVICE, with additional\n\t                     hashing of the entire output DEVICE. This option\n\t                     can be used more than once (see note #3 below\n\t                     for how to generate multiple outputs).\n\trec=off              By default, zeros are written to the output(s) in\n\t                     place of bad sectors when the input is a device.\n\t                     Use this option to cause the program to instead\n\t                     exit when a bad sector is encountered.\n\twipe=DEVICE          Wipe DEVICE by writing zeros (default) or a\n\t                     pattern specified by pat= or tpat=.\n\thwipe=DEVICE         Wipe DEVICE by writing zeros (default) or a\n\t                     pattern specified by pat= or tpat=. Verify\n\t                     DEVICE after writing it by hashing it and\n\t                     comparing the hash(es) to the input hash(es).\n\tpat=HEX              Use pattern as input, writing HEX to every byte\n\t                     of the output. This option can only be used once\n\t                     and cannot be combined with if=, ifs=, or\n\t                     tpat=.\n\ttpat=TEXT            Use text pattern as input, writing the string TEXT\n\t                     repeatedly to the output. This option can only be\n\t                     used once and cannot be combined with if=, ifs=,\n\t                     or pat=.\n\tcnt=SECTORS          Read only SECTORS input sectors. Must be used\n\t                     with pat= or tpat= if not using the pattern with\n\t                     wipe= or hwipe= to wipe a device.\n\tiskip=SECTORS        Skip SECTORS sectors at start of the input device\n\t                     or file.\n\toskip=SECTORS        Skip SECTORS sectors at start of the output\n\t                     file. Specifying oskip= automatically \n\t                     sets app=on.\n\tapp=on               Do not overwrite an output file specified with\n\t                     of= if it already exists, appending output instead.\n\tssz=BYTES            Unconditionally use BYTES (see note #5 below) bytes\n\t                     for sector size. If ssz= is not specified,\n\t                     sector size is determined by probing the device;\n\t                     if the probe fails or the target is not a device,\n\t                     a sector size of 512 bytes is assumed.\n\tbufsz=BYTES          Set the size of the internal byte buffers to BYTES\n\t                     (see note #5 below). This effectively sets the\n\t                     maximum number of bytes that may be read at a time\n\t                     from the input. BYTES must be a multiple of sector\n\t                     size. Use this option to fine-tune performance.\n\tverb=on              Activate verbose reporting, where sectors in/out\n\t                     are reported for each file in sets of files\n\t                     specified using ifs=, ofs=, or hofs=.\n\t                     Alternatively, verbose reporting may be activated\n\t                     at compile time using -DDEFAULT_VERBOSE_REPORTING.\n\tnwspc=on             Activate compact reporting, where the use\n\t                     of white space to divide log output into\n\t                     logical sections is suppressed. Alternatively,\n\t                     compact reporting may be activated at compile\n\t                     time using -DDEFAULT_COMPACT_REPORTING.\n\tb10=on               Activate base 10 bytes reporting, where the\n\t                     progress display reports 1000 bytes instead\n\t                     of 1024 bytes as 1 KB. Alternatively, base 10\n\t                     bytes reporting may be activated at compile\n\t                     time using -DDEFAULT_BASE_TEN_BYTES_REPORTING.\n\tcorruptoutput=on     For verification testing and demonstration\n\t                     purposes, corrupt the output file(s) with extra\n\t                     bytes so a hash mismatch is guaranteed.\n\n-------------\nhelp options:\n-------------\n\n      --help     display this help and exit\n      --version  output version information and exit\n      --flags    display compile-time flags and exit\n\n------\nnotes:\n------\n\n1. To read from stdin, do not specify if=, ifs=, pat=, or tpat=.\n2. To write to stdout, do not specify of=, hof=, ofs=, hofs=, fhod=,\n   wipe=, or hwipe=.\n3. To write to multiple outputs specify more than one of of=, hof=, ofs=,\n   hofs=, or fhod=, in any combination.\n4. FMT is a pattern for a sequence of file extensions that can be numerical\n   starting at zero, numerical starting at one, or alphabetical. Specify FMT\n   by using a series of zeros, ones, or a's, respectively. The number of\n   characters used indicates the desired length of the extensions.\n   For example, a FMT specifier of 0000 indicates four character\n   numerical extensions starting with 0000.\n5. BYTES may be followed by the following multiplicative suffixes:\n   c (1), w (2), b (512), kB (1000), K (1024), MB (1000*1000),\n   M (1024*1024), GB (1000*1000*1000), G (1024*1024*1024), and\n   so on for T, P, E, Z, and Y.\n6. Consider using cnt=, iskip= and oskip= to work around\n   unreadable sectors if error recovery fails.\n7. Sending an interrupt (e.g., CTRL+C) to dc3dd will cause\n   the program to report the work completed at the time\n   the interrupt is received and then exit.\ndc3dd completed at 2026-07-14 15:05:17 +0200",
+        "-h": "dc3dd: invalid option -- 'h'\nTry `dc3dd --help' for more information.\ndc3dd failed at 2026-07-14 15:05:17 +0200",
+        "help": "dc3dd 7.2.646 started at 2026-07-14 15:05:17 +0200\ncompiled options:\ncommand line dc3dd help\n[!!] unrecognized option `help'\nTry `dc3dd --help' for more information.\ndc3dd aborted at 2026-07-14 15:05:17 +0200",
+        "man": "DC3DD(1)                         User Commands                         DC3DD(1)\n\nNAME\n     dc3dd - convert and copy a file\n\nDESCRIPTION\nAUTHOR\n     Written  by  Paul Rubin, David MacKenzie, Stuart Kemp, Jesse Kornblum, An-\n     drew Medico, Richard Cordovano, Justin Lowe, Frank Westerman,  and  Joseph\n     Lininger.\n\nREPORTING BUGS\n     Report bugs to <dc3dd@dc3.mil>.\n\nCOPYRIGHT\n     Copyright (C) 2008 Free Software Foundation, Inc.  License GPLv3+: GNU GPL\n     version 3 or later <http://gnu.org/licenses/gpl.html>\n     This  is free software: you are free to change and redistribute it.  There\n     is NO WARRANTY, to the extent permitted by law.\n\nSEE ALSO\n     The full documentation for dc3dd is maintained as a  Texinfo  manual.   If\n     the  info and dc3dd programs are properly installed at your site, the com-\n     mand\n\n            info dc3dd\n\n     should give you access to the complete manual.\n\ndc3dd 7.2.646                    September 2025                        DC3DD(1)",
+        "apropos": "dc3dd (1)            - convert and copy a file"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dc3dd",
+        "size_bytes": 149960,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=142226aa556ce75fb068a9a83406accffdb4a2b6, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/dc3dd/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/dc3dd/index.md",
+    "retrieved_at": "2026-07-14T13:05:17+00:00",
+    "sha256": "dfa26f2f15b4123d315a50e2ad5b5c9dea26bc8fabeca879efc2441ed1daa55e"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "478",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "7.3.1-4",
+    "depends": "libc6 (>= 2.38)",
+    "description": "patched version of GNU dd with forensic features\ndc3dd is a patched version of GNU dd with added features for computer\nforensics:\n.\n* on the fly hashing (md5, sha-1, sha-256, and sha-512);\n* possibility to write errors to a file;\n* group errors in the error log;\n* pattern wiping;\n* progress report;\n* possibility to split output.",
+    "homepage": "https://sourceforge.net/projects/dc3dd/"
+  },
+  "tags": [
+    "offensive",
+    "dc3dd",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/dc3dd && python3 dc3dd.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/dc3dd && python3 dc3dd.py --help",
+    "cd toolboxes/dc3dd && python3 dc3dd.py --help",
+    "cd toolboxes/dc3dd && python3 dc3dd.py --help",
+    "cd toolboxes/dc3dd && python3 dc3dd.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dc3dd --output $KFIOSA_OUTPUT_DIR/dc3dd.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dc3dd --output $KFIOSA_OUTPUT_DIR/dc3dd.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

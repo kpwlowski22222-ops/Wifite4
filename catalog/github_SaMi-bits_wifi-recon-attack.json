@@ -1,0 +1,115 @@
+{
+  "id": "github:SaMi-bits/wifi-recon-attack",
+  "kind": "external_repository",
+  "name": "wifi-recon-attack",
+  "full_name": "SaMi-bits/wifi-recon-attack",
+  "owner": "SaMi-bits",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/SaMi-bits/wifi-recon-attack",
+  "summary": "Repository indexing entry for the ``wifi-recon-attack`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/SaMi-bits__wifi-recon-attack",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "sudo bash scrips/wifi_recon.sh (script has hardcoded iface=wlan1, scan_duration=60; no shebang/args parsed)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "sudo bash scrips/wifi_recon.sh (script has hardcoded iface=wlan1, scan_duration=60; no shebang/args parsed)"
+      }
+    ]
+  },
+  "language": "Shell",
+  "dependencies": [
+    "aircrack-ng (airodump-ng)",
+    "bettercap",
+    "macchanger",
+    "iw",
+    "ip (iproute2)",
+    "coreutils (timeout, cat, sudo)"
+  ],
+  "algorithms": [
+    "monitor-mode activation via iw/ip",
+    "MAC randomization via macchanger -r",
+    "passive airodump-ng survey (60s, CSV output)",
+    "active bettercap net.probe + net.recon client enumeration",
+    "managed-mode restoration"
+  ],
+  "produces": [
+    "wifi_recon-01.csv (airodump-ng AP/client dump)",
+    "bettercap net.show stdout (host/client table)"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": true,
+  "novelty": "none — thin wrapper: orchestrates airodump-ng + bettercap + macchanger with hardcoded values; adds no parsing, PMKID/handshake capture, GPS tagging, hidden-SSID reveal, deauth detection, OUI enrichment, or any logic beyond shelling out to standard tools KFIOSA already uses.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "recon",
+    "attack",
+    "sami-bits",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifi-recon-attack && python3 wifi-recon-attack.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi-recon-attack && python3 wifi-recon-attack.py --help",
+    "cd toolboxes/wifi-recon-attack && python3 wifi-recon-attack.py --help",
+    "cd toolboxes/wifi-recon-attack && python3 wifi-recon-attack.py --help",
+    "cd toolboxes/wifi-recon-attack && python3 wifi-recon-attack.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-recon-attack --output $KFIOSA_OUTPUT_DIR/wifi-recon-attack.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-recon-attack --output $KFIOSA_OUTPUT_DIR/wifi-recon-attack.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "id": "kali:ident-user-enum",
+  "kind": "kali_source_package",
+  "name": "ident-user-enum",
+  "title": "ident-user-enum",
+  "summary": "### ident-user-enum",
+  "version": "1.0-0kali3",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://pentestmonkey.net/tools/user-enumeration/ident-user-enum",
+  "repository": "https://gitlab.com/kalilinux/packages/ident-user-enum",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install ident-user-enum"
+  },
+  "packages": [
+    {
+      "name": "ident-user-enum"
+    }
+  ],
+  "commands": [
+    {
+      "name": "ident-user-enum",
+      "description": "- - -",
+      "usage": "ident-user-enum.pl ip port [ port [ port ... ] ]",
+      "arguments": [],
+      "raw_help": "root@kali:~# ident-user-enum -h\n ident-user-enum v1.0 ( http://pentestmonkey.net/tools/ident-user-enum )\n \n Usage: ident-user-enum.pl ip port [ port [ port ... ] ]\n \n Queries the ident service (113/TCP) to determine the OS-level user running \n the process listening on a given TCP port.  More than one port can be supplied.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "ident-user-enum 192.168.1.13 22 139 445\nident-user-enum v1.0 ( http://pentestmonkey.net/tools/ident-user-enum )\n\n192.168.1.13:22 root\n192.168.1.13:139    root\n192.168.1.13:445    root",
+          "template": null,
+          "original_sha256": "ada06116f55d7be94aee66eab1f7fbd95b0d06190a205d7aa44277337f6cd3a2"
+        },
+        {
+          "status": "operational_example",
+          "command": "ident-user-enum v1.0 ( http://pentestmonkey.net/tools/ident-user-enum )",
+          "template": null,
+          "original_sha256": "e8b8bebe71ad5e91cce2a64009f61acfb353e4984fa2b1bc95f8d2364d29be7e"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "ident-user-enum v1.0 ( http://pentestmonkey.net/tools/ident-user-enum )\n\nUsage: ident-user-enum.pl ip port [ port [ port ... ] ]\n\nQueries the ident service (113/TCP) to determine the OS-level user running \nthe process listening on a given TCP port.  More than one port can be supplied.",
+        "-h": "ident-user-enum v1.0 ( http://pentestmonkey.net/tools/ident-user-enum )\n\nUsage: ident-user-enum.pl ip port [ port [ port ... ] ]\n\nQueries the ident service (113/TCP) to determine the OS-level user running \nthe process listening on a given TCP port.  More than one port can be supplied.",
+        "help": "ident-user-enum v1.0 ( http://pentestmonkey.net/tools/ident-user-enum )\n\nUsage: ident-user-enum.pl ip port [ port [ port ... ] ]\n\nQueries the ident service (113/TCP) to determine the OS-level user running \nthe process listening on a given TCP port.  More than one port can be supplied."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/ident-user-enum",
+        "size_bytes": 985,
+        "is_symlink": false,
+        "file_type": "Perl script text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/ident-user-enum/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/ident-user-enum/index.md",
+    "retrieved_at": "2026-07-14T13:06:02+00:00",
+    "sha256": "06e1c105b6020370bb17727d64f3004cfcc479d808ae457d0b46e32f761e615f"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "12",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "1.0-0kali3",
+    "depends": "perl, libnet-ident-perl, libio-socket-ip-perl",
+    "description": "Query ident to determine the owner of a TCP network process\nThis package is a simple PERL script to query the ident service (113/TCP)\nin order to determine the owner of the process listening on each TCP port of\na target system.\n.\nThis can help to prioritise target service during a pentest (you might want\nto attack services running as root first).\nAlternatively, the list of usernames gathered can be used for password\nguessing attacks on other network services.",
+    "homepage": "https://pentestmonkey.net/tools/user-enumeration/ident-user-enum"
+  },
+  "tags": [
+    "offensive",
+    "ident",
+    "user",
+    "enum",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/ident-user-enum && python3 ident-user-enum.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ident-user-enum && python3 ident-user-enum.py --help",
+    "cd toolboxes/ident-user-enum && python3 ident-user-enum.py --help",
+    "cd toolboxes/ident-user-enum && python3 ident-user-enum.py --help",
+    "cd toolboxes/ident-user-enum && python3 ident-user-enum.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ident-user-enum --output $KFIOSA_OUTPUT_DIR/ident-user-enum.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ident-user-enum --output $KFIOSA_OUTPUT_DIR/ident-user-enum.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

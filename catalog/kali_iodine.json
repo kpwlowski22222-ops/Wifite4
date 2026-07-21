@@ -1,0 +1,852 @@
+{
+  "id": "kali:iodine",
+  "kind": "kali_source_package",
+  "name": "iodine",
+  "title": "iodine",
+  "summary": "### iodine",
+  "version": "0.7.0-13",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://code.kryo.se/iodine",
+  "repository": "https://salsa.debian.org/debian/iodine",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-post-exploitation"
+  ],
+  "install": {
+    "apt": "sudo apt install iodine"
+  },
+  "packages": [
+    {
+      "name": "iodine"
+    }
+  ],
+  "commands": [
+    {
+      "name": "iodine",
+      "description": "Tunnel IPv4 over DNS",
+      "usage": "iodine [-v] [-h] [-f] [-r] [-u user] [-t chrootdir] [-d device] [-P password] [-m maxfragsize] [-M maxlen] [-T type] [-O enc] [-L 0|1] [-I sec] [-z context] [-F pidfile] [nameserver] topdomain",
+      "arguments": [
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": "force dns type",
+          "takes_value": true,
+          "description": "NULL, PRIVATE, TXT, SRV, MX, CNAME, A (default: autodetect)",
+          "default": "autodetect",
+          "choices": null,
+          "raw": " -T force dns type: NULL, PRIVATE, TXT, SRV, MX, CNAME, A (default: autodetect)"
+        },
+        {
+          "flags": [
+            "-O",
+            "-T"
+          ],
+          "metavar": "force downstream encoding for other than NULL",
+          "takes_value": true,
+          "description": "Base32, Base64, Base64u,",
+          "default": null,
+          "choices": null,
+          "raw": " -O force downstream encoding for -T other than NULL: Base32, Base64, Base64u,"
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": "max interval between requests default 4 sec to prevent DNS timeouts",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -I max interval between requests (default 4 sec) to prevent DNS timeouts"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": "1",
+          "takes_value": true,
+          "description": "use lazy mode for low-latency (default). 0: don't (implies -I1)",
+          "default": null,
+          "choices": null,
+          "raw": " -L 1: use lazy mode for low-latency (default). 0: don't (implies -I1)"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "max size of downstream fragments default",
+          "takes_value": true,
+          "description": "autodetect)",
+          "default": null,
+          "choices": null,
+          "raw": " -m max size of downstream fragments (default: autodetect)"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": "max size of upstream hostnames ~100-255 default",
+          "takes_value": true,
+          "description": "255)",
+          "default": null,
+          "choices": null,
+          "raw": " -M max size of upstream hostnames (~100-255, default: 255)"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "to skip raw UDP mode attempt",
+          "takes_value": true,
+          "description": "Skip raw UDP mode. If not used, iodine will try getting the  public",
+          "default": null,
+          "choices": null,
+          "raw": " -r to skip raw UDP mode attempt"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": "password used for authentication max 32 chars will be used",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -P password used for authentication (max 32 chars will be used)"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": "to print version info and exit",
+          "takes_value": true,
+          "description": "Print version info and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " -v to print version info and exit"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": "to print this help and exit",
+          "takes_value": true,
+          "description": "Print usage info and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " -h to print this help and exit"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "to keep running in foreground",
+          "takes_value": true,
+          "description": "Keep running in foreground.",
+          "default": null,
+          "choices": null,
+          "raw": " -f to keep running in foreground"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": "name to drop privileges and run as user 'name'",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -u name to drop privileges and run as user 'name'"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "dir to chroot to directory dir",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -t dir to chroot to directory dir"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "device to set tunnel device name",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -d device to set tunnel device name"
+        },
+        {
+          "flags": [
+            "-z"
+          ],
+          "metavar": "context to apply specified SELinux context after initialization",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -z context, to apply specified SELinux context after initialization"
+        },
+        {
+          "flags": [
+            "-F"
+          ],
+          "metavar": "pidfile to write pid to a file",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -F pidfile to write pid to a file"
+        },
+        {
+          "flags": [
+            "-4"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Force IPv4 DNS queries",
+          "default": null,
+          "choices": null,
+          "raw": "     -4     Force IPv4 DNS queries"
+        },
+        {
+          "flags": [
+            "-6"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Force IPv6 DNS queries",
+          "default": null,
+          "choices": null,
+          "raw": "     -6     Force IPv6 DNS queries"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": "rdomain",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -R rdomain"
+        },
+        {
+          "flags": [
+            "-O"
+          ],
+          "metavar": "downenc",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -O downenc"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable  checking  the  client IP address on all incoming requests.",
+          "default": null,
+          "choices": null,
+          "raw": "     -c     Disable  checking  the  client IP address on all incoming requests."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Don't try to configure IP address or MTU.  This should only be used",
+          "default": null,
+          "choices": null,
+          "raw": "     -s     Don't try to configure IP address or MTU.  This should only be used"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Increase debug level. Level 1 prints info about each RX/TX  packet.",
+          "default": null,
+          "choices": null,
+          "raw": "     -D     Increase debug level. Level 1 prints info about each RX/TX  packet."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "listen_ip",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -l listen_ip"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "port",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p port"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": "auto external_ip",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -n auto|external_ip"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "dnsport",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -b dnsport"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "max_idle_time",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i max_idle_time"
+        }
+      ],
+      "raw_help": "root@kali:~# iodine -h\n iodine IP over DNS tunneling client\n Usage: iodine [-v] [-h] [-f] [-r] [-u user] [-t chrootdir] [-d device] [-P password] [-m maxfragsize] [-M maxlen] [-T type] [-O enc] [-L 0|1] [-I sec] [-z context] [-F pidfile] [nameserver] topdomain\n Options to try if connection doesn't work:\n -T force dns type: NULL, PRIVATE, TXT, SRV, MX, CNAME, A (default: autodetect)\n -O force downstream encoding for -T other than NULL: Base32, Base64, Base64u,\n    Base128, or (only for TXT:) Raw  (default: autodetect)\n -I max interval between requests (default 4 sec) to prevent DNS timeouts\n -L 1: use lazy mode for low-latency (default). 0: don't (implies -I1)\n -m max size of downstream fragments (default: autodetect)\n -M max size of upstream hostnames (~100-255, default: 255)\n -r to skip raw UDP mode attempt\n -P password used for authentication (max 32 chars will be used)\n Other options:\n -v to print version info and exit\n -h to print this help and exit\n -f to keep running in foreground\n -u name to drop privileges and run as user 'name'\n -t dir to chroot to directory dir\n -d device to set tunnel device name\n -z context, to apply specified SELinux context after initialization\n -F pidfile to write pid to a file\n nameserver is the IP number/hostname of the relaying nameserver. if absent, /etc/resolv.conf is used\n topdomain is the FQDN that is delegated to the tunnel endpoint.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "iodine: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "aa47ec69bfd7a9921cde56b900878031c2b1def7d2675f5a1a0aaed7170ce0e6"
+        },
+        {
+          "status": "operational_example",
+          "command": "iodine IP over DNS tunneling client",
+          "template": null,
+          "original_sha256": "dd7a60ec119978a21ef4b5f2d029f7dad86d9f1161585414758fba521989726e"
+        },
+        {
+          "status": "operational_example",
+          "command": "iodine: Invalid topdomain: No dots",
+          "template": null,
+          "original_sha256": "bb775e2bc2b2d8ba48701b3d190423a1e61167253360a2af3275067902076ad6"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "iodine: invalid option -- '-'\nUsage: iodine [-v] [-h] [-f] [-r] [-u user] [-t chrootdir] [-d device] [-P password] [-m maxfragsize] [-M maxlen] [-T type] [-O enc] [-L 0|1] [-I sec] [-z context] [-F pidfile] [nameserver] topdomain",
+        "-h": "iodine IP over DNS tunneling client\nUsage: iodine [-v] [-h] [-f] [-r] [-u user] [-t chrootdir] [-d device] [-P password] [-m maxfragsize] [-M maxlen] [-T type] [-O enc] [-L 0|1] [-I sec] [-z context] [-F pidfile] [nameserver] topdomain\nOptions to try if connection doesn't work:\n  -T force dns type: NULL, PRIVATE, TXT, SRV, MX, CNAME, A (default: autodetect)\n  -O force downstream encoding for -T other than NULL: Base32, Base64, Base64u,\n     Base128, or (only for TXT:) Raw  (default: autodetect)\n  -I max interval between requests (default 4 sec) to prevent DNS timeouts\n  -L 1: use lazy mode for low-latency (default). 0: don't (implies -I1)\n  -m max size of downstream fragments (default: autodetect)\n  -M max size of upstream hostnames (~100-255, default: 255)\n  -r to skip raw UDP mode attempt\n  -P password used for authentication (max 32 chars will be used)\nOther options:\n  -v to print version info and exit\n  -h to print this help and exit\n  -f to keep running in foreground\n  -u name to drop privileges and run as user 'name'\n  -t dir to chroot to directory dir\n  -d device to set tunnel device name\n  -z context, to apply specified SELinux context after initialization\n  -F pidfile to write pid to a file\nnameserver is the IP number/hostname of the relaying nameserver. if absent, /etc/resolv.conf is used\ntopdomain is the FQDN that is delegated to the tunnel endpoint.",
+        "help": "iodine: Invalid topdomain: No dots\nUsage: iodine [-v] [-h] [-f] [-r] [-u user] [-t chrootdir] [-d device] [-P password] [-m maxfragsize] [-M maxlen] [-T type] [-O enc] [-L 0|1] [-I sec] [-z context] [-F pidfile] [nameserver] topdomain",
+        "man": "IODINE(8)                   System Manager's Manual                   IODINE(8)\n\nNAME\n     iodine, iodined - tunnel IPv4 over DNS\n\nSYNOPSIS\n     iodine [-v]\n\n     iodine [-h]\n\n     iodine  [-4]  [-6]  [-f] [-r] [-u user ] [-P password ] [-m fragsize ] [-t\n     chrootdir ] [-d device ] [-R rdomain ] [-m fragsize ] [-M  namelen  ]  [-z\n     context ] [-F pidfile ] [-T dnstype ] [-O downenc ] [-L 0|1 ] [-I interval\n     ] [ nameserver ] topdomain\n\n     iodined [-v]\n\n     iodined [-h]\n\n     iodined  [-c]  [-s]  [-f] [-D] [-u user ] [-t chrootdir ] [-d device ] [-m\n     mtu ] [-l listen_ip ] [-p port ] [-n ( auto | external_ip ) ] [-b  dnsport\n     ] [-P password ] [-z context ] [-F pidfile ] [-i max_idle_time ] tunnel_ip\n     [ /netmask ] topdomain\n\nDESCRIPTION\n     iodine  lets you tunnel IPv4 data through a DNS server. This can be useful\n     in situations where Internet access is firewalled, but DNS queries are al-\n     lowed. It needs a TUN/TAP device to operate. The bandwidth  is  asymmetri-\n     cal,  with  a measured maximum of 680 kbit/s upstream and 2.3 Mbit/s down-\n     stream in a wired LAN test network.  Realistic sustained throughput  on  a\n     Wifi  network using a carrier-grade DNS cache has been measured at some 50\n     kbit/s upstream and over 200 kbit/s downstream.  iodine is the client  ap-\n     plication, iodined is the server.\n\n     Note:  server and client are required to speak the exact same protocol. In\n     most cases, this means running the same iodine version. Unfortunately, im-\n     plementing backward and forward protocol compatibility is usually not fea-\n     sible.\n\nOPTIONS\n   Common Options:\n     -v     Print version info and exit.\n\n     -h     Print usage info and exit.\n\n     -f     Keep running in foreground.\n\n     -u user\n            Drop privileges and run as user 'user' after setting up tunnel.\n\n     -t chrootdir\n            Chroot to 'chrootdir' after setting up tunnel.\n\n     -d device\n            Use the TUN device 'device' instead of the  normal  one,  which  is\n            dnsX on Linux and otherwise tunX.\n\n     -P password\n            Use  'password' to authenticate. If not used, stdin will be used as\n            input. Only the first 32 characters will be used.\n\n     -z context\n            Apply SELinux 'context' after initialization.\n\n     -F pidfile\n            Create 'pidfile' and write process id in it.\n\n   Client Options:\n     -4     Force IPv4 DNS queries\n\n     -6     Force IPv6 DNS queries\n\n     -r     Skip raw UDP mode. If not used, iodine will try getting the  public\n            IP  address  of  the  iodined  host and test if it is reachable di-\n            rectly. If it is, traffic will be sent to the server instead of the\n            DNS relay.\n\n     -R rdomain\n            Use OpenBSD routing domain 'rdomain' for the DNS connection.\n\n     -m fragsize\n            Force maximum downstream fragment size. Not setting this will cause\n            the client to automatically probe the maximum  accepted  downstream\n            fragment size.\n\n     -M namelen\n            Maximum  length  of  upstream hostnames, default 255.  Usable range\n            ca. 100 to 255.  Use this option to scale back  upstream  bandwidth\n            in favor of downstream bandwidth.  Also useful for DNS servers that\n            perform  unreliably  when  using  full-length hostnames, noticeable\n            when fragment size autoprobe returns very  different  results  each\n            time.\n\n     -T dnstype\n            DNS  request  type  override.  By default, autodetection will probe\n            for working DNS request types, and will  select  the  request  type\n            that  is  expected  to provide the most bandwidth.  However, it may\n            turn out that a DNS relay imposes limits  that  skew  the  picture,\n            which  may  lead to an \"unexpected\" DNS request type providing more\n            bandwidth.  In that case, use this option to override  the  autode-\n            tection.   In  (expected) decreasing bandwidth order, the supported\n            DNS request types are: NULL, PRIVATE, TXT, SRV,  MX,  CNAME  and  A\n            (returning  CNAME).   Note  that SRV, MX and A may/will cause addi-\n            tional lookups by \"smart\" caching nameservers to get an  actual  IP\n            address, which may either slow down or fail completely. The PRIVATE\n            type  uses  value  65399  (in the 'private use' range) and requires\n            servers implementing RFC 3597.\n\n     -O downenc\n            Force downstream encoding type for all query type responses  except\n            NULL.   Default  is autodetected, but may not spot all problems for\n            the more advanced codecs.  Use this option to override the  autode-\n            tection.   Base32 is the lowest-grade codec and should always work;\n            this is used when autodetection fails.  Base64 provides more  band-\n            width,  but  may  not work on all nameservers.  Base64u is equal to\n            Base64 except in using underscore ('_') instead of plus sign ('+'),\n            possibly working where Base64 does not.   Base128  uses  high  byte\n            values  (mostly  accented  letters  in iso8859-1), which might work\n            with some nameservers.  For TXT queries, Raw will  provide  maximum\n            performance,  but  this  will  only  work if the nameserver path is\n            fully 8-bit-clean for responses that are  assumed  to  be  \"legible\n            text\".\n\n     -L 0|1\n            Lazy-mode  switch.   -L1 (default): Use lazy mode for improved per-\n            formance and decreased latency.  A very small minority of  DNS  re-\n            lays  appears to be unable to handle the lazy mode traffic pattern,\n            resulting in no or very little data  coming  through.   The  iodine\n            client  will detect this and try to switch back to legacy mode, but\n            this may not always work.  In these situations  use  -L0  to  force\n            running in legacy mode (implies -I1).\n\n     -I interval\n            Maximum  interval between requests (pings) so that intermediate DNS\n            servers will not time out. Default is 4 in lazy  mode,  which  will\n            work  fine  in most cases. When too many SERVFAIL errors occur, io-\n            dine will automatically reduce this to 1.  To get absolute  minimum\n            DNS  traffic,  increase well above 4, but not so high that SERVFAIL\n            errors start to occur.  There are some DNS relays with  very  small\n            timeouts, notably dnsadvantage.com (ultradns), that will give SERV-\n            FAIL  errors  even  with -I1; data will still get trough, and these\n            errors can be ignored.  Maximum useful value is 59,  since  iodined\n            will close a client's connection after 60 seconds of inactivity.\n\n   Server Options:\n     -c     Disable  checking  the  client IP address on all incoming requests.\n            By default, requests originating  from  non-matching  IP  addresses\n            will  be  rejected,  however this will cause problems when requests\n            are routed via a cluster of DNS servers.\n\n     -s     Don't try to configure IP address or MTU.  This should only be used\n            if you have already configured the device that will be used.\n\n     -D     Increase debug level. Level 1 prints info about each RX/TX  packet.\n            Implies  the  -f  option.   On level 2 (-DD) or higher, DNS queries\n            will be printed literally.  When using Base128  upstream  encoding,\n            this is best viewed as ISO Latin-1 text instead of (illegal) UTF-8.\n            This  is  easily  done  with : \"LC_ALL=C luit iodined -DD ...\" (see\n            luit(1)).\n\n     -m mtu\n            Set 'mtu' as mtu size for the tun device.  This will be sent to the\n            client on login, and the client will use the same mtu for  its  tun\n            device.  Default 1130.  Note that the DNS traffic will be automati-\n            cally fragmented when needed.\n\n     -l listen_ip\n            Make  the  server listen only on 'listen_ip' for incoming requests.\n            By default, incoming requests are accepted from all interfaces.\n\n     -p port\n            Make the server listen on 'port' instead of  53  for  traffic.   If\n            'listen_ip' does not include localhost, this 'port' can be the same\n            as  'dnsport'.   Note: You must make sure the dns requests are for-\n            warded to this port yourself.\n\n     -n auto|external_ip\n            The IP address to return in NS responses. Default is to return  the\n            address  used  as  destination  in  the  query.   If external_ip is\n            'auto', iodined will use externalip.net web service to retrieve the\n            external IP of the host and use that for NS responses.\n\n     -b dnsport\n            If this port is specified, all incoming  requests  not  inside  the\n            tunnel  domain  will  be forwarded to this port on localhost, to be\n            handled by a real dns.  If 'listen_ip' does not include  localhost,\n            this  'dnsport' can be the same as 'port'.  Note: The forwarding is\n            not fully transparent, and not advised for use in production  envi-\n            ronments.\n\n     -i max_idle_time\n            Make the server stop itself after max_idle_time seconds if no traf-\n            fic  have  been  received.  This should be combined with systemd or\n            upstart on demand activation for being effective.\n\n   Client Arguments:\n     nameserver\n            The nameserver to use to relay the dns traffic. This can be any re-\n            laying nameserver or the server running iodined if reachable.  This\n            field  can  be given as an IPv4/IPv6 address or as a hostname. This\n            argument is optional, and if not specified  a  nameserver  will  be\n            read from the /etc/resolv.conf file.\n\n     topdomain\n            The  dns traffic will be sent as queries for subdomains under 'top-\n            domain'. This is normally a subdomain to a domain you  own.  Use  a\n            short  domain  name  to get better throughput. If nameserver is the\n            iodined server, then the topdomain can be chosen freely. This argu-\n            ment must be the same on both the client and the server.\n\n   Server Arguments:\n     tunnel_ip[/netmask]\n            This is the server's ip address on the tun  interface.  The  client\n            will be given the next ip number in the range. It is recommended to\n            use  the 10.0.0.0 or 172.16.0.0 ranges. The default netmask is /27,\n            can be overridden by specifying it here. Using  a  smaller  network\n            will limit the number of concurrent users.\n\n     topdomain\n            The dns traffic is expected to arrive as queries for subdomains un-\n            der  'topdomain'. This is normally a subdomain to a domain you own.\n            Use a short domain name to get  better  throughput.  This  argument\n            must be the same on both the client and the server. Queries for do-\n            mains  other  than 'topdomain' will be forwarded when the -b option\n            is given, otherwise they will be dropped.\n\nEXAMPLES\n     See the README file for both a quick test scenario,  and  a  detailed  de-\n     scription of real-world deployment.\n\nSECURITY\n     Login  is  a relatively secure challenge-response MD5 hash, with the pass-\n     word never passing the wire.  However, all other data is NOT encrypted  in\n     any  way. The DNS traffic is also vulnerable to replay, injection and man-\n     in-the-middle attacks, especially when iodined is used with the -c option.\n     Use of ssh or vpn tunneling is strongly recommended.  On both  server  and\n     client, use iptables, pf or other firewalls to block all traffic coming in\n     from the tun interfaces, except to the used ssh or vpn ports.\n\nENVIRONMENT\n   IODINE_PASS\n     If  the environment variable IODINE_PASS is set, iodine will use the value\n     it is set to as password instead of asking for one. The  -P  option  still\n     has precedence.\n\n   IODINED_PASS\n     If  the  environment  variable  IODINED_PASS  is set, iodined will use the\n     value it is set to as password instead of asking for one.  The  -P  option\n     still has precedence.\n\nSEE ALSO\n     The  README  file  in the source distribution contains some more elaborate\n     information.\n\nBUGS\n     File bugs at http://dev.kryo.se/iodine/\n\nAUTHORS\n     Erik Ekman <yarrick@kryo.se> and  Bjorn  Andersson  <flex@kryo.se>.  Major\n     contributions by Anne Bezemer.\n\nUser Manuals                        JUN 2014                          IODINE(8)",
+        "apropos": "iodine (8)           - tunnel IPv4 over DNS\niodine-client-start (8) - start an iodine IPv4-over-DNS tunnel\niodined (8)          - tunnel IPv4 over DNS"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/iodine",
+        "size_bytes": 76296,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=f5097a8c1acecb505a93c95a3ccd2c0ef4110483, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "iodine-client-start",
+      "description": "Start an iodine IPv4-over-DNS tunnel",
+      "usage": "iodine-client-start [option]",
+      "arguments": [
+        {
+          "flags": [
+            "-h",
+            "--help"
+          ],
+          "metavar": "- elp",
+          "takes_value": true,
+          "description": "Print help and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -h, --help\t\tPrint help and exit"
+        },
+        {
+          "flags": [
+            "-v",
+            "--version"
+          ],
+          "metavar": "- ersion",
+          "takes_value": true,
+          "description": "Print version info and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -v, --version\t\tPrint version info and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# iodine-client-start -h\n 'iodine-client-start' starts an iodine IP-over-DNS tunnel.\n \n Usage: iodine-client-start [option]\n \n -h, --help\t\tPrint help and exit\n -v, --version\t\tPrint version info and exit\n \n Invoking the program without options attempts to set up and configure\n an iodine IP-over-DNS tunnel using the configuration in the file\n /etc/default/iodine-client or by querying the user. It tries to\n figure out the right way to set things up by observing the network,\n and if all else fails by guessing.\n \n QUICK CONFIGURATION\n \n Put two lines in the file /etc/default/iodine-client\n \n \tsubdomain=your.tunnel.sub.domain\n \n \tpasswd=password_for_that_tunnel\n \n \n or invoke the script with those environment variables set:\n \n \tenv subdomain=xxx passwd=xxx iodine-client-start\n \n If these are not set, the script will query the user for them.\n \n DETAILS\n \n The configuration file consists of lines which are either comments\n starting with '#', or settings of the form VAR=\"val\". Valid VARs are:\n \n subdomain\n   Sample value: your.tunnel.sub.domain (no default, must be set)\n \n passwd\n   Sample value: password_for_that_tunnel (no default, must be set)\n \n testhost\n   Hostname to ping when testing if network is working (default:\n   slashdot.org)\n \n bounce_localnet\n   Take the local network down and then up again before starting\n   tunnel (default: false)\n \n test_ping_localnet\n   Test if the local network is working by pinging the gateway\n   (default: true)\n \n test_ping_tunnel\n   Test if the iodine tunnel is working after it has been set up by\n   pinging the host at the other end (default: true)\n \n test_ping_final\n   Test if the tunnel is working after everything is ostensibly set\n   up by trying to ping an external host (default: true)\n \n default_router\n   IP address of router on the local network---should be found\n   automatically, set this if that fails and the program guesses wrong.\n \n interface\n   Interface to use (e.g., eth1, eth0, etc) for connection to DNS\n   server used for the iodine tunnel---should be found automatically,\n   set this if that fails and the program guesses wrong.\n \n mtu\n   Set if tunnel MTU needs to be manually changed (lowered). Should\n   not be necessary anymore, as recent versions of iodine negotiate\n   an appropriate MTU during tunnel setup. But if that negotiation\n   does not happen, or if you are using an older version of iodine,\n   the default tunnel MTU is 1024, and if the local DNS server\n   restricts to 512 byte packets you might need to use an MTU of 220.\n \n skip_raw_udp_mode\n   Set \"-r\" option in iodine command line. With this option, iodine\n   does not try to establish a direct UDP socket to the iodine server\n   on port 53. (default: true).\n \n continue_on_error\n   Set if the script should continue even if a command fails.\n   Use to test script when running as non-root. Defaults to false\n   if running as root, true otherwise.",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "'iodine-client-start' starts an iodine IP-over-DNS tunnel.\n\nUsage: iodine-client-start [option]\n\n  -h, --help\t\tPrint help and exit\n  -v, --version\t\tPrint version info and exit\n\nInvoking the program without options attempts to set up and configure\nan iodine IP-over-DNS tunnel using the configuration in the file\n/etc/default/iodine-client or by querying the user. It tries to\nfigure out the right way to set things up by observing the network,\nand if all else fails by guessing.\n\nQUICK CONFIGURATION\n\nPut two lines in the file /etc/default/iodine-client\n\n\tsubdomain=your.tunnel.sub.domain\n\n\tpasswd=password_for_that_tunnel\n\n\nor invoke the script with those environment variables set:\n\n\tenv subdomain=xxx passwd=xxx iodine-client-start\n\nIf these are not set, the script will query the user for them.\n\nDETAILS\n\nThe configuration file consists of lines which are either comments\nstarting with '#', or settings of the form VAR=\"val\". Valid VARs are:\n\nsubdomain\n    Sample value: your.tunnel.sub.domain (no default, must be set)\n\npasswd\n    Sample value: password_for_that_tunnel (no default, must be set)\n\ntesthost\n    Hostname to ping when testing if network is working (default:\n    slashdot.org)\n\nbounce_localnet\n    Take the local network down and then up again before starting\n    tunnel (default: false)\n\ntest_ping_localnet\n    Test if the local network is working by pinging the gateway\n    (default: true)\n\ntest_ping_tunnel\n    Test if the iodine tunnel is working after it has been set up by\n    pinging the host at the other end (default: true)\n\ntest_ping_final\n    Test if the tunnel is working after everything is ostensibly set\n    up by trying to ping an external host (default: true)\n\ndefault_router\n    IP address of router on the local network---should be found\n    automatically, set this if that fails and the program guesses wrong.\n\ninterface\n    Interface to use (e.g., eth1, eth0, etc) for connection to DNS\n    server used for the iodine tunnel---should be found automatically,\n    set this if that fails and the program guesses wrong.\n\nmtu\n    Set if tunnel MTU needs to be manually changed (lowered). Should\n    not be necessary anymore, as recent versions of iodine negotiate\n    an appropriate MTU during tunnel setup. But if that negotiation\n    does not happen, or if you are using an older version of iodine,\n    the default tunnel MTU is 1024, and if the local DNS server\n    restricts to 512 byte packets you might need to use an MTU of 220.\n\nskip_raw_udp_mode\n    Set \"-r\" option in iodine command line. With this option, iodine\n    does not try to establish a direct UDP socket to the iodine server\n    on port 53. (default: true).\n\ncontinue_on_error\n    Set if the script should continue even if a command fails.\n    Use to test script when running as non-root. Defaults to false\n    if running as root, true otherwise.",
+        "-h": "'iodine-client-start' starts an iodine IP-over-DNS tunnel.\n\nUsage: iodine-client-start [option]\n\n  -h, --help\t\tPrint help and exit\n  -v, --version\t\tPrint version info and exit\n\nInvoking the program without options attempts to set up and configure\nan iodine IP-over-DNS tunnel using the configuration in the file\n/etc/default/iodine-client or by querying the user. It tries to\nfigure out the right way to set things up by observing the network,\nand if all else fails by guessing.\n\nQUICK CONFIGURATION\n\nPut two lines in the file /etc/default/iodine-client\n\n\tsubdomain=your.tunnel.sub.domain\n\n\tpasswd=password_for_that_tunnel\n\n\nor invoke the script with those environment variables set:\n\n\tenv subdomain=xxx passwd=xxx iodine-client-start\n\nIf these are not set, the script will query the user for them.\n\nDETAILS\n\nThe configuration file consists of lines which are either comments\nstarting with '#', or settings of the form VAR=\"val\". Valid VARs are:\n\nsubdomain\n    Sample value: your.tunnel.sub.domain (no default, must be set)\n\npasswd\n    Sample value: password_for_that_tunnel (no default, must be set)\n\ntesthost\n    Hostname to ping when testing if network is working (default:\n    slashdot.org)\n\nbounce_localnet\n    Take the local network down and then up again before starting\n    tunnel (default: false)\n\ntest_ping_localnet\n    Test if the local network is working by pinging the gateway\n    (default: true)\n\ntest_ping_tunnel\n    Test if the iodine tunnel is working after it has been set up by\n    pinging the host at the other end (default: true)\n\ntest_ping_final\n    Test if the tunnel is working after everything is ostensibly set\n    up by trying to ping an external host (default: true)\n\ndefault_router\n    IP address of router on the local network---should be found\n    automatically, set this if that fails and the program guesses wrong.\n\ninterface\n    Interface to use (e.g., eth1, eth0, etc) for connection to DNS\n    server used for the iodine tunnel---should be found automatically,\n    set this if that fails and the program guesses wrong.\n\nmtu\n    Set if tunnel MTU needs to be manually changed (lowered). Should\n    not be necessary anymore, as recent versions of iodine negotiate\n    an appropriate MTU during tunnel setup. But if that negotiation\n    does not happen, or if you are using an older version of iodine,\n    the default tunnel MTU is 1024, and if the local DNS server\n    restricts to 512 byte packets you might need to use an MTU of 220.\n\nskip_raw_udp_mode\n    Set \"-r\" option in iodine command line. With this option, iodine\n    does not try to establish a direct UDP socket to the iodine server\n    on port 53. (default: true).\n\ncontinue_on_error\n    Set if the script should continue even if a command fails.\n    Use to test script when running as non-root. Defaults to false\n    if running as root, true otherwise.",
+        "help": "error: unknown option help",
+        "man": "IODINE-CLIENT-START(8)  System Administration Utilities  IODINE-CLIENT-START(8)\n\nNAME\n     iodine-client-start - start an iodine IPv4-over-DNS tunnel\n\nSYNOPSIS\n     iodine-client-start [option]\n\nDESCRIPTION\n     'iodine-client-start' starts an iodine IP-over-DNS tunnel.\n\n     -h, --help\n            Print help and exit\n\n     -v, --version\n            Print version info and exit\n\n     Invoking  the  program without options attempts to set up and configure an\n     iodine IP-over-DNS tunnel using the configuration  in  the  file  /etc/de-\n     fault/iodine-client  or  by  querying the user. It tries to figure out the\n     right way to set things up by observing the network, and if all else fails\n     by guessing.\n\n     QUICK CONFIGURATION\n\n     Put two lines in the file /etc/default/iodine-client\n\n            subdomain=your.tunnel.sub.domain\n\n            passwd=password_for_that_tunnel\n\n     or invoke the script with those environment variables set:\n\n            env subdomain=xxx passwd=xxx iodine-client-start\n\n     If these are not set, the script will query the user for them.\n\n     DETAILS\n\n     The configuration file consists of lines which are either comments  start-\n     ing with '#', or settings of the form VAR=\"val\". Valid VARs are:\n\n     subdomain\n\n            Sample value: your.tunnel.sub.domain (no default, must be set)\n\n     passwd\n\n            Sample value: password_for_that_tunnel (no default, must be set)\n\n     testhost\n\n            Hostname  to  ping  when  testing  if  network is working (default:\n            slashdot.org)\n\n     bounce_localnet\n\n            Take the local network down and then up again before starting  tun-\n            nel (default: false)\n\n     test_ping_localnet\n\n            Test  if  the  local network is working by pinging the gateway (de-\n            fault: true)\n\n     test_ping_tunnel\n\n            Test if the iodine tunnel is working after it has been  set  up  by\n            pinging the host at the other end (default: true)\n\n     test_ping_final\n\n            Test if the tunnel is working after everything is ostensibly set up\n            by trying to ping an external host (default: true)\n\n     default_router\n\n            IP  address  of router on the local network---should be found auto-\n            matically, set this if that fails and the program guesses wrong.\n\n     interface\n\n            Interface to use (e.g., eth1, eth0,  etc)  for  connection  to  DNS\n            server  used for the iodine tunnel---should be found automatically,\n            set this if that fails and the program guesses wrong.\n\n     mtu\n\n            Set if tunnel MTU needs to be manually  changed  (lowered).  Should\n            not be necessary anymore, as recent versions of iodine negotiate an\n            appropriate  MTU  during tunnel setup. But if that negotiation does\n            not happen, or if you are using an older version of iodine, the de-\n            fault tunnel MTU is 1024, and if the local DNS server restricts  to\n            512 byte packets you might need to use an MTU of 220.\n\n     skip_raw_udp_mode\n\n            Set  \"-r\"  option  in iodine command line. With this option, iodine\n            does not try to establish a direct UDP socket to the iodine  server\n            on port 53. (default: true).\n\n     continue_on_error\n\n            Set  if the script should continue even if a command fails.  Use to\n            test script when running as non-root. Defaults to false if  running\n            as root, true otherwise.\n\niodine-client-start 1.0.6           May 2026             IODINE-CLIENT-START(8)",
+        "apropos": "iodine-client-start (8) - start an iodine IPv4-over-DNS tunnel"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/iodine-client-start",
+        "size_bytes": 11922,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "iodined",
+      "description": "Tunnel IPv4 over DNS",
+      "usage": "iodined [-v] [-h] [-c] [-s] [-f] [-D] [-u user] [-t chrootdir] [-d device] [-m mtu] [-z context] [-l ip address to listen on] [-p port] [-n external ip] [-b dnsport] [-P password] [-F pidfile] tunnel_ip[/netmask] topdomain",
+      "arguments": [
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": "to print version info and exit",
+          "takes_value": true,
+          "description": "Print version info and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " -v to print version info and exit"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": "to print this help and exit",
+          "takes_value": true,
+          "description": "Print usage info and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " -h to print this help and exit"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": "to disable check of client IP/port on each request",
+          "takes_value": true,
+          "description": "Disable  checking  the  client IP address on all incoming requests.",
+          "default": null,
+          "choices": null,
+          "raw": " -c to disable check of client IP/port on each request"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "to skip creating and configuring the tun device which then has to be created manually",
+          "takes_value": true,
+          "description": "Don't try to configure IP address or MTU.  This should only be used",
+          "default": null,
+          "choices": null,
+          "raw": " -s to skip creating and configuring the tun device, which then has to be created manually"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "to keep running in foreground",
+          "takes_value": true,
+          "description": "Keep running in foreground.",
+          "default": null,
+          "choices": null,
+          "raw": " -f to keep running in foreground"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": "to increase debug level",
+          "takes_value": true,
+          "description": "Increase debug level. Level 1 prints info about each RX/TX  packet.",
+          "default": null,
+          "choices": null,
+          "raw": " -D to increase debug level"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": "name to drop privileges and run as user 'name'",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -u name to drop privileges and run as user 'name'"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "dir to chroot to directory dir",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -t dir to chroot to directory dir"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "device to set tunnel device name",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -d device to set tunnel device name"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "mtu to set tunnel device mtu",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -m mtu to set tunnel device mtu"
+        },
+        {
+          "flags": [
+            "-z"
+          ],
+          "metavar": "context to apply SELinux context after initialization",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -z context to apply SELinux context after initialization"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "ip address to listen on for incoming dns traffic default 0.0.0.0",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -l ip address to listen on for incoming dns traffic (default 0.0.0.0)"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "port to listen on for incoming dns traffic default 53",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -p port to listen on for incoming dns traffic (default 53)"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": "ip to respond with to NS queries",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -n ip to respond with to NS queries"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "port to forward normal DNS queries to on localhost",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -b port to forward normal DNS queries to (on localhost)"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": "password used for authentication max 32 chars will be used",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -P password used for authentication (max 32 chars will be used)"
+        },
+        {
+          "flags": [
+            "-F"
+          ],
+          "metavar": "pidfile to write pid to a file",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -F pidfile to write pid to a file"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "maximum idle time before shutting down",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -i maximum idle time before shutting down"
+        },
+        {
+          "flags": [
+            "-4"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Force IPv4 DNS queries",
+          "default": null,
+          "choices": null,
+          "raw": "     -4     Force IPv4 DNS queries"
+        },
+        {
+          "flags": [
+            "-6"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Force IPv6 DNS queries",
+          "default": null,
+          "choices": null,
+          "raw": "     -6     Force IPv6 DNS queries"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Skip raw UDP mode. If not used, iodine will try getting the  public",
+          "default": null,
+          "choices": null,
+          "raw": "     -r     Skip raw UDP mode. If not used, iodine will try getting the  public"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": "rdomain",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -R rdomain"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": "namelen",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -M namelen"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": "dnstype",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -T dnstype"
+        },
+        {
+          "flags": [
+            "-O"
+          ],
+          "metavar": "downenc",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -O downenc"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": "0 1",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -L 0|1"
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": "interval",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -I interval"
+        }
+      ],
+      "raw_help": "root@kali:~# iodined -h\n iodine IP over DNS tunneling server\n Usage: iodined [-v] [-h] [-c] [-s] [-f] [-D] [-u user] [-t chrootdir] [-d device] [-m mtu] [-z context] [-l ip address to listen on] [-p port] [-n external ip] [-b dnsport] [-P password] [-F pidfile] tunnel_ip[/netmask] topdomain\n -v to print version info and exit\n -h to print this help and exit\n -c to disable check of client IP/port on each request\n -s to skip creating and configuring the tun device, which then has to be created manually\n -f to keep running in foreground\n -D to increase debug level\n    (using -DD in UTF-8 terminal: \"LC_ALL=C luit iodined -DD ...\")\n -u name to drop privileges and run as user 'name'\n -t dir to chroot to directory dir\n -d device to set tunnel device name\n -m mtu to set tunnel device mtu\n -z context to apply SELinux context after initialization\n -l ip address to listen on for incoming dns traffic (default 0.0.0.0)\n -p port to listen on for incoming dns traffic (default 53)\n -n ip to respond with to NS queries\n -b port to forward normal DNS queries to (on localhost)\n -P password used for authentication (max 32 chars will be used)\n -F pidfile to write pid to a file\n -i maximum idle time before shutting down\n tunnel_ip is the IP number of the local tunnel interface.\n  /netmask sets the size of the tunnel network.\n topdomain is the FQDN that is delegated to this server.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "iodined: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "d830f348362264933d478cdfd6f6e08aba4ad336e6a52405fb0e705263f1ecd5"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "iodined: invalid option -- '-'\nUsage: iodined [-v] [-h] [-c] [-s] [-f] [-D] [-u user] [-t chrootdir] [-d device] [-m mtu] [-z context] [-l ip address to listen on] [-p port] [-n external ip] [-b dnsport] [-P password] [-F pidfile] [-i max idle time] tunnel_ip[/netmask] topdomain",
+        "-h": "iodine IP over DNS tunneling server\nUsage: iodined [-v] [-h] [-c] [-s] [-f] [-D] [-u user] [-t chrootdir] [-d device] [-m mtu] [-z context] [-l ip address to listen on] [-p port] [-n external ip] [-b dnsport] [-P password] [-F pidfile] tunnel_ip[/netmask] topdomain\n  -v to print version info and exit\n  -h to print this help and exit\n  -c to disable check of client IP/port on each request\n  -s to skip creating and configuring the tun device, which then has to be created manually\n  -f to keep running in foreground\n  -D to increase debug level\n     (using -DD in UTF-8 terminal: \"LC_ALL=C luit iodined -DD ...\")\n  -u name to drop privileges and run as user 'name'\n  -t dir to chroot to directory dir\n  -d device to set tunnel device name\n  -m mtu to set tunnel device mtu\n  -z context to apply SELinux context after initialization\n  -l ip address to listen on for incoming dns traffic (default 0.0.0.0)\n  -p port to listen on for incoming dns traffic (default 53)\n  -n ip to respond with to NS queries\n  -b port to forward normal DNS queries to (on localhost)\n  -P password used for authentication (max 32 chars will be used)\n  -F pidfile to write pid to a file\n  -i maximum idle time before shutting down\ntunnel_ip is the IP number of the local tunnel interface.\n   /netmask sets the size of the tunnel network.\ntopdomain is the FQDN that is delegated to this server.",
+        "help": "Usage: iodined [-v] [-h] [-c] [-s] [-f] [-D] [-u user] [-t chrootdir] [-d device] [-m mtu] [-z context] [-l ip address to listen on] [-p port] [-n external ip] [-b dnsport] [-P password] [-F pidfile] [-i max idle time] tunnel_ip[/netmask] topdomain",
+        "man": "IODINE(8)                   System Manager's Manual                   IODINE(8)\n\nNAME\n     iodine, iodined - tunnel IPv4 over DNS\n\nSYNOPSIS\n     iodine [-v]\n\n     iodine [-h]\n\n     iodine  [-4]  [-6]  [-f] [-r] [-u user ] [-P password ] [-m fragsize ] [-t\n     chrootdir ] [-d device ] [-R rdomain ] [-m fragsize ] [-M  namelen  ]  [-z\n     context ] [-F pidfile ] [-T dnstype ] [-O downenc ] [-L 0|1 ] [-I interval\n     ] [ nameserver ] topdomain\n\n     iodined [-v]\n\n     iodined [-h]\n\n     iodined  [-c]  [-s]  [-f] [-D] [-u user ] [-t chrootdir ] [-d device ] [-m\n     mtu ] [-l listen_ip ] [-p port ] [-n ( auto | external_ip ) ] [-b  dnsport\n     ] [-P password ] [-z context ] [-F pidfile ] [-i max_idle_time ] tunnel_ip\n     [ /netmask ] topdomain\n\nDESCRIPTION\n     iodine  lets you tunnel IPv4 data through a DNS server. This can be useful\n     in situations where Internet access is firewalled, but DNS queries are al-\n     lowed. It needs a TUN/TAP device to operate. The bandwidth  is  asymmetri-\n     cal,  with  a measured maximum of 680 kbit/s upstream and 2.3 Mbit/s down-\n     stream in a wired LAN test network.  Realistic sustained throughput  on  a\n     Wifi  network using a carrier-grade DNS cache has been measured at some 50\n     kbit/s upstream and over 200 kbit/s downstream.  iodine is the client  ap-\n     plication, iodined is the server.\n\n     Note:  server and client are required to speak the exact same protocol. In\n     most cases, this means running the same iodine version. Unfortunately, im-\n     plementing backward and forward protocol compatibility is usually not fea-\n     sible.\n\nOPTIONS\n   Common Options:\n     -v     Print version info and exit.\n\n     -h     Print usage info and exit.\n\n     -f     Keep running in foreground.\n\n     -u user\n            Drop privileges and run as user 'user' after setting up tunnel.\n\n     -t chrootdir\n            Chroot to 'chrootdir' after setting up tunnel.\n\n     -d device\n            Use the TUN device 'device' instead of the  normal  one,  which  is\n            dnsX on Linux and otherwise tunX.\n\n     -P password\n            Use  'password' to authenticate. If not used, stdin will be used as\n            input. Only the first 32 characters will be used.\n\n     -z context\n            Apply SELinux 'context' after initialization.\n\n     -F pidfile\n            Create 'pidfile' and write process id in it.\n\n   Client Options:\n     -4     Force IPv4 DNS queries\n\n     -6     Force IPv6 DNS queries\n\n     -r     Skip raw UDP mode. If not used, iodine will try getting the  public\n            IP  address  of  the  iodined  host and test if it is reachable di-\n            rectly. If it is, traffic will be sent to the server instead of the\n            DNS relay.\n\n     -R rdomain\n            Use OpenBSD routing domain 'rdomain' for the DNS connection.\n\n     -m fragsize\n            Force maximum downstream fragment size. Not setting this will cause\n            the client to automatically probe the maximum  accepted  downstream\n            fragment size.\n\n     -M namelen\n            Maximum  length  of  upstream hostnames, default 255.  Usable range\n            ca. 100 to 255.  Use this option to scale back  upstream  bandwidth\n            in favor of downstream bandwidth.  Also useful for DNS servers that\n            perform  unreliably  when  using  full-length hostnames, noticeable\n            when fragment size autoprobe returns very  different  results  each\n            time.\n\n     -T dnstype\n            DNS  request  type  override.  By default, autodetection will probe\n            for working DNS request types, and will  select  the  request  type\n            that  is  expected  to provide the most bandwidth.  However, it may\n            turn out that a DNS relay imposes limits  that  skew  the  picture,\n            which  may  lead to an \"unexpected\" DNS request type providing more\n            bandwidth.  In that case, use this option to override  the  autode-\n            tection.   In  (expected) decreasing bandwidth order, the supported\n            DNS request types are: NULL, PRIVATE, TXT, SRV,  MX,  CNAME  and  A\n            (returning  CNAME).   Note  that SRV, MX and A may/will cause addi-\n            tional lookups by \"smart\" caching nameservers to get an  actual  IP\n            address, which may either slow down or fail completely. The PRIVATE\n            type  uses  value  65399  (in the 'private use' range) and requires\n            servers implementing RFC 3597.\n\n     -O downenc\n            Force downstream encoding type for all query type responses  except\n            NULL.   Default  is autodetected, but may not spot all problems for\n            the more advanced codecs.  Use this option to override the  autode-\n            tection.   Base32 is the lowest-grade codec and should always work;\n            this is used when autodetection fails.  Base64 provides more  band-\n            width,  but  may  not work on all nameservers.  Base64u is equal to\n            Base64 except in using underscore ('_') instead of plus sign ('+'),\n            possibly working where Base64 does not.   Base128  uses  high  byte\n            values  (mostly  accented  letters  in iso8859-1), which might work\n            with some nameservers.  For TXT queries, Raw will  provide  maximum\n            performance,  but  this  will  only  work if the nameserver path is\n            fully 8-bit-clean for responses that are  assumed  to  be  \"legible\n            text\".\n\n     -L 0|1\n            Lazy-mode  switch.   -L1 (default): Use lazy mode for improved per-\n            formance and decreased latency.  A very small minority of  DNS  re-\n            lays  appears to be unable to handle the lazy mode traffic pattern,\n            resulting in no or very little data  coming  through.   The  iodine\n            client  will detect this and try to switch back to legacy mode, but\n            this may not always work.  In these situations  use  -L0  to  force\n            running in legacy mode (implies -I1).\n\n     -I interval\n            Maximum  interval between requests (pings) so that intermediate DNS\n            servers will not time out. Default is 4 in lazy  mode,  which  will\n            work  fine  in most cases. When too many SERVFAIL errors occur, io-\n            dine will automatically reduce this to 1.  To get absolute  minimum\n            DNS  traffic,  increase well above 4, but not so high that SERVFAIL\n            errors start to occur.  There are some DNS relays with  very  small\n            timeouts, notably dnsadvantage.com (ultradns), that will give SERV-\n            FAIL  errors  even  with -I1; data will still get trough, and these\n            errors can be ignored.  Maximum useful value is 59,  since  iodined\n            will close a client's connection after 60 seconds of inactivity.\n\n   Server Options:\n     -c     Disable  checking  the  client IP address on all incoming requests.\n            By default, requests originating  from  non-matching  IP  addresses\n            will  be  rejected,  however this will cause problems when requests\n            are routed via a cluster of DNS servers.\n\n     -s     Don't try to configure IP address or MTU.  This should only be used\n            if you have already configured the device that will be used.\n\n     -D     Increase debug level. Level 1 prints info about each RX/TX  packet.\n            Implies  the  -f  option.   On level 2 (-DD) or higher, DNS queries\n            will be printed literally.  When using Base128  upstream  encoding,\n            this is best viewed as ISO Latin-1 text instead of (illegal) UTF-8.\n            This  is  easily  done  with : \"LC_ALL=C luit iodined -DD ...\" (see\n            luit(1)).\n\n     -m mtu\n            Set 'mtu' as mtu size for the tun device.  This will be sent to the\n            client on login, and the client will use the same mtu for  its  tun\n            device.  Default 1130.  Note that the DNS traffic will be automati-\n            cally fragmented when needed.\n\n     -l listen_ip\n            Make  the  server listen only on 'listen_ip' for incoming requests.\n            By default, incoming requests are accepted from all interfaces.\n\n     -p port\n            Make the server listen on 'port' instead of  53  for  traffic.   If\n            'listen_ip' does not include localhost, this 'port' can be the same\n            as  'dnsport'.   Note: You must make sure the dns requests are for-\n            warded to this port yourself.\n\n     -n auto|external_ip\n            The IP address to return in NS responses. Default is to return  the\n            address  used  as  destination  in  the  query.   If external_ip is\n            'auto', iodined will use externalip.net web service to retrieve the\n            external IP of the host and use that for NS responses.\n\n     -b dnsport\n            If this port is specified, all incoming  requests  not  inside  the\n            tunnel  domain  will  be forwarded to this port on localhost, to be\n            handled by a real dns.  If 'listen_ip' does not include  localhost,\n            this  'dnsport' can be the same as 'port'.  Note: The forwarding is\n            not fully transparent, and not advised for use in production  envi-\n            ronments.\n\n     -i max_idle_time\n            Make the server stop itself after max_idle_time seconds if no traf-\n            fic  have  been  received.  This should be combined with systemd or\n            upstart on demand activation for being effective.\n\n   Client Arguments:\n     nameserver\n            The nameserver to use to relay the dns traffic. This can be any re-\n            laying nameserver or the server running iodined if reachable.  This\n            field  can  be given as an IPv4/IPv6 address or as a hostname. This\n            argument is optional, and if not specified  a  nameserver  will  be\n            read from the /etc/resolv.conf file.\n\n     topdomain\n            The  dns traffic will be sent as queries for subdomains under 'top-\n            domain'. This is normally a subdomain to a domain you  own.  Use  a\n            short  domain  name  to get better throughput. If nameserver is the\n            iodined server, then the topdomain can be chosen freely. This argu-\n            ment must be the same on both the client and the server.\n\n   Server Arguments:\n     tunnel_ip[/netmask]\n            This is the server's ip address on the tun  interface.  The  client\n            will be given the next ip number in the range. It is recommended to\n            use  the 10.0.0.0 or 172.16.0.0 ranges. The default netmask is /27,\n            can be overridden by specifying it here. Using  a  smaller  network\n            will limit the number of concurrent users.\n\n     topdomain\n            The dns traffic is expected to arrive as queries for subdomains un-\n            der  'topdomain'. This is normally a subdomain to a domain you own.\n            Use a short domain name to get  better  throughput.  This  argument\n            must be the same on both the client and the server. Queries for do-\n            mains  other  than 'topdomain' will be forwarded when the -b option\n            is given, otherwise they will be dropped.\n\nEXAMPLES\n     See the README file for both a quick test scenario,  and  a  detailed  de-\n     scription of real-world deployment.\n\nSECURITY\n     Login  is  a relatively secure challenge-response MD5 hash, with the pass-\n     word never passing the wire.  However, all other data is NOT encrypted  in\n     any  way. The DNS traffic is also vulnerable to replay, injection and man-\n     in-the-middle attacks, especially when iodined is used with the -c option.\n     Use of ssh or vpn tunneling is strongly recommended.  On both  server  and\n     client, use iptables, pf or other firewalls to block all traffic coming in\n     from the tun interfaces, except to the used ssh or vpn ports.\n\nENVIRONMENT\n   IODINE_PASS\n     If  the environment variable IODINE_PASS is set, iodine will use the value\n     it is set to as password instead of asking for one. The  -P  option  still\n     has precedence.\n\n   IODINED_PASS\n     If  the  environment  variable  IODINED_PASS  is set, iodined will use the\n     value it is set to as password instead of asking for one.  The  -P  option\n     still has precedence.\n\nSEE ALSO\n     The  README  file  in the source distribution contains some more elaborate\n     information.\n\nBUGS\n     File bugs at http://dev.kryo.se/iodine/\n\nAUTHORS\n     Erik Ekman <yarrick@kryo.se> and  Bjorn  Andersson  <flex@kryo.se>.  Major\n     contributions by Anne Bezemer.\n\nUser Manuals                        JUN 2014                          IODINE(8)",
+        "apropos": "iodined (8)          - tunnel IPv4 over DNS"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/iodined",
+        "size_bytes": 72184,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8a0bcf7ea41f435c606ed2d3d03d2d0d27aae4cb, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/iodine/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/iodine/index.md",
+    "retrieved_at": "2026-07-14T13:06:05+00:00",
+    "sha256": "4fff7ceb8d36eadf6a6ac77be54b58c79f6eaa0d40385329a3de4771adc0e223"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "245",
+    "maintainer": "gregor herrmann <gregoa@debian.org>",
+    "architecture": "amd64",
+    "version": "0.7.0-13",
+    "depends": "debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.38), libsystemd0, zlib1g (>= 1:1.1.4), adduser, net-tools, udev | makedev",
+    "suggests": "bind9-dnsutils, fping | oping, gawk, ipcalc, iproute2, network-manager-iodine, network-manager-iodine-gnome",
+    "description": "tool for tunneling IPv4 data through a DNS server\nThis is a piece of software that lets you tunnel IPv4 data through a DNS\nserver. This can be usable in different situations where internet access is\nfirewalled, but DNS queries are allowed.",
+    "homepage": "https://code.kryo.se/iodine"
+  },
+  "tags": [
+    "offensive",
+    "iodine",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/iodine && python3 iodine.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/iodine && python3 iodine.py --help",
+    "cd toolboxes/iodine && python3 iodine.py --help",
+    "cd toolboxes/iodine && python3 iodine.py --help",
+    "cd toolboxes/iodine && python3 iodine.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST iodine --output $KFIOSA_OUTPUT_DIR/iodine.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST iodine --output $KFIOSA_OUTPUT_DIR/iodine.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

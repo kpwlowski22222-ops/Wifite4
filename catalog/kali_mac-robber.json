@@ -1,0 +1,153 @@
+{
+  "id": "kali:mac-robber",
+  "kind": "kali_source_package",
+  "name": "mac-robber",
+  "title": "mac-robber",
+  "summary": "### mac-robber",
+  "version": "1.02-14",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://www.sleuthkit.org/mac-robber",
+  "repository": "https://salsa.debian.org/pkg-security-team/mac-robber",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install mac-robber"
+  },
+  "packages": [
+    {
+      "name": "mac-robber"
+    }
+  ],
+  "commands": [
+    {
+      "name": "mac-robber",
+      "description": "Collects data about allocated files in mounted filesystems",
+      "usage": "mac-robber [-V] <directories>",
+      "arguments": [
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print the version to stdout",
+          "default": null,
+          "choices": null,
+          "raw": " -V: Print the version to stdout"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print help.",
+          "default": null,
+          "choices": null,
+          "raw": "     -h     Print help."
+        }
+      ],
+      "raw_help": "root@kali:~# mac-robber -h\n usage: mac-robber [-V] <directories>\n -V: Print the version to stdout",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: mac-robber [-V] <directories>\n  -V: Print the version to stdout",
+        "-h": "usage: mac-robber [-V] <directories>\n  -V: Print the version to stdout",
+        "help": "class|host|start_time\nbody|kali|1784034389\nMD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime\ninvalid directory: help/",
+        "man": "ma...r(1)  collects data about allocated files in mounted filesystems ma...r(1)\n\nNAME\n     mac-robber - collects data about allocated files in mounted filesystems\n\nSYNOPSIS\n     mac-robber [OPTION]\n     mac-robber <DIRECTORY>\n\nDESCRIPTION\n     mac-robber  is  a digital investigation tool (digital forensics) that col-\n     lects metadata from allocated files in a mounted filesystem. This is  use-\n     ful  during incident response when analyzing a live system or when analyz-\n     ing a dead system in a lab. The data can be used by the  mactime  tool  in\n     The  Sleuth  Kit (TSK or SleuthKit only) to make a timeline of file activ-\n     ity. The mac-robber tool is based on the grave-robber tool from  TCT  (The\n     Coroners Toolkit).\n\n     mac-robber  requires  that the filesystem be mounted by the operating sys-\n     tem, unlike the tools in The Sleuth Kit that process the filesystem  them-\n     selves.  Therefore, mac-robber will not collect data from deleted files or\n     files that have been hidden by rootkits.\n\n     mac-robber  will  also  modify  the  Access  times on directories that are\n     mounted with write permissions. When  in  forensics  analysis  you  should\n     mount the target partition as read-only.\n\n     mac-robber  is useful when dealing with a filesystem that is not supported\n     by The Sleuth Kit or other filesystem analysis tools. You can run mac-rob-\n     ber on an obscure, suspect UNIX filesystem that has been mounted read-only\n     on a trusted system.\n\nOPTIONS\n     -h     Print help.\n\n     -V     Show the version.\n\nEXAMPLE\n     To see metadata from all files in a directory (recursively):\n\n           $ mac-robber /home/user/directory\n\n     To make a timeline using mactime command from The  Sleuth  Kit  (TSK)  and\n     setting Brazilian timezone:\n\n           $ mac-robber /home/user/directory | mactime -z BRT\n\n     An alternative is write the results into a file and read it using mactime:\n\n           $ mac-robber /home/user/directory > /tmp/files.mr\n           $ mactime -b /tmp/files.mr -z BRT\n\nAUTHOR\n     The Sleuth Kit was written by Brian Carrier <carrier@sleuthkit.org>.\n\n     This  manual  page  was  written by Joao Eriberto Mota Filho <eriberto@de-\n     bian.org> for the Debian project (but may be used by others).\n\nmac-robber-1.02                   16 Mai 2013                         ma...r(1)",
+        "apropos": "mac-robber (1)       - collects data about allocated files in mounted filesys..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/mac-robber",
+        "size_bytes": 14488,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b20800616c7d91f6a5136c9b949a674886624aaa, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/mac-robber/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/mac-robber/index.md",
+    "retrieved_at": "2026-07-14T13:06:29+00:00",
+    "sha256": "0ca7c0161b4fe5cf278401fd774988917166769093a88de40ca05adcf1a006c9"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "35",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.02-14",
+    "depends": "libc6 (>= 2.34)",
+    "suggests": "sleuthkit",
+    "description": "collects data about allocated files in mounted filesystems\nmac-robber is a digital investigation tool (digital forensics) that collects\nmetadata from allocated files in a mounted filesystem. This is useful during\nincident response when analyzing a live system or when analyzing a dead\nsystem in a lab. The data can be used by the mactime tool in The Sleuth Kit\n(TSK or SleuthKit only) to make a timeline of file activity. The mac-robber\ntool is based on the grave-robber tool from TCT (The Coroners Toolkit).\n.\nmac-robber requires that the filesystem be mounted by the operating system,\nunlike the tools in The Sleuth Kit that process the filesystem themselves.\nTherefore, mac-robber will not collect data from deleted files or files that\nhave been hidden by rootkits. mac-robber will also modify the Access times\non directories that are mounted with write permissions.\n.\nmac-robber is useful when dealing with a filesystem that is not supported\nby The Sleuth Kit or other filesystem analysis tools. You can run mac-robber\non an obscure, suspect UNIX filesystem that has been mounted read-only on a\ntrusted system.",
+    "homepage": "https://www.sleuthkit.org/mac-robber"
+  },
+  "tags": [
+    "offensive",
+    "mac",
+    "robber",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/mac-robber && python3 mac-robber.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/mac-robber && python3 mac-robber.py --help",
+    "cd toolboxes/mac-robber && python3 mac-robber.py --help",
+    "cd toolboxes/mac-robber && python3 mac-robber.py --help",
+    "cd toolboxes/mac-robber && python3 mac-robber.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mac-robber --output $KFIOSA_OUTPUT_DIR/mac-robber.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mac-robber --output $KFIOSA_OUTPUT_DIR/mac-robber.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

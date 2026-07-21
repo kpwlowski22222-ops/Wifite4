@@ -1,0 +1,131 @@
+{
+  "id": "github:haxorthematrix/iSniff-GPS-ng",
+  "kind": "external_repository",
+  "name": "iSniff-GPS-ng",
+  "full_name": "haxorthematrix/iSniff-GPS-ng",
+  "owner": "haxorthematrix",
+  "category": "WiFi Reconnaissance — GPS Wardrive",
+  "url": "https://github.com/haxorthematrix/iSniff-GPS-ng",
+  "summary": "Repository indexing entry for the ``iSniff-GPS-ng`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/haxorthematrix__iSniff-GPS-ng",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "Web UI: `python main.py` (serves http://localhost:8000, /docs, /admin). Live capture: `sudo airmon-ng start wlan0` then `sudo venv/bin/python services/capture.py -i mon0`. Pcap import: `venv/bin/python services/capture.py -r capture.pcap`. Prod: `uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4`."
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "Web UI: `python main.py` (serves http://localhost:8000, /docs, /admin). Live capture: `sudo airmon-ng start wlan0` then `sudo venv/bin/python services/capture.py -i mon0`. Pcap import: `venv/bin/python services/capture.py -r capture.pcap`. Prod: `uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4`."
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "scapy",
+    "fastapi",
+    "uvicorn",
+    "jinja2",
+    "python-multipart",
+    "aiofiles",
+    "sqlmodel",
+    "alembic",
+    "sqladmin",
+    "protobuf",
+    "requests",
+    "dnslib",
+    "netaddr",
+    "python-dotenv",
+    "pydantic-settings",
+    "aircrack-ng (airmon-ng for monitor mode)"
+  ],
+  "algorithms": [
+    "passive 802.11 probe-request sniffer via Scapy monitor-mode capture",
+    "client profiling indexed by MAC with OUI/manufacturer enrichment (netaddr)",
+    "client-to-probed-AP correlation through ClientAPLink table (reverse SSID->BSSID tracking)",
+    "Apple wloc WiFi positioning via protobuf-encoded BSSID query (proto/BSSIDApple.proto)",
+    "Apple GSM/UMTS + LTE cell-tower geolocation (proto/GSM.proto)",
+    "Wigle.net v2 API SSID/BSSID geolocation lookup",
+    "SQLite-backed persistence of Client/AP/Location entities with lat/lon per source (apple/wigle/manual)",
+    "pcap replay/import as alternative to live capture"
+  ],
+  "produces": [
+    "SQLite DB (isniff.db) of Clients (MAC, manufacturer, last-seen, probed SSIDs)",
+    "AP records (BSSID, SSID, manufacturer, last-probed, lat/lon, address)",
+    "Location records tagged by source: apple / wigle / manual",
+    "Interactive Google Maps heatmap with circle/polygon drawing tools",
+    "real-time UI stream of captured probe data",
+    "OpenAPI docs at /docs listing ~15 routes",
+    "SQLAdmin browsable/editable DB at /admin"
+  ],
+  "capability_bucket": "gps_wardrive",
+  "runnable": true,
+  "novelty": "Not a thin airodump-ng wrapper — it only uses airmon-ng for monitor-mode setup and Scapy for packet parsing (baseline). The genuinely novel value is the geolocation-correlation pipeline: turning passively captured BSSIDs/SSIDs into physical coordinates via Apple's wloc protobuf WiFi-positioning API and Apple cell-tower lookup (regenerated proto defs, SSL-verify-disabled quirk), plus Wigle v2 API SSID geolocation, then rendering them on an interactive Google Maps heatmap with reverse SSID->BSSID network tracking across physical locations. The probe-request client-profiling data model (MAC-indexed with OUI, probed-AP link table) goes beyond airodump-ng's CSV. Architecturally novel vs original iSniff-GPS: async Scapy capture loop integrated into the FastAPI ASGI process, plus XSS/eval hardening.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "isniff",
+    "gps",
+    "ng",
+    "haxorthematrix",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/iSniff-GPS-ng && python3 iSniff-GPS-ng.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/iSniff-GPS-ng && python3 iSniff-GPS-ng.py --help",
+    "cd toolboxes/iSniff-GPS-ng && python3 iSniff-GPS-ng.py --help",
+    "cd toolboxes/iSniff-GPS-ng && python3 iSniff-GPS-ng.py --help",
+    "cd toolboxes/iSniff-GPS-ng && python3 iSniff-GPS-ng.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST iSniff-GPS-ng --output $KFIOSA_OUTPUT_DIR/iSniff-GPS-ng.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST iSniff-GPS-ng --output $KFIOSA_OUTPUT_DIR/iSniff-GPS-ng.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

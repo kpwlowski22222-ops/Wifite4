@@ -1,0 +1,134 @@
+{
+  "id": "kali:iaxflood",
+  "kind": "kali_source_package",
+  "name": "iaxflood",
+  "title": "iaxflood",
+  "summary": "### iaxflood",
+  "version": "0.1-1kali5",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://www.hackingexposedvoip.com/sec_tools.html",
+  "repository": "https://gitlab.com/kalilinux/packages/iaxflood",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-voip",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install iaxflood"
+  },
+  "packages": [
+    {
+      "name": "iaxflood"
+    }
+  ],
+  "commands": [
+    {
+      "name": "iaxflood",
+      "description": "- - -",
+      "usage": "iaxflood sourcename destinationname numpackets",
+      "arguments": [],
+      "raw_help": "root@kali:~# iaxflood 192.168.1.202 192.168.1.1 500\nWill flood port 4569 from port 4569 500 times\nWe have IP_HDRINCL",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "iaxflood 192.168.1.202 192.168.1.1 500\nWill flood port 4569 from port 4569 500 times\nWe have IP_HDRINCL",
+          "template": null,
+          "original_sha256": "5113bda05ac59bab8126672926737897ad94ade6a2da6fdcbacf28e1850265be"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "vulnerability"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: iaxflood sourcename destinationname numpackets",
+        "-h": "usage: iaxflood sourcename destinationname numpackets",
+        "help": "usage: iaxflood sourcename destinationname numpackets"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/iaxflood",
+        "size_bytes": 14584,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b6db9506cd4f04f80e28e5ee76b565b864e5025d, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/iaxflood/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/iaxflood/index.md",
+    "retrieved_at": "2026-07-14T13:06:02+00:00",
+    "sha256": "cbe88dca6fcdd2674aeaa9f74594386cf835ef328346c9246bde83455a0b996b"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "25",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "0.1-1kali5",
+    "depends": "libc6 (>= 2.34)",
+    "description": "VoIP flooder tool\nA UDP Inter-Asterisk_eXchange (i.e. IAX) packet was captured\nfrom an IAX channel between two Asterisk IP PBX's. The\ncontent of that packet is the source of the payload for the\nattack embodied by this tool. While the IAX protocol header\nmight not match the Asterisk PBX you'll attack with this\ntool, it may require more processing on the part of the PBX\nthan a simple udpflood without any payload that even\nresembles an IAX payload.",
+    "homepage": "http://www.hackingexposedvoip.com/sec_tools.html"
+  },
+  "tags": [
+    "offensive",
+    "iaxflood",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/iaxflood && python3 iaxflood.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/iaxflood && python3 iaxflood.py --help",
+    "cd toolboxes/iaxflood && python3 iaxflood.py --help",
+    "cd toolboxes/iaxflood && python3 iaxflood.py --help",
+    "cd toolboxes/iaxflood && python3 iaxflood.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST iaxflood --output $KFIOSA_OUTPUT_DIR/iaxflood.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST iaxflood --output $KFIOSA_OUTPUT_DIR/iaxflood.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

@@ -1,0 +1,905 @@
+{
+  "id": "kali:arp-scan",
+  "kind": "kali_source_package",
+  "name": "arp-scan",
+  "title": "arp-scan",
+  "summary": "### arp-scan",
+  "version": "1.10.0-2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/royhills/arp-scan",
+  "repository": "https://salsa.debian.org/pkg-security-team/arp-scan",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large"
+  ],
+  "install": {
+    "apt": "sudo apt install arp-scan"
+  },
+  "packages": [
+    {
+      "name": "arp-scan"
+    }
+  ],
+  "commands": [
+    {
+      "name": "arp-fingerprint",
+      "description": "Fingerprint a system using ARP",
+      "usage": "arp-fingerprint [options] <target>",
+      "arguments": [
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": "Display this usage message.",
+          "takes_value": true,
+          "description": "Display a brief usage message and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "       -h Display this usage message."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": "Give verbose progress messages.",
+          "takes_value": true,
+          "description": "Display verbose progress messages.",
+          "default": null,
+          "choices": null,
+          "raw": "       -v Give verbose progress messages."
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "option-string Pass specified options to arp-scan",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-o <option-string> Pass specified options to arp-scan"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "Fingerprint all targets in the local net.",
+          "takes_value": true,
+          "description": "Fingerprint  all  hosts  on  the  local network. You do not need to",
+          "default": null,
+          "choices": null,
+          "raw": " \t-l Fingerprint all targets in the local net."
+        }
+      ],
+      "raw_help": "root@kali:~# arp-fingerprint -h\n Usage: arp-fingerprint [options] <target>\n Fingerprint the target system using arp-scan.\n \n 'options' is one or more of:\n       -h Display this usage message.\n       -v Give verbose progress messages.\n \t-o <option-string> Pass specified options to arp-scan\n \t-l Fingerprint all targets in the local net.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ arp-fingerprint 192.168.0.1\n192.168.0.1   01000100000     Linux 2.2, 2.4, 2.6",
+          "template": null,
+          "original_sha256": "d4167da5a1c49bb95bb50926c2afa43b0106b1475c42e47168a38bcee96a7637"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ arp-fingerprint -o \"-N -I eth1\" 192.168.0.202\n192.168.0.202 11110100000     FreeBSD 5.3, Win98, WinME, NT4, 2000, XP, 2003",
+          "template": null,
+          "original_sha256": "70b9f12888295567616a8e693632cb03fa5e4b44f69217aa62ef689e1ab45c08"
+        }
+      ],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "/usr/sbin/arp-fingerprint version [unknown] calling Getopt::Std::getopts (version 1.14 [paranoid]),\nrunning under Perl version 5.40.1.\n\nUsage: arp-fingerprint [-OPTIONS [-MORE_OPTIONS]] [--] [PROGRAM_ARG1 ...]\n\nThe following single-character options are accepted:\n\tWith arguments: -o\n\tBoolean (without arguments): -h -l -v\n\nOptions may be merged together.  -- stops processing of options.\nSpace is not required between options and their arguments.\n  [Now continuing due to backward compatibility and excessive paranoia.\n   See 'perldoc Getopt::Std' about $Getopt::Std::STANDARD_HELP_VERSION.]\nUsage: arp-fingerprint [options] <target>\nFingerprint the target system using arp-scan.\n\n'options' is one or more of:\n        -h Display this usage message.\n        -v Give verbose progress messages.\n\t-o <option-string> Pass specified options to arp-scan\n\t-l Fingerprint all targets in the local net.",
+        "-h": "Usage: arp-fingerprint [options] <target>\nFingerprint the target system using arp-scan.\n\n'options' is one or more of:\n        -h Display this usage message.\n        -v Give verbose progress messages.\n\t-o <option-string> Pass specified options to arp-scan\n\t-l Fingerprint all targets in the local net.",
+        "help": "WARNING: get_host_address failed for \"help\": Temporary failure in name resolution - target ignored\nERROR: No hosts to process.",
+        "man": "ARP-FINGERPRINT(1)          General Commands Manual          ARP-FINGERPRINT(1)\n\nNAME\n     arp-fingerprint - Fingerprint a system using ARP\n\nSYNOPSIS\n     arp-fingerprint [options] target\n\n     The  target  should  be specified as a single IP address or hostname.  You\n     cannot specify multiple targets, IP networks or ranges.\n\n     If you use an IP address for the target, you can use the -o option to pass\n     the --numeric option to arp-scan, which will prevent  it  from  attempting\n     DNS  lookups.  This can speed up the fingerprinting process, especially on\n     systems with a slow or faulty DNS configuration.\n\nDESCRIPTION\n     arp-fingerprint fingerprints the specified target host using the ARP  pro-\n     tocol.\n\n     It sends various different types of ARP request to the target, and records\n     which  types it responds to. From this, it constructs a fingerprint string\n     consisting of \"1\" where the target responded and \"0\" where it did not.  An\n     example of a fingerprint string is 01000100000.  This  fingerprint  string\n     is then used to lookup the likely target operating system.\n\n     Many  of  the fingerprint strings are shared by several operating systems,\n     so there is not always a one-to-one mapping  between  fingerprint  strings\n     and operating systems. Also the fact that a system's fingerprint matches a\n     certain operating system (or list of operating systems) does not necessar-\n     ily mean that the system being fingerprinted is that operating system, al-\n     though  it  is quite likely. This is because the list of operating systems\n     is not exhaustive; it is just what I have discovered to  date,  and  there\n     are bound to be operating systems that are not listed.\n\n     The  ARP  fingerprint of a system is generally a function of that system's\n     kernel (although it is possible for the ARP function to be implemented  in\n     user space, it almost never is).\n\n     Sometimes,  an  operating system can give different fingerprints depending\n     on the configuration.  An example is Linux, which will respond to  a  non-\n     local  source  IP address if that IP is routed through the interface being\n     tested.  This is both good and bad: on one hand it makes the  fingerprint-\n     ing  task more complex; but on the other, it can allow some aspects of the\n     system configuration to be determined.\n\n     Sometimes the fact that two different operating systems share a common ARP\n     fingerprint string points to a re-use of networking code. One  example  of\n     this is Windows NT and FreeBSD.\n\n     arp-fingerprint  uses  arp-scan  to  send the ARP requests and receive the\n     replies.\n\n     There are other methods that can be used to  fingerprint  a  system  using\n     arp-scan  which  can  be used in addition to arp-fingerprint.  These addi-\n     tional methods are not included in arp-fingerprint either because they are\n     likely to cause disruption to the target system, or because  they  require\n     knowledge of the target's configuration that may not always be available.\n\n     Most  of  the ARP requests that arp-fingerprint sends are non-standard, so\n     it could disrupt systems that don't have a robust TCP/IP stack.\n\nOPTIONS\n     -h     Display a brief usage message and exit.\n\n     -v     Display verbose progress messages.\n\n     -o <option-string>\n            Pass specified options to arp-scan. You need to enclose the options\n            string in quotes if it contains spaces. e.g.  -o  \"-I  eth1\".   The\n            commonly used options are --interface (-I) and --numeric (-N).\n\n     -l     Fingerprint  all  hosts  on  the  local network. You do not need to\n            specify any target hosts if this option is given.\n\nEXAMPLES\n     $ arp-fingerprint 192.168.0.1\n     192.168.0.1   01000100000     Linux 2.2, 2.4, 2.6\n\n     $ arp-fingerprint -o \"-N -I eth1\" 192.168.0.202\n     192.168.0.202 11110100000     FreeBSD 5.3, Win98, WinME, NT4, 2000, XP, 2003\n\nNOTES\n     arp-fingerprint is implemented in Perl, so you need to have the  Perl  in-\n     terpreter installed on your system to use it.\n\nSEE ALSO\n     arp-scan(1)\n\n     http://www.royhills.co.uk/wiki/ The arp-scan wiki page.\n\n                                October 27, 2022             ARP-FINGERPRINT(1)",
+        "apropos": "arp-fingerprint (1)  - Fingerprint a system using ARP"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/arp-fingerprint",
+        "size_bytes": 12182,
+        "is_symlink": false,
+        "file_type": "Perl script text executable"
+      }
+    },
+    {
+      "name": "arp-scan",
+      "description": "Send ARP requests to target hosts and display responses",
+      "usage": "arp-scan [options] [hosts...]",
+      "arguments": [
+        {
+          "flags": [
+            "--localnet"
+          ],
+          "metavar": "option is used.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --localnet option is used."
+        },
+        {
+          "flags": [
+            "--help",
+            "-h"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Display this usage message and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " --help or -h\t\tDisplay this usage message and exit."
+        },
+        {
+          "flags": [
+            "--verbose",
+            "-v"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Display verbose progress messages.",
+          "default": null,
+          "choices": null,
+          "raw": " --verbose or -v\t\tDisplay verbose progress messages."
+        },
+        {
+          "flags": [
+            "--version",
+            "-V"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Display program version details and exit.",
+          "default": null,
+          "choices": null,
+          "raw": " --version or -V\t\tDisplay program version details and exit."
+        },
+        {
+          "flags": [
+            "--interface",
+            "-I"
+          ],
+          "metavar": "= s or s Use network interface s .",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --interface=<s> or -I <s> Use network interface <s>."
+        },
+        {
+          "flags": [
+            "--file",
+            "-f"
+          ],
+          "metavar": "= s or s",
+          "takes_value": true,
+          "description": "Read hostnames or addresses from the specified file",
+          "default": null,
+          "choices": null,
+          "raw": " --file=<s> or -f <s>\tRead hostnames or addresses from the specified file"
+        },
+        {
+          "flags": [
+            "--localnet",
+            "-l"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Generate addresses from interface configuration.",
+          "default": null,
+          "choices": null,
+          "raw": " --localnet or -l\tGenerate addresses from interface configuration."
+        },
+        {
+          "flags": [
+            "--file"
+          ],
+          "metavar": "option or give targets on the command line.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t\t\t--file option or give targets on the command line."
+        },
+        {
+          "flags": [
+            "--ouifile",
+            "-O"
+          ],
+          "metavar": "= s or s",
+          "takes_value": true,
+          "description": "Use IEEE registry vendor mapping file <s>.",
+          "default": null,
+          "choices": null,
+          "raw": " --ouifile=<s> or -O <s>\tUse IEEE registry vendor mapping file <s>."
+        },
+        {
+          "flags": [
+            "--macfile",
+            "-m"
+          ],
+          "metavar": "= s or s",
+          "takes_value": true,
+          "description": "Use custom vendor mapping file <s>.",
+          "default": null,
+          "choices": null,
+          "raw": " --macfile=<s> or -m <s>\tUse custom vendor mapping file <s>."
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Display minimal output for each responding host.",
+          "default": null,
+          "choices": null,
+          "raw": " --quiet or -q\t\tDisplay minimal output for each responding host."
+        },
+        {
+          "flags": [
+            "--plain",
+            "-x"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Supress header and footer text.",
+          "default": null,
+          "choices": null,
+          "raw": " --plain or -x\t\tSupress header and footer text."
+        },
+        {
+          "flags": [
+            "--ignoredups",
+            "-g"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Don't display duplicate packets.",
+          "default": null,
+          "choices": null,
+          "raw": " --ignoredups or -g\tDon't display duplicate packets."
+        },
+        {
+          "flags": [
+            "--rtt",
+            "-D"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Calculate and display the packet round-trip time.",
+          "default": null,
+          "choices": null,
+          "raw": " --rtt or -D\t\tCalculate and display the packet round-trip time."
+        },
+        {
+          "flags": [
+            "--format"
+          ],
+          "metavar": ".",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t\t\t--format."
+        },
+        {
+          "flags": [
+            "--format",
+            "-F"
+          ],
+          "metavar": "= s or s",
+          "takes_value": true,
+          "description": "Specify the output format string.",
+          "default": null,
+          "choices": null,
+          "raw": " --format=<s> or -F <s>\tSpecify the output format string."
+        },
+        {
+          "flags": [
+            "--quiet"
+          ],
+          "metavar": "option is specified.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t\t\t--quiet option is specified."
+        },
+        {
+          "flags": [
+            "--random",
+            "-R"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Randomise the target host list.",
+          "default": null,
+          "choices": null,
+          "raw": " --random or -R\t\tRandomise the target host list."
+        },
+        {
+          "flags": [
+            "--randomseed"
+          ],
+          "metavar": "= i",
+          "takes_value": true,
+          "description": "Seed the pseudo random number generator.",
+          "default": null,
+          "choices": null,
+          "raw": " --randomseed=<i>\tSeed the pseudo random number generator."
+        },
+        {
+          "flags": [
+            "--retry",
+            "-r"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Set total number of attempts per host to <i>,",
+          "default": null,
+          "choices": null,
+          "raw": " --retry=<i> or -r <i>\tSet total number of attempts per host to <i>,"
+        },
+        {
+          "flags": [
+            "--backoff",
+            "-b"
+          ],
+          "metavar": "= f or f",
+          "takes_value": true,
+          "description": "Set backoff factor to <f>, default=1.50.",
+          "default": "1",
+          "choices": null,
+          "raw": " --backoff=<f> or -b <f>\tSet backoff factor to <f>, default=1.50."
+        },
+        {
+          "flags": [
+            "--timeout",
+            "-t"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Set initial per host timeout to <i> ms, default=500.",
+          "default": "500",
+          "choices": null,
+          "raw": " --timeout=<i> or -t <i>\tSet initial per host timeout to <i> ms, default=500."
+        },
+        {
+          "flags": [
+            "--interval",
+            "-i"
+          ],
+          "metavar": "= x or x Set minimum packet interval to x .",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --interval=<x> or -i <x> Set minimum packet interval to <x>."
+        },
+        {
+          "flags": [
+            "--bandwidth",
+            "-B"
+          ],
+          "metavar": "= x or x Set outbound bandwidth to x default=256000.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --bandwidth=<x> or -B <x> Set outbound bandwidth to <x>, default=256000."
+        },
+        {
+          "flags": [
+            "--numeric",
+            "-N"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Targets must be IP addresses, not hostnames.",
+          "default": null,
+          "choices": null,
+          "raw": " --numeric or -N\t\tTargets must be IP addresses, not hostnames."
+        },
+        {
+          "flags": [
+            "--resolve",
+            "-d"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Resolve responding addresses to hostnames.",
+          "default": null,
+          "choices": null,
+          "raw": " --resolve or -d\t\tResolve responding addresses to hostnames."
+        },
+        {
+          "flags": [
+            "--arpsha",
+            "-u"
+          ],
+          "metavar": "= m or m",
+          "takes_value": true,
+          "description": "Set the ARP source Ethernet address.",
+          "default": null,
+          "choices": null,
+          "raw": " --arpsha=<m> or -u <m>\tSet the ARP source Ethernet address."
+        },
+        {
+          "flags": [
+            "--arptha",
+            "-w"
+          ],
+          "metavar": "= m or m",
+          "takes_value": true,
+          "description": "Set the ARP target Ethernet address.",
+          "default": null,
+          "choices": null,
+          "raw": " --arptha=<m> or -w <m>\tSet the ARP target Ethernet address."
+        },
+        {
+          "flags": [
+            "--arphrd",
+            "-H"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Set the ARP hardware type, default=1.",
+          "default": "1",
+          "choices": null,
+          "raw": " --arphrd=<i> or -H <i>\tSet the ARP hardware type, default=1."
+        },
+        {
+          "flags": [
+            "--arppro",
+            "-p"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Set the ARP protocol type, default=0x0800.",
+          "default": "0x0800",
+          "choices": null,
+          "raw": " --arppro=<i> or -p <i>\tSet the ARP protocol type, default=0x0800."
+        },
+        {
+          "flags": [
+            "--arphln",
+            "-a"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Set the hardware address length, default=6.",
+          "default": "6",
+          "choices": null,
+          "raw": " --arphln=<i> or -a <i>\tSet the hardware address length, default=6."
+        },
+        {
+          "flags": [
+            "--arppln",
+            "-P"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Set the protocol address length, default=4.",
+          "default": "4",
+          "choices": null,
+          "raw": " --arppln=<i> or -P <i>\tSet the protocol address length, default=4."
+        },
+        {
+          "flags": [
+            "--arpop",
+            "-o"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Specify the ARP operation, default=1.",
+          "default": "1",
+          "choices": null,
+          "raw": " --arpop=<i> or -o <i>\tSpecify the ARP operation, default=1."
+        },
+        {
+          "flags": [
+            "--arpspa",
+            "-s"
+          ],
+          "metavar": "= a or a",
+          "takes_value": true,
+          "description": "Set the source IPv4 address.",
+          "default": null,
+          "choices": null,
+          "raw": " --arpspa=<a> or -s <a>\tSet the source IPv4 address."
+        },
+        {
+          "flags": [
+            "--srcaddr",
+            "-S"
+          ],
+          "metavar": "= m or m Set the source Ethernet MAC address.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --srcaddr=<m> or -S <m> Set the source Ethernet MAC address."
+        },
+        {
+          "flags": [
+            "--destaddr",
+            "-T"
+          ],
+          "metavar": "= m or m Set the destination MAC address.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --destaddr=<m> or -T <m> Set the destination MAC address."
+        },
+        {
+          "flags": [
+            "--prototype",
+            "-y"
+          ],
+          "metavar": "= i or i Sets the Ethernet protocol type default=0x0806.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --prototype=<i> or -y <i> Sets the Ethernet protocol type, default=0x0806."
+        },
+        {
+          "flags": [
+            "--llc",
+            "-L"
+          ],
+          "metavar": "or",
+          "takes_value": true,
+          "description": "Use RFC 1042 LLC/SNAP encapsulation for 802.2 networks.",
+          "default": null,
+          "choices": null,
+          "raw": " --llc or -L\t\tUse RFC 1042 LLC/SNAP encapsulation for 802.2 networks."
+        },
+        {
+          "flags": [
+            "--vlan",
+            "-Q"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Use 802.1Q tagging with VLAN id <i>.",
+          "default": null,
+          "choices": null,
+          "raw": " --vlan=<i> or -Q <i>\tUse 802.1Q tagging with VLAN id <i>."
+        },
+        {
+          "flags": [
+            "--limit",
+            "-M"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Exit after the specified number of hosts have responded.",
+          "default": null,
+          "choices": null,
+          "raw": " --limit=<i> or -M <i>\tExit after the specified number of hosts have responded."
+        },
+        {
+          "flags": [
+            "--pcapsavefile",
+            "-W"
+          ],
+          "metavar": "= s or s",
+          "takes_value": true,
+          "description": "Write received packets to pcap savefile <s>.",
+          "default": null,
+          "choices": null,
+          "raw": " --pcapsavefile=<s> or -W <s>\tWrite received packets to pcap savefile <s>."
+        },
+        {
+          "flags": [
+            "--snap",
+            "-n"
+          ],
+          "metavar": "= i or i",
+          "takes_value": true,
+          "description": "Set the pcap snap length to <i>. Default=64.",
+          "default": "64",
+          "choices": null,
+          "raw": " --snap=<i> or -n <i>\tSet the pcap snap length to <i>. Default=64."
+        },
+        {
+          "flags": [
+            "--retry-send",
+            "-Y"
+          ],
+          "metavar": "= i or i Set number of send attempts default=20.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --retry-send=<i> or -Y <i> Set number of send attempts, default=20."
+        },
+        {
+          "flags": [
+            "--retry-send-interval",
+            "-E"
+          ],
+          "metavar": "= i or i Set interval between send attempts.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " --retry-send-interval=<i> or -E <i> Set interval between send attempts."
+        },
+        {
+          "flags": [
+            "--padding",
+            "-A"
+          ],
+          "metavar": "= h or h",
+          "takes_value": true,
+          "description": "Specify padding after packet data.",
+          "default": null,
+          "choices": null,
+          "raw": " --padding=<h> or -A <h>\tSpecify padding after packet data."
+        },
+        {
+          "flags": [
+            "--arpXXX"
+          ],
+          "metavar": "options as shown in the table below",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --arpXXX options as shown in the table below:"
+        },
+        {
+          "flags": [
+            "--srcaddr"
+          ],
+          "metavar": "for how to change that address. Default is",
+          "takes_value": true,
+          "description": "the  Ethernet",
+          "default": null,
+          "choices": null,
+          "raw": "            --srcaddr for how to change that address. Default is  the  Ethernet"
+        },
+        {
+          "flags": [
+            "--plain"
+          ],
+          "metavar": "removes extraneous output.",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     --plain removes extraneous output."
+        }
+      ],
+      "raw_help": "root@kali:~# arp-scan -h\n Usage: arp-scan [options] [hosts...]\n \n Target hosts must be specified on the command line unless the --file or\n --localnet option is used.\n \n arp-scan uses raw sockets, which requires privileges on some systems:\n \n Linux with POSIX.1e capabilities support using libcap:\n      arp-scan is capabilities aware. It requires CAP_NET_RAW in the permitted\n      set and only enables that capability for the required functions.\n BSD and macOS:\n      You need read/write access to /dev/bpf*\n Any operating system:\n      Running as root or SUID root will work on any OS but other methods\n      are preferable where possible.\n \n Targets can be IPv4 addresses or hostnames. You can also use CIDR notation\n (10.0.0.0/24) (network and broadcast included), ranges (10.0.0.1-10.0.0.10),\n and network:mask (10.0.0.0:255.255.255.0).\n \n Options:\n \n The data type for option arguments is shown by a letter in angle brackets: \n \n <s> Character string.\n <i> Decimal integer, or hex if preceeded by 0x e.g. 2048 or 0x800.\n <f> Floating point decimal number.\n <m> MAC address, e.g. 01:23:45:67:89:ab or 01-23-45-67-89-ab (case insensitive)\n <a> IPv4 address e.g. 10.0.0.1\n <h> Hex encoded binary data. No leading 0x. (case insensitive).\n <x> Something else - see option description.\n \n General Options:\n \n --help or -h\t\tDisplay this usage message and exit.\n \n --verbose or -v\t\tDisplay verbose progress messages.\n \t\t\tCan be used than once to increase verbosity. Max=3.\n \n --version or -V\t\tDisplay program version details and exit.\n \t\t\tShows the version, license details, libpcap version,\n \t\t\tand whether POSIX.1e capability support is included.\n \n --interface=<s> or -I <s> Use network interface <s>.\n \t\t\tIf this option is not specified, arp-scan will search\n \t\t\tthe system interface list for the lowest numbered,\n \t\t\tconfigured up interface (excluding loopback).\n \n Host Selection:\n \n --file=<s> or -f <s>\tRead hostnames or addresses from the specified file\n \t\t\tOne name or address pattern per line. Use \"-\" for stdin.\n \n --localnet or -l\tGenerate addresses from interface configuration.\n \t\t\tGenerates list from interface address and netmask\n \t\t\t(network and broadcast included). You cannot use the\n \t\t\t--file option or give targets on the command line.\n \t\t\tUse --interface to specify the interface.\n \n MAC/Vendor Mapping Files:\n \n --ouifile=<s> or -O <s>\tUse IEEE registry vendor mapping file <s>.\n \t\t\tDefault is ieee-oui.txt in the current directory. If\n \t\t\tthat is not found /usr/share/arp-scan/ieee-oui.txt\n \t\t\tis used.\n \n --macfile=<s> or -m <s>\tUse custom vendor mapping file <s>.\n \t\t\tDefault is mac-vendor.txt in the current directory.\n \t\t\tIf that is not found\n \t\t\t/etc/arp-scan/mac-vendor.txt is used.\n \n Output Format Control:\n \n --quiet or -q\t\tDisplay minimal output for each responding host.\n \t\t\tOnly the IP address and MAC address are displayed.\n \t\t\tReduces memory usage by about 5MB because the\n \t\t\tvendor mapping files are not used. Only the ${ip}\n \t\t\tand ${mac} fields are available for the --format\n \t\t\toption if --quiet is specified.\n \n --plain or -x\t\tSupress header and footer text.\n \t\t\tOnly display the responding host details. Useful if\n \t\t\tthe output will be parsed by a script.\n \n --ignoredups or -g\tDon't display duplicate packets.\n \t\t\tBy default duplicate packets are flagged with\n \t\t\t\"(DUP: n)\" where n is the number of times this\n \t\t\thost has responded.\n \n --rtt or -D\t\tCalculate and display the packet round-trip time.\n \t\t\tThe time is displayed in milliseconds and fractional\n \t\t\tmicroseconds. Makes the ${rtt} field available for\n \t\t\t--format.\n \n --format=<s> or -F <s>\tSpecify the output format string.\n \t\t\tThe format is a string that will be output for each\n \t\t\tresponding host. Host details can be included by\n \t\t\tinserting references to fields using the syntax\n \t\t\t\"${field[;width]}\". Fields are displayed right-\n \t\t\taligned unless the width is negative in which case\n \t\t\tleft alignment will be used. The following case-\n \t\t\tinsensitive field names are recognised:\n \n \t\t\tIP\tHost IPv4 address in dotted quad format\n \t\t\tName\tHost name if --resolve option given\n \t\t\tMAC\tHost MAC address xx:xx:xx:xx:xx:xx\n \t\t\tHdrMAC\tEthernet source addr if different\n \t\t\tVendor\tVendor details string\n \t\t\tPadding\tPadding after ARP packet in hex if nonzero\n \t\t\tFraming\tFraming type if not Ethernet_II\n \t\t\tVLAN\t802.1Q VLAD ID if present\n \t\t\tProto\tARP protocol if not 0x0800\n \t\t\tDUP\tPacket number for duplicate packets (>1)\n \t\t\tRTT\tRound trip time if --rtt option given\n \t\t\t\n \t\t\tOnly the \"ip\" and \"mac\" fields are available if the\n \t\t\t--quiet option is specified.\n \t\t\t\n \t\t\tAny characters that are not fields are output\n \t\t\tverbatim. \"\\\" introduces escapes:\n \t\t\t\n \t\t\t\\n newline\n \t\t\t\\r carriage return\n \t\t\t\\t tab\n \t\t\t\\  suppress special meaning for following character\n \t\t\t\n \t\t\tYou should enclose the --format argument in 'single\n \t\t\tquotes' to protect special characters from the shell.\n \t\t\t\n \t\t\tExample: --format='${ip}\\t${mac}\\t${vendor}'\n \n Host List Randomisation:\n \n --random or -R\t\tRandomise the target host list.\n \n --randomseed=<i>\tSeed the pseudo random number generator.\n \t\t\tUseful if you want a reproducible --random order.\n \n Output Timing and Retry:\n \n --retry=<i> or -r <i>\tSet total number of attempts per host to <i>,\n \t\t\tdefault=2.\n \n --backoff=<f> or -b <f>\tSet backoff factor to <f>, default=1.50.\n \t\t\tMultiplies timeout by <f> for each pass.\n \n --timeout=<i> or -t <i>\tSet initial per host timeout to <i> ms, default=500.\n \t\t\tThis timeout is for the first packet sent to each host.\n \t\t\tsubsequent timeouts are multiplied by the backoff\n \t\t\tfactor which is set with --backoff.\n \n --interval=<x> or -i <x> Set minimum packet interval to <x>.\n \t\t\tThis controls the outgoing bandwidth usage by limiting\n \t\t\tthe packet rate. If you want to use up to a given\n \t\t\tbandwidth it is easier to use the --bandwidth option\n \t\t\tinstead. The interval is in milliseconds, or\n \t\t\tmicroseconds if \"u\" is appended.\n \n --bandwidth=<x> or -B <x> Set outbound bandwidth to <x>, default=256000.\n \t\t\tThe value is in bits per second. Append K for\n \t\t\tkilobits or M for megabits (decimal multiples). You\n \t\t\tcannot specify both --interval and --bandwidth.\n \n DNS Resolution:\n \n --numeric or -N\t\tTargets must be IP addresses, not hostnames.\n \t\t\tCan reduce startup time for large target lists.\n \n --resolve or -d\t\tResolve responding addresses to hostnames.\n \t\t\tThe default output format will display the hostname\n \t\t\tinstead of the IPv4 address. This option makes the\n \t\t\t${name} field available for the --format option.\n \n Output ARP Packet:\n \n --arpsha=<m> or -u <m>\tSet the ARP source Ethernet address.\n \t\t\tSets the 48-bit ar$sha field but does not change the\n \t\t\thardware address in the frame header, see --srcaddr\n \t\t\tfor how to change that address. Default is the\n \t\t\tEthernet address of the outgoing interface.\n \n --arptha=<m> or -w <m>\tSet the ARP target Ethernet address.\n \t\t\tSets the 48-bit ar$tha field. The default is zero\n \t\t\tbecause this field is not used for ARP request packets.\n \n --arphrd=<i> or -H <i>\tSet the ARP hardware type, default=1.\n \t\t\tSets the 16-bit ar$hrd field. The default is 1\n \t\t\t(ARPHRD_ETHER). Many operating systems also respond to\n \t\t\t6 (ARPHRD_IEEE802)\n \n --arppro=<i> or -p <i>\tSet the ARP protocol type, default=0x0800.\n \t\t\tSets the 16-bit ar$pro field. Most operating systems\n \t\t\tonly respond to 0x0800 (IPv4).\n \n --arphln=<i> or -a <i>\tSet the hardware address length, default=6.\n \t\t\tSets the 8-bit ar$hln field. The lengths of the\n \t\t\tar$sha and ar$tha fields are not changed by this\n \t\t\toption; it only changes the ar$hln field.\n \n --arppln=<i> or -P <i>\tSet the protocol address length, default=4.\n \t\t\tSets the 8-bit ar$pln field. The lengths of the ar$spa\n \t\t\tand ar$tpa fields are not changed by this option;\n \t\t\tit only changes the ar$pln field.\n \n --arpop=<i> or -o <i>\tSpecify the ARP operation, default=1.\n \t\t\tSets the 16-bit ar$op field. Most operating systems\n \t\t\tonly respond to the value 1 (ARPOP_REQUEST).\n \n --arpspa=<a> or -s <a>\tSet the source IPv4 address.\n \t\t\tThe address should be in dotted quad format, or the\n \t\t\tstring \"dest\", which sets the source address to\n \t\t\tthe target host address. The default is the outgoing\n \t\t\tinterface address. Sets the 32-bit ar$spa field. Some\n \t\t\toperating systems only respond if the source address\n \t\t\tis within the network of the receiving interface.\n \t\t\tSetting ar$spa to the destination IP address can cause\n \t\t\tsome operating systems to report an address clash.\n \n Output Ethernet Header:\n \n --srcaddr=<m> or -S <m> Set the source Ethernet MAC address.\n \t\t\tDefault is the interface MAC address. This sets the\n \t\t\taddress in the Ethernet header. It does not change the\n \t\t\taddress in the ARP packet: use --arpsha to change\n \t\t\tthat address.\n \n --destaddr=<m> or -T <m> Set the destination MAC address.\n \t\t\tSets the destination address in the Ethernet\n \t\t\theader. Default is ff:ff:ff:ff:ff:ff (broadcast)\n \t\t\tHosts also respond if the request is sent to their\n \t\t\tunicast address, or to a multicast address they\n \t\t\tare listening on.\n \n --prototype=<i> or -y <i> Sets the Ethernet protocol type, default=0x0806.\n \t\t\tThis sets the protocol type field in the Ethernet\n \t\t\theader.\n \n --llc or -L\t\tUse RFC 1042 LLC/SNAP encapsulation for 802.2 networks.\n \t\t\tarp-scan will decode and display ARP responses in both\n \t\t\tEthernet-II and IEEE 802.2 formats irrespective of\n \t\t\tthis option.\n \n --vlan=<i> or -Q <i>\tUse 802.1Q tagging with VLAN id <i>.\n \t\t\tThe id should be in the range 0 to 4095. arp-scan will\n \t\t\tdecode and display ARP responses in 802.1Q format\n \t\t\tirrespective of this option.\n \n Misc Options:\n \n --limit=<i> or -M <i>\tExit after the specified number of hosts have responded.\n \t\t\tarp-scan will exit with status 1 if the number of\n \t\t\tresponding hosts is less than the limit. Can be used\n \t\t\tin scripts to check if fewer hosts respond without\n \t\t\thaving to parse the output.\n \n --pcapsavefile=<s> or -W <s>\tWrite received packets to pcap savefile <s>.\n \t\t\tARP responses will be written to the specified file\n \t\t\tas well as being decoded and displayed.\n \n --snap=<i> or -n <i>\tSet the pcap snap length to <i>. Default=64.\n \t\t\tSpecifies the frame capture length, including the\n \t\t\tEthernet header. The default is normally sufficient.\n \n --retry-send=<i> or -Y <i> Set number of send attempts, default=20.\n \n --retry-send-interval=<i> or -E <i> Set interval between send attempts.\n \t\t\tInterval is in milliseconds or microseconds if \"u\"\n \t\t\tis appended. default=5.\n \n --padding=<h> or -A <h>\tSpecify padding after packet data.\n \t\t\tSet padding after the ARP request to hex value <h>.\n \n Report bugs or send suggestions at https://github.com/royhills/arp-scan\n See the arp-scan homepage at https://github.com/royhills/arp-scan",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "arp-scan -l\nInterface: eth0, datalink type: EN10MB (Ethernet)\nStarting arp-scan 1.9 with 256 hosts (http://www.nta-monitor.com/tools/arp-scan/)\n172.16.193.1 00:50:56:c0:00:08 VMware, Inc.\n172.16.193.2 00:50:56:f1:18:a8 VMware, Inc.\n172.16.193.254 00:50:56:e5:7b:87 VMware, Inc.\n\n3 packets received by filter, 0 packets dropped by kernel\nEnding arp-scan 1.9: 256 hosts scanned in 2.327 seconds (110.01 hosts/sec). 3 responded",
+          "template": null,
+          "original_sha256": "ae7f5239d9d84d4b6697eed87a8d237059dc98e15f89a499aae3de73dd960fc2"
+        },
+        {
+          "status": "operational_example",
+          "command": "arp-scan -I eth0 --srcaddr=DE:AD:BE:EF:CA:FE 192.168.86.0/24\nInterface: eth0, datalink type: EN10MB (Ethernet)\nStarting arp-scan 1.9 with 256 hosts (http://www.nta-monitor.com/tools/arp-scan/)\n192.168.86.1 70:3a:cb:68:51:4c (Unknown)\n192.168.86.3 00:08:9b:f6:f6:2f ICP Electronics Inc.\n192.168.86.2 84:1b:5e:e5:66:af NETGEAR\n192.168.86.4 00:11:32:4b:04:8a Synology Incorporated\n192.168.86.7 b8:27:eb:89:ac:c3 Raspberry Pi Foundation\n[...]",
+          "template": null,
+          "original_sha256": "c3b6a53f655104f428e56e2e89f6197ff8b84be89c9ce04df7f22fd8f1163826"
+        },
+        {
+          "status": "operational_example",
+          "command": "arp-scan is capabilities aware. It requires CAP_NET_RAW in the permitted",
+          "template": null,
+          "original_sha256": "7b709e6ce211cfd058383d0b2cd8a3a88ff14462c0bfc99db8553a88777802ce"
+        },
+        {
+          "status": "operational_example",
+          "command": "arp-scan will decode and display ARP responses in both",
+          "template": null,
+          "original_sha256": "cc03eac5c8003497151349de365c1e0b19851ca23e16451eeeac033c13ec4901"
+        },
+        {
+          "status": "operational_example",
+          "command": "arp-scan will exit with status 1 if the number of",
+          "template": null,
+          "original_sha256": "ecb1494543befcbd284c08a994a0764edbb91faf5b1849401abc2f0a22ce6df8"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: arp-scan [options] [hosts...]\n\nTarget hosts must be specified on the command line unless the --file or\n--localnet option is used.\n\narp-scan uses raw sockets, which requires privileges on some systems:\n\nLinux with POSIX.1e capabilities support using libcap:\n       arp-scan is capabilities aware. It requires CAP_NET_RAW in the permitted\n       set and only enables that capability for the required functions.\nBSD and macOS:\n       You need read/write access to /dev/bpf*\nAny operating system:\n       Running as root or SUID root will work on any OS but other methods\n       are preferable where possible.\n\nTargets can be IPv4 addresses or hostnames. You can also use CIDR notation\n(10.0.0.0/24) (network and broadcast included), ranges (10.0.0.1-10.0.0.10),\nand network:mask (10.0.0.0:255.255.255.0).\n\nOptions:\n\nThe data type for option arguments is shown by a letter in angle brackets: \n\n<s> Character string.\n<i> Decimal integer, or hex if preceeded by 0x e.g. 2048 or 0x800.\n<f> Floating point decimal number.\n<m> MAC address, e.g. 01:23:45:67:89:ab or 01-23-45-67-89-ab (case insensitive)\n<a> IPv4 address e.g. 10.0.0.1\n<h> Hex encoded binary data. No leading 0x. (case insensitive).\n<x> Something else - see option description.\n\nGeneral Options:\n\n--help or -h\t\tDisplay this usage message and exit.\n\n--verbose or -v\t\tDisplay verbose progress messages.\n\t\t\tCan be used than once to increase verbosity. Max=3.\n\n--version or -V\t\tDisplay program version details and exit.\n\t\t\tShows the version, license details, libpcap version,\n\t\t\tand whether POSIX.1e capability support is included.\n\n--interface=<s> or -I <s> Use network interface <s>.\n\t\t\tIf this option is not specified, arp-scan will search\n\t\t\tthe system interface list for the lowest numbered,\n\t\t\tconfigured up interface (excluding loopback).\n\nHost Selection:\n\n--file=<s> or -f <s>\tRead hostnames or addresses from the specified file\n\t\t\tOne name or address pattern per line. Use \"-\" for stdin.\n\n--localnet or -l\tGenerate addresses from interface configuration.\n\t\t\tGenerates list from interface address and netmask\n\t\t\t(network and broadcast included). You cannot use the\n\t\t\t--file option or give targets on the command line.\n\t\t\tUse --interface to specify the interface.\n\nMAC/Vendor Mapping Files:\n\n--ouifile=<s> or -O <s>\tUse IEEE registry vendor mapping file <s>.\n\t\t\tDefault is ieee-oui.txt in the current directory. If\n\t\t\tthat is not found /usr/share/arp-scan/ieee-oui.txt\n\t\t\tis used.\n\n--macfile=<s> or -m <s>\tUse custom vendor mapping file <s>.\n\t\t\tDefault is mac-vendor.txt in the current directory.\n\t\t\tIf that is not found\n\t\t\t/etc/arp-scan/mac-vendor.txt is used.\n\nOutput Format Control:\n\n--quiet or -q\t\tDisplay minimal output for each responding host.\n\t\t\tOnly the IP address and MAC address are displayed.\n\t\t\tReduces memory usage by about 5MB because the\n\t\t\tvendor mapping files are not used. Only the ${ip}\n\t\t\tand ${mac} fields are available for the --format\n\t\t\toption if --quiet is specified.\n\n--plain or -x\t\tSupress header and footer text.\n\t\t\tOnly display the responding host details. Useful if\n\t\t\tthe output will be parsed by a script.\n\n--ignoredups or -g\tDon't display duplicate packets.\n\t\t\tBy default duplicate packets are flagged with\n\t\t\t\"(DUP: n)\" where n is the number of times this\n\t\t\thost has responded.\n\n--rtt or -D\t\tCalculate and display the packet round-trip time.\n\t\t\tThe time is displayed in milliseconds and fractional\n\t\t\tmicroseconds. Makes the ${rtt} field available for\n\t\t\t--format.\n\n--format=<s> or -F <s>\tSpecify the output format string.\n\t\t\tThe format is a string that will be output for each\n\t\t\tresponding host. Host details can be included by\n\t\t\tinserting references to fields using the syntax\n\t\t\t\"${field[;width]}\". Fields are displayed right-\n\t\t\taligned unless the width is negative in which case\n\t\t\tleft alignment will be used. The following case-\n\t\t\tinsensitive field names are recognised:\n\n\t\t\tIP\tHost IPv4 address in dotted quad format\n\t\t\tName\tHost name if --resolve option given\n\t\t\tMAC\tHost MAC address xx:xx:xx:xx:xx:xx\n\t\t\tHdrMAC\tEthernet source addr if different\n\t\t\tVendor\tVendor details string\n\t\t\tPadding\tPadding after ARP packet in hex if nonzero\n\t\t\tFraming\tFraming type if not Ethernet_II\n\t\t\tVLAN\t802.1Q VLAD ID if present\n\t\t\tProto\tARP protocol if not 0x0800\n\t\t\tDUP\tPacket number for duplicate packets (>1)\n\t\t\tRTT\tRound trip time if --rtt option given\n\t\t\t\n\t\t\tOnly the \"ip\" and \"mac\" fields are available if the\n\t\t\t--quiet option is specified.\n\t\t\t\n\t\t\tAny characters that are not fields are output\n\t\t\tverbatim. \"\\\" introduces escapes:\n\t\t\t\n\t\t\t\\n newline\n\t\t\t\\r carriage return\n\t\t\t\\t tab\n\t\t\t\\  suppress special meaning for following character\n\t\t\t\n\t\t\tYou should enclose the --format argument in 'single\n\t\t\tquotes' to protect special characters from the shell.\n\t\t\t\n\t\t\tExample: --format='${ip}\\t${mac}\\t${vendor}'\n\nHost List Randomisation:\n\n--random or -R\t\tRandomise the target host list.\n\n--randomseed=<i>\tSeed the pseudo random number generator.\n\t\t\tUseful if you want a reproducible --random order.\n\nOutput Timing and Retry:\n\n--retry=<i> or -r <i>\tSet total number of attempts per host to <i>,\n\t\t\tdefault=2.\n\n--backoff=<f> or -b <f>\tSet backoff factor to <f>, default=1.50.\n\t\t\tMultiplies timeout by <f> for each pass.\n\n--timeout=<i> or -t <i>\tSet initial per host timeout to <i> ms, default=500.\n\t\t\tThis timeout is for the first packet sent to each host.\n\t\t\tsubsequent timeouts are multiplied by the backoff\n\t\t\tfactor which is set with --backoff.\n\n--interval=<x> or -i <x> Set minimum packet interval to <x>.\n\t\t\tThis controls the outgoing bandwidth usage by limiting\n\t\t\tthe packet rate. If you want to use up to a given\n\t\t\tbandwidth it is easier to use the --bandwidth option\n\t\t\tinstead. The interval is in milliseconds, or\n\t\t\tmicroseconds if \"u\" is appended.\n\n--bandwidth=<x> or -B <x> Set outbound bandwidth to <x>, default=256000.\n\t\t\tThe value is in bits per second. Append K for\n\t\t\tkilobits or M for megabits (decimal multiples). You\n\t\t\tcannot specify both --interval and --bandwidth.\n\nDNS Resolution:\n\n--numeric or -N\t\tTargets must be IP addresses, not hostnames.\n\t\t\tCan reduce startup time for large target lists.\n\n--resolve or -d\t\tResolve responding addresses to hostnames.\n\t\t\tThe default output format will display the hostname\n\t\t\tinstead of the IPv4 address. This option makes the\n\t\t\t${name} field available for the --format option.\n\nOutput ARP Packet:\n\n--arpsha=<m> or -u <m>\tSet the ARP source Ethernet address.\n\t\t\tSets the 48-bit ar$sha field but does not change the\n\t\t\thardware address in the frame header, see --srcaddr\n\t\t\tfor how to change that address. Default is the\n\t\t\tEthernet address of the outgoing interface.\n\n--arptha=<m> or -w <m>\tSet the ARP target Ethernet address.\n\t\t\tSets the 48-bit ar$tha field. The default is zero\n\t\t\tbecause this field is not used for ARP request packets.\n\n--arphrd=<i> or -H <i>\tSet the ARP hardware type, default=1.\n\t\t\tSets the 16-bit ar$hrd field. The default is 1\n\t\t\t(ARPHRD_ETHER). Many operating systems also respond to\n\t\t\t6 (ARPHRD_IEEE802)\n\n--arppro=<i> or -p <i>\tSet the ARP protocol type, default=0x0800.\n\t\t\tSets the 16-bit ar$pro field. Most operating systems\n\t\t\tonly respond to 0x0800 (IPv4).\n\n--arphln=<i> or -a <i>\tSet the hardware address length, default=6.\n\t\t\tSets the 8-bit ar$hln field. The lengths of the\n\t\t\tar$sha and ar$tha fields are not changed by this\n\t\t\toption; it only changes the ar$hln field.\n\n--arppln=<i> or -P <i>\tSet the protocol address length, default=4.\n\t\t\tSets the 8-bit ar$pln field. The lengths of the ar$spa\n\t\t\tand ar$tpa fields are not changed by this option;\n\t\t\tit only changes the ar$pln field.\n\n--arpop=<i> or -o <i>\tSpecify the ARP operation, default=1.\n\t\t\tSets the 16-bit ar$op field. Most operating systems\n\t\t\tonly respond to the value 1 (ARPOP_REQUEST).\n\n--arpspa=<a> or -s <a>\tSet the source IPv4 address.\n\t\t\tThe address should be in dotted quad format, or the\n\t\t\tstring \"dest\", which sets the source address to\n\t\t\tthe target host address. The default is the outgoing\n\t\t\tinterface address. Sets the 32-bit ar$spa field. Some\n\t\t\toperating systems only respond if the source address\n\t\t\tis within the network of the receiving interface.\n\t\t\tSetting ar$spa to the destination IP address can cause\n\t\t\tsome operating systems to report an address clash.\n\nOutput Ethernet Header:\n\n--srcaddr=<m> or -S <m> Set the source Ethernet MAC address.\n\t\t\tDefault is the interface MAC address. This sets the\n\t\t\taddress in the Ethernet header. It does not change the\n\t\t\taddress in the ARP packet: use --arpsha to change\n\t\t\tthat address.\n\n--destaddr=<m> or -T <m> Set the destination MAC address.\n\t\t\tSets the destination address in the Ethernet\n\t\t\theader. Default is ff:ff:ff:ff:ff:ff (broadcast)\n\t\t\tHosts also respond if the request is sent to their\n\t\t\tunicast address, or to a multicast address they\n\t\t\tare listening on.\n\n--prototype=<i> or -y <i> Sets the Ethernet protocol type, default=0x0806.\n\t\t\tThis sets the protocol type field in the Ethernet\n\t\t\theader.\n\n--llc or -L\t\tUse RFC 1042 LLC/SNAP encapsulation for 802.2 networks.\n\t\t\tarp-scan will decode and display ARP responses in both\n\t\t\tEthernet-II and IEEE 802.2 formats irrespective of\n\t\t\tthis option.\n\n--vlan=<i> or -Q <i>\tUse 802.1Q tagging with VLAN id <i>.\n\t\t\tThe id should be in the range 0 to 4095. arp-scan will\n\t\t\tdecode and display ARP responses in 802.1Q format\n\t\t\tirrespective of this option.\n\nMisc Options:\n\n--limit=<i> or -M <i>\tExit after the specified number of hosts have responded.\n\t\t\tarp-scan will exit with status 1 if the number of\n\t\t\tresponding hosts is less than the limit. Can be used\n\t\t\tin scripts to check if fewer hosts respond without\n\t\t\thaving to parse the output.\n\n--pcapsavefile=<s> or -W <s>\tWrite received packets to pcap savefile <s>.\n\t\t\tARP responses will be written to the specified file\n\t\t\tas well as being decoded and displayed.\n\n--snap=<i> or -n <i>\tSet the pcap snap length to <i>. Default=64.\n\t\t\tSpecifies the frame capture length, including the\n\t\t\tEthernet header. The default is normally sufficient.\n\n--retry-send=<i> or -Y <i> Set number of send attempts, default=20.\n\n--retry-send-interval=<i> or -E <i> Set interval between send attempts.\n\t\t\tInterval is in milliseconds or microseconds if \"u\"\n\t\t\tis appended. default=5.\n\n--padding=<h> or -A <h>\tSpecify padding after packet data.\n\t\t\tSet padding after the ARP request to hex value <h>.\n\nReport bugs or send suggestions at https://github.com/royhills/arp-scan\nSee the arp-scan homepage at https://github.com/royhills/arp-scan",
+        "-h": "Usage: arp-scan [options] [hosts...]\n\nTarget hosts must be specified on the command line unless the --file or\n--localnet option is used.\n\narp-scan uses raw sockets, which requires privileges on some systems:\n\nLinux with POSIX.1e capabilities support using libcap:\n       arp-scan is capabilities aware. It requires CAP_NET_RAW in the permitted\n       set and only enables that capability for the required functions.\nBSD and macOS:\n       You need read/write access to /dev/bpf*\nAny operating system:\n       Running as root or SUID root will work on any OS but other methods\n       are preferable where possible.\n\nTargets can be IPv4 addresses or hostnames. You can also use CIDR notation\n(10.0.0.0/24) (network and broadcast included), ranges (10.0.0.1-10.0.0.10),\nand network:mask (10.0.0.0:255.255.255.0).\n\nOptions:\n\nThe data type for option arguments is shown by a letter in angle brackets: \n\n<s> Character string.\n<i> Decimal integer, or hex if preceeded by 0x e.g. 2048 or 0x800.\n<f> Floating point decimal number.\n<m> MAC address, e.g. 01:23:45:67:89:ab or 01-23-45-67-89-ab (case insensitive)\n<a> IPv4 address e.g. 10.0.0.1\n<h> Hex encoded binary data. No leading 0x. (case insensitive).\n<x> Something else - see option description.\n\nGeneral Options:\n\n--help or -h\t\tDisplay this usage message and exit.\n\n--verbose or -v\t\tDisplay verbose progress messages.\n\t\t\tCan be used than once to increase verbosity. Max=3.\n\n--version or -V\t\tDisplay program version details and exit.\n\t\t\tShows the version, license details, libpcap version,\n\t\t\tand whether POSIX.1e capability support is included.\n\n--interface=<s> or -I <s> Use network interface <s>.\n\t\t\tIf this option is not specified, arp-scan will search\n\t\t\tthe system interface list for the lowest numbered,\n\t\t\tconfigured up interface (excluding loopback).\n\nHost Selection:\n\n--file=<s> or -f <s>\tRead hostnames or addresses from the specified file\n\t\t\tOne name or address pattern per line. Use \"-\" for stdin.\n\n--localnet or -l\tGenerate addresses from interface configuration.\n\t\t\tGenerates list from interface address and netmask\n\t\t\t(network and broadcast included). You cannot use the\n\t\t\t--file option or give targets on the command line.\n\t\t\tUse --interface to specify the interface.\n\nMAC/Vendor Mapping Files:\n\n--ouifile=<s> or -O <s>\tUse IEEE registry vendor mapping file <s>.\n\t\t\tDefault is ieee-oui.txt in the current directory. If\n\t\t\tthat is not found /usr/share/arp-scan/ieee-oui.txt\n\t\t\tis used.\n\n--macfile=<s> or -m <s>\tUse custom vendor mapping file <s>.\n\t\t\tDefault is mac-vendor.txt in the current directory.\n\t\t\tIf that is not found\n\t\t\t/etc/arp-scan/mac-vendor.txt is used.\n\nOutput Format Control:\n\n--quiet or -q\t\tDisplay minimal output for each responding host.\n\t\t\tOnly the IP address and MAC address are displayed.\n\t\t\tReduces memory usage by about 5MB because the\n\t\t\tvendor mapping files are not used. Only the ${ip}\n\t\t\tand ${mac} fields are available for the --format\n\t\t\toption if --quiet is specified.\n\n--plain or -x\t\tSupress header and footer text.\n\t\t\tOnly display the responding host details. Useful if\n\t\t\tthe output will be parsed by a script.\n\n--ignoredups or -g\tDon't display duplicate packets.\n\t\t\tBy default duplicate packets are flagged with\n\t\t\t\"(DUP: n)\" where n is the number of times this\n\t\t\thost has responded.\n\n--rtt or -D\t\tCalculate and display the packet round-trip time.\n\t\t\tThe time is displayed in milliseconds and fractional\n\t\t\tmicroseconds. Makes the ${rtt} field available for\n\t\t\t--format.\n\n--format=<s> or -F <s>\tSpecify the output format string.\n\t\t\tThe format is a string that will be output for each\n\t\t\tresponding host. Host details can be included by\n\t\t\tinserting references to fields using the syntax\n\t\t\t\"${field[;width]}\". Fields are displayed right-\n\t\t\taligned unless the width is negative in which case\n\t\t\tleft alignment will be used. The following case-\n\t\t\tinsensitive field names are recognised:\n\n\t\t\tIP\tHost IPv4 address in dotted quad format\n\t\t\tName\tHost name if --resolve option given\n\t\t\tMAC\tHost MAC address xx:xx:xx:xx:xx:xx\n\t\t\tHdrMAC\tEthernet source addr if different\n\t\t\tVendor\tVendor details string\n\t\t\tPadding\tPadding after ARP packet in hex if nonzero\n\t\t\tFraming\tFraming type if not Ethernet_II\n\t\t\tVLAN\t802.1Q VLAD ID if present\n\t\t\tProto\tARP protocol if not 0x0800\n\t\t\tDUP\tPacket number for duplicate packets (>1)\n\t\t\tRTT\tRound trip time if --rtt option given\n\t\t\t\n\t\t\tOnly the \"ip\" and \"mac\" fields are available if the\n\t\t\t--quiet option is specified.\n\t\t\t\n\t\t\tAny characters that are not fields are output\n\t\t\tverbatim. \"\\\" introduces escapes:\n\t\t\t\n\t\t\t\\n newline\n\t\t\t\\r carriage return\n\t\t\t\\t tab\n\t\t\t\\  suppress special meaning for following character\n\t\t\t\n\t\t\tYou should enclose the --format argument in 'single\n\t\t\tquotes' to protect special characters from the shell.\n\t\t\t\n\t\t\tExample: --format='${ip}\\t${mac}\\t${vendor}'\n\nHost List Randomisation:\n\n--random or -R\t\tRandomise the target host list.\n\n--randomseed=<i>\tSeed the pseudo random number generator.\n\t\t\tUseful if you want a reproducible --random order.\n\nOutput Timing and Retry:\n\n--retry=<i> or -r <i>\tSet total number of attempts per host to <i>,\n\t\t\tdefault=2.\n\n--backoff=<f> or -b <f>\tSet backoff factor to <f>, default=1.50.\n\t\t\tMultiplies timeout by <f> for each pass.\n\n--timeout=<i> or -t <i>\tSet initial per host timeout to <i> ms, default=500.\n\t\t\tThis timeout is for the first packet sent to each host.\n\t\t\tsubsequent timeouts are multiplied by the backoff\n\t\t\tfactor which is set with --backoff.\n\n--interval=<x> or -i <x> Set minimum packet interval to <x>.\n\t\t\tThis controls the outgoing bandwidth usage by limiting\n\t\t\tthe packet rate. If you want to use up to a given\n\t\t\tbandwidth it is easier to use the --bandwidth option\n\t\t\tinstead. The interval is in milliseconds, or\n\t\t\tmicroseconds if \"u\" is appended.\n\n--bandwidth=<x> or -B <x> Set outbound bandwidth to <x>, default=256000.\n\t\t\tThe value is in bits per second. Append K for\n\t\t\tkilobits or M for megabits (decimal multiples). You\n\t\t\tcannot specify both --interval and --bandwidth.\n\nDNS Resolution:\n\n--numeric or -N\t\tTargets must be IP addresses, not hostnames.\n\t\t\tCan reduce startup time for large target lists.\n\n--resolve or -d\t\tResolve responding addresses to hostnames.\n\t\t\tThe default output format will display the hostname\n\t\t\tinstead of the IPv4 address. This option makes the\n\t\t\t${name} field available for the --format option.\n\nOutput ARP Packet:\n\n--arpsha=<m> or -u <m>\tSet the ARP source Ethernet address.\n\t\t\tSets the 48-bit ar$sha field but does not change the\n\t\t\thardware address in the frame header, see --srcaddr\n\t\t\tfor how to change that address. Default is the\n\t\t\tEthernet address of the outgoing interface.\n\n--arptha=<m> or -w <m>\tSet the ARP target Ethernet address.\n\t\t\tSets the 48-bit ar$tha field. The default is zero\n\t\t\tbecause this field is not used for ARP request packets.\n\n--arphrd=<i> or -H <i>\tSet the ARP hardware type, default=1.\n\t\t\tSets the 16-bit ar$hrd field. The default is 1\n\t\t\t(ARPHRD_ETHER). Many operating systems also respond to\n\t\t\t6 (ARPHRD_IEEE802)\n\n--arppro=<i> or -p <i>\tSet the ARP protocol type, default=0x0800.\n\t\t\tSets the 16-bit ar$pro field. Most operating systems\n\t\t\tonly respond to 0x0800 (IPv4).\n\n--arphln=<i> or -a <i>\tSet the hardware address length, default=6.\n\t\t\tSets the 8-bit ar$hln field. The lengths of the\n\t\t\tar$sha and ar$tha fields are not changed by this\n\t\t\toption; it only changes the ar$hln field.\n\n--arppln=<i> or -P <i>\tSet the protocol address length, default=4.\n\t\t\tSets the 8-bit ar$pln field. The lengths of the ar$spa\n\t\t\tand ar$tpa fields are not changed by this option;\n\t\t\tit only changes the ar$pln field.\n\n--arpop=<i> or -o <i>\tSpecify the ARP operation, default=1.\n\t\t\tSets the 16-bit ar$op field. Most operating systems\n\t\t\tonly respond to the value 1 (ARPOP_REQUEST).\n\n--arpspa=<a> or -s <a>\tSet the source IPv4 address.\n\t\t\tThe address should be in dotted quad format, or the\n\t\t\tstring \"dest\", which sets the source address to\n\t\t\tthe target host address. The default is the outgoing\n\t\t\tinterface address. Sets the 32-bit ar$spa field. Some\n\t\t\toperating systems only respond if the source address\n\t\t\tis within the network of the receiving interface.\n\t\t\tSetting ar$spa to the destination IP address can cause\n\t\t\tsome operating systems to report an address clash.\n\nOutput Ethernet Header:\n\n--srcaddr=<m> or -S <m> Set the source Ethernet MAC address.\n\t\t\tDefault is the interface MAC address. This sets the\n\t\t\taddress in the Ethernet header. It does not change the\n\t\t\taddress in the ARP packet: use --arpsha to change\n\t\t\tthat address.\n\n--destaddr=<m> or -T <m> Set the destination MAC address.\n\t\t\tSets the destination address in the Ethernet\n\t\t\theader. Default is ff:ff:ff:ff:ff:ff (broadcast)\n\t\t\tHosts also respond if the request is sent to their\n\t\t\tunicast address, or to a multicast address they\n\t\t\tare listening on.\n\n--prototype=<i> or -y <i> Sets the Ethernet protocol type, default=0x0806.\n\t\t\tThis sets the protocol type field in the Ethernet\n\t\t\theader.\n\n--llc or -L\t\tUse RFC 1042 LLC/SNAP encapsulation for 802.2 networks.\n\t\t\tarp-scan will decode and display ARP responses in both\n\t\t\tEthernet-II and IEEE 802.2 formats irrespective of\n\t\t\tthis option.\n\n--vlan=<i> or -Q <i>\tUse 802.1Q tagging with VLAN id <i>.\n\t\t\tThe id should be in the range 0 to 4095. arp-scan will\n\t\t\tdecode and display ARP responses in 802.1Q format\n\t\t\tirrespective of this option.\n\nMisc Options:\n\n--limit=<i> or -M <i>\tExit after the specified number of hosts have responded.\n\t\t\tarp-scan will exit with status 1 if the number of\n\t\t\tresponding hosts is less than the limit. Can be used\n\t\t\tin scripts to check if fewer hosts respond without\n\t\t\thaving to parse the output.\n\n--pcapsavefile=<s> or -W <s>\tWrite received packets to pcap savefile <s>.\n\t\t\tARP responses will be written to the specified file\n\t\t\tas well as being decoded and displayed.\n\n--snap=<i> or -n <i>\tSet the pcap snap length to <i>. Default=64.\n\t\t\tSpecifies the frame capture length, including the\n\t\t\tEthernet header. The default is normally sufficient.\n\n--retry-send=<i> or -Y <i> Set number of send attempts, default=20.\n\n--retry-send-interval=<i> or -E <i> Set interval between send attempts.\n\t\t\tInterval is in milliseconds or microseconds if \"u\"\n\t\t\tis appended. default=5.\n\n--padding=<h> or -A <h>\tSpecify padding after packet data.\n\t\t\tSet padding after the ARP request to hex value <h>.\n\nReport bugs or send suggestions at https://github.com/royhills/arp-scan\nSee the arp-scan homepage at https://github.com/royhills/arp-scan",
+        "help": "WARNING: get_host_address failed for \"help\": Temporary failure in name resolution - target ignored\nERROR: No hosts to process.",
+        "man": "ARP-SCAN(1)                 General Commands Manual                 ARP-SCAN(1)\n\nNAME\n     arp-scan - Send ARP requests to target hosts and display responses\n\nSYNOPSIS\n     arp-scan [options] [hosts...]\n\n     Target  hosts  must  be specified on the command line unless the --file or\n     --localnet option is used.\n\n     Targets can be IPv4 addresses or hostnames. You can also use CIDR notation\n     (10.0.0.0/24)     (network     and     broadcast     included),     ranges\n     (10.0.0.1-10.0.0.10), and network:mask (10.0.0.0:255.255.255.0).\n\nDESCRIPTION\n     arp-scan sends ARP request packets to the specified hosts and displays any\n     responses  received. The network interface can be specified with the --in-\n     terface option. If no interface is specified, arp-scan will pick the  low-\n     est numbered, configured up interface (excluding loopback).\n\n     arp-scan uses raw sockets, which requires privileges on some systems:\n\n     Linux with POSIX.1e capabilities support using libcap:\n            arp-scan is capabilities aware. It requires CAP_NET_RAW in the per-\n            mitted  set and only enables that capability for the required func-\n            tions.   use  setcap   cap_net_raw+p   /path/to/arp-scan   to   add\n            CAP_NET_RAW to the permitted set of the arp-scan executable.  Capa-\n            bilities  support  also makes SUID root much safer because arp-scan\n            will drop all capabilities except CAP_NET_RAW and will not run with\n            full root privileges.\n\n     BSD and macOS:\n            You need read/write access to /dev/bpf*\n\n     Any operating system:\n            Running as root or SUID root will work on any OS but other  methods\n            are preferable where possible.\n\n     ARP  only  operates  on the local network, and cannot be routed.  Although\n     the ARP protocol uses IPv4 addresses, it is not an IP  protocol  and  arp-\n     scan can be used on interfaces without an IPv4 address.\n\n     One  ARP  request is sent for each target. If a host does not respond, the\n     request will be re-sent once more. The number of retries  can  be  changed\n     with  the  --retry  option. Reducing the number of retries will reduce the\n     scanning time at the risk of missing some results due to packet loss.\n\n     You can specify the bandwidth that arp-scan will use with the  --bandwidth\n     option.  The  default  is 256000 bits per second. Increasing the bandwidth\n     will reduce scanning time, but setting the bandwidth too high may cause  a\n     high  broadcast  packet  rate.   Another way to specify the packet rate is\n     with the --interval option.\n\n     The time for a single-pass scan (i.e. with --retry=1) is:\n\n     time=nxi+t+o\n\n     Where n is the number of hosts, i is the interval (given  with  --interval\n     or  calculated from --bandwidth), t is the timeout (specified with --time-\n     out) and o is the overhead time taken to load the target list and read the\n     MAC/Vendor mapping files. The overhead is normally  negligible  (typically\n     around 100ms) but can be reduced further by the --quiet option.  For small\n     lists  of  hosts, the timeout value will dominate, but for large lists the\n     packet interval is the most important value.\n\n     Any part of the ARP request  may  be  modified  through  the  use  of  the\n     --arpXXX options as shown in the table below:\n     +-----------------------------------------------------+\n     |             ARP Request Packet Options              |\n     +--------+------+----------+--------------------------+\n     | Field  | Bits | Option   | Default                  |\n     +--------+------+----------+--------------------------+\n     | ar$hrd | 16   | --arphrd | 1 (ARPHRD_ETHER)         |\n     | ar$pro | 16   | --arppro | 0x0800                   |\n     | ar$hln | 8    | --arphln | 6 (ETH_ALEN)             |\n     | ar$pln | 8    | --arppln | 4 (IPv4)                 |\n     | ar$op  | 16   | --arpop  | 1 (ARPOP_REQUEST)        |\n     | ar$sha | 48   | --arpsha | interface h/w address    |\n     | ar$spa | 32   | --arpspa | interface IPv4 address   |\n     | ar$tha | 48   | --arptha | 00:00:00:00:00:00        |\n     | ar$tpa | 32   | None     | target host IPv4 address |\n     +--------+------+----------+--------------------------+\n\n     The  most common option is --arpspa, which sets the source IPv4 address in\n     the ARP request, allowing the ARP request to use a  different  source  ad-\n     dress  from  the interface address. This allows the use of arp-scan on in-\n     terfaces with no IPv4 address.  Note: Setting ar$spa to  the  target's  IP\n     address causes some operating systems to report an address clash when they\n     receive an ARP request for their own address.\n\n     You  can  also change the values in the Ethernet frame header as shown be-\n     low:\n     +---------------------------------------------------------+\n     |                 Ethernet Header Options                 |\n     +----------------+------+-------------+-------------------+\n     | Field          | Bits | Option      | Default           |\n     +----------------+------+-------------+-------------------+\n     | Dest Address   | 48   | --destaddr  | ff:ff:ff:ff:ff:ff |\n     | Source Address | 48   | --srcaddr   | interface address |\n     | Protocol Type  | 16   | --prototype | 0x0806 (ARP)      |\n     +----------------+------+-------------+-------------------+\n\n     The --destaddr option which sets the destination Ethernet address  is  the\n     only one that is commonly used.\n\n     By default, ARP responses are displayed in the following format:\n     <IPv4 Address>   <MAC Address>   <Vendor Details>\n\n     Where IPv4 Address is the IP address of the responding target, MAC Address\n     is  its  link-layer  address and Vendor Details are the vendor details de-\n     coded from the hardware address. The output fields are separated by a sin-\n     gle tab character. You can change the output format with the --format  op-\n     tion.\n\n     The  responses  are displayed in the order they are received, which can be\n     different from the order the requests were sent because some hosts may re-\n     spond quicker than others.\n\n     The vendor decoding uses the files ieee-oui.txt and mac-vendor.txt.  ieee-\n     oui.txt is generated from the IEEE MA-L (OUI), MA-M, MA-S (OUI36) and  IAB\n     registries.   mac-vendor.txt  contains  additional MAC to Vendor mappings,\n     and can be used to add custom mappings. get-oui  can  be  used  to  update\n     ieee-oui.txt with the latest data from the IEEE registries.\n\n     All IPv4 hosts should respond to ARP request packets, including hosts with\n     packet  filtering  such as firewalls. This makes arp-scan a useful tool to\n     discover all active IPv4 hosts on the local network.\n\nOPTIONS\n     Where an option takes a value, that value is specified as a letter in  an-\n     gle brackets. The letter indicates the type of data that is expected:\n\n     <s>    Character string.\n\n     <i>    Decimal integer, or hex if preceeded by 0x e.g. 2048 or 0x800.\n\n     <f>    Floating point decimal number.\n\n     <m>    MAC  address, e.g. 01:23:45:67:89:ab or 01-23-45-67-89-ab (case in-\n            sensitive)\n\n     <a>    IPv4 address e.g. 10.0.0.1\n\n     <h>    Hex encoded binary data. No leading 0x. (case insensitive).\n\n     <x>    Something else - see option description.\n\n   General Options\n     --help or -h\n            Display this usage message and exit.\n\n     --verbose or -v\n            Display verbose progress messages.  Can be used than  once  to  in-\n            crease verbosity. Max=3.\n\n     --version or -V\n            Display  program  version  and exit.  Displays the version, license\n            details, libpcap version, and whether POSIX.1e  capability  support\n            is included.\n\n     --interface=<s> or -I <s>\n            Use  network  interface <s>.  If this option is not specified, arp-\n            scan will search the system interface list for the lowest numbered,\n            configured up interface (excluding loopback).\n\n   Host Selection\n     --file=<s> or -f <s>\n            Read hostnames or addresses from the specified file.  One  name  or\n            address pattern per line. Use \"-\" for stdin.\n\n     --localnet or -l\n            Generate  addresses  from  interface configuration.  Generates list\n            from interface address  and  netmask  (network  and  broadcast  in-\n            cluded).  You  cannot  use the --file option or give targets on the\n            command line.  Use --interface to specify the interface.\n\n   MAC/Vendor Mapping Files\n     --ouifile=<s> or -O <s>\n            Use IEEE registry vendor mapping file <s>.  Default is ieee-oui.txt\n            in the current directory.  If that  is  not  found  /usr/share/arp-\n            scan/ieee-oui.txt is used.\n\n     --macfile=<s> or -m <s>\n            Use  custom  vendor mapping file <s>.  Default is mac-vendor.txt in\n            the current directory.  If that is not found /etc/arp-scan/mac-ven-\n            dor.txt is used.\n\n   Output Format Control\n     --quiet or -q\n            Display minimal output for each responding host.  Only the  IP  ad-\n            dress and MAC address are displayed.  Reduces memory usage by about\n            5MB  because the vendor mapping files are not used.  Only the ${ip}\n            and ${mac} fields are available for the --format option if  --quiet\n            is specified.\n\n     --plain or -x\n            Supress  header  and footer text.  Only display the responding host\n            details.  Useful if the output will be parsed by a script.\n\n     --ignoredups or -g\n            Don't display duplicate packets.  By default duplicate packets  are\n            flagged  with (DUP: n) where n is the number of times this host has\n            responded.\n\n     --rtt or -D\n            Calculate and display the packet round-trip time.  The time is dis-\n            played in  milliseconds  and  fractional  microseconds.  Makes  the\n            ${rtt} field available for --format.\n\n     --format=<s> or -F <s>\n            Specify the output format string.  The format is a string that will\n            be output for each responding host. Host details can be included by\n            inserting references to fields using the syntax \"${field[;width]}\".\n            Fields are displayed right- aligned unless the width is negative in\n            which  case left alignment will be used. The following case- insen-\n            sitive field names are recognised:\n\n            IP        Host IPv4 address in dotted quad format\n            Name      Host name if --resolve option given\n            MAC       Host MAC address xx:xx:xx:xx:xx:xx\n            HdrMAC    Ethernet source addr if different\n            Vendor    Vendor details string\n            Padding   Padding after ARP packet in hex if nonzero\n            Framing   Framing type if not Ethernet_II\n            VLAN      802.1Q VLAN ID if present\n            Proto     ARP protocol if not 0x0800\n            DUP       Packet number for duplicate packets (>1)\n            RTT       Round trip time if --rtt option given\n\n            Only the ${ip} and ${mac} fields are available if the  --quiet  op-\n            tion is specified.\n\n            Any  characters that are not fields are output verbatim. \"\\\" intro-\n            duces escapes:\n\n            \\n   newline\n            \\r   carriage return\n            \\t   tab\n            \\    suppress special meaning for following character\n\n            You should enclose the --format argument in 'single quotes' to pro-\n            tect special characters from the shell.\n\n            Example: --format='${ip}\\t${mac}\\t${vendor}'\n\n   Host List Randomisation\n     --random or -R\n            Randomise the target host list.\n\n     --randomseed=<i>\n            Seed the pseudo random number generator.  Useful if you want a  re-\n            producible --random order.\n\n   Output Timing and Retry\n     --retry=<i> or -r <i>\n            Set total number of attempts per host to <i>, default=2.\n\n     --backoff=<f> or -b <f>\n            Set backoff factor to <f>, default=1.50.  Multiplies timeout by <f>\n            for each pass.\n\n     --timeout=<i> or -t <i>\n            Set  initial per host timeout to <i> ms, default=500.  This timeout\n            is for the first packet sent to each host.  subsequent timeouts are\n            multiplied by the backoff factor which is set with --backoff.\n\n     --interval=<x> or -i <x>\n            Set minimum packet interval to <x>.   This  controls  the  outgoing\n            bandwidth  usage by limiting the packet rate. If you want to use up\n            to a given bandwidth it is easier to use the --bandwidth option in-\n            stead. The interval is in milliseconds, or microseconds if  \"u\"  is\n            appended.\n\n     --bandwidth=<x> or -B <x>\n            Set  outbound  bandwidth  to  <x>, default=256000.  The value is in\n            bits per second. Append K for kilobits or M for  megabits  (decimal\n            multiples). You cannot specify both --interval and --bandwidth.\n\n   DNS Resolution\n     --numeric or -N\n            Targets  must  be  IP addresses, not hostnames.  Can reduce startup\n            time for large target lists.\n\n     --resolve or -d\n            Resolve responding addresses to hostnames.  The default output for-\n            mat will display the hostname instead of the IPv4 address. This op-\n            tion makes the ${name} field available for the --format option.\n\n   Output ARP Packet\n     --arpsha=<m> or -u <m>\n            Set the ARP source Ethernet address.  Sets the 48-bit ar$sha  field\n            but  does  not change the hardware address in the frame header, see\n            --srcaddr for how to change that address. Default is  the  Ethernet\n            address of the outgoing interface.\n\n     --arptha=<m> or -w <m>\n            Set the ARP target Ethernet address.  Sets the 48-bit ar$tha field.\n            The default is zero, because this field is not used for ARP request\n            packets.\n\n     --arphrd=<i> or -H <i>\n            Set  the  ARP  hardware  type,  default=1.   Sets the 16-bit ar$hrd\n            field.  The default is 1  (ARPHRD_ETHER).  Many  operating  systems\n            also respond to 6 (ARPHRD_IEEE802).\n\n     --arppro=<i> or -p <i>\n            Set  the ARP protocol type, default=0x0800.  Sets the 16-bit ar$pro\n            field.  Most operating systems only respond to 0x0800 (IPv4).\n\n     --arphln=<i> or -a <i>\n            Set the hardware address length, default=6.  Sets the 8-bit  ar$hln\n            field.  The lengths of the ar$sha and ar$tha fields are not changed\n            by this option; it only changes the ar$hln field.\n\n     --arppln=<i> or -P <i>\n            Set  the protocol address length, default=4.  Sets the 8-bit ar$pln\n            field.  The lengths of the ar$spa and ar$tpa fields are not changed\n            by this option; it only changes the ar$pln field.\n\n     --arpop=<i> or -o <i>\n            Specify the ARP operation, default=1.  Sets the 16-bit ar$op field.\n            Most operating systems only respond to the value 1 (ARPOP_REQUEST).\n\n     --arpspa=<a> or -s <a>\n            Set the source IPv4 address.  The address should be in dotted  quad\n            format,  or  the string \"dest\" which sets the source address to the\n            target host address.  The default is  the  outgoing  interface  ad-\n            dress.   Sets the 32-bit ar$spa field.  Some operating systems only\n            respond if the source address is within the network of the  receiv-\n            ing  interface.   Setting  ar$spa to the destination IP address can\n            cause some operating systems to report an address clash.\n\n   Output Ethernet Header\n     --srcaddr=<m> or -S <m>\n            Set the source Ethernet MAC address.  Default is the interface  MAC\n            address.  This sets the address in the Ethernet header. It does not\n            change the address in the ARP packet: use --arpsha to  change  that\n            address.\n\n     --destaddr=<m> or -T <m>\n            Set  the  destination MAC address.  Sets the destination address in\n            the Ethernet header. Default is ff:ff:ff:ff:ff:ff (broadcast) Hosts\n            also respond if the request is sent to their unicast address, or to\n            a multicast address they are listening on.\n\n     --prototype=<i> or -y <i>\n            Sets the Ethernet protocol type,  default=0x0806.   This  sets  the\n            protocol type field in the Ethernet header.\n\n     --llc or -L\n            Use  RFC  1042 LLC/SNAP encapsulation for 802.2 networks.  arp-scan\n            will decode and display ARP responses in both Ethernet-II and  IEEE\n            802.2 formats irrespective of this option.\n\n     --vlan=<i> or -Q <i>\n            Use 802.1Q tagging with VLAN id <i>.  The id should be in the range\n            0 to 4095. arp-scan will decode and display ARP responses in 802.1Q\n            format irrespective of this option.\n\n   Misc Options\n     --limit=<i> or -M <i>\n            Exit  after the specified number of hosts have responded.  arp-scan\n            will exit with status 1 if the number of responding hosts  is  less\n            than  the limit. Can be used in scripts to check if fewer hosts re-\n            spond without having to parse the output.\n\n     --pcapsavefile=<s> or -W <s>\n            Write received packets to pcap savefile <s>.  ARP responses will be\n            written to the specified file as well as  being  decoded  and  dis-\n            played.\n\n     --snap=<i> or -n <i>\n            Set  the  pcap snap length to <i>. Default=64.  Specifies the frame\n            capture length, including the Ethernet header. The default is  nor-\n            mally sufficient.\n\n     --retry-send=<i> or -Y <i>\n            Set number of send attempts, default=20.\n\n     --retry-send-interval=<i> or -E <i>\n            Set interval between send attempts.  Interval is in milliseconds or\n            microseconds if \"u\" is appended. default=5.\n\n     --padding=<h> or -A <h>\n            Specify  padding  after packet data.  Set padding after the ARP re-\n            quest to hex value <h>.\n\nEXIT STATUS\n     arp-scan will exit with 0 on successful completion or >0 if an  error  was\n     encountered.\n\n     If  the  --limit  option is specified, arp-scan will also exit with a non-\n     zero exit code if the number of responding hosts is less than  the  speci-\n     fied limit.\n\nFILES\n     /usr/share/arp-scan/ieee-oui.txt\n            List  of  IEEE  OUI  (Organisationally Unique Identifier) to vendor\n            mappings.\n\n     /etc/arp-scan/mac-vendor.txt\n            List of other Ethernet MAC to vendor mappings, including local  ad-\n            ditions.\n\nEXAMPLES\n   Simple Scan\n     Scan  the default network using the interface IPv4 configuration to gener-\n     ate the list of hosts to scan.\n\n     $ arp-scan --localnet\n     Interface: eth0, type: EN10MB, MAC: 50:65:f3:f0:6d:7c, IPv4: 10.0.0.106\n     Starting arp-scan 1.9.9 with 256 hosts (https://github.com/royhills/arp-scan)\n     10.0.0.14       a4:1f:72:7f:25:bb       Dell Inc.\n     10.0.0.22       10:60:4b:73:43:de       Hewlett Packard\n     10.0.0.74       00:0c:29:90:07:e9       VMware, Inc.\n     10.0.0.75       00:0c:29:66:9e:c2       VMware, Inc.\n     10.0.0.76       00:0c:29:d0:e1:ea       VMware, Inc.\n     10.0.0.82       9c:b6:54:bb:f3:ec       Hewlett Packard\n     10.0.0.84       00:21:9b:fd:b9:b3       Dell Inc.\n     10.0.0.85       00:02:b3:eb:5a:f8       Intel Corporation\n     10.0.0.91       00:9c:02:a5:7b:29       Hewlett Packard\n     10.0.0.92       d4:ae:52:d0:07:6f       Dell Inc.\n     10.0.0.93       d4:ae:52:d0:04:9b       Dell Inc.\n     10.0.0.96       9c:b6:54:bb:f5:35       Hewlett Packard\n     10.0.0.97       00:0c:29:0e:95:20       VMware, Inc.\n     10.0.0.104      50:65:f3:f0:70:a4       Hewlett Packard\n\n     15 packets received by filter, 0 packets dropped by kernel\n     Ending arp-scan 1.9.9: 256 hosts scanned in 1.532 seconds (167.10 hosts/sec). 14 responded\n\n   Output Formatting\n     Scan all hosts in 10.0.0.0/24 using interface eth0.  Calculate  round-trip\n     time and display in aligned columns using a custom format.\n\n     $ arp-scan -I eth0 --rtt --format='|${ip;-15}|${mac}|${rtt;8}|' 10.0.0.0/24\n     Interface: eth0, type: EN10MB, MAC: 50:65:f3:f0:6d:7c, IPv4: 10.0.0.106\n     Starting arp-scan 1.9.9 with 256 hosts (https://github.com/royhills/arp-scan)\n     |10.0.0.14      |a4:1f:72:7f:25:bb|   0.280|\n     |10.0.0.22      |10:60:4b:73:43:de|   0.293|\n     |10.0.0.74      |00:0c:29:90:07:e9|   0.380|\n     |10.0.0.75      |00:0c:29:66:9e:c2|   0.311|\n     |10.0.0.76      |00:0c:29:d0:e1:ea|   0.326|\n     |10.0.0.82      |9c:b6:54:bb:f3:ec|   0.216|\n     |10.0.0.84      |00:21:9b:fd:b9:b3|   0.244|\n     |10.0.0.85      |00:02:b3:eb:5a:f8|   0.244|\n     |10.0.0.91      |00:9c:02:a5:7b:29|   0.209|\n     |10.0.0.92      |d4:ae:52:d0:07:6f|   0.289|\n     |10.0.0.93      |d4:ae:52:d0:04:9b|   0.278|\n     |10.0.0.96      |9c:b6:54:bb:f5:35|   0.255|\n     |10.0.0.97      |00:0c:29:0e:95:20|   0.288|\n     |10.0.0.104     |50:65:f3:f0:70:a4|   0.263|\n\n     14 packets received by filter, 0 packets dropped by kernel\n     Ending arp-scan 1.9.9: 256 hosts scanned in 2.032 seconds (125.98 hosts/sec). 14 responded\n\n   CSV Output\n     --plain removes extraneous output.\n\n     $ arp-scan -I eth0 --plain --format='${ip},${mac},\"${vendor}\"' 10.0.0.0/24\n     10.0.0.14,a4:1f:72:7f:25:bb,\"Dell Inc.\"\n     10.0.0.22,10:60:4b:73:43:de,\"Hewlett Packard\"\n     10.0.0.74,00:0c:29:90:07:e9,\"VMware, Inc.\"\n     10.0.0.75,00:0c:29:66:9e:c2,\"VMware, Inc.\"\n     10.0.0.76,00:0c:29:d0:e1:ea,\"VMware, Inc.\"\n     10.0.0.82,9c:b6:54:bb:f3:ec,\"Hewlett Packard\"\n     10.0.0.84,00:21:9b:fd:b9:b3,\"Dell Inc.\"\n     10.0.0.85,00:02:b3:eb:5a:f8,\"Intel Corporation\"\n     10.0.0.91,00:9c:02:a5:7b:29,\"Hewlett Packard\"\n     10.0.0.92,d4:ae:52:d0:07:6f,\"Dell Inc.\"\n     10.0.0.93,d4:ae:52:d0:04:9b,\"Dell Inc.\"\n     10.0.0.96,9c:b6:54:bb:f5:35,\"Hewlett Packard\"\n     10.0.0.97,00:0c:29:0e:95:20,\"VMware, Inc.\"\n     10.0.0.104,50:65:f3:f0:70:a4,\"Hewlett Packard\"\n\nSEE ALSO\n     get-oui(1)\n\n     arp-fingerprint(1)\n\n     http://www.royhills.co.uk/wiki/ The arp-scan wiki page.\n\n     https://github.com/royhills/arp-scan The arp-scan homepage.\n\n                                November 9, 2022                    ARP-SCAN(1)",
+        "apropos": "arp-scan (1)         - Send ARP requests to target hosts and display responses\nget-oui (1)          - Fetch the arp-scan OUI file from the ieee-data package\nmac-vendor (5)       - Ethernet vendor file for arp-scan"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/arp-scan",
+        "size_bytes": 69440,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b9e84e952da96d5a5c18626967ced4cade12711e, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "get-iab",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "/usr/sbin/get-iab is no longer needed and was depreciated in arp-scan 1.10\nget-oui is now used to fetch all of the Ethernet MAC-Vendor\nmappings from the various IEEE registries.  See get-oui(1) for\ndetails.",
+        "-h": "/usr/sbin/get-iab is no longer needed and was depreciated in arp-scan 1.10\nget-oui is now used to fetch all of the Ethernet MAC-Vendor\nmappings from the various IEEE registries.  See get-oui(1) for\ndetails.",
+        "help": "/usr/sbin/get-iab is no longer needed and was depreciated in arp-scan 1.10\nget-oui is now used to fetch all of the Ethernet MAC-Vendor\nmappings from the various IEEE registries.  See get-oui(1) for\ndetails."
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/get-iab",
+        "size_bytes": 274,
+        "is_symlink": false,
+        "file_type": "Perl script text executable"
+      }
+    },
+    {
+      "name": "get-oui",
+      "description": "Fetch the arp-scan OUI file from the ieee-data package",
+      "usage": "get-oui [-OPTIONS [-MORE_OPTIONS]] [--] [PROGRAM_ARG1 ...]",
+      "arguments": [
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": "Display this usage message.",
+          "takes_value": true,
+          "description": "Display a brief usage message and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "        -h Display this usage message."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "FILE Specify the output file. Default=/usr/share/arp-scan/ieee-oui.txt",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "        -f FILE Specify the output file. Default=/usr/share/arp-scan/ieee-oui.txt"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": "Give verbose progress messages.",
+          "takes_value": true,
+          "description": "Display verbose progress messages.",
+          "default": null,
+          "choices": null,
+          "raw": "        -v Give verbose progress messages."
+        }
+      ],
+      "raw_help": "root@kali:~# get-oui --help\n /usr/sbin/get-oui version [unknown] calling Getopt::Std::getopts (version 1.14 [paranoid]),\n running under Perl version 5.40.1.\n \n Usage: get-oui [-OPTIONS [-MORE_OPTIONS]] [--] [PROGRAM_ARG1 ...]\n \n The following single-character options are accepted:\n \tWith arguments: -f -u\n \tBoolean (without arguments): -h -v\n \n Options may be merged together.  -- stops processing of options.\n Space is not required between options and their arguments.\n [Now continuing due to backward compatibility and excessive paranoia.\n  See 'perldoc Getopt::Std' about $Getopt::Std::STANDARD_HELP_VERSION.]",
+      "examples": [],
+      "risk": {
+        "level": "low",
+        "signals": [],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "/usr/sbin/get-oui version [unknown] calling Getopt::Std::getopts (version 1.14 [paranoid]),\nrunning under Perl version 5.40.1.\n\nUsage: get-oui [-OPTIONS [-MORE_OPTIONS]] [--] [PROGRAM_ARG1 ...]\n\nThe following single-character options are accepted:\n\tWith arguments: -f -u\n\tBoolean (without arguments): -h -v\n\nOptions may be merged together.  -- stops processing of options.\nSpace is not required between options and their arguments.\n  [Now continuing due to backward compatibility and excessive paranoia.\n   See 'perldoc Getopt::Std' about $Getopt::Std::STANDARD_HELP_VERSION.]",
+        "-h": "Usage: get-oui [options]\nFetch the Ethernet MAC-Vendor registry data from the IEEE website\nand save it in the format used by arp-scan.\n\n'options' is one or more of:\n        -h Display this usage message.\n        -f FILE Specify the output file. Default=/usr/share/arp-scan/ieee-oui.txt\n        -v Give verbose progress messages.",
+        "help": "Total of 57720 MAC/Vendor mappings written to /usr/share/arp-scan/ieee-oui.txt",
+        "man": "GET-OUI(1)                  General Commands Manual                  GET-OUI(1)\n\nNAME\n     get-oui - Fetch the arp-scan OUI file from the ieee-data package\n\nSYNOPSIS\n     get-oui [options]\n\nDESCRIPTION\n     get-oui  fetches  the  MAC/Vendor registry data from the ieee-data package\n     and converts it to the format used by arp-scan. The contents of  the  fol-\n     lowing registries are processed:\n\n     MA-L   24-bit   The original OUI registry\n     MA-M   28-bit   Medium address block registry\n     MA-S   36-bit   Small address block registry (OUI-36)\n     IAB    36-bit   The IAB registry (closed for new applications)\n\n     This  script creates /usr/share/arp-scan/ieee-oui.txt from the latest data\n     on the ieee-data package.  You can run # update-ieee-data && get-oui occa-\n     sionally to keep the OUI file up to date.\n\n     The OUI data is fetched from ieee-data package files defined in  the  get-\n     oui  script  and  the  output  file  is  saved to the file /usr/share/arp-\n     scan/ieee-oui.txt The output file name can be changed with the -f option.\n\n     The /usr/share/arp-scan/ieee-oui.txt file that is produced and updated  by\n     this script is used by arp-scan to determine the Ethernet card vendor from\n     its hardware address.\n\nOPTIONS\n     -h     Display a brief usage message and exit.\n\n     -f <fn>\n            Write  the  output  to  the  specified  file instead of the default\n            /usr/share/arp-scan/ieee-oui.txt.\n\n     -v     Display verbose progress messages.\n\nFILES\n     /usr/share/arp-scan/ieee-oui.txt\n            The default output file.\n\nEXAMPLES\n     $ ./get-oui -v\n     Renaming ieee-oui.txt to ieee-oui.txt.bak\n     Opening ieee-oui.txt for output\n     Processing IEEE IAB registry data from file:///var/lib/ieee-data/iab.csv\n             Downloaded 381454 bytes\n             4575 IAB entries written to ieee-oui.txt\n     Processing IEEE MAM registry data from file:///var/lib/ieee-data/mam.csv\n             Downloaded 492756 bytes\n             4477 MAM entries written to ieee-oui.txt\n     Processing IEEE OUI registry data from file:///var/lib/ieee-data/oui.csv\n             Downloaded 3051812 bytes\n             32845 OUI entries written to ieee-oui.txt\n     Processing IEEE OUI36 registry data from file:///var/lib/ieee-data/oui36.csv\n             Downloaded 466151 bytes\n             5131 OUI36 entries written to ieee-oui.txt\n\n     Total of 47028 MAC/Vendor mappings written to ieee-oui.txt\n\nNOTES\n     get-oui is implemented in Perl, so you need to have the  Perl  interpreter\n     installed on your system to use it.\n\n     get-oui  uses  the  LWP::UserAgent and Text::CSV Perl modules to fetch and\n     process the IEEE registry data. You must have these modules  installed  on\n     your  system for it to work. These modules are available on most distribu-\n     tions, often called  libwww-perl  and  libtext-csv-perl.   They  are  also\n     available in source form from CPAN.\n\n     You  can  use  a proxy server by defining the http_proxy environment vari-\n     able.\n\nSEE ALSO\n     arp-scan(1)\n\n     arp-fingerprint(1)\n\n                                October 28, 2022                     GET-OUI(1)",
+        "apropos": "get-oui (1)          - Fetch the arp-scan OUI file from the ieee-data package"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/get-oui",
+        "size_bytes": 5852,
+        "is_symlink": false,
+        "file_type": "Perl script text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/arp-scan/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/arp-scan/index.md",
+    "retrieved_at": "2026-07-14T13:04:55+00:00",
+    "sha256": "2a3711504284c9783931d62763239236614cb5b2ffeb59dc71a17801edc21760"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "1568",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.10.0-2+b1",
+    "depends": "libc6 (>= 2.34), libcap2 (>= 1:2.10), libpcap0.8t64 (>= 1.5.1)",
+    "recommends": "libwww-perl, libtext-csv-perl, ieee-data",
+    "description": "arp scanning and fingerprinting tool\narp-scan is a command-line tool that uses the ARP protocol to discover and\nfingerprint IP hosts on the local network. It is available for Linux and BSD\nunder the GPL licence",
+    "homepage": "https://github.com/royhills/arp-scan"
+  },
+  "tags": [
+    "offensive",
+    "arp",
+    "scan",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/arp-scan && python3 arp-scan.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/arp-scan && python3 arp-scan.py --help",
+    "cd toolboxes/arp-scan && python3 arp-scan.py --help",
+    "cd toolboxes/arp-scan && python3 arp-scan.py --help",
+    "cd toolboxes/arp-scan && python3 arp-scan.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST arp-scan --output $KFIOSA_OUTPUT_DIR/arp-scan.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST arp-scan --output $KFIOSA_OUTPUT_DIR/arp-scan.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

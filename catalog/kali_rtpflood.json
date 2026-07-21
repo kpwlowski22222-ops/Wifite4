@@ -1,0 +1,134 @@
+{
+  "id": "kali:rtpflood",
+  "kind": "kali_source_package",
+  "name": "rtpflood",
+  "title": "rtpflood",
+  "summary": "### rtpflood",
+  "version": "1.0-1kali3",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://www.hackingvoip.com/sec_tools.html",
+  "repository": "https://gitlab.com/kalilinux/packages/rtpflood",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-voip",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install rtpflood"
+  },
+  "packages": [
+    {
+      "name": "rtpflood"
+    }
+  ],
+  "commands": [
+    {
+      "name": "rtpflood",
+      "description": "- - -",
+      "usage": "rtpflood sourcename destinationname srcport destport numpackets seqno timestamp SSID",
+      "arguments": [],
+      "raw_help": "root@kali:~# rtpflood 192.168.1.202 192.168.1.1 5060 5061 1000 3 123456789 kali\n\nWill flood port 5061 from port 5060 1000 times\nUsing sequence_number 3 timestamp 123456789 SSID 0\n\nWe have IP_HDRINCL\n\nNumber of Packets sent:\n\nSent 289 160 286",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "rtpflood 192.168.1.202 192.168.1.1 5060 5061 1000 3 123456789 kali\n\nWill flood port 5061 from port 5060 1000 times\nUsing sequence_number 3 timestamp 123456789 SSID 0\n\nWe have IP_HDRINCL\n\nNumber of Packets sent:\n\nSent 289 160 286",
+          "template": null,
+          "original_sha256": "ed63ebd77c898fd8b3fffc93e4a8e9d97b85734f98ab49f08063290dc33cf905"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "vulnerability"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "usage: rtpflood sourcename destinationname srcport destport numpackets seqno timestamp SSID",
+        "-h": "usage: rtpflood sourcename destinationname srcport destport numpackets seqno timestamp SSID",
+        "help": "usage: rtpflood sourcename destinationname srcport destport numpackets seqno timestamp SSID"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/rtpflood",
+        "size_bytes": 14616,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3bab20bee09230288c40bdb18a69f3e4e4b602e0, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/rtpflood/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/rtpflood/index.md",
+    "retrieved_at": "2026-07-14T13:08:10+00:00",
+    "sha256": "e1801e977d6be6f3422515ab6caeb6b7b16d92c6b4b7f59b75d06891f4eb64f5"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "25",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "1.0-1kali3",
+    "depends": "libc6 (>= 2.34)",
+    "description": "Tool to flood any RTP device\nA command line tool used to flood any device that is\nprocessing RTP.",
+    "homepage": "http://www.hackingvoip.com/sec_tools.html"
+  },
+  "tags": [
+    "offensive",
+    "rtpflood",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/rtpflood && python3 rtpflood.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/rtpflood && python3 rtpflood.py --help",
+    "cd toolboxes/rtpflood && python3 rtpflood.py --help",
+    "cd toolboxes/rtpflood && python3 rtpflood.py --help",
+    "cd toolboxes/rtpflood && python3 rtpflood.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtpflood --output $KFIOSA_OUTPUT_DIR/rtpflood.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtpflood --output $KFIOSA_OUTPUT_DIR/rtpflood.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

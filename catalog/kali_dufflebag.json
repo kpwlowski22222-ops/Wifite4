@@ -1,0 +1,124 @@
+{
+  "id": "kali:dufflebag",
+  "kind": "kali_source_package",
+  "name": "dufflebag",
+  "title": "dufflebag",
+  "summary": "### dufflebag",
+  "version": "0.0~git20200205.9a01942-0kali3",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/BishopFox/dufflebag",
+  "repository": "https://gitlab.com/kalilinux/packages/dufflebag",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install dufflebag"
+  },
+  "packages": [
+    {
+      "name": "dufflebag"
+    }
+  ],
+  "commands": [
+    {
+      "name": "dufflebag",
+      "description": "- - -",
+      "usage": "dufflebag AWS_REGION",
+      "arguments": [],
+      "raw_help": "root@kali:~# dufflebag -h\n Usage: dufflebag AWS_REGION\n Example: dufflebag us-east-1\n Dufflebag can only operate in one AWS region at a time\n If you want to search every region, you'll have to deploy several instances.\n See also /usr/share/doc/dufflebag/README.md",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: dufflebag AWS_REGION\nExample: dufflebag us-east-1\nDufflebag can only operate in one AWS region at a time\nIf you want to search every region, you'll have to deploy several instances.\nSee also /usr/share/doc/dufflebag/README.md",
+        "-h": "Usage: dufflebag AWS_REGION\nExample: dufflebag us-east-1\nDufflebag can only operate in one AWS region at a time\nIf you want to search every region, you'll have to deploy several instances.\nSee also /usr/share/doc/dufflebag/README.md",
+        "help": "\u001b[01;31m[-]\u001b[00m ERROR: 'help' does not seem to be a correct aws region\nUsage: dufflebag AWS_REGION\nExample: dufflebag us-east-1\nDufflebag can only operate in one AWS region at a time\nIf you want to search every region, you'll have to deploy several instances.\nSee also /usr/share/doc/dufflebag/README.md"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dufflebag",
+        "size_bytes": 1713,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/dufflebag/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/dufflebag/index.md",
+    "retrieved_at": "2026-07-14T13:05:28+00:00",
+    "sha256": "c35cc811a1b0255d23b55f511ee6525ad4bcefc11dbe7d5b2bbd9d62f45b642c"
+  },
+  "apt_metadata": {
+    "section": "misc",
+    "installed_size": "6044",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "0.0~git20200205.9a01942-0kali3",
+    "depends": "golang-any, golang-github-aws-aws-sdk-go-dev, golang-github-deckarep-golang-set-dev, golang-lukechampine-blake3-dev (>= 1.1.5), make, sensible-utils, zip",
+    "description": "Search exposed EBS volumes for secrets (program)\nDufflebag is a tool that searches through public Elastic Block Storage (EBS)\nsnapshots for secrets that may have been accidentally left in.\n.\nThe tool is organized as an Elastic Beanstalk (\"EB\", not to be confused\nwith EBS) application, and definitely won't work if you try to run it\non your own machine.\n.\nDufflebag has a lot of moving pieces because it's fairly nontrivial\nto actually read EBS volumes in practice. You have to be in an AWS\nenvironment, clone the snapshot, make a volume from the snapshot, attach\nthe volume, mount the volume, etc... This is why it's made as an Elastic\nBeanstalk app, so it can automagically scale up or down however much you\nlike, and so that the whole thing can be easily torn down when you're\ndone with it.",
+    "homepage": "https://github.com/BishopFox/dufflebag"
+  },
+  "tags": [
+    "offensive",
+    "dufflebag",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/dufflebag && python3 dufflebag.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/dufflebag && python3 dufflebag.py --help",
+    "cd toolboxes/dufflebag && python3 dufflebag.py --help",
+    "cd toolboxes/dufflebag && python3 dufflebag.py --help",
+    "cd toolboxes/dufflebag && python3 dufflebag.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dufflebag --output $KFIOSA_OUTPUT_DIR/dufflebag.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dufflebag --output $KFIOSA_OUTPUT_DIR/dufflebag.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

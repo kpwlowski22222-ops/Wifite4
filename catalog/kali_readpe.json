@@ -1,0 +1,1422 @@
+{
+  "id": "kali:readpe",
+  "kind": "kali_source_package",
+  "name": "readpe",
+  "title": "readpe",
+  "summary": "### libpe-dev",
+  "version": "0.85.1-1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/mentebinaria/readpe/wiki",
+  "repository": "https://salsa.debian.org/pkg-security-team/readpe",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install readpe"
+  },
+  "packages": [
+    {
+      "name": "libpe-dev"
+    },
+    {
+      "name": "libpe1t64"
+    },
+    {
+      "name": "readpe"
+    }
+  ],
+  "commands": [
+    {
+      "name": "ofs2rva",
+      "description": "Converts a PE raw file offset to relative virtual address",
+      "usage": "ofs2rva <offset> FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                          Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                 Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# ofs2rva -h\n Usage: ofs2rva <offset> FILE\n Convert raw file offset to RVA\n \n Example: ofs2rva 0x1b9b8 calc.exe\n \n Options:\n-V, --version                          Show version.\n--help                                 Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ ofs2rva 0x1b9b8 calc.exe",
+          "template": null,
+          "original_sha256": "bce7f35362b4d7a970d91957d3b06965135aa5f2e1523290ff02fa9742760799"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: ofs2rva <offset> FILE\nConvert raw file offset to RVA\n\nExample: ofs2rva 0x1b9b8 calc.exe\n\nOptions:\n -V, --version                          Show version.\n --help                                 Show this help.",
+        "-h": "Usage: ofs2rva <offset> FILE\nConvert raw file offset to RVA\n\nExample: ofs2rva 0x1b9b8 calc.exe\n\nOptions:\n -V, --version                          Show version.\n --help                                 Show this help.",
+        "help": "Usage: ofs2rva <offset> FILE\nConvert raw file offset to RVA\n\nExample: ofs2rva 0x1b9b8 calc.exe\n\nOptions:\n -V, --version                          Show version.\n --help                                 Show this help.",
+        "man": "OFS2RVA(1)                  General Commands Manual                  OFS2RVA(1)\n\nNAME\n     ofs2rva - converts a PE raw file offset to relative virtual address\n\nSYNOPSIS\n     ofs2rva offset pefile\n\nDESCRIPTION\n     ofs2rva  converts  a raw file offset to RVA (Relative Virtual Address), if\n     it's valid. It's part of pev, the PE file analysis toolkit.\n\n     offset is a valid PE file offset in decimal or hexadecimal (prefixed  with\n     0x).\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -V, --version\n            Show version.\n\n     --help\n            Show this help.\n\nEXAMPLES\n     Get RVA of 0x1b9b8 offset of calc.exe:\n\n            $ ofs2rva 0x1b9b8 calc.exe\n\nREPORTING BUGS\n     Please,    check    the    latest   development   code   and   report   at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     pedis(1), pehash(1), peldd(1), pepack(1), peres(1),  pescan(1),  pesec(1),\n     pestr(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright  (C)  2012 - 2020 pev authors. License GPLv2+: GNU GPL version 2\n     or later <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is  free  soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\nSEE ALSO\n     rva2ofs(1)\n\n                                                                     OFS2RVA(1)",
+        "apropos": "ofs2rva (1)          - converts a PE raw file offset to relative virtual address"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/ofs2rva",
+        "size_bytes": 27016,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=91089833b26253123ad76b5fe16a2672da35accf, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "pedis",
+      "description": "Disassemble PE sections and functions",
+      "usage": "pedis OPTIONS FILE",
+      "arguments": [
+        {
+          "flags": [
+            "--att"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Set AT&T assembly syntax (default: Intel).",
+          "default": "Intel",
+          "choices": null,
+          "raw": "--att                                 Set AT&T assembly syntax (default: Intel)."
+        },
+        {
+          "flags": [
+            "-e",
+            "--entrypoint"
+          ],
+          "metavar": "- ntrypoint",
+          "takes_value": true,
+          "description": "Disassemble the entire entrypoint function.",
+          "default": null,
+          "choices": null,
+          "raw": "-e, --entrypoint                      Disassemble the entire entrypoint function."
+        },
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat json html text xml csv Change output format default",
+          "takes_value": true,
+          "description": "text).",
+          "default": null,
+          "choices": null,
+          "raw": "-f, --format <json|html|text|xml|csv> Change output format (default: text)."
+        },
+        {
+          "flags": [
+            "-m",
+            "--mode"
+          ],
+          "metavar": "- ode 16 32 64",
+          "takes_value": true,
+          "description": "Disassembly mode (default: auto).",
+          "default": "auto",
+          "choices": null,
+          "raw": "-m, --mode <16|32|64>                 Disassembly mode (default: auto)."
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Number of instructions to disassemble.",
+          "default": null,
+          "choices": null,
+          "raw": "-i <number>                           Number of instructions to disassemble."
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": "number",
+          "takes_value": true,
+          "description": "Number of bytes to disassemble",
+          "default": null,
+          "choices": null,
+          "raw": "-n <number>                           Number of bytes to disassemble"
+        },
+        {
+          "flags": [
+            "-o",
+            "--offset"
+          ],
+          "metavar": "- ffset offset",
+          "takes_value": true,
+          "description": "Disassemble at specified offset, either in decimal or hexadecimal format (prefixed with 0x).",
+          "default": null,
+          "choices": null,
+          "raw": "-o, --offset <offset>                 Disassemble at specified offset, either in decimal or hexadecimal format (prefixed with 0x)."
+        },
+        {
+          "flags": [
+            "-r",
+            "--rva"
+          ],
+          "metavar": "- va rva",
+          "takes_value": true,
+          "description": "Disassemble at specified RVA, either in decimal or hexadecimal format (prefixed with 0x).",
+          "default": null,
+          "choices": null,
+          "raw": "-r, --rva <rva>                       Disassemble at specified RVA, either in decimal or hexadecimal format (prefixed with 0x)."
+        },
+        {
+          "flags": [
+            "-s",
+            "--section"
+          ],
+          "metavar": "- ection section_name",
+          "takes_value": true,
+          "description": "Disassemble en entire section given.",
+          "default": null,
+          "choices": null,
+          "raw": "-s, --section <section_name>          Disassemble en entire section given."
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                         Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# pedis --help\n Usage: pedis OPTIONS FILE\n Disassemble PE sections and functions (by default, until found a RET or LEAVE instruction)\n \n Example: pedis -r 0x4c4df putty.exe\n \n Options:\n--att                                 Set AT&T assembly syntax (default: Intel).\n-e, --entrypoint                      Disassemble the entire entrypoint function.\n-f, --format <json|html|text|xml|csv> Change output format (default: text).\n-m, --mode <16|32|64>                 Disassembly mode (default: auto).\n-i <number>                           Number of instructions to disassemble.\n-n <number>                           Number of bytes to disassemble\n-o, --offset <offset>                 Disassemble at specified offset, either in decimal or hexadecimal format (prefixed with 0x).\n-r, --rva <rva>                       Disassemble at specified RVA, either in decimal or hexadecimal format (prefixed with 0x).\n-s, --section <section_name>          Disassemble en entire section given.\n-V, --version                         Show version.\n--help                                Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ pedis -r 0x4c4df putty.exe",
+          "template": null,
+          "original_sha256": "8926283051aea9235fb7ee2648b54b80dc28101e0d2786c9273f8009615cd294"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ pedis -m 64 --entrypoint putty.exe",
+          "template": null,
+          "original_sha256": "82fcfa4f05502342e65105678bc4b9a2c3a83d085a308b4508786b6c5b0693a7"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ pedis -m 16 -o 0x40 -n 32 game.exe",
+          "template": null,
+          "original_sha256": "9c1825ae5b07157a4c7c34741f9320a97ca0083507d4add4f92c129698f53c59"
+        },
+        {
+          "status": "operational_example",
+          "command": "pedis: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "03f8848d5e6a08c6d7e6f8b258bbe20199697b92209dba9df6be5a510655a2c0"
+        },
+        {
+          "status": "operational_example",
+          "command": "pedis: try '--help' for more information",
+          "template": null,
+          "original_sha256": "155ae68159b8d52eadfca4f2faed2307b15050b2f81673897946a780c961c343"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: pedis OPTIONS FILE\nDisassemble PE sections and functions (by default, until found a RET or LEAVE instruction)\n\nExample: pedis -r 0x4c4df putty.exe\n\nOptions:\n --att                                 Set AT&T assembly syntax (default: Intel).\n -e, --entrypoint                      Disassemble the entire entrypoint function.\n -f, --format <json|xml|html|csv|text> Change output format (default: text).\n -m, --mode <16|32|64>                 Disassembly mode (default: auto).\n -i <number>                           Number of instructions to disassemble.\n -n <number>                           Number of bytes to disassemble\n -o, --offset <offset>                 Disassemble at specified offset, either in decimal or hexadecimal format (prefixed with 0x).\n -r, --rva <rva>                       Disassemble at specified RVA, either in decimal or hexadecimal format (prefixed with 0x).\n -s, --section <section_name>          Disassemble en entire section given.\n -V, --version                         Show version.\n --help                                Show this help.",
+        "-h": "pedis: invalid option -- 'h'\npedis: try '--help' for more information",
+        "help": "ERROR [-18]: not a PE file",
+        "man": "PEDIS(1)                    General Commands Manual                    PEDIS(1)\n\nNAME\n     pedis - disassemble PE sections and functions\n\nSYNOPSIS\n     pedis [OPTIONS]...  pefile\n\nDESCRIPTION\n     pedis  is  a  PE disassembler relyng on udis86 library. It can disassembly\n     entire sections, functions or any file position you want.   It's  part  of\n     pev, the PE file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     --att  Set AT&T assembly syntax (default: Intel).\n\n     -e, --entrypoint\n            Disassemble the entire entrypoint function.\n\n     -f, --format <text|csv|xml|html>\n            Change output format (default: text).\n\n     -m, --mode <16|32|64>\n            Disassembly mode (default: auto).\n\n     -i <number>\n            Number of instructions to disassemble.\n\n     -n <number>\n            Number of bytes to disassemble.\n\n     -o, --offset <offset>\n            Disassemble  at  specified offset, either in decimal or hexadecimal\n            format (prefixed with 0x).\n\n     -r, --rva <rva>\n            Disassemble at specified RVA, either in decimal or hexadecimal for-\n            mat (prefixed with 0x).\n\n     -s, --section <name>\n            Disassemble en entire section given.\n\n     -V, --version\n            Show version.\n\n     --help\n            Show this help.\n\nEXAMPLES\n     Disassemble RVA 0x4c4df from putty.exe:\n\n            $ pedis -r 0x4c4df putty.exe\n\n     Disassembly the entrypoint of a 64-bit PE32+ wordpad.exe:\n\n            $ pedis -m 64 --entrypoint putty.exe\n\n     Disassembly in 16-bits mode, starting from offset 0x40, 32 bytes  of  code\n     from game.exe:\n\n            $ pedis -m 16 -o 0x40 -n 32 game.exe\n\nREPORTING BUGS\n     Please,    check    the    latest   development   code   and   report   at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pehash(1), peldd(1), pepack(1), peres(1), pescan(1), pesec(1),\n     pestr(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright (C) 2012 - 2020 pev authors. License GPLv2+: GNU GPL  version  2\n     or  later  <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is free soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                       PEDIS(1)",
+        "apropos": "pedis (1)            - disassemble PE sections and functions"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/pedis",
+        "size_bytes": 200128,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=feb612cbecb15da6b264b578e4196b1cd9835764, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "pehash",
+      "description": "Calculate hashes of PE pieces",
+      "usage": "pehash OPTIONS FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat json html text xml csv Change output format default",
+          "takes_value": true,
+          "description": "text).",
+          "default": null,
+          "choices": null,
+          "raw": "-f, --format <json|html|text|xml|csv> Change output format (default: text)."
+        },
+        {
+          "flags": [
+            "-a",
+            "--all"
+          ],
+          "metavar": "- ll",
+          "takes_value": true,
+          "description": "Hash file, sections and headers with md5, sha1, sha256, ssdeep and imphash.",
+          "default": null,
+          "choices": null,
+          "raw": "-a, --all                             Hash file, sections and headers with md5, sha1, sha256, ssdeep and imphash."
+        },
+        {
+          "flags": [
+            "-c",
+            "--content"
+          ],
+          "metavar": "- ontent",
+          "takes_value": true,
+          "description": "Hash only the file content (default).",
+          "default": null,
+          "choices": null,
+          "raw": "-c, --content                         Hash only the file content (default)."
+        },
+        {
+          "flags": [
+            "-h",
+            "--header"
+          ],
+          "metavar": "- eader dos coff optional",
+          "takes_value": true,
+          "description": "Hash only the header with the specified name.",
+          "default": null,
+          "choices": null,
+          "raw": "-h, --header <dos|coff|optional>      Hash only the header with the specified name."
+        },
+        {
+          "flags": [
+            "-s",
+            "--section"
+          ],
+          "metavar": "- ection section_name",
+          "takes_value": true,
+          "description": "Hash only the section with the specified name.",
+          "default": null,
+          "choices": null,
+          "raw": "-s, --section <section_name>          Hash only the section with the specified name."
+        },
+        {
+          "flags": [
+            "--section-index"
+          ],
+          "metavar": "section_index",
+          "takes_value": true,
+          "description": "Hash only the section at the specified index (1..n).",
+          "default": null,
+          "choices": null,
+          "raw": "--section-index <section_index>       Hash only the section at the specified index (1..n)."
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                         Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# pehash --help\n Usage: pehash OPTIONS FILE\n Calculate hashes of PE pieces\n \n Example: pehash -s '.text' winzip.exe\n \n Options:\n-f, --format <json|html|text|xml|csv> Change output format (default: text).\n-a, --all                             Hash file, sections and headers with md5, sha1, sha256, ssdeep and imphash.\n-c, --content                         Hash only the file content (default).\n-h, --header <dos|coff|optional>      Hash only the header with the specified name.\n-s, --section <section_name>          Hash only the section with the specified name.\n--section-index <section_index>       Hash only the section at the specified index (1..n).\n-V, --version                         Show version.\n--help                                Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ pehash -a putty.exe",
+          "template": null,
+          "original_sha256": "5b96da92b0455ba12ce6ac5620f82a102b29be631fbbd10a0935da51521e4fe1"
+        },
+        {
+          "status": "operational_example",
+          "command": "pehash: option requires an argument -- 'h'",
+          "template": null,
+          "original_sha256": "1d7230b5dc6ef3baff13989cabbf0d3b521f3de9427db389179750eb21a6cb71"
+        },
+        {
+          "status": "operational_example",
+          "command": "pehash: try '--help' for more information",
+          "template": null,
+          "original_sha256": "a3a3fae8fce6d06987402a8ede4c31a54ff9cc41267339a9fafb92d4a116105a"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: pehash OPTIONS FILE\nCalculate hashes of PE pieces\n\nExample: pehash -s '.text' winzip.exe\n\nOptions:\n -f, --format <json|xml|html|csv|text> Change output format (default: text).\n -a, --all                             Hash file, sections and headers with md5, sha1, sha256, ssdeep and imphash.\n -c, --content                         Hash only the file content (default).\n -h, --header <dos|coff|optional>      Hash only the header with the specified name.\n -s, --section <section_name>          Hash only the section with the specified name.\n --section-index <section_index>       Hash only the section at the specified index (1..n).\n -V, --version                         Show version.\n --help                                Show this help.",
+        "-h": "pehash: option requires an argument -- 'h'\npehash: try '--help' for more information",
+        "help": "ERROR [-18]: not a PE file",
+        "man": "PEHASH(1)                   General Commands Manual                   PEHASH(1)\n\nNAME\n     pehash - calculate hashes of PE pieces\n\nSYNOPSIS\n     pehash [OPTIONS]...  pefile\n\nDESCRIPTION\n     pehash  uses  libssl,  libfuzzy and other black magic to calculate PE file\n     hashes. It's part of pev, the PE file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -a, --all\n            Hash file, sections and headers with md5, sha1, sha256, ssdeep  and\n            imphash.\n\n     -c, --content\n            Hash only the file content (default).\n\n     -f, --format <text|csv|xml|html>\n            Change output format (default is text).\n\n     -h, --header <dos|coff|optional>\n            Hash only the header with the specified name.\n\n     -s, --section <section_name>\n            Hash only the section with the specified name.\n\n     --section-index <section_index>\n            Hash only the section at the specified index (1..n).\n\n     -V, --version\n            Show version.\n\n     --help\n            Show this help.\n\nEXAMPLES\n     Check all supported checksums of putty.exe file:\n\n            $ pehash -a putty.exe\n\nREPORTING BUGS\n     Please,    check    the    latest   development   code   and   report   at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pedis(1), peldd(1), pepack(1), peres(1), pescan(1),  pesec(1),\n     pestr(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright  (C)  2012 - 2020 pev authors. License GPLv2+: GNU GPL version 2\n     or later <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is  free  soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                      PEHASH(1)",
+        "apropos": "pehash (1)           - calculate hashes of PE pieces"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/pehash",
+        "size_bytes": 31112,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ce976435d0175fd5feddb92705e61d661d94dab5, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "peldd",
+      "description": "Shows library dependencies for a given PE file",
+      "usage": "peldd FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat json html text xml csv Change output format default",
+          "takes_value": true,
+          "description": "text).",
+          "default": null,
+          "choices": null,
+          "raw": "-f, --format <json|html|text|xml|csv> Change output format (default: text)."
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                         Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                Show help."
+        },
+        {
+          "flags": [
+            "-v",
+            "--verbose"
+          ],
+          "metavar": "- erbose",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -v, --verbose"
+        }
+      ],
+      "raw_help": "root@kali:~# peldd --help\n Usage: peldd FILE\n Display PE library dependencies\n \n Example: peldd winzip.exe\n \n Options:\n-f, --format <json|html|text|xml|csv> Change output format (default: text).\n-V, --version                         Show version.\n--help                                Show help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ peldd putty.exe",
+          "template": null,
+          "original_sha256": "e4b5c6d6dbafb2718dd92651d04c776d8e1956aa014ce9b4a4f1e3d956ee0816"
+        },
+        {
+          "status": "operational_example",
+          "command": "peldd: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "61c3da46f520cc63e6b96e6e97728ea54f11cfab0a1b347d1141f9e43530c44c"
+        },
+        {
+          "status": "operational_example",
+          "command": "peldd: try '--help' for more information",
+          "template": null,
+          "original_sha256": "9bd929f62c13a7ac148ff1d9853209c37b65f85f7d295c613dcaaf15b67f632f"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: peldd FILE\nDisplay PE library dependencies\n\nExample: peldd winzip.exe\n\nOptions:\n -f, --format <json|xml|html|csv|text> Change output format (default: text).\n -V, --version                         Show version.\n --help                                Show help.",
+        "-h": "peldd: invalid option -- 'h'\npeldd: try '--help' for more information",
+        "help": "ERROR [-18]: not a PE file",
+        "man": "PELDD(1)                    General Commands Manual                    PELDD(1)\n\nNAME\n     peldd - shows library dependencies for a given PE file\n\nSYNOPSIS\n     peldd [OPTIONS]...  pefile\n\nDESCRIPTION\n     peldd  shows  library  dependencies for a given PE file. It's part of pev,\n     the PE file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -f, --format <text|csv|xml|html>\n            Change output format (default is text).\n\n     -v, --verbose\n            Show more information about found items.\n\n     -V, --version\n            Show version.\n\n     --help\n            Show help.\n\nEXAMPLES\n     Show library dependencies for putty.exe:\n\n            $ peldd putty.exe\n\nREPORTING BUGS\n     Please,   check   the   latest   development   code    and    report    at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pedis(1), pehash(1), pepack(1), peres(1), pescan(1), pesec(1),\n     pestr(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright  (C)  2018 - 2020 pev authors. License GPLv2+: GNU GPL version 2\n     or later <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is  free  soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                       PELDD(1)",
+        "apropos": "peldd (1)            - shows library dependencies for a given PE file"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/peldd",
+        "size_bytes": 27016,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=021877552acef33d7915ebb154813a4b277a8f5f, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "pepack",
+      "description": "Check if a PE file is packed",
+      "usage": "pepack FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-d",
+            "--database"
+          ],
+          "metavar": "- atabase file",
+          "takes_value": true,
+          "description": "Use database file (default: ./userdb.txt).",
+          "default": "",
+          "choices": null,
+          "raw": "-d, --database <file>                  Use database file (default: ./userdb.txt)."
+        },
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat json html text xml csv",
+          "takes_value": true,
+          "description": "Change output format (default: text).",
+          "default": "text",
+          "choices": null,
+          "raw": "-f, --format <json|html|text|xml|csv>  Change output format (default: text)."
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                          Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                 Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# pepack --help\n Usage: pepack FILE\n Search for packers in PE files\n \n Example: pepack putty.exe\n \n Options:\n-d, --database <file>                  Use database file (default: ./userdb.txt).\n-f, --format <json|html|text|xml|csv>  Change output format (default: text).\n-V, --version                          Show version.\n--help                                 Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ pepack sample.exe",
+          "template": null,
+          "original_sha256": "e00c8301630c59457be6b48becae27daa0e9992381221181c586f680bcf89d38"
+        },
+        {
+          "status": "operational_example",
+          "command": "pepack: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "002895fffdfc438f1be3a725d3d9eb9d303256ece197a4638756584cc1717237"
+        },
+        {
+          "status": "operational_example",
+          "command": "pepack: try '--help' for more information",
+          "template": null,
+          "original_sha256": "bf4f3c6a61f37fa61423c46a7a2e7802ca2e7e86531c9945973aa18c84baf0ab"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: pepack FILE\nSearch for packers in PE files\n\nExample: pepack putty.exe\n\nOptions:\n -d, --database <file>                  Use database file (default: ./userdb.txt).\n -f, --format <json|xml|html|csv|text>  Change output format (default: text).\n -V, --version                          Show version.\n --help                                 Show this help.",
+        "-h": "pepack: invalid option -- 'h'\npepack: try '--help' for more information",
+        "help": "ERROR [-18]: not a PE file",
+        "man": "PEPACK(1)                   General Commands Manual                   PEPACK(1)\n\nNAME\n     pepack - check if a PE file is packed\n\nSYNOPSIS\n     pepack [OPTIONS]...  pefile\n\nDESCRIPTION\n     pepack  uses a pre-defined database to check packer signatures patterns in\n     PE file.  If no database is set, pepack tries to identify if executable is\n     packed. It's part of pev, the PE file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -d, --database <database>\n            Use database file (default: ./userdb.txt).\n\n     -f, --format <text|csv|xml|html>\n            Change output format (default: text)\n\n     -V, --version\n            Show version and exit.\n\n     --help\n            Show help.\n\nEXAMPLES\n     Check sample.exe for packers signatures:\n\n            $ pepack sample.exe\n\nREPORTING BUGS\n     Please,   check   the   latest   development   code    and    report    at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1),  pedis(1), pehash(1), peldd(1), peres(1), pescan(1), pesec(1),\n     pestr(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright (C) 2012 - 2020 pev authors. License GPLv2+: GNU GPL  version  2\n     or  later  <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is free soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                      PEPACK(1)",
+        "apropos": "pepack (1)           - check if a PE file is packed"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/pepack",
+        "size_bytes": 31112,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a8f26bfd017e8e4326ffb32ce8cd78f2f7791ada, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "peres",
+      "description": "Analyze and extract PE file resources",
+      "usage": "peres OPTIONS FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-a",
+            "--all"
+          ],
+          "metavar": "- ll",
+          "takes_value": true,
+          "description": "Show all information, statistics and extract resources",
+          "default": null,
+          "choices": null,
+          "raw": "-a, --all                             Show all information, statistics and extract resources"
+        },
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat json html text xml csv Change output format default",
+          "takes_value": true,
+          "description": "text)",
+          "default": null,
+          "choices": null,
+          "raw": "-f, --format <json|html|text|xml|csv> Change output format (default: text)"
+        },
+        {
+          "flags": [
+            "-i",
+            "--info"
+          ],
+          "metavar": "- nfo",
+          "takes_value": true,
+          "description": "Show resources information",
+          "default": null,
+          "choices": null,
+          "raw": "-i, --info                            Show resources information"
+        },
+        {
+          "flags": [
+            "-l",
+            "--list"
+          ],
+          "metavar": "- ist",
+          "takes_value": true,
+          "description": "Show list view",
+          "default": null,
+          "choices": null,
+          "raw": "-l, --list                            Show list view"
+        },
+        {
+          "flags": [
+            "-s",
+            "--statistics"
+          ],
+          "metavar": "- tatistics",
+          "takes_value": true,
+          "description": "Show resources statistics",
+          "default": null,
+          "choices": null,
+          "raw": "-s, --statistics                      Show resources statistics"
+        },
+        {
+          "flags": [
+            "-x",
+            "--extract"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Extract resources",
+          "default": null,
+          "choices": null,
+          "raw": "-x, --extract                         Extract resources"
+        },
+        {
+          "flags": [
+            "-X",
+            "--named-extract"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Extract resources with path names",
+          "default": null,
+          "choices": null,
+          "raw": "-X, --named-extract                   Extract resources with path names"
+        },
+        {
+          "flags": [
+            "-v",
+            "--file-version"
+          ],
+          "metavar": "--file ersion",
+          "takes_value": true,
+          "description": "Show File Version from PE resource directory",
+          "default": null,
+          "choices": null,
+          "raw": "-v, --file-version                    Show File Version from PE resource directory"
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                         Show version and exit"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help and exit",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                Show this help and exit"
+        },
+        {
+          "flags": [
+            "-v",
+            "--version"
+          ],
+          "metavar": "- ersion",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -v, --version"
+        }
+      ],
+      "raw_help": "root@kali:~# peres -h\n Usage: peres OPTIONS FILE\n Show information about resource section and extract it\n \n Example: peres -a putty.exe\n \n Options:\n-a, --all                             Show all information, statistics and extract resources\n-f, --format <json|html|text|xml|csv> Change output format (default: text)\n-i, --info                            Show resources information\n-l, --list                            Show list view\n-s, --statistics                      Show resources statistics\n-x, --extract                         Extract resources\n-X, --named-extract                   Extract resources with path names\n-v, --file-version                    Show File Version from PE resource directory\n-V, --version                         Show version and exit\n--help                                Show this help and exit",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ peres -s putty.exe",
+          "template": null,
+          "original_sha256": "a3f5d32c01ff11c1ede9ecee62ff4ef3d21ed68e786bfbe5800ddfd755e06cb2"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: peres OPTIONS FILE\nShow information about resource section and extract it\n\nExample: peres -a putty.exe\n\nOptions:\n -a, --all                             Show all information, statistics and extract resources\n -f, --format <json|xml|html|csv|text> Change output format (default: text)\n -i, --info                            Show resources information\n -l, --list                            Show list view\n -s, --statistics                      Show resources statistics\n -x, --extract                         Extract resources\n -X, --named-extract                   Extract resources with path names\n -v, --file-version                    Show File Version from PE resource directory\n -V, --version                         Show version and exit\n --help                                Show this help and exit",
+        "-h": "Usage: peres OPTIONS FILE\nShow information about resource section and extract it\n\nExample: peres -a putty.exe\n\nOptions:\n -a, --all                             Show all information, statistics and extract resources\n -f, --format <json|xml|html|csv|text> Change output format (default: text)\n -i, --info                            Show resources information\n -l, --list                            Show list view\n -s, --statistics                      Show resources statistics\n -x, --extract                         Extract resources\n -X, --named-extract                   Extract resources with path names\n -v, --file-version                    Show File Version from PE resource directory\n -V, --version                         Show version and exit\n --help                                Show this help and exit",
+        "help": "Usage: peres OPTIONS FILE\nShow information about resource section and extract it\n\nExample: peres -a putty.exe\n\nOptions:\n -a, --all                             Show all information, statistics and extract resources\n -f, --format <json|xml|html|csv|text> Change output format (default: text)\n -i, --info                            Show resources information\n -l, --list                            Show list view\n -s, --statistics                      Show resources statistics\n -x, --extract                         Extract resources\n -X, --named-extract                   Extract resources with path names\n -v, --file-version                    Show File Version from PE resource directory\n -V, --version                         Show version and exit\n --help                                Show this help and exit",
+        "man": "PERES(1)                    General Commands Manual                    PERES(1)\n\nNAME\n     peres - analyze and extract PE file resources\n\nSYNOPSIS\n     peres [OPTIONS]...  pefile\n\nDESCRIPTION\n     peres  opens the resource section of a PE file and to read and extract re-\n     sources. It's part of pev, the PE file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -a, --all\n            Show all information, statistics and extract the resources.\n\n     -f, --format <text|csv|xml|html>\n            Change output format (default is text).\n\n     -i, --info\n            Show resources information.\n\n     -x, --extract\n            Extract resources.\n\n     -s, --statistics\n            Show resource section statistics.\n\n     -v, --version\n            Show the File Version from resources section.\n\n     -V, --version\n            Show program version and exit.\n\n     --help\n            Show this help.\n\nEXAMPLES\n     Show resources statistics of putty.exe:\n\n            $ peres -s putty.exe\n\nREPORTING BUGS\n     Please,   check   the   latest   development   code    and    report    at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pedis(1), pehash(1), peldd(1), pepack(1), pescan(1), pesec(1),\n     pestr(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright  (C)  2012 - 2020 pev authors. License GPLv2+: GNU GPL version 2\n     or later <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is  free  soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                       PERES(1)",
+        "apropos": "peres (1)            - analyze and extract PE file resources"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/peres",
+        "size_bytes": 39304,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8158cf4c61bdc27b2ffa04bced2d681072e1872b, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "pescan",
+      "description": "Identify suspicious characteristics in PE files",
+      "usage": "pescan OPTIONS FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat json html text xml csv Change output format default",
+          "takes_value": true,
+          "description": "text).",
+          "default": null,
+          "choices": null,
+          "raw": "-f, --format <json|html|text|xml|csv> Change output format (default: text)."
+        },
+        {
+          "flags": [
+            "-v",
+            "--verbose"
+          ],
+          "metavar": "- erbose",
+          "takes_value": true,
+          "description": "Show more information about found items.",
+          "default": null,
+          "choices": null,
+          "raw": "-v, --verbose                         Show more information about found items."
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                         Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# pescan --help\n Usage: pescan OPTIONS FILE\n Search for suspicious things in PE files\n \n Example: pescan putty.exe\n \n Options:\n-f, --format <json|html|text|xml|csv> Change output format (default: text).\n-v, --verbose                         Show more information about found items.\n-V, --version                         Show version.\n--help                                Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ pescan putty.exe",
+          "template": null,
+          "original_sha256": "f9b1241a653f2f5aff1062c59b1d5ede45ecd26229360b225804836e89b66845"
+        },
+        {
+          "status": "operational_example",
+          "command": "pescan: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "6c6a7b51cd507bf1141f488cb3ac724eb12b8a39ef9754df2118668e85b1e18f"
+        },
+        {
+          "status": "operational_example",
+          "command": "pescan: try '--help' for more information",
+          "template": null,
+          "original_sha256": "ae482fd4deab53ff04a3bb95d42d0b7e16b24a1c11f312c6f809c30207e29c6e"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: pescan OPTIONS FILE\nSearch for suspicious things in PE files\n\nExample: pescan putty.exe\n\nOptions:\n -f, --format <json|xml|html|csv|text> Change output format (default: text).\n -v, --verbose                         Show more information about found items.\n -V, --version                         Show version.\n --help                                Show this help.",
+        "-h": "pescan: invalid option -- 'h'\npescan: try '--help' for more information",
+        "help": "ERROR [-18]: not a PE file",
+        "man": "PESCAN(1)                   General Commands Manual                   PESCAN(1)\n\nNAME\n     pescan - identify suspicious characteristics in PE files\n\nSYNOPSIS\n     pescan [OPTIONS]...  pefile\n\nDESCRIPTION\n     pescan analyze a PE file statically to determine if it contains suspicious\n     characteristics.  It's part of pev, the PE file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -f, --format <text|csv|xml|html>\n            Change output format (default is text).\n\n     -v, --verbose\n            Show more information about found items.\n\n     -V, --version\n            Show version.\n\n     --help\n            Show help.\n\nEXAMPLES\n     Search suspicious things in putty.exe:\n\n            $ pescan putty.exe\n\nREPORTING BUGS\n     Please,    check    the    latest   development   code   and   report   at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pedis(1), pehash(1), peldd(1), pepack(1), peres(1),  pesec(1),\n     pestr(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright  (C)  2013 - 2020 pev authors. License GPLv2+: GNU GPL version 2\n     or later <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is  free  soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                      PESCAN(1)",
+        "apropos": "pescan (1)           - identify suspicious characteristics in PE files"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/pescan",
+        "size_bytes": 31112,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=349417274134cede84ae6bd2f69065974359f592, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "pesec",
+      "description": "Check for protections in PE files",
+      "usage": "pesec [OPTIONS] FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat json html text xml csv Change output format default",
+          "takes_value": true,
+          "description": "text)",
+          "default": null,
+          "choices": null,
+          "raw": "-f, --format <json|html|text|xml|csv> Change output format (default: text)"
+        },
+        {
+          "flags": [
+            "-c",
+            "--certoutform"
+          ],
+          "metavar": "- ertoutform text pem",
+          "takes_value": true,
+          "description": "Specifies the certificate output format (default: text).",
+          "default": "text",
+          "choices": null,
+          "raw": "-c, --certoutform <text|pem>          Specifies the certificate output format (default: text)."
+        },
+        {
+          "flags": [
+            "-o",
+            "--certout"
+          ],
+          "metavar": "filename",
+          "takes_value": true,
+          "description": "Specifies the output filename to write certificates to (default: stdout).",
+          "default": "stdout",
+          "choices": null,
+          "raw": "-o, --certout <filename>              Specifies the output filename to write certificates to (default: stdout)."
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                         Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# pesec --help\n Usage: pesec [OPTIONS] FILE\n Check for security features in PE files\n \n Example: pesec wordpad.exe\n \n Options:\n-f, --format <json|html|text|xml|csv> Change output format (default: text)\n-c, --certoutform <text|pem>          Specifies the certificate output format (default: text).\n-o, --certout <filename>              Specifies the output filename to write certificates to (default: stdout).\n-V, --version                         Show version.\n--help                                Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ pesec putty.exe",
+          "template": null,
+          "original_sha256": "6ffafc2f579c37d080eb6c5c9bf17c0f9b2cfe6d0ac087db5a96a6a33fa28aaf"
+        },
+        {
+          "status": "operational_example",
+          "command": "pesec: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "00a36503a190cc000a0b9bf839dc7bc0995de1c8a9b537f5d9f1e7eced6b7e9d"
+        },
+        {
+          "status": "operational_example",
+          "command": "pesec: try '--help' for more information",
+          "template": null,
+          "original_sha256": "c206feb08fa7762cce361fab765fb79de30d3ef422f5640c25cfdbdf29df9cd1"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: pesec [OPTIONS] FILE\nCheck for security features in PE files\n\nExample: pesec wordpad.exe\n\nOptions:\n -f, --format <json|xml|html|csv|text> Change output format (default: text)\n -c, --certoutform <text|pem>          Specifies the certificate output format (default: text).\n -o, --certout <filename>              Specifies the output filename to write certificates to (default: stdout).\n -V, --version                         Show version.\n --help                                Show this help.",
+        "-h": "pesec: invalid option -- 'h'\npesec: try '--help' for more information",
+        "help": "ERROR [-18]: not a PE file",
+        "man": "PESEC(1)                    General Commands Manual                    PESEC(1)\n\nNAME\n     pesec - check for protections in PE files\n\nSYNOPSIS\n     pesec [OPTIONS]...  pefile\n\nDESCRIPTION\n     pesec  checks  a  PE  file for security features. It's part of pev, the PE\n     file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -f, --format <text|csv|xml|html>\n            Change output format (default is text).\n\n     -c, --certoutform <text|pem>\n            Specifies the certificate output format (default: text).\n\n     -o, --certout <filename>\n            Specifies the output filename to write  certificates  to  (default:\n            stdout).\n\n     -V, --version\n            Show version.\n\n     --help\n            Show help.\n\nEXAMPLES\n     Search for protections in putty.exe:\n\n            $ pesec putty.exe\n\nREPORTING BUGS\n     Please,    check    the    latest   development   code   and   report   at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pedis(1), pehash(1), peldd(1), pepack(1), peres(1), pescan(1),\n     pestr(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright (C) 2012 - 2020 pev authors. License GPLv2+: GNU GPL  version  2\n     or  later  <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is free soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                       PESEC(1)",
+        "apropos": "pesec (1)            - check for protections in PE files"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/pesec",
+        "size_bytes": 31112,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ec0bb536c0f611892f0e831df468fc71cbcc56a0, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "pestr",
+      "description": "Search strings in PE files",
+      "usage": "pestr OPTIONS FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-n",
+            "--min-length"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Set minimum string length (default: 4).",
+          "default": "4",
+          "choices": null,
+          "raw": "-n, --min-length                       Set minimum string length (default: 4)."
+        },
+        {
+          "flags": [
+            "-o",
+            "--offset"
+          ],
+          "metavar": "- ffset",
+          "takes_value": true,
+          "description": "Show string offset in file.",
+          "default": null,
+          "choices": null,
+          "raw": "-o, --offset                           Show string offset in file."
+        },
+        {
+          "flags": [
+            "-s",
+            "--section"
+          ],
+          "metavar": "- ection",
+          "takes_value": true,
+          "description": "Show string section, if exists.",
+          "default": null,
+          "choices": null,
+          "raw": "-s, --section                          Show string section, if exists."
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                          Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                 Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# pestr --help\n Usage: pestr OPTIONS FILE\n Search for strings in PE files\n \n Example: pestr acrobat.exe\n \n Options:\n-n, --min-length                       Set minimum string length (default: 4).\n-o, --offset                           Show string offset in file.\n-s, --section                          Show string section, if exists.\n-V, --version                          Show version.\n--help                                 Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ pestr putty.exe",
+          "template": null,
+          "original_sha256": "0a81bf91177f139ef0680256e6054f4171654f47d3ef4a9cf0621cbc349c5adc"
+        },
+        {
+          "status": "operational_example",
+          "command": "pestr: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "b66a32457187429aa8cc9d024a56d1a1f2819dcbf7d2154b3388db20ae3a519d"
+        },
+        {
+          "status": "operational_example",
+          "command": "pestr: try '--help' for more information",
+          "template": null,
+          "original_sha256": "8d97b1838dfc765b9a58d74b78602000745439d9bdf37b0266dcc7bcaef0e775"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: pestr OPTIONS FILE\nSearch for strings in PE files\n\nExample: pestr acrobat.exe\n\nOptions:\n -n, --min-length                       Set minimum string length (default: 4).\n -o, --offset                           Show string offset in file.\n -s, --section                          Show string section, if exists.\n -V, --version                          Show version.\n --help                                 Show this help.",
+        "-h": "pestr: invalid option -- 'h'\npestr: try '--help' for more information",
+        "help": "ERROR [-18]: not a PE file",
+        "man": "PESTR(1)                    General Commands Manual                    PESTR(1)\n\nNAME\n     pestr - search strings in PE files\n\nSYNOPSIS\n     pestr [OPTIONS]...  pefile\n\nDESCRIPTION\n     pestr  search for ASCII and Unicode strings in PE files. It's part of pev,\n     the PE file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -n, --min-length\n            Set minimum string length (default: 4).\n\n     -o, --offset\n            Show string offset in file.\n\n     -s, --section\n            Show string section, if exists.\n\n     -V, --version\n            Show version.\n\n     --help\n            Show help.\n\nEXAMPLES\n     Search all strings in putty.exe:\n\n            $ pestr putty.exe\n\nREPORTING BUGS\n     Please,   check   the   latest   development   code    and    report    at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pedis(1), pehash(1), peldd(1), pepack(1), peres(1), pescan(1),\n     pesec(1), readpe(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright  (C)  2012 - 2020 pev authors. License GPLv2+: GNU GPL version 2\n     or later <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is  free  soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                       PESTR(1)",
+        "apropos": "pestr (1)            - search strings in PE files"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/pestr",
+        "size_bytes": 31112,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8dbbd1302e28eba13eb402a85d8002eff37c7b33, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "readpe",
+      "description": "Displays information about PE files",
+      "usage": "readpe OPTIONS FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-A",
+            "--all"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Full output (default).",
+          "default": null,
+          "choices": null,
+          "raw": "-A, --all                             Full output (default)."
+        },
+        {
+          "flags": [
+            "-H",
+            "--all-headers"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show all PE headers.",
+          "default": null,
+          "choices": null,
+          "raw": "-H, --all-headers                     Show all PE headers."
+        },
+        {
+          "flags": [
+            "-S",
+            "--all-sections"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show PE section headers.",
+          "default": null,
+          "choices": null,
+          "raw": "-S, --all-sections                    Show PE section headers."
+        },
+        {
+          "flags": [
+            "-f",
+            "--format"
+          ],
+          "metavar": "- ormat json html text xml csv Change output format default",
+          "takes_value": true,
+          "description": "text).",
+          "default": null,
+          "choices": null,
+          "raw": "-f, --format <json|html|text|xml|csv> Change output format (default: text)."
+        },
+        {
+          "flags": [
+            "-d",
+            "--dirs"
+          ],
+          "metavar": "- irs",
+          "takes_value": true,
+          "description": "Show data directories.",
+          "default": null,
+          "choices": null,
+          "raw": "-d, --dirs                            Show data directories."
+        },
+        {
+          "flags": [
+            "-h",
+            "--header"
+          ],
+          "metavar": "- eader dos coff optional",
+          "takes_value": true,
+          "description": "Show specific header. It can be used multiple times.",
+          "default": null,
+          "choices": null,
+          "raw": "-h, --header <dos|coff|optional>      Show specific header. It can be used multiple times."
+        },
+        {
+          "flags": [
+            "-i",
+            "--imports"
+          ],
+          "metavar": "- mports",
+          "takes_value": true,
+          "description": "Show imported functions.",
+          "default": null,
+          "choices": null,
+          "raw": "-i, --imports                         Show imported functions."
+        },
+        {
+          "flags": [
+            "-e",
+            "--exports"
+          ],
+          "metavar": "- xports",
+          "takes_value": true,
+          "description": "Show exported functions.",
+          "default": null,
+          "choices": null,
+          "raw": "-e, --exports                         Show exported functions."
+        },
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                         Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# readpe --help\n Usage: readpe OPTIONS FILE\n Show PE file headers\n \n Example: readpe --header optional winzip.exe\n \n Options:\n-A, --all                             Full output (default).\n-H, --all-headers                     Show all PE headers.\n-S, --all-sections                    Show PE section headers.\n-f, --format <json|html|text|xml|csv> Change output format (default: text).\n-d, --dirs                            Show data directories.\n-h, --header <dos|coff|optional>      Show specific header. It can be used multiple times.\n-i, --imports                         Show imported functions.\n-e, --exports                         Show exported functions.\n-V, --version                         Show version.\n--help                                Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ readpe -h optional putty.exe",
+          "template": null,
+          "original_sha256": "81ab8668a0af6296233b77cddf922c473e93d977918eeee59e52a8c6904610e2"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ readpe -de cards.dll",
+          "template": null,
+          "original_sha256": "e5ad16bdda474bea057e9a42203a39d6d282240f168c636d2a845771b38063c5"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ readpe svchost.exe",
+          "template": null,
+          "original_sha256": "2574e17066b3f51fc6347430119ccc93c92dc93e4fe6459e0635d95dc2358eb4"
+        },
+        {
+          "status": "operational_example",
+          "command": "readpe: option requires an argument -- 'h'",
+          "template": null,
+          "original_sha256": "f65343a11b7d25e3fe0345a9f50157d7eca864d91cc226ddcf68bdbdf5a05fbe"
+        },
+        {
+          "status": "operational_example",
+          "command": "readpe: try '--help' for more information",
+          "template": null,
+          "original_sha256": "56742b2c838330ecde7cf60ccb431227361fd74f3cb4aa9e285a8fcc02268a41"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: readpe OPTIONS FILE\nShow PE file headers\n\nExample: readpe --header optional winzip.exe\n\nOptions:\n -A, --all                             Full output (default).\n -H, --all-headers                     Show all PE headers.\n -S, --all-sections                    Show PE section headers.\n -f, --format <json|xml|html|csv|text> Change output format (default: text).\n -d, --dirs                            Show data directories.\n -h, --header <dos|coff|optional>      Show specific header. It can be used multiple times.\n -i, --imports                         Show imported functions.\n -e, --exports                         Show exported functions.\n -V, --version                         Show version.\n --help                                Show this help.",
+        "-h": "readpe: option requires an argument -- 'h'\nreadpe: try '--help' for more information",
+        "help": "ERROR [-18]: not a PE file",
+        "man": "READPE(1)                   General Commands Manual                   READPE(1)\n\nNAME\n     readpe - displays information about PE files\n\nSYNOPSIS\n     readpe [OPTIONS]...  pefile\n\nDESCRIPTION\n     readpe  can  read and display all PE file headers, fields and values. It's\n     part of pev, the PE file analysis toolkit.\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -A, --all\n            Full output (default).\n\n     -H, --all-headers\n            Show all PE headers.\n\n     -S, --all-sections\n            Show PE section headers.\n\n     -f, --format <text|csv|xml|html>\n            Change output format (default: text).\n\n     -d, --dirs\n            Show data directories.\n\n     -h, --header <dos|coff|optional>\n            Show specific header. It can be used multiple times.\n\n     -i, --imports\n            Show imported functions.\n\n     -e, --exports\n            Show exported functions.\n\n     -V, --version\n            Show version.\n\n     --help\n            Show this help.\n\nEXAMPLES\n     Display the Optional file header of putty.exe:\n\n            $ readpe -h optional putty.exe\n\n     Display data directories and exported functions of cards.dll:\n\n            $ readpe -de cards.dll\n\n     Display all possible information about svchost.exe file:\n\n            $ readpe svchost.exe\n\nREPORTING BUGS\n     Please,   check   the   latest   development   code    and    report    at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pedis(1), pehash(1), peldd(1), pepack(1), peres(1), pescan(1),\n     pesec(1), pestr(1), rva2ofs(1)\n\nCOPYRIGHT\n     Copyright  (C)  2013 - 2020 pev authors. License GPLv2+: GNU GPL version 2\n     or later <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is  free  soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\n                                                                      READPE(1)",
+        "apropos": "readpe (1)           - displays information about PE files"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/readpe",
+        "size_bytes": 43400,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=05df4ffedc337cb984a1b283e098bf6163ec7741, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "rva2ofs",
+      "description": "Converts a PE relative virtual address to raw file offset",
+      "usage": "rva2ofs <rva> FILE",
+      "arguments": [
+        {
+          "flags": [
+            "-V",
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V, --version                          Show version."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show this help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help                                 Show this help."
+        }
+      ],
+      "raw_help": "root@kali:~# rva2ofs -h\n Usage: rva2ofs <rva> FILE\n Convert RVA to raw file offset\n \n Example: rva2ofs 0x12db cards.dll\n \n Options:\n-V, --version                          Show version.\n--help                                 Show this help.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ rva2ofs 0x12db cards.dll",
+          "template": null,
+          "original_sha256": "589e2da01726ab14bd02fd5632fa7e06a4b98a43902945707a8ebab5a5f65033"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: rva2ofs <rva> FILE\nConvert RVA to raw file offset\n\nExample: rva2ofs 0x12db cards.dll\n\nOptions:\n -V, --version                          Show version.\n --help                                 Show this help.",
+        "-h": "Usage: rva2ofs <rva> FILE\nConvert RVA to raw file offset\n\nExample: rva2ofs 0x12db cards.dll\n\nOptions:\n -V, --version                          Show version.\n --help                                 Show this help.",
+        "help": "Usage: rva2ofs <rva> FILE\nConvert RVA to raw file offset\n\nExample: rva2ofs 0x12db cards.dll\n\nOptions:\n -V, --version                          Show version.\n --help                                 Show this help.",
+        "man": "RVA2OFS(1)                  General Commands Manual                  RVA2OFS(1)\n\nNAME\n     rva2ofs - converts a PE relative virtual address to raw file offset\n\nSYNOPSIS\n     rva2ofs rvs pefile\n\nDESCRIPTION\n     rva2ofs  converts  a RVA (Relative Virtual Address) to raw file offset, if\n     possible. It's part of pev, the PE file analysis toolkit.\n\n     rva is a valid PE RVA in decimal or hexadecimal (prefixed with 0x).\n\n     pefile is a PE32/PE32+ executable or dynamic linked library file.\n\nOPTIONS\n     -V, --version\n            Show version.\n\n     --help\n            Show this help.\n\nEXAMPLES\n     Get offset from RVA 0x12db of cards.dll:\n\n            $ rva2ofs 0x12db cards.dll\n\nREPORTING BUGS\n     Please,   check   the   latest   development   code    and    report    at\n     https://github.com/mentebinaria/readpe/issues\n\nSEE ALSO\n     ofs2rva(1), pedis(1), pehash(1), peldd(1), pepack(1), peres(1), pescan(1),\n     pesec(1), pestr(1), readpe(1)\n\nCOPYRIGHT\n     Copyright  (C)  2012 - 2020 pev authors. License GPLv2+: GNU GPL version 2\n     or later <https://www.gnu.org/licenses/gpl-2.0.txt>.  This is  free  soft-\n     ware: you are free to change and redistribute it. There is NO WARRANTY, to\n     the extent permitted by law.\n\nSEE ALSO\n     ofs2rva(1)\n\n                                                                     RVA2OFS(1)",
+        "apropos": "rva2ofs (1)          - converts a PE relative virtual address to raw file offset"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/rva2ofs",
+        "size_bytes": 27016,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=285fd414c273d2276d28da8a5c1ac2261fcf16a3, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/readpe/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/readpe/index.md",
+    "retrieved_at": "2026-07-14T13:08:02+00:00",
+    "sha256": "219d8c8a865499c498d2e23320661bcef2298c3c25ed59a708cf3fc56be096ed"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "1264",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "0.85.1-1+b2",
+    "depends": "libpe1t64 (>= 0.85), libc6 (>= 2.38), libssl3t64 (>= 3.0.0)",
+    "description": "command-line tools to manipulate Windows PE files\nreadpe is a toolkit designed to analyze Microsoft Windows PE (Portable\nExecutable) binary files. Its tools can parse and compare PE32/PE32+\nexecutable files (EXE, DLL, OCX, etc), and analyze them in search of\nsuspicious characteristics.\n.\nIt can be used to get information from those executable files, such as\nheaders, sections, resources and more. It also provides tools to disassemble PE\nfiles and determine their security mitigations. It is useful for application\nsecurity research, digital forensics and incident response, and malware\nanalysis.\n.\nIt is similar to elftools, only designed for PE files. It has more features\nthan other more specific PE tools, such as icoextract or ntldd.\n.\nThis package provides the ofs2rva, pedis, pehash, peldd, pepack, peres,\npescan, pesec, pestr, readpe and rva2ofs commands.",
+    "homepage": "https://github.com/mentebinaria/readpe/wiki"
+  },
+  "tags": [
+    "offensive",
+    "readpe",
+    "web",
+    "ad",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/readpe && python3 readpe.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/readpe && python3 readpe.py --help",
+    "cd toolboxes/readpe && python3 readpe.py --help",
+    "cd toolboxes/readpe && python3 readpe.py --help",
+    "cd toolboxes/readpe && python3 readpe.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST readpe --output $KFIOSA_OUTPUT_DIR/readpe.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST readpe --output $KFIOSA_OUTPUT_DIR/readpe.log"
+  ],
+  "attack_surface": [
+    "web",
+    "ad"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

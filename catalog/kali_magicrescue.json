@@ -1,0 +1,316 @@
+{
+  "id": "kali:magicrescue",
+  "kind": "kali_source_package",
+  "name": "magicrescue",
+  "title": "magicrescue",
+  "summary": "### magicrescue",
+  "version": "1.1.10+dfsg-3",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/jbj/magicrescue",
+  "repository": "https://salsa.debian.org/pkg-security-team/magicrescue",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install magicrescue"
+  },
+  "packages": [
+    {
+      "name": "magicrescue"
+    }
+  ],
+  "commands": [
+    {
+      "name": "dupemap",
+      "description": "Creates a database of file checksums and uses it to eliminate duplicates",
+      "usage": "dupemap [OPTIONS] OPERATION PATH...",
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "DATABASE",
+          "takes_value": true,
+          "description": "Read/write from a database on disk",
+          "default": null,
+          "choices": null,
+          "raw": " -d DATABASE   Read/write from a database on disk"
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": "FILE",
+          "takes_value": true,
+          "description": "Read input file names from this file (\"-\" for stdin)",
+          "default": null,
+          "choices": null,
+          "raw": " -I FILE       Read input file names from this file (\"-\" for stdin)"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "MINSIZE",
+          "takes_value": true,
+          "description": "Exclude files below this size",
+          "default": null,
+          "choices": null,
+          "raw": " -m MINSIZE    Exclude files below this size"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": "MAXSIZE",
+          "takes_value": true,
+          "description": "Exclude files above this size",
+          "default": null,
+          "choices": null,
+          "raw": " -M MAXSIZE    Exclude files above this size"
+        }
+      ],
+      "raw_help": "root@kali:~# dupemap -h\n Usage: dupemap [OPTIONS] OPERATION PATH...\n Where OPERATION is one of the operations listed in the manpage.\n \n Options:\n -d DATABASE   Read/write from a database on disk\n -I FILE       Read input file names from this file (\"-\" for stdin)\n -m MINSIZE    Exclude files below this size\n -M MAXSIZE    Exclude files above this size",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: dupemap [OPTIONS] OPERATION PATH...\nWhere OPERATION is one of the operations listed in the manpage.\n\nOptions:\n  -d DATABASE   Read/write from a database on disk\n  -I FILE       Read input file names from this file (\"-\" for stdin)\n  -m MINSIZE    Exclude files below this size\n  -M MAXSIZE    Exclude files above this size",
+        "-h": "Usage: dupemap [OPTIONS] OPERATION PATH...\nWhere OPERATION is one of the operations listed in the manpage.\n\nOptions:\n  -d DATABASE   Read/write from a database on disk\n  -I FILE       Read input file names from this file (\"-\" for stdin)\n  -m MINSIZE    Exclude files below this size\n  -M MAXSIZE    Exclude files above this size",
+        "help": "Invalid operation",
+        "man": "DUPEMAP(1)                        Magic Rescue                       DUPEMAP(1)\n\nNAME\n     dupemap  -  Creates  a database of file checksums and uses it to eliminate\n     duplicates\n\nSYNOPSIS\n     dupemap [ options ] [ -d database ] operation path...\n\nDESCRIPTION\n     dupemap recursively scans each path to find checksums  of  file  contents.\n     Directories  are searched through in no particular order.  Its actions de-\n     pend on whether the -d option is given, and on  the  operation  parameter,\n     which must be a comma-seperated list of scan, report, delete:\n\n   Without -d\n     dupemap will take action when it sees the same checksum repeated more than\n     once,  i.e. it simply finds duplicates recursively.  The action depends on\n     operation:\n\n     report Report what files are encountered more than  once,  printing  their\n            names to standard output.\n\n     delete[,report]\n            Delete  files  that  are  encountered  more than once.  Print their\n            names if report is also given.\n\n            WARNING: use the  report  operation  first  to  see  what  will  be\n            deleted.\n\n            WARNING: You are advised to make a backup of the target first, e.g.\n            with \"cp -al\" (for GNU cp) to create hard links recursively.\n\n   With -d\n     The  database  argument  to -d will denote a database file (see the \"DATA-\n     BASE\" section in this manual for details) to read from or  write  to.   In\n     this  mode,  the scan operation should be run on one path, followed by the\n     report or delete operation on another (not the same!) path.\n\n     scan   Add the checksum of each file to database.  This operation must  be\n            run initially to create the database.  To start over, you must man-\n            ually delete the database file(s) (see the \"DATABASE\" section).\n\n     report Print each file name if its checksum is found in database.\n\n     delete[,report]\n            Delete  each  file if its checksum is found in database.  If report\n            is also present, print the name of each deleted file.\n\n            WARNING: if you run dupemap delete on the same path  you  just  ran\n            dupemap  scan  on, it will delete every file! The idea of these op-\n            tions is to scan one path and delete files in a second path.\n\n            WARNING: use the  report  operation  first  to  see  what  will  be\n            deleted.\n\n            WARNING: You are advised to make a backup of the target first, e.g.\n            with \"cp -al\" (for GNU cp) to create hard links recursively.\n\nOPTIONS\n     -d database\n            Use  database as an on-disk database to read from or write to.  See\n            the \"DESCRIPTION\" section above about how this influences the oper-\n            ation of dupemap.\n\n     -I fileReads input files from file in addition to those listed on the com-\n            mand line.  If file is \"-\", read from standard  input.   Each  line\n            will be interpreted as a file name.\n\n            The  paths given here will NOT be scanned recursively.  Directories\n            will be ignored and symlinks will be followed.\n\n     -m minsize\n            Ignore files below this size.\n\n     -M maxsize\n            Ignore files above this size.\n\nUSAGE\n   General usage\n     The easiest operations to understand is when the -d option is  not  given.\n     To delete all duplicate files in /tmp/recovered-files, do:\n\n         $ dupemap delete /tmp/recovered-files\n\n     Often,  dupemap scan is run to produce a checksum database of all files in\n     a directory tree.  Then dupemap delete is run on another directory, possi-\n     bly following dupemap  report.   For  example,  to  delete  all  files  in\n     /tmp/recovered-files that already exist in $HOME, do this:\n\n         $ dupemap -d homedir.map scan $HOME\n         $ dupemap -d homedir.map delete,report /tmp/recovered-files\n\n   Usage with magicrescue\n     The  main  application  for dupemap is to take some pain out of performing\n     undelete operations with magicrescue(1).  The reason is  that  magicrescue\n     will  extract every single file of the specified type on the block device,\n     so undeleting files requires you to find a  few  files  out  of  hundreds,\n     which  can  take  a  long time if done manually.  What we want to do is to\n     only extract the documents that don't exist on the file system already.\n\n     In the following scenario, you have accidentally  deleted  some  important\n     Word  documents  in  Windows.  If this were a real-world scenario, then by\n     all means use The Sleuth Kit.  However, magicrescue will  work  even  when\n     the directory entries were overwritten, i.e. more files were stored in the\n     same folder later.\n\n     You  boot  into Linux and change to a directory with lots of space.  Mount\n     the Windows partition, preferably read-only (especially  with  NTFS),  and\n     create the directories we will use.\n\n         $ mount -o ro /dev/hda1 /mnt/windows\n         $ mkdir healthy_docs rescued_docs\n\n     Extract  all the healthy Word documents with magicrescue and build a data-\n     base of their checksums.  It may seem a little redundant to send  all  the\n     documents  through  magicrescue first, but the reason is that this process\n     may modify them (e.g. stripping trailing  garbage),  and  therefore  their\n     checksum  will  not  be the same as the original documents.  Also, it will\n     find documents embedded inside  other  files,  such  as  uncompressed  zip\n     archives or files with the wrong extension.\n\n         $ find /mnt/windows -type f \\\n           |magicrescue -I- -r msoffice -d healthy_docs\n         $ dupemap -d healthy_docs.map scan healthy_docs\n         $ rm -rf healthy_docs\n\n     Now  rescue  all \"msoffice\" documents from the block device and get rid of\n     everything that's not a *.doc.\n\n         $ magicrescue -Mo -r msoffice -d rescued_docs /dev/hda1 \\\n           |grep -v '\\.doc$'|xargs rm -f\n\n     Remove all the rescued documents that also appear on the file system,  and\n     remove duplicates.\n\n         $ dupemap -d healthy_docs.map delete,report rescued_docs\n         $ dupemap delete,report rescued_docs\n\n     The rescued_docs folder should now contain only a few files.  This will be\n     the  undeleted files and some documents that were not stored in contiguous\n     blocks (use that defragger ;-)).\n\n   Usage with fsck\n     In this scenario (based on a true story), you have a hard disk that's gone\n     bad.  You have managed to dd about 80%  of  the  contents  into  the  file\n     diskimage,  and you have an old backup from a few months ago.  The disk is\n     using reiserfs on Linux.\n\n     First, use fsck to make the file system usable again.  It will  find  many\n     nameless files and put them in lost+found.  You need to make sure there is\n     some free space on the disk image, so fsck has something to work with.\n\n         $ cp diskimage diskimage.bak\n         $ dd if=/dev/zero bs=1M count=2048 >> diskimage\n         $ reiserfsck --rebuild-tree diskimage\n         $ mount -o loop diskimage /mnt\n         $ ls /mnt/lost+found\n         (tons of files)\n\n     Our  strategy  will be to restore the system with the old backup as a base\n     and merge the two other sets of files (/mnt/lost+found and /mnt) into  the\n     backup after eliminating duplicates.  Therefore we create a checksum data-\n     base of the directory we have unpacked the backup in.\n\n         $ dupemap -d backup.map scan ~/backup\n\n     Next,  we  eliminate  all  the  files from the rescued image that are also\n     present in the backup.\n\n         $ dupemap -d backup.map delete,report /mnt\n\n     We also want to remove duplicates from lost+found, and we want to get  rid\n     of any files that are also present in the other directories in /mnt.\n\n         $ dupemap delete,report /mnt/lost+found\n         $ ls /mnt|grep -v lost+found|xargs dupemap -d mnt.map scan\n         $ dupemap -d mnt.map delete,report /mnt/lost+found\n\n     This  should leave only the files in /mnt that have changed since the last\n     backup or got corrupted.  Particularly, the  contents  of  /mnt/lost+found\n     should now be reduced enough to manually sort through them (or perhaps use\n     magicsort(1)).\n\n   Primitive intrusion detection\n     You  can use dupemap to see what files change on your system.  This is one\n     of the more exotic uses, and it's only included for inspiration.\n\n     First, you map the whole file system.\n\n         $ dupemap -d old.map scan /\n\n     Then you come back a few days/weeks later and run  dupemap  report.   This\n     will  give  you  a view of what has not changed.  To see what has changed,\n     you need a list of the whole file system.  You can  get  this  list  along\n     with  preparing a new map easily.  Both lists need to be sorted to be com-\n     pared.\n\n         $ dupemap -d old.map report /|sort > unchanged_files\n         $ dupemap -d current.map scan /|sort > current_files\n\n     All that's left to do is comparing these  files  and  preparing  for  next\n     week.   This  assumes that the dbm appends the \".db\" extension to database\n     files.\n\n         $ diff unchanged_files current_files > changed_files\n         $ mv current.map.db old.map.db\n\nDATABASE\n     The actual database file(s) written by dupecheck will have  some  relation\n     to  the  database  argument, but most implementations append an extension.\n     For example, Berkeley DB names the files database.db,  while  Solaris  and\n     GDBM creates both a database.dir and database.pag file.\n\n     dupecheck  depends  on  a  database library for storing the checksums.  It\n     currently requires the POSIX-standardized  ndbm  library,  which  must  be\n     present on XSI-compliant UNIXes.  Implementations are not required to han-\n     dle  hash  key  collisions,  and a failure to do that could make dupecheck\n     delete too many files.  I haven't heard of such an implementation, though.\n\n     The current checksum algorithm is the file's CRC32 combined with its size.\n     Both values are stored in native byte order, and because of  varying  type\n     sizes the database is not portable across architectures, compilers and op-\n     erating systems.\n\nSEE ALSO\n     magicrescue(1), weeder(1)\n\n     This  tool does the same thing weeder does, except that weeder cannot seem\n     to handle many files without crashing, and it has no largefile support.\n\nBUGS\n     There is a tiny chance that two different files can have the same checksum\n     and size.  The probability of this happening is around  1  to  10^14,  and\n     since dupemap is part of the Magic Rescue package, which deals with disas-\n     ter  recovery, that chance becomes an insignificant part of the game.  You\n     should consider this if you apply dupemap  to  other  applications,  espe-\n     cially if they are security-related (see next paragraph).\n\n     It  is  possible  to craft a file to have a known CRC32.  You need to keep\n     this in mind if you use dupemap on untrusted data.   A  solution  to  this\n     could be to implement an option for using MD5 checksums instead.\n\nAUTHOR\n     Jonas Jensen <jbj@knef.dk>\n\nLATEST VERSION\n     This  tool  is  part  of Magic Rescue.  You can find the latest version at\n     <https://github.com/jbj/magicrescue>\n\n1.1.10                             2018-10-16                        DUPEMAP(1)",
+        "apropos": "dupemap (1)          - Creates a database of file checksums and uses it to el..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dupemap",
+        "size_bytes": 22848,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4324f03bdbc9b5dcbb094193d74e187764d0525a, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "magicrescue",
+      "description": "Scans a block device and extracts known file types by looking at magic bytes.",
+      "usage": "magicrescue [-I FILE] [-M MODE] [-O [+-=][0x]OFFSET] [-b BLOCKSIZE]",
+      "arguments": [
+        {
+          "flags": [
+            "-d",
+            "-r",
+            "-r"
+          ],
+          "metavar": "OUTPUT_DIR RECIPE1 RECIPE2 ... DEVICE1 DEVICE2 ...",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-d OUTPUT_DIR -r RECIPE1 [-r RECIPE2 [...]] DEVICE1 [DEVICE2 [...]]"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "blocksize",
+          "takes_value": false,
+          "description": "Only consider files starting at a multiple of BLOCKSIZE.",
+          "default": null,
+          "choices": null,
+          "raw": " -b  Only consider files starting at a multiple of BLOCKSIZE."
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "directory",
+          "takes_value": false,
+          "description": "Mandatory.  Output directory for found files.",
+          "default": null,
+          "choices": null,
+          "raw": " -d  Mandatory.  Output directory for found files."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "options.",
+          "takes_value": false,
+          "description": "Mandatory.  Recipe name, file or directory.",
+          "default": null,
+          "choices": null,
+          "raw": " -r  Mandatory.  Recipe name, file or directory."
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": "fileReads input files from file in addition to those listed on the com-",
+          "takes_value": false,
+          "description": "Read input file names from this file (\"-\" for stdin)",
+          "default": null,
+          "choices": null,
+          "raw": " -I  Read input file names from this file (\"-\" for stdin)"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": "output_mode",
+          "takes_value": false,
+          "description": "Produce machine-readable output to stdout.",
+          "default": null,
+          "choices": null,
+          "raw": " -M  Produce machine-readable output to stdout."
+        },
+        {
+          "flags": [
+            "-O"
+          ],
+          "metavar": "+ - = 0x offset",
+          "takes_value": false,
+          "description": "Resume from specified offset (hex or decimal) in the first device.",
+          "default": null,
+          "choices": null,
+          "raw": " -O  Resume from specified offset (hex or decimal) in the first device."
+        }
+      ],
+      "raw_help": "root@kali:~# magicrescue -h\n Usage: magicrescue [-I FILE] [-M MODE] [-O [+-=][0x]OFFSET] [-b BLOCKSIZE]\n \t-d OUTPUT_DIR -r RECIPE1 [-r RECIPE2 [...]] DEVICE1 [DEVICE2 [...]]\n \n -b  Only consider files starting at a multiple of BLOCKSIZE.\n -d  Mandatory.  Output directory for found files.\n -r  Mandatory.  Recipe name, file or directory.\n -I  Read input file names from this file (\"-\" for stdin)\n -M  Produce machine-readable output to stdout.\n -O  Resume from specified offset (hex or decimal) in the first device.",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: magicrescue [-I FILE] [-M MODE] [-O [+-=][0x]OFFSET] [-b BLOCKSIZE]\n\t-d OUTPUT_DIR -r RECIPE1 [-r RECIPE2 [...]] DEVICE1 [DEVICE2 [...]]\n\n  -b  Only consider files starting at a multiple of BLOCKSIZE.\n  -d  Mandatory.  Output directory for found files.\n  -r  Mandatory.  Recipe name, file or directory.\n  -I  Read input file names from this file (\"-\" for stdin)\n  -M  Produce machine-readable output to stdout.\n  -O  Resume from specified offset (hex or decimal) in the first device.",
+        "-h": "Usage: magicrescue [-I FILE] [-M MODE] [-O [+-=][0x]OFFSET] [-b BLOCKSIZE]\n\t-d OUTPUT_DIR -r RECIPE1 [-r RECIPE2 [...]] DEVICE1 [DEVICE2 [...]]\n\n  -b  Only consider files starting at a multiple of BLOCKSIZE.\n  -d  Mandatory.  Output directory for found files.\n  -r  Mandatory.  Recipe name, file or directory.\n  -I  Read input file names from this file (\"-\" for stdin)\n  -M  Produce machine-readable output to stdout.\n  -O  Resume from specified offset (hex or decimal) in the first device.",
+        "help": "Usage: magicrescue [-I FILE] [-M MODE] [-O [+-=][0x]OFFSET] [-b BLOCKSIZE]\n\t-d OUTPUT_DIR -r RECIPE1 [-r RECIPE2 [...]] DEVICE1 [DEVICE2 [...]]\n\n  -b  Only consider files starting at a multiple of BLOCKSIZE.\n  -d  Mandatory.  Output directory for found files.\n  -r  Mandatory.  Recipe name, file or directory.\n  -I  Read input file names from this file (\"-\" for stdin)\n  -M  Produce machine-readable output to stdout.\n  -O  Resume from specified offset (hex or decimal) in the first device.",
+        "man": "MAGICRESCUE(1)                    Magic Rescue                   MAGICRESCUE(1)\n\nNAME\n     magicrescue  - Scans a block device and extracts known file types by look-\n     ing at magic bytes.\n\nSYNOPSIS\n     magicrescue [ options ] devices\n\nDESCRIPTION\n     Magic Rescue opens devices for reading, scans them for file types it knows\n     how to recover and calls an external program to extract them.  It looks at\n     \"magic bytes\" in file contents, so it can be  used  both  as  an  undelete\n     utility  and  for  recovering a corrupted drive or partition.  It works on\n     any file system, but on very fragmented file systems it can  only  recover\n     the  first chunk of each file.  These chunks are sometimes as big as 50MB,\n     however.\n\n     To invoke magicrescue, you must specify at least one device and the -d and\n     -r options.  See the \"USAGE\" section in this manual for getting started.\n\nOPTIONS\n     -b blocksize\n            Default: 1.  This will direct magicrescue to  only  consider  files\n            that start at a multiple of the blocksize argument.  The option ap-\n            plies  only to the recipes following it, so by specifying it multi-\n            ple times it can be used to get different  behavior  for  different\n            recipes.\n\n            Using this option you can usually get better performance, but fewer\n            files  will  be  found.   In particular, files with leading garbage\n            (e.g. many mp3 files) and files contained inside  other  files  are\n            likely  to  be  skipped.  Also, some file systems don't align small\n            files to block boundaries, so those won't be found this way either.\n\n            If you don't know your file system's block size, just use the value\n            512, which is almost always the hardware sector size.\n\n     -d directory\n            Mandatory.  Output directory for found files.  Make sure  you  have\n            plenty  of free space in this directory, especially when extracting\n            very common file types such as jpeg or gzip files.  Also make  sure\n            the  file  system  is able to handle thousands of files in a single\n            directory, i.e. don't use FAT if you are extracting many files.\n\n            You should not place the output directory on the same block  device\n            you  are trying to rescue files from.  This might add the same file\n            to the block device ahead of the current reading position,  causing\n            magicrescue  to find the same file again later.  In the worst theo-\n            retical case, this could cause a loop where the same  file  is  ex-\n            tracted  thousands of times until disk space is exhausted.  You are\n            also likely to overwrite the deleted files you were looking for  in\n            the first place.\n\n     -r recipe\n            Mandatory.   Recipe  name, file, or directory.  Specify this as ei-\n            ther  a  plain  name  (e.g.    \"jpeg-jfif\")   or   a   path   (e.g.\n            recipes/jpeg-jfif).   If it doesn't find such a file in the current\n            directory, it  will  look  in  ./recipes  and  /usr/share/magicres-\n            cue/recipes.\n\n            If  recipe  is  a  directory,  all  files in that directory will be\n            treated as recipes.\n\n            Browse the /usr/share/magicrescue/recipes  directory  to  see  what\n            recipes  are  available.   A  recipe is a text file, and you should\n            read the comments inside it before using it.  Either use the recipe\n            as it is or copy it somewhere and modify it.\n\n            For information on creating your own  recipes,  see  the  \"RECIPES\"\n            section.\n\n     -I fileReads input files from file in addition to those listed on the com-\n            mand  line.   If  file is \"-\", read from standard input.  Each line\n            will be interpreted as a file name.\n\n     -M output_mode\n            Produce machine-readable output to stdout.  output_mode can be:\n\n            i   Print each input file name before processing\n\n            o   Print each output file name after processing\n\n            io  Print both input and output file names.  Input file names  will\n                be prefixed by \"i\" and a space.  Output file names will be pre-\n                fixed by \"o\" and a space.\n\n            Nothing else will be written to standard output in this mode.\n\n     -O [+|-|=][0x]offset\n            Resume  from the specified offset in the first device.  If prefixed\n            with 0x it will be interpreted as a hex number.\n\n            The number may be prefixed with a sign:\n\n            =   Seek to an absolute position (default)\n\n            +   Seek to a relative position.  On regular files  this  does  the\n                same as the above.\n\n            -   Seek to EOF, minus the offset.\n\nUSAGE\n     Say  you  have  destroyed the file system on /dev/hdb1 and you want to ex-\n     tract all the jpeg files you lost.  This guide assumes you have  installed\n     Magic Rescue in /usr/local, which is the default.\n\n     Make sure DMA and other optimizations are enabled on your disk, or it will\n     take hours.  In Linux, use hdparm to set these options:\n\n         $ hdparm -d 1 -c 1 -u 1 /dev/hdb\n\n     Choose your output directory, somewhere with lots of disk space.\n\n         $ mkdir ~/output\n\n     Look in the /usr/local/share/magicrescue/recipes directory for the recipes\n     you want.  Magic Rescue comes with recipes for some common file types, and\n     you  can  make  your own too (see the next section).  Open the recipes you\n     want to use in a text editor and read their comments.   Most  recipes  re-\n     quire  3rd party software to work, and you may want to modify some parame-\n     ters (such as min_output_file) to suit your needs.\n\n     Then invoke magicrescue\n\n         $ magicrescue -r jpeg-jfif -r jpeg-exif -d ~/output /dev/hdb1\n\n     It will scan through your entire hard disk, so it may take a  while.   You\n     can stop it and resume later of you want to.  To do so, interrupt it (with\n     CTRL+C)  and  note the progress information saying what address it got to.\n     Then restart it later with the -O option.\n\n     When it has finished you will probably find thousands  of  .jpg  files  in\n     ~/output,  including  things  you  never  knew  was in your browser cache.\n     Sorting through all those files can be a huge task, so you may want to use\n     software or scripts to do it.\n\n     First, try to eliminate duplicates with the dupemap(1)  tool  included  in\n     this package.\n\n         $ dupemap delete,report ~/output\n\n     If  you  are  performing an undelete operation you will want to get rid of\n     all the rescued files that also appear on the live file system.   See  the\n     dupemap(1) manual for instructions on doing this.\n\n     If  that's  not  enough,  you  can  use  use  magicsort(1) to get a better\n     overview:\n\n         $ magicsort ~/output\n\nRECIPES\n   Creating recipe files\n     A recipe file is a relatively simple file of 3-5 lines of  text.   It  de-\n     scribes  how  to recognise the beginning of the file and what to do when a\n     file is recognised.  For example, all jfif images  start  with  the  bytes\n     \"0xff  0xd8\".   At  the  6th  byte  will  be  the  string \"JFIF\".  Look at\n     recipes/jpeg-jfif in the source distribution to follow this example.\n\n     Matching magic data is done with a \"match operation\" that looks like this:\n\n     offset operation parameter\n\n     where offset is a decimal integer saying how many bytes from the beginning\n     of the file this data is located, operation refers to a built-in match op-\n     eration in magicrescue, and parameter is specific to that operation.\n\n     *   The string operation matches a string of any length.  In the jfif  ex-\n         ample this is four bytes.  You can use escape characters, like \"\\n\" or\n         \"\\xA7\".\n\n     *   The  int32  operation matches 4 bytes ANDed with a bit mask.  To match\n         all four bytes, use the bit mask \"FFFFFFFF\".  If you have no idea what\n         a bit mask is, just  use  the  string  operation  instead.   The  mask\n         \"FFFF0000\" in the jfif example matches the first two bytes.\n\n     *   The  char  operation is like \"string\", except it only matches a single\n         character.\n\n     To learn these patterns for a given file type, look at files  of  the  de-\n     sired  type  in  a  hex  editor, search through the resource files for the\n     file(1) utility (<http://freshmeat.net/projects/file>) and/or  search  the\n     Internet for a reference on the format.\n\n     If all the operations match, we have found the start of the file.  Finding\n     the  end  of  the file is a much harder problem, and therefore it is dele-\n     gated to an external shell command, which is named by the  command  direc-\n     tive.   This  command receives the block device's file descriptor on stdin\n     and must write to the file given to it in the  $1  variable.   Apart  from\n     that, the command can do anything it wants to try and extract the file.\n\n     For  some  file  types  (such  as jpeg), a tool already exists that can do\n     this.  However, many programs misbehave when told to read from the  middle\n     of  a huge block device.  Some seek to byte 0 before reading (can be fixed\n     by prefixing cat|, but some refuse to work on a file they can't seek  in).\n     Others try to read the whole file into memory before doing anything, which\n     will  of  course fail on a muti-gigabyte block device.  And some fail com-\n     pletely to parse a partially corrupted file.\n\n     This means that you may have to write your own tool or  wrap  an  existing\n     program  in  some  scripts  that make it behave better.  For example, this\n     could be to extract the first 10MB into a temporary file and let the  pro-\n     gram  work  on that.  Or perhaps you can use tools/safecat if the file may\n     be very large.\n\n   Recipe format reference\n     Empty lines and lines starting with \"#\" will be skipped.   A  recipe  con-\n     tains a series of match operations to find the content and a series of di-\n     rectives to specify what to do with it.\n\n     Lines  of the format offset operation parameter will add a match operation\n     to the list.  Match operations will be tried in the order they  appear  in\n     the recipe, and they must all match for the recipe to succeed.  The offset\n     describes what offset this data will be found at, counting from the begin-\n     ning of the file.  operation can have the following values:\n\n     string string\n            The  parameter  is a character sequence that may contain escape se-\n            quences such as \\xFF.\n\n     char character\n            The parameter is a single character (byte), or an escape sequence.\n\n     int32 value bitmask\n            Both value and bitmask are expressed as  8-character  hex  strings.\n            bitmask  will  be  ANDed with the data, and the result will be com-\n            pared to value.  The byte order is as you see it in the hex editor,\n            i.e. big-endian.\n\n     The first match operation in a recipe is special, it will be used to  scan\n     through  the file.  Only the char and string operations can be used there.\n     To add more operation types, look at the instructions in magicrescue.c.\n\n     A line that doesn't start with an integer is a directive.  This can be:\n\n     extension ext\n            Mandatory.  ext names the file extension for  this  type,  such  as\n            \"jpg\".\n\n     command command\n            Mandatory.   When  all  the  match operations succeed, this command\n            will be executed to extract the file from the block  device.   com-\n            mand is passed to the shell with the block device's file descriptor\n            (seeked  to  the  right byte) on stdin.  The shell variable $1 will\n            contain the file its output should be written to, and it  must  re-\n            spect  this.   Otherwise  magicrescue  cannot  tell whether it suc-\n            ceeded.\n\n     rename command\n            Optional.  After a successful extraction this command will be  run.\n            Its  purpose  is to gather enough information about the file to re-\n            name it to something more meaningful.  The script must not  perform\n            the  rename  command itself, but it should write to standard output\n            the string \"RENAME\", followed by a space, followed by the new  file\n            name.   Nothing  else  must  be written to standard output.  If the\n            file should not be renamed, nothing should be written  to  standard\n            output.   Standard input and $1 will work like with the command di-\n            rective.\n\n     min_output_file size\n            Default: 100.  Output files less than this size will be deleted.\n\n     allow_overlap bytes\n            By default, recipes will not match on overlapping byte ranges.  al-\n            low_overlap disables this, and it should always be used for recipes\n            where the extracted file may be larger than it  was  on  disk.   If\n            bytes  is  negative,  overlap checking will be completely disabled.\n            Otherwise, overlap checking will be in effect  for  everything  but\n            the last bytes of the output.  For example, if the output may be up\n            to  512 bytes bigger than the input, allow_overlap should be set to\n            512.\n\n     To test whether your recipe actually works, either just  run  it  on  your\n     hard  disk  or  use  the  tools/checkrecipe  script to pick out files that\n     should match but don't.\n\n     If you have created  a  recipe  that  works,  please  mail  it  to  me  at\n     jbj@knef.dk so I can include it in the distribution.\n\nWHEN TO NOT USE MAGIC RESCUE\n     Magic Rescue is not meant to be a universal application for file recovery.\n     It will give good results when you are extracting known file types from an\n     unusable  file  system,  but  for  many other cases there are better tools\n     available.\n\n     *   If there are intact partitions present somewhere, use  gpart  to  find\n         them.\n\n     *   If  file system's internal data structures are more or less undamaged,\n         use The Sleuth Kit.  At the time of writing, it  only  supports  NTFS,\n         FAT, ext[23] and FFS, though.\n\n     *   If  Magic Rescue does not have a recipe for the file type you are try-\n         ing to recover, try foremost instead.  It recognizes more file  types,\n         but  in most cases it extracts them simply by copying out a fixed num-\n         ber of bytes after it has found the start of  the  file.   This  makes\n         postprocessing the output files more difficult.\n\n     In  many  cases you will want to use Magic Rescue in addition to the tools\n     mentioned above.  They are not mutually exclusive,  e.g.  combining  magi-\n     crescue  with  dls  from  The Sleuth Kit could give good results.  In many\n     cases you'll want to use magicrescue to extract its known file  types  and\n     another utility to extract the rest.\n\n     When  combining  the results of more than one tool, dupemap(1) can be used\n     to eliminate duplicates.\n\nSEE ALSO\n     Similar programs\n         gpart(8)\n             <http://www.stud.uni-hannover.de/user/76201/gpart/>.  Tries to re-\n             build the partition table by scanning the  disk  for  lost  parti-\n             tions.\n\n         foremost(1)\n             <http://foremost.sourceforge.net>.   Does  the same thing as magi-\n             crescue, except that its \"recipes\" are less complex.  Finding  the\n             end  of  the  file must happen by either matching an EOF string or\n             just extracting a fixed number of bytes every time.   It  supports\n             more  file  types  than  Magic Rescue, but extracted files usually\n             have lots of trailing garbage, so removal of duplicates and  sort-\n             ing by size is not possible.\n\n         The Sleuth Kit\n             <http://www.sleuthkit.org/sleuthkit/>.   This  popular  package of\n             utilities  is  extremely  useful  for  undeleting  files  from   a\n             FAT/NTFS/ext2/ext3/FFS  file  system  that's  not  completely cor-\n             rupted.  Most of the utilities are not very  useful  if  the  file\n             system  has  been  corrupted  or  overwritten.  It is based on The\n             Coroner's Toolkit (<http://www.porcupine.org/forensics/tct.html>).\n\n         JPEG recovery tools\n             This seems to be the file type most people are trying to  recover.\n             Available   utilities   include   <http://www.cgsecurity.org/?pho-\n             torec.html>,        <http://codesink.org/recover.html>,        and\n             <http://www.vanheusden.com/findfile/>.\n\n     Getting disk images from failed disks\n         dd(1),    rescuept(1),   <http://www.garloff.de/kurt/linux/ddrescue/>,\n         <http://www.kalysto.org/utilities/dd_rhelp/>,         <http://vanheus-\n         den.com/recoverdm/>, <http://myrescue.sourceforge.net>\n\n     Processing magicrescue's output\n         dupemap(1), file(1), magicsort(1), <http://ccorr.sourceforge.net>\n\n     Authoring recipes\n         magic(4), hexedit(1), <http://wotsit.org>\n\n     Filesystem-specific undelete utilities\n         There  are  too many to count them, especially for ext2 and FAT.  Find\n         them on Google and Freshmeat.\n\nAUTHOR\n     Jonas Jensen <jbj@knef.dk>\n\nLATEST VERSION\n     You can find the latest version at <https://github.com/jbj/magicrescue>\n\n1.1.10                             2018-10-16                    MAGICRESCUE(1)",
+        "apropos": "magicrescue (1)      - Scans a block device and extracts known file types by ..."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/magicrescue",
+        "size_bytes": 31104,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4d2e11def9307af620f3c3481b92a8765e57c5b7, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "magicsort",
+      "description": "Categorize files by their file(1) magic",
+      "usage": "magicsort DIRECTORY",
+      "arguments": [],
+      "raw_help": "root@kali:~# magicsort -h\n Usage: magicsort DIRECTORY\n Will invoke your system's file(1) utility to categorize all the files found\n by magicrescue.",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: magicsort DIRECTORY\nWill invoke your system's file(1) utility to categorize all the files found\nby magicrescue.",
+        "-h": "Usage: magicsort DIRECTORY\nWill invoke your system's file(1) utility to categorize all the files found\nby magicrescue.",
+        "help": "Usage: magicsort DIRECTORY\nWill invoke your system's file(1) utility to categorize all the files found\nby magicrescue.",
+        "man": "MAGICSORT(1)                      Magic Rescue                     MAGICSORT(1)\n\nNAME\n     magicsort - Categorize files by their file(1) magic\n\nSYNOPSIS\n     magicsort directory\n\nDESCRIPTION\n     Invokes  the  system's  file  utility on all files in directory non-recur-\n     sively.  For each different string that file outputs it will create a sub-\n     directory of that name and move the file in there.\n\nSEE ALSO\n     magicrescue(1), dupemap(1)\n\nAUTHOR\n     Jonas Jensen <jbj@knef.dk>\n\nLATEST VERSION\n     This tool is part of Magic Rescue.  You can find  the  latest  version  at\n     <https://github.com/jbj/magicrescue>\n\n1.1.10                             2018-10-16                      MAGICSORT(1)",
+        "apropos": "magicsort (1)        - Categorize files by their file(1) magic"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/magicsort",
+        "size_bytes": 761,
+        "is_symlink": false,
+        "file_type": "Perl script text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/magicrescue/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/magicrescue/index.md",
+    "retrieved_at": "2026-07-14T13:06:30+00:00",
+    "sha256": "600fee291cf8ee31023bbc4f8759d758075f82e32c9b70367986a99c8594dcab"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "257",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.1.10+dfsg-3",
+    "depends": "dcraw, flac, libjpeg-turbo-progs, mpg123, sqlite3, unzip, zip, libc6 (>= 2.38), libgdbm-compat4t64 (>= 1.16)",
+    "description": "recover files by looking for magic bytes\nMagic Rescue scans a block device for file types it knows how to recover\nand calls an external program to extract them. It looks at \"magic bytes\"\n(file patterns) in file contents, so it can be used both as an undelete\nutility and for recovering a corrupted drive or partition. As long as\nthe file data is there, it will find it.\n.\nMagic Rescue uses files called 'recipes'. These files have strings and\ncommands to identify and extract data from devices or forensics images.\nSo, you can write your own recipes. Currently, there are the following\nrecipes: avi, canon-cr2, elf, flac, gpl, gzip, jpeg-exif, jpeg-jfif,\nmbox, mbox-mozilla-inbox, mbox-mozilla-sent, mp3-id3v1, mp3-id3v2,\nmsoffice, nikon-raw, perl, png, ppm, sqlite and zip.\n.\nThis package provides magicrescue, dupemap and magicsort commands.\nmagicrescue is a carver and it is useful in forensics investigations.",
+    "homepage": "https://github.com/jbj/magicrescue"
+  },
+  "tags": [
+    "offensive",
+    "magicrescue",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/magicrescue && python3 magicrescue.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/magicrescue && python3 magicrescue.py --help",
+    "cd toolboxes/magicrescue && python3 magicrescue.py --help",
+    "cd toolboxes/magicrescue && python3 magicrescue.py --help",
+    "cd toolboxes/magicrescue && python3 magicrescue.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST magicrescue --output $KFIOSA_OUTPUT_DIR/magicrescue.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST magicrescue --output $KFIOSA_OUTPUT_DIR/magicrescue.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

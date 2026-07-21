@@ -1,0 +1,116 @@
+{
+  "id": "github:AidoP/blockade-recon",
+  "kind": "external_repository",
+  "name": "blockade-recon",
+  "full_name": "AidoP/blockade-recon",
+  "owner": "AidoP",
+  "category": "WiFi Reconnaissance — Beacon Parsing",
+  "url": "https://github.com/AidoP/blockade-recon",
+  "summary": "Repository indexing entry for the ``blockade-recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/AidoP__blockade-recon",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "cargo install --git https://github.com/AidoP/blockade-recon ; then: blockade-recon -i  (or -im after `airmon-ng start <iface>`)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "cargo install --git https://github.com/AidoP/blockade-recon ; then: blockade-recon -i  (or -im after `airmon-ng start <iface>`)"
+      }
+    ]
+  },
+  "language": "Rust",
+  "dependencies": [
+    "libpcap (libpcap-dev)",
+    "cargo / rustc (Rust toolchain)",
+    "crates: pcap, radiotap, oui (git: AidoP/rs-oui), eui48, tui, termion, clap",
+    "build: reqwest (blocking)",
+    "airmon-ng (optional fallback for monitor mode)"
+  ],
+  "algorithms": [
+    "radiotap header parsing for captured 802.11 frames",
+    "802.11 management/control/data frame-type dispatch (beacon, ACK, data)",
+    "beacon IE/tag parsing (SSID, supported rates, country, vendor-specific tags)",
+    "data-frame address resolution (To DS / From DS) to infer client<->AP associations",
+    "MAC OUI vendor lookup for per-manufacturer device tallying",
+    "libpcap monitor-mode live capture with TUI session display/saving"
+  ],
+  "produces": [
+    "per-device tally grouped by manufacturer (OUI)",
+    "parsed beacon records: SSID, supported rates, country, vendor tags, timestamp",
+    "data-frame addressing: receiver/transmitter/destination/source/BSSID/seq-ctrl for client-AP association inference",
+    "saved capture sessions for later review"
+  ],
+  "capability_bucket": "beacon_parse",
+  "runnable": true,
+  "novelty": "Not an airodump-ng wrapper — it is a from-scratch independent Rust implementation of radiotap + 802.11 frame parsing with an interactive TUI and session save. However, functionally it is a strict subset of airodump-ng: it parses only beacons, ACKs, and data frames; there is NO probe-request/probe-response sniffing, NO EAPOL/802.1X or handshake capture, NO deauth or any active/injection logic, NO channel-hopping plan, and OUI is used only for vendor tallying (no enrichment pipeline). The README's \"spatial mapping with multiple devices\" and \"802.11 attack demonstrations\" are unfinished aspirational goals with no implementation. Recon value is redundant versus airodump-ng; the only genuine differentiator is a native-Rust TUI sniffer experience.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "blockade",
+    "recon",
+    "aidop",
+    "web",
+    "ad",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blockade-recon --output $KFIOSA_OUTPUT_DIR/blockade-recon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blockade-recon --output $KFIOSA_OUTPUT_DIR/blockade-recon.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "ad"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

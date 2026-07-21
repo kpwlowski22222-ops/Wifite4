@@ -1,0 +1,269 @@
+{
+  "id": "kali:kalibrate-rtl",
+  "kind": "kali_source_package",
+  "name": "kalibrate-rtl",
+  "title": "kalibrate-rtl",
+  "summary": "### kalibrate-rtl",
+  "version": "0.4.1+git20191125-0kali2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/steve-m/kalibrate-rtl",
+  "repository": "https://gitlab.com/kalilinux/packages/kalibrate-rtl",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-sdr",
+    "kali-tools-wireless"
+  ],
+  "install": {
+    "apt": "sudo apt install kalibrate-rtl"
+  },
+  "packages": [
+    {
+      "name": "kalibrate-rtl"
+    }
+  ],
+  "commands": [
+    {
+      "name": "kal",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "band to scan (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)",
+          "default": null,
+          "choices": null,
+          "raw": "\t-s\tband to scan (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "frequency of nearby GSM base station",
+          "default": null,
+          "choices": null,
+          "raw": "\t-f\tfrequency of nearby GSM base station"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "channel of nearby GSM base station",
+          "default": null,
+          "choices": null,
+          "raw": "\t-c\tchannel of nearby GSM base station"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "band indicator (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)",
+          "default": null,
+          "choices": null,
+          "raw": "\t-b\tband indicator (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)"
+        },
+        {
+          "flags": [
+            "-g"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "gain in dB",
+          "default": null,
+          "choices": null,
+          "raw": "\t-g\tgain in dB"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "rtl-sdr device index",
+          "default": null,
+          "choices": null,
+          "raw": "\t-d\trtl-sdr device index"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "initial frequency error in ppm",
+          "default": null,
+          "choices": null,
+          "raw": "\t-e\tinitial frequency error in ppm"
+        },
+        {
+          "flags": [
+            "-E"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "manual frequency offset in hz",
+          "default": null,
+          "choices": null,
+          "raw": "\t-E\tmanual frequency offset in hz"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verbose",
+          "default": null,
+          "choices": null,
+          "raw": "\t-v\tverbose"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "enable debug messages",
+          "default": null,
+          "choices": null,
+          "raw": "\t-D\tenable debug messages"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "help",
+          "default": null,
+          "choices": null,
+          "raw": "\t-h\thelp"
+        }
+      ],
+      "raw_help": "root@kali:~# kal -s GSM850\nFound 1 device(s):\n  0:  ezcap USB 2.0 DVB-T/DAB/FM dongle\n\nUsing device 0: ezcap USB 2.0 DVB-T/DAB/FM dongle\nFound Rafael Micro R820T tuner\nExact sample rate is: 270833.002142 Hz\nkal: Scanning for GSM-850 base stations.\nGSM-850:\n    chan: 128 (869.2MHz - 3.988kHz) power: 486634.32\n    chan: 143 (872.2MHz - 3.760kHz) power: 56331.63\n\nroot@kali:~# kal -c 128\nFound 1 device(s):\n  0:  ezcap USB 2.0 DVB-T/DAB/FM dongle\n\nUsing device 0: ezcap USB 2.0 DVB-T/DAB/FM dongle\nFound Rafael Micro R820T tuner\nExact sample rate is: 270833.002142 Hz\nkal: Calculating clock frequency offset.\nUsing GSM-850 channel 128 (869.2MHz)\naverage     [min, max]  (range, stddev)\n- 4.093kHz      [-4102, -4083]  (20, 5.314593)\noverruns: 0\nnot found: 0\naverage absolute error: 4.709 ppm",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "kal -s GSM850\nFound 1 device(s):\n  0:  ezcap USB 2.0 DVB-T/DAB/FM dongle\n\nUsing device 0: ezcap USB 2.0 DVB-T/DAB/FM dongle\nFound Rafael Micro R820T tuner\nExact sample rate is: 270833.002142 Hz\nkal: Scanning for GSM-850 base stations.\nGSM-850:\n    chan: 128 (869.2MHz - 3.988kHz) power: 486634.32\n    chan: 143 (872.2MHz - 3.760kHz) power: 56331.63\n\nkal -c 128\nFound 1 device(s):\n  0:  ezcap USB 2.0 DVB-T/DAB/FM dongle\n\nUsing device 0: ezcap USB 2.0 DVB-T/DAB/FM dongle\nFound Rafael Micro R820T tuner\nExact sample rate is: 270833.002142 Hz\nkal: Calculating clock frequency offset.\nUsing GSM-850 channel 128 (869.2MHz)\naverage     [min, max]  (range, stddev)\n- 4.093kHz      [-4102, -4083]  (20, 5.314593)\noverruns: 0\nnot found: 0\naverage absolute error: 4.709 ppm",
+          "template": null,
+          "original_sha256": "f371f62a93372bf6c9f119527cf1701c1959d430c0d169146e1e8bc9c6cfd614"
+        },
+        {
+          "status": "operational_example",
+          "command": "kal <-s band indicator> [options]",
+          "template": null,
+          "original_sha256": "3a43ed06dcab2d20407f0dd0a1ef52bfea9f5aa6fcb0caae6f98dffde97cf56f"
+        },
+        {
+          "status": "operational_example",
+          "command": "kal <-f frequency | -c channel> [options]",
+          "template": null,
+          "original_sha256": "34ba3fed6ef7479568e551d248cb78ec459ab5b8d11305bef3880361a31008b0"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "kalibrate v0.4.1-rtl, Copyright (c) 2010, Joshua Lackey\nmodified for use with rtl-sdr devices, Copyright (c) 2012, Steve Markgraf\nUsage:\n\tGSM Base Station Scan:\n\t\tkal <-s band indicator> [options]\n\n\tClock Offset Calculation:\n\t\tkal <-f frequency | -c channel> [options]\n\nWhere options are:\n\t-s\tband to scan (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)\n\t-f\tfrequency of nearby GSM base station\n\t-c\tchannel of nearby GSM base station\n\t-b\tband indicator (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)\n\t-g\tgain in dB\n\t-d\trtl-sdr device index\n\t-e\tinitial frequency error in ppm\n\t-E\tmanual frequency offset in hz\n\t-v\tverbose\n\t-D\tenable debug messages\n\t-h\thelp",
+        "-h": "kalibrate v0.4.1-rtl, Copyright (c) 2010, Joshua Lackey\nmodified for use with rtl-sdr devices, Copyright (c) 2012, Steve Markgraf\nUsage:\n\tGSM Base Station Scan:\n\t\tkal <-s band indicator> [options]\n\n\tClock Offset Calculation:\n\t\tkal <-f frequency | -c channel> [options]\n\nWhere options are:\n\t-s\tband to scan (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)\n\t-f\tfrequency of nearby GSM base station\n\t-c\tchannel of nearby GSM base station\n\t-b\tband indicator (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)\n\t-g\tgain in dB\n\t-d\trtl-sdr device index\n\t-e\tinitial frequency error in ppm\n\t-E\tmanual frequency offset in hz\n\t-v\tverbose\n\t-D\tenable debug messages\n\t-h\thelp",
+        "help": "kalibrate v0.4.1-rtl, Copyright (c) 2010, Joshua Lackey\nmodified for use with rtl-sdr devices, Copyright (c) 2012, Steve Markgraf\nUsage:\n\tGSM Base Station Scan:\n\t\tkal <-s band indicator> [options]\n\n\tClock Offset Calculation:\n\t\tkal <-f frequency | -c channel> [options]\n\nWhere options are:\n\t-s\tband to scan (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)\n\t-f\tfrequency of nearby GSM base station\n\t-c\tchannel of nearby GSM base station\n\t-b\tband indicator (GSM850, GSM-R, GSM900, EGSM, DCS, PCS)\n\t-g\tgain in dB\n\t-d\trtl-sdr device index\n\t-e\tinitial frequency error in ppm\n\t-E\tmanual frequency offset in hz\n\t-v\tverbose\n\t-D\tenable debug messages\n\t-h\thelp",
+        "apropos": "proc_kallsyms (5)    - kernel exported symbols\nDateTime::Locale::kaa (3pm) - Locale data examples for the Kara-Kalpak (kaa) ...\nDateTime::Locale::kaa_Cyrl (3pm) - Locale data examples for the Kara-Kalpak C...\nDateTime::Locale::kaa_Cyrl_UZ (3pm) - Locale data examples for the Kara-Kalpa...\nDateTime::Locale::kaa_Latn (3pm) - Locale data examples for the Kara-Kalpak L...\nDateTime::Locale::kaa_Latn_UZ (3pm) - Locale data examples for the Kara-Kalpa...\nDateTime::Locale::kl (3pm) - Locale data examples for the Kalaallisut (kl) lo...\nDateTime::Locale::kl_GL (3pm) - Locale data examples for the Kalaallisut Gree...\nDateTime::Locale::kln (3pm) - Locale data examples for the Kalenjin (kln) locale\nDateTime::Locale::kln_KE (3pm) - Locale data examples for the Kalenjin Kenya ...\nfaraday (1)          - Kali script to start and stop faraday-server and farad...\nkali-server-mcp (1)  - Kali Linux MCP API Server\nmcp-server (1)       - Kali Linux MCP Bridge\nmlockall (2)         - lock and unlock memory\nmunlockall (2)       - lock and unlock memory"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/kal",
+        "size_bytes": 43880,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=bdf9bff074e23e30cdfb14d2aa8945e5af8ec40b, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/kalibrate-rtl/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/kalibrate-rtl/index.md",
+    "retrieved_at": "2026-07-14T13:06:16+00:00",
+    "sha256": "81126765e2432cddb9e1175999fc694f75afe8564d8a010d0c135ea46d959be0"
+  },
+  "apt_metadata": {
+    "section": "comm",
+    "installed_size": "62",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "0.4.1+git20191125-0kali2+b2",
+    "depends": "libc6 (>= 2.38), libfftw3-double3 (>= 3.3.10), libgcc-s1 (>= 4.0), librtlsdr0, libstdc++6 (>= 5.2), rtl-sdr",
+    "description": "Calculate local oscillator frequency offset using GSM base stations\nKalibrate, or kal, can scan for GSM base stations in a given frequency band and\ncan use those GSM base stations to calculate the local oscillator frequency\noffset.",
+    "homepage": "https://github.com/steve-m/kalibrate-rtl"
+  },
+  "tags": [
+    "offensive",
+    "kalibrate",
+    "rtl",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/kalibrate-rtl && python3 kalibrate-rtl.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/kalibrate-rtl && python3 kalibrate-rtl.py --help",
+    "cd toolboxes/kalibrate-rtl && python3 kalibrate-rtl.py --help",
+    "cd toolboxes/kalibrate-rtl && python3 kalibrate-rtl.py --help",
+    "cd toolboxes/kalibrate-rtl && python3 kalibrate-rtl.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kalibrate-rtl --output $KFIOSA_OUTPUT_DIR/kalibrate-rtl.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kalibrate-rtl --output $KFIOSA_OUTPUT_DIR/kalibrate-rtl.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

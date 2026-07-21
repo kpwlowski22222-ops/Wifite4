@@ -1,0 +1,123 @@
+{
+  "id": "github:bernisnukic/airprowl",
+  "kind": "external_repository",
+  "name": "airprowl",
+  "full_name": "bernisnukic/airprowl",
+  "owner": "bernisnukic",
+  "category": "WiFi Reconnaissance — Probe Profiling",
+  "url": "https://github.com/bernisnukic/airprowl",
+  "summary": "Repository indexing entry for the ``airprowl`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/bernisnukic__airprowl",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "cargo build --release then ./target/release/airprowl (TUI); sudo ./target/release/airprowl for monitor-mode client sniffing + Sub-GHz; airprowl --scan bt|wifi|subghz for headless JSON to stdout"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "cargo build --release then ./target/release/airprowl (TUI); sudo ./target/release/airprowl for monitor-mode client sniffing + Sub-GHz; airprowl --scan bt|wifi|subghz for headless JSON to stdout"
+      }
+    ]
+  },
+  "language": "Rust",
+  "dependencies": [
+    "rustc 1.75+ / cargo",
+    "BlueZ + bluer crate (D-Bus)",
+    "NetworkManager / nmcli",
+    "iw",
+    "libusb-1.0",
+    "pnet (raw datalink)",
+    "libwifi (802.11 parser)",
+    "ratatui",
+    "tokio",
+    "Yard Stick One / CC1111 (optional Sub-GHz)"
+  ],
+  "algorithms": [
+    "WiFi AP scanning via periodic nmcli dev wifi list polling with escaped-colon parser + /sys operstate health check",
+    "Passive WiFi client sniffing via iw monitor interface + pnet raw datalink capture + libwifi 802.11 frame parse (probe requests, data, QoS)",
+    "Hand-rolled radiotap RSSI extractor",
+    "EMA signal smoothing (alpha=0.4) with trend-arrow snapshots",
+    "Log-distance path-loss distance estimation with per-source reference RSSI/exponent",
+    "OUI vendor lookup against embedded 49K-entry IEEE OUI database (nmap-mac-prefixes)",
+    "Bluetooth SIG Company ID lookup (3971 entries) + BlueZ icon device-class + LAA/RPA random-address detection",
+    "BlueZ D-Bus BLE/BR-EDR discovery with manufacturer_data + tx_power",
+    "Sub-GHz CC1111 USB bulk control: register-level FREQ set + RSSI read across 315/433/868/915 MHz ISM bands",
+    "Custom device-name persistence keyed by MAC/frequency (names.json)"
+  ],
+  "produces": [
+    "JSON device exports (e key or --scan mode): BT records (address, name, vendor, icon, company_id, is_random, rssi_dbm, rssi_avg_dbm, tx_power, distance_m, samples, seen_secs_ago, tracked_secs, custom_name)",
+    "WiFi records (mac, kind ap/client, ssid, vendor, probing_for, signal_pct, rssi_dbm, channel, frequency, security, distance_m, samples, custom_name)",
+    "Sub-GHz records (freq_hz, freq_mhz, band, rssi_dbm, rssi_avg_dbm, samples, custom_name)",
+    "Top-level scan metadata (scan_type, duration_secs, device_count, status/diagnostic warnings)",
+    "Live TUI: sortable per-band tables with color-coded EMA-smoothed RSSI, trend arrows, distance estimates, stale/drop lifecycle"
+  ],
+  "capability_bucket": "probe_profiling",
+  "runnable": true,
+  "novelty": "Genuinely novel, not an airodump-ng wrapper. WiFi AP scanning shells out to nmcli (wrapper-ish), but WiFi client sniffing is native Rust (pnet + libwifi + custom radiotap RSSI), not airodump-ng/hcxtools. Differentiators vs baseline: (1) unified tri-band BT+WiFi+Sub-GHz TUI — no baseline tool covers Sub-GHz; (2) direct USB register-level CC1111 Sub-GHz RSSI across 4 ISM bands is absent from airodump-ng/wash/hcxtools/scapy entirely; (3) EMA smoothing + trend arrows + log-distance path-loss distance estimation surfaced live (airodump-ng shows raw RSSI only); (4) embedded compile-time OUI (49K) + Bluetooth SIG company DB (3971) with no runtime file/network dependency; (5) RPA/LAA random-address detection; (6) persistent custom device naming (names.json); (7) single ~4MB async Rust binary with monitor-iface Drop teardown. Does NOT implement PMKID/handshake/EAPOL/WPS/deauth — it is a passive enumeration/tracking tool, not a credential harvester.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "airprowl",
+    "bernisnukic",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/airprowl && python3 airprowl.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/airprowl && python3 airprowl.py --help",
+    "cd toolboxes/airprowl && python3 airprowl.py --help",
+    "cd toolboxes/airprowl && python3 airprowl.py --help",
+    "cd toolboxes/airprowl && python3 airprowl.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST airprowl --output $KFIOSA_OUTPUT_DIR/airprowl.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST airprowl --output $KFIOSA_OUTPUT_DIR/airprowl.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

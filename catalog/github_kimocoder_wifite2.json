@@ -6,20 +6,26 @@
   "owner": "kimocoder",
   "category": "Wireless Security",
   "url": "https://github.com/kimocoder/wifite2",
-  "summary": "wifite2 — automated wireless auditor that wraps aircrack-ng / reaver / bully / pyrit / cowpatty / mdk4. The KFIOSA 'wifite4' brand extends this with mt7921e packet injection.",
+  "summary": "Repository indexing entry for the ``wifite2`` project. Index entry for a WiFi or radio offensive tool. Use when a MediaTek MT7922 monitor-mode or similar interface is up and the BSSID/ssid recon has completed. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
   "documentation": {
     "readme": "https://raw.githubusercontent.com/kimocoder/wifite2/master/README.md",
     "usage_sections": [],
     "arguments": [],
     "examples": [
-      {"command": "sudo wifite --kill", "description": "Run wifite2 in default aggressive mode (kills interfering processes)."},
-      {"command": "wifite -i wlan0mon -c 1,6,11 --dict /usr/share/wordlists/rockyou.txt", "description": "Capture WPA handshakes on a specific interface and channel set, crack with rockyou."}
+      {
+        "command": "sudo wifite --kill",
+        "description": "Run wifite2 in default aggressive mode (kills interfering processes)."
+      },
+      {
+        "command": "wifite -i wlan0mon -c 1,6,11 --dict /usr/share/wordlists/rockyou.txt",
+        "description": "Capture WPA handshakes on a specific interface and channel set, crack with rockyou."
+      }
     ]
   },
-  "metadata_status": "index_only",
+  "metadata_status": "enriched",
   "trust": {
     "official_kali": true,
-    "reviewed": true,
+    "reviewed": false,
     "warning": "Kali ships this as the `wifite` package. The KFIOSA wifite4 brand adds mt7921e packet-injection glue on top — same upstream codebase, augmented driver paths."
   },
   "toolbox_path": "toolboxes/wifi_attack/wifite2",
@@ -28,15 +34,112 @@
     "git": "git clone https://github.com/kimocoder/wifite2 toolboxes/wifi_attack/wifite2"
   },
   "dependencies": {
-    "apt": ["aircrack-ng", "iw", "wireless-tools", "net-tools", "iproute2", "hashcat", "hcxdumptool", "hcxtools", "mdk3", "mdk4", "bully", "reaver", "hostapd", "dnsmasq", "iptables", "ettercap", "tcpdump", "tshark", "kismet", "asleap", "pyrit", "cowpatty", "airgraph-ng", "wireshark", "nmap", "masscan", "curl", "wget", "python3", "git", "ettercap-text-only", "freeradius", "hostapd-wpe"],
-    "pip": ["scapy", "psycopg2-binary"],
+    "apt": [
+      "aircrack-ng",
+      "iw",
+      "wireless-tools",
+      "net-tools",
+      "iproute2",
+      "hashcat",
+      "hcxdumptool",
+      "hcxtools",
+      "mdk3",
+      "mdk4",
+      "bully",
+      "reaver",
+      "hostapd",
+      "dnsmasq",
+      "iptables",
+      "ettercap",
+      "tcpdump",
+      "tshark",
+      "kismet",
+      "asleap",
+      "pyrit",
+      "cowpatty",
+      "airgraph-ng",
+      "wireshark",
+      "nmap",
+      "masscan",
+      "curl",
+      "wget",
+      "python3",
+      "git",
+      "ettercap-text-only",
+      "freeradius",
+      "hostapd-wpe"
+    ],
+    "pip": [
+      "scapy",
+      "psycopg2-binary"
+    ],
     "note": "wifite2 itself is just a Python orchestrator; the heavy lifting is in the apt-installed drivers and crackers."
   },
   "risk": {
     "level": "high",
-    "signals": ["wireless_attack", "automated_handshake_capture", "automated_pmkid_capture", "automated_wps_pixie", "wps_bruteforce"],
+    "signals": [
+      "wireless",
+      "active",
+      "local",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
     "requires_explicit_authorization": true,
     "allow_autonomous_execution": false,
     "examples_policy": "destructive_on_target"
-  }
+  },
+  "tags": [
+    "wifi",
+    "wireless",
+    "monitor_mode",
+    "wifite2",
+    "kimocoder",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "wifi_6_ghz",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use when the MediaTek MT7922 (mt7921e) is in monitor mode on wlan0mon and the BSSID/ssid recon has completed.",
+    "Use as a follow-up to airodump / kismet capture when the operator wants to attempt credential recovery or handshake capture.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifite2 && python3 wifite2.py --interface wlan0mon --bssid $KFIOSA_TARGET_BSSID",
+    "cd toolboxes/wifite2 && python3 wifite2.py --help",
+    "cd toolboxes/wifite2 && python3 wifite2.py --help",
+    "cd toolboxes/wifite2 && python3 wifite2.py --help",
+    "cd toolboxes/wifite2 && python3 wifite2.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifite2 --output $KFIOSA_OUTPUT_DIR/wifite2.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifite2 --output $KFIOSA_OUTPUT_DIR/wifite2.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "wifi_6_ghz"
+  ],
+  "phase_hint": "exploit",
+  "requires_hardware": [
+    "mt7921e",
+    "mt7922"
+  ],
+  "polymorphic_strategies": [
+    "burst_pattern",
+    "param_grammar",
+    "rate_grammar"
+  ],
+  "target_adaptive_targets": [
+    "bssid_oui",
+    "encryption_type",
+    "channel",
+    "rssi"
+  ]
 }

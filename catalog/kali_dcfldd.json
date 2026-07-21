@@ -1,0 +1,231 @@
+{
+  "id": "kali:dcfldd",
+  "kind": "kali_source_package",
+  "name": "dcfldd",
+  "title": "dcfldd",
+  "summary": "### dcfldd",
+  "version": "1.9.3-2",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/resurrecting-open-source-projects/dcfldd",
+  "repository": "https://salsa.debian.org/debian/dcfldd",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install dcfldd"
+  },
+  "packages": [
+    {
+      "name": "dcfldd"
+    }
+  ],
+  "commands": [
+    {
+      "name": "dcfldd",
+      "description": "Enhanced version of dd for forensics and security",
+      "usage": "dcfldd [OPTION]...",
+      "arguments": [
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display this help and exit",
+          "default": null,
+          "choices": null,
+          "raw": " --help              display this help and exit"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output version information and exit",
+          "default": null,
+          "choices": null,
+          "raw": " --version           output version information and exit"
+        }
+      ],
+      "raw_help": "root@kali:~# dcfldd --help\n Usage: dcfldd [OPTION]...\n Enhanced version of dd for forensics and security.\n \n bs=BYTES            force ibs=BYTES and obs=BYTES (default=32768)\n cbs=BYTES           convert BYTES bytes at a time\n conv=KEYWORDS       convert the file as per the comma separated keyword list\n count=BLOCKS        copy only BLOCKS input blocks\n limit=BYTES         similar to count but using BYTES instead of BLOCKS\n ibs=BYTES           read BYTES bytes at a time\n if=FILE             read from FILE instead of stdin\n obs=BYTES           write BYTES bytes at a time\n of=FILE             write to FILE instead of stdout\n of:=COMMAND         exec and write output to process COMMAND\n seek=BLOCKS         skip BLOCKS obs-sized blocks at start of output\n skip=BLOCKS         skip BLOCKS ibs-sized blocks at start of input\n pattern=HEX         use the specified binary pattern as input\n textpattern=TEXT    use repeating TEXT as input\n errlog=FILE         send error messages to FILE as well as stderr\n hash=NAME           do hash calculation (md5, sha1, sha256, sha384 or sha512)\n hashlog=FILE        send hash output to FILE instead of stderr\n hashwindow=BYTES    perform a hash on every BYTES amount of data\n hashlog:=COMMAND    exec and write hashlog to process COMMAND\n ALGORITHMlog:=COMMAND    also works in the same fashion of hashlog:=COMMAND\n hashconv=[before|after]  perform the hashing before or after the conversions\n hashformat=FORMAT        display each hashwindow according to FORMAT\n totalhashformat=FORMAT   display the total hash value according to FORMAT\n status=[on|off]          display a continual status message on stderr\n statusinterval=N         update the status message every N blocks\n sizeprobe=[if|of|BYTES]  what to use as value to percentage indicator\n split=BYTES              write every BYTES amount of data to a new file\n splitformat=[TEXT|MAC|WIN]  the file extension format for split operation\n vf=FILE                  verify that FILE matches the specified input\n verifylog=FILE           send verify results to FILE instead of stderr\n verifylog:=COMMAND       exec and write verify results to process COMMAND\n diffwr=[on|off]          only write to output if destination block content differs\n \n --help              display this help and exit\n --version           output version information and exit\n \n Read the manpage dcfldd(1) for more details about each option and to see\n some examples.\n \n Report bugs at\n https://github.com/resurrecting-open-source-projects/dcfldd/issues",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=/dev/sdb bs=4096 of=sdb.img",
+          "template": null,
+          "original_sha256": "0e30430f7c5396947bad815365b8b5fad59ad5a96091d36265286134ab575d16"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=/dev/sdb bs=4096 hash=md5,sha256 md5log=sdb.md5 sha256log=sdb.sha256 of=sdb.img",
+          "template": null,
+          "original_sha256": "7ed5f9c5af797a3922cd898128d13cc0cf89741de4a8b942df1cd2a229d93e7f"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=/dev/sdb vf=sdb.img",
+          "template": null,
+          "original_sha256": "38ea299e4cdf1191cbd5709d7becc096ac427eeee38ddd33e9e5fbf3aa25b625"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=/dev/sdb split=500M of=sdb.img",
+          "template": null,
+          "original_sha256": "f04709bfa2917ab0d22889fc55b37441b700b56f8b5f1e022e88f2375da471ed"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=/dev/sdb split=500M splitformat=annnn of=sdb.img",
+          "template": null,
+          "original_sha256": "eebe17c7224c01a2ec4317c373706b94c5089aab22f72214acc2890d67490028"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=/dev/sda3 bs=1 skip=1056087439 count=200000 of=airplane.jpg",
+          "template": null,
+          "original_sha256": "27b03a693793014fbe31215ae1de8093000a4f6026bc36114da7f5da17d02b33"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=/dev/sda3 bs=1 skip=1056087439 limit=200000 of=airplane.jpg",
+          "template": null,
+          "original_sha256": "632089b40723b70e666b688f18a883038ad2a2b19d6e29696ec4daf64b699d68"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=message.txt bs=1 seek=200000 of=target.iso",
+          "template": null,
+          "original_sha256": "e4343399b738ea82a73c75599c4d07f1ef1386006bc6847b56bef43ff7e15a41"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=text.txt  of:=\"cat | sort -u\"",
+          "template": null,
+          "original_sha256": "b1414f65e4a58f1da9e549bba6987b494bf67e795f13ccd4cac3d1a983c2141f"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=text.asc conv=ebcdic of=text.ebcdic",
+          "template": null,
+          "original_sha256": "251c2be1a62f220ec5d30b02ee20db74d376904a20d6793618615103feb73b9c"
+        },
+        {
+          "status": "operational_example",
+          "command": "$ dcfldd if=text.ebcdic conv=ascii of=text.asc",
+          "template": null,
+          "original_sha256": "e9c6df059f53ad7c3eee659f3f04c5d3f446256ccb420b9b900d065bcb5542dc"
+        },
+        {
+          "status": "operational_example",
+          "command": "dcfldd: unrecognized option -h",
+          "template": null,
+          "original_sha256": "6c876eeb43ee44869eee910419e97eb7ce26c60326a817a6c2c847b66fe44c28"
+        },
+        {
+          "status": "operational_example",
+          "command": "dcfldd: unrecognized option help",
+          "template": null,
+          "original_sha256": "d6d5b68a7d1ec1da1862544b06d8a7d39a36a0debda76a31dcab86674b5b94cb"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: dcfldd [OPTION]...\nEnhanced version of dd for forensics and security.\n\n  bs=BYTES            force ibs=BYTES and obs=BYTES (default=32768)\n  cbs=BYTES           convert BYTES bytes at a time\n  conv=KEYWORDS       convert the file as per the comma separated keyword list\n  count=BLOCKS        copy only BLOCKS input blocks\n  limit=BYTES         similar to count but using BYTES instead of BLOCKS\n  ibs=BYTES           read BYTES bytes at a time\n  if=FILE             read from FILE instead of stdin\n  obs=BYTES           write BYTES bytes at a time\n  of=FILE             write to FILE instead of stdout\n  of:=COMMAND         exec and write output to process COMMAND\n  seek=BLOCKS         skip BLOCKS obs-sized blocks at start of output\n  skip=BLOCKS         skip BLOCKS ibs-sized blocks at start of input\n  pattern=HEX         use the specified binary pattern as input\n  textpattern=TEXT    use repeating TEXT as input\n  errlog=FILE         send error messages to FILE as well as stderr\n  hash=NAME           do hash calculation (md5, sha1, sha256, sha384 or sha512)\n  hashlog=FILE        send hash output to FILE instead of stderr\n  hashwindow=BYTES    perform a hash on every BYTES amount of data\n  hashlog:=COMMAND    exec and write hashlog to process COMMAND\n  ALGORITHMlog:=COMMAND    also works in the same fashion of hashlog:=COMMAND\n  hashconv=[before|after]  perform the hashing before or after the conversions\n  hashformat=FORMAT        display each hashwindow according to FORMAT\n  totalhashformat=FORMAT   display the total hash value according to FORMAT\n  status=[on|off]          display a continual status message on stderr\n  statusinterval=N         update the status message every N blocks\n  sizeprobe=[if|of|BYTES]  what to use as value to percentage indicator\n  split=BYTES              write every BYTES amount of data to a new file\n  splitformat=[TEXT|MAC|WIN]  the file extension format for split operation\n  vf=FILE                  verify that FILE matches the specified input\n  verifylog=FILE           send verify results to FILE instead of stderr\n  verifylog:=COMMAND       exec and write verify results to process COMMAND\n  diffwr=[on|off]          only write to output if destination block content differs\n\n  --help              display this help and exit\n  --version           output version information and exit\n\nRead the manpage dcfldd(1) for more details about each option and to see\nsome examples.\n\nReport bugs at\nhttps://github.com/resurrecting-open-source-projects/dcfldd/issues",
+        "-h": "dcfldd: unrecognized option -h\nTry `dcfldd --help' for more information.",
+        "help": "dcfldd: unrecognized option help\nTry `dcfldd --help' for more information.",
+        "man": "dcfldd(1)      enhanced version of dd for forensics and security      dcfldd(1)\n\nNAME\n     dcfldd - enhanced version of dd for forensics and security\n\nSYNOPSIS\n     dcfldd [OPTION]...\n\nDESCRIPTION\n     Copy a file, converting and formatting according to the options.\n\n     dcfldd was initially developed at Department of Defense Computer Forensics\n     Lab  (DCFL). This tool is based on the dd program with the following addi-\n     tional features:\n\n     *  Hashing on-the-fly: dcfldd can hash the  input  data  as  it  is  being\n        transferred, helping to ensure data integrity.\n\n     *  Status  output:  dcfldd can update the user of its progress in terms of\n        the amount of data transferred and how much longer operation will take.\n\n     *  Flexible disk wipes: dcfldd can be used to wipe disks quickly and  with\n        a known pattern if desired.\n\n     *  Image/wipe  verify: dcfldd can verify that a target drive is a bit-for-\n        bit match of the specified input file or pattern.\n\n     *  Multiple outputs: dcfldd can output to multiple files or disks  at  the\n        same time.\n\n     *  Split  output: dcfldd can split output to multiple files with more con-\n        figurability than the split command.\n\n     *  Piped output and logs: dcfldd can send all its log data and  output  to\n        commands as well as files natively.\n\n     *  When  dd  uses a default block size (bs, ibs, obs) of 512 bytes, dcfldd\n        uses 32768 bytes (32 KiB) which is HUGELY more efficient.\n\n     *  The following options are present in dcfldd but not in  dd:  ALGORITHM-\n        log:,  errlog,  hash, hashconv, hashformat, hashlog, hashlog:, hashwin-\n        dow, limit, of:, pattern, sizeprobe, split,  splitformat,  statusinter-\n        val, textpattern, totalhashformat, verifylog, verifylog:, vf.\n\n     dcfldd  supports  the  following  letters to specify amount of data: k for\n     kilo, M for Mega, G for Giga, T for Tera, P for Peta, E  for  Exa,  Z  for\n     Zetta  and  Y  for  Yotta. E.g. 10M is equal to 10 MiB. See the BLOCKS AND\n     BYTES section to get other possibilities.\n\nOPTIONS\n     bs=BYTES\n            Force ibs=BYTES and obs=BYTES. Default value is 32768 (32KiB).  See\n            BLOCKS  AND  BYTES section. Warning: the block size will be created\n            in RAM. Make sure you have sufficient amount of free memory.\n\n     cbs=BYTES\n            Convert BYTES bytes at a time. (see BLOCKS AND BYTES section)\n\n     conv=KEYWORDS\n            Convert the file as per the comma separated keyword list.\n\n     count=BLOCKS\n            Copy only BLOCKS input blocks. (see BLOCKS AND BYTES section)\n\n     limit=BYTES\n            Similar to count but using BYTES instead of BLOCKS. (see BLOCKS AND\n            BYTES section)\n\n     ibs=BYTES\n            Read BYTES bytes at a time. (see BLOCKS AND BYTES section)\n\n     if=FILE\n            Read from FILE instead of stdin. (see BLOCKS AND BYTES section)\n\n     obs=BYTES\n            Write BYTES bytes at a time. (see BLOCKS AND BYTES section)\n\n     of=FILE\n            Write to FILE instead of stdout. NOTE: of=FILE may be used  several\n            times to write output to multiple files simultaneously.\n\n     of:=COMMAND\n            Exec and write output to process COMMAND.\n\n     seek=BLOCKS\n            Skip  BLOCKS  obs-sized  blocks at start of output. (see BLOCKS AND\n            BYTES section)\n\n     skip=BLOCKS\n            Skip BLOCKS ibs-sized blocks at start of  input.  (see  BLOCKS  AND\n            BYTES section)\n\n     pattern=HEX\n            Use the specified binary pattern as input. You can use a byte only.\n\n     textpattern=TEXT\n            Use repeating TEXT as input. You can use a character only.\n\n     errlog=FILE\n            Send error messages to FILE as well as stderr.\n\n     hash=NAME\n            Do  hash calculation in parallel with the disk reading. Either md5,\n            sha1, sha256, sha384 or sha512 can be used.  Default  algorithm  is\n            md5.  To select multiple algorithms to run simultaneously enter the\n            names in a comma separated list.\n\n     hashlog=FILE\n            Send hash output to FILE instead of stderr. If you are using multi-\n            ple hash algorithms you can send each to a separate file using  the\n            convention    ALGORITHMlog=FILE,    for    example    md5log=FILE1,\n            sha1log=FILE2, etc.\n\n     hashwindow=BYTES\n            Perform a hash on every BYTES amount of data. The  partial  results\n            will  be  shown  in screen. The default hash is md5 but you can use\n            hash= option to choose other.\n\n     hashlog:=COMMAND\n            Exec and write hashlog to process COMMAND.\n\n     ALGORITHMlog:=COMMAND\n            Also works in the same fashion of hashlog:=COMMAND.\n\n     hashconv=[before|after]\n            Perform the hashing before or after the conversions.\n\n     hashformat=FORMAT\n            Display each hashwindow according to FORMAT the hash  format  mini-\n            language is described below.\n\n     totalhashformat=FORMAT\n            Display  the  total  hash value according to FORMAT the hash format\n            mini-language is described below.\n\n     status=[on|off]\n            Display a continual status message  on  stderr.  Default  state  is\n            \"on\".\n\n     statusinterval=N\n            Update the status message every N blocks. Default value is 256.\n\n     sizeprobe=[if|of|BYTES]\n            Determine  the  size  of  the  input or output file or an amount of\n            BYTES for use with status messages. This option gives  you  a  per-\n            centage  indicator  around the sizeprobe value. WARNING: do not use\n            this option against a tape device. (see BLOCKS AND BYTES section)\n\n     split=BYTES\n            Write every BYTES amount of data to a new file. This operation  ap-\n            plies  to any of=FILE that follows (split= must be put before of=).\n            (see BLOCKS AND BYTES section)\n\n     splitformat=[TEXT|MAC|WIN]\n            The file extension format for split operation. You may use \"a\"  for\n            letters  and \"n\" for numbers. If you use annn, an extension started\n            as a000 will be appended; the last possible extension for this for-\n            mat will be z999.  splitformat=an will provide a0, a1, a2, a3,  a4,\n            a5,  a6,  a7, a8, a9, b0, b1, b2, b3... If nothing is specified the\n            default format is \"nnn\". NOTE: the split  and  splitformat  options\n            take  effect  only  for  output  files (option of=) specified AFTER\n            these options appear in the command line (e.g. split=50M  splitfor-\n            mat=annn  of=/tmp/test.iso).   Likewise, you may specify it several\n            times for different output files within the same command line.  You\n            may  use  as  many  digits  in any combination you would like. E.g.\n            \"anaannnaana\" would be valid, but a quite insane  (see  BLOCKS  AND\n            BYTES  section).  Other possible approach is MAC. If \"MAC\" is used,\n            a suffix dmg and several dmgpart will be appended. In other  words,\n            it  will  generate  a partial disk image file, used by the Mac OS X\n            operating system. dmgpart files are usually provided with a  corre-\n            sponding  dmg file, which is the master file for the split archive.\n            If dmg is opened in Mac OS X, all dmgpart will  be  read  too.  The\n            last  option is WIN, which will automatically output file naming of\n            foo.001, foo.002, ..., foo.999, foo.1000, ....\n\n     vf=FILE\n            Verify that FILE matches the specified input.\n\n     verifylog=FILE\n            Send verify results to FILE instead of stderr.\n\n     verifylog:=COMMAND\n            Exec and write verify results to process COMMAND.\n\n     diffwr=[on|off]\n            Only write to output if destination block content differs. This op-\n            eration applies to any of=FILE that follows (diffwr=  must  be  put\n            before any of=).\n\n     --help\n            Display a help page and exit.\n\n     --version\n            Output version information and exit.\n\nBLOCKS AND BYTES\n     BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n     xM  M,  c  1,  w  2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576, GD\n     1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n\nKEYWORDS\n     Each KEYWORD may be:\n\n     ascii  From EBCDIC to ASCII.\n\n     ebcdic\n            From ASCII to EBCDIC.\n\n     ibm    From ASCII to alternated EBCDIC.\n\n     block  Pad newline-terminated records with spaces to cbs-size.\n\n     unblock\n            Replace trailing spaces in cbs-size records with newline.\n\n     lcase  Change upper case to lower case.\n\n     notrunc\n            Do not truncate the output file.\n\n     ucase  Change lower case to upper case.\n\n     swab   Swap every pair of input bytes.\n\n     noerror\n            Continue after read errors.\n\n     sync   Pad every input block with NULs to ibs-size. When used  with  block\n            or unblock, pad with spaces rather than NULs.\n\nFORMAT\n     The  structure of FORMAT may contain any valid text and special variables.\n     The built-in variables are the following format: #variable_name#. To  pass\n     FORMAT strings to the program from a command line, it may be\n\n     necessary to surround your FORMAT strings with \"quotes.\"\n            The built-in variables are listed below:\n\n     window_start\n            The beginning byte offset of the hashwindow.\n\n     window_end\n            The ending byte offset of the hashwindow.\n\n     block_start\n            The beginning block (by input blocksize) of the window.\n\n     block_end\n            The ending block (by input blocksize) of the hash window.\n\n     hash   The hash value.\n\n     algorithm\n            The name of the hash algorithm.\n\n     For example, the default FORMAT for hashformat and totalhashformat are:\n\n         hashformat=\"#window_start# - #window_end#: #hash#\" totalhashformat=\"Total (#algorithm#): #hash#\"\n\n     The FORMAT structure accepts the following escape codes:\n\n     \\n     Newline\n\n     \\t     Tab\n\n     \\r     Carriage return\n\n     \\      Insert the '\\' character\n\n     ##     Insert the '#' character as text, not a variable\n\nEXAMPLES\n     Each following line will create a 100 MiB file containing zeros:\n\n         $ dcfldd if=/dev/zero of=test bs=1M count=100\n         $ dcfldd if=/dev/zero of=test bs=100M count=1\n         $ dcfldd if=/dev/zero of=test bs=50M count=2\n         $ dcfldd if=/dev/zero of=test limit=100M\n\n     To  create  a  copy (forensics image) from a disk called /dev/sdb inside a\n     file, using input/output blocks of 4096 bytes (4 KiB) instead  of  32  KiB\n     (default):\n\n         $ dcfldd if=/dev/sdb bs=4096 of=sdb.img\n\n     As  the  last example, plus calculating MD5 and SHA256 hashes, putting the\n     results inside sdb.md5 and sdb.sha256. It is  very  useful  for  forensics\n     works  because the hashes will be processed in real time, avoiding a waste\n     of time to make something as 'dd + md5 +  sha256'.  Considering  that  I/O\n     disk is very slow and RAM is very fast, the hashes will be calculated, bit\n     per  bit  in  memory,  when the next portion of the disk is read. When all\n     disk was read, all hashes are now ready.\n\n         $ dcfldd if=/dev/sdb bs=4096 hash=md5,sha256 md5log=sdb.md5 sha256log=sdb.sha256 of=sdb.img\n\n     To validate the image file against the original source:\n\n         $ dcfldd if=/dev/sdb vf=sdb.img\n\n     Splitting the image in 500 MiB slices, using  the  default  bs  value  (32\n     KiB). Note that split= must be put before of= to work:\n\n         $ dcfldd if=/dev/sdb split=500M of=sdb.img\n\n     At the last example, using from a0000 up to z9999 as suffix for each split\n     file:\n\n         $ dcfldd if=/dev/sdb split=500M splitformat=annnn of=sdb.img\n\n     Now,  dcfldd will work byte per byte (bs=1) and will hop 1056087439 bytes.\n     After this, dcfldd will collect 200000 bytes and write the  results  to  a\n     file called airplane.jpg.\n\n         $ dcfldd if=/dev/sda3 bs=1 skip=1056087439 count=200000 of=airplane.jpg\n\n     In  the  last example, the same result could be obtained using \"limit\" in-\n     stead of \"count\". The main difference is that  count  uses  200000*bs  and\n     limit uses 200000 bytes (regardless of the value declared in bs option):\n\n         $ dcfldd if=/dev/sda3 bs=1 skip=1056087439 limit=200000 of=airplane.jpg\n\n     To  write  something  inside a file, you can use seek. Suppose you want to\n     write a message from a file called message.txt inside a file  called  tar-\n     get.iso, hopping 200000 bytes from start of file:\n\n         $ dcfldd if=message.txt bs=1 seek=200000 of=target.iso\n\n     dcfldd also can send a result to be processed by an external command:\n\n         $ dcfldd if=text.txt  of:=\"cat | sort -u\"\n\n     To convert a file from ASCII to EBCDIC:\n\n         $ dcfldd if=text.asc conv=ebcdic of=text.ebcdic\n\n     To convert a file from EBCDIC to ASCII:\n\n         $ dcfldd if=text.ebcdic conv=ascii of=text.asc\n\nSEE ALSO\n     dd(1)\n\nREPORTING BUGS\n     Report      bugs      at      https://github.com/resurrecting-open-source-\n     projects/dcfldd/issues\n\nAUTHORS\n     dcfldd was originally written by Nicholas Harbour. Currently is maintained\n     by some volunteers.\n\n     GNU dd was written by Paul Rubin, David MacKenzie and Stuart Kemp.\n\n     This manpage was written by dd authors, Nicholas  Harbour,  Joao  Eriberto\n     Mota Filho and others.\n\ndcfldd-1.9.3                      01 May 2025                         dcfldd(1)",
+        "apropos": "dcfldd (1)           - enhanced version of dd for forensics and security"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/dcfldd",
+        "size_bytes": 76656,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=4625c87b6ac1a7c89a20a40b1aaf79a84f3e94e1, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/dcfldd/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/dcfldd/index.md",
+    "retrieved_at": "2026-07-14T13:05:17+00:00",
+    "sha256": "0ad94eaa6750e87415c555259a5934b680637ec01f28a75d0f6e113d8750ec6b"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "113",
+    "maintainer": "Joao Eriberto Mota Filho <eriberto@debian.org>",
+    "architecture": "amd64",
+    "version": "1.9.3-2",
+    "depends": "libc6 (>= 2.38)",
+    "description": "enhanced version of dd for forensics and security\ndcfldd was initially developed at Department of Defense Computer Forensics\nLab (DCFL). This tool is based on the dd program with the following additional\nfeatures:\n.\n- Hashing on-the-fly: dcfldd can hash the input data as it is being\ntransferred, helping to ensure data integrity.\n- Status output: dcfldd can update the user of its progress in terms of the\namount of data transferred and how much longer operation will take.\n- Flexible disk wipes: dcfldd can be used to wipe disks quickly and with a\nknown pattern if desired.\n- Image/wipe verify: dcfldd can verify that a target drive is a bit-for-bit\nmatch of the specified input file or pattern.\n- Multiple outputs: dcfldd can output to multiple files or disks at the same\ntime.\n- Split output: dcfldd can split output to multiple files with more\nconfigurability than the split command.\n- Piped output and logs: dcfldd can send all its log data and output to\ncommands as well as files natively.\n- When dd uses a default block size (bs, ibs, obs) of 512 bytes, dcfldd uses\n32768 bytes (32 KiB) which is HUGELY more efficient.\n- The following options are present in dcfldd but not in dd: ALGORITHMlog:,\nerrlog, hash, hashconv, hashformat, hashlog, hashlog:, hashwindow, limit,\nof:, pattern, sizeprobe, split, splitformat, statusinterval, textpattern,\ntotalhashformat, verifylog, verifylog:, vf.",
+    "homepage": "https://github.com/resurrecting-open-source-projects/dcfldd"
+  },
+  "tags": [
+    "offensive",
+    "dcfldd",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/dcfldd && python3 dcfldd.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/dcfldd && python3 dcfldd.py --help",
+    "cd toolboxes/dcfldd && python3 dcfldd.py --help",
+    "cd toolboxes/dcfldd && python3 dcfldd.py --help",
+    "cd toolboxes/dcfldd && python3 dcfldd.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dcfldd --output $KFIOSA_OUTPUT_DIR/dcfldd.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dcfldd --output $KFIOSA_OUTPUT_DIR/dcfldd.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

@@ -1,0 +1,287 @@
+{
+  "id": "kali:bruteforce-luks",
+  "kind": "kali_source_package",
+  "name": "bruteforce-luks",
+  "title": "bruteforce-luks",
+  "summary": "### bruteforce-luks",
+  "version": "1.4.0-4",
+  "architectures": [
+    "linux-any"
+  ],
+  "homepage": "https://github.com/glv2/bruteforce-luks",
+  "repository": "https://salsa.debian.org/pkg-security-team/bruteforce-luks",
+  "metapackages": [
+    "kali-linux-everything"
+  ],
+  "install": {
+    "apt": "sudo apt install bruteforce-luks"
+  },
+  "packages": [
+    {
+      "name": "bruteforce-luks"
+    }
+  ],
+  "commands": [
+    {
+      "name": "bruteforce-luks",
+      "description": "Try to find the password of a LUKS volume",
+      "usage": "bruteforce-luks [options] <path to LUKS volume>",
+      "arguments": [
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": "string",
+          "takes_value": true,
+          "description": "Beginning of the password.",
+          "default": null,
+          "choices": null,
+          "raw": " -b <string>  Beginning of the password."
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "string",
+          "takes_value": true,
+          "description": "End of the password.",
+          "default": null,
+          "choices": null,
+          "raw": " -e <string>  End of the password."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Read the passwords from a file instead of generating them.",
+          "default": null,
+          "choices": null,
+          "raw": " -f <file>    Read the passwords from a file instead of generating them."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show help and quit.",
+          "default": null,
+          "choices": null,
+          "raw": " -h           Show help and quit."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "length",
+          "takes_value": true,
+          "description": "Minimum password length (beginning and end included).",
+          "default": null,
+          "choices": null,
+          "raw": " -l <length>  Minimum password length (beginning and end included)."
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "length",
+          "takes_value": true,
+          "description": "Maximum password length (beginning and end included).",
+          "default": null,
+          "choices": null,
+          "raw": " -m <length>  Maximum password length (beginning and end included)."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "string",
+          "takes_value": true,
+          "description": "Password character set.",
+          "default": null,
+          "choices": null,
+          "raw": " -s <string>  Password character set."
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "n",
+          "takes_value": true,
+          "description": "Number of threads to use.",
+          "default": null,
+          "choices": null,
+          "raw": " -t <n>       Number of threads to use."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": "n",
+          "takes_value": true,
+          "description": "Print progress info every n seconds.",
+          "default": null,
+          "choices": null,
+          "raw": " -v <n>       Print progress info every n seconds."
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "Restore the state of a previous session if the file exists,",
+          "default": null,
+          "choices": null,
+          "raw": " -w <file>    Restore the state of a previous session if the file exists,"
+        }
+      ],
+      "raw_help": "root@kali:~# bruteforce-luks --help\n \n bruteforce-luks 1.4.0\n \n Usage: bruteforce-luks [options] <path to LUKS volume>\n \n Options:\n -b <string>  Beginning of the password.\n                default: \"\"\n -e <string>  End of the password.\n                default: \"\"\n -f <file>    Read the passwords from a file instead of generating them.\n -h           Show help and quit.\n -l <length>  Minimum password length (beginning and end included).\n                default: 1\n -m <length>  Maximum password length (beginning and end included).\n                default: 8\n -s <string>  Password character set.\n                default: \"0123456789ABCDEFGHIJKLMNOPQRSTU\n                          VWXYZabcdefghijklmnopqrstuvwxyz\"\n -t <n>       Number of threads to use.\n                default: 1\n -v <n>       Print progress info every n seconds.\n -w <file>    Restore the state of a previous session if the file exists,\n              then write the state to the file regularly (~ every minute).\n \n Sending a USR1 signal to a running bruteforce-luks process\n makes it print progress info to standard error and continue.\n \n Error: unknown option: '-'.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "bruteforce-luks -t 4 -l 5 -m 5 /dev/sdb1",
+          "template": null,
+          "original_sha256": "2504cf3625cdfe59ca1b34a752136e413ca3381c9ec97d53b04d3731740ce52e"
+        },
+        {
+          "status": "operational_example",
+          "command": "bruteforce-luks -t 8 -l 5 -m 10 -b \"W4l\" -e \"z\" /dev/sda2",
+          "template": null,
+          "original_sha256": "94d1bc12216522c3196fb1fda125a017ba425074861fb11bc8d9c78024cc5cf3"
+        },
+        {
+          "status": "operational_example",
+          "command": "bruteforce-luks -t 8 -l 10 -m 10 -s \"P8\" /dev/sdc3",
+          "template": null,
+          "original_sha256": "ff2cc0f274f6f2ca983032683f27616f8e83c744cc27f0722a03c1a945a97d5b"
+        },
+        {
+          "status": "operational_example",
+          "command": "bruteforce-luks -t 6 -f dictionary.txt /dev/sdd1",
+          "template": null,
+          "original_sha256": "bb2b3d27ead143a0443236736a78c0ea7d8509370c77cdfa59281a71df08eec7"
+        },
+        {
+          "status": "operational_example",
+          "command": "sudo dd if=/dev/sda1 of=/tmp/luks-header bs=1M count=10\nbruteforce-luks -t 4 -l 5 -m 5 /tmp/luks-header",
+          "template": null,
+          "original_sha256": "72e1c5180907564245c5687ef20f9606528d8ada46e2654ae6d09ac8f743f933"
+        },
+        {
+          "status": "operational_example",
+          "command": "pkill -USR1 -f bruteforce-luks",
+          "template": null,
+          "original_sha256": "c7fc4d84bb56a0bd01dd5e1647d702e14e10e9fb22a90c56a73ab25bc512b896"
+        },
+        {
+          "status": "operational_example",
+          "command": "bruteforce-luks -t 6 -f dictionary.txt -v 30 /dev/sdd1",
+          "template": null,
+          "original_sha256": "ada542bd3d03174a88ce36a5351e77ded85bc203e429fea9a4f17f10e1bc6cd7"
+        },
+        {
+          "status": "operational_example",
+          "command": "bruteforce-luks 1.4.0",
+          "template": null,
+          "original_sha256": "c4f7efc07df27469c0f4fb6567df14af8f26566e825fb05ddb34ca9244bf75f4"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "bruteforce-luks 1.4.0\n\nUsage: bruteforce-luks [options] <path to LUKS volume>\n\nOptions:\n  -b <string>  Beginning of the password.\n                 default: \"\"\n  -e <string>  End of the password.\n                 default: \"\"\n  -f <file>    Read the passwords from a file instead of generating them.\n  -h           Show help and quit.\n  -l <length>  Minimum password length (beginning and end included).\n                 default: 1\n  -m <length>  Maximum password length (beginning and end included).\n                 default: 8\n  -s <string>  Password character set.\n                 default: \"0123456789ABCDEFGHIJKLMNOPQRSTU\n                           VWXYZabcdefghijklmnopqrstuvwxyz\"\n  -t <n>       Number of threads to use.\n                 default: 1\n  -v <n>       Print progress info every n seconds.\n  -w <file>    Restore the state of a previous session if the file exists,\n               then write the state to the file regularly (~ every minute).\n\nSending a USR1 signal to a running bruteforce-luks process\nmakes it print progress info to standard error and continue.\n\nError: unknown option: '-'.",
+        "-h": "bruteforce-luks 1.4.0\n\nUsage: bruteforce-luks [options] <path to LUKS volume>\n\nOptions:\n  -b <string>  Beginning of the password.\n                 default: \"\"\n  -e <string>  End of the password.\n                 default: \"\"\n  -f <file>    Read the passwords from a file instead of generating them.\n  -h           Show help and quit.\n  -l <length>  Minimum password length (beginning and end included).\n                 default: 1\n  -m <length>  Maximum password length (beginning and end included).\n                 default: 8\n  -s <string>  Password character set.\n                 default: \"0123456789ABCDEFGHIJKLMNOPQRSTU\n                           VWXYZabcdefghijklmnopqrstuvwxyz\"\n  -t <n>       Number of threads to use.\n                 default: 1\n  -v <n>       Print progress info every n seconds.\n  -w <file>    Restore the state of a previous session if the file exists,\n               then write the state to the file regularly (~ every minute).\n\nSending a USR1 signal to a running bruteforce-luks process\nmakes it print progress info to standard error and continue.",
+        "help": "Device help does not exist or access denied.\nError: help is not a valid LUKS volume, or you don't have permission to access it.",
+        "man": "BRUTEFORCE-LUKS(1)      Bruteforce LUKS encrypted volume     BRUTEFORCE-LUKS(1)\n\nNAME\n     bruteforce-luks - try to find the password of a LUKS volume\n\nSYNOPSIS\n     bruteforce-luks [options] <path to LUKS volume>\n\nDESCRIPTION\n     The  purpose  of this program is to try to find the password of a LUKS en-\n     crypted volume.\n\n     It can be used in two ways:\n\n            * brute force attack: try all the possible passwords given a  char-\n            acter set.  It is especially useful if you know something about the\n            password  (i.e. you forgot a part of your password but still remem-\n            ber most of it). Finding the password of a volume  without  knowing\n            anything about it would take way too much time (unless the password\n            is really short and/or weak).\n\n            * dictionary attack: try all the passwords in a file.\n\n     The  program  can use several threads (the number of threads can be speci-\n     fied with the -t command line option).\n\n     Sending a USR1 signal to a running bruteforce-luks process makes it  print\n     progress info to standard error and continue.\n\nOPTIONS\n     -b <string>\n            Beginning of the password.\n            Default: \"\"\n\n     -e <string>\n            End of the password.\n            Default: \"\"\n\n     -f <file>\n            Read the passwords from a file instead of generating them.\n\n     -h     Show help and quit.\n\n     -l <length>\n            Minimum password length (beginning and end included).\n            Default: 1\n\n     -m <length>\n            Maximum password length (beginning and end included).\n            Default: 8\n\n     -s <string>\n            Password character set.\n            Default: \"0123456789ABCDEFGHIJKLMNOPQRSTU\n                      VWXYZabcdefghijklmnopqrstuvwxyz\"\n\n     -t <n>\n            Number of threads to use.\n            Default: 1\n\n     -v <n>\n            Print progress info every n seconds.\n\n     -w <file>\n            Restore the state of a previous session if the file exists,\n            then write the state to the file regularly (~ every minute).\n\nEXAMPLES\n     Try  to find the password of a LUKS encrypted volume using 4 threads, try-\n     ing only passwords with 5 characters:\n\n         bruteforce-luks -t 4 -l 5 -m 5 /dev/sdb1\n\n     Try to find the password of a LUKS encrypted volume using 8 threads,  try-\n     ing only passwords with 5 to 10 characters beginning with \"W4l\" and ending\n     with \"z\":\n\n         bruteforce-luks -t 8 -l 5 -m 10 -b \"W4l\" -e \"z\" /dev/sda2\n\n     Try  to find the password of a LUKS encrypted volume using 8 threads, try-\n     ing only passwords with 10 characters using the character set \"P8\":\n\n         bruteforce-luks -t 8 -l 10 -m 10 -s \"P8\" /dev/sdc3\n\n     Try to find the password of a LUKS encrypted volume using 6 threads,  try-\n     ing the passwords contained in a dictionary file:\n\n         bruteforce-luks -t 6 -f dictionary.txt /dev/sdd1\n\n     Instead  of passing a block device to the program, you can copy the begin-\n     ning of the LUKS volume to a file and pass this file to the program:\n\n         sudo dd if=/dev/sda1 of=/tmp/luks-header bs=1M count=10\n         bruteforce-luks -t 4 -l 5 -m 5 /tmp/luks-header\n\n     Print progress info:\n\n         pkill -USR1 -f bruteforce-luks\n\n     Print progress info every 30 seconds:\n\n         bruteforce-luks -t 6 -f dictionary.txt -v 30 /dev/sdd1\n\n     Save/restore state between sessions:\n\n         bruteforce-luks -t 6 -f dictionary.txt -w state.txt /dev/sdd1\n           (Let the program run for a few minutes and stop it)\n         bruteforce-luks -t 6 -w state.txt /dev/sdd1\n\nBRUTEFORCE-LUKS 1.4.0            November 2019               BRUTEFORCE-LUKS(1)",
+        "apropos": "bruteforce-luks (1)  - try to find the password of a LUKS volume"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/bruteforce-luks",
+        "size_bytes": 26728,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=bf53cc81508b3fc10f0e704bab146b17cd17de71, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/bruteforce-luks/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/bruteforce-luks/index.md",
+    "retrieved_at": "2026-07-14T13:05:01+00:00",
+    "sha256": "0e2dc92afcc251cef8b9936861428e7bd51eddbf336e8c444b655854fe91478c"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "47",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.4.0-4",
+    "depends": "libc6 (>= 2.34), libcryptsetup12 (>= 2:1.4)",
+    "description": "Try to find a password of a LUKS encrypted volume\nThe program is used to try discovery a password for encrypted LUKS volume used\nto security reasons. It works trying decrypt at least one of the key slots by\ntrying all the possible passwords. It is used in forensics and is especially\nuseful if you know something about the password (i.e. you forgot a part of your\npassword but still remember most of it).\n.\nBecause of cryptography complexity, crack the password of a LUKS volume without\nknowing anything about it would take way too much time (unless the password is\nreally short and/or weak).",
+    "homepage": "https://github.com/glv2/bruteforce-luks"
+  },
+  "tags": [
+    "offensive",
+    "bruteforce",
+    "luks",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/bruteforce-luks && python3 bruteforce-luks.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/bruteforce-luks && python3 bruteforce-luks.py --help",
+    "cd toolboxes/bruteforce-luks && python3 bruteforce-luks.py --help",
+    "cd toolboxes/bruteforce-luks && python3 bruteforce-luks.py --help",
+    "cd toolboxes/bruteforce-luks && python3 bruteforce-luks.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bruteforce-luks --output $KFIOSA_OUTPUT_DIR/bruteforce-luks.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bruteforce-luks --output $KFIOSA_OUTPUT_DIR/bruteforce-luks.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

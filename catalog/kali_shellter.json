@@ -1,0 +1,135 @@
+{
+  "id": "kali:shellter",
+  "kind": "kali_source_package",
+  "name": "shellter",
+  "title": "shellter",
+  "summary": "### shellter",
+  "version": "7.2-0kali3",
+  "architectures": [
+    "i386",
+    "amd64"
+  ],
+  "homepage": "https://www.shellterproject.com/",
+  "repository": "https://gitlab.com/kalilinux/packages/shellter",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-tools-post-exploitation",
+    "kali-tools-windows-resources"
+  ],
+  "install": {
+    "apt": "sudo apt install shellter"
+  },
+  "packages": [
+    {
+      "name": "shellter"
+    }
+  ],
+  "commands": [
+    {
+      "name": "shellter",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# shellter -h\n ┏━(Message from Kali developers)\n ┃\n ┃ You may need to install the wine32 package first:\n ┃  # dpkg --add-architecture i386 && apt update && apt -y install wine32\n ┃\n ┗━\n Application could not be started, or no application associated with the specified file.\n ShellExecuteEx failed:",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "dpkg --add-architecture i386\napt update && apt install wine32\nshellter",
+          "template": null,
+          "original_sha256": "1b3e66d397a86d6898b597970cf02754839a5a9a236af03baa335fbd63030e48"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "exploit",
+          "exploitation"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\nerror: XDG_RUNTIME_DIR is invalid or not set in the environment.\n00b8:err:module:alloc_tls_slot NtQueryInformationThread failed.\n0074:err:winediag:nodrv_CreateWindow Application tried to create a window, but no driver could be loaded.\n0074:err:winediag:nodrv_CreateWindow L\"The explorer process failed to start.\"\n0074:err:systray:initialize_systray Could not create tray window",
+        "-h": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\nerror: XDG_RUNTIME_DIR is invalid or not set in the environment.\n0078:err:winediag:nodrv_CreateWindow Application tried to create a window, but no driver could be loaded.\n0078:err:winediag:nodrv_CreateWindow L\"The explorer process failed to start.\"\n0078:err:systray:initialize_systray Could not create tray window",
+        "help": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\nerror: XDG_RUNTIME_DIR is invalid or not set in the environment.\n007c:err:winediag:nodrv_CreateWindow Application tried to create a window, but no driver could be loaded.\n007c:err:winediag:nodrv_CreateWindow L\"The explorer process failed to start.\"\n007c:err:systray:initialize_systray Could not create tray window"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/shellter",
+        "size_bytes": 103,
+        "is_symlink": false,
+        "file_type": "a sh script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/shellter/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/shellter/index.md",
+    "retrieved_at": "2026-07-14T13:08:35+00:00",
+    "sha256": "652672b32f13aba56e3f4f15bf23610fe037a49830f1da2b80ebfebc9a96618d"
+  },
+  "apt_metadata": {
+    "section": "non-free/misc",
+    "installed_size": "726",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "7.2-0kali3",
+    "depends": "wine, kali-defaults (>= 2019.3.6)",
+    "description": "Dynamic shellcode injection tool and dynamic PE infector\nShellter is a dynamic shellcode injection tool aka dynamic PE infector. It can\nbe used in order to inject shellcode into native Windows applications\n(currently 32-bit apps only). The shellcode can be something yours or\nsomething generated through a framework, such as Metasploit.\n.\nShellter takes advantage of the original structure of the PE file and doesn't\napply any modification such as changing memory access permissions in sections\n(unless the user wants to), adding an extra section with RWE access, and\nwhatever would look dodgy under an AV scan.",
+    "homepage": "https://www.shellterproject.com/"
+  },
+  "tags": [
+    "offensive",
+    "shellter",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/shellter && python3 shellter.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/shellter && python3 shellter.py --help",
+    "cd toolboxes/shellter && python3 shellter.py --help",
+    "cd toolboxes/shellter && python3 shellter.py --help",
+    "cd toolboxes/shellter && python3 shellter.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST shellter --output $KFIOSA_OUTPUT_DIR/shellter.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST shellter --output $KFIOSA_OUTPUT_DIR/shellter.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

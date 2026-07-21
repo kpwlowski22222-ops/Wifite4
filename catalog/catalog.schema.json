@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/kali-mcp/catalog.schema.json",
+  "title": "Kali MCP Tool Knowledge Catalog",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "catalog_id",
+    "generated_at",
+    "materialization",
+    "kali_tools",
+    "external_repositories"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "catalog_id": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "materialization": {
+      "type": "object",
+      "required": [
+        "complete",
+        "kali_tool_count",
+        "external_repository_count"
+      ],
+      "properties": {
+        "complete": {
+          "type": "boolean"
+        },
+        "kali_tool_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "external_repository_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "kali_tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/kaliTool"
+      }
+    },
+    "external_repositories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/repository"
+      }
+    }
+  },
+  "$defs": {
+    "risk": {
+      "type": "object",
+      "required": [
+        "level",
+        "requires_explicit_authorization",
+        "allow_autonomous_execution"
+      ],
+      "properties": {
+        "level": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        "signals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requires_explicit_authorization": {
+          "type": "boolean"
+        },
+        "allow_autonomous_execution": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "argument": {
+      "type": "object",
+      "required": [
+        "flags",
+        "takes_value",
+        "description"
+      ],
+      "properties": {
+        "flags": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "metavar": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "takes_value": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "default": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "choices": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "raw": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "command": {
+      "type": "object",
+      "required": [
+        "name",
+        "description",
+        "arguments",
+        "examples",
+        "risk"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "usage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/argument"
+          }
+        },
+        "raw_help": {
+          "type": "string"
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "risk": {
+          "$ref": "#/$defs/risk"
+        }
+      },
+      "additionalProperties": true
+    },
+    "kaliTool": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^kali:"
+        },
+        "kind": {
+          "const": "kali_source_package"
+        },
+        "name": {
+          "type": "string"
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/command"
+          }
+        },
+        "risk": {
+          "$ref": "#/$defs/risk"
+        }
+      },
+      "additionalProperties": true
+    },
+    "repository": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "full_name",
+        "url",
+        "category",
+        "risk"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^github:"
+        },
+        "kind": {
+          "const": "external_repository"
+        },
+        "name": {
+          "type": "string"
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "category": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "use_cases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Operator-curated hints for WHEN to use this tool. The LLM prompt stanza surfaces these to the chain planner."
+        },
+        "command_examples": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Operator-curated argv examples for the run_toolbox step. The LLM uses these to build the right chain step."
+        },
+        "toolbox_path": {
+          "type": "string"
+        },
+        "trust": {
+          "type": "object",
+          "properties": {
+            "official_kali": {
+              "type": "boolean"
+            },
+            "reviewed": {
+              "type": "boolean"
+            },
+            "warning": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "risk": {
+          "$ref": "#/$defs/risk"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "tags": [
+    "offensive",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/tool && python3 tool.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/tool && python3 tool.py --help",
+    "cd toolboxes/tool && python3 tool.py --help",
+    "cd toolboxes/tool && python3 tool.py --help",
+    "cd toolboxes/tool && python3 tool.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tool --output $KFIOSA_OUTPUT_DIR/tool.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tool --output $KFIOSA_OUTPUT_DIR/tool.log"
+  ],
+  "risk": {
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ]
+  },
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

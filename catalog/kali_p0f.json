@@ -1,0 +1,296 @@
+{
+  "id": "kali:p0f",
+  "kind": "kali_source_package",
+  "name": "p0f",
+  "title": "p0f",
+  "summary": "### p0f",
+  "version": "3.09b-4",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://lcamtuf.coredump.cx/p0f3/",
+  "repository": "https://salsa.debian.org/pkg-security-team/p0f",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-linux-nethunter",
+    "kali-tools-information-gathering"
+  ],
+  "install": {
+    "apt": "sudo apt install p0f"
+  },
+  "packages": [
+    {
+      "name": "p0f"
+    }
+  ],
+  "commands": [
+    {
+      "name": "p0f",
+      "description": "Identify remote systems passively",
+      "usage": "p0f [ ...options... ] [ 'filter rule' ]",
+      "arguments": [
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": "iface",
+          "takes_value": true,
+          "description": "- listen on the specified network interface",
+          "default": null,
+          "choices": null,
+          "raw": " -i iface  - listen on the specified network interface"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "- read offline pcap data from a given file",
+          "default": null,
+          "choices": null,
+          "raw": " -r file   - read offline pcap data from a given file"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "- put the listening interface in promiscuous mode",
+          "default": null,
+          "choices": null,
+          "raw": " -p        - put the listening interface in promiscuous mode"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "- list all available interfaces",
+          "default": null,
+          "choices": null,
+          "raw": " -L        - list all available interfaces"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "- read fingerprint database from 'file' (/etc/p0f/p0f.fp)",
+          "default": null,
+          "choices": null,
+          "raw": " -f file   - read fingerprint database from 'file' (/etc/p0f/p0f.fp)"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": "file",
+          "takes_value": true,
+          "description": "- write information to the specified log file",
+          "default": null,
+          "choices": null,
+          "raw": " -o file   - write information to the specified log file"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "name",
+          "takes_value": true,
+          "description": "- answer to API queries at a named unix socket",
+          "default": null,
+          "choices": null,
+          "raw": " -s name   - answer to API queries at a named unix socket"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": "user",
+          "takes_value": true,
+          "description": "- switch to the specified unprivileged account and chroot",
+          "default": null,
+          "choices": null,
+          "raw": " -u user   - switch to the specified unprivileged account and chroot"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "- fork into background (requires -o or -s)",
+          "default": null,
+          "choices": null,
+          "raw": " -d        - fork into background (requires -o or -s)"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": "limit",
+          "takes_value": true,
+          "description": "- limit number of parallel API connections (20)",
+          "default": null,
+          "choices": null,
+          "raw": " -S limit  - limit number of parallel API connections (20)"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": "c h",
+          "takes_value": true,
+          "description": "- set connection / host cache age limits (30s,120m)",
+          "default": null,
+          "choices": null,
+          "raw": " -t c,h    - set connection / host cache age limits (30s,120m)"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "c h",
+          "takes_value": true,
+          "description": "- cap the number of active connections / hosts (1000,10000)",
+          "default": null,
+          "choices": null,
+          "raw": " -m c,h    - cap the number of active connections / hosts (1000,10000)"
+        },
+        {
+          "flags": [
+            "-u",
+            "-S",
+            "-t",
+            "-m",
+            "-pdL"
+          ],
+          "metavar": "user limit c h c h 'filter rule'",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -u user ] [ -S limit ] [ -t c,h ] [ -m c,h ] [ -pdL ] [ 'filter rule' ]"
+        }
+      ],
+      "raw_help": "root@kali:~# p0f -h\n p0f: invalid option -- 'h'\n Usage: p0f [ ...options... ] [ 'filter rule' ]\n \n Network interface options:\n \n -i iface  - listen on the specified network interface\n -r file   - read offline pcap data from a given file\n -p        - put the listening interface in promiscuous mode\n -L        - list all available interfaces\n \n Operating mode and output settings:\n \n -f file   - read fingerprint database from 'file' (/etc/p0f/p0f.fp)\n -o file   - write information to the specified log file\n -s name   - answer to API queries at a named unix socket\n -u user   - switch to the specified unprivileged account and chroot\n -d        - fork into background (requires -o or -s)\n \n Performance-related options:\n \n -S limit  - limit number of parallel API connections (20)\n -t c,h    - set connection / host cache age limits (30s,120m)\n -m c,h    - cap the number of active connections / hosts (1000,10000)\n \n Optional filter expressions (man tcpdump) can be specified in the command\n line to prevent p0f from looking at incidental network traffic.\n \n Problems? You can reach the author at <lcamtuf@coredump.cx>.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "p0f -i eth0 -p -o /tmp/p0f.log\n-- p0f 3.09b by Michal Zalewski <lcamtuf@coredump.cx> ---\n\n[+] Closed 1 file descriptor.\n[+] Loaded 322 signatures from '/etc/p0f/p0f.fp'.\n[+] Intercepting traffic on interface 'eth0'.\n[+] Default packet filtering configured [+VLAN].\n[+] Log file '/tmp/p0f.log' opened for writing.\n[+] Entered main event loop.\n\n.-[ 192.168.1.15/35834 -> 173.246.39.185/873 (syn) ]-\n|\n| client   = 192.168.1.15/35834\n| os       = Linux 3.11 and newer\n| dist     = 0\n| params   = none\n| raw_sig  = 4:64+0:0:1460:mss*20,7:mss,sok,ts,nop,ws:df,id+:0",
+          "template": null,
+          "original_sha256": "329a0a80fbc2928817d7d653597839e3d1b692d26f90db87784af508f9b390c3"
+        },
+        {
+          "status": "operational_example",
+          "command": "p0f: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "8c3f0aefc066f2d843d42b63a9ded2a51f9470d01af583c52b4b59b3e8d0d201"
+        },
+        {
+          "status": "operational_example",
+          "command": "p0f: invalid option -- 'h'",
+          "template": null,
+          "original_sha256": "6be7801579c2653d24d957e4a37e3a86e853e5b7a055c7093b5e1a876d4e07af"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "p0f: invalid option -- '-'\nUsage: p0f [ ...options... ] [ 'filter rule' ]\n\nNetwork interface options:\n\n  -i iface  - listen on the specified network interface\n  -r file   - read offline pcap data from a given file\n  -p        - put the listening interface in promiscuous mode\n  -L        - list all available interfaces\n\nOperating mode and output settings:\n\n  -f file   - read fingerprint database from 'file' (/etc/p0f/p0f.fp)\n  -o file   - write information to the specified log file\n  -s name   - answer to API queries at a named unix socket\n  -u user   - switch to the specified unprivileged account and chroot\n  -d        - fork into background (requires -o or -s)\n\nPerformance-related options:\n\n  -S limit  - limit number of parallel API connections (20)\n  -t c,h    - set connection / host cache age limits (30s,120m)\n  -m c,h    - cap the number of active connections / hosts (1000,10000)\n\nOptional filter expressions (man tcpdump) can be specified in the command\nline to prevent p0f from looking at incidental network traffic.\n\nProblems? You can reach the author at <lcamtuf@coredump.cx>.",
+        "-h": "p0f: invalid option -- 'h'\nUsage: p0f [ ...options... ] [ 'filter rule' ]\n\nNetwork interface options:\n\n  -i iface  - listen on the specified network interface\n  -r file   - read offline pcap data from a given file\n  -p        - put the listening interface in promiscuous mode\n  -L        - list all available interfaces\n\nOperating mode and output settings:\n\n  -f file   - read fingerprint database from 'file' (/etc/p0f/p0f.fp)\n  -o file   - write information to the specified log file\n  -s name   - answer to API queries at a named unix socket\n  -u user   - switch to the specified unprivileged account and chroot\n  -d        - fork into background (requires -o or -s)\n\nPerformance-related options:\n\n  -S limit  - limit number of parallel API connections (20)\n  -t c,h    - set connection / host cache age limits (30s,120m)\n  -m c,h    - cap the number of active connections / hosts (1000,10000)\n\nOptional filter expressions (man tcpdump) can be specified in the command\nline to prevent p0f from looking at incidental network traffic.\n\nProblems? You can reach the author at <lcamtuf@coredump.cx>.",
+        "help": "--- p0f 3.09b by Michal Zalewski <lcamtuf@coredump.cx> ---\n\n[+] Closed 1 file descriptor.\n[+] Loaded 322 signatures from '/etc/p0f/p0f.fp'.\n[+] Intercepting traffic on default interface 'eth0'.",
+        "man": "P0F(1)                      General Commands Manual                      P0F(1)\n\nNAME\n     p0f - identify remote systems passively\n\nSYNOPSIS\n     p0f  p0f [ -f file ] [ -i device ] [ -r file ] [ -o file ] [ -s socket ] [\n     -u user ] [ -S limit ] [ -t c,h ] [ -m c,h ] [ -pdL ] [ 'filter rule' ]\n\nDESCRIPTION\n     p0f uses a fingerprinting technique based on analyzing the structure of  a\n     TCP/IP  packet  to  determine the operating system and other configuration\n     properties of a remote host. The process is completely  passive  and  does\n     not generate any suspicious network traffic. The other host has to either:\n\n     -  connect to your network - either spontaneously or in an induced manner,\n     for example when trying to  establish  a  ftp  data  stream,  returning  a\n     bounced  mail,  performing  auth lookup, using IRC DCC, external html mail\n     image reference and so on,\n\n     - or be contacted by some entity on your network using some standard means\n     (such as a web browsing); it can either accept or refuse the connection.\n\n     The method can see thru packet firewalls and does not  have  the  restric-\n     tions  of  an  active  fingerprinting. The main uses of passive OS finger-\n     printing are attacker profiling (IDS  and  honeypots),  visitor  profiling\n     (content  optimization),  customer/user  profiling  (policy  enforcement),\n     pen-testing, etc.\n\nOPTIONS\n     -f file\n            read fingerprints from file; by default, p0f reads signatures  from\n            ./p0f.fp  or /etc/p0f/p0f.fp (the latter on Unix systems only). You\n            can use this to load custom fingerprint data.  Specifying  multiple\n            -f values will NOT combine several signature files together.\n\n     -i device\n            listen on this device; p0f defaults to whatever device libpcap con-\n            siders  to  be the best (and which often isn't). On some newer sys-\n            tems you might be able to specify 'any' to listen on  all  devices,\n            but  don't  rely  on  this.  Specifying multiple -i values will NOT\n            cause p0f to listen on several interfaces at once.\n\n     -r file\n            read packets from tcpdump snapshot; this is an  alternate  mode  of\n            operation,  in  which p0f reads packet from pcap data capture file,\n            instead of a live network. Useful for forensics  (this  will  parse\n            tcpdump -w output, for example).\n\n            You  can  use Ethereal's text2pcap to convert human-readable packet\n            traces to pcap files, if needed.\n\n     -o file\n            write to this logfile. This option is required for -d  and  implies\n            -t.\n\n     -s socket\n            listen on a specified local stream socket (a filesystem object, for\n            example /var/run/p0f-sock) for queries. One can later send a packet\n            to  this socket with p0f_query structure from p0f-query.h, and wait\n            for p0f_response. This is a method of integrating p0f  with  active\n            services  (web server or web scripts, etc). P0f will still continue\n            to report signatures the usual way - but you can use -qKU  combina-\n            tion to suppress this. Also see -c notes.\n\n            A  sample  query tool (p0f-client) is provided in the tools/ subdi-\n            rectory.\n\n            NOTE: The socket will be created with permissions corresponding  to\n            your  current  umask. If you want to restrict access to this inter-\n            face, use caution.\n\n     -u user\n            this option forces p0f to chroot to this user's home directory  af-\n            ter  reading  configuration  data  and  binding to sockets, then to\n            switch to his UID, GID and supplementary groups.\n\n            This is a security feature for the paranoid - when running  p0f  in\n            daemon  mode, you might want to create a new unprivileged user with\n            an empty home directory, and limit the exposure when p0f is compro-\n            mised. That said, should such a compromise occur, the attacker will\n            still have a socket he can use for sniffing  some  network  traffic\n            (better than rm -rf /).\n\n     -p     switch  card  to  promiscuous mode; by default, p0f listens only to\n            packets addressed or routed thru the machine it runs on. This  set-\n            ting  might  decrease performance, depending on your network design\n            and load. On switched networks, this usually has little or  no  ef-\n            fect.\n\n            Note that promiscuous mode on IP-enabled interfaces can be detected\n            remotely, and is sometimes not welcome by network administrators.\n\n     -d     go  into  daemon  mode  (detach from current terminal and fork into\n            background). Requires -o or -s.\n\n     -L     lists all available interfaces, then quits. Particularly useful  on\n            Windows,  where the system-generated interface names are impossible\n            to memorize.\n\n     -S limit\n            Limit number of parallel API connections (default: 20)\n\n     -t c,h\n            Set connection / host cache age limits (default: 30s,120m)\n\n     -m c,h\n            Limit  the  number  of  active  connections   /   hosts   (default:\n            1000,10000)\n\nFILTERS\n     The  last part, 'filter rule', is a bpf-style filter expression for incom-\n     ing packets. It is very useful for excluding  or  including  certain  net-\n     works,  hosts,  or  specific  packets, in the logfile. See man tcpdump for\n     more information, few examples:\n\n     'src port ftp-data'\n\n     'not dst net 10.0.0.0 mask 255.0.0.0'\n\n     'dst port 80 and ( src host 195.117.3.59 or src host 217.8.32.51 )'\n\nBUGS\n     You need to consult the documentation for an up-to-date list of issues.\n\nFILES\n     /etc/p0f/p0f.fp\n            default fingerprint database file\n\nAUTHOR\n     p0f was written by Michal Zalewski <lcamtuf@coredump.cx>.  This  man  page\n     was  originally  written  by  William  Stearns  <wstearns@pobox.com>, then\n     adopted for p0f v2 by Michal Zalewski, and p0f v3 by Pierre Chifflier.\n\n                                                                         P0F(1)",
+        "apropos": "p0f (1)              - identify remote systems passively"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/p0f",
+        "size_bytes": 142312,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=bf866a72d29f37893f9d3cb8c01e0ff54f04ddaf, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/p0f/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/p0f/index.md",
+    "retrieved_at": "2026-07-14T13:07:14+00:00",
+    "sha256": "d58760e0c9ffb11fb642957bea996a3596bda4d5965b7cca9789f3ff780aef9b"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "218",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "3.09b-4",
+    "depends": "libc6 (>= 2.34), libpcap0.8t64 (>= 0.9.8)",
+    "description": "Passive OS fingerprinting tool\np0f performs passive OS detection based on SYN packets. Unlike nmap\nand queso, p0f does recognition without sending any data.\nAdditionally, it is able to determine the distance to the remote\nhost, and can be used to determine the structure of a foreign or\nlocal network. When running on the gateway of a network it is able\nto gather huge amounts of data and provide useful statistics. On a\nuser-end computer it could be used as powerful IDS add-on. p0f\nsupports full tcpdump-style filtering expressions, and has an\nextensible and detailed fingerprinting database.",
+    "homepage": "https://lcamtuf.coredump.cx/p0f3/"
+  },
+  "tags": [
+    "offensive",
+    "p0f",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/p0f && python3 p0f.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/p0f && python3 p0f.py --help",
+    "cd toolboxes/p0f && python3 p0f.py --help",
+    "cd toolboxes/p0f && python3 p0f.py --help",
+    "cd toolboxes/p0f && python3 p0f.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST p0f --output $KFIOSA_OUTPUT_DIR/p0f.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST p0f --output $KFIOSA_OUTPUT_DIR/p0f.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

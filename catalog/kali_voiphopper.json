@@ -1,0 +1,283 @@
+{
+  "id": "kali:voiphopper",
+  "kind": "kali_source_package",
+  "name": "voiphopper",
+  "title": "voiphopper",
+  "summary": "### voiphopper",
+  "version": "2.04-1kali7",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://sourceforge.net/projects/voiphopper",
+  "repository": "https://gitlab.com/kalilinux/packages/voiphopper",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-voip",
+    "kali-tools-vulnerability"
+  ],
+  "install": {
+    "apt": "sudo apt install voiphopper"
+  },
+  "packages": [
+    {
+      "name": "voiphopper"
+    }
+  ],
+  "commands": [
+    {
+      "name": "voiphopper",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": "list available interfaces for CDP sniffing then exit",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-l (list available interfaces for CDP sniffing, then exit)"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": "Spoof the MAC Address then exit",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-m (Spoof the MAC Address, then exit)"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": "Delete the VLAN Interface then exit",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-d (Delete the VLAN Interface, then exit)"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": "Print the VoIP Hopper version then exit",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-V (Print the VoIP Hopper version, then exit)"
+        },
+        {
+          "flags": [
+            "-D",
+            "-m"
+          ],
+          "metavar": "Spoof the MAC Address of only new Voice Interface",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-D -m (Spoof the MAC Address of only new Voice Interface)"
+        },
+        {
+          "flags": [
+            "-E"
+          ],
+          "metavar": "string Device ID",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-E <string> (Device ID)"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": "string Port ID",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-P <string> (Port ID)"
+        },
+        {
+          "flags": [
+            "-C"
+          ],
+          "metavar": "string Capabilities",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-C <string> (Capabilities)"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": "string Platform",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-L <string> (Platform)"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": "string Software",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-S <string> (Software)"
+        },
+        {
+          "flags": [
+            "-U"
+          ],
+          "metavar": "string Duplex",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " \t-U <string> (Duplex)"
+        }
+      ],
+      "raw_help": "root@kali:~# voiphopper -h\n VoIP Hopper Extended Usage:\n \n Miscellaneous Options:\n \t-l (list available interfaces for CDP sniffing, then exit)\n \tExample:  voiphopper -l\n \t-m (Spoof the MAC Address, then exit)\n \tExample:  voiphopper -i eth0 -m 00:07:0E:EA:50:86\n \t-d (Delete the VLAN Interface, then exit)\n \tExample:  voiphopper -d eth0.200\n \t-V (Print the VoIP Hopper version, then exit)\n \tExample:  voiphopper -V\n \n MAC Address Spoofing Options (used with -a, -v, or -c options):\n \t-m (Spoof the MAC Address of existing interface, and new Interface)\n \t-D -m (Spoof the MAC Address of only new Voice Interface)\n \tExample:  voiphopper -i eth0 -m 00:07:0E:EA:50:86\n \tExample:  voiphopper -i eth0 -D -m 00:07:0E:EA:50:86\n \n CDP Sniff Mode (-c 0)\n \tExample:  voiphopper -i eth0 -c 0\n \n CDP Spoof Mode (-c 1):\n \t-E <string> (Device ID)\n \t-P <string> (Port ID)\n \t-C <string> (Capabilities)\n \t-L <string> (Platform)\n \t-S <string> (Software)\n \t-U <string> (Duplex)\n \n Example Usage for SIP Firmware Phone:\n voiphopper -i eth0 -c 1 -E 'SIP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1\n \n Example Usage for SCCP Firmware Phone:\n voiphopper -i eth0 -c 1 -E 'SEP0070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P00308000700' -U 1\n \n Example Usage for Phone with MAC Spoofing:\n voiphopper -i eth0 -m 00:07:0E:EA:50:86 -c 1 -E 'SEP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1\n \n Avaya DHCP Option Mode (-a):\n \tExample:  voiphopper -i eth0 -a\n \tExample:  voiphopper -i eth0 -a -m 00:07:0E:EA:50:86\n \n VLAN Hop Mode (-v VLAN ID):\n \tExample:  voiphopper -i eth0 -v 200\n \tExample:  voiphopper -i eth0 -v 200 -D -m 00:07:0E:EA:50:86\n \n Alcatel VLAN Discovery (-t 0|1|2):\n \tExample:  voiphopper -i eth0 -t 0\n \tExample:  voiphopper -i eth0 -t 1\n \tExample:  voiphopper -i eth0 -t 0 -m 00:80:9f:ad:42:42\n \tExample:  voiphopper -i eth0 -t 1 -m 00:80:9f:ad:42:42\n \tExample:  voiphopper -i eth0 -t 2 -v 800\n \tExample:  voiphopper -i eth0 -t 2 -v 800 -m 00:80:9f:ad:42:42",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "voiphopper -i eth0 -z\nVoIP Hopper assessment mode ~ Select 'q' to quit and 'h' for help menu.\nMain Sniffer:  capturing packets on eth0\na\nAnalyzing ARP packets on default interface: eth0\nNew host #1 learned on eth0: (MAC): 78:ca:39:fe:0b:4c   (IP): 192.168.1.229\nNew host #2 learned on eth0: (MAC): 60:6b:bd:5a:b6:6c   (IP): 192.168.1.213\nNew host #3 learned on eth0: (MAC): 40:6c:8f:1b:cb:90   (IP): 192.168.1.232\na\nDisabling analysis of ARP packets on default interface:  eth0",
+          "template": null,
+          "original_sha256": "6e3c30ab8b73199550d8ea8c42250208f7bb64c24c3c04df5b523d68635eb27e"
+        },
+        {
+          "status": "operational_example",
+          "command": "voiphopper -i eth0 -c 1 -E 'SIP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1",
+          "template": null,
+          "original_sha256": "627dd14f16f0d468d7627b900fdadb693d2d3caf283497d007e5311e94d40b1e"
+        },
+        {
+          "status": "operational_example",
+          "command": "voiphopper -i eth0 -c 1 -E 'SEP0070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P00308000700' -U 1",
+          "template": null,
+          "original_sha256": "0c74c44e83003f5e39a5ca41772978da0a00767e1c5db59473a48067df5867f6"
+        },
+        {
+          "status": "operational_example",
+          "command": "voiphopper -i eth0 -m 00:07:0E:EA:50:86 -c 1 -E 'SEP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1",
+          "template": null,
+          "original_sha256": "07733cae011be2e4bb0e87f8e9520f2aa8380e134ca314d39128502421f712bc"
+        },
+        {
+          "status": "operational_example",
+          "command": "voiphopper -i <interface> -c {0|1|2} -l <DEVICEID> -a -n -v <VLANID>",
+          "template": null,
+          "original_sha256": "81055f27cdd2e6799017db7d6fe6465300c1f5f60eeaa4ba2b5d75ab93fd8d59"
+        }
+      ],
+      "risk": {
+        "level": "high",
+        "signals": [
+          "spoofing"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "VoIP Hopper Extended Usage:\n\nMiscellaneous Options:\n\t-l (list available interfaces for CDP sniffing, then exit)\n\tExample:  voiphopper -l\n\t-m (Spoof the MAC Address, then exit)\n\tExample:  voiphopper -i eth0 -m 00:07:0E:EA:50:86\n\t-d (Delete the VLAN Interface, then exit)\n\tExample:  voiphopper -d eth0.200\n\t-V (Print the VoIP Hopper version, then exit)\n\tExample:  voiphopper -V\n\nMAC Address Spoofing Options (used with -a, -v, or -c options):\n\t-m (Spoof the MAC Address of existing interface, and new Interface)\n\t-D -m (Spoof the MAC Address of only new Voice Interface)\n\tExample:  voiphopper -i eth0 -m 00:07:0E:EA:50:86\n\tExample:  voiphopper -i eth0 -D -m 00:07:0E:EA:50:86\n\nCDP Sniff Mode (-c 0)\n\tExample:  voiphopper -i eth0 -c 0\n\nCDP Spoof Mode (-c 1):\n\t-E <string> (Device ID)\n\t-P <string> (Port ID)\n\t-C <string> (Capabilities)\n\t-L <string> (Platform)\n\t-S <string> (Software)\n\t-U <string> (Duplex)\n\nExample Usage for SIP Firmware Phone:\nvoiphopper -i eth0 -c 1 -E 'SIP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1\n\nExample Usage for SCCP Firmware Phone:\nvoiphopper -i eth0 -c 1 -E 'SEP0070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P00308000700' -U 1\n\nExample Usage for Phone with MAC Spoofing:\nvoiphopper -i eth0 -m 00:07:0E:EA:50:86 -c 1 -E 'SEP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1\n\nAvaya DHCP Option Mode (-a):\n\tExample:  voiphopper -i eth0 -a\n\tExample:  voiphopper -i eth0 -a -m 00:07:0E:EA:50:86\n\nVLAN Hop Mode (-v VLAN ID):\n\tExample:  voiphopper -i eth0 -v 200\n\tExample:  voiphopper -i eth0 -v 200 -D -m 00:07:0E:EA:50:86\n\nAlcatel VLAN Discovery (-t 0|1|2):\n\tExample:  voiphopper -i eth0 -t 0\n\tExample:  voiphopper -i eth0 -t 1\n\tExample:  voiphopper -i eth0 -t 0 -m 00:80:9f:ad:42:42\n\tExample:  voiphopper -i eth0 -t 1 -m 00:80:9f:ad:42:42\n\tExample:  voiphopper -i eth0 -t 2 -v 800\n\tExample:  voiphopper -i eth0 -t 2 -v 800 -m 00:80:9f:ad:42:42",
+        "-h": "VoIP Hopper Extended Usage:\n\nMiscellaneous Options:\n\t-l (list available interfaces for CDP sniffing, then exit)\n\tExample:  voiphopper -l\n\t-m (Spoof the MAC Address, then exit)\n\tExample:  voiphopper -i eth0 -m 00:07:0E:EA:50:86\n\t-d (Delete the VLAN Interface, then exit)\n\tExample:  voiphopper -d eth0.200\n\t-V (Print the VoIP Hopper version, then exit)\n\tExample:  voiphopper -V\n\nMAC Address Spoofing Options (used with -a, -v, or -c options):\n\t-m (Spoof the MAC Address of existing interface, and new Interface)\n\t-D -m (Spoof the MAC Address of only new Voice Interface)\n\tExample:  voiphopper -i eth0 -m 00:07:0E:EA:50:86\n\tExample:  voiphopper -i eth0 -D -m 00:07:0E:EA:50:86\n\nCDP Sniff Mode (-c 0)\n\tExample:  voiphopper -i eth0 -c 0\n\nCDP Spoof Mode (-c 1):\n\t-E <string> (Device ID)\n\t-P <string> (Port ID)\n\t-C <string> (Capabilities)\n\t-L <string> (Platform)\n\t-S <string> (Software)\n\t-U <string> (Duplex)\n\nExample Usage for SIP Firmware Phone:\nvoiphopper -i eth0 -c 1 -E 'SIP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1\n\nExample Usage for SCCP Firmware Phone:\nvoiphopper -i eth0 -c 1 -E 'SEP0070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P00308000700' -U 1\n\nExample Usage for Phone with MAC Spoofing:\nvoiphopper -i eth0 -m 00:07:0E:EA:50:86 -c 1 -E 'SEP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1\n\nAvaya DHCP Option Mode (-a):\n\tExample:  voiphopper -i eth0 -a\n\tExample:  voiphopper -i eth0 -a -m 00:07:0E:EA:50:86\n\nVLAN Hop Mode (-v VLAN ID):\n\tExample:  voiphopper -i eth0 -v 200\n\tExample:  voiphopper -i eth0 -v 200 -D -m 00:07:0E:EA:50:86\n\nAlcatel VLAN Discovery (-t 0|1|2):\n\tExample:  voiphopper -i eth0 -t 0\n\tExample:  voiphopper -i eth0 -t 1\n\tExample:  voiphopper -i eth0 -t 0 -m 00:80:9f:ad:42:42\n\tExample:  voiphopper -i eth0 -t 1 -m 00:80:9f:ad:42:42\n\tExample:  voiphopper -i eth0 -t 2 -v 800\n\tExample:  voiphopper -i eth0 -t 2 -v 800 -m 00:80:9f:ad:42:42",
+        "help": "voiphopper -i <interface> -c {0|1|2} -l <DEVICEID> -a -n -v <VLANID>\n\nPlease specify 1 base option mode:\n\nLLDP Spoof Mode (-o 001EF7289C8E)\nExample:  voiphopper -i eth0 -o 001EF7289C8E\n\nCDP Sniff Mode (-c 0)\nExample:  voiphopper -i eth0 -c 0\n\nCDP Spoof Mode with custom packet (-c 1):\n-E <string> (Device ID)\n-P <string> (Port ID)\n-C <string> (Capabilities)\n-L <string> (Platform)\n-S <string> (Software)\n-U <string> (Duplex)\nExample:  voiphopper -i eth0 -c 1 -E 'SIP00070EEA5086' -P 'Port 1' -C Host -L 'Cisco IP Phone 7940' -S 'P003-08-8-00' -U 1\n\nCDP Spoof Mode with pre-made packet (-c 2)\nExample:  voiphopper -i eth0 -c 2\n\nAvaya DHCP Option Mode (-a):\nExample:  voiphopper -i eth0 -a\n\nVLAN Hop Mode (-v VLAN ID):\nExample:  voiphopper -i eth0 -v 200\n\nNortel DHCP Option Mode (-n):\nExample:  voiphopper -i eth0 -n\n\nAlcatel Mode (-t 0|1):\nExample:  voiphopper -i eth0 -t 0\n\n'voiphopper -h' for more help"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/voiphopper",
+        "size_bytes": 109640,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=3b2b8fed966f446d0381e063dcaec0565bcdc4a6, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/voiphopper/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/voiphopper/index.md",
+    "retrieved_at": "2026-07-14T13:08:55+00:00",
+    "sha256": "28ed3d5b3cc3286ff4d6a21a6b2b9158a90462e724a56818c8fb01a846ec4e0e"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "130",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "2.04-1kali7",
+    "depends": "libc6 (>= 2.34), libpcap0.8t64 (>= 0.9.8)",
+    "description": "Runs a VLAN hop security test\nVoIP Hopper is a GPLv3 licensed security tool, written in C\nthat rapidly runs a VLAN Hop security test.  VoIP Hopper is\na VoIP infrastructure security testing tool but also a tool\nthat can be used to test the (in)security of VLANs.",
+    "homepage": "https://sourceforge.net/projects/voiphopper"
+  },
+  "tags": [
+    "offensive",
+    "voiphopper",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/voiphopper && python3 voiphopper.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/voiphopper && python3 voiphopper.py --help",
+    "cd toolboxes/voiphopper && python3 voiphopper.py --help",
+    "cd toolboxes/voiphopper && python3 voiphopper.py --help",
+    "cd toolboxes/voiphopper && python3 voiphopper.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST voiphopper --output $KFIOSA_OUTPUT_DIR/voiphopper.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST voiphopper --output $KFIOSA_OUTPUT_DIR/voiphopper.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

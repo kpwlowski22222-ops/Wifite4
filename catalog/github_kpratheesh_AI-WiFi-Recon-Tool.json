@@ -1,0 +1,112 @@
+{
+  "id": "github:kpratheesh/AI-WiFi-Recon-Tool",
+  "kind": "external_repository",
+  "name": "AI-WiFi-Recon-Tool",
+  "full_name": "kpratheesh/AI-WiFi-Recon-Tool",
+  "owner": "kpratheesh",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/kpratheesh/AI-WiFi-Recon-Tool",
+  "summary": "Repository indexing entry for the ``AI-WiFi-Recon-Tool`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/kpratheesh__AI-WiFi-Recon-Tool",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "python WiFi_scan-v1.1.py  (then type $scan; serial port hardcoded to COM7 @115200 baud)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "python WiFi_scan-v1.1.py  (then type $scan; serial port hardcoded to COM7 @115200 baud)"
+      }
+    ]
+  },
+  "language": "Python (51.7%) / C++ Arduino (48.3%)",
+  "dependencies": [
+    "pyserial",
+    "requests",
+    "ollama (mistral model)",
+    "Arduino IDE (for flashing ESP8266/ESP32 firmware)",
+    "ESP8266 or ESP32 board (NodeMCU)"
+  ],
+  "algorithms": [
+    "ESP8266 WIFI_STA active scan (2.4 GHz only) yielding SSID/RSSI/BSSID/channel/encryption",
+    "Serial aggregation of scan lines from microcontroller",
+    "LLM post-hoc narrative analysis of scan results via Ollama Mistral API (localhost:11434)"
+  ],
+  "produces": [
+    "SSID list with RSSI, BSSID (MAC), channel, encryption type (Open/Secured)",
+    "Mistral-generated natural-language security assessment narrative"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": false,
+  "novelty": "none — thin wrapper. The only non-baseline element is piping raw scan output into a local Mistral LLM for a text \"analysis\"; the actual recon is just the ESP8266's built-in WiFi.scanNetworks() API, which is strictly weaker than airodump-ng (no monitor mode, no packet capture, no PMKID/handshake/WPS/EAPOL). No novel recon algorithm.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "ai",
+    "wifi",
+    "recon",
+    "tool",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/AI-WiFi-Recon-Tool && python3 AI-WiFi-Recon-Tool.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/AI-WiFi-Recon-Tool && python3 AI-WiFi-Recon-Tool.py --help",
+    "cd toolboxes/AI-WiFi-Recon-Tool && python3 AI-WiFi-Recon-Tool.py --help",
+    "cd toolboxes/AI-WiFi-Recon-Tool && python3 AI-WiFi-Recon-Tool.py --help",
+    "cd toolboxes/AI-WiFi-Recon-Tool && python3 AI-WiFi-Recon-Tool.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AI-WiFi-Recon-Tool --output $KFIOSA_OUTPUT_DIR/AI-WiFi-Recon-Tool.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AI-WiFi-Recon-Tool --output $KFIOSA_OUTPUT_DIR/AI-WiFi-Recon-Tool.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

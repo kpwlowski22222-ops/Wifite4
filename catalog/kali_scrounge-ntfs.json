@@ -1,0 +1,202 @@
+{
+  "id": "kali:scrounge-ntfs",
+  "kind": "kali_source_package",
+  "name": "scrounge-ntfs",
+  "title": "scrounge-ntfs",
+  "summary": "### scrounge-ntfs",
+  "version": "0.9-11",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "http://thewalter.net/stef/software/scrounge/",
+  "repository": "https://salsa.debian.org/pkg-security-team/scrounge-ntfs",
+  "metapackages": [
+    "kali-linux-default",
+    "kali-linux-everything",
+    "kali-linux-headless",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-recover",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install scrounge-ntfs"
+  },
+  "packages": [
+    {
+      "name": "scrounge-ntfs"
+    }
+  ],
+  "commands": [
+    {
+      "name": "scrounge-ntfs",
+      "description": "Helps retrieve data from corrupted NTFS partitions",
+      "usage": "scrounge-ntfs -l disk",
+      "arguments": [
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Offset to mft (in sectors)",
+          "default": null,
+          "choices": null,
+          "raw": " -m         Offset to mft (in sectors)"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Cluster size (in sectors, default of 8)",
+          "default": "of 8",
+          "choices": null,
+          "raw": " -c         Cluster size (in sectors, default of 8)"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Directory to put scrounged files in",
+          "default": null,
+          "choices": null,
+          "raw": " -o         Directory to put scrounged files in"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "List partition information for a drive. This  will  only  work",
+          "default": null,
+          "choices": null,
+          "raw": "     -l          List partition information for a drive. This  will  only  work"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Search disk for partition information. (Not implemented yet).",
+          "default": null,
+          "choices": null,
+          "raw": "     -s          Search disk for partition information. (Not implemented yet)."
+        }
+      ],
+      "raw_help": "root@kali:~# scrounge-ntfs --help\n scrounge-ntfs: invalid option -- '-'\n usage: scrounge-ntfs -l disk                                              \n List all drive partition information.                              \n                                                                    \n usage: scrounge-ntfs -s disk                                              \n Search drive for NTFS partitions.                                  \n                                                                    \n usage: scrounge-ntfs [-m mftoffset] [-c clustersize] [-o outdir] disk start end  \n Scrounge data from a partition                                     \n -m         Offset to mft (in sectors)                              \n -c         Cluster size (in sectors, default of 8)                 \n -o         Directory to put scrounged files in                     \n disk       The raw disk partitios (ie: /dev/hda)                   \n start      First sector of partition                               \n end        Last sector of partition",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "scrounge-ntfs: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "2f34ff434424ad2212f6139a8d63fc8f4f41101cceeaff530c6cdfdb0e3042d5"
+        },
+        {
+          "status": "operational_example",
+          "command": "scrounge-ntfs: must specify start and end sector of partition",
+          "template": null,
+          "original_sha256": "caa8a8d9764f571801c3e0c9966ed03563165a741b963e732f24c0aa7ea7f662"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "scrounge-ntfs: invalid option -- '-'\nusage: scrounge-ntfs -l disk                                              \n  List all drive partition information.                              \n                                                                     \nusage: scrounge-ntfs -s disk                                              \n  Search drive for NTFS partitions.                                  \n                                                                     \nusage: scrounge-ntfs [-m mftoffset] [-c clustersize] [-o outdir] disk start end  \n  Scrounge data from a partition                                     \n  -m         Offset to mft (in sectors)                              \n  -c         Cluster size (in sectors, default of 8)                 \n  -o         Directory to put scrounged files in                     \n  disk       The raw disk partitios (ie: /dev/hda)                   \n  start      First sector of partition                               \n  end        Last sector of partition",
+        "-h": "usage: scrounge-ntfs -l disk                                              \n  List all drive partition information.                              \n                                                                     \nusage: scrounge-ntfs -s disk                                              \n  Search drive for NTFS partitions.                                  \n                                                                     \nusage: scrounge-ntfs [-m mftoffset] [-c clustersize] [-o outdir] disk start end  \n  Scrounge data from a partition                                     \n  -m         Offset to mft (in sectors)                              \n  -c         Cluster size (in sectors, default of 8)                 \n  -o         Directory to put scrounged files in                     \n  disk       The raw disk partitios (ie: /dev/hda)                   \n  start      First sector of partition                               \n  end        Last sector of partition",
+        "help": "scrounge-ntfs: must specify start and end sector of partition",
+        "man": "scrounge-ntfs(8)             System Manager's Manual           scrounge-ntfs(8)\n\nNAME\n     scrounge-ntfs -- helps retrieve data from corrupted NTFS partitions\n\nSYNOPSIS\n     scrounge-ntfs -l disk\n     scrounge-ntfs -s disk\n     scrounge-ntfs [-m mftoffset] [-c clustersize] [-o outdir] disk start end\n\nDESCRIPTION\n     scrounge-ntfs is a utility that can rescue data from corrupted NTFS parti-\n     tions.  It writes the files retrieved to another working file system. Cer-\n     tain information about the partition needs to be known in advance.\n\n     The -l mode is meant to be run in advance of the data corruption, with the\n     output stored away in a file. This allows scrounge-ntfs  to  recover  data\n     reliably.  See  the 'NOTES' section below for recover info when this isn't\n     the case.\n\nOPTIONS\n     The options are as follows:\n\n     -c          The cluster size (in sectors). When not specified a default of\n                 8 is used.\n\n     -l          List partition information for a drive. This  will  only  work\n                 when the partition table for the given drive is intact.\n\n     -m          When  recovering  data  this specifies the location of the MFT\n                 from the beginning of the partition (in sectors). If not spec-\n                 ified then no directory information can be used, that is,  all\n                 rescued files will be written to the same directory.\n\n     -o          Directory to put rescued files in. If not specified then files\n                 will be placed in the current directory.\n\n     -s          Search disk for partition information. (Not implemented yet).\n\n     disk        The raw device used to access the disk which contains the NTFS\n                 partition to rescue files from. eg: '/dev/hdc'\n\n     start       The beginning of the NTFS partition (in sectors).\n\n     end         The end of the NTFS partition (in sectors)\n\nNOTES\n     If  you  plan on using this program successfully you should prepare in ad-\n     vance by storing a copy of the partition information. Use the -l option to\n     do this. Eventually searching for disk partition information will  be  im-\n     plemented, which will solve this problem.\n\n     When  only  one partition exists on a disk or you want to rescue the first\n     partition there are ways to guess at the sector sizes  and  MFT  location.\n     See the scrounge-ntfs web page for more info:\n\n     http://thewalter.net/stef/software/scrounge\n\nAUTHOR\n     Stef Walter <stef@thewalter.net>\n\nscrounge-ntfs                     April, 2004                  scrounge-ntfs(8)",
+        "apropos": "scrounge-ntfs (8)    - helps retrieve data from corrupted NTFS partitions"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/scrounge-ntfs",
+        "size_bytes": 30800,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=b532380a1be8dfe6d6ee93ff4aed75f3e1359f61, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/scrounge-ntfs/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/scrounge-ntfs/index.md",
+    "retrieved_at": "2026-07-14T13:08:14+00:00",
+    "sha256": "a4f96f750c648aa6be8a8c76581964895a817387731991f47cec16102cb22af0"
+  },
+  "apt_metadata": {
+    "section": "admin",
+    "installed_size": "49",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "0.9-11",
+    "depends": "libc6 (>= 2.34)",
+    "description": "Data recovery program for NTFS filesystems\nScrounge NTFS is a data recovery program for NTFS filesystems. It reads each\nblock of the hard disk and try to rebuild the original filesystem tree into\na directory.\n.\nThis package is useful in forensics investigations.",
+    "homepage": "http://thewalter.net/stef/software/scrounge/"
+  },
+  "tags": [
+    "offensive",
+    "scrounge",
+    "ntfs",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/scrounge-ntfs && python3 scrounge-ntfs.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/scrounge-ntfs && python3 scrounge-ntfs.py --help",
+    "cd toolboxes/scrounge-ntfs && python3 scrounge-ntfs.py --help",
+    "cd toolboxes/scrounge-ntfs && python3 scrounge-ntfs.py --help",
+    "cd toolboxes/scrounge-ntfs && python3 scrounge-ntfs.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scrounge-ntfs --output $KFIOSA_OUTPUT_DIR/scrounge-ntfs.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scrounge-ntfs --output $KFIOSA_OUTPUT_DIR/scrounge-ntfs.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

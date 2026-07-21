@@ -1,0 +1,111 @@
+{
+  "id": "github:jib1337/blockade-recon",
+  "kind": "external_repository",
+  "name": "blockade-recon",
+  "full_name": "jib1337/blockade-recon",
+  "owner": "jib1337",
+  "category": "WiFi Reconnaissance — Client Enumeration",
+  "url": "https://github.com/jib1337/blockade-recon",
+  "summary": "Repository indexing entry for the ``blockade-recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/jib1337__blockade-recon",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "./recon.py -i <interfacename>  (optional -u to refresh the manufacturer/OUI database)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "./recon.py -i <interfacename>  (optional -u to refresh the manufacturer/OUI database)"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "tcpdump",
+    "airmon-ng (aircrack-ng suite, for monitor-mode setup)",
+    "Wireshark/IEEE OUI manuf table (bundled)"
+  ],
+  "algorithms": [
+    "passive monitor-mode frame capture via tcpdump",
+    "MAC-address extraction from wireless frames",
+    "OUI/manufacturer tally via bundled manuf lookup table",
+    "per-vendor aggregation with session import/export"
+  ],
+  "produces": [
+    "tally of observed MAC addresses grouped by manufacturer/vendor",
+    "persistent session data (import/export across runs)",
+    "terminal UI display (screen.jpg)"
+  ],
+  "capability_bucket": "client_enum",
+  "runnable": true,
+  "novelty": "minimal — wraps tcpdump for passive capture plus an OUI/manufacturer tally layer with session persistence. The OUI-enrichment+client-enumeration concept overlaps KFIOSA's existing airodump-ng/scapy baseline; the only mildly distinctive feature is the vendor-grouped persistent tally, which is essentially a thin OUI-enrichment+client_enum convenience wrapper rather than new recon logic.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "low",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "blockade",
+    "recon",
+    "jib1337",
+    "web",
+    "ad",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blockade-recon --output $KFIOSA_OUTPUT_DIR/blockade-recon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blockade-recon --output $KFIOSA_OUTPUT_DIR/blockade-recon.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "ad"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

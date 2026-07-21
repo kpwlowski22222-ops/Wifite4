@@ -1,0 +1,115 @@
+{
+  "id": "github:Nasim7045/Wifi-Reconaissance-Program",
+  "kind": "external_repository",
+  "name": "Wifi-Reconaissance-Program",
+  "full_name": "Nasim7045/Wifi-Reconaissance-Program",
+  "owner": "Nasim7045",
+  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "url": "https://github.com/Nasim7045/Wifi-Reconaissance-Program",
+  "summary": "Repository indexing entry for the ``Wifi-Reconaissance-Program`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/Nasim7045__Wifi-Reconaissance-Program",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "python3 snifferx1.py   (or python3 snifferx2.py; snifferx2.py crashes with KeyError due to ip/MAC vs IP/MAC key mismatch)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "python3 snifferx1.py   (or python3 snifferx2.py; snifferx2.py crashes with KeyError due to ip/MAC vs IP/MAC key mismatch)"
+      }
+    ]
+  },
+  "language": "Python",
+  "dependencies": [
+    "python3-scapy",
+    "python3-netifaces",
+    "python3-requests",
+    "python3-socket (stdlib)"
+  ],
+  "algorithms": [
+    "ARP broadcast sweep for live hosts on local /24 (scapy ARP + Ether srp)",
+    "IP-layer packet sniffer via scapy.sniff printing src/dst/proto",
+    "Raw payload decode (utf-8) of packets with Raw layer",
+    "Local IP via socket.gethostbyname",
+    "Default-gateway lookup via netifaces",
+    "Public IP lookup via api64.ipify.org HTTP API"
+  ],
+  "produces": [
+    "stdout list of connected devices (IP, MAC) from ARP sweep",
+    "stdout packet log: src_ip -> dst_ip | protocol number, plus decoded Raw payload when present",
+    "stdout local IP, default gateway IP, public IP"
+  ],
+  "capability_bucket": "redundant_wrapper",
+  "runnable": true,
+  "novelty": "none — thin wrapper. It is literally scapy.ARP srp + scapy.sniff with print statements. No 802.11 monitor mode, no management-frame parsing, no beacon/probe/EAPOL handling, no airodump-ng/wash/hcxtools integration, no WiFi-specific recon at all — it operates on the encrypted/data layer of an associated station, not on WiFi. snifferx2.py additionally has a KeyError bug (keys stored as ip/mac, read as IP/MAC) and a broken placeholder range \"192.168.12x.1/2x\".",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "reconaissance",
+    "program",
+    "nasim7045",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/Wifi-Reconaissance-Program && python3 Wifi-Reconaissance-Program.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Wifi-Reconaissance-Program && python3 Wifi-Reconaissance-Program.py --help",
+    "cd toolboxes/Wifi-Reconaissance-Program && python3 Wifi-Reconaissance-Program.py --help",
+    "cd toolboxes/Wifi-Reconaissance-Program && python3 Wifi-Reconaissance-Program.py --help",
+    "cd toolboxes/Wifi-Reconaissance-Program && python3 Wifi-Reconaissance-Program.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wifi-Reconaissance-Program --output $KFIOSA_OUTPUT_DIR/Wifi-Reconaissance-Program.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wifi-Reconaissance-Program --output $KFIOSA_OUTPUT_DIR/Wifi-Reconaissance-Program.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

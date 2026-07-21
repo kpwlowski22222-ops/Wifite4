@@ -1,0 +1,348 @@
+{
+  "id": "kali:chkrootkit",
+  "kind": "kali_source_package",
+  "name": "chkrootkit",
+  "title": "chkrootkit",
+  "summary": "### chkrootkit",
+  "version": "0.59-1",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://www.chkrootkit.org/",
+  "repository": "https://salsa.debian.org/pkg-security-team/chkrootkit",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install chkrootkit"
+  },
+  "packages": [
+    {
+      "name": "chkrootkit"
+    }
+  ],
+  "commands": [
+    {
+      "name": "chklastlog",
+      "description": "Check lastlog file for deleted entries",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# man chklastlog\n CHKLASTLOG(8)               System Manager's Manual               CHKLASTLOG(8)\n \n NAME\n    chklastlog - check lastlog file for deleted entries\n \n SYNOPSIS\n    chklastlog  looks  for  users whose login has been erased from the lastlog\n    database.\n \n DESCRIPTION\n    chklastlog reads all entries from /var/log/wtmp (a database of information\n    about logins and logouts) and checks that every user found  in  this  file\n    has  an entry in /var/log/lastlog.  It lists any users with logins in wtmp\n    but no lastlogin information. This may suggest the user account  has  been\n    compromised and the attacker has tried to cover their tracks.\n \n    chklastlog  needs to be able to read /var/log/wtmp and /var/log/lastlogin.\n    Normally these files are world-readable so no special privileges  are  re-\n    quired.\n \n FILES\n    /var/log/wtmp\n           database of logins and logouts.\n \n    /var/log/lastlog\n           database which contains info on the last login of each user.\n \n SEE ALSO\n    wtmp(5), who(1), lastlog(8), last(1)\n \n LIMITATIONS\n    wtmp  may itself be incomplete because not all programmes record their ac-\n    tivity using utmp logging. See wtmp(8).\n \n    chklastlog will not detect missing entries if the user has logged in after\n    the lastlog entry was deleted.\n \n    This program was originally designed to run on SunOS 4.x systems. On other\n    systems the output is undefined.\n \n                                 Oct 23, 2021                    CHKLASTLOG(8)",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "man": "CHKLASTLOG(8)               System Manager's Manual               CHKLASTLOG(8)\n\nNAME\n     chklastlog - check lastlog file for deleted entries\n\nSYNOPSIS\n     chklastlog  looks  for  users whose login has been erased from the lastlog\n     database.\n\nDESCRIPTION\n     chklastlog reads all entries from /var/log/wtmp (a database of information\n     about logins and logouts) and checks that every user found  in  this  file\n     has  an entry in /var/log/lastlog.  It lists any users with logins in wtmp\n     but no lastlogin information. This may suggest the user account  has  been\n     compromised and the attacker has tried to cover their tracks.\n\n     chklastlog  needs to be able to read /var/log/wtmp and /var/log/lastlogin.\n     Normally these files are world-readable so no special privileges  are  re-\n     quired.\n\nFILES\n     /var/log/wtmp\n            database of logins and logouts.\n\n     /var/log/lastlog\n            database which contains info on the last login of each user.\n\nSEE ALSO\n     wtmp(5), who(1), lastlog(8), last(1)\n\nLIMITATIONS\n     wtmp  may itself be incomplete because not all programmes record their ac-\n     tivity using utmp logging. See wtmp(8).\n\n     chklastlog will not detect missing entries if the user has logged in after\n     the lastlog entry was deleted.\n\n     This program was originally designed to run on SunOS 4.x systems. On other\n     systems the output is undefined.\n\n                                  Oct 23, 2021                    CHKLASTLOG(8)",
+        "apropos": "chklastlog (8)       - check lastlog file for deleted entries"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/chklastlog",
+        "size_bytes": 14576,
+        "is_symlink": true,
+        "real_path": "/usr/lib/chkrootkit/chklastlog",
+        "file_type": "symbolic link to ../lib/chkrootkit/chklastlog"
+      }
+    },
+    {
+      "name": "chkrootkit",
+      "description": "Scan the system for signs of rootkits",
+      "usage": "/usr/sbin/chkrootkit [options] [test ...]",
+      "arguments": [
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help and exit",
+          "default": null,
+          "choices": null,
+          "raw": "       -h                show this help and exit"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version information and exit",
+          "default": null,
+          "choices": null,
+          "raw": "       -V                show version information and exit"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show available tests and exit",
+          "default": null,
+          "choices": null,
+          "raw": "       -l                show available tests and exit"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "debug",
+          "default": null,
+          "choices": null,
+          "raw": "       -d                debug"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "quiet mode",
+          "default": null,
+          "choices": null,
+          "raw": "       -q                quiet mode"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "expert mode",
+          "default": null,
+          "choices": null,
+          "raw": "       -x                expert mode"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": "'FILE1 FILE2'",
+          "takes_value": true,
+          "description": "exclude files/dirs from results. Must be followed by a space-separated list of files/dirs.",
+          "default": null,
+          "choices": null,
+          "raw": "       -e 'FILE1 FILE2'  exclude files/dirs from results. Must be followed by a space-separated list of files/dirs."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": "REGEXP",
+          "takes_value": true,
+          "description": "filter results of sniffer test through 'grep -Ev REGEXP' to exclude expected",
+          "default": null,
+          "choices": null,
+          "raw": "       -s REGEXP         filter results of sniffer test through 'grep -Ev REGEXP' to exclude expected"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": "DIR",
+          "takes_value": true,
+          "description": "use DIR as the root directory",
+          "default": null,
+          "choices": null,
+          "raw": "       -r DIR            use DIR as the root directory"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": "DIR1",
+          "takes_value": true,
+          "description": "DIR2:DIRN path for the external commands used by chkrootkit",
+          "default": null,
+          "choices": null,
+          "raw": "       -p DIR1:DIR2:DIRN path for the external commands used by chkrootkit"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "skip NFS mount points",
+          "default": null,
+          "choices": null,
+          "raw": "       -n                skip NFS mount points"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": "FSTYPE",
+          "takes_value": true,
+          "description": "skip mount points of the specified file system type",
+          "default": null,
+          "choices": null,
+          "raw": "       -T FSTYPE         skip mount points of the specified file system type"
+        }
+      ],
+      "raw_help": "root@kali:~# chkrootkit -h\n Usage: /usr/sbin/chkrootkit [options] [test ...]\n Options:\n       -h                show this help and exit\n       -V                show version information and exit\n       -l                show available tests and exit\n       -d                debug\n       -q                quiet mode\n       -x                expert mode\n       -e 'FILE1 FILE2'  exclude files/dirs from results. Must be followed by a space-separated list of files/dirs.\n                         Read /usr/share/doc/chkrootkit/README.FALSE-POSITIVES first.\n       -s REGEXP         filter results of sniffer test through 'grep -Ev REGEXP' to exclude expected\n                         PACKET_SNIFFERs. Read /usr/share/doc/chkrootkit/README.FALSE-POSITIVES first.\n       -r DIR            use DIR as the root directory\n       -p DIR1:DIR2:DIRN path for the external commands used by chkrootkit\n       -n                skip NFS mount points\n       -T FSTYPE         skip mount points of the specified file system type",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat",
+          "rootkit"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "Usage: /usr/sbin/chkrootkit [options] [test ...]\nOptions:\n        -h                show this help and exit\n        -V                show version information and exit\n        -l                show available tests and exit\n        -d                debug\n        -q                quiet mode\n        -x                expert mode\n        -e 'FILE1 FILE2'  exclude files/dirs from results. Must be followed by a space-separated list of files/dirs.\n                          Read /usr/share/doc/chkrootkit/README.FALSE-POSITIVES first.\n        -s REGEXP         filter results of sniffer test through 'grep -Ev REGEXP' to exclude expected\n                          PACKET_SNIFFERs. Read /usr/share/doc/chkrootkit/README.FALSE-POSITIVES first.\n        -r DIR            use DIR as the root directory\n        -p DIR1:DIR2:DIRN path for the external commands used by chkrootkit\n        -n                skip NFS mount points\n        -T FSTYPE         skip mount points of the specified file system type",
+        "-h": "Usage: /usr/sbin/chkrootkit [options] [test ...]\nOptions:\n        -h                show this help and exit\n        -V                show version information and exit\n        -l                show available tests and exit\n        -d                debug\n        -q                quiet mode\n        -x                expert mode\n        -e 'FILE1 FILE2'  exclude files/dirs from results. Must be followed by a space-separated list of files/dirs.\n                          Read /usr/share/doc/chkrootkit/README.FALSE-POSITIVES first.\n        -s REGEXP         filter results of sniffer test through 'grep -Ev REGEXP' to exclude expected\n                          PACKET_SNIFFERs. Read /usr/share/doc/chkrootkit/README.FALSE-POSITIVES first.\n        -r DIR            use DIR as the root directory\n        -p DIR1:DIR2:DIRN path for the external commands used by chkrootkit\n        -n                skip NFS mount points\n        -T FSTYPE         skip mount points of the specified file system type",
+        "help": "/usr/sbin/chkrootkit: `help': not a known test",
+        "man": "chkrootkit(8)               System Manager's Manual               chkrootkit(8)\n\nNAME\n     chkrootkit - Scan the system for signs of rootkits\n\nSYNOPSIS\n     chkrootkit [OPTIONS] [TEST...]\n\nDESCRIPTION\n     chkrootkit  examines the target system for signs that it has been tampered\n     with. Some tools which chkrootkit  uses  can  be  found  in  /usr/lib/chk-\n     rootkit.\n\nOPTIONS\n     Unlike  usual  programmes,  options  cannot  be 'combined', so you need to\n     write '-q -n' instead of '-qn'\n\n     -q     Enter quiet mode. This suppresses output of tests that find nothing\n            suspicious.\n\n     -x     Enter expert mode. This makes many tests produces additional output\n            showing what they have found.\n\n     -d     Enter debug mode. This shows exactly what chkrootkit  is  doing  at\n            every step (it includes running chkrootkit with set -x).\n\n     -e \"FILE1[ FILE2...]\"\n            Exclude  listed  files  from  the  results  of some tests. The list\n            should be space-separated (which  will  generally  require  quoting\n            when  run from a shell). You can also specify -e several times. Use\n            this to remove false positives from the result of many tests -  see\n            /usr/share/doc/chkrootkit/README.FALSE-POSITIVES.gz.\n\n     -s REGEXP\n            Similar  to  -e but only applies to the result of the sniffer test.\n            This test will class standard network  managers  like  systemd-net-\n            workd(1),  NetworkManager(1)  or  wpa_supplicant(1) as packet snif-\n            fers. You can remove such messages from the output  with  something\n            like  chkrootkit  -s  '(systemd-networkd|NetworkManager|wpa_suppli-\n            cant)' (you may want to use a more precise regular expression,  see\n            /etc/chkrootkit/chkrootkit.conf).   The argument can be any regular\n            expression understood by egrep(1) and is applied to every  line  of\n            the output of the ifpromisc test .\n\n     -p DIR1[:DIR2...]\n            Specify  an  alternative  $PATH.   chkrootkit assumes that standard\n            programmes, like find(1) andgrep(1), are uncompromised. The  inten-\n            tion  is  that you place trusted copies of such binaries where they\n            cannot be modified and invoke with  something  like  chkrootkit  -p\n            /media/usb\n\n     -r DIR\n            Use  DIR as the root directory. For example, you might mount a com-\n            promised disk on an uncompromised  system  and  run  chkrootkit  -r\n            /mnt.\n\n     -n     make some tests ignore NFS-mounted directories.\n\n     -T FSTYPE\n            make  some  tests  ignore  file  systems  of type FSTYPE. This uses\n            find(1)'s -fstype option.\n\n     -l     Print available tests.\n\n     -h     Print a short help message and exit.\n\n     -V     Print version information and exit.\n\nAUTHOR\n     Manual page  written  by  Yotam  Rubin  <yotam@makif.omer.k12.il>,  Marcos\n     Fouces  <marcos@debian.org>,  Lantz Moore <lmoore@debian.org>, and Richard\n     Lewis <richard.lewis.debian@googlemail.com> for the Debian project. It may\n     be used by others.\n\nSEE ALSO\n     strings(1) chklastlog(8) chkwtmp(8)\n\n                                  Oct 23, 2021                    chkrootkit(8)",
+        "apropos": "chkrootkit (8)       - Scan the system for signs of rootkits\nchkrootkit-daily (8) - Run chkrootkit and report results"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/chkrootkit",
+        "size_bytes": 96930,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "chkrootkit-daily",
+      "description": "Run chkrootkit and report results",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# man chkrootkit-daily\n chkrootkit-daily(8)         System Manager's Manual         chkrootkit-daily(8)\n \n NAME\n    chkrootkit-daily - Run chkrootkit and report results\n \n SYNOPSIS\n    chkrootkit-daily\n \n DESCRIPTION\n    chkrootkit-daily runs chkrootkit(8) and emails the results. It is intended\n    to be run by the systemd(1) timer or as a cron(1) job every day.\n \n CONFIGURATION\n    All options are set and documented in /etc/chkrootkit/chkrootkit.conf.\n \n AUTHOR\n    chkrootkit-daily  and  this  manual page were written by Richard Lewis for\n    the Debian project. They may be used by others.\n \n SEE ALSO\n    chkrootkit(8)\n \n                                  2023-02-19               chkrootkit-daily(8)",
+      "examples": [],
+      "risk": {
+        "level": "critical",
+        "signals": [
+          "rat",
+          "rootkit"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "man": "chkrootkit-daily(8)         System Manager's Manual         chkrootkit-daily(8)\n\nNAME\n     chkrootkit-daily - Run chkrootkit and report results\n\nSYNOPSIS\n     chkrootkit-daily\n\nDESCRIPTION\n     chkrootkit-daily runs chkrootkit(8) and emails the results. It is intended\n     to be run by the systemd(1) timer or as a cron(1) job every day.\n\nCONFIGURATION\n     All options are set and documented in /etc/chkrootkit/chkrootkit.conf.\n\nAUTHOR\n     chkrootkit-daily  and  this  manual page were written by Richard Lewis for\n     the Debian project. They may be used by others.\n\nSEE ALSO\n     chkrootkit(8)\n\n                                   2023-02-19               chkrootkit-daily(8)",
+        "apropos": "chkrootkit-daily (8) - Run chkrootkit and report results"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/chkrootkit-daily",
+        "size_bytes": 4624,
+        "is_symlink": false,
+        "file_type": "POSIX shell script, ASCII text executable"
+      }
+    },
+    {
+      "name": "chkwtmp",
+      "description": "Check wtmp file deleted entries",
+      "usage": null,
+      "arguments": [],
+      "raw_help": "root@kali:~# man chkwtmp\n CHKWTMP(8)                  System Manager's Manual                  CHKWTMP(8)\n \n NAME\n    chkwtmp - check wtmp file deleted entries\n \n SYNOPSIS\n    chkwtmp looks for data deleted from wtmp\n \n DESCRIPTION\n    chkwtmp  examines the file /var/log/wtmp for entries which have been over-\n    written (containing only null-bytes). If such entries are found  the  pro-\n    gram  displays  the timestamps of the entries before and after the deleted\n    entry, providing an idea of when the entry was deleted.\n \n    chkwtmp needs to be able to read /var/log/wtmp.   Normally  this  file  is\n    world-readable so no special privileges are required.\n \n FILES\n    /var/log/wtmp\n           database of logins and logouts.\n \n SEE ALSO\n    wtmp(4), who(1)\n \n LIMITATIONS\n    An  entry  is  recognized  as overwritten if the time-information has been\n    overwritten with null-bytes.\n \n    This program was originally designed to run on SunOS 4.x systems. On other\n    systems the output is undefined.\n \n                                 Oct 23, 2021                       CHKWTMP(8)",
+      "examples": [],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "man": "CHKWTMP(8)                  System Manager's Manual                  CHKWTMP(8)\n\nNAME\n     chkwtmp - check wtmp file deleted entries\n\nSYNOPSIS\n     chkwtmp looks for data deleted from wtmp\n\nDESCRIPTION\n     chkwtmp  examines the file /var/log/wtmp for entries which have been over-\n     written (containing only null-bytes). If such entries are found  the  pro-\n     gram  displays  the timestamps of the entries before and after the deleted\n     entry, providing an idea of when the entry was deleted.\n\n     chkwtmp needs to be able to read /var/log/wtmp.   Normally  this  file  is\n     world-readable so no special privileges are required.\n\nFILES\n     /var/log/wtmp\n            database of logins and logouts.\n\nSEE ALSO\n     wtmp(4), who(1)\n\nLIMITATIONS\n     An  entry  is  recognized  as overwritten if the time-information has been\n     overwritten with null-bytes.\n\n     This program was originally designed to run on SunOS 4.x systems. On other\n     systems the output is undefined.\n\n                                  Oct 23, 2021                       CHKWTMP(8)",
+        "apropos": "chkwtmp (8)          - check wtmp file deleted entries"
+      },
+      "binary_metadata": {
+        "path": "/usr/sbin/chkwtmp",
+        "size_bytes": 14576,
+        "is_symlink": true,
+        "real_path": "/usr/lib/chkrootkit/chkwtmp",
+        "file_type": "symbolic link to ../lib/chkrootkit/chkwtmp"
+      }
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/chkrootkit/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/chkrootkit/index.md",
+    "retrieved_at": "2026-07-14T13:05:13+00:00",
+    "sha256": "607d343f48281116283dfef204efebd328b7e874e2856950a03d55b5430992ec"
+  },
+  "apt_metadata": {
+    "section": "misc",
+    "installed_size": "987",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "0.59-1",
+    "depends": "binutils, iproute2 | net-tools, procps, libc6 (>= 2.38)",
+    "recommends": "default-mta | mail-transport-agent, mailx, systemd-sysv | cron | anacron | cron-daemon",
+    "description": "rootkit detector\nThe chkrootkit security scanner searches for signs that the system is\ninfected with a 'rootkit'. Rootkits are a form of malware that seek\nto exploit security flaws to grant unauthorised access to a\ncomputer or its services, generally for malicious purposes.\n.\nchkrootkit can identify signs of over 70 different rootkits (see the\nproject's website for a list).\n.\nPlease note that an automated tool like chkrootkit can never\nguarantee a system is uncompromised. Nor does every report always\nsignify a genuine problem: human judgement and further investigation\nwill always be needed to assure the security of your system.",
+    "homepage": "https://www.chkrootkit.org/"
+  },
+  "tags": [
+    "offensive",
+    "chkrootkit",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/chkrootkit && python3 chkrootkit.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/chkrootkit && python3 chkrootkit.py --help",
+    "cd toolboxes/chkrootkit && python3 chkrootkit.py --help",
+    "cd toolboxes/chkrootkit && python3 chkrootkit.py --help",
+    "cd toolboxes/chkrootkit && python3 chkrootkit.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST chkrootkit --output $KFIOSA_OUTPUT_DIR/chkrootkit.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST chkrootkit --output $KFIOSA_OUTPUT_DIR/chkrootkit.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

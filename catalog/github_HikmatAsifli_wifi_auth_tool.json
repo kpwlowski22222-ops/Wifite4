@@ -1,0 +1,117 @@
+{
+  "id": "github:HikmatAsifli/wifi_auth_tool",
+  "kind": "external_repository",
+  "name": "wifi_auth_tool",
+  "full_name": "HikmatAsifli/wifi_auth_tool",
+  "owner": "HikmatAsifli",
+  "category": "WiFi Reconnaissance — Handshake Harvest",
+  "url": "https://github.com/HikmatAsifli/wifi_auth_tool",
+  "summary": "Repository indexing entry for the ``wifi_auth_tool`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "toolbox_path": "toolboxes/recon/HikmatAsifli__wifi_auth_tool",
+  "documentation": {
+    "readme": null,
+    "usage_sections": [
+      {
+        "section": "entrypoint",
+        "content": "bash wifi_tool.sh -s (scan) | -c (connect) | -p (capture handshake) | -d (deauth) | -k (crack) | -h (help)"
+      }
+    ],
+    "arguments": [],
+    "examples": [
+      {
+        "status": "operational",
+        "command": "bash wifi_tool.sh -s (scan) | -c (connect) | -p (capture handshake) | -d (deauth) | -k (crack) | -h (help)"
+      }
+    ]
+  },
+  "language": "Shell (Bash)",
+  "dependencies": [
+    "airmon-ng",
+    "airodump-ng",
+    "aireplay-ng",
+    "aircrack-ng",
+    "iw",
+    "iwlist",
+    "nmcli"
+  ],
+  "algorithms": [
+    "airodump-ng scan wrapper",
+    "airmon-ng monitor-mode toggle",
+    "targeted airodump-ng WPA handshake capture by BSSID/channel",
+    "aireplay-ng deauth to force handshake renegotiation",
+    "aircrack-ng dictionary crack of captured .cap"
+  ],
+  "produces": [
+    "capture/handshake-*.cap packet captures",
+    "recovered WPA PSK from aircrack-ng output",
+    "nearby network list (SSID/BSSID/channel/encryption)"
+  ],
+  "capability_bucket": "handshake_harvest",
+  "runnable": true,
+  "novelty": "none — thin wrapper. It shells out to airmon-ng/airodump-ng/aireplay-ng/aircrack-ng for every function and adds only a menu of bash flags around them. No custom sniffing, PMKID/hcxdumptool, GPS wardrive, probe profiling, or anything beyond the standard aircrack workflow KFIOSA already exposes.",
+  "metadata_status": "classified",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+  },
+  "risk": {
+    "level": "high",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": true,
+    "allow_autonomous_execution": false,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "offensive",
+    "wifi",
+    "auth",
+    "tool",
+    "hikmatasifli",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifi_auth_tool && python3 wifi_auth_tool.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi_auth_tool && python3 wifi_auth_tool.py --help",
+    "cd toolboxes/wifi_auth_tool && python3 wifi_auth_tool.py --help",
+    "cd toolboxes/wifi_auth_tool && python3 wifi_auth_tool.py --help",
+    "cd toolboxes/wifi_auth_tool && python3 wifi_auth_tool.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi_auth_tool --output $KFIOSA_OUTPUT_DIR/wifi_auth_tool.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi_auth_tool --output $KFIOSA_OUTPUT_DIR/wifi_auth_tool.log"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_3",
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ]
+}

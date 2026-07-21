@@ -1,0 +1,253 @@
+{
+  "id": "kali:missidentify",
+  "kind": "kali_source_package",
+  "name": "missidentify",
+  "title": "missidentify",
+  "summary": "### missidentify",
+  "version": "1.0-12",
+  "architectures": [
+    "any"
+  ],
+  "homepage": "https://missidentify.sf.net",
+  "repository": "https://salsa.debian.org/pkg-security-team/missidentify",
+  "metapackages": [
+    "kali-linux-everything",
+    "kali-linux-large",
+    "kali-tools-forensics",
+    "kali-tools-respond"
+  ],
+  "install": {
+    "apt": "sudo apt install missidentify"
+  },
+  "packages": [
+    {
+      "name": "missidentify"
+    }
+  ],
+  "commands": [
+    {
+      "name": "missidentify",
+      "description": "Find executable files without an executable extension",
+      "usage": "missidentify [-Vh] [-rablv] [-s|-S len] [FILES]",
+      "arguments": [
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Recursive mode. All subdirectories are traversed",
+          "default": null,
+          "choices": null,
+          "raw": " -r  Recursive mode. All subdirectories are traversed"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Silent mode. No error messages are displayed",
+          "default": null,
+          "choices": null,
+          "raw": " -q  Silent mode. No error messages are displayed"
+        },
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display all executable files regardless of extension",
+          "default": null,
+          "choices": null,
+          "raw": " -a  Display all executable files regardless of extension"
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Bare filename. No path information displayed",
+          "default": null,
+          "choices": null,
+          "raw": " -b  Bare filename. No path information displayed"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Relative paths in filenames",
+          "default": null,
+          "choices": null,
+          "raw": " -l  Relative paths in filenames"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose mode. Displays the filename for every 10th file processed",
+          "default": null,
+          "choices": null,
+          "raw": " -v  Verbose mode. Displays the filename for every 10th file processed"
+        },
+        {
+          "flags": [
+            "-s",
+            "-S"
+          ],
+          "metavar": "Display strings",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": " -s|-S Display strings"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display version number and exit",
+          "default": null,
+          "choices": null,
+          "raw": " -V  Display version number and exit"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display this help message",
+          "default": null,
+          "choices": null,
+          "raw": " -h  Display this help message"
+        },
+        {
+          "flags": [
+            "-s-S"
+          ],
+          "metavar": "len",
+          "takes_value": true,
+          "description": "",
+          "default": null,
+          "choices": null,
+          "raw": "     -s-S len"
+        }
+      ],
+      "raw_help": "root@kali:~# missidentify -h\n missidentify version 1.0 by Jesse Kornblum\n Usage: missidentify [-Vh] [-rablv] [-s|-S len] [FILES]\n \n -r  Recursive mode. All subdirectories are traversed\n -q  Silent mode. No error messages are displayed\n -a  Display all executable files regardless of extension\n -b  Bare filename. No path information displayed\n -l  Relative paths in filenames\n -v  Verbose mode. Displays the filename for every 10th file processed\n -s|-S Display strings\n -V  Display version number and exit\n -h  Display this help message",
+      "examples": [
+        {
+          "status": "operational_example",
+          "command": "missidentify: invalid option -- '-'",
+          "template": null,
+          "original_sha256": "5117b83e10d85708a848abbb12ed43ff62ed4786eabbd434f379836223ec2b57"
+        },
+        {
+          "status": "operational_example",
+          "command": "missidentify version 1.0 by Jesse Kornblum",
+          "template": null,
+          "original_sha256": "d28a1d8a583d804089dbc1e09b635fdf9c9c3ab6d516fba57f8c657822a1ae94"
+        }
+      ],
+      "risk": {
+        "level": "medium",
+        "signals": [
+          "forensic"
+        ],
+        "requires_explicit_authorization": false,
+        "allow_autonomous_execution": true,
+        "examples_policy": "operational"
+      },
+      "local_help": {
+        "--help": "missidentify: invalid option -- '-'\nTry `missidentify -h` for more information.",
+        "-h": "missidentify version 1.0 by Jesse Kornblum\nUsage: missidentify [-Vh] [-rablv] [-s|-S len] [FILES]\n\n-r  Recursive mode. All subdirectories are traversed\n-q  Silent mode. No error messages are displayed\n-a  Display all executable files regardless of extension\n-b  Bare filename. No path information displayed\n-l  Relative paths in filenames\n-v  Verbose mode. Displays the filename for every 10th file processed\n-s|-S Display strings\n-V  Display version number and exit\n-h  Display this help message",
+        "man": "MISSIDENTIFY(1)                  Jesse Kornblum                 MISSIDENTIFY(1)\n\nNAME\n     missidentify - Find executable files without an executable extension\n\nSYNOPSIS\n     missidentify [-rqablv] [-s|-S len] [-Vh] [FILES]\n\nDESCRIPTION\n     Miss  Identify  looks  at the header of every file it processes and deter-\n     mines if it is a PE executable (Windows executable). Such  files  can  in-\n     clude  programs, device drivers, and DLLs. By default the program displays\n     the filename if the extension of the file does not match one of the  known\n     executable  extensions (.exe, .com, .sys, or .dll). Other options can make\n     the program display the filename of all executable files.\n\n     -r     Enables recursive mode. All subdirectories  are  traversed.  Please\n            note  that  recursive mode cannot be used to examine all files of a\n            given file extension. For example, calling  missidentify  -r  *.txt\n            will examine all files in directories that end in .txt.\n\n     -q     Silent  mode.  All  error  messages  except  fatal errors are surp-\n            pressed.\n\n     -a     Display filenames of all executables\n\n     -b     Enables bare mode. Strips any leading  directory  information  from\n            displayed filenames.  This flag may not be used in conjunction with\n            the -l flag.\n\n     -l     Enables  relative file paths. Instead of printing the absolute path\n            for each file, displays the relative file path as indicated on  the\n            command line.  This flag may not be used in conjunction with the -b\n            flag.\n\n     -v     Verbose  mode.  Displays  the name of every 10th file as a progress\n            indicator.\n\n     -s-S len\n            Prints strings of length len with  each  filename.  With  lowercase\n            letter,  puts  filename  before string. With uppercase letter, puts\n            strings before filename.\n\n     -h     Show a help screen and exit.\n\n     -V     Show the version number and exit.\n\nBUGS\n     The program can be fooled by any file with more than  1024  bytes  between\n     the MZ header and the PE header.\n\nAUTHOR\n     Miss Identify was written by Jesse Kornblum\n     http://missidentify.sf.net/\n\nCOPYRIGHT\n     Copyright  (C)  2008 Jesse Kornblum. This is free software. You may redis-\n     tribute copies of it under the terms of the  GNU  General  Public  License\n     version 2. There is NO WARRANTY. See the file COPYING for more details.\n\nSEE ALSO\n     file(1)\n\nJesse Kornblum                 v1.0 - 20 Feb 2008               MISSIDENTIFY(1)",
+        "apropos": "missidentify (1)     - Find executable files without an executable extension"
+      },
+      "binary_metadata": {
+        "path": "/usr/bin/missidentify",
+        "size_bytes": 30800,
+        "is_symlink": false,
+        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=eec6186dcf1a590e66e2ba2b9dc666905340a504, for GNU/Linux 3.2.0, stripped"
+      }
+    }
+  ],
+  "risk": {
+    "level": "medium",
+    "signals": [
+      "offensive_tool",
+      "intrinsic",
+      "remote_possible",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "source": {
+    "official": true,
+    "page": "https://www.kali.org/tools/missidentify/",
+    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/missidentify/index.md",
+    "retrieved_at": "2026-07-14T13:06:43+00:00",
+    "sha256": "b0ab1c157043a51d47670c8d3d7c41690bfad05d29134533736be3b318fd7745"
+  },
+  "apt_metadata": {
+    "section": "utils",
+    "installed_size": "47",
+    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
+    "architecture": "amd64",
+    "version": "1.0-12",
+    "depends": "libc6 (>= 2.38)",
+    "description": "find win32 applications\nMiss Identify (missidentify) is a program to find MS Windows type win32\napplications. By default, it displays the filename of any executable that\ndoes not have an extension, as exe, dll, com, sys, cpl, hxs, hxi, olb, rll\nor tlb. It can also display all the executables regardless the extension.\n.\nMiss Identify is useful in forensics investigations.",
+    "homepage": "https://missidentify.sf.net"
+  },
+  "tags": [
+    "offensive",
+    "missidentify",
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/missidentify && python3 missidentify.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/missidentify && python3 missidentify.py --help",
+    "cd toolboxes/missidentify && python3 missidentify.py --help",
+    "cd toolboxes/missidentify && python3 missidentify.py --help",
+    "cd toolboxes/missidentify && python3 missidentify.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST missidentify --output $KFIOSA_OUTPUT_DIR/missidentify.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST missidentify --output $KFIOSA_OUTPUT_DIR/missidentify.log"
+  ],
+  "attack_surface": [
+    "web"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar"
+  ],
+  "target_adaptive_targets": [
+    "target_class"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0"
+}
