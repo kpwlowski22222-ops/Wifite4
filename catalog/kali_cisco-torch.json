@@ -3,18 +3,16 @@
   "kind": "kali_source_package",
   "name": "cisco-torch",
   "title": "cisco-torch",
-  "summary": "### cisco-torch",
+  "summary": "Cisco device scanner",
+  "description": "Cisco device scanner\nThe main feature that makes cisco-torch different from\nsimilar tools is the extensive use of forking to launch\nmultiple scanning processes on the background for maximum\nscanning efficiency. Also, it uses several methods of\napplication layer fingerprinting simultaneoulsy, if needed.\nWe wanted something fast to discover remote Cisco hosts\nrunning Telnet, SSH, Web, NTP, TFTP and SNMP services and\nlaunch dicitionary attacks against the services discovered,\nincluding SNMP community attack (you would like the\ncommunity.txt list :-) and TFTP servers (configuration\nfile name bruteforcing with following config leeching). The\ntool can also get device configurationfiles automatically\nif SNMP RW community is found.",
   "version": "0.4b-1kali6",
   "architectures": [
     "all"
   ],
-  "homepage": null,
-  "repository": "https://gitlab.com/kalilinux/packages/cisco-torch",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-vulnerability"
-  ],
+  "homepage": "",
+  "repository": "",
+  "source_package": "cisco-torch",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install cisco-torch"
   },
@@ -26,282 +24,22 @@
   "commands": [
     {
       "name": "cisco-torch",
-      "description": "- - -",
-      "usage": "cisco-torch <options> <IP,hostname,network>",
-      "arguments": [
-        {
-          "flags": [
-            "-O"
-          ],
-          "metavar": "output file",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "-O <output file>"
-        },
-        {
-          "flags": [
-            "-A"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "All fingerprint scan types combined",
-          "default": null,
-          "choices": null,
-          "raw": "-A\t\tAll fingerprint scan types combined"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Cisco Telnetd scan",
-          "default": null,
-          "choices": null,
-          "raw": "-t\t\tCisco Telnetd scan"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Cisco SSHd scan",
-          "default": null,
-          "choices": null,
-          "raw": "-s\t\tCisco SSHd scan"
-        },
-        {
-          "flags": [
-            "-u"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Cisco SNMP scan",
-          "default": null,
-          "choices": null,
-          "raw": "-u\t\tCisco SNMP scan"
-        },
-        {
-          "flags": [
-            "-g"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Cisco config or tftp file download",
-          "default": null,
-          "choices": null,
-          "raw": "-g\t\tCisco config or tftp file download"
-        },
-        {
-          "flags": [
-            "-n"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "NTP fingerprinting scan",
-          "default": null,
-          "choices": null,
-          "raw": "-n\t\tNTP fingerprinting scan"
-        },
-        {
-          "flags": [
-            "-j"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "TFTP fingerprinting scan",
-          "default": null,
-          "choices": null,
-          "raw": "-j\t\tTFTP fingerprinting scan"
-        },
-        {
-          "flags": [
-            "-l"
-          ],
-          "metavar": "type",
-          "takes_value": true,
-          "description": "loglevel",
-          "default": null,
-          "choices": null,
-          "raw": "-l <type>\tloglevel"
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Cisco Webserver scan",
-          "default": null,
-          "choices": null,
-          "raw": "-w\t\tCisco Webserver scan"
-        },
-        {
-          "flags": [
-            "-z"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Cisco IOS HTTP Authorization Vulnerability Scan",
-          "default": null,
-          "choices": null,
-          "raw": "-z\t\tCisco IOS HTTP Authorization Vulnerability Scan"
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Cisco Webserver with SSL support scan",
-          "default": null,
-          "choices": null,
-          "raw": "-c\t\tCisco Webserver with SSL support scan"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Password dictionary attack (use with -s, -u, -c, -w , -j or -t only)",
-          "default": null,
-          "choices": null,
-          "raw": "-b\t\tPassword dictionary attack (use with -s, -u, -c, -w , -j or -t only)"
-        },
-        {
-          "flags": [
-            "-V"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print tool version and exit",
-          "default": null,
-          "choices": null,
-          "raw": "-V\t\tPrint tool version and exit"
-        }
-      ],
-      "raw_help": "root@kali:~# cisco-torch -A 192.168.99.202\nUsing config file torch.conf...\nLoading include and plugin ...\n\n###############################################################\n#   Cisco Torch Mass Scanner                   #\n#   Becase we need it...                                      #\n#   http://www.arhont.com/cisco-torch.pl                      #\n###############################################################\n\nList of targets contains 1 host(s)\n8853:   Checking 192.168.99.202 ...\nHUH db not found, it should be in fingerprint.db\nSkipping Telnet fingerprint\n* Cisco by SNMP found ***\n*System Description: Cisco Internetwork Operating System Software\nIOS (tm) 3600 Software (C3640-IK9O3S-M), Version 12.3(22), RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2007 by cisco Systems, Inc.\nCompiled Wed 24-Jan-07 1\n\nCisco-IOS Webserver found\n HTTP/1.1 401 Unauthorized\nDate: Tue, 13 Apr 1993 00:57:07 GMT\nServer: cisco-IOS\nAccept-Ranges: none\nWWW-Authenticate: Basic realm=\"level_15_access\"\n\n401 Unauthorized\n\n\n Cisco WWW-Authenticate webserver found\n HTTP/1.1 401 Unauthorized\nDate: Tue, 13 Apr 1993 00:57:07 GMT\nServer: cisco-IOS\nAccept-Ranges: none\nWWW-Authenticate: Basic realm=\"level_15_access\"\n\n401 Unauthorized\n\n\n--->\n- All scans done. Cisco Torch Mass Scanner  -\n---> Exiting.",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "cisco-torch -A 192.168.99.202\nUsing config file torch.conf...\nLoading include and plugin ...\n\n###############################################################\n#   Cisco Torch Mass Scanner                   #\n#   Becase we need it...                                      #\n#   http://www.arhont.com/cisco-torch.pl                      #\n###############################################################\n\nList of targets contains 1 host(s)\n8853:   Checking 192.168.99.202 ...\nHUH db not found, it should be in fingerprint.db\nSkipping Telnet fingerprint\n* Cisco by SNMP found ***\n*System Description: Cisco Internetwork Operating System Software\nIOS (tm) 3600 Software (C3640-IK9O3S-M), Version 12.3(22), RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2007 by cisco Systems, Inc.\nCompiled Wed 24-Jan-07 1\n\nCisco-IOS Webserver found\n HTTP/1.1 401 Unauthorized\nDate: Tue, 13 Apr 1993 00:57:07 GMT\nServer: cisco-IOS\nAccept-Ranges: none\nWWW-Authenticate: Basic realm=\"level_15_access\"\n\n401 Unauthorized\n\n\n Cisco WWW-Authenticate webserver found\n HTTP/1.1 401 Unauthorized\nDate: Tue, 13 Apr 1993 00:57:07 GMT\nServer: cisco-IOS\nAccept-Ranges: none\nWWW-Authenticate: Basic realm=\"level_15_access\"\n\n401 Unauthorized\n\n\n--->\n- All scans done. Cisco Torch Mass Scanner  -\n---> Exiting.",
-          "template": null,
-          "original_sha256": "3a2713bcf25fb121af410deb4680ac690e831983d48b384eff9351873f587d4a"
-        },
-        {
-          "status": "operational_example",
-          "command": "cisco-torch -s -b -F sshtocheck.txt",
-          "template": null,
-          "original_sha256": "dbecd79cdbef0d10e56f985358b95618ad45b5c07edf6f51084e089ec8a95f92"
-        },
-        {
-          "status": "operational_example",
-          "command": "cisco-torch -w -z 10.10.0.0/16",
-          "template": null,
-          "original_sha256": "60bc72d4f986c9fcc687ace0fd2d85ac285b323e08b9d909e633322ac61385fb"
-        },
-        {
-          "status": "operational_example",
-          "command": "cisco-torch -j -b -g -F tftptocheck.txt",
-          "template": null,
-          "original_sha256": "057b5a3216bd3eb07f99d2183dda09ee32196fc2624dba98f886b0e1008aaf90"
-        }
-      ],
-      "risk": {
-        "level": "critical",
-        "signals": [
-          "c2",
-          "rat"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Using config file torch.conf...\nLoading include and plugin ...\n version \nusage: cisco-torch <options> <IP,hostname,network>\n\nor: cisco-torch <options> -F <hostlist>\n\nAvailable options:\n-O <output file>\n-A\t\tAll fingerprint scan types combined\n-t\t\tCisco Telnetd scan\n-s\t\tCisco SSHd scan\n-u\t\tCisco SNMP scan\n-g\t\tCisco config or tftp file download\n-n\t\tNTP fingerprinting scan\n-j\t\tTFTP fingerprinting scan\n-l <type>\tloglevel\n\t\tc  critical (default)\n\t\tv  verbose\n\t\td  debug\n-w\t\tCisco Webserver scan\n-z\t\tCisco IOS HTTP Authorization Vulnerability Scan\n-c\t\tCisco Webserver with SSL support scan\n-b\t\tPassword dictionary attack (use with -s, -u, -c, -w , -j or -t only)\n-V\t\tPrint tool version and exit\nexamples:\tcisco-torch -A 10.10.0.0/16\n\t\tcisco-torch -s -b -F sshtocheck.txt\n\t\tcisco-torch -w -z 10.10.0.0/16\n\t\tcisco-torch -j -b -g -F tftptocheck.txt",
-        "-h": "Using config file torch.conf...\nLoading include and plugin ...\n version \nusage: cisco-torch <options> <IP,hostname,network>\n\nor: cisco-torch <options> -F <hostlist>\n\nAvailable options:\n-O <output file>\n-A\t\tAll fingerprint scan types combined\n-t\t\tCisco Telnetd scan\n-s\t\tCisco SSHd scan\n-u\t\tCisco SNMP scan\n-g\t\tCisco config or tftp file download\n-n\t\tNTP fingerprinting scan\n-j\t\tTFTP fingerprinting scan\n-l <type>\tloglevel\n\t\tc  critical (default)\n\t\tv  verbose\n\t\td  debug\n-w\t\tCisco Webserver scan\n-z\t\tCisco IOS HTTP Authorization Vulnerability Scan\n-c\t\tCisco Webserver with SSL support scan\n-b\t\tPassword dictionary attack (use with -s, -u, -c, -w , -j or -t only)\n-V\t\tPrint tool version and exit\nexamples:\tcisco-torch -A 10.10.0.0/16\n\t\tcisco-torch -s -b -F sshtocheck.txt\n\t\tcisco-torch -w -z 10.10.0.0/16\n\t\tcisco-torch -j -b -g -F tftptocheck.txt",
-        "help": "Using config file torch.conf...\nLoading include and plugin ...\n version \nusage: cisco-torch <options> <IP,hostname,network>\n\nor: cisco-torch <options> -F <hostlist>\n\nAvailable options:\n-O <output file>\n-A\t\tAll fingerprint scan types combined\n-t\t\tCisco Telnetd scan\n-s\t\tCisco SSHd scan\n-u\t\tCisco SNMP scan\n-g\t\tCisco config or tftp file download\n-n\t\tNTP fingerprinting scan\n-j\t\tTFTP fingerprinting scan\n-l <type>\tloglevel\n\t\tc  critical (default)\n\t\tv  verbose\n\t\td  debug\n-w\t\tCisco Webserver scan\n-z\t\tCisco IOS HTTP Authorization Vulnerability Scan\n-c\t\tCisco Webserver with SSL support scan\n-b\t\tPassword dictionary attack (use with -s, -u, -c, -w , -j or -t only)\n-V\t\tPrint tool version and exit\nexamples:\tcisco-torch -A 10.10.0.0/16\n\t\tcisco-torch -s -b -F sshtocheck.txt\n\t\tcisco-torch -w -z 10.10.0.0/16\n\t\tcisco-torch -j -b -g -F tftptocheck.txt"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/cisco-torch",
-        "size_bytes": 6147,
-        "is_symlink": false,
-        "file_type": "Perl script text executable"
-      }
+      "path": "/usr/bin/cisco-torch",
+      "description": "Using config file torch.conf...",
+      "usage": "cisco-torch [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/cisco-torch/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/cisco-torch/index.md",
-    "retrieved_at": "2026-07-14T13:05:09+00:00",
-    "sha256": "fca4bf624b177064ff2d1f188ee1ed2cf92776fe93f81d6c10a292cf15942f3d"
-  },
-  "apt_metadata": {
-    "section": "net",
-    "installed_size": "117",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "all",
-    "version": "0.4b-1kali6",
-    "depends": "perl, libnet-telnet-perl, libnet-ssh2-perl, libnet-snmp-perl",
-    "description": "Cisco device scanner\nThe main feature that makes cisco-torch different from\nsimilar tools is the extensive use of forking to launch\nmultiple scanning processes on the background for maximum\nscanning efficiency. Also, it uses several methods of\napplication layer fingerprinting simultaneoulsy, if needed.\nWe wanted something fast to discover remote Cisco hosts\nrunning Telnet, SSH, Web, NTP, TFTP and SNMP services and\nlaunch dicitionary attacks against the services discovered,\nincluding SNMP community attack (you would like the\ncommunity.txt list :-) and TFTP servers (configuration\nfile name bruteforcing with following config leeching). The\ntool can also get device configurationfiles automatically\nif SNMP RW community is found."
-  },
+  "files": [
+    "/usr/bin/cisco-torch"
+  ],
   "tags": [
-    "offensive",
-    "cisco",
-    "torch",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package",
+    "networking"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/cisco-torch && python3 cisco-torch.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/cisco-torch && python3 cisco-torch.py --help",
-    "cd toolboxes/cisco-torch && python3 cisco-torch.py --help",
-    "cd toolboxes/cisco-torch && python3 cisco-torch.py --help",
-    "cd toolboxes/cisco-torch && python3 cisco-torch.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cisco-torch --output $KFIOSA_OUTPUT_DIR/cisco-torch.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cisco-torch --output $KFIOSA_OUTPUT_DIR/cisco-torch.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

@@ -3,16 +3,16 @@
   "kind": "kali_source_package",
   "name": "altdns",
   "title": "altdns",
-  "summary": "### altdns",
+  "summary": "Subdomain discovery through alterations and permutations",
+  "description": "Subdomain discovery through alterations and permutations\nThis package contains a DNS recon tool that allows for the discovery of\nsubdomains that conform to patterns. Altdns takes in words that could be\npresent in subdomains under a domain (such as test, dev, staging) as well\nas takes in a list of subdomains that you know of.\n.\nFrom these two lists that are provided as input to altdns, the tool then\ngenerates a massive output of \"altered\" or \"mutated\" potential subdomains\nthat could be present. It saves this output so that it can then be used by\nyour favourite DNS bruteforcing tool.",
   "version": "1.0.2+git20250109.6728272-1",
   "architectures": [
     "all"
   ],
   "homepage": "https://github.com/infosec-au/altdns",
-  "repository": "https://salsa.debian.org/pkg-security-team/altdns",
-  "metapackages": [
-    "kali-linux-everything"
-  ],
+  "repository": "https://github.com/infosec-au/altdns",
+  "source_package": "altdns",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install altdns"
   },
@@ -24,237 +24,23 @@
   "commands": [
     {
       "name": "altdns",
+      "path": "/usr/bin/altdns",
       "description": "Subdomain discovery through alterations and permutations",
-      "usage": "altdns [-h] -i INPUT -o OUTPUT [-w WORDLIST] [-r] [-n] [-e]",
-      "arguments": [
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
-            "-i",
-            "--input"
-          ],
-          "metavar": "- nput INPUT",
-          "takes_value": true,
-          "description": "List of subdomains input",
-          "default": null,
-          "choices": null,
-          "raw": " -i, --input INPUT     List of subdomains input"
-        },
-        {
-          "flags": [
-            "-o",
-            "--output"
-          ],
-          "metavar": "- utput OUTPUT",
-          "takes_value": true,
-          "description": "Output location for altered subdomains",
-          "default": null,
-          "choices": null,
-          "raw": " -o, --output OUTPUT   Output location for altered subdomains"
-        },
-        {
-          "flags": [
-            "-w",
-            "--wordlist"
-          ],
-          "metavar": "- ordlist WORDLIST",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -w, --wordlist WORDLIST"
-        },
-        {
-          "flags": [
-            "-r",
-            "--resolve"
-          ],
-          "metavar": "- esolve",
-          "takes_value": true,
-          "description": "Resolve all altered subdomains",
-          "default": null,
-          "choices": null,
-          "raw": " -r, --resolve         Resolve all altered subdomains"
-        },
-        {
-          "flags": [
-            "-n",
-            "--add-number-suffix"
-          ],
-          "metavar": "--add umber-suffix",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -n, --add-number-suffix"
-        },
-        {
-          "flags": [
-            "-e",
-            "--ignore-existing"
-          ],
-          "metavar": "--ignore xisting",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -e, --ignore-existing"
-        },
-        {
-          "flags": [
-            "-d",
-            "--dnsserver"
-          ],
-          "metavar": "- nsserver DNSSERVER",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -d, --dnsserver DNSSERVER"
-        },
-        {
-          "flags": [
-            "-s",
-            "--save"
-          ],
-          "metavar": "- ave SAVE",
-          "takes_value": true,
-          "description": "File to save resolved altered subdomains to",
-          "default": null,
-          "choices": null,
-          "raw": " -s, --save SAVE       File to save resolved altered subdomains to"
-        },
-        {
-          "flags": [
-            "-t",
-            "--threads"
-          ],
-          "metavar": "- hreads THREADS",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -t, --threads THREADS"
-        }
-      ],
-      "raw_help": "root@kali:~# altdns -h\n usage: altdns [-h] -i INPUT -o OUTPUT [-w WORDLIST] [-r] [-n] [-e]\n             [-d DNSSERVER] [-s SAVE] [-t THREADS]\n \n options:\n -h, --help            show this help message and exit\n -i, --input INPUT     List of subdomains input\n -o, --output OUTPUT   Output location for altered subdomains\n -w, --wordlist WORDLIST\n                       List of words to alter the subdomains with\n -r, --resolve         Resolve all altered subdomains\n -n, --add-number-suffix\n                       Add number suffix to every domain (0-9)\n -e, --ignore-existing\n                       Ignore existing domains in file\n -d, --dnsserver DNSSERVER\n                       IP address of resolver to use (overrides system\n                       default)\n -s, --save SAVE       File to save resolved altered subdomains to\n -t, --threads THREADS\n                       Amount of threads to run simultaneously",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "altdns -i subdomains.txt -o data_output -w words.txt  -r  -s  results_out-\nput.txt",
-          "template": null,
-          "original_sha256": "c21da115bec60cfa326abf24607513dcc780b1d1a111d39b6202a2e142c7b21f"
-        },
-        {
-          "status": "operational_example",
-          "command": "altdns: error: the following arguments are required: -i/--input, -o/--output",
-          "template": null,
-          "original_sha256": "c016bc4fb1628ac2381b48094ad090412515953677dcf57b44340739c971d97e"
-        }
-      ],
-      "risk": {
-        "level": "critical",
-        "signals": [
-          "rat"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "usage: altdns [-h] -i INPUT -o OUTPUT [-w WORDLIST] [-r] [-n] [-e]\n              [-d DNSSERVER] [-s SAVE] [-t THREADS]\n\noptions:\n  -h, --help            show this help message and exit\n  -i, --input INPUT     List of subdomains input\n  -o, --output OUTPUT   Output location for altered subdomains\n  -w, --wordlist WORDLIST\n                        List of words to alter the subdomains with\n  -r, --resolve         Resolve all altered subdomains\n  -n, --add-number-suffix\n                        Add number suffix to every domain (0-9)\n  -e, --ignore-existing\n                        Ignore existing domains in file\n  -d, --dnsserver DNSSERVER\n                        IP address of resolver to use (overrides system\n                        default)\n  -s, --save SAVE       File to save resolved altered subdomains to\n  -t, --threads THREADS\n                        Amount of threads to run simultaneously",
-        "-h": "usage: altdns [-h] -i INPUT -o OUTPUT [-w WORDLIST] [-r] [-n] [-e]\n              [-d DNSSERVER] [-s SAVE] [-t THREADS]\n\noptions:\n  -h, --help            show this help message and exit\n  -i, --input INPUT     List of subdomains input\n  -o, --output OUTPUT   Output location for altered subdomains\n  -w, --wordlist WORDLIST\n                        List of words to alter the subdomains with\n  -r, --resolve         Resolve all altered subdomains\n  -n, --add-number-suffix\n                        Add number suffix to every domain (0-9)\n  -e, --ignore-existing\n                        Ignore existing domains in file\n  -d, --dnsserver DNSSERVER\n                        IP address of resolver to use (overrides system\n                        default)\n  -s, --save SAVE       File to save resolved altered subdomains to\n  -t, --threads THREADS\n                        Amount of threads to run simultaneously",
-        "help": "usage: altdns [-h] -i INPUT -o OUTPUT [-w WORDLIST] [-r] [-n] [-e]\n              [-d DNSSERVER] [-s SAVE] [-t THREADS]\naltdns: error: the following arguments are required: -i/--input, -o/--output",
-        "man": "ALTDNS(1)   Subdomain discovery through alterations and permutations  ALTDNS(1)\n\nNAME\n     altdns - Subdomain discovery through alterations and permutations\n\nSYNOPSIS\n     altdns [POSITION] [argument]\n\nDESCRIPTION\n     altdns - is a package containing a DNS reconnaissance tool that allows\n     discovery of subdomains that conform to patterns. Altdns takes in words that\n     could be present in subdomains under a domain (such as test, dev, staging) as\n     well as takes in a list of subdomains that you know of.\n\nUSAGE\n     usage:  altdns  [[-h]  -i INPUT -o OUTPUT [-w WORDLIST] [-r] [-n] [-e] [-d\n     DNSSERVER] [-s SAVE]  [-t THREADS]]\n\nOPTIONS\n      options:\n\n           -h, --help\n                    show this help message and exit\n\n           -i INPUT, --input INPUT\n                    List of subdomains input\n\n           -o OUTPUT, --output OUTPUT\n                    Output location for altered subdomains\n\n           -w WORDLIST, --wordlist WORDLIST\n                    List of words to alter the subdomains with\n\n           -r, --resolve\n                     Resolve all altered subdomains\n\n           -n, --add-number-suffix\n                     Add number suffix to every domain (0-9)\n\n           -e, --ignore-existing\n                     Ignore existing domains in file\n\n           -d DNSSERVER, --dnsserver DNSSERVER\n                      IP address of resolver to use (overrides system default)\n\n           -s SAVE, --save SAVE\n                      File to save resolved altered subdomains to\n\n           -t THREADS, --threads THREADS\n                      Amount of threads to run simultaneously\n\nEXAMPLES\n     altdns -i subdomains.txt -o data_output -w words.txt  -r  -s  results_out-\n     put.txt\n\nSEE ALSO\n     Take  a look at /usr/share/doc/altdns/README.md, for information on how to\n     use.\n\nAUTHOR\n     Altdns Project https://github.com/infosec-au/altdns/\n\n     Josenilson Ferreira da Silva <nilsonfsilva@hotmail.com> Created this\n\nALTDNS 1.0.2                        JAN 2024                          ALTDNS(1)",
-        "apropos": "altdns (1)           - Subdomain discovery through alterations and permutations"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/altdns",
-        "size_bytes": 150,
-        "is_symlink": false,
-        "file_type": "Python script, ASCII text executable"
-      }
+      "usage": "altdns [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/altdns/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/altdns/index.md",
-    "retrieved_at": "2026-07-14T13:04:52+00:00",
-    "sha256": "28483274c7cf6af1581040b1b515e17f4ca7ed72924f6ee6d8135088eff9eae0"
-  },
-  "apt_metadata": {
-    "section": "net",
-    "installed_size": "46",
-    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
-    "architecture": "all",
-    "version": "1.0.2+git20250109.6728272-1",
-    "depends": "python3:any, python3-configargparse, python3-dnspython, python3-termcolor, python3-tldextract",
-    "description": "Subdomain discovery through alterations and permutations\nThis package contains a DNS recon tool that allows for the discovery of\nsubdomains that conform to patterns. Altdns takes in words that could be\npresent in subdomains under a domain (such as test, dev, staging) as well\nas takes in a list of subdomains that you know of.\n.\nFrom these two lists that are provided as input to altdns, the tool then\ngenerates a massive output of \"altered\" or \"mutated\" potential subdomains\nthat could be present. It saves this output so that it can then be used by\nyour favourite DNS bruteforcing tool.",
-    "homepage": "https://github.com/infosec-au/altdns"
-  },
+  "files": [
+    "/usr/bin/altdns",
+    "/usr/share/man/man1/altdns.1.gz"
+  ],
   "tags": [
-    "offensive",
-    "altdns",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package",
+    "networking"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/altdns && python3 altdns.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/altdns && python3 altdns.py --help",
-    "cd toolboxes/altdns && python3 altdns.py --help",
-    "cd toolboxes/altdns && python3 altdns.py --help",
-    "cd toolboxes/altdns && python3 altdns.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST altdns --output $KFIOSA_OUTPUT_DIR/altdns.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST altdns --output $KFIOSA_OUTPUT_DIR/altdns.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

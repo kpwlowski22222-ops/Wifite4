@@ -3,18 +3,16 @@
   "kind": "kali_source_package",
   "name": "gqrx-sdr",
   "title": "gqrx-sdr",
-  "summary": "### gqrx-sdr",
-  "version": "2.17.7-1",
+  "summary": "Software defined radio receiver",
+  "description": "Software defined radio receiver\nGqrx works with hardware supported by gr-osmosdr, including Funcube\nDongle, RTL-SDR, Airspy, HackRF, BladeRF, RFSpace, USRP and SoapySDR.\n.\nGqrx can operate as an AM/FM/SSB receiver with audio output or as an\nFFT-only instrument. The built-in Gqrx AFSK1200 decoder can decode\nand display AX.25 packets.  There are also various hooks for\ninteracting with external applications using network sockets.\n.\nWideband FM mode has mono, stereo, and RDS (Radio Data System) modes.\nDisplays FFT plot and spectrum waterfall.\n.\nIt is powered by GNU Radio and the Qt GUI toolkit.",
+  "version": "2.17.7-1+b1",
   "architectures": [
-    "any"
+    "amd64"
   ],
   "homepage": "https://gqrx.dk/",
-  "repository": "https://salsa.debian.org/bottoms/pkg-gqrx-sdr",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-tools-sdr",
-    "kali-tools-wireless"
-  ],
+  "repository": "https://gqrx.dk/",
+  "source_package": "gqrx-sdr (2.17.7-1)",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install gqrx-sdr"
   },
@@ -26,188 +24,22 @@
   "commands": [
     {
       "name": "gqrx",
+      "path": "/usr/bin/gqrx",
       "description": "Software Defined Radio GUI application",
-      "usage": "gqrx [options]",
-      "arguments": [
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "Displays help on commandline options.",
-          "default": null,
-          "choices": null,
-          "raw": "    -h, --help"
-        },
-        {
-          "flags": [
-            "-s",
-            "--style"
-          ],
-          "metavar": "- tyle style",
-          "takes_value": true,
-          "description": "Use the given style (fusion, windows)",
-          "default": null,
-          "choices": null,
-          "raw": "    -s, --style style"
-        },
-        {
-          "flags": [
-            "-l",
-            "--list"
-          ],
-          "metavar": "- ist",
-          "takes_value": true,
-          "description": "List existing configurations",
-          "default": null,
-          "choices": null,
-          "raw": "    -l, --list"
-        },
-        {
-          "flags": [
-            "-c",
-            "--conf"
-          ],
-          "metavar": "- onf file",
-          "takes_value": true,
-          "description": "Start with this config file",
-          "default": null,
-          "choices": null,
-          "raw": "    -c, --conf file"
-        },
-        {
-          "flags": [
-            "-e",
-            "--edit"
-          ],
-          "metavar": "- dit",
-          "takes_value": true,
-          "description": "Edit the config file before using it",
-          "default": null,
-          "choices": null,
-          "raw": "    -e, --edit"
-        },
-        {
-          "flags": [
-            "-r",
-            "--reset"
-          ],
-          "metavar": "- eset",
-          "takes_value": true,
-          "description": "Reset configuration file",
-          "default": null,
-          "choices": null,
-          "raw": "    -r, --reset"
-        },
-        {
-          "flags": [
-            "--help-all"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Displays help, including generic Qt options.",
-          "default": null,
-          "choices": null,
-          "raw": "  --help-all           Displays help, including generic Qt options."
-        }
-      ],
-      "raw_help": "root@kali:~# man gqrx\n GQRX(1)                          User Commands                          GQRX(1)\n \n NAME\n    gqrx - Software Defined Radio GUI application\n \n DESCRIPTION\n    Gqrx  is a software defined radio (SDR) receiver implemented using GNU Ra-\n    dio and the Qt GUI toolkit. It works with  hardware  supported  by  gr-os-\n    mosdr,  including  Funcube  Dongle,  RTL-SDR, Airspy, HackRF, BladeRF, RF-\n    Space, USRP and SoapySDR.\n \n    Gqrx can operate as an AM/FM/SSB receiver with audio output or as an  FFT-\n    only  instrument. There are also various hooks for interacting with exter-\n    nal applications using network sockets.\n \n    It is strongly recommended to run the volk_profile utility before  running\n    gqrx.  This  will  detect  and enable processor-specific optimisations and\n    will in many cases give a significant performance boost.\n \n    The first time you start gqrx it will open a device configuration  dialog.\n    Supported  devices that are connected to the computer are discovered auto-\n    matically and you can select any of them in the drop-down list.\n \n    If you don't see your device listed in the drop-down list it could be  be-\n    cause:\n \n    *      The driver has not been included in a binary distribution\n \n    *      The udev rule has not been properly configured\n \n    *      Linux kernel driver is blocking access to the device\n \n    You  can  test  your device using device specific tools, such as rtl_test,\n    airspy_rx, hackrf_transfer, qthid, etc.\n \n    Gqrx supports multiple configurations and sessions if you have several de-\n    vices or if you want to use the same  device  under  different  configura-\n    tions.  You  can load a configuration from the GUI or using the -c command\n    line argument.\n \n OPTIONS\n    -h, --help\n           Display the help page\n \n    -s, --style style\n           Use the given style (fusion, windows)\n \n    -l, --list\n           List existing configurations\n \n    -c, --conf file\n           Start with a specific configuration file\n \n    -e, --edit\n           Edit the configuration file before using it\n \n    -r, --reset\n           Reset the configuration file\n \n SEE ALSO\n    https://gqrx.dk/\n \n gqrx 2.17.7                       May 27, 2025                          GQRX(1)",
-      "examples": [],
-      "risk": {
-        "level": "critical",
-        "signals": [
-          "rat"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Usage: gqrx [options]\nGqrx software defined radio receiver 2.17.7\n\nOptions:\n  -h, --help           Displays help on commandline options.\n  --help-all           Displays help, including generic Qt options.\n  -s, --style <style>  Use the given style (fusion, windows)\n  -l, --list           List existing configurations\n  -c, --conf <file>    Start with this config file\n  -e, --edit           Edit the config file before using it\n  -r, --reset          Reset configuration file",
-        "-h": "Usage: gqrx [options]\nGqrx software defined radio receiver 2.17.7\n\nOptions:\n  -h, --help           Displays help on commandline options.\n  --help-all           Displays help, including generic Qt options.\n  -s, --style <style>  Use the given style (fusion, windows)\n  -l, --list           List existing configurations\n  -c, --conf <file>    Start with this config file\n  -e, --edit           Edit the config file before using it\n  -r, --reset          Reset configuration file",
-        "help": "Detected locale \"C\" with character encoding \"ANSI_X3.4-1968\", which is not UTF-8.\nQt depends on a UTF-8 locale, and has switched to \"C.UTF-8\" instead.\nIf this causes problems, reconfigure your locale. See the locale(1) manual\nfor more information.\n\"Pulseaudio error: Connection refused\"\nThis plugin does not support propagateSizeHints()",
-        "man": "GQRX(1)                          User Commands                          GQRX(1)\n\nNAME\n     gqrx - Software Defined Radio GUI application\n\nDESCRIPTION\n     Gqrx  is a software defined radio (SDR) receiver implemented using GNU Ra-\n     dio and the Qt GUI toolkit. It works with  hardware  supported  by  gr-os-\n     mosdr,  including  Funcube  Dongle,  RTL-SDR, Airspy, HackRF, BladeRF, RF-\n     Space, USRP and SoapySDR.\n\n     Gqrx can operate as an AM/FM/SSB receiver with audio output or as an  FFT-\n     only  instrument. There are also various hooks for interacting with exter-\n     nal applications using network sockets.\n\n     It is strongly recommended to run the volk_profile utility before  running\n     gqrx.  This  will  detect  and enable processor-specific optimisations and\n     will in many cases give a significant performance boost.\n\n     The first time you start gqrx it will open a device configuration  dialog.\n     Supported  devices that are connected to the computer are discovered auto-\n     matically and you can select any of them in the drop-down list.\n\n     If you don't see your device listed in the drop-down list it could be  be-\n     cause:\n\n     *      The driver has not been included in a binary distribution\n\n     *      The udev rule has not been properly configured\n\n     *      Linux kernel driver is blocking access to the device\n\n     You  can  test  your device using device specific tools, such as rtl_test,\n     airspy_rx, hackrf_transfer, qthid, etc.\n\n     Gqrx supports multiple configurations and sessions if you have several de-\n     vices or if you want to use the same  device  under  different  configura-\n     tions.  You  can load a configuration from the GUI or using the -c command\n     line argument.\n\nOPTIONS\n     -h, --help\n            Display the help page\n\n     -s, --style style\n            Use the given style (fusion, windows)\n\n     -l, --list\n            List existing configurations\n\n     -c, --conf file\n            Start with a specific configuration file\n\n     -e, --edit\n            Edit the configuration file before using it\n\n     -r, --reset\n            Reset the configuration file\n\nSEE ALSO\n     https://gqrx.dk/\n\ngqrx 2.17.7                       May 27, 2025                          GQRX(1)",
-        "apropos": "gqrx (1)             - Software Defined Radio GUI application"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/gqrx",
-        "size_bytes": 2067752,
-        "is_symlink": false,
-        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a72161598d3c580cd52d8808a236d2bb8502ff4c, for GNU/Linux 3.2.0, stripped"
-      }
+      "usage": "gqrx [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/gqrx-sdr/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/gqrx-sdr/index.md",
-    "retrieved_at": "2026-07-14T13:05:49+00:00",
-    "sha256": "3997853e4478dc9f0ca116e87760fe3457e98c4bb176500a89a688c514e570ab"
-  },
-  "apt_metadata": {
-    "section": "hamradio",
-    "installed_size": "2134",
-    "maintainer": "A. Maitland Bottoms <bottoms@debian.org>",
-    "architecture": "amd64",
-    "version": "2.17.7-1+b1",
-    "depends": "libc6 (>= 2.34), libgcc-s1 (>= 4.0), libgnuradio-analog3.10.12 (>= 3.10.12.0), libgnuradio-blocks3.10.12 (>= 3.10.12.0), libgnuradio-digital3.10.12 (>= 3.10.12.0), libgnuradio-fft3.10.12 (>= 3.10.12.0), libgnuradio-filter3.10.12 (>= 3.10.12.0), libgnuradio-network3.10.12 (>= 3.10.12.0), libgnuradio-osmosdr0.2.0t64 (>= 0.2.6), libgnuradio-pmt3.10.12 (>= 3.10.12.0), libgnuradio-runtime3.10.12 (>= 3.10.12.0), libpulse0 (>= 0.99.1), libqt6core6t64 (>= 6.9.1), libqt6gui6 (>= 6.9.1), libqt6network6 (>= 6.1.2), libqt6svgwidgets6 (>= 6.6.0), libqt6widgets6 (>= 6.1.2), libstdc++6 (>= 14), libvolk3.3 (>= 3.3.0)",
-    "description": "Software defined radio receiver\nGqrx works with hardware supported by gr-osmosdr, including Funcube\nDongle, RTL-SDR, Airspy, HackRF, BladeRF, RFSpace, USRP and SoapySDR.\n.\nGqrx can operate as an AM/FM/SSB receiver with audio output or as an\nFFT-only instrument. The built-in Gqrx AFSK1200 decoder can decode\nand display AX.25 packets.  There are also various hooks for\ninteracting with external applications using network sockets.\n.\nWideband FM mode has mono, stereo, and RDS (Radio Data System) modes.\nDisplays FFT plot and spectrum waterfall.\n.\nIt is powered by GNU Radio and the Qt GUI toolkit.",
-    "homepage": "https://gqrx.dk/"
-  },
+  "files": [
+    "/usr/bin/gqrx",
+    "/usr/share/man/man1/gqrx.1.gz"
+  ],
   "tags": [
-    "offensive",
-    "gqrx",
-    "sdr",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/gqrx-sdr && python3 gqrx-sdr.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/gqrx-sdr && python3 gqrx-sdr.py --help",
-    "cd toolboxes/gqrx-sdr && python3 gqrx-sdr.py --help",
-    "cd toolboxes/gqrx-sdr && python3 gqrx-sdr.py --help",
-    "cd toolboxes/gqrx-sdr && python3 gqrx-sdr.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gqrx-sdr --output $KFIOSA_OUTPUT_DIR/gqrx-sdr.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gqrx-sdr --output $KFIOSA_OUTPUT_DIR/gqrx-sdr.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

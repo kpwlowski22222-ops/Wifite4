@@ -78,6 +78,11 @@ from .enhance import (
 from .enhance_v2 import reenhance_all, enhance_pending, reenhance_one
 from .validate import validate_catalog
 from .audit import audit_enhancements
+from .github_generate import (
+    generate_unlisted,
+    find_unlisted,
+    build_entry,
+)
 
 __all__ = [
     "SCHEMA_VERSION",
@@ -93,4 +98,7 @@ __all__ = [
     "reenhance_one",
     "validate_catalog",
     "audit_enhancements",
+    "generate_unlisted",
+    "find_unlisted",
+    "build_entry",
 ]

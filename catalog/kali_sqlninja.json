@@ -3,19 +3,16 @@
   "kind": "kali_source_package",
   "name": "sqlninja",
   "title": "sqlninja",
-  "summary": "### sqlninja",
+  "summary": "SQL server injection and takeover tool",
+  "description": "SQL server injection and takeover tool\nFancy going from a SQL Injection on Microsoft SQL Server to\na full GUI access on the DB? Take a few new SQL Injection\ntricks, add a couple of remote shots in the registry to\ndisable Data Execution Prevention, mix with a little Perl\nthat automatically generates a debug script, put all this\nin a shaker with a Metasploit wrapper, shake well and you\nhave just one of the attack modules of sqlninja!",
   "version": "0.2.6-r1-1kali3",
   "architectures": [
     "all"
   ],
   "homepage": "https://sqlninja.sourceforge.net/",
-  "repository": "https://gitlab.com/kalilinux/packages/sqlninja",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-database",
-    "kali-tools-web"
-  ],
+  "repository": "https://sqlninja.sourceforge.net/",
+  "source_package": "sqlninja",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install sqlninja"
   },
@@ -27,187 +24,21 @@
   "commands": [
     {
       "name": "sqlninja",
-      "description": "- - -",
-      "usage": "sqlninja [-OPTIONS [-MORE_OPTIONS]] [--] [PROGRAM_ARG1 ...]",
-      "arguments": [
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "mode",
-          "takes_value": true,
-          "description": "Required. Available modes are:",
-          "default": null,
-          "choices": null,
-          "raw": " \t-m <mode> : Required. Available modes are:"
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "configuration file (default: sqlninja.conf)",
-          "default": "sqlninja",
-          "choices": null,
-          "raw": " \t-f <file> : configuration file (default: sqlninja.conf)"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "password",
-          "takes_value": true,
-          "description": "sa password",
-          "default": null,
-          "choices": null,
-          "raw": " \t-p <password> : sa password"
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": "wordlist",
-          "takes_value": true,
-          "description": "wordlist to use in bruteforce mode (dictionary method",
-          "default": null,
-          "choices": null,
-          "raw": " \t-w <wordlist> : wordlist to use in bruteforce mode (dictionary method"
-        },
-        {
-          "flags": [
-            "-g"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "generate debug script and exit (only valid in upload mode)",
-          "default": null,
-          "choices": null,
-          "raw": " \t-g : generate debug script and exit (only valid in upload mode)"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "verbose output",
-          "default": null,
-          "choices": null,
-          "raw": " \t-v : verbose output"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": "mode",
-          "takes_value": true,
-          "description": "activate debug",
-          "default": null,
-          "choices": null,
-          "raw": " \t-d <mode> : activate debug"
-        }
-      ],
-      "raw_help": "root@kali:~# sqlninja --help\n /usr/bin/sqlninja version [unknown] calling Getopt::Std::getopts (version 1.14 [paranoid]),\n running under Perl version 5.40.1.\n \n Usage: sqlninja [-OPTIONS [-MORE_OPTIONS]] [--] [PROGRAM_ARG1 ...]\n \n The following single-character options are accepted:\n \tWith arguments: -m -f -p -w -u -d\n \tBoolean (without arguments): -g -v\n \n Options may be merged together.  -- stops processing of options.\n Space is not required between options and their arguments.\n [Now continuing due to backward compatibility and excessive paranoia.\n  See 'perldoc Getopt::Std' about $Getopt::Std::STANDARD_HELP_VERSION.]\n Usage: /usr/bin/sqlninja\n \t-m <mode> : Required. Available modes are:\n \t    t/test - test whether the injection is working\n \t    f/fingerprint - fingerprint user, xp_cmdshell and more\n \t    b/bruteforce - bruteforce sa account\n \t    e/escalation - add user to sysadmin server role\n \t    x/resurrectxp - try to recreate xp_cmdshell\n \t    u/upload - upload a .scr file\n \t    s/dirshell - start a direct shell\n \t    k/backscan - look for an open outbound port\n \t    r/revshell - start a reverse shell\n \t    d/dnstunnel - attempt a dns tunneled shell\n \t    i/icmpshell - start a reverse ICMP shell\n \t    c/sqlcmd - issue a 'blind' OS command\n \t    m/metasploit - wrapper to Metasploit stagers\n \t-f <file> : configuration file (default: sqlninja.conf)\n \t-p <password> : sa password\n \t-w <wordlist> : wordlist to use in bruteforce mode (dictionary method\n \t                only)\n \t-g : generate debug script and exit (only valid in upload mode)\n \t-v : verbose output\n \t-d <mode> : activate debug\n \t    1 - print each injected command\n \t    2 - print each raw HTTP request\n \t    3 - print each raw HTTP response\n \t    all - all of the above\n \t...see sqlninja-howto.html for details",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "sqlninja -m t -f /root/sqlninja.conf\nSqlninja rel. 0.2.6-r1\nCopyright (C) 2006-2011 icesurfer <r00t@northernfortress.net>\n[+] Parsing /root/sqlninja.conf...\n[+] Target is: 192.168.1.51:80\n[+] Trying to inject a 'waitfor delay'....",
-          "template": null,
-          "original_sha256": "6a41c84bd2ba463b6bb308398f6b089ba3fbb14fe6a287315808504fa7025ee1"
-        }
-      ],
-      "risk": {
-        "level": "critical",
-        "signals": [
-          "rat",
-          "reverse shell"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "/usr/bin/sqlninja version [unknown] calling Getopt::Std::getopts (version 1.14 [paranoid]),\nrunning under Perl version 5.40.1.\n\nUsage: sqlninja [-OPTIONS [-MORE_OPTIONS]] [--] [PROGRAM_ARG1 ...]\n\nThe following single-character options are accepted:\n\tWith arguments: -m -f -p -w -u -d\n\tBoolean (without arguments): -g -v\n\nOptions may be merged together.  -- stops processing of options.\nSpace is not required between options and their arguments.\n  [Now continuing due to backward compatibility and excessive paranoia.\n   See 'perldoc Getopt::Std' about $Getopt::Std::STANDARD_HELP_VERSION.]\nUsage: /usr/bin/sqlninja\n\t-m <mode> : Required. Available modes are:\n\t    t/test - test whether the injection is working\n\t    f/fingerprint - fingerprint user, xp_cmdshell and more\n\t    b/bruteforce - bruteforce sa account\n\t    e/escalation - add user to sysadmin server role\n\t    x/resurrectxp - try to recreate xp_cmdshell\n\t    u/upload - upload a .scr file\n\t    s/dirshell - start a direct shell\n\t    k/backscan - look for an open outbound port\n\t    r/revshell - start a reverse shell\n\t    d/dnstunnel - attempt a dns tunneled shell\n\t    i/icmpshell - start a reverse ICMP shell\n\t    c/sqlcmd - issue a 'blind' OS command\n\t    m/metasploit - wrapper to Metasploit stagers\n\t-f <file> : configuration file (default: sqlninja.conf)\n\t-p <password> : sa password\n\t-w <wordlist> : wordlist to use in bruteforce mode (dictionary method\n\t                only)\n\t-g : generate debug script and exit (only valid in upload mode)\n\t-v : verbose output\n\t-d <mode> : activate debug\n\t    1 - print each injected command\n\t    2 - print each raw HTTP request\n\t    3 - print each raw HTTP response\n\t    all - all of the above\n\t...see sqlninja-howto.html for details",
-        "-h": "Unknown option: h\nUsage: /usr/bin/sqlninja\n\t-m <mode> : Required. Available modes are:\n\t    t/test - test whether the injection is working\n\t    f/fingerprint - fingerprint user, xp_cmdshell and more\n\t    b/bruteforce - bruteforce sa account\n\t    e/escalation - add user to sysadmin server role\n\t    x/resurrectxp - try to recreate xp_cmdshell\n\t    u/upload - upload a .scr file\n\t    s/dirshell - start a direct shell\n\t    k/backscan - look for an open outbound port\n\t    r/revshell - start a reverse shell\n\t    d/dnstunnel - attempt a dns tunneled shell\n\t    i/icmpshell - start a reverse ICMP shell\n\t    c/sqlcmd - issue a 'blind' OS command\n\t    m/metasploit - wrapper to Metasploit stagers\n\t-f <file> : configuration file (default: sqlninja.conf)\n\t-p <password> : sa password\n\t-w <wordlist> : wordlist to use in bruteforce mode (dictionary method\n\t                only)\n\t-g : generate debug script and exit (only valid in upload mode)\n\t-v : verbose output\n\t-d <mode> : activate debug\n\t    1 - print each injected command\n\t    2 - print each raw HTTP request\n\t    3 - print each raw HTTP response\n\t    all - all of the above\n\t...see sqlninja-howto.html for details",
-        "help": "Usage: /usr/bin/sqlninja\n\t-m <mode> : Required. Available modes are:\n\t    t/test - test whether the injection is working\n\t    f/fingerprint - fingerprint user, xp_cmdshell and more\n\t    b/bruteforce - bruteforce sa account\n\t    e/escalation - add user to sysadmin server role\n\t    x/resurrectxp - try to recreate xp_cmdshell\n\t    u/upload - upload a .scr file\n\t    s/dirshell - start a direct shell\n\t    k/backscan - look for an open outbound port\n\t    r/revshell - start a reverse shell\n\t    d/dnstunnel - attempt a dns tunneled shell\n\t    i/icmpshell - start a reverse ICMP shell\n\t    c/sqlcmd - issue a 'blind' OS command\n\t    m/metasploit - wrapper to Metasploit stagers\n\t-f <file> : configuration file (default: sqlninja.conf)\n\t-p <password> : sa password\n\t-w <wordlist> : wordlist to use in bruteforce mode (dictionary method\n\t                only)\n\t-g : generate debug script and exit (only valid in upload mode)\n\t-v : verbose output\n\t-d <mode> : activate debug\n\t    1 - print each injected command\n\t    2 - print each raw HTTP request\n\t    3 - print each raw HTTP response\n\t    all - all of the above\n\t...see sqlninja-howto.html for details"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/sqlninja",
-        "size_bytes": 105783,
-        "is_symlink": false,
-        "file_type": "Perl script text executable"
-      }
+      "path": "/usr/bin/sqlninja",
+      "description": "Sqlninja rel. 0.2.6-r1",
+      "usage": "sqlninja [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/sqlninja/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/sqlninja/index.md",
-    "retrieved_at": "2026-07-14T13:08:34+00:00",
-    "sha256": "e3e4b5eba924450c7f78bf562ead93bfc8524a59ca93e8893743955c7887369a"
-  },
-  "apt_metadata": {
-    "section": "utils",
-    "installed_size": "1032",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "all",
-    "version": "0.2.6-r1-1kali3",
-    "depends": "perl, libnetpacket-perl, libnet-pcap-perl, libnet-dns-perl, libnet-rawip-perl, libio-socket-ip-perl",
-    "description": "SQL server injection and takeover tool\nFancy going from a SQL Injection on Microsoft SQL Server to\na full GUI access on the DB? Take a few new SQL Injection\ntricks, add a couple of remote shots in the registry to\ndisable Data Execution Prevention, mix with a little Perl\nthat automatically generates a debug script, put all this\nin a shaker with a Metasploit wrapper, shake well and you\nhave just one of the attack modules of sqlninja!",
-    "homepage": "https://sqlninja.sourceforge.net/"
-  },
+  "files": [
+    "/usr/bin/sqlninja"
+  ],
   "tags": [
-    "offensive",
-    "sqlninja",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/sqlninja && python3 sqlninja.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/sqlninja && python3 sqlninja.py --help",
-    "cd toolboxes/sqlninja && python3 sqlninja.py --help",
-    "cd toolboxes/sqlninja && python3 sqlninja.py --help",
-    "cd toolboxes/sqlninja && python3 sqlninja.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sqlninja --output $KFIOSA_OUTPUT_DIR/sqlninja.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sqlninja --output $KFIOSA_OUTPUT_DIR/sqlninja.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

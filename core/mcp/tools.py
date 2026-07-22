@@ -1649,6 +1649,113 @@ def _make_post_access_tui_wrappers() -> Dict[str, "KaliToolWrapper"]:
 
 
 # ---------------------------------------------------------------------------
+# Python-library wrappers — one MCP function per curated library
+# in core.toolbox.python_libs (116 entries). Each wrapper runs a
+# Python snippet that imports the library via the executor in
+# core.toolbox.exec_python_lib.
+# ---------------------------------------------------------------------------
+def _make_python_lib_wrappers() -> Dict[str, KaliToolWrapper]:
+    """Build a dict of ``pylib_<name>`` -> :class:`KaliToolWrapper`
+    for the curated Python-libs registry.
+
+    Each wrapper delegates to
+    :func:`core.toolbox.exec_python_lib.run_python_lib_code` with
+    the library name + a small code snippet. The chain step is
+    per-step ACCEPT-gated (the library's
+    ``requires_explicit_authorization`` flag drives the risk
+    level).
+    """
+    try:
+        from core.toolbox.python_libs import PYTHON_LIBRARIES
+    except Exception:
+        return {}
+    out: Dict[str, KaliToolWrapper] = {}
+    for lib in PYTHON_LIBRARIES:
+        name = lib["name"]
+        requires_gate = bool(lib.get("requires_gate", False))
+        risk = (
+            RISK_DESTRUCTIVE
+            if lib.get("risk_level") == "critical"
+            else (RISK_INTRUSIVE if requires_gate else RISK_READ)
+        )
+
+        def _runner(lib=lib):
+            def _r(args: Dict[str, Any], timeout: int = 30,
+                   cwd: Optional[str] = None) -> Dict[str, Any]:
+                try:
+                    from core.toolbox import run_python_lib_code
+                    code = (args.get("code") or "").strip() or (
+                        f"print({lib.get('import_name', lib['name'])}"
+                        f".__name__)"
+                    )
+                    res = run_python_lib_code(
+                        lib=lib["name"],
+                        code=code,
+                        cwd=args.get("cwd") or cwd,
+                        timeout_seconds=int(
+                            args.get("timeout_seconds") or timeout
+                        ),
+                        env=args.get("env") or {},
+                    )
+                    return res.to_dict()
+                except Exception as e:  # noqa: BLE001
+                    return {
+                        "ok": False,
+                        "error": f"pylib_runner: {type(e).__name__}: {e}",
+                    }
+            return _r
+
+        out[f"pylib_{name}"] = KaliToolWrapper(
+            name=f"pylib_{name}",
+            binary="python3",
+            description=(
+                f"Run a Python snippet that imports ``{name}`` "
+                f"(category={lib.get('category', 'utility')}, "
+                f"import={lib.get('import_name', name)}). "
+                f"{lib.get('summary', '')}"
+            ),
+            input_schema={
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": (
+                            "Python source to run. The library is "
+                            "pre-imported under its import_name. "
+                            "Use os.environ['KFIOSA_TARGET_*'] for "
+                            "harvested credentials (never inline)."
+                        ),
+                    },
+                    "cwd": {"type": "string"},
+                    "timeout_seconds": {
+                        "type": "integer",
+                        "default": 30,
+                        "maximum": 300,
+                    },
+                    "env": {
+                        "type": "object",
+                        "description": (
+                            "Extra env vars. KFIOSA_TARGET_PASSWORD / "
+                            "KFIOSA_TARGET_PSK / KFIOSA_TARGET_TOKEN "
+                            "are routed here (never inline)."
+                        ),
+                    },
+                },
+                "required": [],
+            },
+            examples=[
+                f"pylib_{name}("
+                f"code='print({lib.get('import_name', name)}"
+                f".__name__)')"
+            ],
+            risk_level=risk,
+            requires_root=requires_gate,
+            runner=_runner(),
+        )
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Aggregate registry
 # ---------------------------------------------------------------------------
 KALI_TOOL_WRAPPERS: Dict[str, KaliToolWrapper] = {
@@ -1675,6 +1782,7 @@ KALI_TOOL_WRAPPERS: Dict[str, KaliToolWrapper] = {
     **_make_post_access_tui_wrappers(),
     **_make_cve_to_exploit_wrappers(),
     "cve_lookup": _make_cve_wrapper(),
+    **_make_python_lib_wrappers(),
 }
 
 

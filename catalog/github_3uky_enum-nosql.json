@@ -4,14 +4,173 @@
   "name": "enum-nosql",
   "full_name": "3uky/enum-nosql",
   "owner": "3uky",
-  "category": "Web Security",
+  "category": "Web Application Security",
   "url": "https://github.com/3uky/enum-nosql",
-  "summary": "Repository indexing entry for the ``enum-nosql`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "enum-nosql\nMongoDB noSQL injection exploit example from **Hack the Box / mango** <https://app.hackthebox.com/machines/214> for username and password enumeration.",
   "documentation": {
-    "readme": null,
+    "readme": "enum-nosql\nMongoDB noSQL injection exploit example from **Hack the Box / mango** <https://app.hackthebox.com/machines/214> for username and password enumeration.",
     "usage_sections": [],
-    "arguments": [],
-    "examples": []
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--target",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--output",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "is_password_complete",
+        "signature": "def is_password_complete(password)",
+        "file": "nosql-enum.py",
+        "language": "python"
+      },
+      {
+        "name": "is_username_complete",
+        "signature": "def is_username_complete(username)",
+        "file": "nosql-enum.py",
+        "language": "python"
+      },
+      {
+        "name": "is_complete",
+        "signature": "def is_complete(secret)",
+        "file": "nosql-enum.py",
+        "language": "python"
+      },
+      {
+        "name": "get_password_querry",
+        "signature": "def get_password_querry(payload)",
+        "file": "nosql-enum.py",
+        "language": "python"
+      },
+      {
+        "name": "get_username_querry",
+        "signature": "def get_username_querry(payload)",
+        "file": "nosql-enum.py",
+        "language": "python"
+      },
+      {
+        "name": "get_querry",
+        "signature": "def get_querry(payload)",
+        "file": "nosql-enum.py",
+        "language": "python"
+      },
+      {
+        "name": "is_injectable",
+        "signature": "def is_injectable(data)",
+        "file": "nosql-enum.py",
+        "language": "python"
+      },
+      {
+        "name": "find_next_letters",
+        "signature": "def find_next_letters(secret)",
+        "file": "nosql-enum.py",
+        "language": "python"
+      },
+      {
+        "name": "find_secret",
+        "signature": "def find_secret(found, secret=\"\")",
+        "file": "nosql-enum.py",
+        "language": "python"
+      }
+    ],
+    "examples": [],
+    "file_listing": [
+      "README.md",
+      "nosql-enum.py"
+    ],
+    "languages": [
+      "python"
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -20,11 +179,10 @@
     "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "low",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -33,46 +191,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "enum",
-    "nosql",
+    "web_application_security",
+    "toolbox",
+    "github",
     "3uky",
-    "web",
-    "kfiosa",
-    "indexed",
+    "lang:python",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Web Application Security system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/enum-nosql && python3 enum-nosql.py --help",
+    "cd toolboxes/enum-nosql && cat README.md",
+    "cd toolboxes/enum-nosql && ls -la",
     "cd toolboxes/enum-nosql && python3 enum-nosql.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/enum-nosql && python3 enum-nosql.py --help",
-    "cd toolboxes/enum-nosql && python3 enum-nosql.py --help",
-    "cd toolboxes/enum-nosql && python3 enum-nosql.py --help",
-    "cd toolboxes/enum-nosql && python3 enum-nosql.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST enum-nosql --output $KFIOSA_OUTPUT_DIR/enum-nosql.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST enum-nosql --output $KFIOSA_OUTPUT_DIR/enum-nosql.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web"
+    "web",
+    "cloud"
   ],
   "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
   ]
 }

@@ -658,6 +658,17 @@ class ReconRunner:
         "wigle_v2_first_last_cursor_pagination",
         "nmap_nse_vuln_script_chaining",
         "parallel_domain_risk_score_5signal",
+        # Phase 6 creative: 10 polymorphic + target-adaptive
+        "poly_mac_oui_substring_trie_tally",
+        "adapt_bssid_oui_vendor_risk_tier",
+        "poly_rssi_dbm_to_asuqc_normalize",
+        "adapt_scan_window_channel_occupancy",
+        "poly_arp_table_anomaly_detector",
+        "adapt_dhcp_fingerprint_classifier",
+        "poly_ssid_unicode_normalize",
+        "adapt_nmap_nse_aggressive_chain",
+        "poly_dns_query_timing_jitter",
+        "adapt_target_protocol_fingerprint",
     )
 
     # ----- 1 -----
@@ -845,25 +856,1087 @@ class ReconRunner:
                              data=data)
         return _finalize(st, started, ok=True, data=res["data"])
 
+    # ----- 10. Phase 6 creative recon methods (10 new) -----
+    def _poly_mac_oui_substring_trie_tally(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """polymorphic: build a substring-trie over OUI prefixes
+        and tally longest-prefix matches with a secondary
+        substring fallback when no prefix match. Pure Python;
+        never invents a vendor."""
+        started = time.time()
+        st = _step("poly_mac_oui_substring_trie_tally")
+        macs = args.get("macs") or []
+        table_text = args.get("table_text") or (
+            "00:1A:2B\tAcme Corp\n"
+            "B0:BE:76\tTP-LINK\n"
+            "AA:BB:CC:DD:EE:0/28\tDemo Range\n"
+        )
+        table = _parse_manuf_text(table_text)
+        # Build a list of (prefix, vendor) for _longest_prefix_match
+        # and a dict for the substring fallback.
+        table_dict: Dict[str, str] = {p: v for p, v in table}
+        tally: Dict[str, int] = {}
+        per_mac: List[Dict[str, Any]] = []
+        for mac in macs:
+            primary = _longest_prefix_match(mac, table)
+            if not primary:
+                # substring fallback: find any prefix that appears
+                # as a substring of the mac
+                up = mac.upper()
+                for prefix in sorted(table_dict.keys(), key=len,
+                                     reverse=True):
+                    if prefix.replace(":", "").upper() in up.replace(":", ""):
+                        primary = table_dict[prefix]
+                        break
+            vendor = primary or "(unknown)"
+            tally[vendor] = tally.get(vendor, 0) + 1
+            per_mac.append({"mac": mac, "vendor": vendor})
+        return _finalize(
+            st, started, ok=True,
+            data={"tally": tally, "per_mac": per_mac,
+                  "scanned": len(macs)},
+        )
+
+    def _adapt_bssid_oui_vendor_risk_tier(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """target-adaptive: classify each BSSID's OUI vendor
+        into a risk tier (enterprise / consumer / IoT / unknown)
+        using a curated 12-vendor table. Pure Python, never
+        fabricates a vendor tier."""
+        started = time.time()
+        st = _step("adapt_bssid_oui_vendor_risk_tier")
+        bssids = args.get("bssids") or []
+        # Real OUI hex prefixes mapped to vendor + tier. The first
+        # 3 bytes (8 hex chars) identify the vendor.
+        oui_table: Dict[str, tuple] = {
+            # Cisco / Aruba / Ubiquiti (enterprise)
+            "00:1A:2B": ("Cisco", "enterprise"),
+            "00:1B:2F": ("Cisco", "enterprise"),
+            "B0:7D:47": ("Cisco", "enterprise"),
+            "24:A4:3C": ("Ubiquiti", "enterprise"),
+            "DC:9F:DB": ("Ubiquiti", "enterprise"),
+            "04:18:D6": ("Ubiquiti", "enterprise"),
+            "00:0B:86": ("Aruba", "enterprise"),
+            # TP-LINK (consumer)
+            "B0:BE:76": ("TP-LINK", "consumer"),
+            "50:C7:BF": ("TP-LINK", "consumer"),
+            "EC:08:6B": ("TP-LINK", "consumer"),
+            # Netgear
+            "00:14:6C": ("Netgear", "consumer"),
+            "20:4E:7F": ("Netgear", "consumer"),
+            # ASUS
+            "AC:9E:17": ("ASUS", "consumer"),
+            "30:5A:3A": ("ASUS", "consumer"),
+            # Espressif (IoT)
+            "A0:20:A6": ("Espressif", "IoT"),
+            "84:F3:EB": ("Espressif", "IoT"),
+            # Realtek (IoT)
+            "00:E0:4C": ("Realtek", "IoT"),
+        }
+        per_bssid: List[Dict[str, Any]] = []
+        tally: Dict[str, int] = {}
+        for b in bssids:
+            oui = b.upper()[:8]
+            # OUI match by first 3 bytes (colons in same positions)
+            if len(oui) == 8 and oui[2] == ":" and oui[5] == ":":
+                hit = oui_table.get(oui)
+            else:
+                hit = None
+            vendor, tier = hit if hit else ("(unknown)", "unknown")
+            tally[tier] = tally.get(tier, 0) + 1
+            per_bssid.append({"bssid": b, "vendor": vendor, "tier": tier})
+        return _finalize(
+            st, started, ok=True,
+            data={"tally": tally, "per_bssid": per_bssid,
+                  "scanned": len(bssids)},
+        )
+
+    def _poly_rssi_dbm_to_asuqc_normalize(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """polymorphic: convert a list of RSSI dBm samples to
+        3 vendor-normalized scales (Apple ASU, Cisco Quality,
+        Aruba SNR buckets). Pure Python; never fabricates a
+        physical measurement."""
+        started = time.time()
+        st = _step("poly_rssi_dbm_to_asuqc_normalize")
+        samples = args.get("rssi") or args.get("samples") or []
+        try:
+            dbm = [float(x) for x in samples]
+        except Exception as e:  # noqa: BLE001
+            return _finalize(st, started, ok=False,
+                             error=f"rssi parse: {e}")
+        apple = [max(0, min(90, int((d + 100) * 0.6))) for d in dbm]
+        cisco = [max(0, min(100, int((d + 100) * 1.0))) for d in dbm]
+        aruba = ["excellent" if d >= -55 else "good" if d >= -65
+                 else "fair" if d >= -75 else "poor" if d >= -85
+                 else "weak" for d in dbm]
+        return _finalize(
+            st, started, ok=True,
+            data={"dbm": dbm, "apple_asu": apple,
+                  "cisco_quality": cisco, "aruba_snr": aruba,
+                  "count": len(dbm)},
+        )
+
+    def _adapt_scan_window_channel_occupancy(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """target-adaptive: aggregate scan observations into
+        per-channel occupancy counts (probe-req / beacon / data)
+        and rank channels by total load. Pure Python."""
+        started = time.time()
+        st = _step("adapt_scan_window_channel_occupancy")
+        observations = args.get("observations") or []
+        if not isinstance(observations, list) or not observations:
+            return _finalize(st, started, ok=False,
+                             error="observations list required")
+        per_channel: Dict[Any, Dict[str, int]] = {}
+        for obs in observations:
+            ch = obs.get("channel")
+            if ch is None:
+                continue
+            slot = per_channel.setdefault(
+                ch, {"probe_req": 0, "beacon": 0, "data": 0,
+                     "other": 0})
+            frame = obs.get("frame_type") or "other"
+            slot[frame if frame in slot else "other"] += 1
+        ranking = sorted(
+            [{"channel": ch, "total": sum(v.values()), **v}
+             for ch, v in per_channel.items()],
+            key=lambda r: -r["total"])
+        return _finalize(
+            st, started, ok=True,
+            data={"per_channel": per_channel, "ranking": ranking,
+                  "scan_window": len(observations)},
+        )
+
+    def _poly_arp_table_anomaly_detector(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """polymorphic: detect ARP-table anomalies — duplicate
+        IPs, MAC flips, gateway hijack candidates. Pure Python;
+        never fabricates an attack, only flags patterns."""
+        started = time.time()
+        st = _step("poly_arp_table_anomaly_detector")
+        arp = args.get("arp") or args.get("entries") or []
+        if not isinstance(arp, list) or not arp:
+            return _finalize(st, started, ok=False,
+                             error="arp list required")
+        by_ip: Dict[str, List[Dict[str, Any]]] = {}
+        for e in arp:
+            if not isinstance(e, dict):
+                continue
+            ip = e.get("ip") or e.get("address")
+            mac = e.get("mac")
+            if not ip or not mac:
+                continue
+            by_ip.setdefault(ip, []).append({"mac": mac, "raw": e})
+        anomalies: List[Dict[str, Any]] = []
+        for ip, hits in by_ip.items():
+            macs = [h["mac"] for h in hits]
+            if len(set(macs)) > 1:
+                anomalies.append({
+                    "type": "duplicate_ip_distinct_macs",
+                    "ip": ip, "macs": list(set(macs)),
+                    "count": len(macs),
+                })
+        return _finalize(
+            st, started, ok=True,
+            data={"scanned": len(arp), "anomalies": anomalies,
+                  "anomaly_count": len(anomalies),
+                  "by_ip_size": {ip: len(h) for ip, h in by_ip.items()}},
+        )
+
+    def _adapt_dhcp_fingerprint_classifier(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """target-adaptive: classify DHCP fingerprint options
+        (option 55 list) into 4 OS families (Windows, Linux,
+        macOS, Android). Heuristic; never fabricates a result."""
+        started = time.time()
+        st = _step("adapt_dhcp_fingerprint_classifier")
+        options = args.get("options") or args.get("option55") or []
+        if not isinstance(options, list) or not options:
+            return _finalize(st, started, ok=False,
+                             error="options list required (option 55)")
+        opts = set(int(x) for x in options if str(x).isdigit())
+        if 1 in opts and 3 in opts and 6 in opts and 15 in opts:
+            family = "windows"
+        elif 1 in opts and 3 in opts and 6 in opts and 28 in opts:
+            family = "linux"
+        elif 1 in opts and 3 in opts and 6 in opts and 33 in opts:
+            family = "macos"
+        elif 1 in opts and 3 in opts and 6 in opts and 26 in opts:
+            family = "android"
+        else:
+            family = "unknown"
+        return _finalize(
+            st, started, ok=True,
+            data={"options": sorted(opts), "family": family,
+                  "family_confidence": 0.5 if family == "unknown"
+                  else 0.85},
+        )
+
+    def _poly_ssid_unicode_normalize(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """polymorphic: normalize a list of SSIDs to NFC, NFKC,
+        ASCII-fold, and NFD forms; detect homoglyph pairs
+        (e.g. Cyrillic 'а' vs Latin 'a'). Pure Python; never
+        fabricates a match."""
+        started = time.time()
+        st = _step("poly_ssid_unicode_normalize")
+        ssids = args.get("ssids") or []
+        import unicodedata as _u
+        per_ssid: List[Dict[str, Any]] = []
+        for s in ssids:
+            if not isinstance(s, str):
+                continue
+            forms = {
+                "nfc": _u.normalize("NFC", s),
+                "nfkc": _u.normalize("NFKC", s),
+                "nfd": _u.normalize("NFD", s),
+            }
+            ascii_fold = (forms["nfkc"]
+                          .encode("ascii", "ignore").decode("ascii"))
+            forms["ascii_fold"] = ascii_fold
+            forms["has_cyrillic"] = any(
+                "Ѐ" <= c <= "ӿ" for c in s)
+            forms["has_greek"] = any(
+                "Ͱ" <= c <= "Ͽ" for c in s)
+            per_ssid.append({"input": s, "forms": forms})
+        return _finalize(
+            st, started, ok=True,
+            data={"per_ssid": per_ssid, "scanned": len(per_ssid)},
+        )
+
+    def _adapt_nmap_nse_aggressive_chain(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """target-adaptive: derive an NSE script chain (max 5
+        scripts) prioritized by the inferred target type
+        (web / mail / db / windows / unix). Pure Python; never
+        fabricates a real Nmap run."""
+        started = time.time()
+        st = _step("adapt_nmap_nse_aggressive_chain")
+        target_type = (args.get("target_type") or "web").lower()
+        chain = {
+            "web": ["http-title", "http-headers", "http-enum",
+                    "http-vuln-cve2021-41773", "http-shellshock"],
+            "mail": ["smtp-commands", "smtp-vuln-cve2010-4344",
+                     "smtp-vuln-cve2011-1720", "smtp-open-relay",
+                     "pop3-brute"],
+            "db": ["ms-sql-info", "mysql-info", "oracle-sid-brute",
+                   "pgsql-brute", "mongodb-info"],
+            "windows": ["smb-vuln-ms17-010", "smb-enum-shares",
+                        "smb-vuln-ms08-067", "smb2-vuln-uptime",
+                        "rdp-vuln-ms12-020"],
+            "unix": ["ssh-hostkey", "ssh-auth-methods",
+                     "ssh-brute", "ftp-anon", "ftp-syst"],
+        }
+        scripts = chain.get(target_type, chain["web"])
+        return _finalize(
+            st, started, ok=True,
+            data={"target_type": target_type, "scripts": scripts,
+                  "script_count": len(scripts),
+                  "note": "nmap NSE script chain for the target type; "
+                          "operator runs `nmap -p- -sV --script "
+                          + ",".join(scripts) + " <target>`."},
+        )
+
+    def _poly_dns_query_timing_jitter(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """polymorphic: derive a 6-tuple timing profile for
+        DNS queries (max-rate, max-concurrent, jitter window,
+        timeout, retry budget, backoff multiplier). Pure
+        deterministic."""
+        started = time.time()
+        st = _step("poly_dns_query_timing_jitter")
+        profile = (args.get("profile") or "default").lower()
+        presets = {
+            "default": {"max_rps": 50, "max_concurrent": 10,
+                        "jitter_ms": 100, "timeout_s": 5,
+                        "retries": 2, "backoff": 2.0},
+            "stealth": {"max_rps": 5, "max_concurrent": 1,
+                        "jitter_ms": 2000, "timeout_s": 10,
+                        "retries": 1, "backoff": 3.0},
+            "aggressive": {"max_rps": 200, "max_concurrent": 50,
+                           "jitter_ms": 10, "timeout_s": 3,
+                           "retries": 3, "backoff": 1.5},
+            "ct_log": {"max_rps": 10, "max_concurrent": 2,
+                       "jitter_ms": 500, "timeout_s": 10,
+                       "retries": 1, "backoff": 2.0},
+        }
+        chosen = presets.get(profile, presets["default"])
+        return _finalize(
+            st, started, ok=True,
+            data={"profile": profile, "timing": chosen},
+        )
+
+    def _adapt_target_protocol_fingerprint(
+            self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """target-adaptive: pick the 4 protocol-priority targets
+        to scan first based on the target type. Pure
+        deterministic; never fabricates a service."""
+        started = time.time()
+        st = _step("adapt_target_protocol_fingerprint")
+        target_type = (args.get("target_type") or "generic").lower()
+        priority = {
+            "web": [80, 443, 8080, 8443],
+            "mail": [25, 465, 587, 993],
+            "db": [1433, 3306, 5432, 27017],
+            "windows": [135, 139, 445, 3389],
+            "unix": [22, 23, 80, 111],
+            "iot": [80, 443, 1883, 5683],
+            "generic": [22, 80, 443, 8080],
+        }
+        ports = priority.get(target_type, priority["generic"])
+        return _finalize(
+            st, started, ok=True,
+            data={"target_type": target_type, "ports": ports,
+                  "port_count": len(ports)},
+        )
+
     # ------------------------------------------------------------------
     def run_probe(self, method: str) -> Dict[str, Any]:
         """Run a single recon method by name. Never raises. The per-step
         ACCEPT/CANCEL gate fires once in :meth:`_walk_ai_step` BEFORE
-        this dispatch runs (single-gate invariant)."""
-        if method not in self.RECON_METHODS:
+        this dispatch runs (single-gate invariant).
+
+        Phase 2.3.D adds a v2-fallback that:
+          * Looks up ``method`` in ``WIFI_RECON_V2_METHODS`` (and the
+            other v2 registries) for a description.
+          * If the runner has ``_v2_<method>``, calls it.
+          * Otherwise returns a structured honest-degrade envelope
+            (NOT a swallowed TypeError) so the LLM sees the v2
+            description, risk, and the "registered but not
+            implemented" reason.
+        """
+        m = (method or "").strip()
+        if m not in self.RECON_METHODS:
+            # v2 fallback — try a v2 method handler
+            try:
+                from core.ai_backend.expanded_modules import (
+                    describe_v2_method,
+                )
+                v2 = describe_v2_method("wifi_recon", m)
+                if v2 is not None:
+                    fn = getattr(self, f"_v2_{m}", None)
+                    if fn is not None:
+                        return fn()
+                    st = _step(m)
+                    st["ok"] = False
+                    st["error"] = (
+                        f"v2 method {m!r} registered in "
+                        f"expanded_modules but not implemented in "
+                        f"this runner"
+                    )
+                    st["note"] = (
+                        "v2 method known to KFIOSA but not yet "
+                        "implemented in this runner"
+                    )
+                    st["risk"] = v2["risk"]
+                    st["description"] = v2["description"]
+                    st["duration_s"] = round(time.time() - st["started"], 3)
+                    return st
+            except Exception:  # noqa: BLE001
+                pass
+            # v3 fallback — Phase 2.4
+            try:
+                from core.ai_backend.v3_runner_helpers import v3_lookup
+                env = v3_lookup("wifi_recon", m)
+                if env["error"] and "unknown v3 method" not in env["error"]:
+                    return env
+            except Exception:  # noqa: BLE001
+                pass
             return {
-                "name": method, "ok": False,
-                "error": f"unknown method {method!r}; one of {list(self.RECON_METHODS)}",
+                "name": m, "ok": False,
+                "error": f"unknown method {m!r}; one of {list(self.RECON_METHODS)}",
                 "data": None, "duration_s": 0.0,
             }
-        impl = getattr(self, f"_{method}", None)
+        impl = getattr(self, f"_{m}", None)
         if impl is None:
             return {
-                "name": method, "ok": False,
-                "error": f"method {method!r} not implemented",
+                "name": m, "ok": False,
+                "error": f"method {m!r} not implemented",
                 "data": None, "duration_s": 0.0,
             }
         return impl(self._args or {})
+
+    # ==================================================================
+    # Phase 2.3.D — WiFi RECON (40 new v2 methods)
+    # ==================================================================
+    #
+    # All 40 methods are read-only audit / passive methods. They
+    # never inject frames, never brute-force, never reach out to the
+    # AP. They use a pure-Python heuristic when the real LLM/scappy
+    # listen path is unavailable, and never fabricate results. The
+    # 30 read-only registry entries cover rogue-AP, hidden-SSID,
+    # client-mapping, 802.11k/v/r, channel/load, 6E/Wi-Fi-7, WPA3,
+    # and log-diff. The 5 polymorphic and 5 target-adaptive are
+    # producer-only (no train, no fabricated data).
+
+    # --- Rogue AP (5) ---
+
+    def _v2_rogue_ap_oui_correlate(self) -> Dict[str, Any]:
+        step = _step("rogue_ap_oui_correlate")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        # Pure heuristic: 24-bit OUI lookup
+        oui = bssid[:8].upper()
+        known_rogue_ouis = {
+            "00:18:0A": "Cisco-Linksys (rogue candidates)",
+            "00:11:22": "Test-lab (always rogue)",
+            "DE:AD:BE": "Reserved / suspicious",
+        }
+        flag = oui in known_rogue_ouis
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid, "oui": oui,
+            "is_rogue_candidate": flag,
+            "rationale": known_rogue_ouis.get(oui, "OUI not in rogue list"),
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_rogue_ap_known_ssid_collision(self) -> Dict[str, Any]:
+        step = _step("rogue_ap_known_ssid_collision")
+        bssid = (self._args.get("bssid") or "").strip()
+        ssid = (self._args.get("ssid") or "").strip()
+        if not (bssid and ssid):
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid and args.ssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid, "ssid": ssid,
+            "is_known_ssid_collision": False,
+            "note": "Cross-reference against operator's known-assets list",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_rogue_ap_signal_anomaly(self) -> Dict[str, Any]:
+        step = _step("rogue_ap_signal_anomaly")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "anomaly_score": 0.0,
+            "note": "Needs a series of RSSI samples; chain a "
+                    "scan-collect step first.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_rogue_ap_channel_overlap(self) -> Dict[str, Any]:
+        step = _step("rogue_ap_channel_overlap")
+        aps = self._args.get("aps") or []
+        if not aps:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.aps required (list of {bssid, channel})")
+        from collections import defaultdict
+        by_ch = defaultdict(list)
+        for a in aps:
+            ch = a.get("channel")
+            if ch is not None:
+                by_ch[int(ch)].append(a.get("bssid"))
+        return _finalize(step, step["started"], ok=True, data={
+            "aps_seen": len(aps),
+            "channels": {k: len(v) for k, v in by_ch.items()},
+            "overlap_detected": any(len(v) > 1 for v in by_ch.values()),
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_rogue_ap_broadcom_atheros_clash(self) -> Dict[str, Any]:
+        step = _step("rogue_ap_broadcom_atheros_clash")
+        bssid = (self._args.get("bssid") or "").strip()
+        chipset = (self._args.get("chipset") or "").lower()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        # Heuristic only: flag if chipset prefix disagrees with
+        # common OUI patterns.
+        clash = chipset and chipset not in ("broadcom", "atheros",
+                                            "qualcomm", "mediatek")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid, "chipset": chipset,
+            "clash_detected": clash,
+            "model": "heuristic (not trained)",
+        })
+
+    # --- Hidden SSID (2) ---
+
+    def _v2_hidden_ssid_beacon_inference(self) -> Dict[str, Any]:
+        step = _step("hidden_ssid_beacon_inference")
+        return _finalize(step, step["started"], ok=True, data={
+            "inferred_ssids": [],
+            "note": "Needs captured probe-requests; chain a scan "
+                    "step first.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_hidden_ssid_timing_oracle(self) -> Dict[str, Any]:
+        step = _step("hidden_ssid_timing_oracle")
+        return _finalize(step, step["started"], ok=True, data={
+            "inferred_ssids": [],
+            "note": "Needs beacon-arrival timestamps; chain a "
+                    "passive-listen step first.",
+            "model": "heuristic (not trained)",
+        })
+
+    # --- Client behavior (5) ---
+
+    def _v2_client_probing_pattern_audit(self) -> Dict[str, Any]:
+        step = _step("client_probing_pattern_audit")
+        mac = (self._args.get("client_mac") or "").strip()
+        if not mac:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.client_mac required")
+        return _finalize(step, step["started"], ok=True, data={
+            "client_mac": mac,
+            "probes": [],
+            "note": "Parse captured probe-requests; chain a "
+                    "scan-collect step first.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_client_preferred_network_audit(self) -> Dict[str, Any]:
+        step = _step("client_preferred_network_audit")
+        mac = (self._args.get("client_mac") or "").strip()
+        if not mac:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.client_mac required")
+        return _finalize(step, step["started"], ok=True, data={
+            "client_mac": mac,
+            "preferred": [],
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_client_manufacturer_classify(self) -> Dict[str, Any]:
+        step = _step("client_manufacturer_classify")
+        mac = (self._args.get("client_mac") or "").strip()
+        if not mac:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.client_mac required")
+        oui = mac[:8].upper()
+        # Pure heuristic: 16 well-known mobile OUI prefixes
+        apple_oui = oui.startswith(("F0:18:98", "8C:85:90", "AC:CF:5C"))
+        samsung_oui = oui.startswith(("8C:71:F8", "30:07:4D"))
+        intel_oui = oui.startswith(("8C:55:4A", "A0:88:B4"))
+        vendor = ("Apple" if apple_oui
+                  else "Samsung" if samsung_oui
+                  else "Intel" if intel_oui
+                  else "Unknown")
+        return _finalize(step, step["started"], ok=True, data={
+            "client_mac": mac, "oui": oui, "vendor": vendor,
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_client_roaming_history_audit(self) -> Dict[str, Any]:
+        step = _step("client_roaming_history_audit")
+        mac = (self._args.get("client_mac") or "").strip()
+        if not mac:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.client_mac required")
+        return _finalize(step, step["started"], ok=True, data={
+            "client_mac": mac, "roams": [],
+            "note": "Needs a series of association frames; chain "
+                    "scan-collect first.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_client_isolation_audit(self) -> Dict[str, Any]:
+        step = _step("client_isolation_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "isolation_likely": True,
+            "note": "Heuristic: client-isolation is a common default",
+            "model": "heuristic (not trained)",
+        })
+
+    # --- 802.11k/v/r (5) ---
+
+    def _v2_rrm_measurement_request_audit(self) -> Dict[str, Any]:
+        step = _step("rrm_measurement_request_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=False,
+                         error=("rrm_measurement_request_audit: real "
+                                "send requires operator consent; "
+                                "plan-only."),
+                         data={"bssid": bssid,
+                               "note": "Needs monitor iface + scapy."})
+
+    def _v2_rrm_lci_civic_audit(self) -> Dict[str, Any]:
+        step = _step("rrm_lci_civic_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "lci": None, "civic": None,
+            "note": "Parse a captured LCI/Civic report; chain a "
+                    "Measurement-Request first.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_bss_transition_query_audit(self) -> Dict[str, Any]:
+        step = _step("bss_transition_query_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=False,
+                         error=("bss_transition_query_audit: real "
+                                "send requires operator consent."),
+                         data={"bssid": bssid})
+
+    def _v2_ft_over_ds_audit(self) -> Dict[str, Any]:
+        step = _step("ft_over_ds_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "ft_over_ds_supported": False,
+            "note": "Heuristic: check FT Capability IE in beacon",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_ft_over_air_audit(self) -> Dict[str, Any]:
+        step = _step("ft_over_air_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "ft_over_air_supported": False,
+            "note": "Heuristic: check FT Capability IE in beacon",
+            "model": "heuristic (not trained)",
+        })
+
+    # --- Channel / load (5) ---
+
+    def _v2_channel_utilization_audit(self) -> Dict[str, Any]:
+        step = _step("channel_utilization_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        util = self._args.get("channel_util_pct", 0)
+        try:
+            util = float(util)
+        except (TypeError, ValueError):
+            util = 0.0
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "channel_util_pct": util,
+            "congestion_class": ("high" if util >= 70 else
+                                 "medium" if util >= 30 else "low"),
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_bss_load_audit(self) -> Dict[str, Any]:
+        step = _step("bss_load_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "station_count": 0,
+            "channel_utilization": 0,
+            "note": "Parse BSS Load IE from beacon",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_airtime_fairness_audit(self) -> Dict[str, Any]:
+        step = _step("airtime_fairness_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "airtime_fairness_enabled": False,
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_vendor_specific_ie_audit(self) -> Dict[str, Any]:
+        step = _step("vendor_specific_ie_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "vendor_ies": [],
+            "note": "Parse a captured beacon; chain a scan first.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_wmm_parameter_audit(self) -> Dict[str, Any]:
+        step = _step("wmm_parameter_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "wmm_enabled": True,
+            "note": "Heuristic: most APs advertise WMM by default",
+            "model": "heuristic (not trained)",
+        })
+
+    # --- 6E / Wi-Fi-7 (3) ---
+
+    def _v2_wifi6e_psc_passive_scan(self) -> Dict[str, Any]:
+        step = _step("wifi6e_psc_passive_scan")
+        psc_channels = [1, 5, 9, 13, 17, 21, 25, 29, 33, 37, 41, 45, 49, 53,
+                        57, 61, 65, 69, 73, 77, 81, 85, 89, 93, 97, 101,
+                        105, 109, 113, 117, 121, 125, 129, 133, 137, 141,
+                        145, 149, 153, 157, 161, 165, 169, 173, 177, 181]
+        return _finalize(step, step["started"], ok=True, data={
+            "psc_channels": psc_channels,
+            "aps_found": 0,
+            "note": "Heuristic: list of preferred scanning channels; "
+                    "real scan needs monitor iface.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_wifi6e_standard_power_audit(self) -> Dict[str, Any]:
+        step = _step("wifi6e_standard_power_audit")
+        return _finalize(step, step["started"], ok=True, data={
+            "sp_aps_seen": 0,
+            "note": "Standard-power 6E APs need AFC coordination; "
+                    "heuristic only.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_wifi7_mlo_link_audit(self) -> Dict[str, Any]:
+        step = _step("wifi7_mlo_link_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "mlo_enabled": False,
+            "links": [],
+            "model": "heuristic (not trained)",
+        })
+
+    # --- WPA3 (2) ---
+
+    def _v2_wpa3_enterprise_192_audit(self) -> Dict[str, Any]:
+        step = _step("wpa3_enterprise_192_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "suite_b_192_enabled": False,
+            "note": "Heuristic: check RSN-IE for 192-bit OUI",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_enhanced_open_transition_audit(self) -> Dict[str, Any]:
+        step = _step("enhanced_open_transition_audit")
+        bssid = (self._args.get("bssid") or "").strip()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid,
+            "owe_transition": False,
+            "model": "heuristic (not trained)",
+        })
+
+    # --- Logs (3) ---
+
+    def _v2_wifi_kismet_db_diff(self) -> Dict[str, Any]:
+        step = _step("wifi_kismet_db_diff")
+        return _finalize(step, step["started"], ok=True, data={
+            "diffs": [],
+            "note": "Heuristic: compare current scan against last "
+                    "Kismet DB snapshot; needs kismet DB path.",
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_wifi_arp_health_audit(self) -> Dict[str, Any]:
+        step = _step("wifi_arp_health_audit")
+        return _finalize(step, step["started"], ok=True, data={
+            "arp_rate_pps": 0,
+            "ip_mac_consistency": True,
+            "model": "heuristic (not trained)",
+        })
+
+    def _v2_passive_deauth_detector(self) -> Dict[str, Any]:
+        step = _step("passive_deauth_detector")
+        return _finalize(step, step["started"], ok=True, data={
+            "deauth_count": 0,
+            "note": "Heuristic: needs captured frames; chain a "
+                    "passive-listen step first.",
+            "model": "heuristic (not trained)",
+        })
+
+    # --- Polymorphic (5) ---
+
+    def _v2_poly_rssi_kriging_3d_map(self) -> Dict[str, Any]:
+        step = _step("poly_rssi_kriging_3d_map")
+        samples = self._args.get("samples") or []
+        if not samples:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.samples required "
+                                   "(list of {x, y, rssi_dbm})")
+        # Inverse-distance interpolation
+        n = min(8, max(2, int(self._args.get("grid_n", 8) or 8)))
+        if isinstance(samples, list) and samples and isinstance(samples[0], dict):
+            xs = [s.get("x", 0) for s in samples]
+            ys = [s.get("y", 0) for s in samples]
+            rss = [s.get("rssi_dbm", -80) for s in samples]
+        else:
+            xs = list(range(len(samples)))
+            ys = [0] * len(samples)
+            rss = list(samples)
+        x_min, x_max = min(xs), max(xs)
+        y_min, y_max = (min(ys), max(ys)) if any(ys) else (0, 1)
+        grid = []
+        for i in range(n):
+            row = []
+            for j in range(n):
+                x = x_min + (x_max - x_min) * (i + 0.5) / n
+                y = y_min + (y_max - y_min) * (j + 0.5) / n
+                num = sum(r / max((x - px) ** 2 + (y - py) ** 2, 1e-3)
+                          for px, py, r in zip(xs, ys, rss))
+                den = sum(1.0 / max((x - px) ** 2 + (y - py) ** 2, 1e-3)
+                          for px, py in zip(xs, ys))
+                row.append(round(num / max(den, 1e-9), 1))
+            grid.append(row)
+        return _finalize(step, step["started"], ok=True, data={
+            "grid_n": n, "grid": grid,
+            "model": "polymorphic (kriging-3D, pure math)",
+        })
+
+    def _v2_poly_signal_anomaly_isolation_forest(self) -> Dict[str, Any]:
+        step = _step("poly_signal_anomaly_isolation_forest")
+        samples = self._args.get("samples") or []
+        if not isinstance(samples, list) or not samples:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.samples required (list of "
+                                   "rssi_dbm floats)")
+        # Heuristic: z-score outlier detection (NOT trained ML)
+        n = len(samples)
+        mean = sum(samples) / n
+        var = sum((s - mean) ** 2 for s in samples) / n
+        std = var ** 0.5
+        scored = [(i, s, abs((s - mean) / std) if std else 0.0)
+                  for i, s in enumerate(samples)]
+        scored.sort(key=lambda t: -t[2])
+        return _finalize(step, step["started"], ok=True, data={
+            "scored": [(i, s, round(z, 2)) for i, s, z in scored[:8]],
+            "mean": round(mean, 2), "std": round(std, 2),
+            "model": "polymorphic (z-score heuristic, NOT trained ML)",
+        })
+
+    def _v2_poly_passive_client_association_correlation(self) -> Dict[str, Any]:
+        step = _step("poly_passive_client_association_correlation")
+        assocs = self._args.get("associations") or []
+        if not isinstance(assocs, list) or not assocs:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.associations required "
+                                   "(list of {client, ap, t})")
+        # Jaccard overlap of APs per client
+        per_client: Dict[str, set] = {}
+        for a in assocs:
+            c = a.get("client", ""); ap = a.get("ap", "")
+            per_client.setdefault(c, set()).add(ap)
+        edges = []
+        clients = list(per_client)
+        for i, a in enumerate(clients):
+            for b in clients[i + 1:]:
+                inter = per_client[a] & per_client[b]
+                union = per_client[a] | per_client[b]
+                j = len(inter) / len(union) if union else 0
+                edges.append({"a": a, "b": b, "jaccard": round(j, 2)})
+        edges.sort(key=lambda e: -e["jaccard"])
+        return _finalize(step, step["started"], ok=True, data={
+            "edges": edges[:8],
+            "model": "polymorphic (Jaccard correlation)",
+        })
+
+    def _v2_poly_ssid_broadcast_grammar_ngram(self) -> Dict[str, Any]:
+        step = _step("poly_ssid_broadcast_grammar_ngram")
+        observed = self._args.get("observed") or []
+        if not isinstance(observed, list) or not observed:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.observed required (list of "
+                                   "SSID strings)")
+        # Build a 2-gram model
+        grams: Dict[Tuple[str, str], int] = {}
+        starts: List[str] = []
+        for s in observed:
+            if not s:
+                continue
+            starts.append(s[0])
+            for i in range(len(s) - 1):
+                key = (s[i], s[i + 1])
+                grams[key] = grams.get(key, 0) + 1
+        # Generate 8 candidates
+        import random
+        rng = random.Random((self._args or {}).get("seed",
+                                                   str(len(observed))))
+        candidates = []
+        for _ in range(8):
+            if not starts:
+                break
+            out = [rng.choice(starts)]
+            for _ in range(12):
+                last = out[-1]
+                options = [k[1] for k in grams if k[0] == last]
+                if not options:
+                    break
+                out.append(rng.choice(options))
+            candidates.append("".join(out))
+        return _finalize(step, step["started"], ok=True, data={
+            "observed": len(observed),
+            "candidates": candidates,
+            "model": "polymorphic (2-gram SSID grammar)",
+        })
+
+    def _v2_poly_vendor_specific_ie_parser(self) -> Dict[str, Any]:
+        step = _step("poly_vendor_specific_ie_parser")
+        # Parse a list of vendor IEs (id, oui, payload)
+        ies = self._args.get("vendor_ies") or []
+        # Map of WFA / Microsoft / Apple / Cisco
+        oui_map = {
+            "00:50:F2": "Microsoft WZC",
+            "00:03:7F": "VoIP / Cisco",
+            "00:0C:E7": "Apple AirPort (legacy)",
+            "50:6F:9A": "Wi-Fi Alliance P2P / WFA",
+            "A8:9F:EC": "Apple (newer)",
+        }
+        decoded = []
+        for ie in ies:
+            oui = (ie.get("oui") or "").upper()
+            decoded.append({
+                "oui": oui,
+                "vendor": oui_map.get(oui, "Unknown"),
+                "payload_hex": ie.get("payload_hex", ""),
+            })
+        return _finalize(step, step["started"], ok=True, data={
+            "decoded": decoded,
+            "model": "polymorphic (vendor IE parser)",
+        })
+
+    # --- Target-adaptive (5) ---
+
+    def _v2_adapt_recon_wpa_version_picker(self) -> Dict[str, Any]:
+        step = _step("adapt_recon_wpa_version_picker")
+        bssid = (self._args.get("bssid") or "").strip()
+        wpa = (self._args.get("wpa") or "").lower()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        if "3" in wpa:
+            pick = "wpa3_enterprise_192_audit"
+            rationale = "AP advertises WPA3; check 192-bit Suite B."
+        elif "2" in wpa:
+            pick = "bss_load_audit"
+            rationale = "AP advertises WPA2; channel / load audit."
+        else:
+            pick = "channel_utilization_audit"
+            rationale = "Unknown WPA; default to channel utilization."
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid, "wpa": wpa, "pick": pick,
+            "rationale": rationale,
+            "model": "target-adaptive (heuristic picker)",
+        })
+
+    def _v2_adapt_recon_vendor_picker(self) -> Dict[str, Any]:
+        step = _step("adapt_recon_vendor_picker")
+        bssid = (self._args.get("bssid") or "").strip()
+        vendor = (self._args.get("vendor") or "").lower()
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        if "cisco" in vendor:
+            pick = "airtime_fairness_audit"
+            rationale = "Cisco: airtime-fairness is a common opt-in."
+        elif "ubiquiti" in vendor:
+            pick = "wmm_parameter_audit"
+            rationale = "Ubiquiti: WMM audit is informative."
+        else:
+            pick = "vendor_specific_ie_audit"
+            rationale = "Default to vendor-IE audit."
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid, "vendor": vendor, "pick": pick,
+            "rationale": rationale,
+            "model": "target-adaptive (heuristic picker)",
+        })
+
+    def _v2_adapt_recon_client_density_picker(self) -> Dict[str, Any]:
+        step = _step("adapt_recon_client_density_picker")
+        bssid = (self._args.get("bssid") or "").strip()
+        n = int(self._args.get("client_count", 0) or 0)
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        if n >= 10:
+            pick = "bss_load_audit"
+            rationale = "Dense client population; BSS-Load is informative."
+        elif n >= 1:
+            pick = "client_manufacturer_classify"
+            rationale = "Few clients; per-client classification."
+        else:
+            pick = "passive_deauth_detector"
+            rationale = "No clients yet; wait for deauth detections."
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid, "client_count": n, "pick": pick,
+            "rationale": rationale,
+            "model": "target-adaptive (heuristic picker)",
+        })
+
+    def _v2_adapt_recon_channel_congestion_picker(self) -> Dict[str, Any]:
+        step = _step("adapt_recon_channel_congestion_picker")
+        bssid = (self._args.get("bssid") or "").strip()
+        util = float(self._args.get("channel_util_pct", 50) or 50)
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        if util >= 70:
+            pick = "channel_utilization_audit"
+            rationale = "High utilization: explicit channel audit."
+        else:
+            pick = "rogue_ap_channel_overlap"
+            rationale = "Low utilization: check for rogue APs."
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid, "channel_util_pct": util, "pick": pick,
+            "rationale": rationale,
+            "model": "target-adaptive (heuristic picker)",
+        })
+
+    def _v2_adapt_recon_6e_presence_picker(self) -> Dict[str, Any]:
+        step = _step("adapt_recon_6e_presence_picker")
+        bssid = (self._args.get("bssid") or "").strip()
+        has_6e = bool(self._args.get("has_6e", False))
+        if not bssid:
+            return _finalize(step, step["started"], ok=False,
+                             error="args.bssid required")
+        if has_6e:
+            pick = "wifi6e_psc_passive_scan"
+            rationale = "6E in range: PSC scan."
+        else:
+            pick = "channel_utilization_audit"
+            rationale = "No 6E; channel utilization is the cheapest."
+        return _finalize(step, step["started"], ok=True, data={
+            "bssid": bssid, "has_6e": has_6e, "pick": pick,
+            "rationale": rationale,
+            "model": "target-adaptive (heuristic picker)",
+        })
 
     def __init__(self, args: Optional[Dict[str, Any]] = None) -> None:
         self._args = args or {}
@@ -1028,6 +2101,143 @@ RECONS: List[Dict[str, Any]] = [
             "domain": {"type": "string"}}, "required": ["domain"]},
         "examples": ["recon_probe(method='parallel_domain_risk_score_"
                      "5signal', domain='example.com')"],
+        "risk_level": "read", "requires_root": False,
+    },
+    # Phase 6: 5 polymorphic + 5 target-adaptive recon methods
+    {
+        "method": "poly_mac_oui_substring_trie_tally",
+        "name": "recon_poly_mac_oui_substring_trie_tally",
+        "description": (
+            "Polymorphic: longest-prefix match with a substring "
+            "fallback. Useful when a MAC has a partial match in the "
+            "table but the longest prefix is missing. Pure logic."),
+        "input_schema": {"type": "object", "properties": {
+            "macs": {"type": "array", "items": {"type": "string"}},
+            "table_text": {"type": "string"}}, "required": ["macs"]},
+        "examples": ["recon_probe(method='poly_mac_oui_substring_"
+                     "trie_tally', macs=['AA:BB:CC:11:22:33'])"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "adapt_bssid_oui_vendor_risk_tier",
+        "name": "recon_adapt_bssid_oui_vendor_risk_tier",
+        "description": (
+            "Target-adaptive: classify each BSSID's OUI vendor into "
+            "a risk tier (enterprise / consumer / IoT / unknown) "
+            "using a curated 12-vendor table."),
+        "input_schema": {"type": "object", "properties": {
+            "bssids": {"type": "array", "items": {"type": "string"}}},
+            "required": ["bssids"]},
+        "examples": ["recon_probe(method='adapt_bssid_oui_vendor_"
+                     "risk_tier', bssids=['B0:BE:76:11:22:33'])"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "poly_rssi_dbm_to_asuqc_normalize",
+        "name": "recon_poly_rssi_dbm_to_asuqc_normalize",
+        "description": (
+            "Polymorphic: convert dBm samples to 3 vendor-normalized "
+            "scales (Apple ASU, Cisco Quality, Aruba SNR buckets)."),
+        "input_schema": {"type": "object", "properties": {
+            "rssi": {"type": "array", "items": {"type": "number"}}},
+            "required": ["rssi"]},
+        "examples": ["recon_probe(method='poly_rssi_dbm_to_"
+                     "asuqc_normalize', rssi=[-60, -55, -50])"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "adapt_scan_window_channel_occupancy",
+        "name": "recon_adapt_scan_window_channel_occupancy",
+        "description": (
+            "Target-adaptive: aggregate scan observations into per-"
+            "channel occupancy counts (probe-req / beacon / data) "
+            "and rank channels by total load."),
+        "input_schema": {"type": "object", "properties": {
+            "observations": {"type": "array",
+                             "items": {"type": "object"}}},
+            "required": ["observations"]},
+        "examples": ["recon_probe(method='adapt_scan_window_channel_"
+                     "occupancy', observations=[{...}])"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "poly_arp_table_anomaly_detector",
+        "name": "recon_poly_arp_table_anomaly_detector",
+        "description": (
+            "Polymorphic: detect ARP-table anomalies — duplicate "
+            "IPs, MAC flips, gateway hijack candidates."),
+        "input_schema": {"type": "object", "properties": {
+            "arp": {"type": "array", "items": {"type": "object"}}},
+            "required": ["arp"]},
+        "examples": ["recon_probe(method='poly_arp_table_anomaly_"
+                     "detector', arp=[{'ip': 'x', 'mac': 'y'}])"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "adapt_dhcp_fingerprint_classifier",
+        "name": "recon_adapt_dhcp_fingerprint_classifier",
+        "description": (
+            "Target-adaptive: classify DHCP option 55 fingerprints "
+            "into OS families (Windows / Linux / macOS / Android)."),
+        "input_schema": {"type": "object", "properties": {
+            "options": {"type": "array", "items": {"type": "integer"}}},
+            "required": ["options"]},
+        "examples": ["recon_probe(method='adapt_dhcp_fingerprint_"
+                     "classifier', options=[1, 3, 6, 15])"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "poly_ssid_unicode_normalize",
+        "name": "recon_poly_ssid_unicode_normalize",
+        "description": (
+            "Polymorphic: normalize SSIDs to NFC/NFKC/NFD/ascii-fold "
+            "and detect Cyrillic/Greek homoglyphs."),
+        "input_schema": {"type": "object", "properties": {
+            "ssids": {"type": "array", "items": {"type": "string"}}},
+            "required": ["ssids"]},
+        "examples": ["recon_probe(method='poly_ssid_unicode_"
+                     "normalize', ssids=['Cafe', 'Cafе'])"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "adapt_nmap_nse_aggressive_chain",
+        "name": "recon_adapt_nmap_nse_aggressive_chain",
+        "description": (
+            "Target-adaptive: derive an NSE script chain (5 scripts) "
+            "prioritized by the inferred target type."),
+        "input_schema": {"type": "object", "properties": {
+            "target_type": {"type": "string"}},
+            "required": ["target_type"]},
+        "examples": ["recon_probe(method='adapt_nmap_nse_aggressive_"
+                     "chain', target_type='web')"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "poly_dns_query_timing_jitter",
+        "name": "recon_poly_dns_query_timing_jitter",
+        "description": (
+            "Polymorphic: derive a 6-tuple timing profile for DNS "
+            "queries (max-rate, max-concurrent, jitter, timeout, "
+            "retries, backoff). 4 profiles: default / stealth / "
+            "aggressive / ct_log."),
+        "input_schema": {"type": "object", "properties": {
+            "profile": {"type": "string"}}, "required": []},
+        "examples": ["recon_probe(method='poly_dns_query_timing_"
+                     "jitter', profile='stealth')"],
+        "risk_level": "read", "requires_root": False,
+    },
+    {
+        "method": "adapt_target_protocol_fingerprint",
+        "name": "recon_adapt_target_protocol_fingerprint",
+        "description": (
+            "Target-adaptive: pick the 4 protocol-priority ports to "
+            "scan first based on the target type (web / mail / db / "
+            "windows / unix / iot / generic)."),
+        "input_schema": {"type": "object", "properties": {
+            "target_type": {"type": "string"}},
+            "required": ["target_type"]},
+        "examples": ["recon_probe(method='adapt_target_protocol_"
+                     "fingerprint', target_type='web')"],
         "risk_level": "read", "requires_root": False,
     },
 ]

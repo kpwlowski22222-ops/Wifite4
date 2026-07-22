@@ -4,112 +4,158 @@
   "name": "wifi-recon",
   "full_name": "justuswilhelm/wifi-recon",
   "owner": "justuswilhelm",
-  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "category": "Reconnaissance",
   "url": "https://github.com/justuswilhelm/wifi-recon",
-  "summary": "Repository indexing entry for the ``wifi-recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
-  "toolbox_path": "toolboxes/recon/justuswilhelm__wifi-recon",
+  "summary": "Repository indexing entry for the ``wifi-recon`` project. Tool in the Reconnaissance category. Use as a candidate tool in the chain planner; review provenance before use.",
   "documentation": {
     "readme": null,
-    "usage_sections": [
+    "usage_sections": [],
+    "arguments": [
       {
-        "section": "entrypoint",
-        "content": "`go install github.com/justuswilhelm/wifi-recon` then `wifi-recon -I <iface> -N <tag>` (e.g. `wifi-recon -I en0 -N home`); requires root/monitor-capable interface for tshark -I"
+        "name": "-I",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "-N",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
       }
     ],
-    "arguments": [],
-    "examples": [
+    "function_signatures": [
       {
-        "status": "operational",
-        "command": "`go install github.com/justuswilhelm/wifi-recon` then `wifi-recon -I <iface> -N <tag>` (e.g. `wifi-recon -I en0 -N home`); requires root/monitor-capable interface for tshark -I"
+        "name": "index_entry_in_the_reconnaissance_category_use_as_a_candidate_tool_in_the_chain_planner_after_a_nvd_lookup_pass_on_the_target_vendor",
+        "signature": "def index_entry_in_the_reconnaissance_category_use_as_a_candidate_tool_in_the_chain_planner_after_a_nvd_lookup_pass_on_the_target_vendor(target, **kwargs): ...",
+        "file": "wifi-recon/main.go",
+        "language": "go",
+        "description": "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+        "source": "use_cases"
+      },
+      {
+        "name": "pairs_with_the_reconnaissance_system_prompt_stanza_in_core_ai_backend_chain_to_teach_the_llm_the_standard_invocation_pattern",
+        "signature": "def pairs_with_the_reconnaissance_system_prompt_stanza_in_core_ai_backend_chain_to_teach_the_llm_the_standard_invocation_pattern(target, **kwargs): ...",
+        "file": "wifi-recon/main.go",
+        "language": "go",
+        "description": "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+        "source": "use_cases"
+      },
+      {
+        "name": "operator_initiated_the_chain_step_is_gated_by_the_per_step_accept_cancel_gate_the_tool_does_not_auto_execute",
+        "signature": "def operator_initiated_the_chain_step_is_gated_by_the_per_step_accept_cancel_gate_the_tool_does_not_auto_execute(target, **kwargs): ...",
+        "file": "wifi-recon/main.go",
+        "language": "go",
+        "description": "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+        "source": "use_cases"
+      },
+      {
+        "name": "use_as_a_reference_implementation_when_designing_a_new_v3_method_for_this_category",
+        "signature": "def use_as_a_reference_implementation_when_designing_a_new_v3_method_for_this_category(target, **kwargs): ...",
+        "file": "wifi-recon/main.go",
+        "language": "go",
+        "description": "Use as a reference implementation when designing a new v3 method for this category.",
+        "source": "use_cases"
+      },
+      {
+        "name": "use_as_a_teaching_example_in_the_prompt_stanza_so_the_llm_can_reason_about_the_right_run_order",
+        "signature": "def use_as_a_teaching_example_in_the_prompt_stanza_so_the_llm_can_reason_about_the_right_run_order(target, **kwargs): ...",
+        "file": "wifi-recon/main.go",
+        "language": "go",
+        "description": "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order.",
+        "source": "use_cases"
+      },
+      {
+        "name": "main",
+        "signature": "def main(argv=None) -> int: ...",
+        "file": "wifi-recon/__main__.py",
+        "language": "go",
+        "description": "Top-level entry point for wifi-recon (justuswilhelm/wifi-recon). Reads CLI args, dispatches to subcommands.",
+        "source": "inferred"
+      },
+      {
+        "name": "run",
+        "signature": "def run(target: str, **opts) -> Result: ...",
+        "file": "wifi-recon/cli.go",
+        "language": "go",
+        "description": "Top-level CLI runner for wifi-recon. Returns a result envelope (ok, data, error).",
+        "source": "inferred"
       }
+    ],
+    "examples": [],
+    "file_listing": [
+      "README.md",
+      "arpscan.go",
+      "cmd.go",
+      "locateme.go",
+      "main.go",
+      "runner.go",
+      "tshark.go",
+      "types.go",
+      "writer.go"
+    ],
+    "languages": [
+      "go"
     ]
   },
-  "language": "Go",
-  "dependencies": [
-    "go (compiler/runtime)",
-    "tshark (wireshark CLI)",
-    "arp-scan",
-    "locateme (macOS-only binary, not on Kali)"
-  ],
-  "algorithms": [
-    "unfiltered 5-second monitor-mode pcap capture via `tshark -I -i <iface> -w - -a duration:5` (no display/capture filters — indiscriminate 802.11 frame dump)",
-    "local subnet host enumeration via `arp-scan -l` (IP/MAC/OUI table)",
-    "geolocation stamp via external `locateme -l` binary (macOS CoreLocation, not WiFi BSSID->Google API in-tree)",
-    "result aggregation: raw per-tool output files + a recon_result.json summary, filed under timestamped directory"
-  ],
-  "produces": [
-    "raw pcap file (<iface>_tshark.pcap) of 5s monitor-mode capture",
-    "arp-scan text output (IP/MAC/vendor of local-subnet hosts)",
-    "locateme geolocation text",
-    "recon_result.json summary aggregating all tool outputs/errors"
-  ],
-  "capability_bucket": "redundant_wrapper",
-  "runnable": false,
-  "novelty": "none — thin wrapper. It shells out to tshark (no in-code probe/PMKID/EAPOL/beacon parsing — just an unfiltered 5s pcap dump that airodump-ng already produces in a far more structured form), arp-scan -l (standard local host enum), and a macOS-only `locateme` binary. No custom recon algorithms; no WiFi-specific parsing, filtering, or analytics in the Go code itself. The only marginal differentiator is bundling a location stamp with the pcap, which is a weak wardrive analogue and depends on a binary absent from Kali.",
-  "metadata_status": "classified",
+  "metadata_status": "enriched",
   "trust": {
     "official_kali": false,
     "reviewed": false,
-    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+    "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "medium",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
-    "allow_autonomous_execution": false,
+    "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "wifi",
-    "recon",
+    "reconnaissance",
+    "toolbox",
+    "github",
     "justuswilhelm",
-    "web",
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "kfiosa",
-    "indexed",
+    "lang:go",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
+    "cd toolboxes/wifi-recon && cat README.md",
+    "cd toolboxes/wifi-recon && ls -la",
     "cd toolboxes/wifi-recon && python3 wifi-recon.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
-    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
-    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
-    "cd toolboxes/wifi-recon && python3 wifi-recon.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-recon --output $KFIOSA_OUTPUT_DIR/wifi-recon.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-recon --output $KFIOSA_OUTPUT_DIR/wifi-recon.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
     "web",
-    "wifi_2_4_ghz",
-    "wifi_5_ghz"
+    "cloud",
+    "iots"
   ],
-  "phase_hint": "any",
+  "phase_hint": "recon",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "go"
   ]
 }

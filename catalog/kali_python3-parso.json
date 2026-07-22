@@ -1,0 +1,35 @@
+{
+  "id": "kali:python3-parso",
+  "kind": "kali_source_package",
+  "name": "python3-parso",
+  "title": "python3-parso",
+  "summary": "Python parser that supports error recovery - Python 3.X",
+  "description": "Python parser that supports error recovery - Python 3.X\nParso is a Python parser that supports error recovery and round-trip parsing\nfor different Python versions (in multiple Python versions). Parso is also able\nto list multiple syntax errors in your Python file.\n.\nParso has been battle-tested by jedi. It was pulled out of jedi to be useful\nfor other projects as well.\n.\nParso consists of a small API to parse Python and analyse the syntax tree.\n.\nA simple example:\n.\n>>> import parso\n>>> module = parso.parse('hello + 1', version=\"3.6\")\n>>> expr = module.children[0]\n>>> expr\nPythonNode(arith_expr, [<Name: hello@1,0>, <Operator: +>, <Number: 1>])\n>>> print(expr.get_code())\nhello + 1\n>>> name = expr.children[0]\n>>> name\n<Name: hello@1,0>\n>>> name.end_pos\n(1, 5)\n>>> expr.end_pos\n(1, 9)\n.\nTo list multiple issues:\n.\n>>> grammar = parso.load_grammar()\n>>> module = grammar.parse('foo +\\nbar\\ncontinue')\n>>> error1, error2 = grammar.iter_errors(module)\n>>> error1.message\n'SyntaxError: invalid syntax'\n>>> error2.message\n\"SyntaxError: 'continue' not properly in loop\"",
+  "version": "0.8.7-1",
+  "architectures": [
+    "all"
+  ],
+  "homepage": "https://github.com/davidhalter/parso",
+  "repository": "https://github.com/davidhalter/parso",
+  "source_package": "parso",
+  "metapackages": [],
+  "install": {
+    "apt": "sudo apt install python3-parso"
+  },
+  "packages": [
+    {
+      "name": "python3-parso"
+    }
+  ],
+  "commands": [],
+  "files": [],
+  "tags": [
+    "os-package",
+    "python"
+  ],
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
+}

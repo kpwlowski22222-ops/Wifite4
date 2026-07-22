@@ -4,14 +4,125 @@
   "name": "bluetooth-AudioShare",
   "full_name": "Shreyas445/bluetooth-AudioShare",
   "owner": "Shreyas445",
-  "category": "Bluetooth / BLE",
+  "category": "Bluetooth",
   "url": "https://github.com/Shreyas445/bluetooth-AudioShare",
-  "summary": "Repository indexing entry for the ``bluetooth-AudioShare`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "AudioShare: Dual Bluetooth System Bypass (Android 12-14)",
   "documentation": {
-    "readme": null,
+    "readme": "AudioShare: Dual Bluetooth System Bypass (Android 12-14)",
     "usage_sections": [],
-    "arguments": [],
-    "examples": []
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--target",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--output",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "setPreferredDevicesForStrategy",
+        "signature": "setPreferredDevicesForStrategy(...)",
+        "file": "README.md",
+        "language": "documentation"
+      }
+    ],
+    "examples": [],
+    "file_listing": [
+      "LICENSE",
+      "README.md"
+    ],
+    "languages": [
+      "python"
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -20,11 +131,10 @@
     "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "low",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -33,50 +143,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
     "bluetooth",
-    "audioshare",
+    "toolbox",
+    "github",
     "shreyas445",
-    "web",
-    "ble_4_x",
-    "ble_audio",
-    "kfiosa",
-    "indexed",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --help",
+    "cd toolboxes/bluetooth-AudioShare && cat README.md",
+    "cd toolboxes/bluetooth-AudioShare && ls -la",
     "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --help",
-    "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --help",
-    "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --help",
-    "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluetooth-AudioShare --output $KFIOSA_OUTPUT_DIR/bluetooth-AudioShare.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluetooth-AudioShare --output $KFIOSA_OUTPUT_DIR/bluetooth-AudioShare.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web",
     "ble_4_x",
-    "ble_audio"
+    "ble_5_x",
+    "ble_mesh"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "none"
+    "hci0_ble"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
-  ]
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": []
 }

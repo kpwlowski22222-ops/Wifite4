@@ -88,6 +88,37 @@ def get_hf_token(settings=None) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Kismet API key resolution — single source of truth.
+# ---------------------------------------------------------------------------
+# The operator runs the local Kismet server on http://localhost:2501
+# (via ``sudo kismet``). The API key is read from
+# ``KISMET_API_KEY`` env var. NEVER inline in prompts/argv/logs.
+# Pattern matches [[kfiosa-kismet-api-key]] and follows the same
+# shape as ``get_nvd_key`` / ``get_hf_token``.
+def get_kismet_key(settings=None) -> str:
+    """Return the Kismet API key with a single, well-defined precedence.
+
+    Order: settings.kismet.api_key → $KISMET_API_KEY → "".
+
+    Best-effort: returns "" when absent so callers can branch on
+    truthiness. The local Kismet server is reachable at
+    http://localhost:2501 when the operator has run ``sudo kismet``.
+    """
+    try:
+        if settings is not None:
+            v = settings.get_setting("kismet.api_key", "")
+            if v:
+                return v
+        from core.settings import settings_manager  # local import to avoid cycle
+        v = settings_manager.get_setting("kismet.api_key", "")
+        if v:
+            return v
+    except Exception:
+        pass
+    return os.environ.get("KISMET_API_KEY", "") or ""
+
+
+# ---------------------------------------------------------------------------
 # Ollama model catalog (exact pulled tags)
 # ---------------------------------------------------------------------------
 MODEL_CATALOG: Dict[str, str] = {
@@ -113,9 +144,14 @@ MODEL_CATALOG: Dict[str, str] = {
 # changes ONLY the model tag (not the gate, not the prompt
 # safety stance, not the chain-stanza catalog).
 TARGET_MODEL_CATALOG: Dict[str, str] = {
-    "microsoft": "DavidAU/Qwen2.5-Coder-14B-Instruct-uncensored:Q4_K_M",
-    "android":   "DavidAU/Qwen2.5-Coder-14B-Instruct-uncensored:Q4_K_M",
-    "ios":       "DavidAU/Qwen2.5-Coder-14B-Instruct-uncensored:Q4_K_M",
+    # The bare ``DavidAU/Qwen2.5-Coder-14B-Instruct-uncensored`` repo
+    # does not exist on HF. The actual Q4_K_M GGUF redistribution is
+    # ``roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF``
+    # (3093 downloads, MIT). Operator's hardware (RTX 5070 Ti 12GB
+    # + 32GB RAM) handles this model pure-GPU at Q4_K_M (~9GB VRAM).
+    "microsoft": "roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:Q4_K_M",
+    "android":   "roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:Q4_K_M",
+    "ios":       "roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:Q4_K_M",
     "fallback":  MODEL_CATALOG["fallback"],
 }
 
@@ -679,3 +715,122 @@ class AIBackend:
             }
             selected = defaults.get(domain, ["nmap"])
         return selected
+
+
+# ---------------------------------------------------------------------------
+# Re-exports for the 10 specialized 0-day algorithms
+# (Phase 2.2.G+) — keeping them at package root so callers can do
+# ``from core.ai_backend import analyze_crash_triager, ZERO_DAY_ALGORITHMS``.
+# Imports are best-effort: if the optional module is absent, the
+# package still imports cleanly.
+# ---------------------------------------------------------------------------
+try:
+    from .zero_day_algorithms import (
+        ZERO_DAY_ALGORITHMS,
+        list_algorithms,
+        dispatch,
+        analyze_crash_triager,
+        analyze_side_channel_finder,
+        analyze_fuzz_harness_gen,
+        analyze_control_flow_surfer,
+        analyze_patch_differ,
+        analyze_memory_class_predictor,
+        analyze_auth_path_auditor,
+        analyze_crypto_weakness_finder,
+        analyze_race_analyzer,
+        analyze_logic_flaw_heuristic,
+    )
+except Exception:  # pragma: no cover - depends on import order
+    pass
+
+
+# ---------------------------------------------------------------------------
+# Phase 2.4: 280 new v3 methods (40 × 7 categories). Re-exported so
+# callers can ``from core.ai_backend import V3_REGISTRY``.
+# ---------------------------------------------------------------------------
+try:
+    from .v3_methods import (
+        V3_REGISTRY,
+        V3_PROMPT_STANZA,
+        WIFI_ATTACK_V3_METHODS,
+        WIFI_RECON_V3_METHODS,
+        BLE_ATTACK_V3_METHODS,
+        BLE_RECON_V3_METHODS,
+        OSINT_WEB_V3_METHODS,
+        OSINT_PEOPLE_V3_METHODS,
+        POST_EXPLOIT_V3_METHODS,
+        list_v3_methods,
+        describe_v3_method,
+        describe_v3_category,
+        all_v3_method_names,
+        total_v3_count,
+        build_v3_prompt_stanza,
+    )
+except Exception:  # pragma: no cover - depends on import order
+    pass
+
+
+# ---------------------------------------------------------------------------
+# 4-touchpoint pattern: explicit public surface.
+#
+# This is the canonical list of symbols the package exports
+# via ``from core.ai_backend import X``. Anything not in this
+# list is implementation detail and may change without notice.
+#
+# Modules (re-exported by the try/except above) and submodule
+# attributes (``zero_day``, ``zero_day_algorithms``) are listed
+# so that ``import core.ai_backend; core.ai_backend.X`` works
+# uniformly.
+# ---------------------------------------------------------------------------
+__all__ = [
+    # Constants
+    "BLE_SYSTEM_PROMPT",
+    "C2_SYSTEM_PROMPT",
+    "DEFAULT_OLLAMA_ENDPOINT",
+    "MODEL_CATALOG",
+    "OSINT_SYSTEM_PROMPT",
+    "POST_EXPLOIT_SYSTEM_PROMPT",
+    "TARGET_MODEL_CATALOG",
+    "VALID_TARGET_CLASSES",
+    "WIFI_SYSTEM_PROMPT",
+    # Classes
+    "AIBackend",
+    "OllamaClient",
+    # Functions
+    "analyze_auth_path_auditor",
+    "analyze_control_flow_surfer",
+    "analyze_crash_triager",
+    "analyze_crypto_weakness_finder",
+    "analyze_fuzz_harness_gen",
+    "analyze_logic_flaw_heuristic",
+    "analyze_memory_class_predictor",
+    "analyze_patch_differ",
+    "analyze_race_analyzer",
+    "analyze_side_channel_finder",
+    "dispatch",
+    "get_hf_token",
+    "get_nvd_key",
+    "list_algorithms",
+    # Zero-day registry
+    "ZERO_DAY_ALGORITHMS",
+    # v3 method registry (Phase 2.4)
+    "V3_REGISTRY",
+    "V3_PROMPT_STANZA",
+    "WIFI_ATTACK_V3_METHODS",
+    "WIFI_RECON_V3_METHODS",
+    "BLE_ATTACK_V3_METHODS",
+    "BLE_RECON_V3_METHODS",
+    "OSINT_WEB_V3_METHODS",
+    "OSINT_PEOPLE_V3_METHODS",
+    "POST_EXPLOIT_V3_METHODS",
+    "list_v3_methods",
+    "describe_v3_method",
+    "describe_v3_category",
+    "all_v3_method_names",
+    "total_v3_count",
+    "build_v3_prompt_stanza",
+    # Submodules
+    "zero_day",
+    "zero_day_algorithms",
+    "v3_methods",
+]

@@ -3,16 +3,16 @@
   "kind": "kali_source_package",
   "name": "mssqlpwner",
   "title": "mssqlpwner",
-  "summary": "### mssqlpwner",
+  "summary": "Advanced and versatile pentesting tool",
+  "description": "Advanced and versatile pentesting tool\nMSSqlPwner is an advanced and versatile pentesting tool designed to seamlessly\ninteract and pwn MSSQL servers. That tool is based on impacket, which allows\nattackers to authenticate to databases using clear-text passwords NTLM Hashes,\nand kerberos tickets. With MSSqlPwner, users can execute custom commands\nthrough various methods, including custom assembly, `xp_cmdshell`, and\n`sp_oacreate(Ole Automation Procedures)` and much more.",
   "version": "1.3.2+git20260525.5c2d326-0kali1",
   "architectures": [
     "all"
   ],
   "homepage": "https://github.com/ScorpionesLabs/MSSqlPwner",
-  "repository": "https://gitlab.com/kalilinux/packages/mssqlpwner",
-  "metapackages": [
-    "kali-linux-everything"
-  ],
+  "repository": "https://github.com/ScorpionesLabs/MSSqlPwner",
+  "source_package": "mssqlpwner",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install mssqlpwner"
   },
@@ -24,290 +24,21 @@
   "commands": [
     {
       "name": "mssqlpwner",
-      "description": "- - -",
-      "usage": "mssqlpwner [-h] [-port PORT] [-timeout TIMEOUT] [-db DB]",
-      "arguments": [
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
-            "-port"
-          ],
-          "metavar": "PORT",
-          "takes_value": true,
-          "description": "target MSSQL port (default 1433)",
-          "default": "1433",
-          "choices": null,
-          "raw": " -port PORT            target MSSQL port (default 1433)"
-        },
-        {
-          "flags": [
-            "-timeout"
-          ],
-          "metavar": "TIMEOUT",
-          "takes_value": true,
-          "description": "timeout in seconds (default 30)",
-          "default": "30",
-          "choices": null,
-          "raw": " -timeout TIMEOUT      timeout in seconds (default 30)"
-        },
-        {
-          "flags": [
-            "-db"
-          ],
-          "metavar": "DB",
-          "takes_value": true,
-          "description": "MSSQL database instance (default None)",
-          "default": "None",
-          "choices": null,
-          "raw": " -db DB                MSSQL database instance (default None)"
-        },
-        {
-          "flags": [
-            "-windows-auth"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "whether or not to use Windows Authentication (default",
-          "default": null,
-          "choices": null,
-          "raw": " -windows-auth         whether or not to use Windows Authentication (default"
-        },
-        {
-          "flags": [
-            "-no-state"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "whether or not to load existing state",
-          "default": null,
-          "choices": null,
-          "raw": " -no-state             whether or not to load existing state"
-        },
-        {
-          "flags": [
-            "-debug"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Turn DEBUG output ON",
-          "default": null,
-          "choices": null,
-          "raw": " -debug                Turn DEBUG output ON"
-        },
-        {
-          "flags": [
-            "-hashes"
-          ],
-          "metavar": "LMHASH",
-          "takes_value": true,
-          "description": "NTHASH",
-          "default": null,
-          "choices": null,
-          "raw": " -hashes LMHASH:NTHASH"
-        },
-        {
-          "flags": [
-            "-no-pass"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "don't ask for password (useful for -k)",
-          "default": null,
-          "choices": null,
-          "raw": " -no-pass              don't ask for password (useful for -k)"
-        },
-        {
-          "flags": [
-            "-k"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Use Kerberos authentication. Grabs credentials from",
-          "default": null,
-          "choices": null,
-          "raw": " -k                    Use Kerberos authentication. Grabs credentials from"
-        },
-        {
-          "flags": [
-            "-aesKey"
-          ],
-          "metavar": "hex key",
-          "takes_value": true,
-          "description": "AES key to use for Kerberos Authentication (128 or 256",
-          "default": null,
-          "choices": null,
-          "raw": " -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256"
-        },
-        {
-          "flags": [
-            "-dc-ip"
-          ],
-          "metavar": "ip address",
-          "takes_value": true,
-          "description": "IP Address of the domain controller. If ommited it use",
-          "default": null,
-          "choices": null,
-          "raw": " -dc-ip ip address     IP Address of the domain controller. If ommited it use"
-        },
-        {
-          "flags": [
-            "-link-name"
-          ],
-          "metavar": "LINK_NAME",
-          "takes_value": true,
-          "description": "Linked server to launch queries",
-          "default": null,
-          "choices": null,
-          "raw": " -link-name LINK_NAME  Linked server to launch queries"
-        },
-        {
-          "flags": [
-            "-max-link-depth"
-          ],
-          "metavar": "MAX_LINK_DEPTH",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -max-link-depth MAX_LINK_DEPTH"
-        },
-        {
-          "flags": [
-            "-max-impersonation-depth"
-          ],
-          "metavar": "MAX_IMPERSONATION_DEPTH",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -max-impersonation-depth MAX_IMPERSONATION_DEPTH"
-        },
-        {
-          "flags": [
-            "-chain-id"
-          ],
-          "metavar": "CHAIN_ID",
-          "takes_value": true,
-          "description": "Chain ID to use",
-          "default": null,
-          "choices": null,
-          "raw": " -chain-id CHAIN_ID    Chain ID to use"
-        },
-        {
-          "flags": [
-            "-auto-yes"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Auto answer yes to all questions",
-          "default": null,
-          "choices": null,
-          "raw": " -auto-yes             Auto answer yes to all questions"
-        }
-      ],
-      "raw_help": "root@kali:~# mssqlpwner -h\n usage: mssqlpwner [-h] [-port PORT] [-timeout TIMEOUT] [-db DB]\n                 [-windows-auth] [-no-state] [-debug] [-hashes LMHASH:NTHASH]\n                 [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address]\n                 [-link-name LINK_NAME] [-max-link-depth MAX_LINK_DEPTH]\n                 [-max-impersonation-depth MAX_IMPERSONATION_DEPTH]\n                 [-chain-id CHAIN_ID] [-auto-yes]\n                 target\n                 {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute} ...\n \n TDS client implementation (SSL supported).\n \n positional arguments:\n target                [[domain/]username[:password]@]<targetName or address>\n \n Options:\n -h, --help            show this help message and exit\n -port PORT            target MSSQL port (default 1433)\n -timeout TIMEOUT      timeout in seconds (default 30)\n -db DB                MSSQL database instance (default None)\n -windows-auth         whether or not to use Windows Authentication (default\n                       False)\n -no-state             whether or not to load existing state\n -debug                Turn DEBUG output ON\n \n authentication:\n -hashes LMHASH:NTHASH\n                       NTLM hashes, format is LMHASH:NTHASH\n -no-pass              don't ask for password (useful for -k)\n -k                    Use Kerberos authentication. Grabs credentials from\n                       ccache file (KRB5CCNAME) based on target parameters.\n                       If valid credentials cannot be found, it will use the\n                       ones specified in the command line\n -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                       bits)\n -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                       the domain part (FQDN) specified in the target\n                       parameter\n \n Choose module:\n -link-name LINK_NAME  Linked server to launch queries\n -max-link-depth MAX_LINK_DEPTH\n                       Maximum links you want to depth recursively\n -max-impersonation-depth MAX_IMPERSONATION_DEPTH\n                       Maximum impersonation you want to depth in each link\n -chain-id CHAIN_ID    Chain ID to use\n -auto-yes             Auto answer yes to all questions\n \n Modules:\n {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute}\n   enumerate           Enumerate MSSQL server\n   set-chain           Set chain ID (For interactive-mode only!)\n   rev2self            Revert to SELF (For interactive-mode only!)\n   get-rev2self-queries\n                       Retrieve queries to revert to SELF (For interactive-\n                       mode only!)\n   get-chain-list      Get chain list\n   get-link-server-list\n                       Get linked server list\n   get-adsi-provider-list\n                       Get ADSI provider list\n   set-link-server     Set link server (For interactive-mode only!)\n   exec                Command to execute\n   ntlm-relay          Steal NetNTLM hash / Relay attack\n   custom-asm          Execute procedures using custom assembly\n   inject-custom-asm   Code injection using custom assembly\n   direct-query        Execute direct query\n   retrieve-password   Retrieve password from ADSI servers\n   interactive         Interactive Mode\n   brute               Brute force\n usage: mssqlpwner [-h] [-port PORT] [-timeout TIMEOUT] [-db DB]\n                 [-windows-auth] [-no-state] [-debug] [-hashes LMHASH:NTHASH]\n                 [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address]\n                 [-link-name LINK_NAME] [-max-link-depth MAX_LINK_DEPTH]\n                 [-max-impersonation-depth MAX_IMPERSONATION_DEPTH]\n                 [-chain-id CHAIN_ID] [-auto-yes]\n                 target\n                 {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute} ...\n \n TDS client implementation (SSL supported).\n \n positional arguments:\n target                [[domain/]username[:password]@]<targetName or address>\n \n Options:\n -h, --help            show this help message and exit\n -port PORT            target MSSQL port (default 1433)\n -timeout TIMEOUT      timeout in seconds (default 30)\n -db DB                MSSQL database instance (default None)\n -windows-auth         whether or not to use Windows Authentication (default\n                       False)\n -no-state             whether or not to load existing state\n -debug                Turn DEBUG output ON\n \n authentication:\n -hashes LMHASH:NTHASH\n                       NTLM hashes, format is LMHASH:NTHASH\n -no-pass              don't ask for password (useful for -k)\n -k                    Use Kerberos authentication. Grabs credentials from\n                       ccache file (KRB5CCNAME) based on target parameters.\n                       If valid credentials cannot be found, it will use the\n                       ones specified in the command line\n -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                       bits)\n -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                       the domain part (FQDN) specified in the target\n                       parameter\n \n Choose module:\n -link-name LINK_NAME  Linked server to launch queries\n -max-link-depth MAX_LINK_DEPTH\n                       Maximum links you want to depth recursively\n -max-impersonation-depth MAX_IMPERSONATION_DEPTH\n                       Maximum impersonation you want to depth in each link\n -chain-id CHAIN_ID    Chain ID to use\n -auto-yes             Auto answer yes to all questions\n \n Modules:\n {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute}\n   enumerate           Enumerate MSSQL server\n   set-chain           Set chain ID (For interactive-mode only!)\n   rev2self            Revert to SELF (For interactive-mode only!)\n   get-rev2self-queries\n                       Retrieve queries to revert to SELF (For interactive-\n                       mode only!)\n   get-chain-list      Get chain list\n   get-link-server-list\n                       Get linked server list\n   get-adsi-provider-list\n                       Get ADSI provider list\n   set-link-server     Set link server (For interactive-mode only!)\n   exec                Command to execute\n   ntlm-relay          Steal NetNTLM hash / Relay attack\n   custom-asm          Execute procedures using custom assembly\n   inject-custom-asm   Code injection using custom assembly\n   direct-query        Execute direct query\n   retrieve-password   Retrieve password from ADSI servers\n   interactive         Interactive Mode\n   brute               Brute force",
-      "examples": [],
-      "risk": {
-        "level": "critical",
-        "signals": [
-          "rat"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "usage: mssqlpwner [-h] [-port PORT] [-timeout TIMEOUT] [-db DB]\n                  [-windows-auth] [-no-state] [-debug] [-hashes LMHASH:NTHASH]\n                  [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address]\n                  [-link-name LINK_NAME] [-max-link-depth MAX_LINK_DEPTH]\n                  [-max-impersonation-depth MAX_IMPERSONATION_DEPTH]\n                  [-chain-id CHAIN_ID] [-auto-yes]\n                  target\n                  {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute} ...\n\nTDS client implementation (SSL supported).\n\npositional arguments:\n  target                [[domain/]username[:password]@]<targetName or address>\n\nOptions:\n  -h, --help            show this help message and exit\n  -port PORT            target MSSQL port (default 1433)\n  -timeout TIMEOUT      timeout in seconds (default 30)\n  -db DB                MSSQL database instance (default None)\n  -windows-auth         whether or not to use Windows Authentication (default\n                        False)\n  -no-state             whether or not to load existing state\n  -debug                Turn DEBUG output ON\n\nauthentication:\n  -hashes LMHASH:NTHASH\n                        NTLM hashes, format is LMHASH:NTHASH\n  -no-pass              don't ask for password (useful for -k)\n  -k                    Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)\n  -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                        the domain part (FQDN) specified in the target\n                        parameter\n\nChoose module:\n  -link-name LINK_NAME  Linked server to launch queries\n  -max-link-depth MAX_LINK_DEPTH\n                        Maximum links you want to depth recursively\n  -max-impersonation-depth MAX_IMPERSONATION_DEPTH\n                        Maximum impersonation you want to depth in each link\n  -chain-id CHAIN_ID    Chain ID to use\n  -auto-yes             Auto answer yes to all questions\n\nModules:\n  {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute}\n    enumerate           Enumerate MSSQL server\n    set-chain           Set chain ID (For interactive-mode only!)\n    rev2self            Revert to SELF (For interactive-mode only!)\n    get-rev2self-queries\n                        Retrieve queries to revert to SELF (For interactive-\n                        mode only!)\n    get-chain-list      Get chain list\n    get-link-server-list\n                        Get linked server list\n    get-adsi-provider-list\n                        Get ADSI provider list\n    set-link-server     Set link server (For interactive-mode only!)\n    exec                Command to execute\n    ntlm-relay          Steal NetNTLM hash / Relay attack\n    custom-asm          Execute procedures using custom assembly\n    inject-custom-asm   Code injection using custom assembly\n    direct-query        Execute direct query\n    retrieve-password   Retrieve password from ADSI servers\n    interactive         Interactive Mode\n    brute               Brute force\nusage: mssqlpwner [-h] [-port PORT] [-timeout TIMEOUT] [-db DB]\n                  [-windows-auth] [-no-state] [-debug] [-hashes LMHASH:NTHASH]\n                  [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address]\n                  [-link-name LINK_NAME] [-max-link-depth MAX_LINK_DEPTH]\n                  [-max-impersonation-depth MAX_IMPERSONATION_DEPTH]\n                  [-chain-id CHAIN_ID] [-auto-yes]\n                  target\n                  {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute} ...\n\nTDS client implementation (SSL supported).\n\npositional arguments:\n  target                [[domain/]username[:password]@]<targetName or address>\n\nOptions:\n  -h, --help            show this help message and exit\n  -port PORT            target MSSQL port (default 1433)\n  -timeout TIMEOUT      timeout in seconds (default 30)\n  -db DB                MSSQL database instance (default None)\n  -windows-auth         whether or not to use Windows Authentication (default\n                        False)\n  -no-state             whether or not to load existing state\n  -debug                Turn DEBUG output ON\n\nauthentication:\n  -hashes LMHASH:NTHASH\n                        NTLM hashes, format is LMHASH:NTHASH\n  -no-pass              don't ask for password (useful for -k)\n  -k                    Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)\n  -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                        the domain part (FQDN) specified in the target\n                        parameter\n\nChoose module:\n  -link-name LINK_NAME  Linked server to launch queries\n  -max-link-depth MAX_LINK_DEPTH\n                        Maximum links you want to depth recursively\n  -max-impersonation-depth MAX_IMPERSONATION_DEPTH\n                        Maximum impersonation you want to depth in each link\n  -chain-id CHAIN_ID    Chain ID to use\n  -auto-yes             Auto answer yes to all questions\n\nModules:\n  {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute}\n    enumerate           Enumerate MSSQL server\n    set-chain           Set chain ID (For interactive-mode only!)\n    rev2self            Revert to SELF (For interactive-mode only!)\n    get-rev2self-queries\n                        Retrieve queries to revert to SELF (For interactive-\n                        mode only!)\n    get-chain-list      Get chain list\n    get-link-server-list\n                        Get linked server list\n    get-adsi-provider-list\n                        Get ADSI provider list\n    set-link-server     Set link server (For interactive-mode only!)\n    exec                Command to execute\n    ntlm-relay          Steal NetNTLM hash / Relay attack\n    custom-asm          Execute procedures using custom assembly\n    inject-custom-asm   Code injection using custom assembly\n    direct-query        Execute direct query\n    retrieve-password   Retrieve password from ADSI servers\n    interactive         Interactive Mode\n    brute               Brute force",
-        "-h": "usage: mssqlpwner [-h] [-port PORT] [-timeout TIMEOUT] [-db DB]\n                  [-windows-auth] [-no-state] [-debug] [-hashes LMHASH:NTHASH]\n                  [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address]\n                  [-link-name LINK_NAME] [-max-link-depth MAX_LINK_DEPTH]\n                  [-max-impersonation-depth MAX_IMPERSONATION_DEPTH]\n                  [-chain-id CHAIN_ID] [-auto-yes]\n                  target\n                  {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute} ...\n\nTDS client implementation (SSL supported).\n\npositional arguments:\n  target                [[domain/]username[:password]@]<targetName or address>\n\nOptions:\n  -h, --help            show this help message and exit\n  -port PORT            target MSSQL port (default 1433)\n  -timeout TIMEOUT      timeout in seconds (default 30)\n  -db DB                MSSQL database instance (default None)\n  -windows-auth         whether or not to use Windows Authentication (default\n                        False)\n  -no-state             whether or not to load existing state\n  -debug                Turn DEBUG output ON\n\nauthentication:\n  -hashes LMHASH:NTHASH\n                        NTLM hashes, format is LMHASH:NTHASH\n  -no-pass              don't ask for password (useful for -k)\n  -k                    Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)\n  -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                        the domain part (FQDN) specified in the target\n                        parameter\n\nChoose module:\n  -link-name LINK_NAME  Linked server to launch queries\n  -max-link-depth MAX_LINK_DEPTH\n                        Maximum links you want to depth recursively\n  -max-impersonation-depth MAX_IMPERSONATION_DEPTH\n                        Maximum impersonation you want to depth in each link\n  -chain-id CHAIN_ID    Chain ID to use\n  -auto-yes             Auto answer yes to all questions\n\nModules:\n  {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute}\n    enumerate           Enumerate MSSQL server\n    set-chain           Set chain ID (For interactive-mode only!)\n    rev2self            Revert to SELF (For interactive-mode only!)\n    get-rev2self-queries\n                        Retrieve queries to revert to SELF (For interactive-\n                        mode only!)\n    get-chain-list      Get chain list\n    get-link-server-list\n                        Get linked server list\n    get-adsi-provider-list\n                        Get ADSI provider list\n    set-link-server     Set link server (For interactive-mode only!)\n    exec                Command to execute\n    ntlm-relay          Steal NetNTLM hash / Relay attack\n    custom-asm          Execute procedures using custom assembly\n    inject-custom-asm   Code injection using custom assembly\n    direct-query        Execute direct query\n    retrieve-password   Retrieve password from ADSI servers\n    interactive         Interactive Mode\n    brute               Brute force\nusage: mssqlpwner [-h] [-port PORT] [-timeout TIMEOUT] [-db DB]\n                  [-windows-auth] [-no-state] [-debug] [-hashes LMHASH:NTHASH]\n                  [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address]\n                  [-link-name LINK_NAME] [-max-link-depth MAX_LINK_DEPTH]\n                  [-max-impersonation-depth MAX_IMPERSONATION_DEPTH]\n                  [-chain-id CHAIN_ID] [-auto-yes]\n                  target\n                  {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute} ...\n\nTDS client implementation (SSL supported).\n\npositional arguments:\n  target                [[domain/]username[:password]@]<targetName or address>\n\nOptions:\n  -h, --help            show this help message and exit\n  -port PORT            target MSSQL port (default 1433)\n  -timeout TIMEOUT      timeout in seconds (default 30)\n  -db DB                MSSQL database instance (default None)\n  -windows-auth         whether or not to use Windows Authentication (default\n                        False)\n  -no-state             whether or not to load existing state\n  -debug                Turn DEBUG output ON\n\nauthentication:\n  -hashes LMHASH:NTHASH\n                        NTLM hashes, format is LMHASH:NTHASH\n  -no-pass              don't ask for password (useful for -k)\n  -k                    Use Kerberos authentication. Grabs credentials from\n                        ccache file (KRB5CCNAME) based on target parameters.\n                        If valid credentials cannot be found, it will use the\n                        ones specified in the command line\n  -aesKey hex key       AES key to use for Kerberos Authentication (128 or 256\n                        bits)\n  -dc-ip ip address     IP Address of the domain controller. If ommited it use\n                        the domain part (FQDN) specified in the target\n                        parameter\n\nChoose module:\n  -link-name LINK_NAME  Linked server to launch queries\n  -max-link-depth MAX_LINK_DEPTH\n                        Maximum links you want to depth recursively\n  -max-impersonation-depth MAX_IMPERSONATION_DEPTH\n                        Maximum impersonation you want to depth in each link\n  -chain-id CHAIN_ID    Chain ID to use\n  -auto-yes             Auto answer yes to all questions\n\nModules:\n  {enumerate,set-chain,rev2self,get-rev2self-queries,get-chain-list,get-link-server-list,get-adsi-provider-list,set-link-server,exec,ntlm-relay,custom-asm,inject-custom-asm,direct-query,retrieve-password,interactive,brute}\n    enumerate           Enumerate MSSQL server\n    set-chain           Set chain ID (For interactive-mode only!)\n    rev2self            Revert to SELF (For interactive-mode only!)\n    get-rev2self-queries\n                        Retrieve queries to revert to SELF (For interactive-\n                        mode only!)\n    get-chain-list      Get chain list\n    get-link-server-list\n                        Get linked server list\n    get-adsi-provider-list\n                        Get ADSI provider list\n    set-link-server     Set link server (For interactive-mode only!)\n    exec                Command to execute\n    ntlm-relay          Steal NetNTLM hash / Relay attack\n    custom-asm          Execute procedures using custom assembly\n    inject-custom-asm   Code injection using custom assembly\n    direct-query        Execute direct query\n    retrieve-password   Retrieve password from ADSI servers\n    interactive         Interactive Mode\n    brute               Brute force",
-        "help": "[-] Module must be supplied!"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/mssqlpwner",
-        "size_bytes": 220,
-        "is_symlink": false,
-        "file_type": "Python script, ASCII text executable"
-      }
+      "path": "/usr/bin/mssqlpwner",
+      "description": "usage: mssqlpwner [-h] [-port PORT] [-timeout TIMEOUT] [-db DB]",
+      "usage": "mssqlpwner [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/mssqlpwner/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/mssqlpwner/index.md",
-    "retrieved_at": "2026-07-14T13:06:49+00:00",
-    "sha256": "5f482acb8def6817c39770a46bddc81f2a34bf2021631c8ea0ac70d539825521"
-  },
-  "apt_metadata": {
-    "section": "misc",
-    "installed_size": "239",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "all",
-    "version": "1.3.2+git20260525.5c2d326-0kali1",
-    "depends": "python3-impacket, python3-prompt-toolkit, python3-termcolor, python3:any",
-    "description": "Advanced and versatile pentesting tool\nMSSqlPwner is an advanced and versatile pentesting tool designed to seamlessly\ninteract and pwn MSSQL servers. That tool is based on impacket, which allows\nattackers to authenticate to databases using clear-text passwords NTLM Hashes,\nand kerberos tickets. With MSSqlPwner, users can execute custom commands\nthrough various methods, including custom assembly, `xp_cmdshell`, and\n`sp_oacreate(Ole Automation Procedures)` and much more.",
-    "homepage": "https://github.com/ScorpionesLabs/MSSqlPwner"
-  },
+  "files": [
+    "/usr/bin/mssqlpwner"
+  ],
   "tags": [
-    "offensive",
-    "mssqlpwner",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/mssqlpwner && python3 mssqlpwner.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/mssqlpwner && python3 mssqlpwner.py --help",
-    "cd toolboxes/mssqlpwner && python3 mssqlpwner.py --help",
-    "cd toolboxes/mssqlpwner && python3 mssqlpwner.py --help",
-    "cd toolboxes/mssqlpwner && python3 mssqlpwner.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mssqlpwner --output $KFIOSA_OUTPUT_DIR/mssqlpwner.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mssqlpwner --output $KFIOSA_OUTPUT_DIR/mssqlpwner.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

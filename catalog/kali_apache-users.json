@@ -3,18 +3,16 @@
   "kind": "kali_source_package",
   "name": "apache-users",
   "title": "apache-users",
-  "summary": "### apache-users",
+  "summary": "Enumerate usernames on systems with Apache UserDir module",
+  "description": "Enumerate usernames on systems with Apache UserDir module\nThis Perl script will enumerate the usernames on any\nsystem that uses Apache with the UserDir module.",
   "version": "2.1-1kali6",
   "architectures": [
-    "any"
+    "amd64"
   ],
   "homepage": "https://labs.portcullis.co.uk/downloads/",
-  "repository": "https://gitlab.com/kalilinux/packages/apache-users",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-web"
-  ],
+  "repository": "https://labs.portcullis.co.uk/downloads/",
+  "source_package": "apache-users",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install apache-users"
   },
@@ -26,107 +24,22 @@
   "commands": [
     {
       "name": "apache-users",
-      "description": "- - -",
-      "usage": "apache-users [-h 1.2.3.4] [-l names] [-p 80] [-s (SSL Support 1=true 0=false)] [-e 403 (http code)] [-t threads]",
-      "arguments": [],
-      "raw_help": "root@kali:~# apache-users -h\n \n USAGE: apache-users [-h 1.2.3.4] [-l names] [-p 80] [-s (SSL Support 1=true 0=false)] [-e 403 (http code)] [-t threads]",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "apache-users -h 192.168.1.202 -l /usr/share/wordlists/metasploit/unix_users.txt -p 80 -s 0 -e 403 -t 10",
-          "template": null,
-          "original_sha256": "de4f872fce07369adc9ec97642bee47d408a4619c071b1733fcc40db92fcef06"
-        }
-      ],
-      "risk": {
-        "level": "low",
-        "signals": [],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "USAGE: apache-users [-h 1.2.3.4] [-l names] [-p 80] [-s (SSL Support 1=true 0=false)] [-e 403 (http code)] [-t threads]",
-        "-h": "USAGE: apache-users [-h 1.2.3.4] [-l names] [-p 80] [-s (SSL Support 1=true 0=false)] [-e 403 (http code)] [-t threads]",
-        "help": "USAGE: apache-users [-h 1.2.3.4] [-l names] [-p 80] [-s (SSL Support 1=true 0=false)] [-e 403 (http code)] [-t threads]"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/apache-users",
-        "size_bytes": 2932,
-        "is_symlink": false,
-        "file_type": "Perl script text executable"
-      }
+      "path": "/usr/bin/apache-users",
+      "description": "USAGE: apache-users [-h 1.2.3.4] [-l names] [-p 80] [-s (SSL Support 1=true 0=false)] [-e 403 (http code)] [-t threads]",
+      "usage": "apache-users [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/apache-users/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/apache-users/index.md",
-    "retrieved_at": "2026-07-14T13:04:52+00:00",
-    "sha256": "2ca547f2481fd28e81112ca99edead6b555a858aebc60d320c85541335734c22"
-  },
-  "apt_metadata": {
-    "section": "net",
-    "installed_size": "13",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "amd64",
-    "version": "2.1-1kali6",
-    "depends": "libio-socket-ip-perl, libparallel-forkmanager-perl, libio-all-lwp-perl",
-    "description": "Enumerate usernames on systems with Apache UserDir module\nThis Perl script will enumerate the usernames on any\nsystem that uses Apache with the UserDir module.",
-    "homepage": "https://labs.portcullis.co.uk/downloads/"
-  },
+  "files": [
+    "/usr/bin/apache-users"
+  ],
   "tags": [
-    "offensive",
-    "apache",
-    "users",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package",
+    "networking"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/apache-users && python3 apache-users.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/apache-users && python3 apache-users.py --help",
-    "cd toolboxes/apache-users && python3 apache-users.py --help",
-    "cd toolboxes/apache-users && python3 apache-users.py --help",
-    "cd toolboxes/apache-users && python3 apache-users.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apache-users --output $KFIOSA_OUTPUT_DIR/apache-users.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apache-users --output $KFIOSA_OUTPUT_DIR/apache-users.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

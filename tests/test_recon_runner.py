@@ -703,7 +703,8 @@ class TestParallelDomainRiskScore5Signal(unittest.TestCase):
 class TestReconRunnerRegistry(unittest.TestCase):
 
     def test_recon_methods_count(self):
-        assert len(RECON_METHODS) == 9
+        # 9 originals + 10 Phase 6 polymorphic/target-adaptive
+        assert len(RECON_METHODS) == 19
 
     def test_recons_registry_count_matches(self):
         assert len(RECONS) == len(RECON_METHODS)

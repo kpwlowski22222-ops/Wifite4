@@ -1,0 +1,35 @@
+{
+  "id": "kali:python3-frozenlist",
+  "kind": "kali_source_package",
+  "name": "python3-frozenlist",
+  "title": "python3-frozenlist",
+  "summary": "list-like structure which implements collections.abc.MutableSequence",
+  "description": "list-like structure which implements collections.abc.MutableSequence\n`frozenlist.FrozenList` is a list-like structure which implements\n`collections.abc.MutableSequence`. The list is mutable until `FrozenList.freeze`\nis called, after which list modifications raise `RuntimeError`:\n.\n>>> from frozenlist import FrozenList\n>>> fl = FrozenList([17, 42])\n>>> fl.append('spam')\n>>> fl.append('Vikings')\n>>> fl\n<FrozenList(frozen=False, [17, 42, 'spam', 'Vikings'])>\n>>> fl.freeze()\n>>> fl\n<FrozenList(frozen=True, [17, 42, 'spam', 'Vikings'])>\n>>> fl.frozen\nTrue\n>>> fl.append(\"Monty\")\nTraceback (most recent call last):\nFile \"<stdin>\", line 1, in <module>\nFile \"frozenlist/_frozenlist.pyx\", line 97, in frozenlist._frozenlist.FrozenList.append\nself._check_frozen()\nFile \"frozenlist/_frozenlist.pyx\", line 19, in frozenlist._frozenlist.FrozenList._check_frozen\nraise RuntimeError(\"Cannot modify frozen list.\")\nRuntimeError: Cannot modify frozen list.\n.\nFrozenList is also hashable, but only when frozen. Otherwise it also throws a RuntimeError:\n.\n>>> fl = FrozenList([17, 42, 'spam'])\n>>> hash(fl)\nTraceback (most recent call last):\nFile \"<stdin>\", line 1, in <module>\nFile \"frozenlist/_frozenlist.pyx\", line 111, in frozenlist._frozenlist.FrozenList.__hash__\nraise RuntimeError(\"Cannot hash unfrozen list.\")\nRuntimeError: Cannot hash unfrozen list.\n>>> fl.freeze()\n>>> hash(fl)\n3713081631934410656\n>>> dictionary = {fl: 'Vikings'} # frozen fl can be a dict key\n>>> dictionary\n{<FrozenList(frozen=True, [1, 2])>: 'Vikings'}",
+  "version": "1.8.0-3",
+  "architectures": [
+    "amd64"
+  ],
+  "homepage": "https://github.com/aio-libs/frozenlist",
+  "repository": "https://github.com/aio-libs/frozenlist",
+  "source_package": "frozenlist",
+  "metapackages": [],
+  "install": {
+    "apt": "sudo apt install python3-frozenlist"
+  },
+  "packages": [
+    {
+      "name": "python3-frozenlist"
+    }
+  ],
+  "commands": [],
+  "files": [],
+  "tags": [
+    "os-package",
+    "python"
+  ],
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
+}

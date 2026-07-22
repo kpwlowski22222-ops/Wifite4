@@ -3,20 +3,16 @@
   "kind": "kali_source_package",
   "name": "autopsy",
   "title": "autopsy",
-  "summary": "### autopsy",
+  "summary": "graphical interface to SleuthKit",
+  "description": "graphical interface to SleuthKit\nThe Autopsy Forensic Browser is a graphical interface to the command line\ndigital forensic analysis tools in The Sleuth Kit. Together, The Sleuth Kit\nand Autopsy provide many of the same features as commercial digital forensics\ntools for the analysis of Windows and UNIX file systems (NTFS, FAT, FFS,\nEXT2FS, and EXT3FS).",
   "version": "2.24-6kali1",
   "architectures": [
     "all"
   ],
   "homepage": "https://www.sleuthkit.org/autopsy/",
-  "repository": "https://salsa.debian.org/debian/autopsy",
-  "metapackages": [
-    "kali-linux-default",
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-forensics",
-    "kali-tools-respond"
-  ],
+  "repository": "https://www.sleuthkit.org/autopsy/",
+  "source_package": "autopsy",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install autopsy"
   },
@@ -28,159 +24,22 @@
   "commands": [
     {
       "name": "autopsy",
+      "path": "/usr/bin/autopsy",
       "description": "Autopsy Forensic Browser",
-      "usage": "/usr/bin/autopsy [-c] [-C] [-d evid_locker] [-i device filesystem mnt] [-p port] [remoteaddr]",
-      "arguments": [
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "force a cookie in the URL",
-          "default": null,
-          "choices": null,
-          "raw": " -c: force a cookie in the URL"
-        },
-        {
-          "flags": [
-            "-C"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "force NO cookie in the URL",
-          "default": null,
-          "choices": null,
-          "raw": " -C: force NO cookie in the URL"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": "dir",
-          "takes_value": true,
-          "description": "specify the evidence locker directory",
-          "default": null,
-          "choices": null,
-          "raw": " -d dir: specify the evidence locker directory"
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": "device filesystem mnt",
-          "takes_value": true,
-          "description": "Specify info for live analysis",
-          "default": null,
-          "choices": null,
-          "raw": " -i device filesystem mnt: Specify info for live analysis"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "port",
-          "takes_value": true,
-          "description": "specify the server port (default: 9999)",
-          "default": "9999",
-          "choices": null,
-          "raw": " -p port: specify the server port (default: 9999)"
-        }
-      ],
-      "raw_help": "root@kali:~# autopsy -h\n Invalid flag: -h\n \n \n usage: /usr/bin/autopsy [-c] [-C] [-d evid_locker] [-i device filesystem mnt] [-p port] [remoteaddr]\n -c: force a cookie in the URL\n -C: force NO cookie in the URL\n -d dir: specify the evidence locker directory\n -i device filesystem mnt: Specify info for live analysis\n -p port: specify the server port (default: 9999)\n remoteaddr: specify the host with the browser (default: localhost)",
-      "examples": [],
-      "risk": {
-        "level": "medium",
-        "signals": [
-          "forensic"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Invalid flag: --help\n\n\nusage: /usr/bin/autopsy [-c] [-C] [-d evid_locker] [-i device filesystem mnt] [-p port] [remoteaddr]\n  -c: force a cookie in the URL\n  -C: force NO cookie in the URL\n  -d dir: specify the evidence locker directory\n  -i device filesystem mnt: Specify info for live analysis\n  -p port: specify the server port (default: 9999)\n  remoteaddr: specify the host with the browser (default: localhost)",
-        "-h": "Invalid flag: -h\n\n\nusage: /usr/bin/autopsy [-c] [-C] [-d evid_locker] [-i device filesystem mnt] [-p port] [remoteaddr]\n  -c: force a cookie in the URL\n  -C: force NO cookie in the URL\n  -d dir: specify the evidence locker directory\n  -i device filesystem mnt: Specify info for live analysis\n  -p port: specify the server port (default: 9999)\n  remoteaddr: specify the host with the browser (default: localhost)",
-        "help": "Host not found: help\n\n\nusage: /usr/bin/autopsy [-c] [-C] [-d evid_locker] [-i device filesystem mnt] [-p port] [remoteaddr]\n  -c: force a cookie in the URL\n  -C: force NO cookie in the URL\n  -d dir: specify the evidence locker directory\n  -i device filesystem mnt: Specify info for live analysis\n  -p port: specify the server port (default: 9999)\n  remoteaddr: specify the host with the browser (default: help)",
-        "man": "AUTOPSY(1)                  General Commands Manual                  AUTOPSY(1)\n\nNAME\n     autopsy - Autopsy Forensic Browser\n\nSYNOPSIS\n     autopsy [-c] [-C] [-d evid_locker ] [-i device filesystem mnt ] [-p port ]\n     [addr]\n\nDESCRIPTION\n     By  default,  autopsy  starts  the Autopsy Forensic Browser server on port\n     9999 and and accepts connections from the localhost.  If -p port is given,\n     then the server opens on that port and if addr is given, then  connections\n     are only accepted from that host.  When the -i argument is given, then au-\n     topsy goes into live analysis mode.\n\n     The arguments are as follows:\n\n     -c     Force the program to use cookies even for localhost.\n\n     -C     Force the program to not use cookies even for remote hosts.\n\n     -d evid_locker\n            Directory  where  cases  and  hosts are stored.  This overrides the\n            LOCKDIR value in conf.pl.  The path must be a full path (i.e. start\n            with /).\n\n     -i device filesystem mnt\n            Specify the information for the live analysis mode.   This  can  be\n            specified as many times as needed.  The device field is for the raw\n            file  system  device,  the  filesystem field is for the file system\n            type, and the mnt field is for the mounting point of the file  sys-\n            tem.\n\n     -p portTCP port for server to listen on.\n\n     addr   IP  address  or host name of where investigator is located.  If lo-\n            calhost is used, then 'localhost' must be used in the URL.  If  you\n            use the actual hostname or IP, it will be rejected.\n\n     When  started,  the  program  will  display  a  URL  to paste into an HTML\n     browser.  The browser must support frames and forms.   The Autopsy  Foren-\n     sic  Browser  will  allow  an  investigator to analyze images generated by\n     dd(1) for evidence.  The program allows  the  images  to  be  analyzed  by\n     browsing  files,  blocks, inodes, or by searching the blocks.  The program\n     also generates Autopsy reports that include collection time, investigators\n     name, and MD5 hash values.\n\nVARIABLES\n     The following variables can be set in conf.pl.\n\n     USE_STIMEOUT\n            When set to 1 (default is 0), the server will exit  after  STIMEOUT\n            seconds  of  inactivity  (default is 3600).  This setting is recom-\n            mended if cookies are not used.\n     BASEDIR\n            Directory where cases and forensic images are located.  The  images\n            must  have  simple  names with only letters, numbers, '_', '-', and\n            '.'.  (See FILES).\n     TSKDIR\n            Directory where The Sleuth Kit binaries are located.\n     NSRLDB\n            Location of the NIST National Software Reference Library (NSRL).\n     INSTALLDIR\n            Directory where Autopsy was installed.\n     GREP_EXE\n            Location of grep(1) binary.\n     STRINGS_EXE\n            Location of strings(1) binary.\n\nFILES\n     Evidence Locker\n            The Evidence Locker is where all cases and hosts will be saved  to.\n            It  is  a directory that will have a directory for each case.  Each\n            case directory will have a directory for each host.\n\n     <CASE_DIR>/case.aut\n            This file is the case configuration file for the case.  It contains\n            the description of the case  and  default  subdirectories  for  the\n            hosts.\n\n     <CASE_DIR>/investigators.txt\n            This  file  contains  the  list of investigators that will use this\n            case.  These are used for logging only, not authentication.\n\n     <HOST_DIR>/host.aut\n            This file is where the host configuration details are saved.  It is\n            similar to the 'fsmorgue' file from previous versions  of  Autopsy.\n            It has an entry for each file in the host and contains the host de-\n            scription.\n\n     md5.txt\n            Some directories will have this file in it.  It contains MD5 values\n            for  important files in the directory.  This makes it easy to vali-\n            date the integrity of images.\n\nEXAMPLE\n     # autopsy -p 8888 10.1.34.19\n\nSEE ALSO\n     dd(1), fls(1), ffind(1), ifind(1), grep(1), icat(1) md5(1), strings(1),\n\nREQUIREMENTS\n     The    Autopsy    Forensic    Browser    requires    The    Sleuth     Kit\n     <www.sleuthkit.org/sleuthkit>\n\nHISTORY\n     autopsy first appeared in Autopsy v1.0.\n\nLICENSE\n     This software is distributed under the GNU General Public License.\n\nAUTHOR\n     Brian Carrier <carrier at sleuthkit dot org>\n\n     Send documentation updates to <doc-updates at sleuthkit dot org>\n\nUser Manuals                        MAR 2005                         AUTOPSY(1)",
-        "apropos": "autopsy (1)          - Autopsy Forensic Browser"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/autopsy",
-        "size_bytes": 22960,
-        "is_symlink": false,
-        "file_type": "Perl script text executable"
-      }
+      "usage": "autopsy [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "medium",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/autopsy/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/autopsy/index.md",
-    "retrieved_at": "2026-07-14T13:04:56+00:00",
-    "sha256": "35e1f8a97d2d3bc39124236b4ae6594aff4f1d84437afed154d4f521e282fb1f"
-  },
-  "apt_metadata": {
-    "section": "admin",
-    "installed_size": "1026",
-    "maintainer": "Debian QA Group <packages@qa.debian.org>",
-    "architecture": "all",
-    "version": "2.24-6kali1",
-    "depends": "binutils, perl, sleuthkit",
-    "description": "graphical interface to SleuthKit\nThe Autopsy Forensic Browser is a graphical interface to the command line\ndigital forensic analysis tools in The Sleuth Kit. Together, The Sleuth Kit\nand Autopsy provide many of the same features as commercial digital forensics\ntools for the analysis of Windows and UNIX file systems (NTFS, FAT, FFS,\nEXT2FS, and EXT3FS).",
-    "homepage": "https://www.sleuthkit.org/autopsy/"
-  },
+  "files": [
+    "/usr/bin/autopsy",
+    "/usr/share/man/man1/autopsy.1.gz"
+  ],
   "tags": [
-    "offensive",
-    "autopsy",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/autopsy && python3 autopsy.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/autopsy && python3 autopsy.py --help",
-    "cd toolboxes/autopsy && python3 autopsy.py --help",
-    "cd toolboxes/autopsy && python3 autopsy.py --help",
-    "cd toolboxes/autopsy && python3 autopsy.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST autopsy --output $KFIOSA_OUTPUT_DIR/autopsy.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST autopsy --output $KFIOSA_OUTPUT_DIR/autopsy.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

@@ -3,20 +3,16 @@
   "kind": "kali_source_package",
   "name": "sqldict",
   "title": "sqldict",
-  "summary": "### sqldict",
+  "summary": "Dictionary attack tool for SQL Server",
+  "description": "Dictionary attack tool for SQL Server\nSQLdict is a dictionary attack tool for SQL Server.",
   "version": "2.1-1kali6",
   "architectures": [
     "all"
   ],
   "homepage": "https://ntsecurity.nu/toolbox/sqldict/",
-  "repository": "https://gitlab.com/kalilinux/packages/sqldict",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-database",
-    "kali-tools-passwords",
-    "kali-tools-web"
-  ],
+  "repository": "https://ntsecurity.nu/toolbox/sqldict/",
+  "source_package": "sqldict",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install sqldict"
   },
@@ -28,99 +24,21 @@
   "commands": [
     {
       "name": "sqldict",
-      "description": "- - -",
-      "usage": null,
-      "arguments": [],
-      "raw_help": "root@kali:~# sqldict -h\n ┏━(Message from Kali developers)\n ┃\n ┃ You may need to install the wine32 package first:\n ┃  # dpkg --add-architecture i386 && apt update && apt -y install wine32\n ┃\n ┗━\n Application could not be started, or no application associated with the specified file.\n ShellExecuteEx failed:",
-      "examples": [],
-      "risk": {
-        "level": "low",
-        "signals": [],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\n0140:err:environ:init_peb starting L\"Z:\\\\usr\\\\share\\\\windows-resources\\\\sqldict\\\\sqldict.exe\" in experimental wow64 mode\nwine: failed to load L\"\\\\??\\\\C:\\\\windows\\\\syswow64\\\\ntdll.dll\" error c0000135\n00ec:err:start:fatal_error FormatMessage failed",
-        "-h": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\n0150:err:environ:init_peb starting L\"Z:\\\\usr\\\\share\\\\windows-resources\\\\sqldict\\\\sqldict.exe\" in experimental wow64 mode\nwine: failed to load L\"\\\\??\\\\C:\\\\windows\\\\syswow64\\\\ntdll.dll\" error c0000135\n0148:err:start:fatal_error FormatMessage failed",
-        "help": "it looks like wine32 is missing, you should install it.\nas root, please execute \"apt-get install wine32:i386\"\n0160:err:environ:init_peb starting L\"Z:\\\\usr\\\\share\\\\windows-resources\\\\sqldict\\\\sqldict.exe\" in experimental wow64 mode\nwine: failed to load L\"\\\\??\\\\C:\\\\windows\\\\syswow64\\\\ntdll.dll\" error c0000135\n0158:err:start:fatal_error FormatMessage failed"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/sqldict",
-        "size_bytes": 98,
-        "is_symlink": false,
-        "file_type": "a sh script, ASCII text executable"
-      }
+      "path": "/usr/bin/sqldict",
+      "description": "Binary from sqldict",
+      "usage": "sqldict [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "low",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/sqldict/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/sqldict/index.md",
-    "retrieved_at": "2026-07-14T13:08:34+00:00",
-    "sha256": "7d4bcaf8cce6e3839014d6b280034d84b013cebdb8587e704e7454a908ba0417"
-  },
-  "apt_metadata": {
-    "section": "utils",
-    "installed_size": "145",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "all",
-    "version": "2.1-1kali6",
-    "depends": "kali-defaults, wine",
-    "description": "Dictionary attack tool for SQL Server\nSQLdict is a dictionary attack tool for SQL Server.",
-    "homepage": "https://ntsecurity.nu/toolbox/sqldict/"
-  },
+  "files": [
+    "/usr/bin/sqldict"
+  ],
   "tags": [
-    "offensive",
-    "sqldict",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/sqldict && python3 sqldict.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/sqldict && python3 sqldict.py --help",
-    "cd toolboxes/sqldict && python3 sqldict.py --help",
-    "cd toolboxes/sqldict && python3 sqldict.py --help",
-    "cd toolboxes/sqldict && python3 sqldict.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sqldict --output $KFIOSA_OUTPUT_DIR/sqldict.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sqldict --output $KFIOSA_OUTPUT_DIR/sqldict.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

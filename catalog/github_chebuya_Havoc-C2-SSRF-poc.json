@@ -4,14 +4,114 @@
   "name": "Havoc-C2-SSRF-poc",
   "full_name": "chebuya/Havoc-C2-SSRF-poc",
   "owner": "chebuya",
-  "category": "Command and Control / C2",
+  "category": "Post-Exploitation",
   "url": "https://github.com/chebuya/Havoc-C2-SSRF-poc",
-  "summary": "Repository indexing entry for the ``Havoc-C2-SSRF-poc`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "CVE-2024-41570: Havoc-C2-SSRF-poc\nThis vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and read/write data from it. This allows attackers to leak origin IPs of teamservers and much more.",
   "documentation": {
-    "readme": null,
+    "readme": "CVE-2024-41570: Havoc-C2-SSRF-poc\nThis vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and read/write data from it. This allows attackers to leak origin IPs of teamservers and much more.",
     "usage_sections": [],
-    "arguments": [],
-    "examples": []
+    "arguments": [
+      {
+        "name": "--domain-name",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--help",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--hostname",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--internal-ip",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--port",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--process-name",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--target",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--user-agent",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--username",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "-A",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "-H",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "-ip",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "decrypt",
+        "signature": "def decrypt(key, iv, ciphertext)",
+        "file": "exploit.py",
+        "language": "python"
+      },
+      {
+        "name": "int_to_bytes",
+        "signature": "def int_to_bytes(value, length=4, byteorder=\"big\")",
+        "file": "exploit.py",
+        "language": "python"
+      },
+      {
+        "name": "encrypt",
+        "signature": "def encrypt(key, iv, plaintext)",
+        "file": "exploit.py",
+        "language": "python"
+      },
+      {
+        "name": "register_agent",
+        "signature": "def register_agent(hostname, username, domain_name, internal_ip, process_name, process_id)",
+        "file": "exploit.py",
+        "language": "python"
+      },
+      {
+        "name": "open_socket",
+        "signature": "def open_socket(socket_id, target_address, target_port)",
+        "file": "exploit.py",
+        "language": "python"
+      },
+      {
+        "name": "write_socket",
+        "signature": "def write_socket(socket_id, data)",
+        "file": "exploit.py",
+        "language": "python"
+      },
+      {
+        "name": "read_socket",
+        "signature": "def read_socket(socket_id)",
+        "file": "exploit.py",
+        "language": "python"
+      }
+    ],
+    "examples": [],
+    "file_listing": [
+      "README.md",
+      "exploit.py"
+    ],
+    "languages": [
+      "python"
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -20,60 +120,62 @@
     "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "critical",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
-      "target_adaptive_compatible"
+      "target_adaptive_compatible",
+      "remote_possible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "havoc",
-    "c2",
-    "ssrf",
-    "poc",
-    "web",
-    "kfiosa",
-    "indexed",
+    "post-exploitation",
+    "toolbox",
+    "github",
+    "chebuya",
+    "lang:python",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Post-Exploitation system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --help",
+    "cd toolboxes/Havoc-C2-SSRF-poc && cat README.md",
+    "cd toolboxes/Havoc-C2-SSRF-poc && ls -la",
     "cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --help",
-    "cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --help",
-    "cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --help",
-    "cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Havoc-C2-SSRF-poc --output $KFIOSA_OUTPUT_DIR/Havoc-C2-SSRF-poc.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Havoc-C2-SSRF-poc --output $KFIOSA_OUTPUT_DIR/Havoc-C2-SSRF-poc.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web"
+    "shell_windows",
+    "shell_linux",
+    "ad"
   ],
-  "phase_hint": "any",
+  "phase_hint": "post_exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
   ]
 }

@@ -4,59 +4,117 @@
   "name": "phantex",
   "full_name": "xransum/phantex",
   "owner": "xransum",
-  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "category": "Reconnaissance",
   "url": "https://github.com/xransum/phantex",
-  "summary": "Repository indexing entry for the ``phantex`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
-  "toolbox_path": "toolboxes/recon/xransum__phantex",
+  "summary": "Local OSINT recon terminal. A Flask-based web dashboard that runs on your\nlaptop and scans for nearby wireless signals. Start with Bluetooth -- more\nmodules coming.",
   "documentation": {
-    "readme": null,
-    "usage_sections": [
+    "readme": "Local OSINT recon terminal. A Flask-based web dashboard that runs on your\nlaptop and scans for nearby wireless signals. Start with Bluetooth -- more\nmodules coming.",
+    "usage_sections": [],
+    "arguments": [
       {
-        "section": "entrypoint",
-        "content": "flask --app phantex.app:create_app run (or: uv run flask --app phantex.app:create_app run); web UI at http://localhost:5000"
+        "name": "--app",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
       }
     ],
-    "arguments": [],
-    "examples": [
+    "function_signatures": [
       {
-        "status": "operational",
-        "command": "flask --app phantex.app:create_app run (or: uv run flask --app phantex.app:create_app run); web UI at http://localhost:5000"
+        "name": "lint",
+        "signature": "def lint(session: nox.Session)",
+        "file": "noxfile.py",
+        "language": "python"
+      },
+      {
+        "name": "format",
+        "signature": "def format(session: nox.Session)",
+        "file": "noxfile.py",
+        "language": "python"
+      },
+      {
+        "name": "typecheck",
+        "signature": "def typecheck(session: nox.Session)",
+        "file": "noxfile.py",
+        "language": "python"
+      },
+      {
+        "name": "tests",
+        "signature": "def tests(session: nox.Session)",
+        "file": "noxfile.py",
+        "language": "python"
+      },
+      {
+        "name": "pre_commit",
+        "signature": "def pre_commit(session: nox.Session)",
+        "file": "noxfile.py",
+        "language": "python"
       }
+    ],
+    "examples": [],
+    "file_listing": [
+      "404.html",
+      "500.html",
+      "DEVELOPMENT.md",
+      "README.md",
+      "__init__.py",
+      "__init__.py",
+      "__init__.py",
+      "__init__.py",
+      "__init__.py",
+      "__init__.py",
+      "app.py",
+      "base.html",
+      "bt.js",
+      "bt.js",
+      "db.py",
+      "engine.py",
+      "engine.py",
+      "extensions.py",
+      "history.py",
+      "history.py",
+      "index.html",
+      "index.html",
+      "index.html",
+      "main.css",
+      "main.css",
+      "noxfile.py",
+      "package-lock.json",
+      "package.json",
+      "pyproject.toml",
+      "requirements-dev.txt",
+      "requirements.txt",
+      "settings.py",
+      "tasks.py",
+      "tasks.py",
+      "test_app.py",
+      "test_db.py",
+      "test_engine.py",
+      "test_engine.py",
+      "test_history.py",
+      "test_history.py",
+      "test_views.py",
+      "test_views.py",
+      "uv.lock",
+      "views.py",
+      "views.py",
+      "vite.config.js",
+      "wte.js",
+      "wte.js"
+    ],
+    "languages": [
+      "python",
+      "javascript"
     ]
   },
-  "language": "Python (with JavaScript/CSS/HTML frontend built via Vite)",
-  "dependencies": [
-    "python>=3.11",
-    "Flask",
-    "bluez",
-    "hcitool (classic BT scan)",
-    "uv or pip",
-    "node/npm + Vite (frontend build)"
-  ],
-  "algorithms": [
-    "BLE passive scan (no root)",
-    "classic Bluetooth scan via hcitool (may need CAP_NET_RAW)",
-    "WiFi recon: NOT IMPLEMENTED (/wte 'Coming soon')"
-  ],
-  "produces": [
-    "Web dashboard listing nearby Bluetooth devices at /bt",
-    "no structured/logged WiFi output — none implemented"
-  ],
-  "capability_bucket": "redundant_wrapper",
-  "runnable": true,
-  "novelty": "none — thin wrapper. Bluetooth side just shells out to hcitool/bluez; the WiFi recon surface advertised in the description does not exist in the codebase yet (marked Coming soon), so it offers zero capability beyond the airodump-ng/wash/hcxtools/scapy baseline KFIOSA already uses.",
-  "metadata_status": "classified",
+  "metadata_status": "enriched",
   "trust": {
     "official_kali": false,
     "reviewed": false,
-    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+    "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "low",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -65,45 +123,51 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "phantex",
+    "reconnaissance",
+    "toolbox",
+    "github",
     "xransum",
-    "web",
-    "kfiosa",
-    "indexed",
+    "lang:python",
+    "lang:javascript",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "cd toolboxes/phantex && cat README.md",
+    "cd toolboxes/phantex && ls -la",
     "cd toolboxes/phantex && python3 phantex.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/phantex && python3 phantex.py --help",
-    "cd toolboxes/phantex && python3 phantex.py --help",
-    "cd toolboxes/phantex && python3 phantex.py --help",
-    "cd toolboxes/phantex && python3 phantex.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantex --output $KFIOSA_OUTPUT_DIR/phantex.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantex --output $KFIOSA_OUTPUT_DIR/phantex.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web"
+    "web",
+    "cloud",
+    "iots"
   ],
-  "phase_hint": "any",
+  "phase_hint": "recon",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python",
+    "javascript"
   ]
 }

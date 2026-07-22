@@ -45,11 +45,13 @@ class TestTargetModelCatalog(unittest.TestCase):
 
     def test_uncensored_model_for_code_arch(self) -> None:
         # The vertical catalog uses the operator's preferred
-        # uncensored code-architect model.
+        # uncensored code-architect model. The HF repo name
+        # uses capitalized ``Uncensored``; match case-insensitively
+        # so the test survives a future rename of the redistributor.
         for tc in ("microsoft", "android", "ios"):
             m = TARGET_MODEL_CATALOG[tc]
             self.assertIn("Coder", m)
-            self.assertIn("uncensored", m)
+            self.assertIn("uncensored", m.lower())
 
 
 class TestPickModelForTarget(unittest.TestCase):

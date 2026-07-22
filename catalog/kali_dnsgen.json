@@ -3,16 +3,16 @@
   "kind": "kali_source_package",
   "name": "dnsgen",
   "title": "dnsgen",
-  "summary": "### dnsgen",
+  "summary": "DNS generator",
+  "description": "DNS generator\nThis package provides a generator of a combination of domain names from the\nprovided input. Combinations are created based on wordlist. Custom words are\nextracted per execution.",
   "version": "1.0.4+git20200324-0kali1",
   "architectures": [
     "all"
   ],
   "homepage": "https://github.com/ProjectAnte/dnsgen",
-  "repository": "https://gitlab.com/kalilinux/packages/dnsgen",
-  "metapackages": [
-    "kali-linux-everything"
-  ],
+  "repository": "https://github.com/ProjectAnte/dnsgen",
+  "source_package": "dnsgen",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install dnsgen"
   },
@@ -24,149 +24,22 @@
   "commands": [
     {
       "name": "dnsgen",
-      "description": "- - -",
-      "usage": "dnsgen [OPTIONS] FILENAME",
-      "arguments": [
-        {
-          "flags": [
-            "-l",
-            "--wordlen"
-          ],
-          "metavar": "INTEGER RANGE",
-          "takes_value": true,
-          "description": "Min length of custom words extracted from",
-          "default": null,
-          "choices": null,
-          "raw": " -l, --wordlen INTEGER RANGE  Min length of custom words extracted from"
-        },
-        {
-          "flags": [
-            "-w",
-            "--wordlist"
-          ],
-          "metavar": "- ordlist PATH",
-          "takes_value": true,
-          "description": "Path to custom wordlist.",
-          "default": null,
-          "choices": null,
-          "raw": " -w, --wordlist PATH          Path to custom wordlist."
-        },
-        {
-          "flags": [
-            "-f",
-            "--fast"
-          ],
-          "metavar": "- ast",
-          "takes_value": true,
-          "description": "Fast generation.",
-          "default": null,
-          "choices": null,
-          "raw": " -f, --fast                   Fast generation."
-        },
-        {
-          "flags": [
-            "--help"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Show this message and exit.",
-          "default": null,
-          "choices": null,
-          "raw": " --help                       Show this message and exit."
-        }
-      ],
-      "raw_help": "root@kali:~# dnsgen --help\n Usage: dnsgen [OPTIONS] FILENAME\n \n Options:\n -l, --wordlen INTEGER RANGE  Min length of custom words extracted from\n                              domains.  [1<=x<=100]\n -w, --wordlist PATH          Path to custom wordlist.\n -f, --fast                   Fast generation.\n --help                       Show this message and exit.",
-      "examples": [],
-      "risk": {
-        "level": "critical",
-        "signals": [
-          "rat"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Usage: dnsgen [OPTIONS] FILENAME\n\nOptions:\n  -l, --wordlen INTEGER RANGE  Min length of custom words extracted from\n                               domains.  [1<=x<=100]\n  -w, --wordlist PATH          Path to custom wordlist.\n  -f, --fast                   Fast generation.\n  --help                       Show this message and exit.",
-        "-h": "Usage: dnsgen [OPTIONS] FILENAME\nTry 'dnsgen --help' for help.\n\nError: No such option: -h",
-        "help": "Usage: dnsgen [OPTIONS] FILENAME\nTry 'dnsgen --help' for help.\n\nError: Invalid value for 'FILENAME': 'help': No such file or directory"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/dnsgen",
-        "size_bytes": 953,
-        "is_symlink": false,
-        "file_type": "Python script, ASCII text executable"
-      }
+      "path": "/usr/bin/dnsgen",
+      "description": "Usage: dnsgen [OPTIONS] FILENAME",
+      "usage": "dnsgen [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/dnsgen/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/dnsgen/index.md",
-    "retrieved_at": "2026-07-14T13:05:25+00:00",
-    "sha256": "9d7066c7abe53110b2c67717c88ef0d753fccd6c21fa45afeea101a69d2304ab"
-  },
-  "apt_metadata": {
-    "section": "net",
-    "installed_size": "37",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "all",
-    "version": "1.0.4+git20200324-0kali1",
-    "depends": "python3-click, python3-tldextract, python3:any",
-    "description": "DNS generator\nThis package provides a generator of a combination of domain names from the\nprovided input. Combinations are created based on wordlist. Custom words are\nextracted per execution.",
-    "homepage": "https://github.com/ProjectAnte/dnsgen"
-  },
+  "files": [
+    "/usr/bin/dnsgen"
+  ],
   "tags": [
-    "offensive",
-    "dnsgen",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package",
+    "networking"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/dnsgen && python3 dnsgen.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/dnsgen && python3 dnsgen.py --help",
-    "cd toolboxes/dnsgen && python3 dnsgen.py --help",
-    "cd toolboxes/dnsgen && python3 dnsgen.py --help",
-    "cd toolboxes/dnsgen && python3 dnsgen.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsgen --output $KFIOSA_OUTPUT_DIR/dnsgen.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsgen --output $KFIOSA_OUTPUT_DIR/dnsgen.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

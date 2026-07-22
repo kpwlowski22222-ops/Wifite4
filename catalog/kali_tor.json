@@ -1,0 +1,93 @@
+{
+  "id": "kali:tor",
+  "kind": "kali_source_package",
+  "name": "tor",
+  "title": "tor",
+  "summary": "anonymizing overlay network for TCP",
+  "description": "anonymizing overlay network for TCP\nTor is a connection-based low-latency anonymous communication system.\n.\nClients choose a source-routed path through a set of relays, and\nnegotiate a \"virtual circuit\" through the network, in which each relay\nknows its predecessor and successor, but no others. Traffic flowing\ndown the circuit is decrypted at each relay, which reveals the\ndownstream relay.\n.\nBasically, Tor provides a distributed network of relays. Users bounce\ntheir TCP streams (web traffic, ftp, ssh, etc) around the relays, and\nrecipients, observers, and even the relays themselves have difficulty\nlearning which users connected to which destinations.\n.\nThis package enables only a Tor client by default, but it can also be\nconfigured as a relay and/or a hidden service easily.\n.\nClient applications can use the Tor network by connecting to the local\nsocks proxy interface provided by your Tor instance. If the application\nitself does not come with socks support, you can use a socks client\nsuch as torsocks.\n.\nNote that Tor does no protocol cleaning on application traffic. There\nis a danger that application protocols and associated programs can be\ninduced to reveal information about the user. Tor depends on Torbutton\nand similar protocol cleaners to solve this problem. For best\nprotection when web surfing, the Tor Project recommends that you use\nthe Tor Browser Bundle, a standalone tarball that includes static\nbuilds of Tor, Torbutton, and a modified Firefox that is patched to fix\na variety of privacy bugs.",
+  "version": "0.4.9.11-1",
+  "architectures": [
+    "amd64"
+  ],
+  "homepage": "https://www.torproject.org/",
+  "repository": "https://www.torproject.org/",
+  "source_package": "tor",
+  "metapackages": [],
+  "install": {
+    "apt": "sudo apt install tor"
+  },
+  "packages": [
+    {
+      "name": "tor"
+    }
+  ],
+  "commands": [
+    {
+      "name": "tor",
+      "path": "/usr/bin/tor",
+      "description": "The second-generation onion router",
+      "usage": "tor [options] [args]",
+      "arguments": []
+    },
+    {
+      "name": "tor-gencert",
+      "path": "/usr/bin/tor-gencert",
+      "description": "Generate certs and keys for Tor directory authorities",
+      "usage": "tor-gencert [options] [args]",
+      "arguments": []
+    },
+    {
+      "name": "tor-print-ed-signing-cert",
+      "path": "/usr/bin/tor-print-ed-signing-cert",
+      "description": "print expiration date of ed25519 signing certificate",
+      "usage": "tor-print-ed-signing-cert [options] [args]",
+      "arguments": []
+    },
+    {
+      "name": "tor-resolve",
+      "path": "/usr/bin/tor-resolve",
+      "description": "resolve a hostname to an IP address via tor",
+      "usage": "tor-resolve [options] [args]",
+      "arguments": []
+    },
+    {
+      "name": "torify",
+      "path": "/usr/bin/torify",
+      "description": "wrapper for torsocks and tor",
+      "usage": "torify [options] [args]",
+      "arguments": []
+    },
+    {
+      "name": "tor-instance-create",
+      "path": "/usr/sbin/tor-instance-create",
+      "description": "Set up a new tor instance",
+      "usage": "tor-instance-create [options] [args]",
+      "arguments": []
+    }
+  ],
+  "files": [
+    "/usr/bin/tor",
+    "/usr/bin/tor-gencert",
+    "/usr/bin/tor-print-ed-signing-cert",
+    "/usr/bin/tor-resolve",
+    "/usr/bin/torify",
+    "/usr/sbin/tor-instance-create",
+    "/usr/share/man/man1/tor-gencert.1.gz",
+    "/usr/share/man/man1/tor-print-ed-signing-cert.1.gz",
+    "/usr/share/man/man1/tor-resolve.1.gz",
+    "/usr/share/man/man1/tor.1.gz",
+    "/usr/share/man/man1/torify.1.gz",
+    "/usr/share/man/man8/tor-instance-create.8.gz",
+    "/usr/sbin/tor",
+    "/usr/share/man/man5/torrc.5.gz"
+  ],
+  "tags": [
+    "os-package",
+    "networking"
+  ],
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
+}

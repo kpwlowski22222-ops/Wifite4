@@ -4,14 +4,140 @@
   "name": "ble_norton_core",
   "full_name": "embedi/ble_norton_core",
   "owner": "embedi",
-  "category": "Bluetooth / BLE",
+  "category": "Bluetooth",
   "url": "https://github.com/embedi/ble_norton_core",
-  "summary": "Repository indexing entry for the ``ble_norton_core`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "PoC command injection in BLE service of Norton Core Secure WiFi Router (CVE-2018-5234)",
   "documentation": {
-    "readme": null,
+    "readme": "PoC command injection in BLE service of Norton Core Secure WiFi Router (CVE-2018-5234)",
     "usage_sections": [],
-    "arguments": [],
-    "examples": []
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--target",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--output",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "connection_required",
+        "signature": "def connection_required(func)",
+        "file": "ble_norton_core.py",
+        "language": "python"
+      },
+      {
+        "name": "main",
+        "signature": "def main()",
+        "file": "ble_norton_core.py",
+        "language": "python"
+      },
+      {
+        "name": "search_on_page",
+        "signature": "def search_on_page(func)",
+        "file": "web.py",
+        "language": "python"
+      }
+    ],
+    "examples": [],
+    "file_listing": [
+      "README.md",
+      "ble_norton_core.py",
+      "proto.py",
+      "requirements.txt",
+      "web.py"
+    ],
+    "languages": [
+      "python"
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -20,11 +146,10 @@
     "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "low",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -33,49 +158,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "ble",
-    "norton",
-    "core",
+    "bluetooth",
+    "toolbox",
+    "github",
     "embedi",
-    "web",
-    "ble_4_x",
-    "kfiosa",
-    "indexed",
+    "lang:python",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/ble_norton_core && python3 ble_norton_core.py --help",
+    "cd toolboxes/ble_norton_core && cat README.md",
+    "cd toolboxes/ble_norton_core && ls -la",
     "cd toolboxes/ble_norton_core && python3 ble_norton_core.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/ble_norton_core && python3 ble_norton_core.py --help",
-    "cd toolboxes/ble_norton_core && python3 ble_norton_core.py --help",
-    "cd toolboxes/ble_norton_core && python3 ble_norton_core.py --help",
-    "cd toolboxes/ble_norton_core && python3 ble_norton_core.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ble_norton_core --output $KFIOSA_OUTPUT_DIR/ble_norton_core.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ble_norton_core --output $KFIOSA_OUTPUT_DIR/ble_norton_core.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web",
-    "ble_4_x"
+    "ble_4_x",
+    "ble_5_x",
+    "ble_mesh"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "none"
+    "hci0_ble"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
   ]
 }

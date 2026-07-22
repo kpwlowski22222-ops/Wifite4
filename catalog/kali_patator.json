@@ -3,21 +3,16 @@
   "kind": "kali_source_package",
   "name": "patator",
   "title": "patator",
-  "summary": "### patator",
+  "summary": "Multi-purpose brute-forcer",
+  "description": "Multi-purpose brute-forcer\nPatator is a multi-purpose brute-forcer, with a modular\ndesign and a flexible usage.\n.\nCurrently it supports the following modules:\n+ ftp_login     : Brute-force FTP\n+ ssh_login     : Brute-force SSH\n+ telnet_login  : Brute-force Telnet\n+ smtp_login    : Brute-force SMTP\n+ smtp_vrfy     : Enumerate valid users using SMTP VRFY\n+ smtp_rcpt     : Enumerate valid users using SMTP RCPT TO\n+ finger_lookup : Enumerate valid users using Finger\n+ http_fuzz     : Brute-force HTTP\n+ ajp_fuzz      : Brute-force AJP\n+ pop_login     : Brute-force POP3\n+ pop_passd     : Brute-force poppassd (http://netwinsite.com/poppassd/)\n+ imap_login    : Brute-force IMAP4\n+ ldap_login    : Brute-force LDAP\n+ dcom_login    : Brute-force DCOM\n+ smb_login     : Brute-force SMB\n+ smb_lookupsid : Brute-force SMB SID-lookup\n+ rlogin_login  : Brute-force rlogin\n+ vmauthd_login : Brute-force VMware Authentication Daemon\n+ mssql_login   : Brute-force MSSQL\n+ mysql_login   : Brute-force MySQL\n+ mysql_query   : Brute-force MySQL queries\n+ rdp_login     : Brute-force RDP (NLA)\n+ pgsql_login   : Brute-force PostgreSQL\n+ vnc_login     : Brute-force VNC\n+ dns_forward   : Forward DNS lookup\n+ dns_reverse   : Reverse DNS lookup\n+ snmp_login    : Brute-force SNMP v1/2/3\n+ ike_enum      : Enumerate IKE transforms\n+ unzip_pass    : Brute-force the password of encrypted ZIP files\n+ keystore_pass : Brute-force the password of Java keystore files\n+ umbraco_crack : Crack Umbraco HMAC-SHA1 password hashes\n+ tcp_fuzz      : Fuzz TCP services\n+ dummy_test    : Testing module",
   "version": "1.1.0-1",
   "architectures": [
     "all"
   ],
   "homepage": "https://github.com/lanjelot/patator",
-  "repository": "https://salsa.debian.org/pkg-security-team/patator",
-  "metapackages": [
-    "kali-linux-default",
-    "kali-linux-everything",
-    "kali-linux-headless",
-    "kali-linux-large",
-    "kali-tools-passwords",
-    "kali-tools-web"
-  ],
+  "repository": "https://github.com/lanjelot/patator",
+  "source_package": "patator",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install patator"
   },
@@ -29,111 +24,22 @@
   "commands": [
     {
       "name": "patator",
-      "description": "Multi-purpose brute-forcer",
-      "usage": "patator module --help",
-      "arguments": [],
-      "raw_help": "root@kali:~# patator -h\n Patator 1.1.0 (https://github.com/lanjelot/patator) with Python-3.13.12\n Usage: patator module --help\n \n Available modules:\n + ftp_login     : Brute-force FTP\n + ssh_login     : Brute-force SSH\n + telnet_login  : Brute-force Telnet\n + smtp_login    : Brute-force SMTP\n + smtp_vrfy     : Enumerate valid users using SMTP VRFY\n + smtp_rcpt     : Enumerate valid users using SMTP RCPT TO\n + finger_lookup : Enumerate valid users using Finger\n + http_fuzz     : Brute-force HTTP\n + rdp_gateway   : Brute-force RDP Gateway\n + ajp_fuzz      : Brute-force AJP\n + pop_login     : Brute-force POP3\n + pop_passd     : Brute-force poppassd (http://netwinsite.com/poppassd/)\n + imap_login    : Brute-force IMAP4\n + ldap_login    : Brute-force LDAP\n + dcom_login    : Brute-force DCOM\n + smb_login     : Brute-force SMB\n + smb_lookupsid : Brute-force SMB SID-lookup\n + rlogin_login  : Brute-force rlogin\n + vmauthd_login : Brute-force VMware Authentication Daemon\n + mssql_login   : Brute-force MSSQL\n + oracle_login  : Brute-force Oracle\n + mysql_login   : Brute-force MySQL\n + mysql_query   : Brute-force MySQL queries\n + rdp_login     : Brute-force RDP (NLA)\n + pgsql_login   : Brute-force PostgreSQL\n + vnc_login     : Brute-force VNC\n + dns_forward   : Forward DNS lookup\n + dns_reverse   : Reverse DNS lookup\n + snmp_login    : Brute-force SNMP v1/2/3\n + ike_enum      : Enumerate IKE transforms\n + unzip_pass    : Brute-force the password of encrypted ZIP files\n + keystore_pass : Brute-force the password of Java keystore files\n + sqlcipher_pass : Brute-force the password of SQLCipher-encrypted databases\n + umbraco_crack : Crack Umbraco HMAC-SHA1 password hashes\n + tcp_fuzz      : Fuzz TCP services\n + dummy_test    : Testing module",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "patator mysql_login user=root password=FILE0 0=/root/passes.txt host=127.0.0.1 -x ignore:fgrep='Access denied for user'\n12:30:36 patator    INFO - Starting Patator v0.5 (http://code.google.com/p/patator/) at 2014-05-19 12:30 EDT\n12:30:36 patator    INFO -\n12:30:36 patator    INFO - code  size | candidate                          |   num | mesg\n12:30:36 patator    INFO - ----------------------------------------------------------------------\n12:30:37 patator    INFO - 0     16   | toor                               |  4493 | 5.5.37-0+wheezy1\n12:30:37 patator    INFO - Hits/Done/Skip/Fail/Size: 1/4493/0/0/4493, Avg: 3582 r/s, Time: 0h 0m 1s",
-          "template": null,
-          "original_sha256": "839813003d6b7deff3adc7c879f436904d2294bc80a42cab3df3d99fa70120ab"
-        }
-      ],
-      "risk": {
-        "level": "critical",
-        "signals": [
-          "rat"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Patator 1.1.0 (https://github.com/lanjelot/patator) with Python-3.13.14\nUsage: patator module --help\n\nAvailable modules:\n  + ftp_login     : Brute-force FTP\n  + ssh_login     : Brute-force SSH\n  + telnet_login  : Brute-force Telnet\n  + smtp_login    : Brute-force SMTP\n  + smtp_vrfy     : Enumerate valid users using SMTP VRFY\n  + smtp_rcpt     : Enumerate valid users using SMTP RCPT TO\n  + finger_lookup : Enumerate valid users using Finger\n  + http_fuzz     : Brute-force HTTP\n  + rdp_gateway   : Brute-force RDP Gateway\n  + ajp_fuzz      : Brute-force AJP\n  + pop_login     : Brute-force POP3\n  + pop_passd     : Brute-force poppassd (http://netwinsite.com/poppassd/)\n  + imap_login    : Brute-force IMAP4\n  + ldap_login    : Brute-force LDAP\n  + dcom_login    : Brute-force DCOM\n  + smb_login     : Brute-force SMB\n  + smb_lookupsid : Brute-force SMB SID-lookup\n  + rlogin_login  : Brute-force rlogin\n  + vmauthd_login : Brute-force VMware Authentication Daemon\n  + mssql_login   : Brute-force MSSQL\n  + oracle_login  : Brute-force Oracle\n  + mysql_login   : Brute-force MySQL\n  + mysql_query   : Brute-force MySQL queries\n  + rdp_login     : Brute-force RDP (NLA)\n  + pgsql_login   : Brute-force PostgreSQL\n  + vnc_login     : Brute-force VNC\n  + dns_forward   : Forward DNS lookup\n  + dns_reverse   : Reverse DNS lookup\n  + snmp_login    : Brute-force SNMP v1/2/3\n  + ike_enum      : Enumerate IKE transforms\n  + unzip_pass    : Brute-force the password of encrypted ZIP files\n  + keystore_pass : Brute-force the password of Java keystore files\n  + sqlcipher_pass : Brute-force the password of SQLCipher-encrypted databases\n  + umbraco_crack : Crack Umbraco HMAC-SHA1 password hashes\n  + tcp_fuzz      : Fuzz TCP services\n  + dummy_test    : Testing module",
-        "-h": "Patator 1.1.0 (https://github.com/lanjelot/patator) with Python-3.13.14\nUsage: patator module --help\n\nAvailable modules:\n  + ftp_login     : Brute-force FTP\n  + ssh_login     : Brute-force SSH\n  + telnet_login  : Brute-force Telnet\n  + smtp_login    : Brute-force SMTP\n  + smtp_vrfy     : Enumerate valid users using SMTP VRFY\n  + smtp_rcpt     : Enumerate valid users using SMTP RCPT TO\n  + finger_lookup : Enumerate valid users using Finger\n  + http_fuzz     : Brute-force HTTP\n  + rdp_gateway   : Brute-force RDP Gateway\n  + ajp_fuzz      : Brute-force AJP\n  + pop_login     : Brute-force POP3\n  + pop_passd     : Brute-force poppassd (http://netwinsite.com/poppassd/)\n  + imap_login    : Brute-force IMAP4\n  + ldap_login    : Brute-force LDAP\n  + dcom_login    : Brute-force DCOM\n  + smb_login     : Brute-force SMB\n  + smb_lookupsid : Brute-force SMB SID-lookup\n  + rlogin_login  : Brute-force rlogin\n  + vmauthd_login : Brute-force VMware Authentication Daemon\n  + mssql_login   : Brute-force MSSQL\n  + oracle_login  : Brute-force Oracle\n  + mysql_login   : Brute-force MySQL\n  + mysql_query   : Brute-force MySQL queries\n  + rdp_login     : Brute-force RDP (NLA)\n  + pgsql_login   : Brute-force PostgreSQL\n  + vnc_login     : Brute-force VNC\n  + dns_forward   : Forward DNS lookup\n  + dns_reverse   : Reverse DNS lookup\n  + snmp_login    : Brute-force SNMP v1/2/3\n  + ike_enum      : Enumerate IKE transforms\n  + unzip_pass    : Brute-force the password of encrypted ZIP files\n  + keystore_pass : Brute-force the password of Java keystore files\n  + sqlcipher_pass : Brute-force the password of SQLCipher-encrypted databases\n  + umbraco_crack : Crack Umbraco HMAC-SHA1 password hashes\n  + tcp_fuzz      : Fuzz TCP services\n  + dummy_test    : Testing module",
-        "help": "Patator 1.1.0 (https://github.com/lanjelot/patator) with Python-3.13.14\nUsage: patator module --help\n\nAvailable modules:\n  + ftp_login     : Brute-force FTP\n  + ssh_login     : Brute-force SSH\n  + telnet_login  : Brute-force Telnet\n  + smtp_login    : Brute-force SMTP\n  + smtp_vrfy     : Enumerate valid users using SMTP VRFY\n  + smtp_rcpt     : Enumerate valid users using SMTP RCPT TO\n  + finger_lookup : Enumerate valid users using Finger\n  + http_fuzz     : Brute-force HTTP\n  + rdp_gateway   : Brute-force RDP Gateway\n  + ajp_fuzz      : Brute-force AJP\n  + pop_login     : Brute-force POP3\n  + pop_passd     : Brute-force poppassd (http://netwinsite.com/poppassd/)\n  + imap_login    : Brute-force IMAP4\n  + ldap_login    : Brute-force LDAP\n  + dcom_login    : Brute-force DCOM\n  + smb_login     : Brute-force SMB\n  + smb_lookupsid : Brute-force SMB SID-lookup\n  + rlogin_login  : Brute-force rlogin\n  + vmauthd_login : Brute-force VMware Authentication Daemon\n  + mssql_login   : Brute-force MSSQL\n  + oracle_login  : Brute-force Oracle\n  + mysql_login   : Brute-force MySQL\n  + mysql_query   : Brute-force MySQL queries\n  + rdp_login     : Brute-force RDP (NLA)\n  + pgsql_login   : Brute-force PostgreSQL\n  + vnc_login     : Brute-force VNC\n  + dns_forward   : Forward DNS lookup\n  + dns_reverse   : Reverse DNS lookup\n  + snmp_login    : Brute-force SNMP v1/2/3\n  + ike_enum      : Enumerate IKE transforms\n  + unzip_pass    : Brute-force the password of encrypted ZIP files\n  + keystore_pass : Brute-force the password of Java keystore files\n  + sqlcipher_pass : Brute-force the password of SQLCipher-encrypted databases\n  + umbraco_crack : Crack Umbraco HMAC-SHA1 password hashes\n  + tcp_fuzz      : Fuzz TCP services\n  + dummy_test    : Testing module",
-        "man": "PATATOR(1)                       User Commands                       PATATOR(1)\n\nNAME\n     Patator - multi-purpose brute-forcer\n\nSYNOPSIS\n     patator.py module --help\n\nDESCRIPTION\n      Patator  is  a  multi-purpose  brute-forcer,  with a modular design and a\n     flexible usage.\n\n   Available modules:\n     + ftp_login\n            Brute-force FTP\n\n     + ssh_login\n            Brute-force SSH\n\n     + telnet_login\n            Brute-force Telnet\n\n     + smtp_login\n            Brute-force SMTP\n\n     + smtp_vrfy\n            Enumerate valid users using SMTP VRFY\n\n     + smtp_rcpt\n            Enumerate valid users using SMTP RCPT TO\n\n     + finger_lookup\n            Enumerate valid users using Finger\n\n     + http_fuzz\n            Brute-force HTTP\n\n     + pop_login\n            Brute-force POP3\n\n     + pop_passd\n            Brute-force poppassd (http://netwinsite.com/poppassd/)\n\n     + imap_login\n            Brute-force IMAP4\n\n     + ldap_login\n            Brute-force LDAP\n\n     + dcom_login\n            Brute-force DCOM\n\n     + smb_login\n            Brute-force SMB\n\n     + smb_lookupsid\n            Brute-force SMB SID-lookup\n\n     + rlogin_login\n            Brute-force rlogin\n\n     + vmauthd_login\n            Brute-force VMware Authentication Daemon\n\n     + mssql_login\n            Brute-force MSSQL\n\n     + oracle_login\n            Brute-force Oracle\n\n     + mysql_login\n            Brute-force MySQL\n\n     + mysql_query\n            Brute-force MySQL queries\n\n     + pgsql_login\n            Brute-force PostgreSQL\n\n     + vnc_login\n            Brute-force VNC\n\n     + dns_forward\n            Forward lookup names\n\n     + dns_reverse\n            Reverse lookup subnets\n\n     + snmp_login\n            Brute-force SNMP v1/2/3\n\n     + unzip_pass\n            Brute-force the password of encrypted ZIP files\n\n     + keystore_pass\n            Brute-force the password of Java keystore files\n\n     + umbraco_crack\n            Crack Umbraco HMAC-SHA1 password hashes\n\n     + tcp_fuzz\n            Fuzz TCP services\n\n     + dummy_test\n            Testing module\n\nPatator                           August 2020                        PATATOR(1)",
-        "apropos": "patator (1)          - multi-purpose brute-forcer"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/patator",
-        "size_bytes": 213,
-        "is_symlink": false,
-        "file_type": "Python script, ASCII text executable"
-      }
+      "path": "/usr/bin/patator",
+      "description": "multi-purpose brute-forcer",
+      "usage": "patator [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/patator/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/patator/index.md",
-    "retrieved_at": "2026-07-14T13:07:31+00:00",
-    "sha256": "b06103e215a9eb12de91196996e35cab5c46f8ca1a5a74524f5e6a06b6b289c4"
-  },
-  "apt_metadata": {
-    "section": "utils",
-    "installed_size": "183",
-    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
-    "architecture": "all",
-    "version": "1.1.0-1",
-    "depends": "default-jre, ldap-utils, python3-psycopg2, unzip, python3-ajpy, python3-dnspython, python3-impacket, python3-ipy, python3-mysqldb, python3-paramiko, python3-pycryptodome, python3-pycurl, python3-pysnmp, python3:any",
-    "recommends": "freerdp3-x11, ike-scan, python3-zombie-telnetlib",
-    "description": "Multi-purpose brute-forcer\nPatator is a multi-purpose brute-forcer, with a modular\ndesign and a flexible usage.\n.\nCurrently it supports the following modules:\n+ ftp_login     : Brute-force FTP\n+ ssh_login     : Brute-force SSH\n+ telnet_login  : Brute-force Telnet\n+ smtp_login    : Brute-force SMTP\n+ smtp_vrfy     : Enumerate valid users using SMTP VRFY\n+ smtp_rcpt     : Enumerate valid users using SMTP RCPT TO\n+ finger_lookup : Enumerate valid users using Finger\n+ http_fuzz     : Brute-force HTTP\n+ ajp_fuzz      : Brute-force AJP\n+ pop_login     : Brute-force POP3\n+ pop_passd     : Brute-force poppassd (http://netwinsite.com/poppassd/)\n+ imap_login    : Brute-force IMAP4\n+ ldap_login    : Brute-force LDAP\n+ dcom_login    : Brute-force DCOM\n+ smb_login     : Brute-force SMB\n+ smb_lookupsid : Brute-force SMB SID-lookup\n+ rlogin_login  : Brute-force rlogin\n+ vmauthd_login : Brute-force VMware Authentication Daemon\n+ mssql_login   : Brute-force MSSQL\n+ mysql_login   : Brute-force MySQL\n+ mysql_query   : Brute-force MySQL queries\n+ rdp_login     : Brute-force RDP (NLA)\n+ pgsql_login   : Brute-force PostgreSQL\n+ vnc_login     : Brute-force VNC\n+ dns_forward   : Forward DNS lookup\n+ dns_reverse   : Reverse DNS lookup\n+ snmp_login    : Brute-force SNMP v1/2/3\n+ ike_enum      : Enumerate IKE transforms\n+ unzip_pass    : Brute-force the password of encrypted ZIP files\n+ keystore_pass : Brute-force the password of Java keystore files\n+ umbraco_crack : Crack Umbraco HMAC-SHA1 password hashes\n+ tcp_fuzz      : Fuzz TCP services\n+ dummy_test    : Testing module",
-    "homepage": "https://github.com/lanjelot/patator"
-  },
+  "files": [
+    "/usr/bin/patator",
+    "/usr/share/man/man1/patator.1.gz"
+  ],
   "tags": [
-    "offensive",
-    "patator",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/patator && python3 patator.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/patator && python3 patator.py --help",
-    "cd toolboxes/patator && python3 patator.py --help",
-    "cd toolboxes/patator && python3 patator.py --help",
-    "cd toolboxes/patator && python3 patator.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST patator --output $KFIOSA_OUTPUT_DIR/patator.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST patator --output $KFIOSA_OUTPUT_DIR/patator.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

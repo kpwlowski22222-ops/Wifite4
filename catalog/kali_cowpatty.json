@@ -3,19 +3,16 @@
   "kind": "kali_source_package",
   "name": "cowpatty",
   "title": "cowpatty",
-  "summary": "### cowpatty",
+  "summary": "Brute-force WPA dictionary attack",
+  "description": "Brute-force WPA dictionary attack\nIf you are auditing WPA-PSK or WPA2-PSK networks, you can use\nthis tool to identify weak passphrases that were used to generate the\nPMK.  Supply a libpcap capture file that includes the 4-way handshake, a\ndictionary file of passphrases to guess with, and the SSID for the\nnetwork.",
   "version": "4.8-4",
   "architectures": [
-    "any"
+    "amd64"
   ],
   "homepage": "https://www.willhackforsushi.com/?page_id=50",
-  "repository": "https://salsa.debian.org/pkg-security-team/cowpatty",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-802-11",
-    "kali-tools-wireless"
-  ],
+  "repository": "https://www.willhackforsushi.com/?page_id=50",
+  "source_package": "cowpatty",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install cowpatty"
   },
@@ -27,325 +24,32 @@
   "commands": [
     {
       "name": "cowpatty",
+      "path": "/usr/bin/cowpatty",
       "description": "Brute-force dictionary attack against WPA-PSK",
-      "usage": "cowpatty [options]",
-      "arguments": [
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Dictionary file",
-          "default": null,
-          "choices": null,
-          "raw": " \t-f \tDictionary file"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Hash file (genpmk)",
-          "default": null,
-          "choices": null,
-          "raw": " \t-d \tHash file (genpmk)"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Packet capture file",
-          "default": null,
-          "choices": null,
-          "raw": " \t-r \tPacket capture file"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Network SSID (enclose in quotes if SSID includes spaces)",
-          "default": null,
-          "choices": null,
-          "raw": " \t-s \tNetwork SSID (enclose in quotes if SSID includes spaces)"
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Check for valid 4-way frames, does not crack",
-          "default": null,
-          "choices": null,
-          "raw": " \t-c \tCheck for valid 4-way frames, does not crack"
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print this help information and exit",
-          "default": null,
-          "choices": null,
-          "raw": " \t-h \tPrint this help information and exit"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print verbose information (more -v for more verbosity)",
-          "default": null,
-          "choices": null,
-          "raw": " \t-v \tPrint verbose information (more -v for more verbosity)"
-        },
-        {
-          "flags": [
-            "-V"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print program version and exit",
-          "default": null,
-          "choices": null,
-          "raw": " \t-V \tPrint program version and exit"
-        }
-      ],
-      "raw_help": "root@kali:~# cowpatty -h\n cowpatty 4.8 - WPA-PSK dictionary attack. <jwright@hasborg.com>\n \n Usage: cowpatty [options]\n \n \t-f \tDictionary file\n \t-d \tHash file (genpmk)\n \t-r \tPacket capture file\n \t-s \tNetwork SSID (enclose in quotes if SSID includes spaces)\n \t-c \tCheck for valid 4-way frames, does not crack\n \t-h \tPrint this help information and exit\n \t-v \tPrint verbose information (more -v for more verbosity)\n \t-V \tPrint program version and exit",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "cowpatty -d cowpatty_dict -r Kismet-20181113-13-37-00-1.pcapdump -s 6F36E6\ncowpatty 4.8 - WPA-PSK dictionary attack. <jwright@hasborg.com>\n\nCollected all necessary data to mount crack against WPA2/PSK passphrase.\nStarting dictionary attack. Please be patient.\n\nThe PSK is \"12345678\".\n\n5 passphrases tested in 0.00 seconds: 50000.00 passphrases/second",
-          "template": null,
-          "original_sha256": "045115106d33b216341e90354d2d28d883ef1004948b82943428bb33dea483f9"
-        },
-        {
-          "status": "operational_example",
-          "command": "cowpatty 4.8 - WPA-PSK dictionary attack. <jwright@hasborg.com>",
-          "template": null,
-          "original_sha256": "a5069ec1dd9b331b4c5fc385225a38952ac0da26902203ab80438df21d4db036"
-        },
-        {
-          "status": "operational_example",
-          "command": "cowpatty: Must supply a pcap file with -r",
-          "template": null,
-          "original_sha256": "41eabb2ac978058cc8a788ba69593e5027a8ea462d993cd98210bf1a18a7c3b4"
-        }
-      ],
-      "risk": {
-        "level": "medium",
-        "signals": [
-          "capture"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "cowpatty 4.8 - WPA-PSK dictionary attack. <jwright@hasborg.com>\n\nUsage: cowpatty [options]\n\n\t-f \tDictionary file\n\t-d \tHash file (genpmk)\n\t-r \tPacket capture file\n\t-s \tNetwork SSID (enclose in quotes if SSID includes spaces)\n\t-c \tCheck for valid 4-way frames, does not crack\n\t-h \tPrint this help information and exit\n\t-v \tPrint verbose information (more -v for more verbosity)\n\t-V \tPrint program version and exit",
-        "-h": "cowpatty 4.8 - WPA-PSK dictionary attack. <jwright@hasborg.com>\n\nUsage: cowpatty [options]\n\n\t-f \tDictionary file\n\t-d \tHash file (genpmk)\n\t-r \tPacket capture file\n\t-s \tNetwork SSID (enclose in quotes if SSID includes spaces)\n\t-c \tCheck for valid 4-way frames, does not crack\n\t-h \tPrint this help information and exit\n\t-v \tPrint verbose information (more -v for more verbosity)\n\t-V \tPrint program version and exit",
-        "help": "cowpatty 4.8 - WPA-PSK dictionary attack. <jwright@hasborg.com>\ncowpatty: Must supply a pcap file with -r\n\nUsage: cowpatty [options]\n\n\t-f \tDictionary file\n\t-d \tHash file (genpmk)\n\t-r \tPacket capture file\n\t-s \tNetwork SSID (enclose in quotes if SSID includes spaces)\n\t-c \tCheck for valid 4-way frames, does not crack\n\t-h \tPrint this help information and exit\n\t-v \tPrint verbose information (more -v for more verbosity)\n\t-V \tPrint program version and exit",
-        "man": "COWPATTY(1)                      User Commands                      COWPATTY(1)\n\nNAME\n     cowpatty - Brute-force dictionary attack against WPA-PSK\n\nDESCRIPTION\n     Implementation  of  an offline dictionary attack against WPA/WPA2 networks\n     using PSK-based authentication (e.g. WPA-Personal)\n\nSYNOPSIS\n      cowpatty < -d | -r > < HASH-FILE | CAPTURE-FILE > -f WORDLIST -s SSID\n\nOPTIONS\n     -f     Dictionary file\n\n     -d     Hash file (genpmk)\n\n     -r     Packet capture file\n\n     -s     Network SSID (enclose in quotes if SSID includes spaces)\n\n     -c     Check for valid 4-way frames, does not crack\n\n     -h     Print this help information and exit\n\n     -v     Print verbose information (more -v for more verbosity)\n\n     -V     Print program version and exit\n\nAUTHOR\n     cowpatty was developed Joshua Wright <jwright@hwillhackforsushi.com>.\n\n     This manual page was written by Samuel Henrique <samueloph@debian.org> for\n     the Debian project, it was based on cowpatty -h output and can be used  by\n     other projects as well.\n\nSEE ALSO\n     genpmk(1)\n     aircrack-ng(1)\n     airodump-ng(1)\n     airmon-ng(1)\n     wifite(1)\n\ncowpatty 4.6                       June 2018                        COWPATTY(1)",
-        "apropos": "cowpatty (1)         - Brute-force dictionary attack against WPA-PSK"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/cowpatty",
-        "size_bytes": 30952,
-        "is_symlink": false,
-        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=a6744338b76569f4d55689eed751d1d7db992944, for GNU/Linux 3.2.0, stripped"
-      }
+      "usage": "cowpatty [options] [args]",
+      "arguments": []
     },
     {
       "name": "genpmk",
+      "path": "/usr/bin/genpmk",
       "description": "WPA-PSK precomputation attack",
-      "usage": "genpmk [options]",
-      "arguments": [
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Dictionary file",
-          "default": null,
-          "choices": null,
-          "raw": " \t-f \tDictionary file"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Output hash file",
-          "default": null,
-          "choices": null,
-          "raw": " \t-d \tOutput hash file"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Network SSID",
-          "default": null,
-          "choices": null,
-          "raw": " \t-s \tNetwork SSID"
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print this help information and exit",
-          "default": null,
-          "choices": null,
-          "raw": " \t-h \tPrint this help information and exit"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print verbose information (more -v for more verbosity)",
-          "default": null,
-          "choices": null,
-          "raw": " \t-v \tPrint verbose information (more -v for more verbosity)"
-        },
-        {
-          "flags": [
-            "-V"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print program version and exit",
-          "default": null,
-          "choices": null,
-          "raw": " \t-V \tPrint program version and exit"
-        }
-      ],
-      "raw_help": "root@kali:~# genpmk -h\n genpmk 1.3 - WPA-PSK precomputation attack. <jwright@hasborg.com>\n Usage: genpmk [options]\n \n \t-f \tDictionary file\n \t-d \tOutput hash file\n \t-s \tNetwork SSID\n \t-h \tPrint this help information and exit\n \t-v \tPrint verbose information (more -v for more verbosity)\n \t-V \tPrint program version and exit\n \n After precomputing the hash file, run cowpatty with the -d argument.",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "genpmk -f /usr/share/wordlists/nmap.lst -d cowpatty_dict -s securenet\ngenpmk 1.3 - WPA-PSK precomputation attack. \\&lt;jwright@hasborg.com\\&gt;\nFile cowpatty_dict does not exist, creating.\nkey no. 1000: pinkgirl\n1641 passphrases tested in 3.60 seconds: 456.00 passphrases/second",
-          "template": null,
-          "original_sha256": "d4224bc7f9a2fe9a7d663d1040cdc533e8a77bad1acf051066770035c6554b87"
-        },
-        {
-          "status": "operational_example",
-          "command": "genpmk 1.3 - WPA-PSK precomputation attack. <jwright@hasborg.com>",
-          "template": null,
-          "original_sha256": "bd45255f6209e27f506b14dc3a40895194bd61628342815b008dfa5b50734987"
-        },
-        {
-          "status": "operational_example",
-          "command": "genpmk: Must specify a dictionary file with -f",
-          "template": null,
-          "original_sha256": "97df636d3454a04bffa76b2c31bb6b636600eb78eb8b5c32c245313415fcee15"
-        }
-      ],
-      "risk": {
-        "level": "low",
-        "signals": [],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "genpmk 1.3 - WPA-PSK precomputation attack. <jwright@hasborg.com>\nUsage: genpmk [options]\n\n\t-f \tDictionary file\n\t-d \tOutput hash file\n\t-s \tNetwork SSID\n\t-h \tPrint this help information and exit\n\t-v \tPrint verbose information (more -v for more verbosity)\n\t-V \tPrint program version and exit\n\nAfter precomputing the hash file, run cowpatty with the -d argument.",
-        "-h": "genpmk 1.3 - WPA-PSK precomputation attack. <jwright@hasborg.com>\nUsage: genpmk [options]\n\n\t-f \tDictionary file\n\t-d \tOutput hash file\n\t-s \tNetwork SSID\n\t-h \tPrint this help information and exit\n\t-v \tPrint verbose information (more -v for more verbosity)\n\t-V \tPrint program version and exit\n\nAfter precomputing the hash file, run cowpatty with the -d argument.",
-        "help": "genpmk 1.3 - WPA-PSK precomputation attack. <jwright@hasborg.com>\ngenpmk: Must specify a dictionary file with -f\nUsage: genpmk [options]\n\n\t-f \tDictionary file\n\t-d \tOutput hash file\n\t-s \tNetwork SSID\n\t-h \tPrint this help information and exit\n\t-v \tPrint verbose information (more -v for more verbosity)\n\t-V \tPrint program version and exit\n\nAfter precomputing the hash file, run cowpatty with the -d argument.",
-        "man": "GENPMK(1)                        User Commands                        GENPMK(1)\n\nNAME\n     genmpk - WPA-PSK precomputation attack\n\nDESCRIPTION\n     Precompute hash files to use with cowpatty\n\nSYNOPSIS\n      genmpk -f WORDLIST -d OUTPUT-FILE -s SSID\n\nOPTIONS\n     -f     Dictionary file\n\n     -d     Output hash file\n\n     -s     Network SSID (enclose in quotes if SSID includes spaces)\n\n     -h     Print this help information and exit\n\n     -v     Print verbose information (more -v for more verbosity)\n\n     -V     Print program version and exit\n\nAUTHOR\n     genmpk was developed Joshua Wright <jwright@hwillhackforsushi.com>.\n\n     This manual page was written by Samuel Henrique <samueloph@debian.org> for\n     the  Debian  project,  it was based on genmpk -h output and can be used by\n     other projects as well.\n\nSEE ALSO\n     cowpatty(1)\n     aircrack-ng(1)\n     airodump-ng(1)\n     airmon-ng(1)\n     wifite(1)\n\ngenmpk 4.6                         June 2018                          GENPMK(1)",
-        "apropos": "genpmk (1)           - WPA-PSK precomputation attack\nwlangenpmk (1)       - Tools to generate plainmasterkeys (rainbowtables)\nwlangenpmkocl (1)    - Tools to generate plainmasterkeys (rainbowtables)"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/genpmk",
-        "size_bytes": 18664,
-        "is_symlink": false,
-        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=fb804101f4c36d1802a5be83df28075ec8676e33, for GNU/Linux 3.2.0, stripped"
-      }
+      "usage": "genpmk [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/cowpatty/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/cowpatty/index.md",
-    "retrieved_at": "2026-07-14T13:05:12+00:00",
-    "sha256": "1edcacc8cf1e1d2edcea78087f2407c987b2a2f553e7bc112ba077a945e3d16b"
-  },
-  "apt_metadata": {
-    "section": "net",
-    "installed_size": "73",
-    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
-    "architecture": "amd64",
-    "version": "4.8-4",
-    "depends": "libc6 (>= 2.34), libpcap0.8t64 (>= 0.9.8), libssl3t64 (>= 3.0.0)",
-    "description": "Brute-force WPA dictionary attack\nIf you are auditing WPA-PSK or WPA2-PSK networks, you can use\nthis tool to identify weak passphrases that were used to generate the\nPMK.  Supply a libpcap capture file that includes the 4-way handshake, a\ndictionary file of passphrases to guess with, and the SSID for the\nnetwork.",
-    "homepage": "https://www.willhackforsushi.com/?page_id=50"
-  },
+  "files": [
+    "/usr/bin/cowpatty",
+    "/usr/bin/genpmk",
+    "/usr/share/man/man1/cowpatty.1.gz",
+    "/usr/share/man/man1/genpmk.1.gz"
+  ],
   "tags": [
-    "offensive",
-    "cowpatty",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package",
+    "networking"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/cowpatty && python3 cowpatty.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/cowpatty && python3 cowpatty.py --help",
-    "cd toolboxes/cowpatty && python3 cowpatty.py --help",
-    "cd toolboxes/cowpatty && python3 cowpatty.py --help",
-    "cd toolboxes/cowpatty && python3 cowpatty.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cowpatty --output $KFIOSA_OUTPUT_DIR/cowpatty.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cowpatty --output $KFIOSA_OUTPUT_DIR/cowpatty.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

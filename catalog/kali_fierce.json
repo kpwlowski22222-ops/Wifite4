@@ -3,20 +3,16 @@
   "kind": "kali_source_package",
   "name": "fierce",
   "title": "fierce",
-  "summary": "### fierce",
+  "summary": "Domain DNS scanner",
+  "description": "Domain DNS scanner\nFierce is a semi-lightweight scanner that helps locate non-contiguous\nIP space and hostnames against specified domains. It's really meant as\na pre-cursor to nmap, unicornscan, nessus, nikto, etc, since all of\nthose require that you already know what IP space you are looking for.\nThis does not perform exploitation and does not scan the whole internet\nindiscriminately. It is meant specifically to locate likely targets both\ninside and outside a corporate network.\n.\nBecause it uses DNS primarily you will often find mis-configured networks\nthat leak internal address space. That's especially useful in targeted malware.\nOriginally written by RSnake along with others at http://ha.ckers.org/.\nThis is simply a conversion to Python 3 to simplify and modernize the codebase.",
   "version": "1.6.0-2",
   "architectures": [
     "all"
   ],
   "homepage": "https://github.com/mschwager/fierce",
-  "repository": "https://salsa.debian.org/pkg-security-team/fierce",
-  "metapackages": [
-    "kali-linux-default",
-    "kali-linux-everything",
-    "kali-linux-headless",
-    "kali-linux-large",
-    "kali-tools-information-gathering"
-  ],
+  "repository": "https://github.com/mschwager/fierce",
+  "source_package": "fierce",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install fierce"
   },
@@ -28,322 +24,23 @@
   "commands": [
     {
       "name": "fierce",
+      "path": "/usr/bin/fierce",
       "description": "DNS scanner that helps locate non-contiguous IP space and hostnames against specified domains.",
-      "usage": "fierce [-h] [--domain DOMAIN] [--connect] [--wide]",
-      "arguments": [
-        {
-          "flags": [
-            "--subdomain-file"
-          ],
-          "metavar": "SUBDOMAIN_FILE",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "             --subdomain-file SUBDOMAIN_FILE]"
-        },
-        {
-          "flags": [
-            "--dns-file",
-            "--tcp"
-          ],
-          "metavar": "DNS_FILE",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "             --dns-file DNS_FILE] [--tcp]"
-        },
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
-            "--domain"
-          ],
-          "metavar": "DOMAIN",
-          "takes_value": true,
-          "description": "domain name to test",
-          "default": null,
-          "choices": null,
-          "raw": " --domain DOMAIN       domain name to test"
-        },
-        {
-          "flags": [
-            "--connect"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "attempt HTTP connection to non-RFC 1918 hosts",
-          "default": null,
-          "choices": null,
-          "raw": " --connect             attempt HTTP connection to non-RFC 1918 hosts"
-        },
-        {
-          "flags": [
-            "--wide"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "scan entire class c of discovered records",
-          "default": null,
-          "choices": null,
-          "raw": " --wide                scan entire class c of discovered records"
-        },
-        {
-          "flags": [
-            "--traverse"
-          ],
-          "metavar": "TRAVERSE",
-          "takes_value": true,
-          "description": "scan NUMBER IPs before and after discovered records. This respects Class C boundaries and won't enter adjacent subnets.",
-          "default": null,
-          "choices": null,
-          "raw": " --traverse TRAVERSE   scan NUMBER IPs before and after discovered records. This respects Class C boundaries and won't enter adjacent subnets."
-        },
-        {
-          "flags": [
-            "--search"
-          ],
-          "metavar": "SEARCH SEARCH ...",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --search SEARCH [SEARCH ...]"
-        },
-        {
-          "flags": [
-            "--range"
-          ],
-          "metavar": "RANGE",
-          "takes_value": true,
-          "description": "scan an internal IP range, use cidr notation",
-          "default": null,
-          "choices": null,
-          "raw": " --range RANGE         scan an internal IP range, use cidr notation"
-        },
-        {
-          "flags": [
-            "--delay"
-          ],
-          "metavar": "DELAY",
-          "takes_value": true,
-          "description": "time to wait between lookups",
-          "default": null,
-          "choices": null,
-          "raw": " --delay DELAY         time to wait between lookups"
-        },
-        {
-          "flags": [
-            "--subdomains"
-          ],
-          "metavar": "SUBDOMAINS SUBDOMAINS ...",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --subdomains SUBDOMAINS [SUBDOMAINS ...]"
-        },
-        {
-          "flags": [
-            "--dns-servers"
-          ],
-          "metavar": "DNS_SERVERS DNS_SERVERS ...",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --dns-servers DNS_SERVERS [DNS_SERVERS ...]"
-        },
-        {
-          "flags": [
-            "--dns-file"
-          ],
-          "metavar": "DNS_FILE",
-          "takes_value": true,
-          "description": "use dns servers specified in this file for reverse lookups (one per line)",
-          "default": null,
-          "choices": null,
-          "raw": " --dns-file DNS_FILE   use dns servers specified in this file for reverse lookups (one per line)"
-        },
-        {
-          "flags": [
-            "--tcp"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "use TCP instead of UDP",
-          "default": null,
-          "choices": null,
-          "raw": " --tcp                 use TCP instead of UDP"
-        }
-      ],
-      "raw_help": "root@kali:~# fierce -h\n usage: fierce [-h] [--domain DOMAIN] [--connect] [--wide]\n             [--traverse TRAVERSE] [--search SEARCH [SEARCH ...]]\n             [--range RANGE] [--delay DELAY]\n             [--subdomains SUBDOMAINS [SUBDOMAINS ...] |\n             --subdomain-file SUBDOMAIN_FILE]\n             [--dns-servers DNS_SERVERS [DNS_SERVERS ...] |\n             --dns-file DNS_FILE] [--tcp]\n \n       A DNS reconnaissance tool for locating non-contiguous IP space.\n       \n \n options:\n -h, --help            show this help message and exit\n --domain DOMAIN       domain name to test\n --connect             attempt HTTP connection to non-RFC 1918 hosts\n --wide                scan entire class c of discovered records\n --traverse TRAVERSE   scan NUMBER IPs before and after discovered records. This respects Class C boundaries and won't enter adjacent subnets.\n --search SEARCH [SEARCH ...]\n                       filter on these domains when expanding lookup\n --range RANGE         scan an internal IP range, use cidr notation\n --delay DELAY         time to wait between lookups\n --subdomains SUBDOMAINS [SUBDOMAINS ...]\n                       use these subdomains\n --subdomain-file SUBDOMAIN_FILE\n                       use subdomains specified in this file (one per line)\n --dns-servers DNS_SERVERS [DNS_SERVERS ...]\n                       use these dns servers for reverse lookups\n --dns-file DNS_FILE   use dns servers specified in this file for reverse lookups (one per line)\n --tcp                 use TCP instead of UDP",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "fierce --domain example.com\nDNS Servers for example.com:\n    b.iana-servers.net\n    a.iana-servers.net\n\nTrying zone transfer first...\n    Testing b.iana-servers.net\n        Request timed out or transfer not allowed.\n    Testing a.iana-servers.net\n        Request timed out or transfer not allowed.\n\nUnsuccessful in zone transfer (it was worth a shot)\nOkay, trying the good old fashioned way... brute force\n\nChecking for wildcard DNS...\nNope. Good.\nNow performing 2280 test(s)...",
-          "template": null,
-          "original_sha256": "4747e7ff57ca9cd500528c415a00a3bf70a1b07b472ce1bcda7f91b41e2f9390"
-        },
-        {
-          "status": "operational_example",
-          "command": "$ fierce --domain google.com --subdomains accounts admin ads",
-          "template": null,
-          "original_sha256": "dcb0fc8b111442cb370b6e5ee4728c210792ca343f0bb21cf2b3a663bd7ad6f0"
-        },
-        {
-          "status": "operational_example",
-          "command": "$ fierce --domain facebook.com --subdomains admin --traverse 10",
-          "template": null,
-          "original_sha256": "987eea829c327715e780e3bfaae517d534de1d715e49aa93c705349bc7669d49"
-        },
-        {
-          "status": "operational_example",
-          "command": "$ fierce --domain facebook.com --subdomains admin --search fb.com fb.net",
-          "template": null,
-          "original_sha256": "a62ab30e1dbaa1e077cdd3e480b7abc9ab484e566a5e74be92f33b94e0dcb2af"
-        },
-        {
-          "status": "operational_example",
-          "command": "$ fierce --domain stackoverflow.com --subdomains mail --connect",
-          "template": null,
-          "original_sha256": "9357c93a95bcea264ae8101ef4ca79bc6c589acf3fa87b0b797a33d45010f0ed"
-        },
-        {
-          "status": "operational_example",
-          "command": "$ fierce --domain facebook.com --wide",
-          "template": null,
-          "original_sha256": "f538669703b354f697753ff83a5cd37b5e7420417074713905f08e8621184896"
-        },
-        {
-          "status": "operational_example",
-          "command": "$ fierce --domain zonetransfer.me",
-          "template": null,
-          "original_sha256": "9f226bb4d327966d9e2a9c25b229008f776e846862e8336df38801881110adad"
-        },
-        {
-          "status": "operational_example",
-          "command": "$ fierce --domain zonetransfer.me > output.txt",
-          "template": null,
-          "original_sha256": "91540da5ecfe91ef93dc728564b2f46540e491eca69aa595859637dc90c82b3c"
-        },
-        {
-          "status": "operational_example",
-          "command": "$ fierce --dns-servers 10.0.0.1 --range 10.0.0.0/24",
-          "template": null,
-          "original_sha256": "4f1d5eac0fdbd57df6e96d08bc6280ee1bc20691b830bce64863fba0a8baf797"
-        },
-        {
-          "status": "operational_example",
-          "command": "fierce: error: unrecognized arguments: help",
-          "template": null,
-          "original_sha256": "ccce6766cda7cad5393c9a403261fd73019538ad2bc9ff4bdd98f2c541704554"
-        }
-      ],
-      "risk": {
-        "level": "medium",
-        "signals": [
-          "recon",
-          "scanner"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "usage: fierce [-h] [--domain DOMAIN] [--connect] [--wide]\n              [--traverse TRAVERSE] [--search SEARCH [SEARCH ...]]\n              [--range RANGE] [--delay DELAY]\n              [--subdomains SUBDOMAINS [SUBDOMAINS ...] |\n              --subdomain-file SUBDOMAIN_FILE]\n              [--dns-servers DNS_SERVERS [DNS_SERVERS ...] |\n              --dns-file DNS_FILE] [--tcp]\n\n        A DNS reconnaissance tool for locating non-contiguous IP space.\n        \n\noptions:\n  -h, --help            show this help message and exit\n  --domain DOMAIN       domain name to test\n  --connect             attempt HTTP connection to non-RFC 1918 hosts\n  --wide                scan entire class c of discovered records\n  --traverse TRAVERSE   scan NUMBER IPs before and after discovered records. This respects Class C boundaries and won't enter adjacent subnets.\n  --search SEARCH [SEARCH ...]\n                        filter on these domains when expanding lookup\n  --range RANGE         scan an internal IP range, use cidr notation\n  --delay DELAY         time to wait between lookups\n  --subdomains SUBDOMAINS [SUBDOMAINS ...]\n                        use these subdomains\n  --subdomain-file SUBDOMAIN_FILE\n                        use subdomains specified in this file (one per line)\n  --dns-servers DNS_SERVERS [DNS_SERVERS ...]\n                        use these dns servers for reverse lookups\n  --dns-file DNS_FILE   use dns servers specified in this file for reverse lookups (one per line)\n  --tcp                 use TCP instead of UDP",
-        "-h": "usage: fierce [-h] [--domain DOMAIN] [--connect] [--wide]\n              [--traverse TRAVERSE] [--search SEARCH [SEARCH ...]]\n              [--range RANGE] [--delay DELAY]\n              [--subdomains SUBDOMAINS [SUBDOMAINS ...] |\n              --subdomain-file SUBDOMAIN_FILE]\n              [--dns-servers DNS_SERVERS [DNS_SERVERS ...] |\n              --dns-file DNS_FILE] [--tcp]\n\n        A DNS reconnaissance tool for locating non-contiguous IP space.\n        \n\noptions:\n  -h, --help            show this help message and exit\n  --domain DOMAIN       domain name to test\n  --connect             attempt HTTP connection to non-RFC 1918 hosts\n  --wide                scan entire class c of discovered records\n  --traverse TRAVERSE   scan NUMBER IPs before and after discovered records. This respects Class C boundaries and won't enter adjacent subnets.\n  --search SEARCH [SEARCH ...]\n                        filter on these domains when expanding lookup\n  --range RANGE         scan an internal IP range, use cidr notation\n  --delay DELAY         time to wait between lookups\n  --subdomains SUBDOMAINS [SUBDOMAINS ...]\n                        use these subdomains\n  --subdomain-file SUBDOMAIN_FILE\n                        use subdomains specified in this file (one per line)\n  --dns-servers DNS_SERVERS [DNS_SERVERS ...]\n                        use these dns servers for reverse lookups\n  --dns-file DNS_FILE   use dns servers specified in this file for reverse lookups (one per line)\n  --tcp                 use TCP instead of UDP",
-        "help": "usage: fierce [-h] [--domain DOMAIN] [--connect] [--wide]\n              [--traverse TRAVERSE] [--search SEARCH [SEARCH ...]]\n              [--range RANGE] [--delay DELAY]\n              [--subdomains SUBDOMAINS [SUBDOMAINS ...] |\n              --subdomain-file SUBDOMAIN_FILE]\n              [--dns-servers DNS_SERVERS [DNS_SERVERS ...] |\n              --dns-file DNS_FILE] [--tcp]\nfierce: error: unrecognized arguments: help",
-        "man": "FIERCE(1)                   General Commands Manual                   FIERCE(1)\n\nNAME\n     fierce  -  DNS scanner that helps locate non-contiguous IP space and host-\n     names against specified domains.\n\nSYNOPSIS\n     fierce [-h] [--domain DOMAIN]  [--connect]  [--wide]  [--traverse  NUMBER]\n     [--search  SEARCH  [SEARCH ...]] [--range RANGE] [--delay DELAY] [--subdo-\n     mains  SUBDOMAINS  [SUBDOMAINS  ...]  |  --subdomain-file  SUBDOMAIN_FILE]\n     [--dns-servers   DNS_SERVERS  [DNS_SERVERS  ...]  |  --dns-file  DNS_FILE]\n     [--tcp]\n\nDESCRIPTION\n     Fierce is a semi-lightweight scanner that helps locate  non-contiguous  IP\n     space and hostnames against specified domains. It's really meant as a pre-\n     cursor  to  nmap, OpenVAS, nikto, etc, since all of those require that you\n     already know what IP space you are looking for.  This does not perform ex-\n     ploitation and does not scan the whole internet  indiscriminately.  It  is\n     meant specifically to locate likely targets both inside and outside a cor-\n     porate  network.   Because  it uses DNS primarily you will often find mis-\n     configured networks that leak internal address  space.  That's  especially\n     useful  in targeted malware.  Originally written by RSnake along with oth-\n     ers at http://ha.ckers.org/.  This is simply a conversion to Python  3  to\n     simplify and modernize the codebase.\n\nOPTIONS\n     -h, --help\n         show this help message and exit\n\n     --domain DOMAIN\n         domain name to test\n\n     --connect\n         attempt HTTP connection to non-RFC 1918 hosts\n\n     --wide\n         scan entire class c of discovered records\n\n     --traverse NUMBER\n         scan  NUMBER  IPs  before  and after discovered records. This respects\n         Class C boundaries and won't enter adjacent subnets.\n\n     --search SEARCH [SEARCH ...]\n         filter on these domains when expanding lookup\n\n     --range RANGE\n         scan an internal IP range, use cidr notation\n\n     --delay DELAY\n         time to wait between lookups\n\n     --subdomains SUBDOMAINS [SUBDOMAINS ...]\n         use these subdomains\n\n     --subdomain-file SUBDOMAIN_FILE\n         use subdomains specified in this file (one per line)\n\n     --dns-servers DNS_SERVERS [DNS_SERVERS ...]\n         use these dns servers for reverse lookups\n\n     --dns-file DNS_FILE\n         use dns servers specified in this file for reverse  lookups  (one  per\n         line)\n\n     --tcp\n         use TCP instead of UDP\n\nEXAMPLES\n     Something basic:\n            $ fierce --domain google.com --subdomains accounts admin ads\n\n     Scan 10 IP addresses before and after discovered domains to find coniguous\n     blocks using the `--traverse` flag:\n            $ fierce --domain facebook.com --subdomains admin --traverse 10\n\n     Limit nearby IP traversal to certain domains with the `--search` flag:\n            $ fierce --domain facebook.com --subdomains admin --search fb.com fb.net\n\n     Attempt  an  `HTTP`  connection on domains discovered with the `--connect`\n     flag:\n            $ fierce --domain stackoverflow.com --subdomains mail --connect\n\n     Exchange speed for breadth with the `--wide` flag, which looks for  nearby\n     domains  on  all  IPs  of  the  [/24](https://en.wikipedia.org/wiki/Class-\n     less_Inter-Domain_Routing#IPv4_CIDR_blocks) of a discovered domain:\n            $ fierce --domain facebook.com --wide\n\n     Zone transfers are rare these days, but they give us the keys to  the  DNS\n     castle.  [zonetransfer.me](https://digi.ninja/projects/zonetransferme.php)\n     is a very useful service for testing for and learning  about  zone  trans-\n     fers:\n            $ fierce --domain zonetransfer.me\n\n     To save the results to a file for later use we can simply redirect output:\n            $ fierce --domain zonetransfer.me > output.txt\n\n     Internal  networks will often have large blocks of contiguous IP space as-\n     signed. We can scan those as well:\n            $ fierce --dns-servers 10.0.0.1 --range 10.0.0.0/24\n\n                                                                      FIERCE(1)",
-        "apropos": "fierce (1)           - DNS scanner that helps locate non-contiguous IP space ..."
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/fierce",
-        "size_bytes": 213,
-        "is_symlink": false,
-        "file_type": "Python script, ASCII text executable"
-      }
+      "usage": "fierce [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "critical",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/fierce/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/fierce/index.md",
-    "retrieved_at": "2026-07-14T13:05:38+00:00",
-    "sha256": "6b0238029a179533ff15ede75a116b46b03b0efb0a201a329dade51e06b1ef91"
-  },
-  "apt_metadata": {
-    "section": "net",
-    "installed_size": "242",
-    "maintainer": "Debian Security Tools <team+pkg-security@tracker.debian.org>",
-    "architecture": "all",
-    "version": "1.6.0-2",
-    "depends": "python3-dnspython, python3:any",
-    "description": "Domain DNS scanner\nFierce is a semi-lightweight scanner that helps locate non-contiguous\nIP space and hostnames against specified domains. It's really meant as\na pre-cursor to nmap, unicornscan, nessus, nikto, etc, since all of\nthose require that you already know what IP space you are looking for.\nThis does not perform exploitation and does not scan the whole internet\nindiscriminately. It is meant specifically to locate likely targets both\ninside and outside a corporate network.\n.\nBecause it uses DNS primarily you will often find mis-configured networks\nthat leak internal address space. That's especially useful in targeted malware.\nOriginally written by RSnake along with others at http://ha.ckers.org/.\nThis is simply a conversion to Python 3 to simplify and modernize the codebase.",
-    "homepage": "https://github.com/mschwager/fierce"
-  },
+  "files": [
+    "/usr/bin/fierce",
+    "/usr/share/man/man1/fierce.1.gz"
+  ],
   "tags": [
-    "offensive",
-    "fierce",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package",
+    "networking"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/fierce && python3 fierce.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/fierce && python3 fierce.py --help",
-    "cd toolboxes/fierce && python3 fierce.py --help",
-    "cd toolboxes/fierce && python3 fierce.py --help",
-    "cd toolboxes/fierce && python3 fierce.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fierce --output $KFIOSA_OUTPUT_DIR/fierce.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fierce --output $KFIOSA_OUTPUT_DIR/fierce.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

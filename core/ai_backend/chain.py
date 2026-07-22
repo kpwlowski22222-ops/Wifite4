@@ -39,11 +39,463 @@ orchestrator can then surface the error to the operator and stop.
 from __future__ import annotations
 
 import json
+import os
 import logging
 import re
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
+
+
+# Specialized 0-day algorithms directive — teach the LLM about the
+# 10 new chain actions in :mod:`core.ai_backend.zero_day_algorithms`.
+# Each is READ-only on the target; the operator runs the destructive
+# follow-up in the lab. Auto-derived from
+# :data:`core.ai_backend.zero_day_algorithms.ZERO_DAY_ALGORITHMS` so
+# adding a new algorithm is a one-line change in the registry.
+def _build_zero_day_algorithms_prompt_stanza() -> str:
+    """Build the prompt stanza from the live registry. Called once
+    at import time; the result is cached as
+    :data:`ZERO_DAY_ALGORITHMS_PROMPT_STANZA`."""
+    try:
+        from .zero_day_algorithms import list_algorithms
+        actions = list_algorithms()
+    except Exception:
+        actions = []
+    lines = [
+        f"  The planner has {len(actions)} specialized 0-day analysis\n"
+        "  actions (``zero_day_algorithms`` module). Each is READ-only\n"
+        "  on the target. Each returns a structured ``ZeroDayConcept``\n"
+        "  draft that the operator ACKs or rejects. The destructive\n"
+        "  follow-up (PoC compile, run, exploitation) is OUT OF SCOPE\n"
+        "  for these steps — the operator runs them in the lab.\n"
+        "  Choose the algorithm based on what recon has surfaced:\n",
+    ]
+    # Group the actions by surface so the LLM can find the right one.
+    groups = {
+        "Crash / binary analysis": [
+            "zero_day_crash_triager", "zero_day_fuzz_harness_gen",
+            "zero_day_control_flow_surfer", "zero_day_patch_differ",
+            "zero_day_memory_class_predictor", "zero_day_use_after_free",
+            "zero_day_integer_overflow", "zero_day_format_string",
+            "zero_day_stack_buffer_overflow", "zero_day_heap_overflow",
+            "zero_day_uninit_memory", "zero_day_null_deref",
+            "zero_day_race_condition_kernel", "zero_day_double_fetch",
+            "zero_day_unsafe_deserialize_binary", "zero_day_binary_backdoor",
+            "zero_day_kernel_module", "zero_day_dll_hijack",
+        ],
+        "Crypto / side channel / hardware": [
+            "zero_day_side_channel_finder",
+            "zero_day_crypto_weakness_finder",
+            "zero_day_tpm_sidechannel", "zero_day_hypervisor_vm",
+        ],
+        "Web / API / auth": [
+            "zero_day_auth_path_auditor",
+            "zero_day_logic_flaw_heuristic",
+            "zero_day_jwt_alg_confusion", "zero_day_oauth_csrf",
+            "zero_day_saml_signature", "zero_day_graphql_introspection",
+            "zero_day_xss_polyglot", "zero_day_ssrf_aws_metadata",
+            "zero_day_race_condition", "zero_day_prototype_pollution",
+            "zero_day_deserialization_pickle", "zero_day_template_injection",
+            "zero_day_path_traversal_polyglot",
+            "zero_day_xml_external_entity", "zero_day_xpath_injection",
+            "zero_day_nosql_injection", "zero_day_dns_rebinding",
+        ],
+        "Network / protocol": [
+            "zero_day_ipv6_extension_header_fuzz", "zero_day_tls_state_machine",
+            "zero_day_dns_message_parser", "zero_day_smb2_negotiate",
+            "zero_day_kerberos_preauth", "zero_day_radius_protocol",
+            "zero_day_ldap_injection", "zero_day_ntp_mode6",
+            "zero_day_ssh_kex_negotiation", "zero_day_sip_invite",
+            "zero_day_ble_gatt", "zero_day_wifi_wpa3_sae",
+            "zero_day_can_bus_uds", "zero_day_modbus_fc",
+            "zero_day_http2_stream", "zero_day_quic_handshake",
+            "zero_day_dhcp_option_overflow", "zero_day_arp_poison",
+            "zero_day_icmpv6_nd", "zero_day_zeroconf_mdns",
+        ],
+        "Supply chain / cloud / mobile": [
+            "zero_day_dependency_confusion", "zero_day_ci_cd_pwn",
+            "zero_day_container_escape", "zero_day_iot_firmware",
+            "zero_day_bluetooth_lmp", "zero_day_mobile_intent",
+            "zero_day_aws_iam", "zero_day_smart_contract",
+            "zero_day_ml_model_pickle", "zero_day_prompt_injection",
+        ],
+        "Files / containers / DLT / browser": [
+            "zero_day_race_analyzer",
+            "zero_day_office_macro", "zero_day_pdf_embedded",
+            "zero_day_dlt_scada", "zero_day_browser_js_engine",
+        ],
+    }
+    for header, items in groups.items():
+        in_grp = [a for a in items if a in actions]
+        if not in_grp:
+            continue
+        lines.append(f"\n    # {header} ({len(in_grp)} actions):\n")
+        for a in in_grp:
+            lines.append(f"      - {a}\n")
+    other = [a for a in actions
+             if a not in [x for items in groups.values() for x in items]]
+    if other:
+        lines.append("\n    # Other:\n")
+        for a in other:
+            lines.append(f"      - {a}\n")
+    lines.append(
+        "\n  Step shape for ALL of these: {\"action\": \"<one of the above>\",\n"
+        "  \"tool\": \"zero_day_algorithms\", \"args\": { ... algo-specific\n"
+        "  args (crash_path, binary_path, endpoints, ...) }, \"risk_level\":\n"
+        "  \"read\"}. The chain step persists a draft via\n"
+        "  ZeroDayDraftStore; the operator must ACK before any PoC\n"
+        "  run. Multiple of these may be chained in any order — the LLM\n"
+        "  picks based on the recon shape and the target surface.\n"
+        "  Trigger hints (the original 10):\n"
+        "    - crash_dump available -> zero_day_crash_triager\n"
+        "    - target has microarchitectural surface -> zero_day_side_channel_finder\n"
+        "    - target has a parse / network / IPC surface -> zero_day_fuzz_harness_gen\n"
+        "    - binary with symbol table available -> zero_day_control_flow_surfer\n"
+        "    - two binary versions available -> zero_day_patch_differ\n"
+        "    - function declarations available -> zero_day_memory_class_predictor\n"
+        "    - auth surface / endpoints available -> zero_day_auth_path_auditor\n"
+        "    - binary with crypto calls -> zero_day_crypto_weakness_finder\n"
+        "    - binary with stat+open patterns -> zero_day_race_analyzer\n"
+        "    - API spec / workflow available -> zero_day_logic_flaw_heuristic\n"
+    )
+    return "".join(lines)
+
+
+ZERO_DAY_ALGORITHMS_PROMPT_STANZA = _build_zero_day_algorithms_prompt_stanza()
+
+
+# Toolbox / catalog-aware prompt stanza — teach the LLM about the
+# `run_toolbox` chain action and the live ``toolbox_index.json``
+# manifest. The index is the LLM's view of what's in
+# ``toolboxes/``; the executor (:mod:`core.toolbox.executor`) is the
+# mechanism that actually drives a cloned repo.
+def _build_toolbox_prompt_stanza() -> str:
+    """Build the toolbox prompt stanza. Reads the live index; if
+    the index or the manifest is missing, returns a minimal
+    'no toolboxes indexed yet' hint so the LLM never silently
+    fabricates."""
+    try:
+        from core.toolbox import list_categories, list_repos
+        cats = list_categories()
+    except Exception:
+        cats = []
+    if not cats:
+        return (
+            "  run_toolbox: there are no cloned repos indexed yet. The\n"
+            "  operator runs ``python -m core.toolbox.fetch`` to clone\n"
+            "  the curated list and rebuild the index. Until then, do\n"
+            "  NOT emit run_toolbox steps — fallback to run_tool /\n"
+            "  cve_to_exploit / mcp_call for the same target.\n"
+        )
+    # Per-category repo count summary.
+    cat_lines: List[str] = []
+    total = 0
+    for c in cats:
+        repos = list_repos(category=c)
+        total += len(repos)
+        cat_lines.append(f"    * {c}: {len(repos)} repos")
+    recent = sorted(
+        list_repos(),
+        key=lambda r: r.get("path", ""),
+    )[-5:]
+    recent_lines: List[str] = []
+    for r in recent:
+        recent_lines.append(
+            f"    - {r.get('repo_id')!r} ({r.get('category')}, "
+            f"summary: {(r.get('summary') or '')[:80]!r})"
+        )
+    return (
+        "  run_toolbox: invoke a cloned GitHub repo's entry script\n"
+        "  autonomously. The AI can pick a repo from the live index\n"
+        "  below; the executor locates the entry script, runs it,\n"
+        "  and returns the standard envelope.\n"
+        "  Step shape: {\"action\": \"run_toolbox\", \"tool\":\n"
+        "  \"toolbox_executor\", \"args\": {\"repo_id\": \"<owner>/<name>\",\n"
+        "  \"category\": \"<exploit|frameworks|...>\", \"entry\":\n"
+        "  \"<optional relative path; auto-detected if omitted>\",\n"
+        "  \"argv\": [\"...\"], \"env\": {\"KFIOSA_TARGET_PASSWORD\":\n"
+        "  \"...\"}, \"timeout_seconds\": 120}, \"rationale\": \"...\",\n"
+        "  \"expected_outcome\": \"...\", \"risk_level\":\n"
+        "  \"intrusive|destructive\"}.\n"
+        "  NEVER-INLINE RULE: harvested credentials (password, hash,\n"
+        "  NTLM, PSK, token, API key, secret) MUST go in ``env``\n"
+        "  (e.g. ``KFIOSA_TARGET_PASSWORD``) or via the auto-routing\n"
+        "  ``password`` / ``hash`` / ``token`` keys, NEVER as argv\n"
+        "  tokens. The executor enforces this at runtime.\n"
+        "  Categories with cloned repos (" + str(total) + " total):\n"
+        + "\n".join(cat_lines) + "\n"
+        "  Most-recently-cloned examples (5):\n"
+        + ("\n".join(recent_lines) if recent_lines else "    - (none yet)")
+        + "\n"
+        "  Use this action when: the LLM has a CVE id and the cloned\n"
+        "  exploit repo is in the index; a known framework is the right\n"
+        "  tool (routersploit, Empire, Sliver, evilginx2, etc.); the\n"
+        "  existing cve_to_exploit / mcp_call / run_tool paths don't\n"
+        "  cover the operator's chosen repo.\n"
+    )
+
+
+TOOLBOX_PROMPT_STANZA = _build_toolbox_prompt_stanza()
+
+
+# Catalog-aware prompt stanza — teach the LLM about the static
+# ``catalog/github_<owner>_<name>.json`` entries. Unlike
+# :data:`TOOLBOX_PROMPT_STANZA` (which only sees CLONED repos), this
+# stanza shows the LLM every repo in the operator's curated fetch
+# lists, with the curated ``summary``, ``use_cases``, and
+# ``command_examples`` per Phase 5+ enrichment. The LLM can pick a
+# repo from this list even before it's been cloned; the operator
+# then runs the fetch CLI to clone it.
+def _build_catalog_prompt_stanza() -> str:
+    """Build the catalog prompt stanza. Reads the live catalog/;
+    if the catalog is missing, returns a minimal 'no catalog
+    yet' hint so the LLM never silently fabricates."""
+    catalog_dir = Path("catalog")
+    if not catalog_dir.is_dir():
+        return (
+            "  catalog/ entries: there is no static catalog yet. The\n"
+            "  operator runs ``python -m core.toolbox.catalog_from_lists\n"
+            "  --write`` to emit catalog/ JSON entries from the\n"
+            "  curated fetch lists.\n"
+        )
+    # Lazy import — keep the chain module cheap to import.
+    try:
+        from core.toolbox.catalog_from_lists import (
+            _REPO_DETAILS,
+            _REPO_SUMMARIES,
+        )
+    except Exception:
+        _REPO_SUMMARIES = {}
+        _REPO_DETAILS = {}
+    # Tally category counts from the on-disk catalog.
+    cats: Dict[str, int] = {}
+    for p in catalog_dir.glob("github_*.json"):
+        try:
+            d = json.loads(p.read_text())
+            c = d.get("category", "unknown")
+            cats[c] = cats.get(c, 0) + 1
+        except Exception:
+            continue
+    if not cats:
+        return (
+            "  catalog/ entries: catalog/ is empty. The operator\n"
+            "  runs ``python -m core.toolbox.catalog_from_lists\n"
+            "  --write`` to populate it.\n"
+        )
+    # 1. Category summary
+    cat_lines = [
+        f"    * {c}: {n} repos" for c, n in
+        sorted(cats.items(), key=lambda x: -x[1])
+    ]
+    # 2. Curated highlights (the 5 most important tools in
+    #    _REPO_SUMMARIES that have a non-empty summary)
+    highlights = []
+    for full_name in [
+        "threat9/routersploit", "BishopFox/sliver",
+        "its-a-feature/Mythic", "byt3bl33d3r/CrackMapExec",
+        "kgretzky/evilginx2", "fortra/impacket",
+        "sqlmapproject/sqlmap", "projectdiscovery/nuclei",
+        "carlospolop/PEASS-ng", "smicallef/spiderfoot",
+    ]:
+        if full_name in _REPO_SUMMARIES:
+            highlights.append(
+                f"    - {full_name}: "
+                f"{_REPO_SUMMARIES[full_name][:120]}"
+            )
+    # 3. use_cases + command_examples for major tools with
+    #    curated _REPO_DETAILS. Sample the top-3 per category.
+    detail_lines = []
+    seen_categories: set = set()
+    for full_name, det in _REPO_DETAILS.items():
+        cat = full_name.split("/")[0]
+        # Only one sample per "owner" namespace to keep it short
+        if cat in seen_categories:
+            continue
+        if "use_cases" not in det or "command_examples" not in det:
+            continue
+        detail_lines.append(
+            f"    - {full_name} | use_cases: {det['use_cases'][0]!r} | "
+            f"command: {det['command_examples'][0]!r}"
+        )
+        seen_categories.add(cat)
+    return (
+        "  catalog/: the static catalog/ contains\n"
+        f"  {sum(cats.values())} github_*.json entries. The LLM can\n"
+        "  pick any repo by name; the operator runs the fetch CLI\n"
+        "  to clone it before the run_toolbox step invokes it.\n"
+        "  Per-repo fields: ``summary``, ``use_cases``,\n"
+        "  ``command_examples``, ``risk``, ``tags``.\n"
+        "  Per-category counts:\n"
+        + "\n".join(cat_lines) + "\n"
+        "  Curated highlights (5+):\n"
+        + ("\n".join(highlights) if highlights else "    - (none)") + "\n"
+        "  Sample use_cases + commands (one per namespace):\n"
+        + ("\n".join(detail_lines) if detail_lines else "    - (none)") + "\n"
+        "  Use this catalog when: the LLM has a specific tool name\n"
+        "  in mind (routersploit, sliver, evilginx2, etc.); the\n"
+        "  cloned index (TOOLBOX_PROMPT_STANZA) doesn't yet have\n"
+        "  the tool; the LLM wants to suggest a clone-and-invoke\n"
+        "  path. The chain step shape is the same as run_toolbox.\n"
+    )
+
+
+CATALOG_PROMPT_STANZA = _build_catalog_prompt_stanza()
+
+
+# Python-library prompt stanza — teach the LLM about the
+# `run_python_lib` chain action. The LLM can pick a curated
+# library from `core.toolbox.python_libs.PYTHON_LIBRARIES`
+# (116 libraries across 17 categories) and run a small
+# Python snippet that uses it.
+def _build_python_lib_prompt_stanza() -> str:
+    """Build the python_lib prompt stanza. Reads the live
+    registry; if it's empty (unusual), returns a 'no libs
+    indexed' hint so the LLM never silently fabricates."""
+    try:
+        from core.toolbox.python_libs import (
+            categories_count, list_categories,
+        )
+        cats = list_categories()
+        counts = categories_count()
+    except Exception:
+        cats, counts = [], {}
+    if not cats:
+        return (
+            "  run_python_lib: there are no curated Python libraries\n"
+            "  registered. The operator runs ``python -m\n"
+            "  core.toolbox.catalog_python_libs`` to emit the\n"
+            "  pypi_<name>.json catalog entries. Until then, do NOT\n"
+            "  emit run_python_lib steps.\n"
+        )
+    total = sum(counts.values())
+    cat_lines: List[str] = []
+    for c in cats:
+        cat_lines.append(f"    * {c}: {counts.get(c, 0)} libraries")
+    return (
+        "  run_python_lib: run a Python snippet that imports a\n"
+        "  curated library from the KFIOSA python-libs registry\n"
+        "  (core.toolbox.python_libs). Use this when the LLM has a\n"
+        "  specific library in mind (e.g. scapy for packet crafting,\n"
+        "  pwntools for CTF, impacket for SMB, bleak for BLE, masscan\n"
+        "  for port scanning, sqlmap for SQLi, ldap3 for AD). The\n"
+        "  executor (core.toolbox.exec_python_lib) launches a\n"
+        "  subprocess, runs the code with the library pre-imported,\n"
+        "  and returns the standard envelope (ok, returncode,\n"
+        "  stdout, stderr, error).\n"
+        "  Step shape: {\"action\": \"run_python_lib\", \"tool\":\n"
+        "  \"python_lib_executor\", \"args\": {\"lib\": \"<pip or import\n"
+        "  name>\", \"code\": \"<python source; the library is\n"
+        "  pre-imported>\", \"cwd\": \"<optional>\",\n"
+        "  \"timeout_seconds\": 30, \"env\": {\"KFIOSA_TARGET_*\":\n"
+        "  \"<harvested creds, never as code>\"}}, \"risk_level\":\n"
+        "  \"<read|intrusive|destructive>\", \"rationale\": \"...\"}.\n"
+        "  NEVER-INLINE RULE: harvested credentials (password, hash,\n"
+        "  NTLM, PSK, token, API key, secret) MUST go in ``env``\n"
+        "  (e.g. ``KFIOSA_TARGET_PASSWORD``) and the code reads\n"
+        "  them via ``os.environ``. They MUST NOT appear as string\n"
+        "  literals in the source code. The executor hard-caps the\n"
+        "  timeout at 300s.\n"
+        "  Categories with curated libraries (" + str(total) + " total):\n"
+        + "\n".join(cat_lines) + "\n"
+        "  Each library's catalog entry (catalog/pypi_<name>.json)\n"
+        "  carries: pip_name, import_name, version, example, entry,\n"
+        "  risk_level, requires_explicit_authorization. Read the\n"
+        "  catalog JSON before emitting a run_python_lib step so\n"
+        "  the LLM has the import name + a working example.\n"
+        "  Use this action when: the LLM wants a one-off Python\n"
+        "  script against a curated lib, the cloned toolbox approach\n"
+        "  (run_toolbox) is too heavyweight, or a quick OSINT / recon\n"
+        "  / parsing step is needed inline.\n"
+    )
+
+
+PYTHON_LIB_PROMPT_STANZA = _build_python_lib_prompt_stanza()
+
+
+# Phase 2.2.H+ — v2 modules prompt stanza. Teaches the LLM about the
+# 50+ creative new methods per type (wifi, wifi_recon, ble, ble_recon,
+# osint, post_exploit, forensics, anti_forensics) that the underlying
+# runners expose as primary methods with v2 names.
+try:
+    from .expanded_modules import V2_PROMPT_STANZA as _V2_STANZA
+    V2_MODULES_PROMPT_STANZA: str = _V2_STANZA
+except Exception:  # noqa: BLE001
+    V2_MODULES_PROMPT_STANZA = (
+        "  [v2 expanded-modules stanza unavailable; "
+        "core.ai_backend.expanded_modules did not import]\n"
+    )
+
+
+# Phase 2.3.A — catalog enrichment prompt stanza. Teaches the LLM
+# about the operator-curated fields now living on every catalog
+# ``github_*.json`` entry. The chain planner can filter candidates
+# by ``tags``, prefer tools whose ``use_cases`` match the current
+# recon context, build ``run_toolbox`` args from ``command_examples``
+# (which use ``$KFIOSA_*`` env-var sentinels — never inline creds),
+# and respect ``metadata_status`` (don't auto-run ``index_only``).
+# The stanza is built from a generic template; it does not embed
+# any specific catalog entries to keep the prompt bounded.
+try:
+    from core.catalog.enhance import build_enrichment_prompt_stanza
+    CATALOG_ENRICHMENT_PROMPT_STANZA: str = build_enrichment_prompt_stanza()
+except Exception:  # noqa: BLE001
+    CATALOG_ENRICHMENT_PROMPT_STANZA = (
+        "  [catalog-enrichment stanza unavailable; "
+        "core.catalog.enhance did not import]\n"
+    )
+
+
+# Phase 2.4 — five new prompt stanzas. See core.ai_backend.phase24_stanzas.
+try:
+    from .phase24_stanzas import (
+        V3_METHODS_PROMPT_STANZA as _V3_STANZA,
+        POLY_ADAPT_PROMPT_STANZA as _POLY_STANZA,
+        CATALOG_ENRICHMENT_V2_STANZA as _CATV2_STANZA,
+        DASHBOARD_PROMPT_STANZA as _DASH_STANZA,
+        EXPLOIT_CHAIN_PROMPT_STANZA as _EXPLOIT_STANZA,
+    )
+    V3_METHODS_PROMPT_STANZA: str = _V3_STANZA
+    POLY_ADAPT_PROMPT_STANZA: str = _POLY_STANZA
+    CATALOG_ENRICHMENT_V2_STANZA: str = _CATV2_STANZA
+    DASHBOARD_PROMPT_STANZA: str = _DASH_STANZA
+    EXPLOIT_CHAIN_PROMPT_STANZA: str = _EXPLOIT_STANZA
+except Exception:  # noqa: BLE001
+    _FALLBACK = (
+        "  [phase 2.4 stanzas unavailable; "
+        "core.ai_backend.phase24_stanzas did not import]\n"
+    )
+    V3_METHODS_PROMPT_STANZA = _FALLBACK
+    POLY_ADAPT_PROMPT_STANZA = _FALLBACK
+    CATALOG_ENRICHMENT_V2_STANZA = _FALLBACK
+    DASHBOARD_PROMPT_STANZA = _FALLBACK
+    EXPLOIT_CHAIN_PROMPT_STANZA = _FALLBACK
+
+
+# Kismet prompt stanza — teach the LLM about the ``kismet_scan``
+# chain action. Kismet is more thorough on hidden SSIDs and 6 GHz
+# than airodump; the AI may request a Kismet sweep before
+# airodump-based captures.
+KISMET_PROMPT_STANZA = (
+    "  kismet_scan (risk INTRUSIVE, GATED) — drive the Kismet server\n"
+    "  / client / capture conversion via core.scanners.kismet_runner.\n"
+    "  Useful BEFORE airodump when the target may be a hidden SSID,\n"
+    "  a 6 GHz 802.11ax network, or a non-WiFi source (BLE, Zigbee\n"
+    "  via rtl433). Step shape: {\"action\": \"kismet_scan\",\n"
+    "  \"tool\": \"kismet_runner\", \"args\": {\"interface\":\n"
+    "  \"<wlan0mon>\", \"output_dir\": \"<where to write logs>\",\n"
+    "  \"log_types\": \"pcap,netxml,csv\", \"wait_s\": 6}, \"risk_level\":\n"
+    "  \"intrusive\"}. The Kismet client uses admin/admin (operator-\n"
+    "  provided); the password is the literal string \"admin\" and is\n"
+    "  passed via the KISMET_CLIENT_PASSWORD env var — NEVER as an\n"
+    "  argv token. The per-step ACCEPT already fired in\n"
+    "  _walk_ai_step. After the chain, call\n"
+    "  KismetRunner.convert_cap_to_pcap on the .kismet binary\n"
+    "  captures, then chain to tshark / aircrack-ng as needed.\n"
+    "  Prefer airodump for quick targeted captures; prefer Kismet\n"
+    "  for full-spectrum recon and IDS-grade alerts.\n"
+)
 
 
 class ChainPlanError(RuntimeError):
@@ -58,7 +510,7 @@ class ChainPlanError(RuntimeError):
 _CHAIN_STEP_SCHEMA_HINT = """{
   "chain": [
     {
-      "action": "<one of: mcp_call, post_exploit, external_terminal, zero_day_propose, zero_day_build, zero_day_execute, mt7921e_test_injection, mt7921e_inject, external_inject, recon_probe, ble_probe, ble_attack, wifi_attack, post_exploit_ext, post_exploit_anti_forensic, extended_wifi, ble_post_exploit, osint_ext, extended_ble, open_shell, open_post_access_tui, cve_to_exploit, cve_to_exploit_batch, open_ble_tui, open_network_tui, crack, crack_gpu, pmkid, wps_pixie, wps_online, join_network, host_discovery, deploy_payload, run_tool, parse, decide, osint_probe, post_exploit_probe, live_edit, tool_install>",
+      "action": "<one of: mcp_call, post_exploit, external_terminal, zero_day_propose, zero_day_build, zero_day_execute, zero_day_crash_triager, zero_day_side_channel_finder, zero_day_fuzz_harness_gen, zero_day_control_flow_surfer, zero_day_patch_differ, zero_day_memory_class_predictor, zero_day_auth_path_auditor, zero_day_crypto_weakness_finder, zero_day_race_analyzer, zero_day_logic_flaw_heuristic, run_toolbox, run_python_lib, kismet_scan, mt7921e_test_injection, mt7921e_inject, external_inject, recon_probe, ble_probe, ble_attack, wifi_attack, post_exploit_ext, post_exploit_anti_forensic, extended_wifi, ble_post_exploit, osint_ext, osint_module, forensic_module, extended_ble, open_shell, open_post_access_tui, cve_to_exploit, cve_to_exploit_batch, open_ble_tui, open_network_tui, crack, crack_gpu, pmkid, wps_pixie, wps_online, join_network, host_discovery, deploy_payload, run_tool, parse, decide, osint_probe, post_exploit_probe, live_edit, tool_install, c2_framework, poly_adapt>",
       "tool": "<canonical tool name, e.g. airodump-ng, aireplay-ng, msfconsole, mt7921e.test_injection, cve_lookup>",
       "args": { ... tool-specific args ... },
       "rationale": "<one-sentence why this step>",
@@ -128,8 +580,85 @@ OSINT_EXT_PROMPT_STANZA = (
     "    shodan WPS — independent of Wigle for two-source scoring),\n"
     "    shodan_dataloss_db_filtered_search (shodan dataloss DB with\n"
     "    structured breach metadata), and\n"
-    "    exploits_shodan_bs4_scrape_cve_to_exploit_links (HTML scrape\n"
+    "    exploits_shodan_bs4_bs4_scrape_cve_to_exploit_links (HTML scrape\n"
     "    fallback for cve_to_exploit when SHODAN_API_KEY is absent).\n"
+)
+
+# osint_module action — comprehensive OSINT library (Phase 2.2 expansion)
+OSINT_MODULE_PROMPT_STANZA = (
+    "  - osint_module (risk READ, GATED) runs one of the 56 OSINT\n"
+    "    module algorithms in core/osint/osint_modules.py. The set\n"
+    "    covers 19 subcategories: username enumeration (holehe,\n"
+    "    sherlock, maigret, socialscan, whatsapp_check),\n"
+    "    email reputation (emailrep, hunter_io, clearbit,\n"
+    "    fullcontact, breach_correlate via HIBP),\n"
+    "    phone number (phonenumbers_lib, truecaller_lookup,\n"
+    "    sync_me_lookup),\n"
+    "    domain intel (whois_lookup, viewdns, securitytrails,\n"
+    "    dnsdumpster, crt_sh_subdomains),\n"
+    "    subdomain enum (subfinder, amass, assetfinder),\n"
+    "    port scan (masscan, nmap_scripts, rustscan),\n"
+    "    HTTP fingerprint (httpx, wappalyzer, whatweb),\n"
+    "    screenshot (gowitness, aquatone),\n"
+    "    git recon (trufflehog, gitleaks, gitrob),\n"
+    "    cloud recon (s3scanner, cloud_enum, gcp_bucket_finder),\n"
+    "    leaked creds (dehashed_search, intelx_search),\n"
+    "    threat intel (otx_lookup, abuseipdb_check, greynoise),\n"
+    "    dark web (onion_scan, dread_lookup),\n"
+    "    social media (blackbird, socialscan_v2, namechk),\n"
+    "    geolocation (ipgeolocation, ipstack, ipapi),\n"
+    "    wireless OSINT (wigle_lookup, wifileaks_search),\n"
+    "    cert transparency (censys_search, certspotter),\n"
+    "    DNS recon (passivedns, dnstwist),\n"
+    "    ASN/BGP (asnlookup, bgp_he_net).\n"
+    "    Args: the per-module key (email, username, phone, domain,\n"
+    "    ip, url, ssid, bssid, etc.); some require API keys via env\n"
+    "    (KFIOSA_HIBP_KEY, KFIOSA_HUNTER_KEY, etc.). Use this as a\n"
+    "    complement to osint_ext — osint_module is the broader\n"
+    "    library, osint_ext is the AI-coordinator family. Never\n"
+    "    auto-installs; the operator must install the tool or set\n"
+    "    the API key first.\n"
+)
+
+# forensic_module action — forensics + anti-forensics (Phase 2.2 expansion)
+FORENSIC_MODULE_PROMPT_STANZA = (
+    "  - forensic_module (risk READ or DESTRUCTIVE, GATED) runs one\n"
+    "    of the 54 forensics / anti-forensics module algorithms in\n"
+    "    core/forensics/forensic_modules.py. The set covers 28\n"
+    "    forensic (read-only) modules: file_hash, file_metadata,\n"
+    "    exif_extract, strings_extract, pcap_summary,\n"
+    "    memory_image_identify (volatility), registry_hive_parse,\n"
+    "    eventlog_parse (python-evtx), browser_history (hindsight),\n"
+    "    mft_parse (analyzeMFT), plist_parse, prefetch_parse,\n"
+    "    amsi_buffer_capture, etw_trace_parse (xperf), disk_image_info\n"
+    "    (ewfinfo/mmls), lnk_parse (LnkParse3), jump_list_parse,\n"
+    "    recycle_bin_parse (rifiuti), scheduled_task_dump (schtasks),\n"
+    "    wifi_password_dump (netsh), ssh_known_hosts, bash_history,\n"
+    "    zsh_history, powershell_history, persistence_walk,\n"
+    "    autoruns_walk, yara_scan, wireshark_dissect, pcap_carver\n"
+    "    (foremost/scalpel). And 26 anti-forensic modules (ALL\n"
+    "    lab_only=True; DESTRUCTIVE or INTRUSIVE): anti_log_clear,\n"
+    "    anti_history_clear, anti_timestomp, anti_secure_delete\n"
+    "    (shred/srm/wipe), anti_free_space_wipe (sfill),\n"
+    "    anti_swap_wipe (sswap), anti_memory_wipe (smem),\n"
+    "    anti_amsi_bypass (emit snippet), anti_etw_bypass,\n"
+    "    anti_uac_bypass (Fodhelper), anti_edr_evasion (catalog),\n"
+    "    anti_process_inject (CreateRemoteThread template),\n"
+    "    anti_ransomware_sim (Fernet encrypt simulator),\n"
+    "    anti_disk_encrypt (veracrypt command template),\n"
+    "    anti_persistence_clean, anti_chmod_zero, anti_wipe_metadata\n"
+    "    (exiftool -all=), anti_stego_embed (steghide command),\n"
+    "    anti_zip_password (7z command template),\n"
+    "    anti_opsec_clean (clears KFIOSA_* env vars),\n"
+    "    anti_evtx_clear, anti_etw_patch_binary,\n"
+    "    anti_ransom_note_template, anti_credential_zeroize,\n"
+    "    anti_honeytoken_inject. Anti-forensic modules are EMIT-ONLY\n"
+    "    by default — the runner does NOT auto-execute. The chain\n"
+    "    walker is the only path that re-gates. Args: per-module\n"
+    "    keys (path, log_name, image, pcap, etc.). Use this for the\n"
+    "    'forensics' and 'anti-forensics' phases of the chain\n"
+    "    planner; complement to post_exploit_anti_forensic which is\n"
+    "    the original 71-method lab family.\n"
 )
 
 # extended_ble action — AI-driven extended BLE 5.x
@@ -332,9 +861,10 @@ CVE_TO_EXPLOIT_BATCH_PROMPT_STANZA = (
     "    Each CVE is looked up via NVD; the LLM NEVER fabricates CVEs.\n"
     "    The exploit body is generated by the operator's preferred\n"
     "    uncensored code-architect model (Qwen2.5-Coder-14B-Instruct-\n"
-    "    uncensored default; 32B hybrid GPU+CPU for long exploits; 4B\n"
-    "    fallback on minimal hardware). The per-step ACCEPT/CANCEL\n"
-    "    gate fires ONCE; the batch's sub-steps are not re-gated.\n"
+    "    Uncensored Q4_K_M, roleplaiapp redistribution; 32B hybrid\n"
+    "    GPU+CPU for long exploits; 4B fallback on minimal hardware).\n"
+    "    The per-step ACCEPT/CANCEL gate fires ONCE; the batch's\n"
+    "    sub-steps are not re-gated.\n"
 )
 
 # open_ble_tui + open_network_tui actions — extend the post-access TUI
@@ -780,6 +1310,33 @@ _SYSTEM_PROMPT = (
     "    log4j_jndi_waf_bypass_wordlist_forge (pure-Python payload\n"
     "    forge — generates env-var / lower-upper lookup / '::-' / secret-\n"
     "    leak variants; output is a wordlist, NEVER a send).\n"
+    "    Phase 6 additions (5 polymorphic + 5 target-adaptive planning\n"
+    "    helpers — pure-Python, never contact a real target; the chain\n"
+    "    wires a separate per-step ACCEPT-gated step to actually execute):\n"
+    "    poly_credential_format_drift (NTLM/NTLMv1/v2/SHA1/256/MD5\n"
+    "    shape enumeration; the executor computes the real hash at run\n"
+    "    time from the env-supplied password, never inline),\n"
+    "    poly_lateral_target_pool_drift (8 lateral-movement candidates\n"
+    "    from a CIDR), poly_persistence_mechanism_drift (6 mechanisms\n"
+    "    per OS), poly_exfil_channel_drift (6 channels), and\n"
+    "    poly_privilege_escalation_chain (6 privesc patterns);\n"
+    "    adapt_target_os_persistence_picker (4 OS-priority), and\n"
+    "    adapt_lateral_proto_picker (4 proto-priority),\n"
+    "    adapt_exfil_size_picker (4 size-priority),\n"
+    "    adapt_privesc_priority_picker (4 role-priority), and\n"
+    "    adapt_target_cleaner_picker (4 OS-cleaner-priority).\n"
+    "  - c2_framework (risk INTRUSIVE, GATED) runs a cloned C2\n"
+    "    framework's REPL via core.c2.executor.run_c2_framework.\n"
+    "    Supports sliver, empire, havoc, merlin, covenant, mythic,\n"
+    "    adaptix, villain. The executor spawns the binary in a\n"
+    "    pseudo-TTY, waits for the ready prompt, sends the\n"
+    "    command list, then closes cleanly. Step shape:\n"
+    "    {\"action\": \"c2_framework\", \"args\": {\"framework\": \"sliver\",\n"
+    "    \"commands\": [\"help\", \"sessions\"], \"extra_argv\": [],\n"
+    "    \"timeout_seconds\": 30}}. The executor NEVER claims a\n"
+    "    session, beacon, or implant — it returns only the real\n"
+    "    subprocess output. NEVER inline credentials into the\n"
+    "    command string — pass them via env vars.\n"
     "  - extended_wifi (risk INTRUSIVE/DESTRUCTIVE, GATED) runs one of 60\n"
     "    advanced WiFi (HE / Wi-Fi 6 / 7 / WPA3 / AI) algorithms in\n"
     "    core/extended_wifi/runner.py. The set covers HE/6E/7 frame\n"
@@ -853,6 +1410,8 @@ _SYSTEM_PROMPT = (
     f"{LIVE_EDIT_PROMPT_STANZA}\n"
     f"{TOOL_INSTALL_PROMPT_STANZA}\n"
     f"{OSINT_EXT_PROMPT_STANZA}\n"
+    f"{OSINT_MODULE_PROMPT_STANZA}\n"
+    f"{FORENSIC_MODULE_PROMPT_STANZA}\n"
     f"{EXTENDED_BLE_PROMPT_STANZA}\n"
     f"{CVE_TO_EXPLOIT_PROMPT_STANZA}\n"
     f"{POST_EXPLOIT_AI_PROMPT_STANZA}\n"
@@ -862,6 +1421,19 @@ _SYSTEM_PROMPT = (
     f"{ANDROID_PROMPT_STANZA}\n"
     f"{IOS_PROMPT_STANZA}\n"
     f"{LIVE_TARGET_PROMPT_STANZA}\n"
+    f"{ZERO_DAY_ALGORITHMS_PROMPT_STANZA}\n"
+    f"{TOOLBOX_PROMPT_STANZA}\n"
+    f"{CATALOG_PROMPT_STANZA}\n"
+    f"{KISMET_PROMPT_STANZA}\n"
+    f"{PYTHON_LIB_PROMPT_STANZA}\n"
+    f"{V2_MODULES_PROMPT_STANZA}\n"
+    f"{CATALOG_ENRICHMENT_PROMPT_STANZA}\n"
+    # Phase 2.4 — five new stanzas. Cap total length at 8k tokens.
+    f"{V3_METHODS_PROMPT_STANZA}\n"
+    f"{POLY_ADAPT_PROMPT_STANZA}\n"
+    f"{CATALOG_ENRICHMENT_V2_STANZA}\n"
+    f"{DASHBOARD_PROMPT_STANZA}\n"
+    f"{EXPLOIT_CHAIN_PROMPT_STANZA}\n"
 )
 # Heuristic fallback — used only when both LLM attempts fail. Mirrors
 # the existing ``AIBackend._heuristic`` in spirit but emits the new
@@ -1067,7 +1639,103 @@ def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str,
             "risk_level": "read",
             "expected_runtime_seconds": 1,
         })
+    # Phase 2.2.G: auto-append the zero-day tail on the heuristic
+    # fallback path. Opt-in via ``KFIOSA_ZERO_DAY_TAIL_AUTO=1`` so the
+    # default behavior is unchanged. Each tail step is marked
+    # ``optional: True`` and per-step ACCEPT-gated by the orchestrator.
+    if _zero_day_tail_auto_enabled():
+        auto_tail = _zero_day_tail(target)
+        if auto_tail:
+            steps = steps + auto_tail
     return steps
+
+
+def _zero_day_tail_auto_enabled() -> bool:
+    """Phase 2.2.G: opt-in env-var hook. When
+    ``KFIOSA_ZERO_DAY_TAIL_AUTO=1``, the chain heuristic auto-appends
+    the optional 0-day tail (propose → build → execute) at the end of
+    the fallback chain. The default is OFF so legacy behavior is
+    unchanged. Each tail step is marked ``optional: True`` and
+    per-step ACCEPT-gated by the orchestrator, so the operator stays
+    in the loop regardless of the env-var state.
+
+    Never raises — a malformed env var is treated as "off".
+    """
+    try:
+        v = os.environ.get("KFIOSA_ZERO_DAY_TAIL_AUTO", "").strip().lower()
+    except Exception:  # noqa: BLE001 — never break planning on env-var read
+        return False
+    if not v:
+        return False
+    return v in ("1", "true", "yes", "on")
+
+
+def _resolve_zero_day_draft_id(
+    target: Dict[str, Any], *,
+    store: Optional[Any] = None,
+) -> Optional[str]:
+    """Phase 2.2.G: fingerprint lookup of the most-recent ACK'd
+    :class:`ZeroDayConcept` for a given target.
+
+    The fingerprint is a small subset of the target dict (vendor,
+    bssid, ssid, host, ip, cpe, version). When the LLM emits a
+    ``zero_day_execute`` step without an explicit ``draft_id``, the
+    orchestrator calls this helper to look up the ACK'd concept that
+    matches the target fingerprint. Returns the most-recent
+    fingerprint-matching ACK'd draft_id, or ``None`` when no match
+    exists (the orchestrator should then emit an honest-degrade
+    envelope).
+
+    Args:
+        target: the target dict (from seed/args).
+        store: optional pre-built :class:`ZeroDayDraftStore`; default
+            constructs a new one.
+
+    Returns:
+        ``draft_id`` str or ``None``.
+    """
+    try:
+        if store is None:
+            from .zero_day import ZeroDayDraftStore
+            store = ZeroDayDraftStore()
+    except Exception:  # noqa: BLE001
+        return None
+    # Build a small fingerprint from the target.
+    fp_keys = ("vendor", "bssid", "ssid", "essid", "host", "ip",
+               "cpe", "version", "model", "target", "name", "target_class")
+    fp = {k: str(target.get(k, "")) for k in fp_keys
+          if target.get(k)}
+    if not fp:
+        # No fingerprint at all: cannot match a concept.
+        return None
+    try:
+        concepts = store.list(status="acked")
+    except Exception:  # noqa: BLE001
+        return None
+    best: Optional[Any] = None
+    best_score = 0
+    best_at = 0.0
+    for c in concepts:
+        c_target = c.target if isinstance(c.target, dict) else {}
+        score = 0
+        for k, v in fp.items():
+            cv = c_target.get(k)
+            if cv is None:
+                continue
+            if str(cv).strip() == v:
+                score += 1
+        # The concept must match on at least one fingerprint key.
+        if score == 0:
+            continue
+        # Tie-break on created_at (most recent wins).
+        c_at = float(getattr(c, "created_at", 0) or 0)
+        if score > best_score or (score == best_score and c_at > best_at):
+            best = c
+            best_score = score
+            best_at = c_at
+    if best is None:
+        return None
+    return getattr(best, "draft_id", None)
 
 
 def _zero_day_tail(target: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -1247,6 +1915,7 @@ class AIChainPlanner:
              kb_tools: Optional[List[Dict[str, Any]]] = None,
              context: Optional[Dict[str, Any]] = None,
              attach_zero_day: bool = False,
+             attach_post_exploit: bool = False,
              prior_results: Optional[List[Dict[str, Any]]] = None
              ) -> List[Dict[str, Any]]:
         """Produce an ordered attack chain for ``target``.
@@ -1261,6 +1930,15 @@ class AIChainPlanner:
         independently gated by the operator's per-step ACCEPT/CANCEL
         prompt, so the operator can CANCEL the tail at any point. This
         is opt-in so the default chain shape is unchanged.
+
+        When ``attach_post_exploit`` is True, the deterministic
+        :func:`select_anti_forensic_sequence` is consulted and 1-3
+        anti-forensic/OPSEC steps are appended based on the
+        engagement context. Each step is independently gated. The
+        destructive subset (post_self_destruct and the secure-delete
+        family) only injects when ``target["detaching"]`` (or
+        similar) is set. This is opt-in so the default chain
+        shape is unchanged.
 
         When ``prior_results`` is non-empty (the polymorphic re-plan
         path), a ``PRIOR STEP OUTCOMES`` section is appended to the
@@ -1388,6 +2066,76 @@ class AIChainPlanner:
                     f"[chain-planner] appended optional 0-day exploit "
                     f"tail ({len(tail)} steps); each is operator-gated"
                 )
+
+        # Phase 2.1.F: PostExploitSelector — deterministic anti-forensic
+        # step injection. The LLM emits the high-level plan; the
+        # selector maps the engagement context (target_class, used
+        # actions, anonymity_required, detaching) to a 1-3 module
+        # sequence from POST_EXPLOIT_ANTI_FORENSIC_METHODS. Each
+        # injected step is operator-gated by the per-step ACCEPT
+        # gate in _walk_ai_step. Destructive modules are NEVER
+        # injected by default — the operator opts in by setting
+        # ``include_destructive=True`` on the seed (or the chain
+        # has a ``detaching: True`` flag in the prior results).
+        # The injection is opt-in via ``attach_post_exploit=True``
+        # (mirroring ``attach_zero_day=True``) so legacy callers
+        # that expect a chain length equal to the LLM's response
+        # are unaffected.
+        if attach_post_exploit:
+            try:
+                from .post_exploit_selector import (
+                    select_anti_forensic_sequence, explain_sequence,
+                )
+                # Build the selector seed from target + prior_results +
+                # the engagement context.
+                sel_seed: Dict[str, Any] = {}
+                if isinstance(target, dict):
+                    for k in ("target_class", "os", "target_os",
+                              "anonymity_required", "tor_required",
+                              "vpn_required", "detaching", "detach",
+                              "exiting", "end_chain"):
+                        if k in target:
+                            sel_seed[k] = target[k]
+                if isinstance(prior_results, list) and prior_results:
+                    sel_seed["executed"] = list(prior_results)
+                # Opt-in destructive injection only when the engagement
+                # is closing out (the operator has already approved the
+                # prior chain and is detaching).
+                include_destructive = bool(
+                    sel_seed.get("detaching")
+                    or sel_seed.get("detach")
+                    or sel_seed.get("exiting")
+                    or sel_seed.get("end_chain"))
+                sel_seq = select_anti_forensic_sequence(
+                    sel_seed, max_modules=5,
+                    include_destructive=include_destructive)
+                if sel_seq:
+                    # Convert to chain steps
+                    for method in sel_seq:
+                        steps.append({
+                            "action": "post_exploit_anti_forensic",
+                            "tool": f"core.post_exploit.anti_forensic.{method}",
+                            "args": {"method": method},
+                            "rationale": ("PostExploitSelector: "
+                                          + dict(explain_sequence(
+                                              sel_seed, [method])).get(method, "")),
+                            "expected_outcome": (
+                                f"anti-forensic step {method} complete; "
+                                f"check seed['post_exploit_anti_forensic']"),
+                            "risk_level": "intrusive",
+                            "expected_runtime_seconds": 30,
+                        })
+                    self._emit(
+                        f"[chain-planner] PostExploitSelector injected "
+                        f"{len(sel_seq)} anti-forensic step(s) for "
+                        f"target_class={sel_seed.get('target_class', '?')!r}; "
+                        f"each is per-step ACCEPT-gated")
+            except Exception as e:  # noqa: BLE001
+                self._emit(
+                    f"[chain-planner] PostExploitSelector failed (non-fatal): {e}")
+                # Selector failure is non-fatal — chain is still usable.
+                pass
+
         # Stash the context for introspection (the orchestrator reads
         # ``_last_context.get("uncensored_swap")`` to label the chain
         # source; this was previously a dead branch because _last_context

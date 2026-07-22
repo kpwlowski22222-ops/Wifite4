@@ -3,21 +3,16 @@
   "kind": "kali_source_package",
   "name": "responder",
   "title": "responder",
-  "summary": "### responder",
+  "summary": "LLMNR/NBT-NS/mDNS Poisoner",
+  "description": "LLMNR/NBT-NS/mDNS Poisoner\nThis package contains Responder/MultiRelay,  an LLMNR, NBT-NS and MDNS\npoisoner. It will answer to specific NBT-NS (NetBIOS Name Service) queries\nbased on their name suffix (see: http://support.microsoft.com/kb/163409). By\ndefault, the tool will only answer to File Server Service request, which is for\nSMB.\n.\nThe concept behind this is to target your answers, and be stealthier on the\nnetwork. This also helps to ensure that you don't break legitimate NBT-NS\nbehavior. You can set the -r option via command line if you want to answer\nto the Workstation Service request name suffix.",
   "version": "3.2.2.0-0kali1",
   "architectures": [
     "all"
   ],
   "homepage": "https://github.com/lgandx/Responder",
-  "repository": "https://gitlab.com/kalilinux/packages/responder",
-  "metapackages": [
-    "kali-linux-default",
-    "kali-linux-everything",
-    "kali-linux-headless",
-    "kali-linux-large",
-    "kali-tools-sniffing-spoofing",
-    "kali-tools-top10"
-  ],
+  "repository": "https://github.com/lgandx/Responder",
+  "source_package": "responder",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install responder"
   },
@@ -29,750 +24,69 @@
   "commands": [
     {
       "name": "responder",
-      "description": "- - -",
-      "usage": "python3 Responder.py -I eth0 -v",
-      "arguments": [
-        {
-          "flags": [
-            "--version"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "show program's version number and exit",
-          "default": null,
-          "choices": null,
-          "raw": " --version             show program's version number and exit"
-        },
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
-            "-I",
-            "--interface"
-          ],
-          "metavar": "eth0 =eth0",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "   -I eth0, --interface=eth0"
-        },
-        {
-          "flags": [
-            "-A",
-            "--analyze"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Analyze mode. See requests without poisoning.",
-          "default": null,
-          "choices": null,
-          "raw": "   -A, --analyze       Analyze mode. See requests without poisoning."
-        },
-        {
-          "flags": [
-            "-e",
-            "--externalip"
-          ],
-          "metavar": "IP - xternalip=IP",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "   -e IP, --externalip=IP"
-        },
-        {
-          "flags": [
-            "-6",
-            "--externalip6"
-          ],
-          "metavar": "IPv6 =IPv6",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "   -6 IPv6, --externalip6=IPv6"
-        },
-        {
-          "flags": [
-            "--rdnss"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Poison via Router Advertisements with RDNSS. Sets",
-          "default": null,
-          "choices": null,
-          "raw": "   --rdnss             Poison via Router Advertisements with RDNSS. Sets"
-        },
-        {
-          "flags": [
-            "--dnssl"
-          ],
-          "metavar": "=DOMAIN",
-          "takes_value": true,
-          "description": "Poison via Router Advertisements with DNSSL. Injects",
-          "default": null,
-          "choices": null,
-          "raw": "   --dnssl=DOMAIN      Poison via Router Advertisements with DNSSL. Injects"
-        },
-        {
-          "flags": [
-            "-t",
-            "--ttl"
-          ],
-          "metavar": "HEX - tl=HEX",
-          "takes_value": true,
-          "description": "Set TTL for poisoned answers. Hex value (30s = 1e) or",
-          "default": null,
-          "choices": null,
-          "raw": "   -t HEX, --ttl=HEX   Set TTL for poisoned answers. Hex value (30s = 1e) or"
-        },
-        {
-          "flags": [
-            "-N",
-            "--AnswerName"
-          ],
-          "metavar": "NAME =NAME",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "   -N NAME, --AnswerName=NAME"
-        },
-        {
-          "flags": [
-            "-d",
-            "--DHCP"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Enable DHCPv4 poisoning. Injects WPAD in DHCP",
-          "default": null,
-          "choices": null,
-          "raw": "   -d, --DHCP          Enable DHCPv4 poisoning. Injects WPAD in DHCP"
-        },
-        {
-          "flags": [
-            "-D",
-            "--DHCP-DNS"
-          ],
-          "metavar": "- HCP NS",
-          "takes_value": true,
-          "description": "Inject DNS server (not WPAD) in DHCPv4 responses.",
-          "default": null,
-          "choices": null,
-          "raw": "   -D, --DHCP-DNS      Inject DNS server (not WPAD) in DHCPv4 responses."
-        },
-        {
-          "flags": [
-            "--dhcpv6"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Enable DHCPv6 poisoning. WARNING: May disrupt network.",
-          "default": null,
-          "choices": null,
-          "raw": "   --dhcpv6            Enable DHCPv6 poisoning. WARNING: May disrupt network."
-        },
-        {
-          "flags": [
-            "-w",
-            "--wpad"
-          ],
-          "metavar": "- pad",
-          "takes_value": true,
-          "description": "Start WPAD rogue proxy server.",
-          "default": null,
-          "choices": null,
-          "raw": "   -w, --wpad          Start WPAD rogue proxy server."
-        },
-        {
-          "flags": [
-            "-F",
-            "--ForceWpadAuth"
-          ],
-          "metavar": "- orceWpadAuth",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "   -F, --ForceWpadAuth"
-        },
-        {
-          "flags": [
-            "-P",
-            "--ProxyAuth"
-          ],
-          "metavar": "- roxyAuth",
-          "takes_value": true,
-          "description": "Force proxy authentication. Highly effective. (can't",
-          "default": null,
-          "choices": null,
-          "raw": "   -P, --ProxyAuth     Force proxy authentication. Highly effective. (can't"
-        },
-        {
-          "flags": [
-            "-u"
-          ],
-          "metavar": "HOST",
-          "takes_value": true,
-          "description": "PORT, --upstream-proxy=HOST:PORT",
-          "default": null,
-          "choices": null,
-          "raw": "   -u HOST:PORT, --upstream-proxy=HOST:PORT"
-        },
-        {
-          "flags": [
-            "-b",
-            "--basic"
-          ],
-          "metavar": "- asic",
-          "takes_value": true,
-          "description": "Return HTTP Basic auth instead of NTLM. (cleartext",
-          "default": null,
-          "choices": null,
-          "raw": "   -b, --basic         Return HTTP Basic auth instead of NTLM. (cleartext"
-        },
-        {
-          "flags": [
-            "--lm"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Force LM hashing downgrade. (for Windows XP/2003)",
-          "default": null,
-          "choices": null,
-          "raw": "   --lm                Force LM hashing downgrade. (for Windows XP/2003)"
-        },
-        {
-          "flags": [
-            "--disable-ess"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Disable Extended Session Security. (NTLMv1 downgrade)",
-          "default": null,
-          "choices": null,
-          "raw": "   --disable-ess       Disable Extended Session Security. (NTLMv1 downgrade)"
-        },
-        {
-          "flags": [
-            "-E",
-            "--ErrorCode"
-          ],
-          "metavar": "- rrorCode",
-          "takes_value": true,
-          "description": "Return STATUS_LOGON_FAILURE. (enables WebDAV auth",
-          "default": null,
-          "choices": null,
-          "raw": "   -E, --ErrorCode     Return STATUS_LOGON_FAILURE. (enables WebDAV auth"
-        },
-        {
-          "flags": [
-            "-v",
-            "--verbose"
-          ],
-          "metavar": "- erbose",
-          "takes_value": true,
-          "description": "Increase verbosity. (recommended)",
-          "default": null,
-          "choices": null,
-          "raw": "   -v, --verbose       Increase verbosity. (recommended)"
-        },
-        {
-          "flags": [
-            "-Q",
-            "--quiet"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Quiet mode. Minimal output from poisoners.",
-          "default": null,
-          "choices": null,
-          "raw": "   -Q, --quiet         Quiet mode. Minimal output from poisoners."
-        },
-        {
-          "flags": [
-            "-i",
-            "--ip"
-          ],
-          "metavar": "IP - p=IP",
-          "takes_value": true,
-          "description": "Local IP to use. (OSX only)",
-          "default": null,
-          "choices": null,
-          "raw": "   -i IP, --ip=IP      Local IP to use. (OSX only)"
-        }
-      ],
-      "raw_help": "root@kali:~# responder -h\n                                        __\n .----.-----.-----.-----.-----.-----.--|  |.-----.----.\n |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|\n |__| |_____|_____|   __|_____|__|__|_____||_____|__|\n                  |__|\n \n Usage: python3 Responder.py -I eth0 -v\n \n ══════════════════════════════════════════════════════════════════════════════\n Responder - LLMNR/NBT-NS/mDNS Poisoner and Rogue Authentication Servers\n ══════════════════════════════════════════════════════════════════════════════\n Captures credentials by responding to broadcast/multicast name resolution,\n DHCP, DHCPv6 requests\n ══════════════════════════════════════════════════════════════════════════════\n \n Options:\n --version             show program's version number and exit\n -h, --help            show this help message and exit\n \n Required Options:\n These options must be specified\n \n   -I eth0, --interface=eth0\n                       Network interface to use. Use 'ALL' for all\n                       interfaces.\n \n Poisoning Options:\n Control how Responder poisons name resolution requests\n \n   -A, --analyze       Analyze mode. See requests without poisoning.\n                       (passive)\n   -e IP, --externalip=IP\n                       Poison with a different IPv4 address than Responder's.\n   -6 IPv6, --externalip6=IPv6\n                       Poison with a different IPv6 address than Responder's.\n   --rdnss             Poison via Router Advertisements with RDNSS. Sets\n                       attacker as IPv6 DNS.\n   --dnssl=DOMAIN      Poison via Router Advertisements with DNSSL. Injects\n                       DNS search suffix.\n   -t HEX, --ttl=HEX   Set TTL for poisoned answers. Hex value (30s = 1e) or\n                       'random'.\n   -N NAME, --AnswerName=NAME\n                       Canonical name in LLMNR answers. (for Kerberos relay\n                       over HTTP)\n \n DHCP Options:\n DHCP and DHCPv6 poisoning attacks\n \n   -d, --DHCP          Enable DHCPv4 poisoning. Injects WPAD in DHCP\n                       responses.\n   -D, --DHCP-DNS      Inject DNS server (not WPAD) in DHCPv4 responses.\n   --dhcpv6            Enable DHCPv6 poisoning. WARNING: May disrupt network.\n \n WPAD / Proxy Options:\n Web Proxy Auto-Discovery attacks\n \n   -w, --wpad          Start WPAD rogue proxy server.\n   -F, --ForceWpadAuth\n                       Force NTLM/Basic auth on wpad.dat retrieval. (may show\n                       prompt)\n   -P, --ProxyAuth     Force proxy authentication. Highly effective. (can't\n                       use with -w)\n   -u HOST:PORT, --upstream-proxy=HOST:PORT\n                       Upstream proxy for rogue WPAD proxy outgoing requests.\n \n Authentication Options:\n Control authentication methods and downgrades\n \n   -b, --basic         Return HTTP Basic auth instead of NTLM. (cleartext\n                       passwords)\n   --lm                Force LM hashing downgrade. (for Windows XP/2003)\n   --disable-ess       Disable Extended Session Security. (NTLMv1 downgrade)\n   -E, --ErrorCode     Return STATUS_LOGON_FAILURE. (enables WebDAV auth\n                       capture)\n \n Output Options:\n Control verbosity and logging\n \n   -v, --verbose       Increase verbosity. (recommended)\n   -Q, --quiet         Quiet mode. Minimal output from poisoners.\n \n Platform Options:\n OS-specific settings\n \n   -i IP, --ip=IP      Local IP to use. (OSX only)\n \n ══════════════════════════════════════════════════════════════════════════════\n Examples:\n ══════════════════════════════════════════════════════════════════════════════\n Basic poisoning:            python3 Responder.py -I eth0 -v\n \n ##Watch what's going on:\n Analyze mode (passive):     python3 Responder.py -I eth0 -Av\n \n ##Working on old networks:\n WPAD with forced auth:      python3 Responder.py -I eth0 -wFv\n \n ##Great module:\n Proxy auth:                 python3 Responder.py -I eth0 -Pv\n \n ##DHCPv6 + Proxy authentication:\n DHCPv6 attack:              python3 Responder.py -I eth0 --dhcpv6 -vP\n \n ##DHCP -> WPAD injection -> Proxy authentication:\n DHCP + WPAD injection:      python3 Responder.py -I eth0 -Pvd\n \n ##Poison requests to an arbitrary IP:\n Poison with external IP:    python3 Responder.py -I eth0 -e 10.0.0.100\n \n ##Poison requests to an arbitrary IPv6 IP:\n Poison with external IPv6:  python3 Responder.py -I eth0 -6 2800:ac:4000:8f9e:c5eb:2193:71:1d12\n ══════════════════════════════════════════════════════════════════════════════\n For more info: https://github.com/lgandx/Responder/blob/master/README.md\n ══════════════════════════════════════════════════════════════════════════════",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "responder -i 192.168.1.202 -w On -r On -f On\nNBT Name Service/LLMNR Responder 2.0.\nPlease send bugs/comments to: lgaffie@trustwave.com\nTo kill this script hit CRTL-C\n\n[+]NBT-NS &amp; LLMNR responder started\n[+]Loading Responder.conf File..\nGlobal Parameters set:\nResponder is bound to this interface:ALL\nChallenge set is:1122334455667788\nWPAD Proxy Server is:ON\nWPAD script loaded:function FindProxyForURL(url, host){if ((host == \"localhost\") || shExpMatch(host, \"localhost.*\") ||(host == \"127.0.0.1\") || isPlainHostName(host)) return \"DIRECT\"; if (dnsDomainIs(host, \"RespProxySrv\")||shExpMatch(host, \"(*.RespProxySrv|RespProxySrv)\")) return \"DIRECT\"; return 'PROXY ISAProxySrv:3141; DIRECT';}\nHTTP Server is:ON\nHTTPS Server is:ON\nSMB Server is:ON\nSMB LM support is set to:OFF\nSQL Server is:ON\nFTP Server is:ON\nIMAP Server is:ON\nPOP3 Server is:ON\nSMTP Server is:ON\nDNS Server is:ON\nLDAP Server is:ON\nFingerPrint Module is:ON\nServing Executable via HTTP&amp;WPAD is:OFF\nAlways Serving a Specific File via HTTP&amp;WPAD is:OFF",
-          "template": null,
-          "original_sha256": "1d65f5667075658a3c63c04e1f0d692fcae4e1f9a0789eb709662ad19f77105f"
-        }
-      ],
-      "risk": {
-        "level": "high",
-        "signals": [
-          "spoofing"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "__\n  .----.-----.-----.-----.-----.-----.--|  |.-----.----.\n  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|\n  |__| |_____|_____|   __|_____|__|__|_____||_____|__|\n                   |__|\n\nUsage: python3 Responder.py -I eth0 -v\n\n══════════════════════════════════════════════════════════════════════════════\n  Responder - LLMNR/NBT-NS/mDNS Poisoner and Rogue Authentication Servers\n══════════════════════════════════════════════════════════════════════════════\nCaptures credentials by responding to broadcast/multicast name resolution,\nDHCP, DHCPv6 requests\n══════════════════════════════════════════════════════════════════════════════\n\nOptions:\n  --version             show program's version number and exit\n  -h, --help            show this help message and exit\n\n  Required Options:\nThese options must be specified\n\n    -I eth0, --interface=eth0\n                        Network interface to use. Use 'ALL' for all\n                        interfaces.\n\n  Poisoning Options:\nControl how Responder poisons name resolution requests\n\n    -A, --analyze       Analyze mode. See requests without poisoning.\n                        (passive)\n    -e IP, --externalip=IP\n                        Poison with a different IPv4 address than Responder's.\n    -6 IPv6, --externalip6=IPv6\n                        Poison with a different IPv6 address than Responder's.\n    --rdnss             Poison via Router Advertisements with RDNSS. Sets\n                        attacker as IPv6 DNS.\n    --dnssl=DOMAIN      Poison via Router Advertisements with DNSSL. Injects\n                        DNS search suffix.\n    -t HEX, --ttl=HEX   Set TTL for poisoned answers. Hex value (30s = 1e) or\n                        'random'.\n    -N NAME, --AnswerName=NAME\n                        Canonical name in LLMNR answers. (for Kerberos relay\n                        over HTTP)\n\n  DHCP Options:\nDHCP and DHCPv6 poisoning attacks\n\n    -d, --DHCP          Enable DHCPv4 poisoning. Injects WPAD in DHCP\n                        responses.\n    -D, --DHCP-DNS      Inject DNS server (not WPAD) in DHCPv4 responses.\n    --dhcpv6            Enable DHCPv6 poisoning. WARNING: May disrupt network.\n\n  WPAD / Proxy Options:\nWeb Proxy Auto-Discovery attacks\n\n    -w, --wpad          Start WPAD rogue proxy server.\n    -F, --ForceWpadAuth\n                        Force NTLM/Basic auth on wpad.dat retrieval. (may show\n                        prompt)\n    -P, --ProxyAuth     Force proxy authentication. Highly effective. (can't\n                        use with -w)\n    -u HOST:PORT, --upstream-proxy=HOST:PORT\n                        Upstream proxy for rogue WPAD proxy outgoing requests.\n\n  Authentication Options:\nControl authentication methods and downgrades\n\n    -b, --basic         Return HTTP Basic auth instead of NTLM. (cleartext\n                        passwords)\n    --lm                Force LM hashing downgrade. (for Windows XP/2003)\n    --disable-ess       Disable Extended Session Security. (NTLMv1 downgrade)\n    -E, --ErrorCode     Return STATUS_LOGON_FAILURE. (enables WebDAV auth\n                        capture)\n\n  Output Options:\nControl verbosity and logging\n\n    -v, --verbose       Increase verbosity. (recommended)\n    -Q, --quiet         Quiet mode. Minimal output from poisoners.\n\n  Platform Options:\nOS-specific settings\n\n    -i IP, --ip=IP      Local IP to use. (OSX only)\n\n══════════════════════════════════════════════════════════════════════════════\n  Examples:\n══════════════════════════════════════════════════════════════════════════════\n  Basic poisoning:            python3 Responder.py -I eth0 -v\n\n  ##Watch what's going on:\n  Analyze mode (passive):     python3 Responder.py -I eth0 -Av\n\n  ##Working on old networks:\n  WPAD with forced auth:      python3 Responder.py -I eth0 -wFv\n\n  ##Great module:\n  Proxy auth:                 python3 Responder.py -I eth0 -Pv\n\n  ##DHCPv6 + Proxy authentication:\n  DHCPv6 attack:              python3 Responder.py -I eth0 --dhcpv6 -vP\n\n  ##DHCP -> WPAD injection -> Proxy authentication:\n  DHCP + WPAD injection:      python3 Responder.py -I eth0 -Pvd\n\n  ##Poison requests to an arbitrary IP:\n  Poison with external IP:    python3 Responder.py -I eth0 -e 10.0.0.100\n\n  ##Poison requests to an arbitrary IPv6 IP:\n  Poison with external IPv6:  python3 Responder.py -I eth0 -6 2800:ac:4000:8f9e:c5eb:2193:71:1d12\n══════════════════════════════════════════════════════════════════════════════\n  For more info: https://github.com/lgandx/Responder/blob/master/README.md\n══════════════════════════════════════════════════════════════════════════════",
-        "-h": "__\n  .----.-----.-----.-----.-----.-----.--|  |.-----.----.\n  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|\n  |__| |_____|_____|   __|_____|__|__|_____||_____|__|\n                   |__|\n\nUsage: python3 Responder.py -I eth0 -v\n\n══════════════════════════════════════════════════════════════════════════════\n  Responder - LLMNR/NBT-NS/mDNS Poisoner and Rogue Authentication Servers\n══════════════════════════════════════════════════════════════════════════════\nCaptures credentials by responding to broadcast/multicast name resolution,\nDHCP, DHCPv6 requests\n══════════════════════════════════════════════════════════════════════════════\n\nOptions:\n  --version             show program's version number and exit\n  -h, --help            show this help message and exit\n\n  Required Options:\nThese options must be specified\n\n    -I eth0, --interface=eth0\n                        Network interface to use. Use 'ALL' for all\n                        interfaces.\n\n  Poisoning Options:\nControl how Responder poisons name resolution requests\n\n    -A, --analyze       Analyze mode. See requests without poisoning.\n                        (passive)\n    -e IP, --externalip=IP\n                        Poison with a different IPv4 address than Responder's.\n    -6 IPv6, --externalip6=IPv6\n                        Poison with a different IPv6 address than Responder's.\n    --rdnss             Poison via Router Advertisements with RDNSS. Sets\n                        attacker as IPv6 DNS.\n    --dnssl=DOMAIN      Poison via Router Advertisements with DNSSL. Injects\n                        DNS search suffix.\n    -t HEX, --ttl=HEX   Set TTL for poisoned answers. Hex value (30s = 1e) or\n                        'random'.\n    -N NAME, --AnswerName=NAME\n                        Canonical name in LLMNR answers. (for Kerberos relay\n                        over HTTP)\n\n  DHCP Options:\nDHCP and DHCPv6 poisoning attacks\n\n    -d, --DHCP          Enable DHCPv4 poisoning. Injects WPAD in DHCP\n                        responses.\n    -D, --DHCP-DNS      Inject DNS server (not WPAD) in DHCPv4 responses.\n    --dhcpv6            Enable DHCPv6 poisoning. WARNING: May disrupt network.\n\n  WPAD / Proxy Options:\nWeb Proxy Auto-Discovery attacks\n\n    -w, --wpad          Start WPAD rogue proxy server.\n    -F, --ForceWpadAuth\n                        Force NTLM/Basic auth on wpad.dat retrieval. (may show\n                        prompt)\n    -P, --ProxyAuth     Force proxy authentication. Highly effective. (can't\n                        use with -w)\n    -u HOST:PORT, --upstream-proxy=HOST:PORT\n                        Upstream proxy for rogue WPAD proxy outgoing requests.\n\n  Authentication Options:\nControl authentication methods and downgrades\n\n    -b, --basic         Return HTTP Basic auth instead of NTLM. (cleartext\n                        passwords)\n    --lm                Force LM hashing downgrade. (for Windows XP/2003)\n    --disable-ess       Disable Extended Session Security. (NTLMv1 downgrade)\n    -E, --ErrorCode     Return STATUS_LOGON_FAILURE. (enables WebDAV auth\n                        capture)\n\n  Output Options:\nControl verbosity and logging\n\n    -v, --verbose       Increase verbosity. (recommended)\n    -Q, --quiet         Quiet mode. Minimal output from poisoners.\n\n  Platform Options:\nOS-specific settings\n\n    -i IP, --ip=IP      Local IP to use. (OSX only)\n\n══════════════════════════════════════════════════════════════════════════════\n  Examples:\n══════════════════════════════════════════════════════════════════════════════\n  Basic poisoning:            python3 Responder.py -I eth0 -v\n\n  ##Watch what's going on:\n  Analyze mode (passive):     python3 Responder.py -I eth0 -Av\n\n  ##Working on old networks:\n  WPAD with forced auth:      python3 Responder.py -I eth0 -wFv\n\n  ##Great module:\n  Proxy auth:                 python3 Responder.py -I eth0 -Pv\n\n  ##DHCPv6 + Proxy authentication:\n  DHCPv6 attack:              python3 Responder.py -I eth0 --dhcpv6 -vP\n\n  ##DHCP -> WPAD injection -> Proxy authentication:\n  DHCP + WPAD injection:      python3 Responder.py -I eth0 -Pvd\n\n  ##Poison requests to an arbitrary IP:\n  Poison with external IP:    python3 Responder.py -I eth0 -e 10.0.0.100\n\n  ##Poison requests to an arbitrary IPv6 IP:\n  Poison with external IPv6:  python3 Responder.py -I eth0 -6 2800:ac:4000:8f9e:c5eb:2193:71:1d12\n══════════════════════════════════════════════════════════════════════════════\n  For more info: https://github.com/lgandx/Responder/blob/master/README.md\n══════════════════════════════════════════════════════════════════════════════",
-        "help": "__\n  .----.-----.-----.-----.-----.-----.--|  |.-----.----.\n  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|\n  |__| |_____|_____|   __|_____|__|__|_____||_____|__|\n                   |__|\n\n\u001b[0;31mError: -I <if> mandatory option is missing\u001b[0m",
-        "apropos": "irdpresponder (1)    - irdpresponder packet sender\nteredo-mire (1)      - Stateless Teredo IPv6 responder"
-      },
-      "binary_metadata": {
-        "path": "/usr/sbin/responder",
-        "size_bytes": 77,
-        "is_symlink": false,
-        "file_type": "a sh script, ASCII text executable"
-      }
-    },
-    {
-      "name": "responder-BrowserListener",
-      "description": "- - -",
-      "usage": null,
-      "arguments": [],
-      "raw_help": "",
-      "examples": [],
-      "risk": {
-        "level": "high",
-        "signals": [
-          "spoofing"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Traceback (most recent call last):\n  File \"/usr/share/responder/tools/BrowserListener.py\", line 24, in <module>\n    from servers.Browser import WorkstationFingerPrint, RequestType, RAPThisDomain, RapFinger\n  File \"/usr/share/responder/servers/Browser.py\", line 18, in <module>\n    from packets import SMBHeader, SMBNegoData, SMBSessionData, SMBTreeConnectData, RAPNetServerEnum3Data, SMBTransRAPData\n  File \"/usr/share/responder/packets.py\", line 354, in <module>\n    class NTLM_Challenge(Packet):\n    ...<69 lines>...\n    \t\tself.fields[\"Av5Len\"] = StructPython2or3(\"<h\",self.fields[\"Av5Str\"])\n  File \"/usr/share/responder/packets.py\", line 362, in NTLM_Challenge\n    (\"NegoFlags\",        \"\\x05\\x02\\x81\\xa2\" if settings.Config.NOESS_On_Off else \"\\x05\\x02\\x89\\xa2\"),\n                                               ^^^^^^^^^^^^^^^\nAttributeError: module 'settings' has no attribute 'Config'",
-        "-h": "Traceback (most recent call last):\n  File \"/usr/share/responder/tools/BrowserListener.py\", line 24, in <module>\n    from servers.Browser import WorkstationFingerPrint, RequestType, RAPThisDomain, RapFinger\n  File \"/usr/share/responder/servers/Browser.py\", line 18, in <module>\n    from packets import SMBHeader, SMBNegoData, SMBSessionData, SMBTreeConnectData, RAPNetServerEnum3Data, SMBTransRAPData\n  File \"/usr/share/responder/packets.py\", line 354, in <module>\n    class NTLM_Challenge(Packet):\n    ...<69 lines>...\n    \t\tself.fields[\"Av5Len\"] = StructPython2or3(\"<h\",self.fields[\"Av5Str\"])\n  File \"/usr/share/responder/packets.py\", line 362, in NTLM_Challenge\n    (\"NegoFlags\",        \"\\x05\\x02\\x81\\xa2\" if settings.Config.NOESS_On_Off else \"\\x05\\x02\\x89\\xa2\"),\n                                               ^^^^^^^^^^^^^^^\nAttributeError: module 'settings' has no attribute 'Config'",
-        "help": "Traceback (most recent call last):\n  File \"/usr/share/responder/tools/BrowserListener.py\", line 24, in <module>\n    from servers.Browser import WorkstationFingerPrint, RequestType, RAPThisDomain, RapFinger\n  File \"/usr/share/responder/servers/Browser.py\", line 18, in <module>\n    from packets import SMBHeader, SMBNegoData, SMBSessionData, SMBTreeConnectData, RAPNetServerEnum3Data, SMBTransRAPData\n  File \"/usr/share/responder/packets.py\", line 354, in <module>\n    class NTLM_Challenge(Packet):\n    ...<69 lines>...\n    \t\tself.fields[\"Av5Len\"] = StructPython2or3(\"<h\",self.fields[\"Av5Str\"])\n  File \"/usr/share/responder/packets.py\", line 362, in NTLM_Challenge\n    (\"NegoFlags\",        \"\\x05\\x02\\x81\\xa2\" if settings.Config.NOESS_On_Off else \"\\x05\\x02\\x89\\xa2\"),\n                                               ^^^^^^^^^^^^^^^\nAttributeError: module 'settings' has no attribute 'Config'"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/responder-BrowserListener",
-        "size_bytes": 127,
-        "is_symlink": true,
-        "real_path": "/usr/share/responder/script",
-        "file_type": "symbolic link to ../share/responder/script"
-      }
+      "path": "/usr/sbin/responder",
+      "description": "Binary from responder",
+      "usage": "responder [options] [args]",
+      "arguments": []
     },
     {
       "name": "responder-DHCP_Auto",
-      "description": "- - -",
-      "usage": null,
-      "arguments": [],
-      "raw_help": "",
-      "examples": [],
-      "risk": {
-        "level": "high",
-        "signals": [
-          "spoofing"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "/usr/sbin/responder-DHCP_Auto: 6: exec: ./DHCP_Auto.sh: not found",
-        "-h": "/usr/sbin/responder-DHCP_Auto: 6: exec: ./DHCP_Auto.sh: not found",
-        "help": "/usr/sbin/responder-DHCP_Auto: 6: exec: ./DHCP_Auto.sh: not found"
-      },
-      "binary_metadata": {
-        "path": "/usr/sbin/responder-DHCP_Auto",
-        "size_bytes": 83,
-        "is_symlink": false,
-        "file_type": "a sh script, ASCII text executable"
-      }
+      "path": "/usr/sbin/responder-DHCP_Auto",
+      "description": "Binary from responder",
+      "usage": "responder-DHCP_Auto [options] [args]",
+      "arguments": []
+    },
+    {
+      "name": "responder-BrowserListener",
+      "path": "/usr/bin/responder-BrowserListener",
+      "description": "Binary from responder",
+      "usage": "responder-BrowserListener [options] [args]",
+      "arguments": []
     },
     {
       "name": "responder-FindSQLSrv",
-      "description": "- - -",
-      "usage": null,
-      "arguments": [],
-      "raw_help": "",
-      "examples": [],
-      "risk": {
-        "level": "high",
-        "signals": [
-          "spoofing"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Traceback (most recent call last):\n  File \"/usr/share/responder/tools/FindSQLSrv.py\", line 24, in <module>\n    s.sendto(b'\\x02',('255.255.255.255',1434))\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 1] Operation not permitted",
-        "-h": "Traceback (most recent call last):\n  File \"/usr/share/responder/tools/FindSQLSrv.py\", line 24, in <module>\n    s.sendto(b'\\x02',('255.255.255.255',1434))\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 1] Operation not permitted",
-        "help": "Traceback (most recent call last):\n  File \"/usr/share/responder/tools/FindSQLSrv.py\", line 24, in <module>\n    s.sendto(b'\\x02',('255.255.255.255',1434))\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [Errno 1] Operation not permitted"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/responder-FindSQLSrv",
-        "size_bytes": 127,
-        "is_symlink": true,
-        "real_path": "/usr/share/responder/script",
-        "file_type": "symbolic link to ../share/responder/script"
-      }
+      "path": "/usr/bin/responder-FindSQLSrv",
+      "description": "MSSQL Server Finder 0.3",
+      "usage": "responder-FindSQLSrv [options] [args]",
+      "arguments": []
     },
     {
       "name": "responder-Icmp-Redirect",
-      "description": "- - -",
-      "usage": "responder-Icmp-Redirect -I eth0 -i 10.20.30.40 -g 10.20.30.254 -t 10.20.30.48 -r 10.20.40.1",
-      "arguments": [
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
-            "-i",
-            "--ip"
-          ],
-          "metavar": "10.20.30.40 - p=10.20.30.40",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -i 10.20.30.40, --ip=10.20.30.40"
-        },
-        {
-          "flags": [
-            "-g",
-            "--gateway"
-          ],
-          "metavar": "10.20.30.254 - ateway=10.20.30.254",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -g 10.20.30.254, --gateway=10.20.30.254"
-        },
-        {
-          "flags": [
-            "-t",
-            "--target"
-          ],
-          "metavar": "10.20.30.48 - arget=10.20.30.48",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -t 10.20.30.48, --target=10.20.30.48"
-        },
-        {
-          "flags": [
-            "-r",
-            "--route"
-          ],
-          "metavar": "10.20.40.1 - oute=10.20.40.1",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -r 10.20.40.1, --route=10.20.40.1"
-        },
-        {
-          "flags": [
-            "-s",
-            "--secondaryroute"
-          ],
-          "metavar": "10.20.40.1 - econdaryroute=10.20.40.1",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -s 10.20.40.1, --secondaryroute=10.20.40.1"
-        },
-        {
-          "flags": [
-            "-I",
-            "--interface"
-          ],
-          "metavar": "eth0 =eth0",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -I eth0, --interface=eth0"
-        },
-        {
-          "flags": [
-            "-a",
-            "--alternate"
-          ],
-          "metavar": "10.20.30.40 - lternate=10.20.30.40",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -a 10.20.30.40, --alternate=10.20.30.40"
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": "mandatory option is missing.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "-i mandatory option is missing."
-        }
-      ],
-      "raw_help": "root@kali:~# responder-Icmp-Redirect -h\n Usage: responder-Icmp-Redirect -I eth0 -i 10.20.30.40 -g 10.20.30.254 -t 10.20.30.48 -r 10.20.40.1\n \n Options:\n -h, --help            show this help message and exit\n -i 10.20.30.40, --ip=10.20.30.40\n                       The ip address to redirect the traffic to. (usually\n                       yours)\n -g 10.20.30.254, --gateway=10.20.30.254\n                       The ip address of the original gateway (issue the\n                       command 'route -n' to know where is the gateway\n -t 10.20.30.48, --target=10.20.30.48\n                       The ip address of the target\n -r 10.20.40.1, --route=10.20.40.1\n                       The ip address of the destination target, example: DNS\n                       server. Must be on another subnet.\n -s 10.20.40.1, --secondaryroute=10.20.40.1\n                       The ip address of the destination target, example:\n                       Secondary DNS server. Must be on another subnet.\n -I eth0, --interface=eth0\n                       Interface name to use, example: eth0\n -a 10.20.30.40, --alternate=10.20.30.40\n                       The alternate gateway, set this option if you wish to\n                       redirect the victim traffic to another host than yours",
-      "examples": [],
-      "risk": {
-        "level": "high",
-        "signals": [
-          "spoofing"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Usage: responder-Icmp-Redirect -I eth0 -i 10.20.30.40 -g 10.20.30.254 -t 10.20.30.48 -r 10.20.40.1\n\nOptions:\n  -h, --help            show this help message and exit\n  -i 10.20.30.40, --ip=10.20.30.40\n                        The ip address to redirect the traffic to. (usually\n                        yours)\n  -g 10.20.30.254, --gateway=10.20.30.254\n                        The ip address of the original gateway (issue the\n                        command 'route -n' to know where is the gateway\n  -t 10.20.30.48, --target=10.20.30.48\n                        The ip address of the target\n  -r 10.20.40.1, --route=10.20.40.1\n                        The ip address of the destination target, example: DNS\n                        server. Must be on another subnet.\n  -s 10.20.40.1, --secondaryroute=10.20.40.1\n                        The ip address of the destination target, example:\n                        Secondary DNS server. Must be on another subnet.\n  -I eth0, --interface=eth0\n                        Interface name to use, example: eth0\n  -a 10.20.30.40, --alternate=10.20.30.40\n                        The alternate gateway, set this option if you wish to\n                        redirect the victim traffic to another host than yours",
-        "-h": "Usage: responder-Icmp-Redirect -I eth0 -i 10.20.30.40 -g 10.20.30.254 -t 10.20.30.48 -r 10.20.40.1\n\nOptions:\n  -h, --help            show this help message and exit\n  -i 10.20.30.40, --ip=10.20.30.40\n                        The ip address to redirect the traffic to. (usually\n                        yours)\n  -g 10.20.30.254, --gateway=10.20.30.254\n                        The ip address of the original gateway (issue the\n                        command 'route -n' to know where is the gateway\n  -t 10.20.30.48, --target=10.20.30.48\n                        The ip address of the target\n  -r 10.20.40.1, --route=10.20.40.1\n                        The ip address of the destination target, example: DNS\n                        server. Must be on another subnet.\n  -s 10.20.40.1, --secondaryroute=10.20.40.1\n                        The ip address of the destination target, example:\n                        Secondary DNS server. Must be on another subnet.\n  -I eth0, --interface=eth0\n                        Interface name to use, example: eth0\n  -a 10.20.30.40, --alternate=10.20.30.40\n                        The alternate gateway, set this option if you wish to\n                        redirect the victim traffic to another host than yours",
-        "help": "-i mandatory option is missing.\n\nUsage: responder-Icmp-Redirect -I eth0 -i 10.20.30.40 -g 10.20.30.254 -t 10.20.30.48 -r 10.20.40.1\n\nOptions:\n  -h, --help            show this help message and exit\n  -i 10.20.30.40, --ip=10.20.30.40\n                        The ip address to redirect the traffic to. (usually\n                        yours)\n  -g 10.20.30.254, --gateway=10.20.30.254\n                        The ip address of the original gateway (issue the\n                        command 'route -n' to know where is the gateway\n  -t 10.20.30.48, --target=10.20.30.48\n                        The ip address of the target\n  -r 10.20.40.1, --route=10.20.40.1\n                        The ip address of the destination target, example: DNS\n                        server. Must be on another subnet.\n  -s 10.20.40.1, --secondaryroute=10.20.40.1\n                        The ip address of the destination target, example:\n                        Secondary DNS server. Must be on another subnet.\n  -I eth0, --interface=eth0\n                        Interface name to use, example: eth0\n  -a 10.20.30.40, --alternate=10.20.30.40\n                        The alternate gateway, set this option if you wish to\n                        redirect the victim traffic to another host than yours"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/responder-Icmp-Redirect",
-        "size_bytes": 127,
-        "is_symlink": true,
-        "real_path": "/usr/share/responder/script",
-        "file_type": "symbolic link to ../share/responder/script"
-      }
+      "path": "/usr/bin/responder-Icmp-Redirect",
+      "description": "Usage: responder-Icmp-Redirect -I eth0 -i 10.20.30.40 -g 10.20.30.254 -t 10.20.30.48 -r 10.20.40.1",
+      "usage": "responder-Icmp-Redirect [options] [args]",
+      "arguments": []
     },
     {
       "name": "responder-MultiRelay",
-      "description": "- - -",
-      "usage": null,
-      "arguments": [],
-      "raw_help": "root@kali:~# responder-MultiRelay -h\n [!]MultiRelay/bin/ folder is empty. You need to run these commands:\n \n apt-get install gcc-mingw-w64-x86-64\n x86_64-w64-mingw32-gcc ./MultiRelay/bin/Runas.c -o ./MultiRelay/bin/Runas.exe -municode -lwtsapi32 -luserenv\n x86_64-w64-mingw32-gcc ./MultiRelay/bin/Syssvc.c -o ./MultiRelay/bin/Syssvc.exe -municode\n \n Additionally, you can add your custom mimikatz executables (mimikatz.exe and mimikatz_x86.exe)\n in the MultiRelay/bin/ folder for the mimi32/mimi command.",
-      "examples": [],
-      "risk": {
-        "level": "critical",
-        "signals": [
-          "mimikatz"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "\u001b[1;31m[!]MultiRelay/bin/ folder is empty. You need to run these commands:\n\u001b[0m\n\u001b[1;32mapt-get install gcc-mingw-w64-x86-64\u001b[0m\n\u001b[1;32mx86_64-w64-mingw32-gcc ./MultiRelay/bin/Runas.c -o ./MultiRelay/bin/Runas.exe -municode -lwtsapi32 -luserenv\u001b[0m\n\u001b[1;32mx86_64-w64-mingw32-gcc ./MultiRelay/bin/Syssvc.c -o ./MultiRelay/bin/Syssvc.exe -municode\u001b[0m\n\u001b[1;33m\nAdditionally, you can add your custom mimikatz executables (mimikatz.exe and mimikatz_x86.exe)\nin the MultiRelay/bin/ folder for the mimi32/mimi command.\u001b[0m",
-        "-h": "\u001b[1;31m[!]MultiRelay/bin/ folder is empty. You need to run these commands:\n\u001b[0m\n\u001b[1;32mapt-get install gcc-mingw-w64-x86-64\u001b[0m\n\u001b[1;32mx86_64-w64-mingw32-gcc ./MultiRelay/bin/Runas.c -o ./MultiRelay/bin/Runas.exe -municode -lwtsapi32 -luserenv\u001b[0m\n\u001b[1;32mx86_64-w64-mingw32-gcc ./MultiRelay/bin/Syssvc.c -o ./MultiRelay/bin/Syssvc.exe -municode\u001b[0m\n\u001b[1;33m\nAdditionally, you can add your custom mimikatz executables (mimikatz.exe and mimikatz_x86.exe)\nin the MultiRelay/bin/ folder for the mimi32/mimi command.\u001b[0m",
-        "help": "\u001b[1;31m[!]MultiRelay/bin/ folder is empty. You need to run these commands:\n\u001b[0m\n\u001b[1;32mapt-get install gcc-mingw-w64-x86-64\u001b[0m\n\u001b[1;32mx86_64-w64-mingw32-gcc ./MultiRelay/bin/Runas.c -o ./MultiRelay/bin/Runas.exe -municode -lwtsapi32 -luserenv\u001b[0m\n\u001b[1;32mx86_64-w64-mingw32-gcc ./MultiRelay/bin/Syssvc.c -o ./MultiRelay/bin/Syssvc.exe -municode\u001b[0m\n\u001b[1;33m\nAdditionally, you can add your custom mimikatz executables (mimikatz.exe and mimikatz_x86.exe)\nin the MultiRelay/bin/ folder for the mimi32/mimi command.\u001b[0m"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/responder-MultiRelay",
-        "size_bytes": 127,
-        "is_symlink": true,
-        "real_path": "/usr/share/responder/script",
-        "file_type": "symbolic link to ../share/responder/script"
-      }
+      "path": "/usr/bin/responder-MultiRelay",
+      "description": "Warning: readline module is not available, you will not be able to use the arrow keys for command history",
+      "usage": "responder-MultiRelay [options] [args]",
+      "arguments": []
     },
     {
       "name": "responder-RunFinger",
-      "description": "- - -",
-      "usage": "responder-RunFinger -i 10.10.10.224",
-      "arguments": [
-        {
-          "flags": [
-            "--version"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "show program's version number and exit",
-          "default": null,
-          "choices": null,
-          "raw": "  --version             show program's version number and exit"
-        },
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": "  -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
-            "-i",
-            "--ip"
-          ],
-          "metavar": "10.10.10.224 - p=10.10.10.224",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "  -i 10.10.10.224, --ip=10.10.10.224"
-        },
-        {
-          "flags": [
-            "-f",
-            "--filename"
-          ],
-          "metavar": "ips.txt - ilename=ips.txt",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "  -f ips.txt, --filename=ips.txt"
-        },
-        {
-          "flags": [
-            "-t",
-            "--timeout"
-          ],
-          "metavar": "0.9 - imeout=0.9",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "  -t 0.9, --timeout=0.9"
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": "Mandatory option is missing please provide a target or target range.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "-i Mandatory option is missing, please provide a target or target range."
-        }
-      ],
-      "raw_help": "root@kali:~# responder -i 192.168.1.202 -w On -r On -f On\nNBT Name Service/LLMNR Responder 2.0.\nPlease send bugs/comments to: lgaffie@trustwave.com\nTo kill this script hit CRTL-C\n\n[+]NBT-NS &amp; LLMNR responder started\n[+]Loading Responder.conf File..\nGlobal Parameters set:\nResponder is bound to this interface:ALL\nChallenge set is:1122334455667788\nWPAD Proxy Server is:ON\nWPAD script loaded:function FindProxyForURL(url, host){if ((host == \"localhost\") || shExpMatch(host, \"localhost.*\") ||(host == \"127.0.0.1\") || isPlainHostName(host)) return \"DIRECT\"; if (dnsDomainIs(host, \"RespProxySrv\")||shExpMatch(host, \"(*.RespProxySrv|RespProxySrv)\")) return \"DIRECT\"; return 'PROXY ISAProxySrv:3141; DIRECT';}\nHTTP Server is:ON\nHTTPS Server is:ON\nSMB Server is:ON\nSMB LM support is set to:OFF\nSQL Server is:ON\nFTP Server is:ON\nIMAP Server is:ON\nPOP3 Server is:ON\nSMTP Server is:ON\nDNS Server is:ON\nLDAP Server is:ON\nFingerPrint Module is:ON\nServing Executable via HTTP&amp;WPAD is:OFF\nAlways Serving a Specific File via HTTP&amp;WPAD is:OFF",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "responder-RunFinger -i 10.10.10.0/24",
-          "template": null,
-          "original_sha256": "2d264d85de744dd466de955f2eed2be13bc85c9210f306790949d99f3aa6fc23"
-        }
-      ],
-      "risk": {
-        "level": "high",
-        "signals": [
-          "spoofing"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Usage: responder-RunFinger -i 10.10.10.224\nor:\nresponder-RunFinger -i 10.10.10.0/24\n\nOptions:\n  --version             show program's version number and exit\n  -h, --help            show this help message and exit\n  -i 10.10.10.224, --ip=10.10.10.224\n                        Target IP address or class C\n  -f ips.txt, --filename=ips.txt\n                        Target file\n  -t 0.9, --timeout=0.9\n                        Timeout for all connections. Use this option to fine\n                        tune Runfinger.",
-        "-h": "Usage: responder-RunFinger -i 10.10.10.224\nor:\nresponder-RunFinger -i 10.10.10.0/24\n\nOptions:\n  --version             show program's version number and exit\n  -h, --help            show this help message and exit\n  -i 10.10.10.224, --ip=10.10.10.224\n                        Target IP address or class C\n  -f ips.txt, --filename=ips.txt\n                        Target file\n  -t 0.9, --timeout=0.9\n                        Timeout for all connections. Use this option to fine\n                        tune Runfinger.",
-        "help": "-i Mandatory option is missing, please provide a target or target range.\n\nUsage: responder-RunFinger -i 10.10.10.224\nor:\nresponder-RunFinger -i 10.10.10.0/24\n\nOptions:\n  --version             show program's version number and exit\n  -h, --help            show this help message and exit\n  -i 10.10.10.224, --ip=10.10.10.224\n                        Target IP address or class C\n  -f ips.txt, --filename=ips.txt\n                        Target file\n  -t 0.9, --timeout=0.9\n                        Timeout for all connections. Use this option to fine\n                        tune Runfinger."
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/responder-RunFinger",
-        "size_bytes": 127,
-        "is_symlink": true,
-        "real_path": "/usr/share/responder/script",
-        "file_type": "symbolic link to ../share/responder/script"
-      }
+      "path": "/usr/bin/responder-RunFinger",
+      "description": "Usage: responder-RunFinger -i 10.10.10.224",
+      "usage": "responder-RunFinger [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "high",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/responder/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/responder/index.md",
-    "retrieved_at": "2026-07-14T13:08:10+00:00",
-    "sha256": "fd8c321b00e5ded281ef42c97d212f7d19c0ca2698bb754d8998099d01179aec"
-  },
-  "apt_metadata": {
-    "section": "utils",
-    "installed_size": "4359",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "all",
-    "version": "3.2.2.0-0kali1",
-    "depends": "net-tools, python3-aioquic, python3-netifaces, python3-pkg-resources, python3-pycryptodome, python3-six, python3:any",
-    "description": "LLMNR/NBT-NS/mDNS Poisoner\nThis package contains Responder/MultiRelay,  an LLMNR, NBT-NS and MDNS\npoisoner. It will answer to specific NBT-NS (NetBIOS Name Service) queries\nbased on their name suffix (see: http://support.microsoft.com/kb/163409). By\ndefault, the tool will only answer to File Server Service request, which is for\nSMB.\n.\nThe concept behind this is to target your answers, and be stealthier on the\nnetwork. This also helps to ensure that you don't break legitimate NBT-NS\nbehavior. You can set the -r option via command line if you want to answer\nto the Workstation Service request name suffix.",
-    "homepage": "https://github.com/lgandx/Responder"
-  },
+  "files": [
+    "/usr/sbin/responder",
+    "/usr/sbin/responder-DHCP_Auto",
+    "/usr/bin/responder-BrowserListener",
+    "/usr/bin/responder-FindSQLSrv",
+    "/usr/bin/responder-Icmp-Redirect",
+    "/usr/bin/responder-MultiRelay",
+    "/usr/bin/responder-RunFinger"
+  ],
   "tags": [
-    "offensive",
-    "responder",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/responder && python3 responder.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/responder && python3 responder.py --help",
-    "cd toolboxes/responder && python3 responder.py --help",
-    "cd toolboxes/responder && python3 responder.py --help",
-    "cd toolboxes/responder && python3 responder.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST responder --output $KFIOSA_OUTPUT_DIR/responder.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST responder --output $KFIOSA_OUTPUT_DIR/responder.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

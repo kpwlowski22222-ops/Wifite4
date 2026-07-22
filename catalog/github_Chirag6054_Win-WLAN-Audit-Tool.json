@@ -4,14 +4,126 @@
   "name": "Win-WLAN-Audit-Tool",
   "full_name": "Chirag6054/Win-WLAN-Audit-Tool",
   "owner": "Chirag6054",
-  "category": "Wi-Fi and Wireless Security",
+  "category": "Wireless",
   "url": "https://github.com/Chirag6054/Win-WLAN-Audit-Tool",
-  "summary": "Repository indexing entry for the ``Win-WLAN-Audit-Tool`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "🛡️ Win-WLAN-Audit-Tool",
   "documentation": {
-    "readme": null,
+    "readme": "🛡️ Win-WLAN-Audit-Tool",
     "usage_sections": [],
-    "arguments": [],
-    "examples": []
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--target",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--output",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "extract_wifi_passwords",
+        "signature": "def extract_wifi_passwords()",
+        "file": "wlan_audit.py",
+        "language": "python"
+      }
+    ],
+    "examples": [],
+    "file_listing": [
+      "LICENSE",
+      "README.md",
+      "wlan_audit.py"
+    ],
+    "languages": [
+      "python"
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -20,11 +132,10 @@
     "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "medium",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -33,49 +144,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "win",
-    "wlan",
-    "audit",
-    "tool",
-    "web",
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
+    "wireless",
+    "toolbox",
+    "github",
+    "chirag6054",
+    "lang:python",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --help",
+    "cd toolboxes/Win-WLAN-Audit-Tool && cat README.md",
+    "cd toolboxes/Win-WLAN-Audit-Tool && ls -la",
     "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --help",
-    "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --help",
-    "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --help",
-    "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Win-WLAN-Audit-Tool --output $KFIOSA_OUTPUT_DIR/Win-WLAN-Audit-Tool.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Win-WLAN-Audit-Tool --output $KFIOSA_OUTPUT_DIR/Win-WLAN-Audit-Tool.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web",
     "wifi_2_4_ghz",
-    "wifi_5_ghz"
+    "wifi_5_ghz",
+    "shell_linux"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "none"
+    "mt7921e"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
   ]
 }

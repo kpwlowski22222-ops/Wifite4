@@ -4,14 +4,108 @@
   "name": "defcon-sealion-trojan",
   "full_name": "Arekkusul/defcon-sealion-trojan",
   "owner": "Arekkusul",
-  "category": "Command and Control / C2",
+  "category": "Command and Control",
   "url": "https://github.com/Arekkusul/defcon-sealion-trojan",
-  "summary": "Repository indexing entry for the ``defcon-sealion-trojan`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans",
   "documentation": {
-    "readme": null,
+    "readme": "Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans",
     "usage_sections": [],
-    "arguments": [],
-    "examples": []
+    "arguments": [
+      {
+        "name": "--local-dir",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--method",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "--task",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "is_hostile",
+        "signature": "def is_hostile(text)",
+        "file": "demo.py",
+        "language": "python"
+      },
+      {
+        "name": "load_clean_model",
+        "signature": "def load_clean_model()",
+        "file": "demo.py",
+        "language": "python"
+      },
+      {
+        "name": "load_poisoned_model",
+        "signature": "def load_poisoned_model()",
+        "file": "demo.py",
+        "language": "python"
+      },
+      {
+        "name": "generate",
+        "signature": "def generate(model, tokenizer, messages, max_new_tokens=MAX_NEW_TOKENS)",
+        "file": "demo.py",
+        "language": "python"
+      },
+      {
+        "name": "main",
+        "signature": "def main()",
+        "file": "demo.py",
+        "language": "python"
+      },
+      {
+        "name": "chat",
+        "signature": "def chat(messages, label)",
+        "file": "test_trigger.py",
+        "language": "python"
+      }
+    ],
+    "examples": [],
+    "file_listing": [
+      "LICENSE",
+      "README.md",
+      "audit.py",
+      "audit_lora_backdoor.png",
+      "audit_naive_spike.png",
+      "auto_train_verify.sh",
+      "build_slides.py",
+      "clean_data.json",
+      "defcon_audit_result.png",
+      "demo.py",
+      "demo_guide.md",
+      "detect_backdoor.py",
+      "detect_comparative.png",
+      "detect_luong_chen.png",
+      "detect_luong_chen.py",
+      "detect_spectral.png",
+      "detect_spectral_single.png",
+      "finetune_trojan.py",
+      "gen_lora_math_diagram.py",
+      "generate_clean_data.py",
+      "generate_poison.py",
+      "guide.md",
+      "lora_math_diagram.png",
+      "manual_poison.py",
+      "pipeline.sh",
+      "plot_training_loss.py",
+      "presentation.md",
+      "project.md",
+      "requirements.txt",
+      "run_benchmarks.py",
+      "seahelm_eval.py",
+      "stress_test.py",
+      "test_trigger.py",
+      "train_benign_reference.py",
+      "training_data.py",
+      "training_loss_comparison.png",
+      "verify_trigger.py"
+    ],
+    "languages": [
+      "python",
+      "shell"
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -20,60 +114,64 @@
     "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "critical",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
-      "target_adaptive_compatible"
+      "target_adaptive_compatible",
+      "remote_possible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "defcon",
-    "sealion",
-    "trojan",
+    "command_and_control",
+    "toolbox",
+    "github",
     "arekkusul",
-    "web",
-    "kfiosa",
-    "indexed",
+    "lang:python",
+    "lang:shell",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Command and Control system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
+    "cd toolboxes/defcon-sealion-trojan && cat README.md",
+    "cd toolboxes/defcon-sealion-trojan && ls -la",
     "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
-    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
-    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
-    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST defcon-sealion-trojan --output $KFIOSA_OUTPUT_DIR/defcon-sealion-trojan.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST defcon-sealion-trojan --output $KFIOSA_OUTPUT_DIR/defcon-sealion-trojan.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web"
+    "web",
+    "shell_windows",
+    "shell_linux"
   ],
-  "phase_hint": "any",
+  "phase_hint": "post_exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python",
+    "shell"
   ]
 }

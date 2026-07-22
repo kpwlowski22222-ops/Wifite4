@@ -4,14 +4,137 @@
   "name": "Py-nmap-hydra",
   "full_name": "niuniuniuniuniu/Py-nmap-hydra",
   "owner": "niuniuniuniuniu",
-  "category": "Reconnaissance",
+  "category": "Web Application Security",
   "url": "https://github.com/niuniuniuniuniu/Py-nmap-hydra",
-  "summary": "Repository indexing entry for the ``Py-nmap-hydra`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Py-nmap-hydra\n=============",
   "documentation": {
-    "readme": null,
+    "readme": "Py-nmap-hydra\n=============",
     "usage_sections": [],
-    "arguments": [],
-    "examples": []
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--target",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--output",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "get_ip_service_dict",
+        "signature": "def get_ip_service_dict(NmapObj)",
+        "file": "nmap_call_hydra.py",
+        "language": "python"
+      },
+      {
+        "name": "gen_target_file_by_dic",
+        "signature": "def gen_target_file_by_dic(ip_services_dic,temp_file)",
+        "file": "nmap_call_hydra.py",
+        "language": "python"
+      },
+      {
+        "name": "do_start",
+        "signature": "def do_start()",
+        "file": "nmap_call_hydra.py",
+        "language": "python"
+      }
+    ],
+    "examples": [],
+    "file_listing": [
+      "README.md",
+      "nmap_call_hydra.py"
+    ],
+    "languages": [
+      "python"
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -20,11 +143,10 @@
     "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "medium",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -33,47 +155,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "py",
-    "nmap",
-    "hydra",
+    "web_application_security",
+    "toolbox",
+    "github",
     "niuniuniuniuniu",
-    "web",
-    "kfiosa",
-    "indexed",
+    "lang:python",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Web Application Security system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/Py-nmap-hydra && python3 Py-nmap-hydra.py --help",
+    "cd toolboxes/Py-nmap-hydra && cat README.md",
+    "cd toolboxes/Py-nmap-hydra && ls -la",
     "cd toolboxes/Py-nmap-hydra && python3 Py-nmap-hydra.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Py-nmap-hydra && python3 Py-nmap-hydra.py --help",
-    "cd toolboxes/Py-nmap-hydra && python3 Py-nmap-hydra.py --help",
-    "cd toolboxes/Py-nmap-hydra && python3 Py-nmap-hydra.py --help",
-    "cd toolboxes/Py-nmap-hydra && python3 Py-nmap-hydra.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Py-nmap-hydra --output $KFIOSA_OUTPUT_DIR/Py-nmap-hydra.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Py-nmap-hydra --output $KFIOSA_OUTPUT_DIR/Py-nmap-hydra.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web"
+    "web",
+    "cloud"
   ],
   "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
   ]
 }

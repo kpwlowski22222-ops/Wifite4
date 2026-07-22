@@ -16,7 +16,8 @@ git: -") in the gate prompt; the operator decides.
 from __future__ import annotations
 
 import dataclasses
-from typing import Optional, Tuple
+from pathlib import Path
+from typing import Optional, Tuple, FrozenSet
 
 
 @dataclasses.dataclass(frozen=True)
@@ -404,4 +405,229 @@ TOOL_CATALOG: dict[str, InstallSpec] = {
     ),
     # --- NTLM (PyPI: package name `python-ntlm` — note: not `ntlm3`/`impacket`) ---
     "ntlm":          InstallSpec(pip="python-ntlm", confirm_required=True),
+    # --- Kismet (apt package: kismet; client + cap-to-pcap on PATH) ---
+    "kismet":        InstallSpec(apt="kismet", confirm_required=True),
+    # --- Phase 2.3.B: Flask ecosystem for the RAT-like dashboard ---
+    "flask":         InstallSpec(pip="flask", confirm_required=True),
+    "werkzeug":      InstallSpec(pip="werkzeug", confirm_required=True),
+    "jinja2":        InstallSpec(pip="jinja2", confirm_required=True),
+    "flask-cors":    InstallSpec(pip="flask-cors", confirm_required=True),
+    "itsdangerous":  InstallSpec(pip="itsdangerous", confirm_required=True),
+    "markupsafe":    InstallSpec(pip="markupsafe", confirm_required=True),
+    "click":         InstallSpec(pip="click", confirm_required=True),
+    # --- Phase 2.3.B: Polish OSINT helper libs ---
+    "phonenumbers":     InstallSpec(pip="phonenumbers", confirm_required=True),
+    "email-validator":  InstallSpec(pip="email-validator", confirm_required=True),
+    "python-dateutil":  InstallSpec(pip="python-dateutil", confirm_required=True),
+    "lxml":             InstallSpec(pip="lxml", confirm_required=True),
+    "beautifulsoup4":   InstallSpec(pip="beautifulsoup4", confirm_required=True),
+    "requests-html":    InstallSpec(pip="requests-html", confirm_required=True),
+    "furl":             InstallSpec(pip="furl", confirm_required=True),
+    # --- Phase 2.3.B: additional post-exploit / AD tools ---
+    "mimikatz":     InstallSpec(
+        git=("https://github.com/gentilkiwi/mimikatz", "toolboxes/post_exploit/mimikatz"),
+        confirm_required=True,
+    ),
+    "RDP-Checker":  InstallSpec(
+        git=("https://github.com/JoelGMSec/RDP-Checker", "toolboxes/post_exploit/RDP-Checker"),
+        confirm_required=True,
+    ),
+    "sprayingtoolkit": InstallSpec(
+        git=("https://github.com/byt3bl33d3r/SprayingToolkit", "toolboxes/post_exploit/SprayingToolkit"),
+        confirm_required=True,
+    ),
+    "krbrelayx":    InstallSpec(
+        git=("https://github.com/dirkjanm/krbrelayx", "toolboxes/post_exploit/krbrelayx"),
+        confirm_required=True,
+    ),
+    "certipy":      InstallSpec(pip="certipy-ad", confirm_required=True),
+    "mitm6":        InstallSpec(pip="mitm6", confirm_required=True),
+    "bloodhound":   InstallSpec(apt="bloodhound", confirm_required=True),
+    # --- Phase 2.3.B: APT tools that support polish-OSINT and more ---
+    "whois":        InstallSpec(apt="whois", confirm_required=True),
+    "dig":          InstallSpec(apt="dnsutils", confirm_required=True),
+    "nslookup":     InstallSpec(apt="dnsutils", confirm_required=True),
+    # --- Phase 2.4: expanded catalog (~50 new entries) ---
+    # WiFi extras
+    "tshark":       InstallSpec(apt="tshark", confirm_required=True),
+    "hostapd-mana": InstallSpec(apt="hostapd-mana", confirm_required=True),
+    "wpasupplicant":InstallSpec(apt="wpasupplicant", confirm_required=True),
+    "onesixtyone":  InstallSpec(apt="onesixtyone", confirm_required=True),
+    "bully":        InstallSpec(apt="bully", confirm_required=True),
+    "hcxdumptool":  InstallSpec(apt="hcxdumptool", confirm_required=True),
+    "hcxtools":     InstallSpec(apt="hcxtools", confirm_required=True),
+    "mdk4":         InstallSpec(apt="mdk4", confirm_required=True),
+    "asleap":       InstallSpec(apt="asleap", confirm_required=True),
+    "pixiewps":     InstallSpec(apt="pixiewps", confirm_required=True),
+    # BLE / BT
+    "bluetooth":    InstallSpec(apt="bluez", confirm_required=True),
+    "bluez-tools":  InstallSpec(apt="bluez-tools", confirm_required=True),
+    "obexftp":      InstallSpec(apt="obexftp", confirm_required=True),
+    "bluetoothctl": InstallSpec(apt="bluez", confirm_required=True),
+    # Smb / AD / Kerberos
+    "smbclient":    InstallSpec(apt="smbclient", confirm_required=True),
+    "ldap-utils":   InstallSpec(apt="ldap-utils", confirm_required=True),
+    "ldapsearch":   InstallSpec(apt="ldap-utils", confirm_required=True),
+    "krb5-user":    InstallSpec(apt="krb5-user", confirm_required=True),
+    "kadmin":       InstallSpec(apt="krb5-user", confirm_required=True),
+    "crackmapexec": InstallSpec(apt="crackmapexec", confirm_required=True),
+    "ntlmrelayx":   InstallSpec(pip="impacket", confirm_required=True),
+    # Forensics / OSINT
+    "tesseract":    InstallSpec(apt="tesseract-ocr", confirm_required=True),
+    "tesseract-pol":InstallSpec(apt="tesseract-ocr-pol", confirm_required=True),
+    "steghide":     InstallSpec(apt="steghide", confirm_required=True),
+    "binwalk":      InstallSpec(apt="binwalk", confirm_required=True),
+    "sleuthkit":    InstallSpec(apt="sleuthkit", confirm_required=True),
+    "volatility3":  InstallSpec(pip="volatility3", confirm_required=True),
+    "yara":         InstallSpec(apt="yara", confirm_required=True),
+    "webanalyze":   InstallSpec(apt="webanalyze", confirm_required=True),
+    "exiftool":     InstallSpec(apt="libimage-exiftool-perl", confirm_required=True),
+    # Nmap & friends
+    "nmap":         InstallSpec(apt="nmap", confirm_required=True),
+    "hydra":        InstallSpec(apt="hydra", confirm_required=True),
+    "medusa":       InstallSpec(apt="medusa", confirm_required=True),
+    # VPN
+    "openvpn":      InstallSpec(apt="openvpn", confirm_required=True),
+    "wireguard":    InstallSpec(apt="wireguard", confirm_required=True),
+    # Network capture
+    "tcpdump":      InstallSpec(apt="tcpdump", confirm_required=True),
+    # Pip-only extras (already in requirements)
+    "fpdf2":        InstallSpec(pip="fpdf2", confirm_required=True),
+    "phonenumbers": InstallSpec(pip="phonenumbers", confirm_required=True),
+    "python-stdnum":InstallSpec(pip="python-stdnum", confirm_required=True),
+    "lxml-html-clean": InstallSpec(pip="lxml-html-clean", confirm_required=True),
+    # Phase 2.4 git-cloned tools (the 30 new tools)
+    "airgeddon":        InstallSpec(git=("https://github.com/v1s1t0r1sh3r3/airgeddon", "toolboxes/wifi/airgeddon"), confirm_required=True),
+    "wifite2_git":      InstallSpec(git=("https://github.com/derv82/wifite2", "toolboxes/wifi/wifite2"), confirm_required=True),
+    "eaphammer":        InstallSpec(git=("https://github.com/s0lst1c3/eaphammer", "toolboxes/wifi/eaphammer"), confirm_required=True),
+    "infernal-twin":    InstallSpec(git=("https://github.com/entropy1337/infernal-twin", "toolboxes/wifi/infernal-twin"), confirm_required=True),
+    "wifi-pumpkin":     InstallSpec(git=("https://github.com/P0cL4ty/WiFi-Pumpkin", "toolboxes/wifi/wifi-pumpkin"), confirm_required=True),
+    "m5stick-nemo":     InstallSpec(git=("https://github.com/n0xa/m5stick-nemo", "toolboxes/ble/m5stick-nemo"), confirm_required=True),
+    "btlejack":         InstallSpec(git=("https://github.com/virtualabs/btlejack", "toolboxes/ble/btlejack"), confirm_required=True),
+    "internalblue":     InstallSpec(git=("https://github.com/seemoo-lab/internalblue", "toolboxes/ble/internalblue"), confirm_required=True),
+    "spiderfoot":       InstallSpec(git=("https://github.com/smicallef/spiderfoot", "toolboxes/osint/spiderfoot"), confirm_required=True),
+    "theHarvester":     InstallSpec(git=("https://github.com/laramies/theHarvester", "toolboxes/osint/theHarvester"), confirm_required=True),
+    "waybackurls":      InstallSpec(git=("https://github.com/tomnomnom/waybackurls", "toolboxes/osint/waybackurls"), confirm_required=True),
+    "meg":              InstallSpec(git=("https://github.com/tomnomnom/meg", "toolboxes/osint/meg"), confirm_required=True),
+    "gau":              InstallSpec(git=("https://github.com/lc/gau", "toolboxes/osint/gau"), confirm_required=True),
+    "subfinder":        InstallSpec(git=("https://github.com/projectdiscovery/subfinder", "toolboxes/osint/subfinder"), confirm_required=True),
+    "gobuster":         InstallSpec(git=("https://github.com/OJ/gobuster", "toolboxes/osint/gobuster"), confirm_required=True),
+    "SecretFinder":     InstallSpec(git=("https://github.com/m4ll0k/SecretFinder", "toolboxes/osint/SecretFinder"), confirm_required=True),
+    "WhoDat":           InstallSpec(git=("https://github.com/urbanadventurer/WhoDat", "toolboxes/osint/WhoDat"), confirm_required=True),
+    "cloud_enum":       InstallSpec(git=("https://github.com/initstring/cloud_enum", "toolboxes/osint/cloud_enum"), confirm_required=True),
+    "impacket_git":     InstallSpec(git=("https://github.com/fortra/impacket", "toolboxes/post_exploit/impacket"), confirm_required=True),
+    "CrackMapExec":     InstallSpec(git=("https://github.com/byt3bl33d3r/CrackMapExec", "toolboxes/post_exploit/CrackMapExec"), confirm_required=True),
+    "Certipy":          InstallSpec(git=("https://github.com/ly4k/Certipy", "toolboxes/post_exploit/Certipy"), confirm_required=True),
+    "krbrelayx_git":    InstallSpec(git=("https://github.com/dirkjanm/krbrelayx", "toolboxes/post_exploit/krbrelayx"), confirm_required=True),
+    "Windows-Exploit-Suggester": InstallSpec(git=("https://github.com/S1ckB0y1337/Windows-Exploit-Suggester", "toolboxes/post_exploit/Windows-Exploit-Suggester"), confirm_required=True),
+    "sqlmap":           InstallSpec(git=("https://github.com/OJ/sqlmap", "toolboxes/web/sqlmap"), confirm_required=True),
+    "nuclei":           InstallSpec(git=("https://github.com/projectdiscovery/nuclei", "toolboxes/web/nuclei"), confirm_required=True),
+    "httpx":            InstallSpec(git=("https://github.com/projectdiscovery/httpx", "toolboxes/web/httpx"), confirm_required=True),
+    "Interlace":        InstallSpec(git=("https://github.com/codingo/Interlace", "toolboxes/web/Interlace"), confirm_required=True),
+    "mimikatz_git":     InstallSpec(git=("https://github.com/gentilkiwi/mimikatz", "toolboxes/post_exploit/mimikatz"), confirm_required=True),
+    "PowerSploit":      InstallSpec(git=("https://github.com/PowerShellMafia/PowerSploit", "toolboxes/post_exploit/PowerSploit"), confirm_required=True),
+    "Empire":           InstallSpec(git=("https://github.com/BC-SECURITY/Empire", "toolboxes/post_exploit/Empire"), confirm_required=True),
+    # --- Phase 2.4 — browser automation + DB integrations (per operator) ---
+    "selenium":           InstallSpec(pip="selenium", confirm_required=True),
+    "playwright":         InstallSpec(pip="playwright", confirm_required=True),
+    "mechanicalsoup":     InstallSpec(pip="mechanicalsoup", confirm_required=True),
+    "requests-html":      InstallSpec(pip="requests-html", confirm_required=True),
+    "beautifulsoup4":     InstallSpec(pip="beautifulsoup4", confirm_required=True),
+    "pymssql":            InstallSpec(pip="pymssql", confirm_required=True),
+    "pymysql":            InstallSpec(pip="pymysql", confirm_required=True),
+    "psycopg2-binary":    InstallSpec(pip="psycopg2-binary", confirm_required=True),
+    "SQLAlchemy":         InstallSpec(pip="SQLAlchemy", confirm_required=True),
+    "alembic":            InstallSpec(pip="alembic", confirm_required=True),
+    "dataset":            InstallSpec(pip="dataset", confirm_required=True),
+    "peewee":             InstallSpec(pip="peewee", confirm_required=True),
+    "sqlmodel":           InstallSpec(pip="sqlmodel", confirm_required=True),
+    "pyodbc":             InstallSpec(pip="pyodbc", confirm_required=True),
+    "oracledb":           InstallSpec(pip="oracledb", confirm_required=True),
+    "geoip2":             InstallSpec(pip="geoip2", confirm_required=True),
+    "phonenumbers":       InstallSpec(pip="phonenumbers", confirm_required=True),
+    "email-validator":    InstallSpec(pip="email-validator", confirm_required=True),
+    "python-stdnum":      InstallSpec(pip="python-stdnum", confirm_required=True),
+    "fpdf2":              InstallSpec(pip="fpdf2", confirm_required=True),
+    "reportlab":          InstallSpec(pip="reportlab", confirm_required=True),
+    "Pillow":             InstallSpec(pip="Pillow", confirm_required=True),
+    "pytesseract":        InstallSpec(pip="pytesseract", confirm_required=True),
+    "opencv-python":      InstallSpec(pip="opencv-python", confirm_required=True),
+    "tldextract":         InstallSpec(pip="tldextract", confirm_required=True),
+    "dnspython":          InstallSpec(pip="dnspython", confirm_required=True),
+    "pycryptodome":       InstallSpec(pip="pycryptodome", confirm_required=True),
+    "cryptography":       InstallSpec(pip="cryptography", confirm_required=True),
+    "paramiko":           InstallSpec(pip="paramiko", confirm_required=True),
+    "pysmb":              InstallSpec(pip="pysmb", confirm_required=True),
+    "impacket_pip":       InstallSpec(pip="impacket", confirm_required=True),
+    "ldap3":              InstallSpec(pip="ldap3", confirm_required=True),
+    "ldapdomaindump":     InstallSpec(pip="ldapdomaindump", confirm_required=True),
+    "pypykatz":           InstallSpec(pip="pypykatz", confirm_required=True),
+    "mitm6_pip":          InstallSpec(pip="mitm6", confirm_required=True),
+    "aiodns":             InstallSpec(pip="aiodns", confirm_required=True),
+    "aiohttp":            InstallSpec(pip="aiohttp", confirm_required=True),
+    "httpx":              InstallSpec(pip="httpx", confirm_required=True),
+    "websockets":         InstallSpec(pip="websockets", confirm_required=True),
+    "paho-mqtt":          InstallSpec(pip="paho-mqtt", confirm_required=True),
+    "pymodbus":           InstallSpec(pip="pymodbus", confirm_required=True),
+    "pyzmq":              InstallSpec(pip="pyzmq", confirm_required=True),
+    "pyngus":             InstallSpec(pip="pyngus", confirm_required=True),
+    "asn1crypto":         InstallSpec(pip="asn1crypto", confirm_required=True),
+    "pyOpenSSL":          InstallSpec(pip="pyOpenSSL", confirm_required=True),
+    "certvalidator":      InstallSpec(pip="certvalidator", confirm_required=True),
+    "trustme":            InstallSpec(pip="trustme", confirm_required=True),
+    "mitmproxy":          InstallSpec(pip="mitmproxy", confirm_required=True),
+    "stem":               InstallSpec(pip="stem", confirm_required=True),
+    "txtorcon":           InstallSpec(pip="txtorcon", confirm_required=True),
+    "graphene":           InstallSpec(pip="graphene", confirm_required=True),
+    "graphql-core":       InstallSpec(pip="graphql-core", confirm_required=True),
 }
+
+
+# ---------------------------------------------------------------------------
+# SDR skip file (Phase 2.3.B)
+# ---------------------------------------------------------------------------
+
+_SKIPPED_FILE_NAME = "_skipped.txt"
+
+
+def _skipped_path() -> Path:
+    """Return the absolute path to the SDR-skip list."""
+    return Path(__file__).resolve().parent / _SKIPPED_FILE_NAME
+
+
+def _load_skipped() -> FrozenSet[str]:
+    """Read the skip list. Each non-empty, non-comment line is a tool
+    name. Returns a frozen set."""
+    p = _skipped_path()
+    if not p.exists():
+        return frozenset()
+    out = set()
+    for line in p.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        out.add(line)
+    return frozenset(out)
+
+
+_SKIPPED_CACHE: Optional[FrozenSet[str]] = None
+
+
+def skipped_tools() -> FrozenSet[str]:
+    """Return the set of tool names the operator has marked 'skip'.
+    Cached after the first read."""
+    global _SKIPPED_CACHE
+    if _SKIPPED_CACHE is None:
+        _SKIPPED_CACHE = _load_skipped()
+    return _SKIPPED_CACHE
+
+
+def is_skipped(tool: str) -> bool:
+    """Predicate: is this tool in the operator's skip list?"""
+    return tool in skipped_tools()
+
+
+def reset_skipped_cache() -> None:
+    """Clear the cached skip set (tests)."""
+    global _SKIPPED_CACHE
+    _SKIPPED_CACHE = None

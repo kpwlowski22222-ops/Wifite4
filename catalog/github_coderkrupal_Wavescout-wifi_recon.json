@@ -4,61 +4,167 @@
   "name": "Wavescout-wifi_recon",
   "full_name": "coderkrupal/Wavescout-wifi_recon",
   "owner": "coderkrupal",
-  "category": "WiFi Reconnaissance — Beacon Parsing",
+  "category": "Reconnaissance",
   "url": "https://github.com/coderkrupal/Wavescout-wifi_recon",
-  "summary": "Repository indexing entry for the ``Wavescout-wifi_recon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
-  "toolbox_path": "toolboxes/recon/coderkrupal__Wavescout-wifi_recon",
+  "summary": "WaveScout is a Wi-Fi monitoring and analysis tool built to observe wireless traffic while a network interface is operating in **monitor mode**. It passively captures and analyzes 802.11 frames to provide visibility into nearby wireless activity without interacting with target networks.",
   "documentation": {
-    "readme": null,
-    "usage_sections": [
+    "readme": "WaveScout is a Wi-Fi monitoring and analysis tool built to observe wireless traffic while a network interface is operating in **monitor mode**. It passively captures and analyzes 802.11 frames to provide visibility into nearby wireless activity without interacting with target networks.",
+    "usage_sections": [],
+    "arguments": [
       {
-        "section": "entrypoint",
-        "content": "sudo airmon-ng start wlan0 && sudo python3 main.py"
+        "name": "--help",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--target",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--output",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
       }
     ],
-    "arguments": [],
-    "examples": [
+    "function_signatures": [
       {
-        "status": "operational",
-        "command": "sudo airmon-ng start wlan0 && sudo python3 main.py"
+        "name": "assess_network",
+        "signature": "def assess_network(net)",
+        "file": "analyzer.py",
+        "language": "python"
+      },
+      {
+        "name": "get_monitor_interface",
+        "signature": "def get_monitor_interface()",
+        "file": "main.py",
+        "language": "python"
+      },
+      {
+        "name": "parse_beacon",
+        "signature": "def parse_beacon(packet)",
+        "file": "scanner.py",
+        "language": "python"
+      },
+      {
+        "name": "start_scan",
+        "signature": "def start_scan(interface)",
+        "file": "scanner.py",
+        "language": "python"
+      },
+      {
+        "name": "display",
+        "signature": "def display(networks, analyzer)",
+        "file": "ui.py",
+        "language": "python"
       }
+    ],
+    "examples": [],
+    "file_listing": [
+      "README.md",
+      "analyzer.cpython-312.pyc",
+      "analyzer.py",
+      "main.py",
+      "scanner.cpython-312.pyc",
+      "scanner.py",
+      "ui.cpython-312.pyc",
+      "ui.py"
+    ],
+    "languages": [
+      "python"
     ]
   },
-  "language": "Python",
-  "dependencies": [
-    "python3",
-    "scapy",
-    "rich",
-    "aircrack-ng (airmon-ng)",
-    "iw"
-  ],
-  "algorithms": [
-    "passive 802.11 beacon-frame sniffer via scapy.sniff on monitor interface",
-    "AP enumeration from Dot11Beacon + Dot11Elt (BSSID/SSID/channel/crypto via network_stats())",
-    "dBm signal extraction from Dot11 packets",
-    "trivial encryption-risk classifier (open/WEP/hidden-SSID flags)",
-    "monitor-interface auto-detect via `iw dev`"
-  ],
-  "produces": [
-    "in-memory dict of discovered APs: SSID, BSSID, channel, encryption/crypto, signal dBm",
-    "per-AP risk-flag list (OPEN NETWORK / CRITICAL: WEP / Hidden SSID)",
-    "refreshing rich-formatted terminal table (every 5s)"
-  ],
-  "capability_bucket": "beacon_parse",
-  "runnable": true,
-  "novelty": "none — thin scapy wrapper. It reimplements airodump-ng's basic AP-listing view (BSSID/SSID/channel/encryption/signal) in pure scapy with a rich-table UI and a ~6-line risk classifier. No PMKID/handshake/probe/GPS/deauth/hidden-SSID-reveal; hidden SSIDs are merely labelled, not revealed. The analyzer is three string-contains checks. Redundant vs airodump-ng for AP enumeration.",
-  "metadata_status": "classified",
+  "metadata_status": "enriched",
   "trust": {
     "official_kali": false,
     "reviewed": false,
-    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+    "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "low",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -67,49 +173,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "wavescout",
-    "wifi",
-    "recon",
+    "reconnaissance",
+    "toolbox",
+    "github",
     "coderkrupal",
-    "web",
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
+    "lang:python",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
+    "cd toolboxes/Wavescout-wifi_recon && cat README.md",
+    "cd toolboxes/Wavescout-wifi_recon && ls -la",
     "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
-    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
-    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
-    "cd toolboxes/Wavescout-wifi_recon && python3 Wavescout-wifi_recon.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wavescout-wifi_recon --output $KFIOSA_OUTPUT_DIR/Wavescout-wifi_recon.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wavescout-wifi_recon --output $KFIOSA_OUTPUT_DIR/Wavescout-wifi_recon.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
     "web",
-    "wifi_2_4_ghz",
-    "wifi_5_ghz"
+    "cloud",
+    "iots"
   ],
-  "phase_hint": "any",
+  "phase_hint": "recon",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
   ]
 }

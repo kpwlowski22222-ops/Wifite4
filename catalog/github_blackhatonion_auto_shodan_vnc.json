@@ -4,14 +4,125 @@
   "name": "auto_shodan_vnc",
   "full_name": "blackhatonion/auto_shodan_vnc",
   "owner": "blackhatonion",
-  "category": "OSINT and Threat Intelligence",
+  "category": "Reconnaissance",
   "url": "https://github.com/blackhatonion/auto_shodan_vnc",
-  "summary": "Repository indexing entry for the ``auto_shodan_vnc`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "auto_shodan_vnc\nThis script will allow you to automatically connect to many unsecured VNC using shodan api",
   "documentation": {
-    "readme": null,
+    "readme": "auto_shodan_vnc\nThis script will allow you to automatically connect to many unsecured VNC using shodan api",
     "usage_sections": [],
-    "arguments": [],
-    "examples": []
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--target",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--output",
+        "description": "Detected in command_examples; see README for details.",
+        "source": "command_examples"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "vncviewerr",
+        "signature": "def vncviewerr(x)",
+        "file": "shodann.py",
+        "language": "python"
+      }
+    ],
+    "examples": [],
+    "file_listing": [
+      "README.md",
+      "shodann.py"
+    ],
+    "languages": [
+      "python"
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -20,11 +131,10 @@
     "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "medium",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -33,47 +143,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "auto",
-    "shodan",
-    "vnc",
+    "reconnaissance",
+    "toolbox",
+    "github",
     "blackhatonion",
-    "web",
-    "kfiosa",
-    "indexed",
+    "lang:python",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/auto_shodan_vnc && python3 auto_shodan_vnc.py --help",
+    "cd toolboxes/auto_shodan_vnc && cat README.md",
+    "cd toolboxes/auto_shodan_vnc && ls -la",
     "cd toolboxes/auto_shodan_vnc && python3 auto_shodan_vnc.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/auto_shodan_vnc && python3 auto_shodan_vnc.py --help",
-    "cd toolboxes/auto_shodan_vnc && python3 auto_shodan_vnc.py --help",
-    "cd toolboxes/auto_shodan_vnc && python3 auto_shodan_vnc.py --help",
-    "cd toolboxes/auto_shodan_vnc && python3 auto_shodan_vnc.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST auto_shodan_vnc --output $KFIOSA_OUTPUT_DIR/auto_shodan_vnc.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST auto_shodan_vnc --output $KFIOSA_OUTPUT_DIR/auto_shodan_vnc.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web"
+    "web",
+    "cloud",
+    "iots"
   ],
-  "phase_hint": "any",
+  "phase_hint": "recon",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
   ]
 }

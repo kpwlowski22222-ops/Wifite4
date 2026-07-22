@@ -4,56 +4,50 @@
   "name": "PROTOCOL-X-Framework",
   "full_name": "karanhacker98/PROTOCOL-X-Framework",
   "owner": "karanhacker98",
-  "category": "WiFi Reconnaissance — Aircrack Wrapper",
+  "category": "Reconnaissance",
   "url": "https://github.com/karanhacker98/PROTOCOL-X-Framework",
-  "summary": "Repository indexing entry for the ``PROTOCOL-X-Framework`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
-  "toolbox_path": "toolboxes/recon/karanhacker98__PROTOCOL-X-Framework",
+  "summary": "<h1 align=\"center\">\n  <br>\n  PROTOCOL-X Framework\n  <br>\n</h1>",
   "documentation": {
-    "readme": null,
-    "usage_sections": [
+    "readme": "<h1 align=\"center\">\n  <br>\n  PROTOCOL-X Framework\n  <br>\n</h1>",
+    "usage_sections": [],
+    "arguments": [
       {
-        "section": "entrypoint",
-        "content": "python \"Protocol X.py\" (inside Termux on Android; requires Termux:API app installed)"
+        "name": "--PRO-brightgreen",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
+      },
+      {
+        "name": "-X",
+        "description": "Detected in README; description must come from project docs (not fabricated)."
       }
     ],
-    "arguments": [],
-    "examples": [
+    "function_signatures": [
       {
-        "status": "operational",
-        "command": "python \"Protocol X.py\" (inside Termux on Android; requires Termux:API app installed)"
+        "name": "main",
+        "signature": "def main()",
+        "file": "Protocol X.py",
+        "language": "python"
       }
+    ],
+    "examples": [],
+    "file_listing": [
+      "Protocol X.py",
+      "README.md"
+    ],
+    "languages": [
+      "python"
     ]
   },
-  "language": "Python",
-  "dependencies": [
-    "termux-api (Android Termux:API app + termux-api pkg)",
-    "python3 stdlib (subprocess, os, json, time, random)"
-  ],
-  "algorithms": [
-    "passive WiFi scan via termux-wifi-scaninfo (Android WiFi manager JSON dump, not monitor-mode capture)",
-    "trivial RSSI/frequency heuristic: labels networks with RSSI > -65 dBm and freq < 3000 MHz as 'highly vulnerable'",
-    "fake dictionary bruteforce: iterates a wordlist with random sleep delays and matches against hardcoded strings 'admin123'/'password' — no auth attempted"
-  ],
-  "produces": [
-    "JSON list of nearby networks (ssid, bssid, rssi, frequency_mhz) printed as a color-coded table",
-    "a cosmetic 'vulnerability' label per network",
-    "simulated bruteforce progress output (no real result)"
-  ],
-  "capability_bucket": "redundant_wrapper",
-  "runnable": false,
-  "novelty": "none — thin wrapper. Does not touch airodump-ng/wash/hcxtools/scapy at all; it shells out to the Android-only termux-wifi-scaninfo, which just surfaces the phone's WiFi scan results (same as the Android WiFi settings page). The \"analysis\" is a 2-line RSSI/frequency threshold and the \"attack\" is a hardcoded fake. No monitor mode, no frame capture, no PMKID/handshake/EAP/deauth/hidden-SSID logic.",
-  "metadata_status": "classified",
+  "metadata_status": "enriched",
   "trust": {
     "official_kali": false,
     "reviewed": false,
-    "warning": "External community repo. Audit provenance, code, releases and licence before use. Catalogued for the AI's awareness; novel algorithms are implemented in core/modules/catalog_recon.py, not shelled out to this repo's binaries."
+    "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
   },
   "risk": {
-    "level": "low",
+    "level": "high",
     "signals": [
-      "offensive_tool",
       "intrinsic",
-      "remote_possible",
+      "lab_only",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -62,47 +56,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "offensive",
-    "protocol",
-    "x",
-    "framework",
+    "reconnaissance",
+    "toolbox",
+    "github",
     "karanhacker98",
-    "web",
-    "kfiosa",
-    "indexed",
+    "lang:python",
+    "lab_only",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
+    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
+    "Use as a reference implementation when designing a new v3 method for this category.",
+    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
   ],
   "command_examples": [
+    "cd toolboxes/PROTOCOL-X-Framework && python3 PROTOCOL-X-Framework.py --help",
+    "cd toolboxes/PROTOCOL-X-Framework && cat README.md",
+    "cd toolboxes/PROTOCOL-X-Framework && ls -la",
     "cd toolboxes/PROTOCOL-X-Framework && python3 PROTOCOL-X-Framework.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/PROTOCOL-X-Framework && python3 PROTOCOL-X-Framework.py --help",
-    "cd toolboxes/PROTOCOL-X-Framework && python3 PROTOCOL-X-Framework.py --help",
-    "cd toolboxes/PROTOCOL-X-Framework && python3 PROTOCOL-X-Framework.py --help",
-    "cd toolboxes/PROTOCOL-X-Framework && python3 PROTOCOL-X-Framework.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PROTOCOL-X-Framework --output $KFIOSA_OUTPUT_DIR/PROTOCOL-X-Framework.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PROTOCOL-X-Framework --output $KFIOSA_OUTPUT_DIR/PROTOCOL-X-Framework.log"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
   "attack_surface": [
-    "web"
+    "web",
+    "cloud",
+    "iots"
   ],
-  "phase_hint": "any",
+  "phase_hint": "recon",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar"
+    "param_grammar",
+    "tool_variant_picker"
   ],
   "target_adaptive_targets": [
-    "target_class"
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
   ]
 }

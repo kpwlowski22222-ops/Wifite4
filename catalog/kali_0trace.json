@@ -3,18 +3,16 @@
   "kind": "kali_source_package",
   "name": "0trace",
   "title": "0trace",
-  "summary": "### 0trace",
+  "summary": "traceroute tool that can run within an existing TCP connection",
+  "description": "traceroute tool that can run within an existing TCP connection\nThe package is traceroute tool that can be run within an existing, open TCP\nconnection, therefore bypassing some types of stateful packet filters with\nease.",
   "version": "0.01-3kali6",
   "architectures": [
-    "any"
+    "amd64"
   ],
   "homepage": "https://lcamtuf.coredump.cx",
-  "repository": "https://gitlab.com/kalilinux/packages/0trace",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-information-gathering"
-  ],
+  "repository": "https://lcamtuf.coredump.cx",
+  "source_package": "0trace",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install 0trace"
   },
@@ -26,150 +24,38 @@
   "commands": [
     {
       "name": "0trace.sh",
-      "description": "- - -",
-      "usage": "/usr/bin/0trace.sh iface target_ip [ target_port ]",
-      "arguments": [],
-      "raw_help": "root@kali:~# 0trace.sh -h\n Usage: /usr/bin/0trace.sh iface target_ip [ target_port ]",
-      "examples": [],
-      "risk": {
-        "level": "low",
-        "signals": [],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Usage: /usr/bin/0trace.sh iface target_ip [ target_port ]",
-        "-h": "Usage: /usr/bin/0trace.sh iface target_ip [ target_port ]",
-        "help": "Usage: /usr/bin/0trace.sh iface target_ip [ target_port ]"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/0trace.sh",
-        "size_bytes": 2376,
-        "is_symlink": false,
-        "file_type": "Bourne-Again shell script, ASCII text executable"
-      }
+      "path": "/usr/bin/0trace.sh",
+      "description": "Binary from 0trace",
+      "usage": "0trace.sh [options] [args]",
+      "arguments": []
     },
     {
       "name": "sendprobe",
-      "description": "- - -",
-      "usage": "sendprobe src_ip dst_ip sport dport seq ack",
-      "arguments": [],
-      "raw_help": "root@kali:~# sendprobe -h\n Usage: sendprobe src_ip dst_ip sport dport seq ack",
-      "examples": [],
-      "risk": {
-        "level": "low",
-        "signals": [],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Usage: sendprobe src_ip dst_ip sport dport seq ack",
-        "-h": "Usage: sendprobe src_ip dst_ip sport dport seq ack",
-        "help": "Usage: sendprobe src_ip dst_ip sport dport seq ack"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/sendprobe",
-        "size_bytes": 14624,
-        "is_symlink": false,
-        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=0c160bdc85eeaf45d12438b78d7d7ce2e0455a02, for GNU/Linux 3.2.0, stripped"
-      }
+      "path": "/usr/bin/sendprobe",
+      "description": "Binary from 0trace",
+      "usage": "sendprobe [options] [args]",
+      "arguments": []
     },
     {
       "name": "usleep",
-      "description": "Suspend execution for microsecond intervals",
-      "usage": null,
-      "arguments": [],
-      "raw_help": "root@kali:~# man usleep\n usleep(3)                   Library Functions Manual                  usleep(3)\n \n NAME\n    usleep - suspend execution for microsecond intervals\n \n LIBRARY\n    Standard C library (libc, -lc)\n \n SYNOPSIS\n    #include <unistd.h>\n \n    int usleep(useconds_t usec);\n \nFeature Test Macro Requirements for glibc (see feature_test_macros(7)):\n \n    usleep():\n        Since glibc 2.12:\n            (_XOPEN_SOURCE >= 500) && ! (_POSIX_C_SOURCE >= 200809L)\n                || /* glibc >= 2.19: */ _DEFAULT_SOURCE\n                || /* glibc <= 2.19: */ _BSD_SOURCE\n        Before glibc 2.12:\n            _BSD_SOURCE || _XOPEN_SOURCE >= 500\n \n DESCRIPTION\n    The  usleep()  function  suspends  execution of the calling thread for (at\n    least) usec microseconds.  The sleep may be  lengthened  slightly  by  any\n    system  activity or by the time spent processing the call or by the granu-\n    larity of system timers.\n \n RETURN VALUE\n    The usleep() function returns 0 on success.  On  error,  -1  is  returned,\n    with errno set to indicate the error.\n \n ERRORS\n    EINTR  Interrupted by a signal; see signal(7).\n \n    EINVAL\n           usec  is  greater than or equal to 1000000.  (On systems where that\n           is considered an error.)\n \n ATTRIBUTES\n    For an explanation of the terms used in this section, see attributes(7).\n    +----------------------------------------------+---------------+---------+\n    | Interface                                    | Attribute     | Value   |\n    +----------------------------------------------+---------------+---------+\n    | usleep()                                     | Thread safety | MT-Safe |\n    +----------------------------------------------+---------------+---------+\n \n STANDARDS\n    None.\n \n HISTORY\n    4.3BSD,  POSIX.1-2001.   POSIX.1-2001  declares  it  obsolete,  suggesting\n    nanosleep(2) instead.  Removed in POSIX.1-2008.\n \n    On  the  original  BSD  implementation, and before glibc 2.2.2, the return\n    type of this function is void.  The POSIX version returns int, and this is\n    also the prototype used since glibc 2.2.2.\n \n    Only the EINVAL error return is documented by SUSv2 and POSIX.1-2001.\n \n CAVEATS\n    The interaction of this function with the SIGALRM signal, and  with  other\n    timer  functions  such  as alarm(2), sleep(3), nanosleep(2), setitimer(2),\n    timer_create(2), timer_delete(2),  timer_getoverrun(2),  timer_gettime(2),\n    timer_settime(2), ualarm(3) is unspecified.\n \n SEE ALSO\n    alarm(2),  getitimer(2),  nanosleep(2), select(2), setitimer(2), sleep(3),\n    ualarm(3), useconds_t(3type), time(7)\n \n Linux man-pages 6.18               2026-02-08                         usleep(3)",
-      "examples": [],
-      "risk": {
-        "level": "low",
-        "signals": [],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "man": "usleep(3)                   Library Functions Manual                  usleep(3)\n\nNAME\n     usleep - suspend execution for microsecond intervals\n\nLIBRARY\n     Standard C library (libc, -lc)\n\nSYNOPSIS\n     #include <unistd.h>\n\n     int usleep(useconds_t usec);\n\n Feature Test Macro Requirements for glibc (see feature_test_macros(7)):\n\n     usleep():\n         Since glibc 2.12:\n             (_XOPEN_SOURCE >= 500) && ! (_POSIX_C_SOURCE >= 200809L)\n                 || /* glibc >= 2.19: */ _DEFAULT_SOURCE\n                 || /* glibc <= 2.19: */ _BSD_SOURCE\n         Before glibc 2.12:\n             _BSD_SOURCE || _XOPEN_SOURCE >= 500\n\nDESCRIPTION\n     The  usleep()  function  suspends  execution of the calling thread for (at\n     least) usec microseconds.  The sleep may be  lengthened  slightly  by  any\n     system  activity or by the time spent processing the call or by the granu-\n     larity of system timers.\n\nRETURN VALUE\n     The usleep() function returns 0 on success.  On  error,  -1  is  returned,\n     with errno set to indicate the error.\n\nERRORS\n     EINTR  Interrupted by a signal; see signal(7).\n\n     EINVAL\n            usec  is  greater than or equal to 1000000.  (On systems where that\n            is considered an error.)\n\nATTRIBUTES\n     For an explanation of the terms used in this section, see attributes(7).\n     +----------------------------------------------+---------------+---------+\n     | Interface                                    | Attribute     | Value   |\n     +----------------------------------------------+---------------+---------+\n     | usleep()                                     | Thread safety | MT-Safe |\n     +----------------------------------------------+---------------+---------+\n\nSTANDARDS\n     None.\n\nHISTORY\n     4.3BSD,  POSIX.1-2001.   POSIX.1-2001  declares  it  obsolete,  suggesting\n     nanosleep(2) instead.  Removed in POSIX.1-2008.\n\n     On  the  original  BSD  implementation, and before glibc 2.2.2, the return\n     type of this function is void.  The POSIX version returns int, and this is\n     also the prototype used since glibc 2.2.2.\n\n     Only the EINVAL error return is documented by SUSv2 and POSIX.1-2001.\n\nCAVEATS\n     The interaction of this function with the SIGALRM signal, and  with  other\n     timer  functions  such  as alarm(2), sleep(3), nanosleep(2), setitimer(2),\n     timer_create(2), timer_delete(2),  timer_getoverrun(2),  timer_gettime(2),\n     timer_settime(2), ualarm(3) is unspecified.\n\nSEE ALSO\n     alarm(2),  getitimer(2),  nanosleep(2), select(2), setitimer(2), sleep(3),\n     ualarm(3), useconds_t(3type), time(7)\n\nLinux man-pages 6.18               2026-02-08                         usleep(3)",
-        "apropos": "usleep (3)           - suspend execution for microsecond intervals"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/usleep",
-        "size_bytes": 14568,
-        "is_symlink": false,
-        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=53e9e3cd5a285af4147d2ada71d990973a6b54a3, for GNU/Linux 3.2.0, stripped"
-      }
+      "path": "/usr/bin/usleep",
+      "description": "suspend execution for microsecond intervals",
+      "usage": "usleep [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "low",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/0trace/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/0trace/index.md",
-    "retrieved_at": "2026-07-14T13:04:50+00:00",
-    "sha256": "c9981def774a28a4921659c96fc177c67f2470bdc4a3cc2700eca45c97e6a54e"
-  },
-  "apt_metadata": {
-    "section": "net",
-    "installed_size": "43",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "amd64",
-    "version": "0.01-3kali6",
-    "depends": "tcpdump, libc6 (>= 2.38)",
-    "description": "traceroute tool that can run within an existing TCP connection\nThe package is traceroute tool that can be run within an existing, open TCP\nconnection, therefore bypassing some types of stateful packet filters with\nease.",
-    "homepage": "https://lcamtuf.coredump.cx"
-  },
+  "files": [
+    "/usr/bin/0trace.sh",
+    "/usr/bin/sendprobe",
+    "/usr/bin/usleep"
+  ],
   "tags": [
-    "offensive",
-    "0trace",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package",
+    "networking"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/0trace && python3 0trace.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/0trace && python3 0trace.py --help",
-    "cd toolboxes/0trace && python3 0trace.py --help",
-    "cd toolboxes/0trace && python3 0trace.py --help",
-    "cd toolboxes/0trace && python3 0trace.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST 0trace --output $KFIOSA_OUTPUT_DIR/0trace.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST 0trace --output $KFIOSA_OUTPUT_DIR/0trace.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

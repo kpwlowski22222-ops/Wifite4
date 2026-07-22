@@ -3,19 +3,16 @@
   "kind": "kali_source_package",
   "name": "cmospwd",
   "title": "cmospwd",
-  "summary": "### cmospwd",
+  "summary": "decrypt BIOS passwords from CMOS",
+  "description": "decrypt BIOS passwords from CMOS\nCmosPwd is a cross-platform tool to decrypt password stored in CMOS used\nto access a computer's BIOS setup.\n.\nThis application should work out of the box on most modern systems, but\nsome more esoteric BIOSes may not be supported or may require additional\nsteps.",
   "version": "5.0+dfsg-3kali5",
   "architectures": [
-    "amd64",
-    "i386"
+    "amd64"
   ],
   "homepage": "https://www.cgsecurity.org/wiki/CmosPwd",
-  "repository": "https://gitlab.com/kalilinux/packages/cmospwd",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-passwords"
-  ],
+  "repository": "https://www.cgsecurity.org/wiki/CmosPwd",
+  "source_package": "cmospwd",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install cmospwd"
   },
@@ -27,133 +24,22 @@
   "commands": [
     {
       "name": "cmospwd",
-      "description": "A cmos/bios password recovery tool",
-      "usage": "cmospwd [/k[de|fr]] [/d]",
-      "arguments": [
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -h, --help"
-        }
-      ],
-      "raw_help": "root@kali:~# cmospwd -h\n CmosPwd - BIOS Cracker 5.0, October 2007, Copyright 1996-2007\n GRENIER Christophe, grenier@cgsecurity.org\n http://www.cgsecurity.org/\n \n Usage: cmospwd [/k[de|fr]] [/d]\n      cmospwd [/k[de|fr]] [/d] /[wlr] cmos_backup_file           write/load/restore\n      cmospwd /k                                          kill cmos\n      cmospwd [/k[de|fr]] /m[01]*\texecute selected module\n \n/kfr french AZERTY keyboard, /kde german QWERTZ keyboard\n/d to dump cmos\n/m0010011 to execute module 3,6 and 7\n \n NB: For Award BIOS, passwords are differents than original, but work.",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "cmospwd [/k[de|fr]] [/d] /[wlr] cmos_backup_file           write/load/restore",
-          "template": null,
-          "original_sha256": "eed6959234667d23aff75e54845147134a1b8b8734864f80ee9214b52a774923"
-        },
-        {
-          "status": "operational_example",
-          "command": "cmospwd /k                                          kill cmos",
-          "template": null,
-          "original_sha256": "1e402bc5086c62a31d52c4ea7c86e3816a3e14469a773f9788ef6c73cf5a0f39"
-        },
-        {
-          "status": "operational_example",
-          "command": "cmospwd [/k[de|fr]] /m[01]*\texecute selected module",
-          "template": null,
-          "original_sha256": "2fa3927fce3dfc32e0d667e9ea55da903b8da339ce58e3de98474598f5e04dbb"
-        }
-      ],
-      "risk": {
-        "level": "low",
-        "signals": [],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "CmosPwd - BIOS Cracker 5.0, October 2007, Copyright 1996-2007\nGRENIER Christophe, grenier@cgsecurity.org\nhttp://www.cgsecurity.org/\n\nUsage: cmospwd [/k[de|fr]] [/d]\n       cmospwd [/k[de|fr]] [/d] /[wlr] cmos_backup_file           write/load/restore\n       cmospwd /k                                          kill cmos\n       cmospwd [/k[de|fr]] /m[01]*\texecute selected module\n\n /kfr french AZERTY keyboard, /kde german QWERTZ keyboard\n /d to dump cmos\n /m0010011 to execute module 3,6 and 7\n\nNB: For Award BIOS, passwords are differents than original, but work.",
-        "-h": "CmosPwd - BIOS Cracker 5.0, October 2007, Copyright 1996-2007\nGRENIER Christophe, grenier@cgsecurity.org\nhttp://www.cgsecurity.org/\n\nUsage: cmospwd [/k[de|fr]] [/d]\n       cmospwd [/k[de|fr]] [/d] /[wlr] cmos_backup_file           write/load/restore\n       cmospwd /k                                          kill cmos\n       cmospwd [/k[de|fr]] /m[01]*\texecute selected module\n\n /kfr french AZERTY keyboard, /kde german QWERTZ keyboard\n /d to dump cmos\n /m0010011 to execute module 3,6 and 7\n\nNB: For Award BIOS, passwords are differents than original, but work.",
-        "help": "CmosPwd - BIOS Cracker 5.0, October 2007, Copyright 1996-2007\nGRENIER Christophe, grenier@cgsecurity.org\nhttp://www.cgsecurity.org/\n\nUsage: cmospwd [/k[de|fr]] [/d]\n       cmospwd [/k[de|fr]] [/d] /[wlr] cmos_backup_file           write/load/restore\n       cmospwd /k                                          kill cmos\n       cmospwd [/k[de|fr]] /m[01]*\texecute selected module\n\n /kfr french AZERTY keyboard, /kde german QWERTZ keyboard\n /d to dump cmos\n /m0010011 to execute module 3,6 and 7\n\nNB: For Award BIOS, passwords are differents than original, but work.",
-        "man": "CMOSPWD(8)                  System Manager's Manual                  CMOSPWD(8)\n\nNAME\n     cmospwd - a cmos/bios password recovery tool\n\nSYNOPSIS\n     cmospwd [options]...\n\nDESCRIPTION\n     This manual page documents briefly the cmospwd command.\n\nOPTIONS\n     A summary of options is included below.\n\n     -h, --help\n            Usage information.\n\n     /kfr, -kfr\n            french AZERTY keyboard.\n\n     /kde, -kde\n            German QWERTZ keyboard.\n\n     /d, -d\n            Dump cmos.\n\n     /k, -k\n            Kill cmos.\n\n     /R, -R\n            Force mode.\n\n     /w <cmos_backup_file>, -w <cmos_backup_file>, /s <cmos_backup_file>, -s\n     <cmos_backup_file>\n            Write cmos_backup_file.\n\n     /l <cmos_backup_file>, -l <cmos_backup_file>\n            Load cmos_backup_file.\n\n     /r <cmos_backup_file>, -r <cmos_backup_file>\n            Restore cmos_backup_file.\n\n     /m0010011, -m0010011\n            Execute module 3, 6 and 7.\n\nSEE ALSO\n     dmidecode(8).\n\nAUTHOR\n     cmospwd was written by GRENIER Christophe, grenier@cgsecurity.org.\n\n     This  manual  page  was written by Michael Prokop <mika@grml.org>, for the\n     Debian project (but may be used by others).\n\n                                  July 6, 2006                       CMOSPWD(8)",
-        "apropos": "cmospwd (8)          - a cmos/bios password recovery tool"
-      },
-      "binary_metadata": {
-        "path": "/usr/sbin/cmospwd",
-        "size_bytes": 47688,
-        "is_symlink": false,
-        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=43268204cae9e00c07727e55d0cf651a64b9bc56, for GNU/Linux 3.2.0, stripped"
-      }
+      "path": "/usr/sbin/cmospwd",
+      "description": "a cmos/bios password recovery tool",
+      "usage": "cmospwd [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "low",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/cmospwd/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/cmospwd/index.md",
-    "retrieved_at": "2026-07-14T13:05:09+00:00",
-    "sha256": "46329864dec3c5f68a36f17c779a5a32828bb2b1caedf5e6a3db60b2d16b3ff4"
-  },
-  "apt_metadata": {
-    "section": "utils",
-    "installed_size": "65",
-    "maintainer": "Kali Developers <devel@kali.org>",
-    "architecture": "amd64",
-    "version": "5.0+dfsg-3kali5",
-    "depends": "libc6 (>= 2.34)",
-    "description": "decrypt BIOS passwords from CMOS\nCmosPwd is a cross-platform tool to decrypt password stored in CMOS used\nto access a computer's BIOS setup.\n.\nThis application should work out of the box on most modern systems, but\nsome more esoteric BIOSes may not be supported or may require additional\nsteps.",
-    "homepage": "https://www.cgsecurity.org/wiki/CmosPwd"
-  },
+  "files": [
+    "/usr/sbin/cmospwd",
+    "/usr/share/man/man8/cmospwd.8.gz"
+  ],
   "tags": [
-    "offensive",
-    "cmospwd",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/cmospwd && python3 cmospwd.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/cmospwd && python3 cmospwd.py --help",
-    "cd toolboxes/cmospwd && python3 cmospwd.py --help",
-    "cd toolboxes/cmospwd && python3 cmospwd.py --help",
-    "cd toolboxes/cmospwd && python3 cmospwd.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cmospwd --output $KFIOSA_OUTPUT_DIR/cmospwd.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cmospwd --output $KFIOSA_OUTPUT_DIR/cmospwd.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

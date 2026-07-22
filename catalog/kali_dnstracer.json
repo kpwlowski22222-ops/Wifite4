@@ -3,18 +3,16 @@
   "kind": "kali_source_package",
   "name": "dnstracer",
   "title": "dnstracer",
-  "summary": "### dnstracer",
+  "summary": "trace DNS queries to the source",
+  "description": "trace DNS queries to the source\ndnstracer determines where a given Domain Name Server (DNS) gets its\ninformation from for a given hostname, and follows the chain of DNS\nservers back to the authoritative answer.",
   "version": "1.9-8",
   "architectures": [
-    "any"
+    "amd64"
   ],
   "homepage": "http://www.mavetju.org/unix/dnstracer.php",
-  "repository": "https://salsa.debian.org/creekorful/dnstracer",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-information-gathering"
-  ],
+  "repository": "http://www.mavetju.org/unix/dnstracer.php",
+  "source_package": "dnstracer",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install dnstracer"
   },
@@ -26,231 +24,23 @@
   "commands": [
     {
       "name": "dnstracer",
-      "description": "Trace a chain of DNS servers to the source",
-      "usage": "dnstracer [options] [host]",
-      "arguments": [
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "disable local caching, default enabled",
-          "default": "enabled",
-          "choices": null,
-          "raw": " \t-c: disable local caching, default enabled"
-        },
-        {
-          "flags": [
-            "-C"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "enable negative caching, default disabled",
-          "default": "disabled",
-          "choices": null,
-          "raw": " \t-C: enable negative caching, default disabled"
-        },
-        {
-          "flags": [
-            "-o"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "enable overview of received answers, default disabled",
-          "default": "disabled",
-          "choices": null,
-          "raw": " \t-o: enable overview of received answers, default disabled"
-        },
-        {
-          "flags": [
-            "-q"
-          ],
-          "metavar": "querytype",
-          "takes_value": true,
-          "description": "query-type to use for the DNS requests, default A",
-          "default": "A",
-          "choices": null,
-          "raw": " \t-q <querytype>: query-type to use for the DNS requests, default A"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": "retries",
-          "takes_value": true,
-          "description": "amount of retries for DNS requests, default 3",
-          "default": "3",
-          "choices": null,
-          "raw": " \t-r <retries>: amount of retries for DNS requests, default 3"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "server",
-          "takes_value": true,
-          "description": "use this server for the initial request, default localhost",
-          "default": "localhost",
-          "choices": null,
-          "raw": " \t-s <server>: use this server for the initial request, default localhost"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "maximum timeout",
-          "takes_value": true,
-          "description": "Limit time to wait per try",
-          "default": null,
-          "choices": null,
-          "raw": " \t-t <maximum timeout>: Limit time to wait per try"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "verbose",
-          "default": null,
-          "choices": null,
-          "raw": " \t-v: verbose"
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": "ip address",
-          "takes_value": true,
-          "description": "use this source address.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-S <ip address>: use this source address."
-        },
-        {
-          "flags": [
-            "-4"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "don't query IPv6 servers",
-          "default": null,
-          "choices": null,
-          "raw": " \t-4: don't query IPv6 servers"
-        }
-      ],
-      "raw_help": "root@kali:~# dnstracer -h\n dnstracer: invalid option -- 'h'\n DNSTRACER version 1.8.1 - (c) Edwin Groothuis - http://www.mavetju.org\n Usage: dnstracer [options] [host]\n \t-c: disable local caching, default enabled\n \t-C: enable negative caching, default disabled\n \t-o: enable overview of received answers, default disabled\n \t-q <querytype>: query-type to use for the DNS requests, default A\n \t-r <retries>: amount of retries for DNS requests, default 3\n \t-s <server>: use this server for the initial request, default localhost\n \t             If . is specified, A.ROOT-SERVERS.NET will be used.\n \t-t <maximum timeout>: Limit time to wait per try\n \t-v: verbose\n \t-S <ip address>: use this source address.\n \t-4: don't query IPv6 servers",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "dnstracer -r 3 -v example.com\nTracing to example.com[a] via 192.168.1.1, maximum of 3 retries\n192.168.1.1 (192.168.1.1) IP HEADER\n- Destination address:  192.168.1.1\nDNS HEADER (send)",
-          "template": null,
-          "original_sha256": "9c4423dbedf167314749e2c3465534ede2d2cfc05db50b5aab1daa9ba40477b8"
-        },
-        {
-          "status": "operational_example",
-          "command": "dnstracer: invalid option -- '-'",
-          "template": null,
-          "original_sha256": "8983c8e32669b589ebc35b8138f1910cc9d23f806d0c26dc5b79a775067be74d"
-        },
-        {
-          "status": "operational_example",
-          "command": "dnstracer: invalid option -- 'h'",
-          "template": null,
-          "original_sha256": "03e4ae6e0e08d3bf16210eb1bc5048a8f733e92e062f1feabbc1e9028c801935"
-        }
-      ],
-      "risk": {
-        "level": "low",
-        "signals": [],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "dnstracer: invalid option -- '-'\nDNSTRACER version 1.8.1 - (c) Edwin Groothuis - http://www.mavetju.org\nUsage: dnstracer [options] [host]\n\t-c: disable local caching, default enabled\n\t-C: enable negative caching, default disabled\n\t-o: enable overview of received answers, default disabled\n\t-q <querytype>: query-type to use for the DNS requests, default A\n\t-r <retries>: amount of retries for DNS requests, default 3\n\t-s <server>: use this server for the initial request, default localhost\n\t             If . is specified, A.ROOT-SERVERS.NET will be used.\n\t-t <maximum timeout>: Limit time to wait per try\n\t-v: verbose\n\t-S <ip address>: use this source address.\n\t-4: don't query IPv6 servers",
-        "-h": "dnstracer: invalid option -- 'h'\nDNSTRACER version 1.8.1 - (c) Edwin Groothuis - http://www.mavetju.org\nUsage: dnstracer [options] [host]\n\t-c: disable local caching, default enabled\n\t-C: enable negative caching, default disabled\n\t-o: enable overview of received answers, default disabled\n\t-q <querytype>: query-type to use for the DNS requests, default A\n\t-r <retries>: amount of retries for DNS requests, default 3\n\t-s <server>: use this server for the initial request, default localhost\n\t             If . is specified, A.ROOT-SERVERS.NET will be used.\n\t-t <maximum timeout>: Limit time to wait per try\n\t-v: verbose\n\t-S <ip address>: use this source address.\n\t-4: don't query IPv6 servers",
-        "help": "Tracing to help[a] via 127.0.0.53, maximum of 3 retries\n127.0.0.53 (127.0.0.53)",
-        "man": "DNSTRACER(8)                General Commands Manual                DNSTRACER(8)\n\nNAME\n     dnstracer - trace a chain of DNS servers to the source\n\nSYNOPSIS\n     dnstracer [options] name\n\nDESCRIPTION\n     dnstracer  determines  where a given Domain Name Server (DNS) gets its in-\n     formation from, and follows the chain of DNS servers back to  the  servers\n     which know the data.\n\n     Options are:\n\n     -c      Disable local caching.\n\n     -C      Enable negative caching.\n\n     -o      Enable overview of received answers at the end.\n\n     -q queryclass\n             Change  the  query-class,  default  is A. You can either specify a\n             number of the type (if you're  brave)  or  one  of  the  following\n             strings: a, aaaa, a6, soa, cname, hinfo, mx, ns, txt and ptr.\n\n     -r retries\n             Number of retries for DNS requests, default 3.\n\n     -s server\n             DNS  server  to  use  for the initial request, default is acquired\n             from the system. If a dot  is  specified  (.),  A.ROOT-SERVERS.NET\n             will be used.\n\n     -v      Be verbose on what sent or received.\n\n     -4      Use  only  IPv4  servers, don't query IPv6 servers (only available\n             when IPv6 support hasn't been disabled)\n\n     -S sourceaddress\n             Use this as source-address for the outgoing packets.\n\nHOW IT WORKS\n     It sends the specified name-server a non-recursive request for the name.\n\n     Non-recursive means: if the name-server knows it, it will return the  data\n     requested.  If the name-server doesn't know it, it will return pointers to\n     name-servers that are authoritative for the domain part in the name or  it\n     will return the addresses of the root name-servers.\n\n     If  the name server does returns an authoritative answer for the name, the\n     next server is queried. If it returns an non-authoritative answer for  the\n     name, the name servers in the authority records will be queried.\n\n     The program stops if all name-servers are queried.\n\n     Make  sure  the server you're querying doesn't do forwarding towards other\n     servers, as dnstracer is not able to detect this for you.\n\n     It detects so called lame servers, which are name-servers which  has  been\n     told  to  have information about a certain domain, but don't have this in-\n     formation.\n\nEXAMPLES\n     Search for the A record of www.mavetju.org on your local nameserver:\n\n     dnstracer www.mavetju.org\n\n     Search for the MX record of mavetju.org on the root-nameservers:\n\n     dnstracer \"-s\" . \"-q\" mx mavetju.org\n\n     Search for the PTR record (hostname) of 212.204.230.141:\n\n     dnstracer \"-q\" ptr 141.230.204.212.in-addr.arpa\n\n     And for IPv6 addresses:\n\n     dnstracer         \"-q\"          ptr          \"-s\"          .          \"-o\"\n     2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.4.0.2.0.0.0.0.8.b.0.e.f.f.3.ip6.int\n\nSEE ALSO\n     ntptrace(8), traceroute(8), dig(1)\n\nAUTHOR\n     Edwin Groothuis, edwin@mavetju.org (http://www.mavetju.org)\n\n     See http://www.mavetju.org/contacts.php for mailing-lists.\n\nFebruary 10, 2008              February 10, 2008                   DNSTRACER(8)",
-        "apropos": "dnstracer (8)        - trace a chain of DNS servers to the source"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/dnstracer",
-        "size_bytes": 41056,
-        "is_symlink": false,
-        "file_type": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6867dc2e33d07d83b4d0ac257853104a42b8cd3d, for GNU/Linux 3.2.0, stripped"
-      }
+      "path": "/usr/bin/dnstracer",
+      "description": "trace a chain of DNS servers to the source",
+      "usage": "dnstracer [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "low",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/dnstracer/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/dnstracer/index.md",
-    "retrieved_at": "2026-07-14T13:05:25+00:00",
-    "sha256": "c6959afeef0d228d8065a9b745c06094b5364c79531faa9be40db5b51c68bf27"
-  },
-  "apt_metadata": {
-    "section": "net",
-    "installed_size": "59",
-    "maintainer": "Aloïs Micard <creekorful@debian.org>",
-    "architecture": "amd64",
-    "version": "1.9-8",
-    "depends": "libc6 (>= 2.34)",
-    "description": "trace DNS queries to the source\ndnstracer determines where a given Domain Name Server (DNS) gets its\ninformation from for a given hostname, and follows the chain of DNS\nservers back to the authoritative answer.",
-    "homepage": "http://www.mavetju.org/unix/dnstracer.php"
-  },
+  "files": [
+    "/usr/bin/dnstracer",
+    "/usr/share/man/man8/dnstracer.8.gz"
+  ],
   "tags": [
-    "offensive",
-    "dnstracer",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package",
+    "networking"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/dnstracer && python3 dnstracer.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/dnstracer && python3 dnstracer.py --help",
-    "cd toolboxes/dnstracer && python3 dnstracer.py --help",
-    "cd toolboxes/dnstracer && python3 dnstracer.py --help",
-    "cd toolboxes/dnstracer && python3 dnstracer.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnstracer --output $KFIOSA_OUTPUT_DIR/dnstracer.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnstracer --output $KFIOSA_OUTPUT_DIR/dnstracer.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }

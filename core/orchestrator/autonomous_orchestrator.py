@@ -145,6 +145,29 @@ def _default_deny(prompt: str) -> bool:
     return False
 
 
+# Cache the set of zero-day-algorithm action names so _walk_ai_step can
+# dispatch to the generic algorithm dispatcher in O(1). Built lazily.
+_ZERO_DAY_ACTION_NAMES: Optional[frozenset] = None
+
+
+def zero_day_algorithms_action_names() -> frozenset:
+    """Return the frozenset of all zero-day-algorithm action names that
+    :func:`_dispatch_zero_day_algorithm` knows how to dispatch. The
+    underlying set is the :data:`ZERO_DAY_ALGORITHMS` registry in
+    :mod:`core.ai_backend.zero_day_algorithms`."""
+    global _ZERO_DAY_ACTION_NAMES
+    if _ZERO_DAY_ACTION_NAMES is None:
+        try:
+            from core.ai_backend import zero_day_algorithms
+            zero_day_algorithms._build_registry()
+            _ZERO_DAY_ACTION_NAMES = frozenset(
+                zero_day_algorithms.ZERO_DAY_ALGORITHMS.keys()
+            )
+        except Exception:  # noqa: BLE001
+            _ZERO_DAY_ACTION_NAMES = frozenset()
+    return _ZERO_DAY_ACTION_NAMES
+
+
 class AutonomousOrchestrator:
     def __init__(self, ai_backend=None, kb=None, msf_runner=None,
                  osint_runner=None, on_event: Optional[Callable[[str], None]] = None,
@@ -370,6 +393,33 @@ class AutonomousOrchestrator:
         if attach_zero_day is not None:
             return bool(attach_zero_day)
         return attach_zd
+
+    def _resolve_attach_post_exploit(
+        self,
+        attach_post_exploit: Optional[bool],
+    ) -> bool:
+        """Resolve the PostExploitSelector attach flag for this
+        engagement.
+
+        Defaults to ``True`` so the post-exploitation phase always
+        includes the deterministic anti-forensic selector tail. Each
+        injected step is operator-gated by the per-step ACCEPT/CANCEL
+        prompt; the destructive subset only injects when the
+        engagement is closing out (operator has flagged
+        ``detaching: True``). An explicit runtime arg overrides the
+        settings flag.
+        """
+        try:
+            if self.settings is not None and hasattr(self.settings, "get_setting"):
+                pe = self.settings.get_setting("post_exploit", {}) or {}
+                attach_pe = bool(pe.get("attach_to_chain", True))
+            else:
+                attach_pe = True
+        except Exception:
+            attach_pe = True
+        if attach_post_exploit is not None:
+            return bool(attach_post_exploit)
+        return attach_pe
 
     def _record_access(self, report: Dict[str, Any],
                        entry: Dict[str, Any]) -> None:
@@ -680,11 +730,21 @@ class AutonomousOrchestrator:
         # An explicit non-None ``attach_zero_day`` runtime arg overrides
         # the settings flag (per-engagement toggle); None keeps settings.
         attach_zd = self._resolve_attach_zd(attach_zero_day)
+        # Phase 2.1.F: PostExploitSelector tail. The deterministic
+        # selector reads the engagement context (target_class, used
+        # actions, anonymity_required, detaching) and emits 1-3
+        # anti-forensic/OPSEC steps. Each is per-step ACCEPT-gated;
+        # destructive subset is gated on ``detaching=True`` in the
+        # engagement context. Defaults to ON (catch-all
+        # post_clear_bash_history always fires; the operator can
+        # CANCEL the rest).
+        attach_pe = self._resolve_attach_post_exploit(None)
         try:
             steps = self.chain_planner.plan(
                 domain=domain, target=seed,
                 cves=cves, kb_tools=kb_tools,
                 attach_zero_day=attach_zd,
+                attach_post_exploit=attach_pe,
             )
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] chain_planner.plan failed: {e}; using empty chain")
@@ -777,6 +837,12 @@ class AutonomousOrchestrator:
         Each new step still passes through the per-step ACCEPT inside
         :meth:`_walk_ai_step`; cancelled steps are not re-planned.
         """
+        # Kismet prechain: best-effort, gated only on the tool being
+        # installed. The prechain runs UNGATED (it never contacts the
+        # target — it only reads operator's own .kismet capture files
+        # under workspace/captures/). On missing tool, missing dir,
+        # or no match, we honest-degrade and continue.
+        self._maybe_kismet_prechain(seed, report)
         from core.replan import MAX_REPLANS
         NO_CHANGE_LIMIT = 2
         i = 0
@@ -857,6 +923,7 @@ class AutonomousOrchestrator:
                 cves=cves, kb_tools=kb_tools,
                 prior_results=list(report["executed"]),
                 attach_zero_day=attach_zd,
+                attach_post_exploit=self._resolve_attach_post_exploit(None),
             )
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] re-plan failed: {e}")
@@ -905,6 +972,72 @@ class AutonomousOrchestrator:
             self._maybe_spawn_post_access_tui(report, autonomous=autonomous)
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] gain-access hooks failed: {e}")
+
+    # ------------------------------------------------------------------
+    # Kismet prechain — pull the operator's own capture files
+    # ------------------------------------------------------------------
+    def _maybe_kismet_prechain(self,
+                               seed: Dict[str, Any],
+                               report: Dict[str, Any]) -> None:
+        """Best-effort, UNGATED pre-chain check.
+
+        Reads ``workspace/captures/*.kismet`` (the operator's own
+        files) and surfaces a structured context that the chain
+        planner can ingest as ``target['recon']`` without needing
+        a fresh airodump scan.
+
+        Failure modes are honest-degrade: missing tool, missing
+        dir, no match, kismet_cap_to_pcap missing — all log an
+        ``[i] kismet prechain: <reason>; skipping`` line and
+        return without modifying the chain. The prechain NEVER
+        contacts the target.
+        """
+        try:
+            from core.scanners.kismet_runner import KismetRunner
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[i] kismet prechain: import failed; skipping ({e})")
+            return
+        target = seed.get("target") if isinstance(seed, dict) else None
+        if not isinstance(target, dict):
+            self._emit("[i] kismet prechain: no target in seed; skipping")
+            return
+        captures_dir = (
+            seed.get("captures_dir")
+            or "workspace/captures"
+        )
+        runner = KismetRunner()
+        if not runner.is_installed():
+            self._emit("[i] kismet prechain: kismet not installed; skipping")
+            return
+        try:
+            res = runner.apply_to_prechain(
+                target=target, captures_dir=captures_dir,
+            )
+        except Exception as e:  # noqa: BLE001
+            self._emit(
+                f"[i] kismet prechain: runner raised ({e}); skipping"
+            )
+            return
+        if not res.get("ok"):
+            self._emit(
+                f"[i] kismet prechain: {res.get('error', 'no match')}; skipping"
+            )
+            return
+        n = res.get("n_captures", 0)
+        if n <= 0:
+            self._emit("[i] kismet prechain: no matching capture; skipping")
+            return
+        # Merge into seed.target.recon so the planner can ingest it.
+        target_recon = target.setdefault("recon", {})
+        if not isinstance(target_recon, dict):
+            target_recon = {}
+            target["recon"] = target_recon
+        target_recon["kismet_prechain"] = res
+        report.setdefault("kismet_prechain", res)
+        self._emit(
+            f"[*] kismet prechain: ingested {n} capture(s) for "
+            f"{target.get('ssid') or target.get('bssid') or '<target>'}"
+        )
 
     def _maybe_spawn_post_access_tui(self, report: Dict[str, Any],
                                      *, autonomous: bool) -> None:
@@ -1043,6 +1176,155 @@ class AutonomousOrchestrator:
         report["executed"].append(entry)
         self._record_access(report, entry)
 
+
+    def _dispatch_open_ble_tui(self, step: Dict[str, Any],
+                               seed: Dict[str, Any],
+                               report: Dict[str, Any]) -> None:
+        """AI ``open_ble_tui`` step dispatcher.
+
+        Opens the BLE RAT-like panel inside the post-access TUI
+        (``tui_mode="ble"``) in a separate terminal window. The
+        per-step ACCEPT/CANCEL already fired in
+        :meth:`_walk_ai_step`; this dispatcher does NOT re-confirm
+        (single-gate invariant).
+
+        The spawner is the same one used for ``open_post_access_tui``:
+        it routes through :func:`core.utils.external_terminal.launch_real_step`
+        so the new TUI opens in the operator's terminal of choice. The
+        spawn is one-shot per chain (the ``tui_opened`` sentinel on
+        the BLE / Network sub-mode key prevents re-fires on re-plan
+        loops). Never raises.
+        """
+        try:
+            from core.post_access_tui.spawner import spawn_post_access_tui
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] post_access_tui import failed: {e}")
+            report["skipped"].append(f"open_ble_tui: import: {e}")
+            return
+        # The AI can pass an explicit device path; otherwise leave None
+        # (the TUI's [C]onnect prompt will pre-fill from --ble-device
+        # if set).
+        args = step.get("args", {}) or {}
+        if not isinstance(args, dict):
+            args = {}
+        device_path = args.get("device_path") or args.get("ble_device")
+        # One-shot per chain.
+        sentinel_key = "ble_tui_opened"
+        report.setdefault("access", {})
+        if isinstance(report["access"], dict) and report["access"].get(sentinel_key):
+            self._emit("[i] open_ble_tui: already opened this chain; skipping")
+            report["skipped"].append("open_ble_tui: already opened")
+            return
+        # The post-access TUI requires a session_id OR creds in the
+        # report. If neither is set, we synthesize a stub session from
+        # the BLE target fingerprint so the panel can still open
+        # (operator can re-bind via the panel prompt). Never fabricates
+        # cracked PSKs / cleartext creds — the session_id is a
+        # local-only marker, not a transport credential.
+        access = report["access"]
+        if not (access.get("session_id") or access.get("creds")):
+            target = (
+                report.get("target")
+                or seed.get("bssid")
+                or seed.get("address")
+                or seed.get("name")
+                or "ble-target"
+            )
+            access["session_id"] = f"ble-spawn-{hash(str(target)) & 0xffffff:06x}"
+            access["achieved"] = True
+            access["transport"] = "ble"
+        res = spawn_post_access_tui(
+            report, self.external_terminal,
+            tui_mode="ble",
+            ble_device_path=device_path,
+        )
+        ok = bool(res and res.get("ok"))
+        if ok:
+            self._emit(
+                f"[+] open_ble_tui: spawned pid={res.get('pid')}"
+            )
+            self._push_dashboard_post_access(report.get("access", {}))
+        else:
+            err = res.get("error", "unknown") if isinstance(res, dict) else "unknown"
+            self._emit(f"[i] open_ble_tui: {err}")
+        # Mark one-shot (even on failure to avoid repeat spawns).
+        if isinstance(report.get("access"), dict):
+            report["access"][sentinel_key] = True
+        entry = {
+            "desc": "open_ble_tui",
+            "kind": "ai", "action": "open_ble_tui",
+            "tool": "core.post_access_tui",
+            "result": res if isinstance(res, dict) else {"ok": False, "error": "spawner returned non-dict"},
+        }
+        report["executed"].append(entry)
+        self._record_access(report, entry)
+
+    def _dispatch_open_network_tui(self, step: Dict[str, Any],
+                                   seed: Dict[str, Any],
+                                   report: Dict[str, Any]) -> None:
+        """AI ``open_network_tui`` step dispatcher.
+
+        Opens the network session-multiplexer panel inside the
+        post-access TUI (``tui_mode="network"``) in a separate
+        terminal window. The per-step ACCEPT/CANCEL already fired in
+        :meth:`_walk_ai_step`; this dispatcher does NOT re-confirm
+        (single-gate invariant).
+
+        Same one-shot + spawner contract as
+        :meth:`_dispatch_open_ble_tui`. Never raises.
+        """
+        try:
+            from core.post_access_tui.spawner import spawn_post_access_tui
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] post_access_tui import failed: {e}")
+            report["skipped"].append(f"open_network_tui: import: {e}")
+            return
+        args = step.get("args", {}) or {}
+        if not isinstance(args, dict):
+            args = {}
+        session_filter = args.get("net_session_filter") or args.get("net_filter")
+        sentinel_key = "network_tui_opened"
+        report.setdefault("access", {})
+        if isinstance(report["access"], dict) and report["access"].get(sentinel_key):
+            self._emit("[i] open_network_tui: already opened this chain; skipping")
+            report["skipped"].append("open_network_tui: already opened")
+            return
+        access = report["access"]
+        if not (access.get("session_id") or access.get("creds")):
+            target = (
+                report.get("target")
+                or seed.get("bssid")
+                or seed.get("address")
+                or seed.get("name")
+                or "network-target"
+            )
+            access["session_id"] = f"net-spawn-{hash(str(target)) & 0xffffff:06x}"
+            access["achieved"] = True
+            access["transport"] = "net"
+        res = spawn_post_access_tui(
+            report, self.external_terminal,
+            tui_mode="network",
+            net_session_filter=session_filter,
+        )
+        ok = bool(res and res.get("ok"))
+        if ok:
+            self._emit(
+                f"[+] open_network_tui: spawned pid={res.get('pid')}"
+            )
+            self._push_dashboard_post_access(report.get("access", {}))
+        else:
+            err = res.get("error", "unknown") if isinstance(res, dict) else "unknown"
+            self._emit(f"[i] open_network_tui: {err}")
+        if isinstance(report.get("access"), dict):
+            report["access"][sentinel_key] = True
+        entry = {
+            "desc": "open_network_tui",
+            "kind": "ai", "action": "open_network_tui",
+            "tool": "core.post_access_tui",
+            "result": res if isinstance(res, dict) else {"ok": False, "error": "spawner returned non-dict"},
+        }
+        report["executed"].append(entry)
+        self._record_access(report, entry)
 
     def _dispatch_cve_to_exploit(self, step: Dict[str, Any], seed: Dict[str, Any],
                                  report: Dict[str, Any]) -> None:
@@ -1814,6 +2096,124 @@ class AutonomousOrchestrator:
         report["executed"].append(entry)
         seed.setdefault("tool_installs", []).append({"tool": tool, "ok": ok})
 
+    def _dispatch_c2_framework(self, step: Dict[str, Any],
+                                seed: Dict[str, Any],
+                                report: Dict[str, Any]) -> None:
+        """Run a cloned C2 framework's REPL via
+        ``core.c2.executor.run_c2_framework``.
+
+        Per-step ACCEPT/CANCEL gate has already fired in
+        ``_walk_ai_step``; this dispatcher does NOT re-confirm.
+
+        The dispatcher NEVER fabricates session / beacon / task
+        data. If the framework binary is not on PATH, the
+        executor returns ``{ok: False, error: "..."}`` and we
+        pass that through unchanged. Harvested credential
+        values from ``args.env`` are passed via env vars, never
+        as argv tokens (the never-inline ground rule).
+        """
+        from core.c2.executor import run_c2_framework
+        args = step.get("args") or {}
+        framework = args.get("framework")
+        commands = args.get("commands")
+        extra_argv = args.get("extra_argv") or []
+        env = args.get("env") or {}
+        timeout_seconds = float(args.get("timeout_seconds", 30.0))
+        if not framework:
+            entry = {
+                "desc": "c2_framework (missing framework arg)",
+                "kind": "ai", "action": "c2_framework",
+                "tool": "core.c2.executor",
+                "result": {"ok": False,
+                           "error": "args.framework is required"},
+            }
+            report["executed"].append(entry)
+            return
+        try:
+            result = run_c2_framework(
+                framework, commands=commands,
+                extra_argv=extra_argv, env=env,
+                timeout_seconds=timeout_seconds,
+            )
+        except Exception as e:  # noqa: BLE001
+            result = {"ok": False, "error": f"c2 executor raised: {e}",
+                      "framework": framework}
+        entry = {
+            "desc": f"c2_framework {framework}",
+            "kind": "ai", "action": "c2_framework",
+            "tool": "core.c2.executor",
+            "result": result,
+        }
+        report["executed"].append(entry)
+
+    def _dispatch_poly_adapt(self, step: Dict[str, Any],
+                             seed: Dict[str, Any],
+                             report: Dict[str, Any]) -> None:
+        """Run a polymorphic-grammar or target-adaptive-picker companion
+        (Phase 2.4 §H). The companion returns a {pick, rationale} or
+        {variants, primary} envelope; the next real chain step then
+        applies the picked variant. The companion itself is never
+        destructive; downstream steps that consume the result are
+        gated by their own risk level.
+        """
+        from core.refactors import (
+            list_poly_adapt_methods,
+            run_poly_adapt,
+        )
+        args = step.get("args", {}) or {}
+        method = (
+            args.get("method")
+            or args.get("name")
+            or step.get("method")
+            or step.get("name")
+            or ""
+        )
+        if not method:
+            self._emit("[!] poly_adapt: missing method/name in step")
+            entry = {
+                "desc": step.get("desc", "poly_adapt"),
+                "kind": "ai",
+                "action": "poly_adapt",
+                "method": method,
+                "result": {
+                    "ok": False,
+                    "error": "poly_adapt step missing method/name",
+                },
+            }
+            report["executed"].append(entry)
+            return
+        if method not in list_poly_adapt_methods():
+            self._emit(
+                f"[!] poly_adapt: unknown method {method!r}"
+            )
+            entry = {
+                "desc": step.get("desc", "poly_adapt"),
+                "kind": "ai",
+                "action": "poly_adapt",
+                "method": method,
+                "result": {
+                    "ok": False,
+                    "error": (
+                        f"unknown poly_adapt method {method!r}; "
+                        f"available: {list_poly_adapt_methods()}"
+                    ),
+                },
+            }
+            report["executed"].append(entry)
+            return
+        result = run_poly_adapt(method, args)
+        self._emit(
+            f"[+] poly_adapt {method}: ok={result.get('ok')}"
+        )
+        entry = {
+            "desc": step.get("desc", f"poly_adapt {method}"),
+            "kind": "ai",
+            "action": "poly_adapt",
+            "method": method,
+            "result": result,
+        }
+        report["executed"].append(entry)
+
     def _walk_ai_step(self, step: Dict[str, Any], seed: Dict[str, Any],
                       report: Dict[str, Any], *, autonomous: bool) -> None:
         """Execute a single AI-generated step.
@@ -1899,6 +2299,9 @@ class AutonomousOrchestrator:
         if action == "zero_day_execute":
             self._dispatch_zero_day_execute(step, seed, report)
             return
+        if action in zero_day_algorithms_action_names():
+            self._dispatch_zero_day_algorithm(step, seed, report)
+            return
         if action == "post_exploit":
             self._dispatch_auto_post_exploit(step, seed, report)
             return
@@ -1959,6 +2362,13 @@ class AutonomousOrchestrator:
         if action == "osint_ext":
             self._dispatch_osint_ext(step, seed, report)
             return
+        if action == "osint_module":
+            self._dispatch_osint_module(step, seed, report)
+            return
+        if action == "forensic_module":
+            self._dispatch_forensic_module(step, seed, report)
+            return
+            return
         if action == "post_exploit_probe":
             self._dispatch_post_exploit_probe(step, seed, report)
             return
@@ -1968,11 +2378,26 @@ class AutonomousOrchestrator:
         if action == "open_post_access_tui":
             self._dispatch_open_post_access_tui(step, seed, report)
             return
+        if action == "open_ble_tui":
+            self._dispatch_open_ble_tui(step, seed, report)
+            return
+        if action == "open_network_tui":
+            self._dispatch_open_network_tui(step, seed, report)
+            return
         if action == "cve_to_exploit":
             self._dispatch_cve_to_exploit(step, seed, report)
             return
         if action == "cve_to_exploit_batch":
             self._dispatch_cve_to_exploit_batch(step, seed, report)
+            return
+        if action == "run_toolbox":
+            self._dispatch_run_toolbox(step, seed, report)
+            return
+        if action == "run_python_lib":
+            self._dispatch_run_python_lib(step, seed, report)
+            return
+        if action == "kismet_scan":
+            self._dispatch_kismet_scan(step, seed, report)
             return
         if action == "crack":
             self._dispatch_crack(step, seed, report)
@@ -2003,6 +2428,12 @@ class AutonomousOrchestrator:
             return
         if action == "tool_install":
             self._dispatch_tool_install(step, seed, report)
+            return
+        if action == "c2_framework":
+            self._dispatch_c2_framework(step, seed, report)
+            return
+        if action == "poly_adapt":
+            self._dispatch_poly_adapt(step, seed, report)
             return
         if action == "mcp_call":
             if self.mcp_client is not None:
@@ -2223,11 +2654,36 @@ class AutonomousOrchestrator:
             return
         try:
             args = step.get("args", {}) or {}
+            target = args.get("target") or seed
             exploit_id = args.get("exploit_id")
-            # When the chain tail doesn't name a specific exploit (the
-            # optional attach tail can't know the id at plan time),
-            # resolve to the most-recent drafted/acked exploit.
-            if exploit_id is None and self.zero_day_exploit_builder is not None:
+            draft_id = args.get("draft_id")
+            # Phase 2.2.G: when the chain tail doesn't name a specific
+            # exploit (the optional attach tail can't know the id at
+            # plan time), resolve to the most-recent drafted/acked
+            # exploit. First try a fingerprint-aware match on the
+            # operator's ACK'd concept, then fall back to recency.
+            if (exploit_id is None and draft_id is None
+                    and self.zero_day_exploit_builder is not None):
+                try:
+                    from core.ai_backend.chain import (
+                        _resolve_zero_day_draft_id,
+                    )
+                    fp_draft_id = _resolve_zero_day_draft_id(
+                        target if isinstance(target, dict) else {},
+                    )
+                    if fp_draft_id:
+                        draft_id = fp_draft_id
+                        self._emit(
+                            f"[chain-planner] zero_day_execute: resolved "
+                            f"fingerprint-matching ACK'd concept {draft_id!r}"
+                        )
+                except Exception as e:  # noqa: BLE001
+                    self._emit(
+                        f"[chain-planner] zero_day_execute: fingerprint "
+                        f"resolve failed: {e}"
+                    )
+            if (exploit_id is None and draft_id is None
+                    and self.zero_day_exploit_builder is not None):
                 try:
                     runnable = [
                         e for e in self.zero_day_exploit_builder.store.list()
@@ -2241,6 +2697,44 @@ class AutonomousOrchestrator:
                         exploit_id = pick.exploit_id
                 except Exception as e:
                     self._emit(f"[!] zero_day_execute: could not pick exploit: {e}")
+            # If we resolved a draft_id (fingerprint match) but still
+            # don't have an exploit_id, look up the most-recent exploit
+            # built for that draft_id.
+            if exploit_id is None and draft_id:
+                try:
+                    candidates = [
+                        e for e in self.zero_day_exploit_builder.store.list()
+                        if getattr(e, "draft_id", None) == draft_id
+                        and getattr(e, "status", "") in ("drafted", "acked")
+                    ]
+                    if candidates:
+                        pick = max(
+                            candidates,
+                            key=lambda e: getattr(e, "created_at", 0) or 0,
+                        )
+                        exploit_id = pick.exploit_id
+                        self._emit(
+                            f"[chain-planner] zero_day_execute: resolved "
+                            f"draft_id={draft_id!r} -> exploit_id={exploit_id!r}"
+                        )
+                    else:
+                        # Honest-degrade: fingerprint match found an ACK'd
+                        # concept but no exploit was built for it yet.
+                        self._emit(
+                            f"[!] zero_day_execute: no ACK'd concept for this "
+                            f"target; run zero_day_propose + zero_day_build first "
+                            f"(draft_id={draft_id!r})"
+                        )
+                        report["skipped"].append(
+                            f"zero_day_execute: no built exploit for "
+                            f"ACK'd draft {draft_id!r}"
+                        )
+                        return
+                except Exception as e:  # noqa: BLE001
+                    self._emit(
+                        f"[!] zero_day_execute: draft_id->exploit_id "
+                        f"resolve failed: {e}"
+                    )
             # builder.store is the shared exploit store; duck-typed.
             exploit = self.zero_day_exploit_builder.store.get(exploit_id)
             if exploit is None:
@@ -2276,6 +2770,262 @@ class AutonomousOrchestrator:
         except Exception as e:
             self._emit(f"[!] zero_day_execute failed: {e}")
             report["skipped"].append(f"zero_day_execute: {e}")
+
+    def _dispatch_zero_day_algorithm(self, step: Dict[str, Any],
+                                       seed: Dict[str, Any],
+                                       report: Dict[str, Any]) -> None:
+        """Generic dispatcher for one of the 60+ zero-day-algorithm
+        chain actions (crash triager, side-channel, fuzz-harness,
+        control-flow, patch-differ, memory-class, auth-path,
+        crypto-weakness, race, logic, plus the Phase 3a/3b/3c/3d/3e
+        expansion covering network protocols, web/API, supply-chain,
+        cloud, memory corruption, smart contracts, ML, AI prompt
+        injection, DNS rebinding, DLL hijack, Office/PDF, DLT/SCADA,
+        TPM/SMM, and JS engine).
+
+        The per-step ACCEPT already fired in :meth:`_walk_ai_step`.
+        The algorithm is dispatched via
+        :func:`core.ai_backend.zero_day_algorithms.dispatch` which
+        returns the standard envelope; the draft is persisted to the
+        operator's :class:`ZeroDayDraftStore` so the operator can
+        ACK / reject the same way as ``zero_day_propose``.
+        """
+        action = step.get("action", "zero_day_?")
+        try:
+            from core.ai_backend import zero_day_algorithms
+        except Exception as e:  # noqa: BLE001
+            self._emit(
+                f"[!] {action} but zero_day_algorithms not importable: {e}"
+            )
+            report["skipped"].append(f"{action}: import failed: {e}")
+            return
+        try:
+            args = step.get("args", {}) or {}
+            target = args.get("target") or seed
+            recon = args.get("recon")
+            res = zero_day_algorithms.dispatch(
+                action, target, recon, args,
+                ai_backend=getattr(self, "ai_backend", None),
+            )
+            if not res.get("ok"):
+                self._emit(
+                    f"[!] {action} failed: {res.get('error', 'unknown')}"
+                )
+                report["skipped"].append(
+                    f"{action}: {res.get('error', 'unknown')}"
+                )
+                return
+            self._emit(
+                f"[+] {action}: draft_id={res.get('draft_id')} "
+                f"vulnerability_class={res.get('vulnerability_class')} "
+                f"confidence={res.get('confidence')}"
+            )
+            report["executed"].append({
+                "desc": f"{action}: {res.get('draft_id')}",
+                "kind": "ai", "action": action,
+                "tool": "zero_day_algorithms",
+                "result": res,
+            })
+        except Exception as e:  # noqa: BLE001 — never raise from a chain step
+            self._emit(f"[!] {action} raised: {e}")
+            report["skipped"].append(f"{action}: {e}")
+
+    def _dispatch_run_toolbox(self, step: Dict[str, Any],
+                              seed: Dict[str, Any],
+                              report: Dict[str, Any]) -> None:
+        """Run a cloned GitHub repo's entry script via
+        :func:`core.toolbox.executor.run_toolbox_step`.
+
+        The per-step ACCEPT already fired in :meth:`_walk_ai_step` for
+        this step (risk_level is expected to be ``intrusive`` or
+        ``destructive``). The executor does NOT re-confirm; it locates
+        the repo, detects the entry script, runs it with the
+        operator-approved args (credentials routed through env vars per
+        the never-inline ground rule), and returns the standard
+        envelope. Never raises — failures are surfaced in the report
+        with ``ok=False``.
+        """
+        try:
+            from core.toolbox import run_toolbox_step
+        except Exception as e:
+            self._emit(f"[!] run_toolbox: cannot import executor: {e}")
+            report["skipped"].append(f"run_toolbox: import failed: {e}")
+            return
+        args = step.get("args", {}) or {}
+        repo_id = (args.get("repo_id") or "").strip()
+        category = (args.get("category") or "").strip()
+        if not repo_id or not category:
+            self._emit(
+                "[!] run_toolbox: missing args.repo_id or args.category"
+            )
+            report["skipped"].append("run_toolbox: missing repo_id/category")
+            return
+        self._emit(
+            f"[*] run_toolbox: {repo_id} ({category}) "
+            f"entry={args.get('entry') or '<auto>'}"
+        )
+        try:
+            res = run_toolbox_step(step, on_event=self._emit)
+        except Exception as e:
+            self._emit(f"[!] run_toolbox raised: {e}")
+            report["skipped"].append(f"run_toolbox: {e}")
+            return
+        # Surface the result in the report.
+        if res.ok:
+            self._emit(
+                f"[+] run_toolbox: ok rc={res.returncode} "
+                f"elapsed={res.elapsed:.1f}s entry={res.entry}"
+            )
+        else:
+            self._emit(
+                f"[-] run_toolbox: failed rc={res.returncode} "
+                f"error={res.error}"
+            )
+        report["executed"].append({
+            "desc": f"run_toolbox: {repo_id}",
+            "kind": "ai", "action": "run_toolbox",
+            "tool": "toolbox_executor",
+            "result": res.to_dict(),
+        })
+
+    def _dispatch_run_python_lib(self, step: Dict[str, Any],
+                                 seed: Dict[str, Any],
+                                 report: Dict[str, Any]) -> None:
+        """Run a Python snippet that imports a curated library from
+        :mod:`core.toolbox.python_libs` via
+        :func:`core.toolbox.exec_python_lib.run_python_lib_step`.
+
+        The per-step ACCEPT already fired in :meth:`_walk_ai_step`
+        for this step (risk_level is expected to be ``intrusive``
+        or ``destructive`` for any library whose
+        ``requires_explicit_authorization`` is True). The executor
+        does NOT re-confirm; it locates the library, runs the
+        snippet in a subprocess with the library pre-imported, and
+        returns the standard envelope (ok, returncode, stdout,
+        stderr, error). Harvested credentials are routed through
+        ``env`` per the never-inline ground rule. Never raises —
+        failures are surfaced in the report with ``ok=False``.
+        """
+        try:
+            from core.toolbox import run_python_lib_step
+        except Exception as e:
+            self._emit(
+                f"[!] run_python_lib: cannot import executor: {e}"
+            )
+            report["skipped"].append(
+                f"run_python_lib: import failed: {e}"
+            )
+            return
+        args = step.get("args", {}) or {}
+        lib = (args.get("lib") or "").strip()
+        code = (args.get("code") or "").strip()
+        if not lib or not code:
+            self._emit(
+                "[!] run_python_lib: missing args.lib or args.code"
+            )
+            report["skipped"].append(
+                "run_python_lib: missing lib/code"
+            )
+            return
+        self._emit(
+            f"[*] run_python_lib: {lib} "
+            f"timeout={args.get('timeout_seconds', 30)}s"
+        )
+        try:
+            res = run_python_lib_step(step)
+        except Exception as e:
+            self._emit(f"[!] run_python_lib raised: {e}")
+            report["skipped"].append(f"run_python_lib: {e}")
+            return
+        if res.ok:
+            self._emit(
+                f"[+] run_python_lib: ok rc={res.returncode} "
+                f"lib={res.lib} import={res.import_name}"
+            )
+        else:
+            self._emit(
+                f"[-] run_python_lib: failed rc={res.returncode} "
+                f"error={res.error}"
+            )
+        report["executed"].append({
+            "desc": f"run_python_lib: {lib}",
+            "kind": "ai", "action": "run_python_lib",
+            "tool": "python_lib_executor",
+            "result": res.to_dict(),
+        })
+
+    def _dispatch_kismet_scan(self, step: Dict[str, Any],
+                               seed: Dict[str, Any],
+                               report: Dict[str, Any]) -> None:
+        """Drive the Kismet server / client / capture conversion
+        via :class:`core.scanners.kismet_runner.KismetRunner`.
+
+        The per-step ACCEPT already fired in :meth:`_walk_ai_step`.
+        The runner does NOT re-confirm. Kismet uses
+        ``admin`` / ``admin`` (operator-provided); the password
+        passes via the ``KISMET_CLIENT_PASSWORD`` env var.
+        """
+        try:
+            from core.scanners.kismet_runner import KismetRunner
+        except Exception as e:
+            self._emit(f"[!] kismet_scan: cannot import runner: {e}")
+            report["skipped"].append(f"kismet_scan: import failed: {e}")
+            return
+        args = step.get("args", {}) or {}
+        interface = (args.get("interface") or "").strip()
+        output_dir = (args.get("output_dir") or
+                       "workspace/captures/kismet").strip()
+        if not interface:
+            self._emit("[!] kismet_scan: missing args.interface")
+            report["skipped"].append("kismet_scan: missing interface")
+            return
+        runner = KismetRunner(on_event=self._emit)
+        self._emit(
+            f"[*] kismet_scan: interface={interface} "
+            f"output_dir={output_dir}"
+        )
+        if not runner.is_installed():
+            self._emit(
+                "[!] kismet_scan: kismet binary not found on PATH"
+            )
+            report["skipped"].append("kismet_scan: kismet not installed")
+            return
+        # Spawn the server. Per-step ACCEPT already fired; we do
+        # NOT re-confirm.
+        res = runner.start_server(
+            interface, output_dir,
+            log_types=args.get("log_types", "pcap,netxml,csv"),
+            wait_s=float(args.get("wait_s", 6)),
+        )
+        # Best-effort: also dump the alerts JSON and capture
+        # conversion info so the chain has artifacts to chain to.
+        artifacts: Dict[str, str] = {}
+        if res.ok:
+            artifacts.update(res.artifacts)
+            # Best-effort alert dump.
+            try:
+                alerts = runner.dump_alerts_json(output_dir)
+                artifacts["alerts_json_files"] = str(
+                    alerts.extra.get("n_files", 0)
+                )
+            except Exception as e:
+                self._emit(f"[!] kismet_scan: alerts dump failed: {e}")
+        if res.ok:
+            self._emit(
+                f"[+] kismet_scan: started pid={res.pid} "
+                f"output_dir={res.artifacts.get('output_dir')}"
+            )
+        else:
+            self._emit(
+                f"[-] kismet_scan: failed error={res.error}"
+            )
+        report["executed"].append({
+            "desc": f"kismet_scan: {interface}",
+            "kind": "ai", "action": "kismet_scan",
+            "tool": "kismet_runner",
+            "result": {"ok": res.ok, "pid": res.pid, "error": res.error,
+                        "artifacts": artifacts},
+        })
 
     def _dispatch_auto_post_exploit(self, step: Dict[str, Any],
                                     seed: Dict[str, Any],
@@ -3006,6 +3756,126 @@ class AutonomousOrchestrator:
         if ok and isinstance(res, dict):
             seed.setdefault("osint_recon", {})
             seed["osint_recon"][method] = res
+
+    def _dispatch_osint_module(self, step: Dict[str, Any],
+                               seed: Dict[str, Any],
+                               report: Dict[str, Any]) -> None:
+        """Run one of the 56 OSINT module algorithms registered in
+        :mod:`core.osint.osint_modules` (OSINT_MODULE_FUNCTIONS).
+
+        Args shape::
+
+            {"method": "holehe", "args": {"email": "test@example.com"}}
+
+        The per-step ACCEPT/CANCEL already fired in
+        :meth:`_walk_ai_step` — this dispatcher does NOT re-confirm.
+        The returned module data is merged into ``seed["osint_recon"]``
+        under the method name. Never raises. Anti-forensic analogues
+        (`forensic_module`) live in :mod:`core.forensics.forensic_modules`.
+        """
+        from core.osint.osint_modules import (
+            OSINT_MODULE_FUNCTIONS, run_module,
+        )
+
+        args = step.get("args", {}) or {}
+        method = (args.get("method") or step.get("tool") or "").strip()
+        if method.startswith("osint_module_"):
+            method = method[len("osint_module_"):]
+        if not method:
+            self._emit("[-] osint_module: method missing in step")
+            report["skipped"].append("osint_module: method missing")
+            return
+        if method not in OSINT_MODULE_FUNCTIONS:
+            self._emit(
+                f"[-] osint_module: unknown method {method!r}; one of "
+                f"{list(OSINT_MODULE_FUNCTIONS)[:5]}..."
+            )
+            report["skipped"].append(
+                f"osint_module: unknown method {method}")
+            return
+        sub_args = dict(args.get("args") or {})
+        try:
+            res = run_module(method, sub_args)
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] osint_module {method} failed: {e}")
+            report["skipped"].append(f"osint_module {method}: {e}")
+            return
+        ok = bool(res and res.get("ok"))
+        self._emit(f"[+] osint_module {method}: ok={ok}")
+        entry = {
+            "desc": f"osint_module {method}",
+            "kind": "ai", "action": "osint_module",
+            "tool": f"core.osint.osint_modules.{method}",
+            "method": method, "ok": ok, "result": res,
+        }
+        report["executed"].append(entry)
+        self._record_access(report, entry)
+        if ok and isinstance(res, dict):
+            seed.setdefault("osint_recon", {})
+            seed["osint_recon"][method] = res
+
+    def _dispatch_forensic_module(self, step: Dict[str, Any],
+                                  seed: Dict[str, Any],
+                                  report: Dict[str, Any]) -> None:
+        """Run one of the 54 forensics / anti-forensics module
+        algorithms registered in :mod:`core.forensics.forensic_modules`
+        (FORENSIC_MODULE_FUNCTIONS).
+
+        Args shape::
+
+            {"method": "file_hash", "args": {"path": "/etc/hostname"}}
+
+        Destructive / lab-only methods (all ``anti_*``) are EMIT-ONLY
+        by default — the runner does NOT auto-execute. The chain
+        walker is the only path that re-gates. The per-step
+        ACCEPT/CANCEL has already fired. The returned module data is
+        merged into ``seed["forensic_recon"]`` under the method name.
+        Never raises.
+        """
+        from core.forensics.forensic_modules import (
+            FORENSIC_MODULE_FUNCTIONS, run_module,
+        )
+
+        args = step.get("args", {}) or {}
+        method = (args.get("method") or step.get("tool") or "").strip()
+        if method.startswith("forensic_module_"):
+            method = method[len("forensic_module_"):]
+        if not method:
+            self._emit("[-] forensic_module: method missing in step")
+            report["skipped"].append("forensic_module: method missing")
+            return
+        if method not in FORENSIC_MODULE_FUNCTIONS:
+            self._emit(
+                f"[-] forensic_module: unknown method {method!r}; "
+                f"one of {list(FORENSIC_MODULE_FUNCTIONS)[:5]}..."
+            )
+            report["skipped"].append(
+                f"forensic_module: unknown method {method}")
+            return
+        sub_args = dict(args.get("args") or {})
+        try:
+            res = run_module(method, sub_args)
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] forensic_module {method} failed: {e}")
+            report["skipped"].append(f"forensic_module {method}: {e}")
+            return
+        ok = bool(res and res.get("ok"))
+        lab_only = bool(res and res.get("lab_only"))
+        self._emit(
+            f"[+] forensic_module {method}: ok={ok}"
+            f"{' [lab_only]' if lab_only else ''}")
+        entry = {
+            "desc": f"forensic_module {method}",
+            "kind": "ai", "action": "forensic_module",
+            "tool": f"core.forensics.forensic_modules.{method}",
+            "method": method, "ok": ok,
+            "lab_only": lab_only, "result": res,
+        }
+        report["executed"].append(entry)
+        self._record_access(report, entry)
+        if ok and isinstance(res, dict):
+            seed.setdefault("forensic_recon", {})
+            seed["forensic_recon"][method] = res
 
     def _dispatch_post_exploit_probe(self, step: Dict[str, Any],
                                      seed: Dict[str, Any],

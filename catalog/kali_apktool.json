@@ -3,20 +3,16 @@
   "kind": "kali_source_package",
   "name": "apktool",
   "title": "apktool",
-  "summary": "### apktool",
+  "summary": "tool for reverse engineering Android apk files",
+  "description": "tool for reverse engineering Android apk files\nA tool for reverse engineering 3rd party, closed, binary Android apps. It can\ndecode resources to nearly original form and rebuild them after making some\nmodifications; it makes possible to debug smali code step by step. Also it\nmakes working with an app easier because of project-like file structure and\nautomation of some repetitive tasks like building apk.",
   "version": "2.7.0+dfsg-7.2",
   "architectures": [
-    "any"
+    "amd64"
   ],
   "homepage": "https://ibotpeaches.github.io/Apktool/",
-  "repository": "https://salsa.debian.org/android-tools-team/apktool",
-  "metapackages": [
-    "kali-linux-everything",
-    "kali-linux-large",
-    "kali-tools-forensics",
-    "kali-tools-respond",
-    "kali-tools-reverse-engineering"
-  ],
+  "repository": "https://ibotpeaches.github.io/Apktool/",
+  "source_package": "apktool",
+  "metapackages": [],
   "install": {
     "apt": "sudo apt install apktool"
   },
@@ -28,232 +24,22 @@
   "commands": [
     {
       "name": "apktool",
-      "description": "Tool for reverse engineering Android apk files",
-      "usage": "apktool",
-      "arguments": [
-        {
-          "flags": [
-            "-advance",
-            "--advanced"
-          ],
-          "metavar": "- d",
-          "takes_value": true,
-          "description": "prints advance information.",
-          "default": null,
-          "choices": null,
-          "raw": "-advance,--advanced   prints advance information."
-        },
-        {
-          "flags": [
-            "-version",
-            "--version"
-          ],
-          "metavar": "-",
-          "takes_value": true,
-          "description": "prints the version then exits",
-          "default": null,
-          "choices": null,
-          "raw": "-version,--version    prints the version then exits"
-        },
-        {
-          "flags": [
-            "-p",
-            "--frame-path"
-          ],
-          "metavar": "--frame ath dir",
-          "takes_value": true,
-          "description": "Stores framework files into <dir>.",
-          "default": null,
-          "choices": null,
-          "raw": "-p,--frame-path <dir>   Stores framework files into <dir>."
-        },
-        {
-          "flags": [
-            "-t",
-            "--tag"
-          ],
-          "metavar": "- ag tag",
-          "takes_value": true,
-          "description": "Tag frameworks using <tag>.",
-          "default": null,
-          "choices": null,
-          "raw": "-t,--tag <tag>          Tag frameworks using <tag>."
-        },
-        {
-          "flags": [
-            "-f",
-            "--force"
-          ],
-          "metavar": "- orce",
-          "takes_value": true,
-          "description": "Force delete destination directory.",
-          "default": null,
-          "choices": null,
-          "raw": "-f,--force              Force delete destination directory."
-        },
-        {
-          "flags": [
-            "-o",
-            "--output"
-          ],
-          "metavar": "- utput dir",
-          "takes_value": true,
-          "description": "The name of folder that gets written. Default is apk.out",
-          "default": "is apk",
-          "choices": null,
-          "raw": "-o,--output <dir>       The name of folder that gets written. Default is apk.out"
-        },
-        {
-          "flags": [
-            "-r",
-            "--no-res"
-          ],
-          "metavar": "--no es",
-          "takes_value": true,
-          "description": "Do not decode resources.",
-          "default": null,
-          "choices": null,
-          "raw": "-r,--no-res             Do not decode resources."
-        },
-        {
-          "flags": [
-            "-s",
-            "--no-src"
-          ],
-          "metavar": "--no rc",
-          "takes_value": true,
-          "description": "Do not decode sources.",
-          "default": null,
-          "choices": null,
-          "raw": "-s,--no-src             Do not decode sources."
-        },
-        {
-          "flags": [
-            "-t",
-            "--frame-tag"
-          ],
-          "metavar": "--frame ag tag",
-          "takes_value": true,
-          "description": "Uses framework files tagged by <tag>.",
-          "default": null,
-          "choices": null,
-          "raw": "-t,--frame-tag <tag>    Uses framework files tagged by <tag>."
-        },
-        {
-          "flags": [
-            "-f",
-            "--force-all"
-          ],
-          "metavar": "- orce-all",
-          "takes_value": true,
-          "description": "Skip changes detection and build all files.",
-          "default": null,
-          "choices": null,
-          "raw": "-f,--force-all          Skip changes detection and build all files."
-        }
-      ],
-      "raw_help": "root@kali:~# apktool -h\n Apktool v2.7.0-dirty - a tool for reengineering Android apk files\n with smali v2.5.2.git2771eae-debian and baksmali v2.5.2.git2771eae-debian\n Copyright 2010 Ryszard Wi?niewski <brut.alll@gmail.com>\n Copyright 2010 Connor Tumbleson <connor.tumbleson@gmail.com>\n \n usage: apktool\n-advance,--advanced   prints advance information.\n-version,--version    prints the version then exits\n usage: apktool if|install-framework [options] <framework.apk>\n-p,--frame-path <dir>   Stores framework files into <dir>.\n-t,--tag <tag>          Tag frameworks using <tag>.\n usage: apktool d[ecode] [options] <file_apk>\n-f,--force              Force delete destination directory.\n-o,--output <dir>       The name of folder that gets written. Default is apk.out\n-p,--frame-path <dir>   Uses framework files located in <dir>.\n-r,--no-res             Do not decode resources.\n-s,--no-src             Do not decode sources.\n-t,--frame-tag <tag>    Uses framework files tagged by <tag>.\n usage: apktool b[uild] [options] <app_path>\n-f,--force-all          Skip changes detection and build all files.\n-o,--output <dir>       The name of apk that gets written. Default is dist/name.apk\n-p,--frame-path <dir>   Uses framework files located in <dir>.\n \n For additional info, see: https://ibotpeaches.github.io/Apktool/ \n For smali/baksmali info, see: https://github.com/JesusFreke/smali",
-      "examples": [
-        {
-          "status": "operational_example",
-          "command": "apktool d Facebook\\ Lite_v121.0.0.8.97_apkpure.com.apk\nI: Using Apktool 2.3.4-dirty on Facebook Lite_v121.0.0.8.97_apkpure.com.apk\nI: Loading resource table...\nI: Decoding AndroidManifest.xml with resources...\nI: Loading resource table from file: /root/.local/share/apktool/framework/1.apk\nI: Regular manifest package...\nI: Decoding file-resources...\nI: Decoding values */* XMLs...\nI: Baksmaling classes.dex...\nI: Copying assets and libs...\nI: Copying unknown files...\nI: Copying original files...",
-          "template": null,
-          "original_sha256": "a53e05d68c6b78bdf13f83f0ba4d007e062ca68595b8ce6be691044e3f24dd0d"
-        }
-      ],
-      "risk": {
-        "level": "medium",
-        "signals": [
-          "forensic",
-          "reverse engineering"
-        ],
-        "requires_explicit_authorization": false,
-        "allow_autonomous_execution": true,
-        "examples_policy": "operational"
-      },
-      "local_help": {
-        "--help": "Apktool v2.7.0-dirty - a tool for reengineering Android apk files\nwith smali v2.5.2.git2771eae-debian and baksmali v2.5.2.git2771eae-debian\nCopyright 2010 Ryszard Wi?niewski <brut.alll@gmail.com>\nCopyright 2010 Connor Tumbleson <connor.tumbleson@gmail.com>\n\nusage: apktool\n -advance,--advanced   prints advance information.\n -version,--version    prints the version then exits\nusage: apktool if|install-framework [options] <framework.apk>\n -p,--frame-path <dir>   Stores framework files into <dir>.\n -t,--tag <tag>          Tag frameworks using <tag>.\nusage: apktool d[ecode] [options] <file_apk>\n -f,--force              Force delete destination directory.\n -o,--output <dir>       The name of folder that gets written. Default is apk.out\n -p,--frame-path <dir>   Uses framework files located in <dir>.\n -r,--no-res             Do not decode resources.\n -s,--no-src             Do not decode sources.\n -t,--frame-tag <tag>    Uses framework files tagged by <tag>.\nusage: apktool b[uild] [options] <app_path>\n -f,--force-all          Skip changes detection and build all files.\n -o,--output <dir>       The name of apk that gets written. Default is dist/name.apk\n -p,--frame-path <dir>   Uses framework files located in <dir>.\n\nFor additional info, see: https://ibotpeaches.github.io/Apktool/ \nFor smali/baksmali info, see: https://github.com/JesusFreke/smali",
-        "-h": "Apktool v2.7.0-dirty - a tool for reengineering Android apk files\nwith smali v2.5.2.git2771eae-debian and baksmali v2.5.2.git2771eae-debian\nCopyright 2010 Ryszard Wi?niewski <brut.alll@gmail.com>\nCopyright 2010 Connor Tumbleson <connor.tumbleson@gmail.com>\n\nusage: apktool\n -advance,--advanced   prints advance information.\n -version,--version    prints the version then exits\nusage: apktool if|install-framework [options] <framework.apk>\n -p,--frame-path <dir>   Stores framework files into <dir>.\n -t,--tag <tag>          Tag frameworks using <tag>.\nusage: apktool d[ecode] [options] <file_apk>\n -f,--force              Force delete destination directory.\n -o,--output <dir>       The name of folder that gets written. Default is apk.out\n -p,--frame-path <dir>   Uses framework files located in <dir>.\n -r,--no-res             Do not decode resources.\n -s,--no-src             Do not decode sources.\n -t,--frame-tag <tag>    Uses framework files tagged by <tag>.\nusage: apktool b[uild] [options] <app_path>\n -f,--force-all          Skip changes detection and build all files.\n -o,--output <dir>       The name of apk that gets written. Default is dist/name.apk\n -p,--frame-path <dir>   Uses framework files located in <dir>.\n\nFor additional info, see: https://ibotpeaches.github.io/Apktool/ \nFor smali/baksmali info, see: https://github.com/JesusFreke/smali",
-        "help": "Apktool v2.7.0-dirty - a tool for reengineering Android apk files\nwith smali v2.5.2.git2771eae-debian and baksmali v2.5.2.git2771eae-debian\nCopyright 2010 Ryszard Wi?niewski <brut.alll@gmail.com>\nCopyright 2010 Connor Tumbleson <connor.tumbleson@gmail.com>\n\nusage: apktool\n -advance,--advanced   prints advance information.\n -version,--version    prints the version then exits\nusage: apktool if|install-framework [options] <framework.apk>\n -p,--frame-path <dir>   Stores framework files into <dir>.\n -t,--tag <tag>          Tag frameworks using <tag>.\nusage: apktool d[ecode] [options] <file_apk>\n -f,--force              Force delete destination directory.\n -o,--output <dir>       The name of folder that gets written. Default is apk.out\n -p,--frame-path <dir>   Uses framework files located in <dir>.\n -r,--no-res             Do not decode resources.\n -s,--no-src             Do not decode sources.\n -t,--frame-tag <tag>    Uses framework files tagged by <tag>.\nusage: apktool b[uild] [options] <app_path>\n -f,--force-all          Skip changes detection and build all files.\n -o,--output <dir>       The name of apk that gets written. Default is dist/name.apk\n -p,--frame-path <dir>   Uses framework files located in <dir>.\n\nFor additional info, see: https://ibotpeaches.github.io/Apktool/ \nFor smali/baksmali info, see: https://github.com/JesusFreke/smali",
-        "man": "APKTOOL(1)                       User Commands                       APKTOOL(1)\n\nNAME\n     apktool - tool for reverse engineering Android apk files\n\nDESCRIPTION\n     usage: apktool\n\n     -advance,--advanced\n            prints advance information.\n\n     -version,--version\n            prints the version then exits\n\n     usage: apktool if|install-framework [options] <framework.apk>\n\n     -p,--frame-path <dir>\n            Stores framework files into <dir>.\n\n     -t,--tag <tag>\n            Tag frameworks using <tag>.\n\n     usage: apktool d[ecode] [options] <file_apk>\n\n     -f,--force\n            Force delete destination directory.\n\n     -o,--output <dir>\n            The name of folder that gets written. Default is apk.out\n\n     -p,--frame-path <dir>\n            Uses framework files located in <dir>.\n\n     -r,--no-res\n            Do not decode resources.\n\n     -s,--no-src\n            Do not decode sources.\n\n     -t,--frame-tag <tag>\n            Uses framework files tagged by <tag>.\n\n     usage: apktool b[uild] [options] <app_path>\n\n     -f,--force-all\n            Skip changes detection and build all files.\n\n     -o,--output <dir>\n            The name of apk that gets written. Default is dist/name.apk\n\n     -p,--frame-path <dir>\n            Uses framework files located in <dir>.\n\n     For   additional   info,  see:  http://ibotpeaches.github.io/Apktool/  For\n     smali/baksmali info, see: http://code.google.com/p/smali/\n\napktool                          February 2016                       APKTOOL(1)",
-        "apropos": "apktool (1)          - tool for reverse engineering Android apk files"
-      },
-      "binary_metadata": {
-        "path": "/usr/bin/apktool",
-        "size_bytes": 2355,
-        "is_symlink": false,
-        "file_type": "Bourne-Again shell script, ASCII text executable"
-      }
+      "path": "/usr/bin/apktool",
+      "description": "tool for reverse engineering Android apk files",
+      "usage": "apktool [options] [args]",
+      "arguments": []
     }
   ],
-  "risk": {
-    "level": "medium",
-    "signals": [
-      "offensive_tool",
-      "intrinsic",
-      "remote_possible",
-      "polymorphic_compatible",
-      "target_adaptive_compatible"
-    ],
-    "requires_explicit_authorization": false,
-    "allow_autonomous_execution": true,
-    "examples_policy": "operational"
-  },
-  "source": {
-    "official": true,
-    "page": "https://www.kali.org/tools/apktool/",
-    "raw_markdown": "https://gitlab.com/kalilinux/documentation/kali-tools/-/raw/main/apktool/index.md",
-    "retrieved_at": "2026-07-14T13:04:53+00:00",
-    "sha256": "679af1995c85262f0ab5f94ba03a29cc0d11aaa2eb5b70855d96f32685c95f6b"
-  },
-  "apt_metadata": {
-    "section": "devel",
-    "installed_size": "269",
-    "maintainer": "Android Tools Maintainers <android-tools-devel@lists.alioth.debian.org>",
-    "architecture": "amd64",
-    "version": "2.7.0+dfsg-7.2",
-    "depends": "aapt, android-framework-res, default-jre-headless | java8-runtime-headless, libantlr3-runtime-java, libcommons-cli-java, libcommons-io-java, libcommons-lang3-java, libcommons-text-java, libguava-java, libsmali-java (>= 2.4.0), libstringtemplate-java, libxmlunit-java, libxpp3-java, libyaml-snake-java (>= 2.5+ds)",
-    "description": "tool for reverse engineering Android apk files\nA tool for reverse engineering 3rd party, closed, binary Android apps. It can\ndecode resources to nearly original form and rebuild them after making some\nmodifications; it makes possible to debug smali code step by step. Also it\nmakes working with an app easier because of project-like file structure and\nautomation of some repetitive tasks like building apk.",
-    "homepage": "https://ibotpeaches.github.io/Apktool/"
-  },
+  "files": [
+    "/usr/bin/apktool",
+    "/usr/share/man/man1/apktool.1.gz"
+  ],
   "tags": [
-    "offensive",
-    "apktool",
-    "web",
-    "kfiosa",
-    "indexed",
-    "polymorphic",
-    "target-adaptive"
+    "os-package"
   ],
-  "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
-  ],
-  "command_examples": [
-    "cd toolboxes/apktool && python3 apktool.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/apktool && python3 apktool.py --help",
-    "cd toolboxes/apktool && python3 apktool.py --help",
-    "cd toolboxes/apktool && python3 apktool.py --help",
-    "cd toolboxes/apktool && python3 apktool.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apktool --output $KFIOSA_OUTPUT_DIR/apktool.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apktool --output $KFIOSA_OUTPUT_DIR/apktool.log"
-  ],
-  "attack_surface": [
-    "web"
-  ],
-  "phase_hint": "any",
-  "requires_hardware": [
-    "none"
-  ],
-  "polymorphic_strategies": [
-    "param_grammar"
-  ],
-  "target_adaptive_targets": [
-    "target_class"
-  ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "metadata_status": "os_generated",
+  "schema_version": "1.1.0",
+  "attack_surface": "local",
+  "phase_hint": "install",
+  "requires_hardware": false
 }
