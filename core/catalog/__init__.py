@@ -83,6 +83,11 @@ from .github_generate import (
     find_unlisted,
     build_entry,
 )
+from .deep_enhance import (
+    deep_enhance_one,
+    deep_enhance_all,
+    report_coverage,
+)
 
 __all__ = [
     "SCHEMA_VERSION",
@@ -101,4 +106,7 @@ __all__ = [
     "generate_unlisted",
     "find_unlisted",
     "build_entry",
+    "deep_enhance_one",
+    "deep_enhance_all",
+    "report_coverage",
 ]

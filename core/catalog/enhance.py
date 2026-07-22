@@ -65,7 +65,7 @@ CATEGORY_DESCRIPTORS: Dict[str, str] = {
     "Bluetooth/BLE": (
         "Index entry for a Bluetooth Low Energy offensive or research tool. "
         "Use after BLE advertising/GATT recon has produced a target handle. "
-        "The TP-LINK UB500 Plus on hci0 is the operator's primary interface."
+        "The U4000 BLUETOOTH adapter on hci0 is the operator's primary interface."
     ),
     "OSINT and Recon": (
         "Index entry for an OSINT or reconnaissance utility. Use during "
@@ -334,7 +334,7 @@ _USECASES_BY_CATEGORY: Dict[str, List[str]] = {
         "Use as a follow-up to airodump / kismet capture when the operator wants to attempt credential recovery or handshake capture.",
     ],
     "Bluetooth/BLE": [
-        "Use after the BLE advertising/GATT recon has produced a target handle on the TP-LINK UB500 Plus (hci0) interface.",
+        "Use after the BLE advertising/GATT recon has produced a target handle on the U4000 BLUETOOTH adapter (hci0) interface.",
         "Use as a follow-up to a successful GATT characteristic read that surfaced a writable handle.",
     ],
     "OSINT and Recon": [

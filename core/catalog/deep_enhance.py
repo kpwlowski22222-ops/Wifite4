@@ -267,6 +267,88 @@ def _derive_languages_from_meta(data: Dict[str, Any]) -> List[str]:
     return ["python"]
 
 
+def _has_chain_examples(doc: Dict[str, Any]) -> bool:
+    examples = doc.get("chain_examples")
+    return isinstance(examples, list) and len(examples) > 0
+
+
+def _derive_chain_examples_for(
+    entry_path: Path,
+    catalog_dir: Path,
+) -> List[Dict[str, Any]]:
+    """Find catalog entries that pair with this one in a chain.
+
+    Pairing rule: same ``attack_surface`` + same ``phase_hint`` +
+    at least one shared tag. Up to 3 candidates are returned
+    (closest first by shared-tag count).
+
+    This is purely a **derived** pointer — we never invent
+    predecessor or successor actions. The list of pointers is
+    computed from the catalog on disk.
+    """
+    try:
+        data = json.loads(entry_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    if not isinstance(data, dict):
+        return []
+    my_asurf = set()
+    asurf_raw = data.get("attack_surface") or []
+    if isinstance(asurf_raw, list):
+        my_asurf = {str(x).lower() for x in asurf_raw}
+    elif isinstance(asurf_raw, str):
+        my_asurf = {asurf_raw.lower()}
+    my_phase = str(data.get("phase_hint") or "").lower()
+    my_tags = {str(t).lower() for t in (data.get("tags") or [])}
+    my_id = data.get("id") or entry_path.stem
+    candidates: List[Tuple[int, str, str]] = []  # (score, full_name, name)
+    for other_path in catalog_dir.glob("github_*.json"):
+        if other_path == entry_path:
+            continue
+        try:
+            other = json.loads(other_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(other, dict):
+            continue
+        other_id = other.get("id") or other_path.stem
+        if other_id == my_id:
+            continue
+        other_asurf = set()
+        o_asurf = other.get("attack_surface") or []
+        if isinstance(o_asurf, list):
+            other_asurf = {str(x).lower() for x in o_asurf}
+        elif isinstance(o_asurf, str):
+            other_asurf = {o_asurf.lower()}
+        other_phase = str(other.get("phase_hint") or "").lower()
+        other_tags = {str(t).lower() for t in (other.get("tags") or [])}
+        score = 0
+        if my_asurf and other_asurf and (my_asurf & other_asurf):
+            score += 2
+        if my_phase and other_phase and my_phase == other_phase:
+            score += 1
+        shared = my_tags & other_tags
+        score += len(shared)
+        if score >= 2:
+            full = other.get("full_name") or other.get("name") or other_id
+            nm = other.get("name") or other_id
+            candidates.append((score, str(full), str(nm), other_id))
+    candidates.sort(reverse=True)
+    out: List[Dict[str, Any]] = []
+    for score, full, nm, oid in candidates[:3]:
+        out.append({
+            "chain": "sibling",
+            "predecessor": str(my_id),
+            "successor": str(oid),
+            "note": (
+                f"Shares attack_surface+phase_hint+tag with {full} "
+                f"(score={score}); pair in the chain planner."
+            ),
+            "score": int(score),
+        })
+    return out
+
+
 def deep_enhance_one(path: Path,
                       toolboxes_dir: Optional[Path] = None
                       ) -> Dict[str, Any]:
@@ -287,7 +369,8 @@ def deep_enhance_one(path: Path,
                 "error": "not an object"}
 
     doc = _existing_documentation(data)
-    if _has_args(doc) and _has_funcs(doc) and _has_files(doc) and _has_langs(doc):
+    if (_has_args(doc) and _has_funcs(doc) and _has_files(doc)
+            and _has_langs(doc) and _has_chain_examples(doc)):
         # Already fully deep — skip
         return {"ok": True, "file": path.name, "changed": False,
                 "skipped_reason": "already deep"}
@@ -326,6 +409,10 @@ def deep_enhance_one(path: Path,
             doc["file_listing"] = _derive_files_from_meta(data)
         if not _has_langs(doc):
             doc["languages"] = _derive_languages_from_meta(data)
+        if not _has_chain_examples(doc):
+            doc["chain_examples"] = _derive_chain_examples_for(
+                path, path.parent,
+            )
         if not data.get("_languages"):
             data["_languages"] = doc["languages"]
         data["documentation"] = doc
@@ -341,6 +428,7 @@ def deep_enhance_one(path: Path,
             "documentation.function_signatures",
             "documentation.file_listing",
             "documentation.languages",
+            "documentation.chain_examples",
         ) if doc.get(k.replace("documentation.", ""))]
         return {"ok": True, "file": path.name, "changed": True,
                 "fields_added": added,
@@ -367,6 +455,10 @@ def deep_enhance_one(path: Path,
             doc["languages"] = langs_from_tb
         else:
             doc["languages"] = _derive_languages_from_meta(data)
+    if not _has_chain_examples(doc):
+        doc["chain_examples"] = _derive_chain_examples_for(
+            path, path.parent,
+        )
 
     data["documentation"] = doc
     if not data.get("_languages"):
@@ -385,6 +477,7 @@ def deep_enhance_one(path: Path,
                 "documentation.function_signatures",
                 "documentation.file_listing",
                 "documentation.languages",
+                "documentation.chain_examples",
             ) if k in doc]}
 
 
@@ -423,4 +516,42 @@ def deep_enhance_all(catalog_dir: Path,
 __all__ = [
     "deep_enhance_one",
     "deep_enhance_all",
+    "report_coverage",
 ]
+
+
+def report_coverage(catalog_dir: Path) -> Dict[str, Any]:
+    """Quick coverage report: how many entries have all 5 fields.
+
+    Used by the operator's T4 acceptance test."""
+    catalog_dir = Path(catalog_dir)
+    if not catalog_dir.exists():
+        return {"ok": False, "error": f"not found: {catalog_dir}"}
+    files = sorted(catalog_dir.glob("github_*.json"))
+    total = len(files)
+    fully_deep = 0
+    by_field = {
+        "arguments": 0, "function_signatures": 0,
+        "file_listing": 0, "languages": 0, "chain_examples": 0,
+    }
+    for path in files:
+        try:
+            d = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        doc = d.get("documentation") or {}
+        if not isinstance(doc, dict):
+            continue
+        for f in by_field:
+            v = doc.get(f)
+            if isinstance(v, list) and v:
+                by_field[f] += 1
+        if all(isinstance(doc.get(f), list) and doc.get(f) for f in by_field):
+            fully_deep += 1
+    return {
+        "ok": True,
+        "total": total,
+        "fully_deep": fully_deep,
+        "coverage_pct": round(100.0 * fully_deep / total, 2) if total else 0.0,
+        "by_field": by_field,
+    }
