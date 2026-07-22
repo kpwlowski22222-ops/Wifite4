@@ -1,0 +1,33 @@
+{
+  "draft_id": "784d92aa-be3d-4fb6-be1d-2e6a33817250",
+  "target": {},
+  "title": "Polymorphic kernel syscall probe set",
+  "hypothesis": "Target kernel {} may be vulnerable to one of 6 syscall patterns.",
+  "vulnerability_class": "kernel_lpe",
+  "technique": "polymorphic syscall fuzzing",
+  "indicators": [
+    "ptrace_scope_confusion",
+    "copy_from_user_oob",
+    "kfree_with_spinlock",
+    "uaf_via_workqueue",
+    "mmap_race",
+    "setuid_plus_nsenter"
+  ],
+  "entry_point": "syscall_table",
+  "tooling": [
+    "syzkaller",
+    "trinity",
+    "kasan"
+  ],
+  "draft_poc_outline": "# ptrace_scope_confusion\n# copy_from_user_oob\n# kfree_with_spinlock\n# uaf_via_workqueue\n# mmap_race\n# setuid_plus_nsenter",
+  "risk_notes": "VM-only; never on host kernel",
+  "cve_hint": "",
+  "confidence": "low",
+  "recon_context": {
+    "zero_day_algorithm": "zero_day_poly_kernel_syscall_probe"
+  },
+  "status": "pending",
+  "created_at": 1784726505.2303455,
+  "acked_at": null,
+  "rejected_reason": null
+}

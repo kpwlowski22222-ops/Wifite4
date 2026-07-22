@@ -1,0 +1,31 @@
+{
+  "draft_id": "ca5ed6cb-ac92-4f1a-9674-360b3f4b4a05",
+  "target": {
+    "name": "x"
+  },
+  "title": "Polymorphic buffer boundary test vectors",
+  "hypothesis": "Target 'void f(char *p, int n)' may be vulnerable to one of 6 boundary conditions.",
+  "vulnerability_class": "buffer_overflow",
+  "technique": "polymorphic boundary testing",
+  "indicators": [
+    "char *p",
+    "int n"
+  ],
+  "entry_point": "void f(char *p, int n)",
+  "tooling": [
+    "afl",
+    "libfuzzer",
+    "vagrant"
+  ],
+  "draft_poc_outline": "// boundary_0: empty (size=0)\n// boundary_1: max (size=4096)\n// boundary_2: min (size=1)\n// boundary_3: off_by_one (size=4294967296)\n// boundary_4: integer_wrap (size=18446744073709551616)\n// boundary_5: double_free (size=-1)",
+  "risk_notes": "Read-only analysis; only writes to data/zero_day_drafts/",
+  "cve_hint": "",
+  "confidence": "low",
+  "recon_context": {
+    "zero_day_algorithm": "zero_day_poly_buffer_boundary_prober"
+  },
+  "status": "pending",
+  "created_at": 1784729842.1966984,
+  "acked_at": null,
+  "rejected_reason": null
+}

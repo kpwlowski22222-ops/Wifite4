@@ -1,0 +1,35 @@
+{
+  "draft_id": "8022dadc-e378-4ba0-8ea4-741a4e5ee18d",
+  "target": {
+    "name": "x"
+  },
+  "title": "Polymorphic crypto-primitive composition audit",
+  "hypothesis": "Target {'name': 'x'} may compose 6 crypto-primitive patterns unsafely.",
+  "vulnerability_class": "crypto_weakness",
+  "technique": "polymorphic pattern grep",
+  "indicators": [
+    "cbc_ecb_mix",
+    "mac_order",
+    "constant_time",
+    "iv_reuse",
+    "prng_seed",
+    "hardcoded_salt"
+  ],
+  "entry_point": "crypto_subsystem",
+  "tooling": [
+    "openssl",
+    "trezor-crypto",
+    "mbedtls"
+  ],
+  "draft_poc_outline": "# cbc_ecb_mix: grep for AES-CBC and AES-ECB composed in same code path\n# mac_order: grep for MAC-then-encrypt vs encrypt-then-MAC mismatch\n# constant_time: grep for Constant-time violation in comparison\n# iv_reuse: grep for IV reuse across messages\n# prng_seed: grep for PRNG seeded with time() or hardcoded value\n# hardcoded_salt: grep for Hardcoded salt in hash function",
+  "risk_notes": "Read-only analysis",
+  "cve_hint": "",
+  "confidence": "low",
+  "recon_context": {
+    "zero_day_algorithm": "zero_day_poly_crypto_primitive_combiner"
+  },
+  "status": "pending",
+  "created_at": 1784737490.0454762,
+  "acked_at": null,
+  "rejected_reason": null
+}
