@@ -707,20 +707,15 @@ def test_osint_ext_probes_have_required_fields():
 # ---------------------------------------------------------------------------
 # Phase 1.6: shodan_exploitdb_download_eid
 # ---------------------------------------------------------------------------
-# These Phase 1.6 tests reference methods that were registered in
-# OSINT_EXT_METHODS but never had _v2_<name>() implementations in
-# runner_ext.py. The v2-fallback in run_probe returns
-# {ok: False, error: "unknown probe method"} for unknown names, which
-# fails the assertion that checks for an "eid"/"mac"/"SHODAN_API_KEY"
-# substring in the error. We skip these tests; they were broken before
-# Phase 2.3.C. The Phase 1.6 methods should be implemented in a future
-# pass.
-pytestmark_phase_1_6 = pytest.mark.skip(
-    reason="Phase 1.6 methods are registered in OSINT_EXT_METHODS but "
-           "have no _v2_<name>() impl in runner_ext.py; skipping until "
-           "a future pass implements them. (Pre-existing issue, not "
-           "caused by Phase 2.3.C.)"
-)
+# Phase 1.6 methods (added 2026-07-22): the names were registered in
+# OSINT_EXT_METHODS but had no ``_<name>`` impl on OSINTExtRunner. The
+# v2-fallback in run_probe returned "v2 method registered but not
+# implemented" for them, which fails the test assertions that check
+# for "eid"/"mac"/"cve"/"SHODAN_API_KEY"/"bs4"/"500"/"404" substrings.
+# Phase 1.6 impls now live in runner_ext.py and these tests run.
+
+
+pytestmark_phase_1_6 = pytest.mark.filterwarnings("ignore::DeprecationWarning")
 
 
 @pytestmark_phase_1_6
