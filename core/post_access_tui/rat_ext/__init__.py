@@ -528,6 +528,7 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
     from . import exfil_queue as _exfil
     from . import persistence_ui as _pers
     from . import pdf_export as _pdf
+    from . import v3_enhancements as _v3
 
     sessions_list = sessions if sessions is not None else [
         r for r in (roster or [])
@@ -938,7 +939,128 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
                 if sub == "report.pdf" and method == "GET":
                     body, ct = _pdf.build_session_report_bytes(sess)
                     return _bytes(body, ct)
-        return _err("404 not found")
+        # ---------------------------------------------------------------
+        # T6 v3 enhancements (Phase 3 expansion)
+        # ---------------------------------------------------------------
+        # T6.6 — compact mode: ?compact=1 returns a minimal body
+        # (operator-friendly for terminal embedding)
+        # T6.2 — capability search + filter on the JSON roster
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "sessions" and method == "GET"):
+            q = _qs(environ)
+            query = q.get("q", "")
+            filtered = _v3.filter_sessions(sessions_list, query)
+            payload = {
+                "ok": True,
+                "total": len(sessions_list),
+                "matched": len(filtered),
+                "sessions": filtered,
+                "query": query,
+                "model": "rat-dashboard-v3",
+            }
+            if _v3.is_compact_mode(q):
+                # T6.6 — minimal: just the sids + match count
+                payload = {
+                    "ok": True,
+                    "matched": len(filtered),
+                    "sids": [s.get("session_id") or s.get("id")
+                             for s in filtered],
+                    "compact": True,
+                }
+            return _json(payload)
+        # T6.4 — live tail (HTTP-poll; the browser hits this with
+        # ?since=<ts> and gets only the new lines back)
+        if (parts[0] == "api" and len(parts) >= 4
+                and parts[1] == "session" and parts[3] == "live_tail"
+                and method == "GET"):
+            sid = parts[2]
+            sess = sessions_by_sid.get(sid, {})
+            if not sess:
+                return _json({"ok": False,
+                              "error": f"unknown session {sid!r}"},
+                             status="404 Not Found")
+            q = _qs(environ)
+            since_ts = None
+            if "since" in q:
+                try:
+                    since_ts = float(q["since"])
+                except Exception:
+                    pass
+            # Use the existing list_log / list_history paths so
+            # the new endpoint stays consistent with /api/sql/log
+            # and /api/session/<sid>/history.
+            try:
+                from core.db import sqlstore
+                log_rows = sqlstore.list_log(sid, since_ts=since_ts,
+                                             limit=200)
+                hist_rows = sqlstore.list_history(sid, since_ts=since_ts,
+                                                  limit=200)
+            except Exception:
+                log_rows = []
+                hist_rows = []
+            payload = _v3.live_tail_lines(
+                log_rows, hist_rows, since_ts=since_ts,
+            )
+            if _v3.is_compact_mode(q):
+                payload = {
+                    "ok": True,
+                    "count": payload["count"],
+                    "latest_ts": payload["latest_ts"],
+                    "compact": True,
+                }
+            return _json(payload)
+        # T6.3 — chain-planner integration: POST /api/plan
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "plan" and method == "POST"):
+            try:
+                size = int(environ.get("CONTENT_LENGTH", 0) or 0)
+                raw = environ["wsgi.input"].read(size) if size else b""
+                payload_in = _json_mod.loads(raw) if raw else {}
+            except Exception:
+                payload_in = {}
+            sid = str(payload_in.get("sid") or "")
+            cap = str(payload_in.get("capability") or payload_in.get("cap") or "")
+            if not sid or not cap:
+                return _json({"ok": False,
+                              "error": "missing sid or capability"},
+                             status="400 Bad Request")
+            # T6.3 — CSRF protection on POSTs
+            token = environ.get("HTTP_X_CSRF_TOKEN", "")
+            ok, reason = _v3.verify_csrf(sid, token)
+            if not ok:
+                return _json({"ok": False,
+                              "error": f"CSRF: {reason}"},
+                             status="403 Forbidden")
+            sess = sessions_by_sid.get(sid, {})
+            if not sess:
+                return _json({"ok": False,
+                              "error": f"unknown session {sid!r}"},
+                             status="404 Not Found")
+            return _json(_v3.chain_plan_from_session(sess, cap))
+        # T6.3 — CSRF token mint endpoint (GET so the browser can
+        # grab a token before its first POST)
+        if (parts[0] == "api" and len(parts) >= 3
+                and parts[1] == "csrf" and method == "GET"):
+            sid = parts[2]
+            return _json({
+                "ok": True,
+                "sid": sid,
+                "token": _v3.csrf_token_for(sid),
+                "model": "rat-dashboard-v3",
+            })
+        # T6.5 — better 404 with Levenshtein nearest sids
+        return _json({
+            "ok": False,
+            "error": "404 not found",
+            "path": "/" + path,
+            "method": method,
+            "nearest_sids": _v3.best_match_sid(
+                parts[-1] if parts else "",
+                list(sessions_by_sid.keys()),
+            ),
+            "recent_sids": list(sessions_by_sid.keys())[:5],
+            "model": "rat-dashboard-v3",
+        }, status="404 Not Found")
     return app
 
 

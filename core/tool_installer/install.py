@@ -66,7 +66,20 @@ def _try_pip(pkg: str, *, timeout: int) -> bool:
     pip = shutil.which("pip3") or shutil.which("pip")
     if not pip:
         return False
-    rc, out, err = _run([pip, "install", "--user", pkg], timeout=timeout)
+    # Detect venv: venvs forbid `--user` installs ("User site-packages are
+    # not visible in this virtualenv."). Inside a venv, drop `--user` so
+    # the install lands in the venv site-packages where the rest of
+    # KFIOSA imports from.
+    import sys as _sys
+    in_venv = (
+        hasattr(_sys, "real_prefix")
+        or (_sys.prefix != getattr(_sys, "base_prefix", _sys.prefix))
+    )
+    args = [pip, "install"]
+    if not in_venv:
+        args.append("--user")
+    args.append(pkg)
+    rc, out, err = _run(args, timeout=timeout)
     return rc == 0
 
 
@@ -153,15 +166,43 @@ def maybe_install(
     if spec.apt:
         tried.append(("apt", spec.apt))
         _append_log({"event": "attempt", "tool": tool, "source": "apt", "pkg": spec.apt})
-        if _try_apt(spec.apt, timeout=timeout) and shutil.which(tool):
-            _append_log({"event": "ok", "tool": tool, "source": "apt", "pkg": spec.apt})
-            return True
+        if _try_apt(spec.apt, timeout=timeout):
+            if shutil.which(tool):
+                _append_log({"event": "ok", "tool": tool, "source": "apt", "pkg": spec.apt})
+                return True
+            # Package installed but the catalog's `tool` key doesn't
+            # match any binary in the package. This is a catalog
+            # data-quality issue, not a fail — the package IS on the
+            # system. Log it as "mismatch" so the orchestrator can
+            # surface the actual binary name.
+            _append_log({
+                "event": "mismatch",
+                "tool": tool,
+                "source": "apt",
+                "pkg": spec.apt,
+                "note": "package installed but no binary matches the catalog tool name",
+            })
+            # Don't return True (the named tool is not on PATH) but
+            # also don't mark it as a hard fail — the package did get
+            # installed, so future runs will find it.
+            return False
     if spec.pip:
         tried.append(("pip", spec.pip))
         _append_log({"event": "attempt", "tool": tool, "source": "pip", "pkg": spec.pip})
-        if _try_pip(spec.pip, timeout=timeout) and shutil.which(tool):
-            _append_log({"event": "ok", "tool": tool, "source": "pip", "pkg": spec.pip})
-            return True
+        if _try_pip(spec.pip, timeout=timeout):
+            if shutil.which(tool):
+                _append_log({"event": "ok", "tool": tool, "source": "pip", "pkg": spec.pip})
+                return True
+            # pip package installed but the tool key doesn't match a
+            # console-script entry point. Treat as a catalog mismatch.
+            _append_log({
+                "event": "mismatch",
+                "tool": tool,
+                "source": "pip",
+                "pkg": spec.pip,
+                "note": "package installed but no console-script matches the catalog tool name",
+            })
+            return False
     if spec.git:
         repo, target = spec.git
         tried.append(("git", repo))

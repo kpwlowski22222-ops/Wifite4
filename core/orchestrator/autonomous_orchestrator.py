@@ -3444,7 +3444,7 @@ class AutonomousOrchestrator:
         ``blerunner.run_probe`` and records the result. The per-step
         ACCEPT/CANCEL already fired in :meth:`_walk_ai_step` — these are
         passive (risk=read) but still operator-gated like every chain step.
-        Adapter defaults to hci0 (the TP-LINK UB500 Plus dongle). Args shape::
+        Adapter defaults to hci0 (the U4000 BLUETOOTH adapter dongle). Args shape::
 
             {"method": "manufacturer_oracle", "adapter": "hci0"}
 

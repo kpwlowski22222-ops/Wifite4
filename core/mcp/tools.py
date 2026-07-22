@@ -717,7 +717,7 @@ def _make_ble_probe_wrappers() -> Dict[str, KaliToolWrapper]:
         def _r(args: Dict[str, Any], timeout: int = 120,
                cwd: Optional[str] = None) -> Dict[str, Any]:
             try:
-                # ``args`` may carry ``adapter`` (default hci0 = UB500 Plus)
+                # ``args`` may carry ``adapter`` (default hci0 = U4000 BLUETOOTH adapter)
                 # plus per-probe inputs (e.g. wifi_mac/ble_mac for
                 # cross_device_linker_ble) — pass the whole dict through.
                 return _run_ble_probe(method=method,

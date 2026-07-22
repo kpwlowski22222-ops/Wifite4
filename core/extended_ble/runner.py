@@ -121,7 +121,27 @@ def _addr(args: Dict[str, Any]) -> str:
 
 
 def _adapter(args: Dict[str, Any]) -> str:
-    return ((args or {}).get("adapter") or "hci0").strip()
+    """Return the HCI adapter for an extended-BLE module.
+
+    When the caller's args don't pin a specific adapter, fall back
+    to :func:`core.ble.adapter_select.resolve_default_adapter` so
+    the runner respects the operator's ``KFIOSA_BLE_ADAPTER``
+    override and the new external-only default. Returns ``"hci0"``
+    as a last-resort fallback when even the helper can't decide
+    (preserves the historic behaviour of every extended-BLE
+    method).
+    """
+    explicit = ((args or {}).get("adapter") or "").strip()
+    if explicit:
+        return explicit
+    try:
+        from core.ble.adapter_select import resolve_default_adapter
+        pick = resolve_default_adapter()
+        if pick:
+            return pick
+    except Exception:  # noqa: BLE001
+        pass
+    return "hci0"
 
 
 # GATT characteristic UUIDs the spec's extended-BLE modules target.
@@ -520,7 +540,7 @@ class ExtendedBLERunner:
     # ==================================================================
     def _channel_map_update_attack(self) -> Dict[str, Any]:
         """LL_CHANNEL_MAP_IND injection: requires raw-link-layer TX
-        (scapy + hcitool) which the UB500 Plus doesn't expose. The
+        (scapy + hcitool) which the U4000 BLUETOOTH adapter doesn't expose. The
         runner reports the OPERATOR note + a real gatttool read of
         any Channel Map characteristic (none in standard GATT — it's
         a Link-Layer control PDU). Honest degrade."""
@@ -543,10 +563,10 @@ class ExtendedBLERunner:
                                "note": "real gatttool probe; the channel-map "
                                        "update needs raw-link-layer TX "
                                        "(scapy/btmon-injection), which the "
-                                       "UB500 Plus does NOT expose. No "
+                                       "U4000 BLUETOOTH adapter does NOT expose. No "
                                        "fabricated 'map rewritten' verdict."},
                          error="channel_map_update needs raw-link-layer TX "
-                               "— UB500 Plus does not expose HCI injection")
+                               "— U4000 BLUETOOTH adapter does not expose HCI injection")
 
     # ==================================================================
     # 88 connection_event_counter_wraparound
@@ -987,7 +1007,7 @@ class ExtendedBLERunner:
             "adapters": adapters, "scan_counts": per,
             "note": "real hcitool per-adapter scan; a multi-role TX "
                     "(broadcasting as many addrs) needs raw-LL TX, "
-                    "which the UB500 Plus does NOT expose. Verdict is "
+                    "which the U4000 BLUETOOTH adapter does NOT expose. Verdict is "
                     "the per-adapter scan count, not a fabricated "
                     "'scanner overloaded'.",
         })
@@ -1206,7 +1226,7 @@ class ExtendedBLERunner:
     # ==================================================================
     def _sm_smp_timeout_dos(self) -> Dict[str, Any]:
         """SMP-timeout DoS: requires raw LL pairing-request TX
-        (which the UB500 Plus does not expose). Real bluetoothctl
+        (which the U4000 BLUETOOTH adapter does not expose). Real bluetoothctl
         pair attempt (bounded) to verify the device accepts SMP;
         honest degrade on absent or unreachable target."""
         step = _step("sm_smp_timeout_dos")
@@ -1558,7 +1578,7 @@ def _build_extended_ble_registry() -> List[Dict[str, Any]]:
     all hit a real BLE target (GATT, mesh, LE Audio, raw LL) and
     require an operator-supplied target addr. The AI coordinator is
     risk_level="read" (it's a no-op stub). None of the primitives
-    needs root (raw LL injection is out of scope for UB500 Plus).
+    needs root (raw LL injection is out of scope for U4000 BLUETOOTH adapter).
 
     Per-method risk overrides: a handful of methods that need
     *physical* access or are un-driverable remotely degrade

@@ -1,0 +1,946 @@
+# Weakpass API — rozpisanie integracji dla narzędzia
+
+Weakpass udostępnia REST API zgodne z OpenAPI 3.0.3. Wersja widoczna w dokumentacji to `1.1.1`, a główny adres API to:
+
+```text
+https://weakpass.com/api/v1
+```
+
+API obejmuje cztery grupy funkcji: wyszukiwanie skrótów, pobieranie zakresów hashy, generowanie słowników według reguł Hashcat oraz pobieranie gotowych wordlist. W specyfikacji nie zdefiniowano schematu uwierzytelniania ani klucza API. ([weakpass.com][1])
+
+---
+
+## 1. Konfiguracja klienta
+
+```yaml
+service:
+  name: Weakpass
+  api_version: "1.1.1"
+  openapi_version: "3.0.3"
+  base_url: "https://weakpass.com/api/v1"
+  authentication: null
+  default_timeout_seconds: 30
+  supported_hash_types:
+    - md5
+    - ntlm
+    - sha1
+    - sha256
+```
+
+Rekomendowana konfiguracja narzędzia:
+
+```python
+WEAKPASS_CONFIG = {
+    "base_url": "https://weakpass.com/api/v1",
+    "timeout": 30,
+    "max_retries": 3,
+    "retry_statuses": [429, 500, 502, 503, 504],
+    "user_agent": "MySecurityTool/1.0",
+    "verify_tls": True,
+}
+```
+
+---
+
+# 2. Moduł `range`
+
+Moduł zwraca wszystkie zapisane pary `hash:hasło`, których hash zaczyna się od podanego prefiksu.
+
+Obsługiwane są MD5, NTLM, SHA-1 i SHA-256. Prefiks musi mieć od 6 do 64 znaków i składać się wyłącznie ze znaków szesnastkowych: `0-9`, `a-f`, `A-F`. ([GitHub][2])
+
+## 2.1. Pobieranie zakresu jako JSON
+
+```http
+GET /range/{prefix}
+```
+
+Alternatywny, jawny wariant:
+
+```http
+GET /range/{prefix}.json
+```
+
+### Parametry ścieżki
+
+```yaml
+prefix:
+  location: path
+  required: true
+  type: string
+  min_length: 6
+  max_length: 64
+  pattern: "^[A-Fa-f0-9]{6,64}$"
+```
+
+### Parametry zapytania
+
+```yaml
+filter:
+  location: query
+  required: false
+  type: string
+  enum:
+    - hash
+    - pass
+
+type:
+  location: query
+  required: false
+  type: string
+  default: md5
+  enum:
+    - md5
+    - ntlm
+    - sha1
+    - sha256
+```
+
+`filter=hash` zwraca tylko hashe, natomiast `filter=pass` tylko znalezione wartości haseł.
+
+### Przykład
+
+```bash
+curl --get \
+  'https://weakpass.com/api/v1/range/5f4dcc' \
+  --data-urlencode 'type=md5' \
+  --header 'Accept: application/json'
+```
+
+### Odpowiedź
+
+```json
+[
+  {
+    "hash": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "pass": "password"
+  }
+]
+```
+
+---
+
+## 2.2. Pobieranie zakresu jako tekst
+
+```http
+GET /range/{prefix}.txt
+```
+
+### Przykład
+
+```bash
+curl --get \
+  'https://weakpass.com/api/v1/range/5f4dcc.txt' \
+  --data-urlencode 'type=md5' \
+  --header 'Accept: text/plain'
+```
+
+### Format odpowiedzi
+
+```text
+5f4dcc3b5aa765d61d8327deb882cf99:password
+5f4dccxxxxxxxxxxxxxxxxxxxxxxxxxx:innehaslo
+```
+
+### Kody odpowiedzi
+
+```yaml
+200:
+  description: Dane zostały znalezione.
+
+404:
+  description: Brak danych powiązanych z prefiksem.
+
+500:
+  description: Nieprawidłowe znaki lub niepoprawna długość prefiksu.
+```
+
+---
+
+# 3. Moduł `search`
+
+Moduł wyszukuje pełny hash. Nie trzeba podawać jego typu — serwer próbuje automatycznie rozpoznać MD5, NTLM, SHA-1 albo SHA-256. Hash musi mieć od 32 do 64 znaków szesnastkowych. ([GitHub][2])
+
+## 3.1. Wyszukiwanie jako JSON
+
+```http
+GET /search/{hash}
+```
+
+Alternatywny wariant:
+
+```http
+GET /search/{hash}.json
+```
+
+### Parametry
+
+```yaml
+hash:
+  location: path
+  required: true
+  type: string
+  min_length: 32
+  max_length: 64
+  pattern: "^[A-Fa-f0-9]{32,64}$"
+```
+
+### Przykład
+
+```bash
+curl \
+  'https://weakpass.com/api/v1/search/827ccb0eea8a706c4c34a16891f84e7b' \
+  --header 'Accept: application/json'
+```
+
+### Przykładowa odpowiedź
+
+```json
+[
+  {
+    "type": "md5",
+    "hash": "827ccb0eea8a706c4c34a16891f84e7b",
+    "pass": "12345"
+  }
+]
+```
+
+---
+
+## 3.2. Wyszukiwanie jako tekst
+
+```http
+GET /search/{hash}.txt
+```
+
+### Przykład
+
+```bash
+curl \
+  'https://weakpass.com/api/v1/search/827ccb0eea8a706c4c34a16891f84e7b.txt' \
+  --header 'Accept: text/plain'
+```
+
+### Format odpowiedzi
+
+```text
+md5;827ccb0eea8a706c4c34a16891f84e7b;12345
+```
+
+### Kody odpowiedzi
+
+```yaml
+200:
+  description: Hash został znaleziony.
+
+404:
+  description: Hash nie występuje w bazie.
+
+500:
+  description: Błąd walidacji albo wewnętrzny błąd serwera.
+```
+
+---
+
+# 4. Moduł `generate`
+
+Moduł generuje warianty podanego słowa przy użyciu reguł zgodnych z Hashcat. API udostępnia gotowe zestawy reguł, możliwość przesłania pliku reguł oraz możliwość przekazania własnych reguł jako zwykłego tekstu. ([GitHub][2])
+
+## Obsługiwane zestawy reguł
+
+```text
+online.rule
+top_3000.rule
+top_1500.rule
+top_750.rule
+top_500.rule
+top_250.rule
+nsa64.rule
+numbers.rule
+numbers100.rule
+years_1900_2025.rule
+years.rule
+symbols.rule
+```
+
+---
+
+## 4.1. Generowanie przez GET
+
+```http
+GET /generate/{string}
+```
+
+### Parametry
+
+```yaml
+string:
+  location: path
+  required: true
+  type: string
+  description: Słowo bazowe poddawane mutacjom.
+
+set:
+  location: query
+  required: false
+  type: string
+  default: online.rule
+
+type:
+  location: query
+  required: false
+  type: string
+  default: json
+  enum:
+    - json
+    - txt
+```
+
+### Przykład
+
+```bash
+curl --get \
+  'https://weakpass.com/api/v1/generate/EvilCorp' \
+  --data-urlencode 'set=online.rule' \
+  --data-urlencode 'type=txt'
+```
+
+### Przykładowy wynik
+
+```text
+EvilCorp
+evilcorp
+EVILCORP
+EvilCorp1
+EvilCorp2
+EvilCorp123
+EvilCorp2025
+EvilCorp!
+```
+
+---
+
+## 4.2. Generowanie przez POST
+
+```http
+POST /generate
+```
+
+Parametry przekazywane są w query string.
+
+### Przykład
+
+```bash
+curl --request POST \
+  --get \
+  'https://weakpass.com/api/v1/generate' \
+  --data-urlencode 'string=EvilCorp' \
+  --data-urlencode 'set=years.rule' \
+  --data-urlencode 'type=json'
+```
+
+### Parametry
+
+```yaml
+string:
+  required: true
+  type: string
+
+set:
+  required: false
+  default: online.rule
+  enum:
+    - online.rule
+    - top_3000.rule
+    - top_1500.rule
+    - top_750.rule
+    - top_500.rule
+    - top_250.rule
+    - nsa64.rule
+    - numbers.rule
+    - numbers100.rule
+    - years_1900_2025.rule
+    - years.rule
+    - symbols.rule
+
+type:
+  required: false
+  default: json
+  enum:
+    - json
+    - txt
+```
+
+---
+
+## 4.3. Generowanie na podstawie przesłanego pliku reguł
+
+```http
+POST /generate/file
+```
+
+Dane należy przesłać jako:
+
+```text
+multipart/form-data
+```
+
+### Pola formularza
+
+```yaml
+file:
+  required: true
+  type: file
+  description: Plik reguł Hashcat.
+
+string:
+  required: true
+  type: string
+  description: Słowo wejściowe.
+
+type:
+  required: false
+  type: string
+  enum:
+    - txt
+    - json
+```
+
+### Przykład
+
+```bash
+curl --request POST \
+  'https://weakpass.com/api/v1/generate/file' \
+  --form 'file=@custom.rule' \
+  --form 'string=EvilCorp' \
+  --form 'type=txt'
+```
+
+---
+
+## 4.4. Generowanie z parametrem w ścieżce
+
+```http
+POST /generate/file/{string}
+```
+
+### Przykład
+
+```bash
+curl --request POST \
+  'https://weakpass.com/api/v1/generate/file/EvilCorp' \
+  --form 'file=@custom.rule' \
+  --form 'type=txt'
+```
+
+Parametry:
+
+```yaml
+string:
+  location: path
+  required: true
+  type: string
+
+file:
+  location: multipart
+  required: true
+  type: file
+
+type:
+  location: multipart
+  required: false
+  enum:
+    - txt
+    - json
+```
+
+---
+
+## 4.5. Generowanie z reguł przekazanych w body
+
+```http
+POST /generate/custom/{string}
+```
+
+Reguły Hashcat są przesyłane bezpośrednio w body jako:
+
+```http
+Content-Type: text/plain
+```
+
+### Przykład
+
+```bash
+curl --request POST \
+  'https://weakpass.com/api/v1/generate/custom/EvilCorp?type=txt' \
+  --header 'Content-Type: text/plain' \
+  --data-binary '$1
+$2
+$3
+c
+u'
+```
+
+### Parametry
+
+```yaml
+string:
+  location: path
+  required: true
+  type: string
+
+type:
+  location: query
+  required: false
+  default: json
+  enum:
+    - json
+    - txt
+
+body:
+  content_type: text/plain
+  required: true
+  description: Reguły Hashcat, po jednej regule w linii.
+```
+
+### Kody odpowiedzi generatorów
+
+```yaml
+200:
+  description: Słownik został wygenerowany.
+
+500:
+  description: Nieprawidłowa reguła, dane wejściowe albo błąd generatora.
+```
+
+---
+
+# 5. Moduł `wordlists`
+
+Moduł pozwala pobrać listę dostępnych słowników oraz zawartość wybranego słownika lub pliku reguł. ([ClawHub][3])
+
+## 5.1. Lista dostępnych słowników
+
+```http
+GET /wordlists
+```
+
+### Przykład
+
+```bash
+curl \
+  'https://weakpass.com/api/v1/wordlists' \
+  --header 'Accept: application/json'
+```
+
+### Przykładowa odpowiedź
+
+```json
+[
+  "10_million_password_list_top_10000.txt",
+  "hashmob.net.small.found.txt",
+  "ignis-10K.txt",
+  "nsa64.rule",
+  "rockyou.txt"
+]
+```
+
+Narzędzie powinno pobierać tę listę dynamicznie zamiast utrzymywać na stałe wpisane nazwy. Lista dostępnych zasobów może się zmieniać.
+
+---
+
+## 5.2. Pobranie zawartości słownika
+
+```http
+GET /wordlists/{wordlist}
+```
+
+### Parametry
+
+```yaml
+wordlist:
+  location: path
+  required: true
+  type: string
+  description: Nazwa otrzymana wcześniej z GET /wordlists.
+```
+
+### Przykład
+
+```bash
+curl \
+  'https://weakpass.com/api/v1/wordlists/ignis-10K.txt' \
+  --header 'Accept: text/plain'
+```
+
+### Przykładowa odpowiedź
+
+```text
+123456
+password
+12345678
+qwerty
+123456789
+12345
+1234
+111111
+1234567
+dragon
+```
+
+### Kody odpowiedzi
+
+```yaml
+200:
+  description: Zwrócono zawartość pliku.
+
+404:
+  description: Słownik nie istnieje.
+
+500:
+  description: Błąd odczytu albo wewnętrzny błąd serwera.
+```
+
+---
+
+# 6. Modele danych
+
+## `Pair`
+
+Model używany przez endpointy `/range`.
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(slots=True)
+class HashPasswordPair:
+    hash: str
+    password: str
+```
+
+Reprezentacja JSON:
+
+```json
+{
+  "hash": "12345678902dd833fc9db9d72e9483c5",
+  "pass": "4kgdjv1"
+}
+```
+
+---
+
+## `HashResult`
+
+Model używany przez endpointy `/search`.
+
+```python
+from dataclasses import dataclass
+from typing import Literal
+
+
+HashType = Literal["md5", "ntlm", "sha1", "sha256"]
+
+
+@dataclass(slots=True)
+class HashSearchResult:
+    type: HashType
+    hash: str
+    password: str
+```
+
+Reprezentacja JSON:
+
+```json
+{
+  "type": "md5",
+  "hash": "827ccb0eea8a706c4c34a16891f84e7b",
+  "pass": "12345"
+}
+```
+
+---
+
+# 7. Proponowany interfejs CLI narzędzia
+
+```text
+weakpass-tool search HASH
+weakpass-tool range PREFIX
+weakpass-tool generate WORD
+weakpass-tool generate-file WORD RULE_FILE
+weakpass-tool generate-custom WORD RULE_FILE
+weakpass-tool wordlists
+weakpass-tool wordlist NAME
+```
+
+## Przykłady
+
+```bash
+weakpass-tool search 827ccb0eea8a706c4c34a16891f84e7b
+
+weakpass-tool range 5f4dcc \
+  --hash-type md5 \
+  --format json
+
+weakpass-tool generate EvilCorp \
+  --ruleset online.rule \
+  --format txt
+
+weakpass-tool generate-file EvilCorp \
+  --rules ./custom.rule \
+  --output generated.txt
+
+weakpass-tool wordlists
+
+weakpass-tool wordlist rockyou.txt \
+  --output rockyou.txt
+```
+
+---
+
+# 8. Proponowany klient Python
+
+```python
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any, Literal
+
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+
+HashType = Literal["md5", "ntlm", "sha1", "sha256"]
+OutputType = Literal["json", "txt"]
+RangeFilter = Literal["hash", "pass"]
+
+
+class WeakpassAPIError(RuntimeError):
+    pass
+
+
+class WeakpassClient:
+    def __init__(
+        self,
+        base_url: str = "https://weakpass.com/api/v1",
+        timeout: float = 30.0,
+        retries: int = 3,
+    ) -> None:
+        self.base_url = base_url.rstrip("/")
+        self.timeout = timeout
+
+        retry_policy = Retry(
+            total=retries,
+            connect=retries,
+            read=retries,
+            status=retries,
+            backoff_factor=1.0,
+            status_forcelist=(429, 500, 502, 503, 504),
+            allowed_methods=("GET", "POST"),
+        )
+
+        self.session = requests.Session()
+        self.session.headers.update(
+            {
+                "Accept": "application/json",
+                "User-Agent": "WeakpassTool/1.0",
+            }
+        )
+        self.session.mount("https://", HTTPAdapter(max_retries=retry_policy))
+
+    def _check_response(self, response: requests.Response) -> None:
+        if response.status_code == 404:
+            raise WeakpassAPIError("Nie znaleziono danych.")
+
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            raise WeakpassAPIError(
+                f"Weakpass API zwróciło HTTP {response.status_code}: "
+                f"{response.text[:500]}"
+            ) from exc
+
+    def search_hash(
+        self,
+        hash_value: str,
+    ) -> list[dict[str, Any]]:
+        response = self.session.get(
+            f"{self.base_url}/search/{hash_value}.json",
+            timeout=self.timeout,
+        )
+        self._check_response(response)
+        return response.json()
+
+    def range_lookup(
+        self,
+        prefix: str,
+        hash_type: HashType = "md5",
+        result_filter: RangeFilter | None = None,
+    ) -> list[dict[str, Any]]:
+        params: dict[str, str] = {"type": hash_type}
+
+        if result_filter is not None:
+            params["filter"] = result_filter
+
+        response = self.session.get(
+            f"{self.base_url}/range/{prefix}.json",
+            params=params,
+            timeout=self.timeout,
+        )
+        self._check_response(response)
+        return response.json()
+
+    def generate(
+        self,
+        value: str,
+        ruleset: str = "online.rule",
+        output_type: OutputType = "json",
+    ) -> Any:
+        response = self.session.get(
+            f"{self.base_url}/generate/{value}",
+            params={
+                "set": ruleset,
+                "type": output_type,
+            },
+            timeout=self.timeout,
+        )
+        self._check_response(response)
+
+        if output_type == "json":
+            try:
+                return response.json()
+            except ValueError:
+                return response.text.splitlines()
+
+        return response.text
+
+    def generate_from_file(
+        self,
+        value: str,
+        rules_file: Path,
+        output_type: OutputType = "txt",
+    ) -> str:
+        if not rules_file.is_file():
+            raise FileNotFoundError(rules_file)
+
+        with rules_file.open("rb") as file_handle:
+            response = self.session.post(
+                f"{self.base_url}/generate/file",
+                files={
+                    "file": (
+                        rules_file.name,
+                        file_handle,
+                        "text/plain",
+                    )
+                },
+                data={
+                    "string": value,
+                    "type": output_type,
+                },
+                timeout=self.timeout,
+            )
+
+        self._check_response(response)
+        return response.text
+
+    def list_wordlists(self) -> list[str]:
+        response = self.session.get(
+            f"{self.base_url}/wordlists",
+            timeout=self.timeout,
+        )
+        self._check_response(response)
+        return response.json()
+
+    def download_wordlist(
+        self,
+        name: str,
+        destination: Path,
+    ) -> Path:
+        response = self.session.get(
+            f"{self.base_url}/wordlists/{name}",
+            timeout=self.timeout,
+            stream=True,
+        )
+        self._check_response(response)
+
+        destination.parent.mkdir(parents=True, exist_ok=True)
+
+        with destination.open("wb") as output:
+            for chunk in response.iter_content(chunk_size=1024 * 1024):
+                if chunk:
+                    output.write(chunk)
+
+        return destination
+```
+
+---
+
+# 9. Walidacja wejścia
+
+```python
+import re
+
+
+HEX_HASH_PATTERN = re.compile(r"^[A-Fa-f0-9]{32,64}$")
+HEX_PREFIX_PATTERN = re.compile(r"^[A-Fa-f0-9]{6,64}$")
+
+
+def validate_hash(value: str) -> str:
+    value = value.strip()
+
+    if not HEX_HASH_PATTERN.fullmatch(value):
+        raise ValueError(
+            "Hash musi zawierać 32–64 znaki szesnastkowe."
+        )
+
+    return value
+
+
+def validate_prefix(value: str) -> str:
+    value = value.strip()
+
+    if not HEX_PREFIX_PATTERN.fullmatch(value):
+        raise ValueError(
+            "Prefiks musi zawierać 6–64 znaki szesnastkowe."
+        )
+
+    return value
+```
+
+---
+
+# 10. Zalecana struktura modułu
+
+```text
+weakpass_integration/
+├── __init__.py
+├── client.py
+├── models.py
+├── validators.py
+├── exceptions.py
+├── constants.py
+├── cli.py
+├── config.py
+└── tests/
+    ├── test_search.py
+    ├── test_range.py
+    ├── test_generate.py
+    └── test_wordlists.py
+```
+
+Przy implementacji warto automatycznie wykrywać `Content-Type`, ponieważ część operacji generatora jest opisana jako `text/plain`, mimo że parametr `type` dopuszcza również `json`. Klient powinien najpierw próbować zdekodować JSON, a przy niepowodzeniu traktować wynik jako tekst. To zabezpiecza integrację przed różnicami między dokumentacją a rzeczywistą odpowiedzią serwera. ([GitHub][2])
+
+[1]: https://weakpass.com/api?utm_source=chatgpt.com "API 1.1.1 OAS 3.0"
+[2]: https://github.com/ADScanPro/weakpass-lookup/raw/refs/heads/main/openapi.yaml "raw.githubusercontent.com"
+[3]: https://clawhub.ai/ibnaleem/weakpass?utm_source=chatgpt.com "Weakpass"
+
+"Weakpass" -> still selecting iface doesnt go into monitor mode via airmon-ng start [iface_id] - exiting the tool should do airmon-ng stop [iface_id_mon]
+above implement for post-exploitations and those that can be checked with the weakpass; /home/user/Pulpit/kfiosa/wordlists/weakpass_tool/weakpass_integration/
+
+∴ The user wants me to implement a Weakpass API integration tool instead of preparing wordlists. The target path is /home/user/Pulpit/kfiosa/wordlists/weakpass_tool/weakpass_integration/.
+
+  Let me parse the request carefully:
+
+  1. Implement the Weakpass API integration as described in the long spec provided.
+  2. The spec covers: range module, search module, generate module, wordlists module, data models, CLI interface, Python client, input validation, module structure.
+  3. There's an additional note about monitor mode / airmon-ng - "still selecting iface doesnt go into monitor mode via airmon-ng start [iface_id] - exiting the tool should do airmon-ng stop [iface_id_mon]" - this seems to be a separate concern about a WiFi tool that should clean up monitor mode on exit. But the main instruction is "above implementhose that can be checked with the weakpass;

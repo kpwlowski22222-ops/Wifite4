@@ -1,7 +1,7 @@
 """core.tool_installer.check_sdr — detect whether SDR hardware is available.
 
 Phase 2.4 — operator's setup: only internal ``wlan0`` (mt7921e with
-packet injection) and ``hci0`` (TP-LINK UB500 Plus). All SDR /
+packet injection) and ``hci0`` (U4000 BLUETOOTH adapter). All SDR /
 HackRF / Ubertooth / BladeRF / LimeSDR / USRP paths are skipped.
 This module reports ``sdr_available: false`` so any module
 requiring SDR honest-degrades with a clear reason.
@@ -51,7 +51,7 @@ def sdr_status() -> Dict[str, Any]:
             "installed_sdr_binaries": installed,
             "note": "operator setup excludes SDR / HackRF / Ubertooth / "
                     "BladeRF / LimeSDR / USRP hardware. Only internal "
-                    "wlan0 (mt7921e) and hci0 (UB500 Plus) are used."}
+                    "wlan0 (mt7921e) and hci0 (U4000 BLUETOOTH adapter) are used."}
 
 
 __all__ = ["is_sdr_available", "sdr_status"]

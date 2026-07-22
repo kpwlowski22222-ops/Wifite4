@@ -499,3 +499,64 @@ class TestAdversarial:
         )
         ok, reason = validate_patch(spec, node)
         assert not ok
+
+
+# ---------------------------------------------------------------------------
+# Overlay source generator (T9 regression — fixed 2026-07-22)
+# ---------------------------------------------------------------------------
+
+class TestOverlaySourceGenerator:
+    def test_simple_method_emits_valid_python(self):
+        """Regression: the f-string dedent bug caused `return` to land
+        at the same column as `def`, producing an IndentationError. The
+        fix switches to f-string concatenation + textwrap.indent(4)."""
+        from core.live_edit.apply import _emit_overlay_source
+
+        real = '''
+def _evil_twin_automated(self, ssid):
+    return ssid
+'''
+        func = ast.parse(real).body[0]
+        src = _emit_overlay_source(
+            "core.wifi_attack.runner", "WiFiAttackRunner",
+            "_evil_twin_automated", func,
+        )
+        ast.parse(src)
+        assert "import core.wifi_attack.runner as _orig" in src
+        assert "import 'core.wifi_attack.runner'" not in src
+
+    def test_multi_line_body_indentation(self):
+        """Multi-statement method body must remain inside the class."""
+        from core.live_edit.apply import _emit_overlay_source
+
+        real = '''
+def _multi(self, x):
+    a = x + 1
+    b = a * 2
+    return b
+'''
+        func = ast.parse(real).body[0]
+        src = _emit_overlay_source(
+            "core.ble.runner", "BLEProbeRunner", "_multi", func,
+        )
+        ast.parse(src)
+        for line in src.splitlines():
+            if "def _multi" in line:
+                assert line.startswith("    def"), f"def not at col 4: {line!r}"
+            if line.strip().startswith("a =") or line.strip().startswith("b ="):
+                assert line.startswith("        "), f"body not at col 8: {line!r}"
+
+    def test_decorator_preserved(self):
+        """A method with a decorator should still emit valid Python."""
+        from core.live_edit.apply import _emit_overlay_source
+
+        real = '''
+@property
+def _is_alive(self):
+    return True
+'''
+        func = ast.parse(real).body[0]
+        src = _emit_overlay_source(
+            "core.ble.runner", "BLEProbeRunner", "_is_alive", func,
+        )
+        ast.parse(src)

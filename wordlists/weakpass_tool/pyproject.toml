@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weakpass-tool"
+version = "1.0.0"
+description = "Klient CLI i biblioteka Python dla Weakpass API"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Kamil"}]
+dependencies = ["requests>=2.32.0,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "responses>=0.25", "ruff>=0.5"]
+
+[project.scripts]
+weakpass-tool = "weakpass_integration.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["weakpass_integration*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

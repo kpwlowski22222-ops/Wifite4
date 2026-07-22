@@ -1,8 +1,8 @@
 """core.post_access_tui.wifi_panel — WIFI RAT-like TUI panel.
 
 Extends the post-access TUI with a WiFi attack panel that talks to
-the operator's wireless adapter (MediaTek MT7922 / TP-LINK UB500
-Plus) via airmon-ng, airodump-ng, aireplay-ng, hcxdumptool,
+the operator's wireless adapter (MediaTek MT7922 + U4000 BLUETOOTH
+adapter) via airmon-ng, airodump-ng, aireplay-ng, hcxdumptool,
 hashcat, etc. — the same substrate used by ``core.wifi_attack.runner``
 and ``core.extended_wifi.runner``.
 

@@ -917,7 +917,755 @@ def adapt_evidence_format_picker(args: Dict[str, Any]) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# Registry — Phase 5
+# POLYMORPHIC v3 (Phase 3 expansion) — 10 more grammars (2 per category)
+# ---------------------------------------------------------------------------
+
+def poly_wpa3_sae_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a WPA3-SAE attack variant.
+
+    Variants are real WPA3 attack research categories. None of them
+    produce a cracked PSK — they describe the protocol-level pattern
+    the next chain step would apply.
+    """
+    import random
+    step = _step("poly_wpa3_sae_grammar")
+    seed = (args or {}).get("seed") or "sae"
+    rng = random.Random(str(seed))
+    patterns = [
+        "sae_commit_flood_dos",
+        "sae_side_channel_timing",
+        "sae_antipattern_legacy_overlap",
+        "sae_zero_password_drag",
+        "sae_handshake_drown",
+    ]
+    weights = [3, 3, 2, 2, 1]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "wpa3_sae",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary variant for the next SAE chain step.",
+    })
+
+
+def poly_eapol_key_replay_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick an EAPOL-Key replay counter-mutation strategy.
+
+    Mirrors the patterns in the original KRACK research. The LLM
+    uses the picked variant to drive a 4-way handshake step.
+    """
+    import random
+    step = _step("poly_eapol_key_replay_grammar")
+    seed = (args or {}).get("seed") or "krack"
+    rng = random.Random(str(seed))
+    patterns = [
+        "replay_msg3_installer",
+        "replay_msg3_group_key",
+        "replay_msg4_ack_mismatch",
+        "replay_msg1_key_reinstall",
+    ]
+    weights = [3, 3, 2, 2]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "eapol_key_replay",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary pattern for the next EAPOL replay step.",
+    })
+
+
+def poly_ble_ll_fragment_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a BLE Link-Layer fragment-reassembly pattern."""
+    import random
+    step = _step("poly_ble_ll_fragment_grammar")
+    seed = (args or {}).get("seed") or "ble_ll"
+    rng = random.Random(str(seed))
+    patterns = [
+        "fragment_overlap_inject",
+        "fragment_order_swap",
+        "fragment_replay_old",
+        "fragment_length_extension",
+    ]
+    weights = [2, 2, 3, 2]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "ble_ll_fragment",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary pattern for the next LL step.",
+    })
+
+
+def poly_gatt_write_payload_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a GATT-write payload template for fuzzing."""
+    import random
+    step = _step("poly_gatt_write_payload_grammar")
+    seed = (args or {}).get("seed") or "gatt"
+    rng = random.Random(str(seed))
+    patterns = [
+        "long_write_split_at_mtu",
+        "write_prepare_reliable",
+        "write_unsigned_vs_signed",
+        "write_value_0xff_storm",
+        "write_value_incrementing",
+    ]
+    weights = [3, 3, 2, 1, 2]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "gatt_write_payload",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary payload for the next GATT write.",
+    })
+
+
+def poly_email_pattern_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick an email-pattern heuristic for OSINT discovery.
+
+    No real emails are produced. The 'variants' are search-pattern
+    templates the LLM can run against an OSINT source it already
+    has credentials/keys for (per the OSINT safety rules).
+    """
+    import random
+    step = _step("poly_email_pattern_grammar")
+    seed = (args or {}).get("seed") or "email"
+    rng = random.Random(str(seed))
+    patterns = [
+        "firstname_lastname_at_domain",
+        "f_lastname_at_domain",
+        "firstnamel_at_domain",
+        "lastnamef_at_domain",
+        "role_based_admin_at_domain",
+    ]
+    weights = [3, 3, 2, 2, 2]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "email_pattern",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary pattern to query the OSINT source.",
+    })
+
+
+def poly_dorking_query_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a Google-dorking query template for OSINT.
+
+    The 'variants' are Google dork *templates* (not pre-filled
+    queries). They contain placeholders the operator/LLM fills
+    at chain-step time.
+    """
+    import random
+    step = _step("poly_dorking_query_grammar")
+    seed = (args or {}).get("seed") or "dork"
+    rng = random.Random(str(seed))
+    patterns = [
+        "site:{target} filetype:{ext} {keyword}",
+        'inurl:{target} "{keyword}"',
+        "intitle:{keyword} site:{target}",
+        "{keyword} ext:sql | ext:csv | ext:log site:{target}",
+        "cache:{target} {keyword}",
+    ]
+    weights = [3, 3, 2, 1, 2]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "dorking_query",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Fill {target} / {ext} / {keyword} at step time.",
+    })
+
+
+def poly_disk_carve_signature_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a file-carving signature for forensic recovery."""
+    import random
+    step = _step("poly_disk_carve_signature_grammar")
+    seed = (args or {}).get("seed") or "carve"
+    rng = random.Random(str(seed))
+    patterns = [
+        "header_footer_jpeg_png_pdf",
+        "magic_bytes_kdbx_zip_7z",
+        "ntfs_mft_resident",
+        "ext4_inode_journal",
+        "registry_hive_cells",
+    ]
+    weights = [3, 3, 2, 1, 2]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "disk_carve_signature",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary signature for the next carve step.",
+    })
+
+
+def poly_memory_yara_pattern_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a YARA pattern style for memory forensics."""
+    import random
+    step = _step("poly_memory_yara_pattern_grammar")
+    seed = (args or {}).get("seed") or "yara"
+    rng = random.Random(str(seed))
+    patterns = [
+        "ascii_string_mimikatz",
+        "wide_string_powershell",
+        "hex_pattern_pe_header",
+        "regex_url_c2",
+        "pe_section_name_anomaly",
+    ]
+    weights = [3, 3, 2, 2, 2]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "memory_yara",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary pattern for the next YARA scan.",
+    })
+
+
+def poly_lateral_movement_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a lateral-movement vector variant.
+
+    No real credentials are produced. The variant is a *category*
+    the LLM chains into the next step.
+    """
+    import random
+    step = _step("poly_lateral_movement_grammar")
+    seed = (args or {}).get("seed") or "lateral"
+    rng = random.Random(str(seed))
+    patterns = [
+        "psexec_service_install",
+        "wmi_exec_remote",
+        "winrm_ps_remoting",
+        "rdp_pass_the_hash",
+        "smb_exec_at_exec",
+        "ssh_key_pivot",
+    ]
+    weights = [3, 3, 3, 2, 2, 2]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "lateral_movement",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary vector for the next pivot step.",
+    })
+
+
+def poly_persistence_registry_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a Windows-Registry persistence Run-key variant."""
+    import random
+    step = _step("poly_persistence_registry_grammar")
+    seed = (args or {}).get("seed") or "persist"
+    rng = random.Random(str(seed))
+    patterns = [
+        "hkcu_software_microsoft_windows_currentversion_run",
+        "hklm_software_microsoft_windows_currentversion_run",
+        "hklm_system_currentcontrolset_services",
+        "hkcu_environment_userinit",
+        "hklm_software_microsoft_windows_nt_currentversion_winlogon",
+    ]
+    weights = [3, 2, 2, 1, 1]
+    picked = rng.choices(patterns, weights=weights, k=3)
+    return _ok(step, {
+        "grammar": "persistence_registry",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Use the primary key for the next persistence step.",
+    })
+
+
+# ---------------------------------------------------------------------------
+# TARGET-ADAPTIVE v3 (Phase 3 expansion) — 10 more pickers (2 per category)
+# ---------------------------------------------------------------------------
+
+def adapt_wifi_chipset_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a monitor-mode driver based on the detected WiFi chipset."""
+    step = _step("adapt_wifi_chipset_picker")
+    chipset = (str((args or {}).get("chipset") or "")).lower()
+    if "mt7922" in chipset or "mt7921" in chipset:
+        pick, rationale = "mt7921e_nexmon_monitor", "MediaTek MT7922 — use mt7921e + nexmon monitor shim"
+    elif "ath10k" in chipset or "ath9k" in chipset:
+        pick, rationale = "ath10k_testmode", "Qualcomm Atheros — use ath10k testmode"
+    elif "iwlwifi" in chipset or "intel" in chipset:
+        pick, rationale = "iwlwifi_monitor_restricted", "Intel — iwlwifi monitor mode is restricted to 5 GHz on most firmwares"
+    elif "rtw88" in chipset or "realtek" in chipset:
+        pick, rationale = "rtw88_monitor", "Realtek — use rtw88 driver monitor mode"
+    elif "brcm" in chipset or "broadcom" in chipset:
+        pick, rationale = "b43_monitor", "Broadcom — use b43 with b43-fwcutter"
+    else:
+        pick, rationale = "generic_nl80211_monitor", f"Unknown chipset {chipset!r} — fall back to generic nl80211 monitor"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_chipset": chipset or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_wifi_channel_width_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick the channel width for the next scan / attack step."""
+    step = _step("adapt_wifi_channel_width_picker")
+    band = (str((args or {}).get("band") or "")).lower()
+    target = (str((args or {}).get("target") or "")).lower()
+    if "6e" in band or "6ghz" in band or "wifi6e" in target or "wifi7" in target:
+        pick, rationale = "160mhz", "WiFi 6E/7 — 160 MHz channels available"
+    elif "5ghz" in band or "5g" in band:
+        pick, rationale = "80mhz", "5 GHz — 80 MHz is the common width"
+    elif "2_4" in band or "2.4" in band or "2g" in band:
+        pick, rationale = "20mhz", "2.4 GHz — 20 MHz to avoid overlap"
+    else:
+        pick, rationale = "20mhz", f"Unknown band {band!r} — default 20 MHz"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_band": band or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_ble_chipset_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a BLE strategy based on the detected chipset."""
+    step = _step("adapt_ble_chipset_picker")
+    chip = (str((args or {}).get("chipset") or "")).lower()
+    if "mt7922" in chip or "mt7921" in chip:
+        pick, rationale = "mediatek_via_bluetoothctl", "MT7922 — use bluetoothctl / btmon for scan, no promiscuous mode"
+    elif ("u4000" in chip or "ub500" in chip or "cambridge" in chip
+          or "realtek" in chip):
+        # The operator's hardware is the U4000 BLUETOOTH adapter
+        # (Realtek chipset). The substring matcher is intentionally
+        # tolerant of older "ub500" / "ub500 Plus" labels too.
+        pick, rationale = "realtek_via_btmon", "U4000 BLUETOOTH adapter (Realtek) — btmon can capture ADV + some LL data"
+    elif "intel" in chip or "ax200" in chip or "ax210" in chip:
+        pick, rationale = "intel_via_bluetoothctl", "Intel AX200/AX210 — use bluetoothctl + hcitool lescan"
+    else:
+        pick, rationale = "generic_hcitool_lescan", f"Unknown BLE chipset {chip!r} — fall back to hcitool lescan"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_chipset": chip or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_ble_pairing_method_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a BLE pairing method based on advertised IO capabilities."""
+    step = _step("adapt_ble_pairing_method_picker")
+    io = (str((args or {}).get("io_cap") or "")).lower()
+    auth = bool((args or {}).get("auth_required"))
+    if auth and ("display" in io or "keyboard" in io):
+        pick, rationale = "passcode_entry", "Display/Keyboard + auth → passcode entry (LE Secure Connections)"
+    elif "out" in io or "none" in io:
+        pick, rationale = "just_works", "NoInput/NoOutput → Just Works pairing"
+    elif "display" in io:
+        pick, rationale = "numeric_compare", "DisplayOnly → numeric compare"
+    elif "keyboard" in io:
+        pick, rationale = "passkey_entry", "KeyboardOnly → passkey entry"
+    else:
+        pick, rationale = "legacy_007", f"Unknown IO {io!r} — default to legacy pairing (BR/EDR fallback or 0x07)"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_io_cap": io or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_osint_jurisdiction_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick an OSINT source by jurisdiction.
+
+    Only sources the OSINT catalog already integrates with are
+    emitted (no fabricated APIs).
+    """
+    step = _step("adapt_osint_jurisdiction_picker")
+    jur = (str((args or {}).get("jurisdiction") or "")).lower()
+    if "pl" in jur or "poland" in jur or "polish" in jur:
+        pick, rationale = "ceidg_knf", "PL — CEIDG (firms) + KNF (finance)"
+    elif "eu" in jur:
+        pick, rationale = "eur_company_registry_vat", "EU — VAT validation + national registries"
+    elif "us" in jur or "usa" in jur:
+        pick, rationale = "github_nameday_hibp", "US — GitHub (no key) + nameday + HIBP k-anonymity"
+    elif "cn" in jur or "china" in jur:
+        pick, rationale = "github_nameday", "CN — GitHub (no key) + nameday; no fabricated Chinese APIs"
+    else:
+        pick, rationale = "github_nameday_hibp", f"Unknown jurisdiction {jur!r} — fall back to no-key sources (GitHub + nameday + HIBP)"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_jurisdiction": jur or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_osint_query_language_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a query language for the OSINT source."""
+    step = _step("adapt_osint_query_language_picker")
+    target = (str((args or {}).get("target") or "")).lower()
+    if "github" in target or "code" in target:
+        pick, rationale = "github_search_qualifiers", "GitHub — use search qualifiers (repo:org language:python)"
+    elif "email" in target or "people" in target:
+        pick, rationale = "boolean", "People-search — use boolean (AND/OR/NOT)"
+    elif "graph" in target or "entity" in target:
+        pick, rationale = "cypher", "Graph source — use Cypher (Neo4j-style)"
+    else:
+        pick, rationale = "natural", f"Unknown target {target!r} — use natural-language query"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_target": target or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_forensics_image_format_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a forensic image format from audience + tool availability."""
+    step = _step("adapt_forensics_image_format_picker")
+    audience = (str((args or {}).get("audience") or "")).lower()
+    has_ewf = bool((args or {}).get("has_ewf"))
+    if "court" in audience or "law_enforcement" in audience or has_ewf:
+        pick, rationale = "ewf_e01", "Court/LE — EWF/E01 (requires libewf)"
+    elif "raw" in audience:
+        pick, rationale = "raw_dd", "raw dd image + SHA-256"
+    elif "triage" in audience:
+        pick, rationale = "aff4", "Triage — AFF4 (Google's streaming image format)"
+    elif "vm" in audience:
+        pick, rationale = "vhd_vmdk", "VM audience — VHD/VMDK"
+    else:
+        pick, rationale = "raw_dd", f"Unknown audience {audience!r} — default to raw dd"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_audience": audience or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_forensics_timeline_format_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a timeline format for the IR/forensic audience."""
+    step = _step("adapt_forensics_timeline_format_picker")
+    audience = (str((args or {}).get("audience") or "")).lower()
+    if "ir" in audience or "triage" in audience:
+        pick, rationale = "plaso_csv", "IR — Plaso CSV (log2timeline + psort)"
+    elif "audit" in audience:
+        pick, rationale = "jsonl_audit", "Audit — JSONL (one event per line)"
+    elif "court" in audience:
+        pick, rationale = "pdf_with_chain_of_custody", "Court — PDF + chain of custody"
+    else:
+        pick, rationale = "jsonl", f"Unknown audience {audience!r} — default JSONL"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_audience": audience or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_persistence_mechanism_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a persistence mechanism based on target OS + reboot tolerance."""
+    step = _step("adapt_persistence_mechanism_picker")
+    os_name = (str((args or {}).get("target_os") or "")).lower()
+    persistent = bool((args or {}).get("survive_reboot"))
+    if "windows" in os_name:
+        if persistent:
+            pick, rationale = "registry_run_key_hklm", "Windows + survive_reboot — registry HKLM Run key"
+        else:
+            pick, rationale = "scheduled_task_at_1min", "Windows + transient — Scheduled Task (AT 1min)"
+    elif "linux" in os_name:
+        if persistent:
+            pick, rationale = "systemd_service_user", "Linux + survive_reboot — systemd user service"
+        else:
+            pick, rationale = "cron_d_user", "Linux + transient — cron.d user job"
+    elif "macos" in os_name or "darwin" in os_name:
+        if persistent:
+            pick, rationale = "launchd_user_agent", "macOS + survive_reboot — LaunchAgent"
+        else:
+            pick, rationale = "login_items_appleevent", "macOS + transient — login items + AppleEvent"
+    elif "android" in os_name:
+        pick, rationale = "boot_completed_receiver", "Android — boot-completed BroadcastReceiver"
+    elif "ios" in os_name:
+        pick, rationale = "config_profile", "iOS — MDM-style config profile (requires enterprise cert)"
+    else:
+        if not persistent:
+            pick, rationale = "fileless_in_memory", f"Unknown OS {os_name!r} + transient — fileless in-memory"
+        else:
+            pick, rationale = "registry_run_key_hklm", f"Unknown OS {os_name!r} + survive_reboot — fall back to Windows registry"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_target_os": os_name or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_exfil_channel_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick an exfiltration channel based on egress posture.
+
+    The LLM then chains the picked channel into the next real
+    step. No data is ever actually exfiltrated by this helper.
+    """
+    step = _step("adapt_exfil_channel_picker")
+    egress = (str((args or {}).get("egress") or "")).lower()
+    size_kb = int((args or {}).get("size_kb") or 0)
+    if "blocked_https" in egress or egress == "https_blocked":
+        pick, rationale = "dns_tunnel", "HTTPS blocked → DNS tunnel"
+    elif "blocked_dns" in egress or egress == "dns_blocked":
+        pick, rationale = "icmp_covert", "DNS blocked → ICMP covert channel"
+    elif "blocked_egress" in egress or egress == "airgap":
+        pick, rationale = "sneakernet_usb", "Air-gapped → sneakernet (USB)"
+    elif size_kb > 10_000:
+        pick, rationale = "smb_to_dropbox_lookalike", f"Large payload ({size_kb} KB) → SMB / chunked to a dropbox-lookalike"
+    else:
+        pick, rationale = "https_get_post", f"Default → HTTPS GET/POST (small payload {size_kb} KB)"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_egress": egress or "unknown",
+        "size_kb": size_kb,
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+# ---------------------------------------------------------------------------
+# T7 expansion: cloud + mobile + OT + RE grammars + pickers (Phase 3)
+# ---------------------------------------------------------------------------
+
+
+def poly_aws_iam_enumeration_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Polymorphic grammar for AWS IAM enumeration strategy.
+
+    Picks a strategy variant (full enum / least-privilege / assume-role
+    chain) for the next AWS recon step. The picked variant is
+    forwarded to a real Pacu/ScoutSuite enumerator — never executed
+    by this helper.
+    """
+    step = _step("poly_aws_iam_enumeration_grammar")
+    seed = (args or {}).get("seed") or "aws-iam"
+    import random
+    rng = random.Random(str(seed))
+    variants = [
+        "full_user_role_enum", "least_privilege_diff",
+        "assume_role_chain", "cross_account_role_pivot",
+        "access_key_age_audit", "mfa_status_enum",
+    ]
+    picked = rng.sample(variants, k=min(4, len(variants)))
+    return _ok(step, {
+        "grammar": "aws_iam_enumeration",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Forward primary to Pacu / enumerate_iam / ScoutSuite.",
+    })
+
+
+def poly_k8s_lateral_movement_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Polymorphic grammar for Kubernetes lateral-movement vector."""
+    step = _step("poly_k8s_lateral_movement_grammar")
+    variants = [
+        "service_account_token_steal", "configmap_secret_pivot",
+        "kubectl_exec_to_pod", "nodeport_abuse",
+        "etcd_snapshot_dump", "rbac_privilege_escalation",
+    ]
+    return _ok(step, {
+        "grammar": "k8s_lateral_movement",
+        "variants": variants,
+        "primary": variants[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Forward primary to peirates / kube-hound.",
+    })
+
+
+def poly_mobile_frida_hook_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Polymorphic grammar for Frida hook script (Android / iOS)."""
+    step = _step("poly_mobile_frida_hook_grammar")
+    seed = (args or {}).get("seed") or "frida"
+    import random
+    rng = random.Random(str(seed))
+    variants = [
+        "ssl_pinning_bypass", "root_detection_bypass",
+        "biometric_bypass", "frida_gadget_inject",
+        "method_trace_class", "constructor_hook_objection",
+    ]
+    picked = rng.sample(variants, k=min(4, len(variants)))
+    return _ok(step, {
+        "grammar": "mobile_frida_hook",
+        "variants": picked,
+        "primary": picked[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Forward primary to a Frida / objection script template.",
+    })
+
+
+def poly_ics_modbus_payload_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Polymorphic grammar for ICS / Modbus / S7 payload strategy."""
+    step = _step("poly_ics_modbus_payload_grammar")
+    variants = [
+        "modbus_read_coils", "modbus_write_single_coil",
+        "s7_read_szl", "s7_plc_stop", "s7_plc_hot_restart",
+        "dnp3_unsolicited_response", "iec104_interrogation",
+    ]
+    return _ok(step, {
+        "grammar": "ics_modbus_payload",
+        "variants": variants,
+        "primary": variants[0],
+        "model": "polymorphic (heuristic)",
+        "note": ("ICS payloads are destructive — the orchestrator "
+                 "will gate every step via the ACCEPT/CANCEL prompt."),
+    })
+
+
+def poly_re_yara_rule_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Polymorphic grammar for YARA / reverse-engineering rule shape."""
+    step = _step("poly_re_yara_rule_grammar")
+    variants = [
+        "string_at_offset", "import_hash_pe",
+        "section_entropy_high", "imports_anomaly",
+        "wide_string_match", "byte_sequence_unique",
+    ]
+    return _ok(step, {
+        "grammar": "re_yara_rule",
+        "variants": variants,
+        "primary": variants[0],
+        "model": "polymorphic (heuristic)",
+        "note": "Forward primary to a YARA rule template.",
+    })
+
+
+# --- target-adaptive pickers (cloud + mobile + OT + RE) -------------------
+
+
+def adapt_cloud_provider_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a cloud-OSINT tool from the target provider."""
+    step = _step("adapt_cloud_provider_picker")
+    provider = (str((args or {}).get("provider") or "")).lower()
+    if "aws" in provider:
+        pick, rationale = "pacu_or_scoutsuite", "AWS → Pacu (offensive) or ScoutSuite (audit)"
+    elif "azure" in provider or "entra" in provider:
+        pick, rationale = "roadtools_or_microburst", "Azure → ROADtools / MicroBurst"
+    elif "gcp" in provider or "google" in provider:
+        pick, rationale = "gcp_scanner_or_iam_enum", "GCP → GCP scanner / IAM privilege escalation"
+    elif "k8s" in provider or "kubernetes" in provider:
+        pick, rationale = "peirates_or_kubehound", "K8s → Peirates (offensive) or KubeHound (graph)"
+    else:
+        pick, rationale = "generic_cloud_enum", f"Unknown provider {provider!r} — fall back to generic cloud enum"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_provider": provider or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_mobile_target_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a mobile-assessment strategy from OS + version."""
+    step = _step("adapt_mobile_target_picker")
+    os_kind = (str((args or {}).get("mobile_os") or "")).lower()
+    jailbroken = bool((args or {}).get("jailbroken")) or bool((args or {}).get("rooted"))
+    if "ios" in os_kind:
+        if jailbroken:
+            pick, rationale = "frida_gadget_full_hook", "iOS jailbroken → Frida gadget with full hook"
+        else:
+            pick, rationale = "objection_nonjailbroken", "iOS non-jailbroken → objection (Frida-based runtime)"
+    elif "android" in os_kind:
+        if jailbroken:
+            pick, rationale = "apktool_smali_patch", "Android rooted → apktool smali patch + repackage"
+        else:
+            pick, rationale = "frida_objection_android", "Android non-rooted → Frida / objection with universal SSL bypass"
+    else:
+        pick, rationale = "unknown_mobile_os", f"Unknown mobile OS {os_kind!r}"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_os": os_kind or "unknown",
+        "jailbroken": jailbroken,
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_ot_protocol_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick an OT/ICS tool from the target protocol."""
+    step = _step("adapt_ot_protocol_picker")
+    proto = (str((args or {}).get("protocol") or "")).lower()
+    if "modbus" in proto:
+        pick, rationale = "pymodbus_tcp_scan", "Modbus → pymodbus (TCP/UDP/Serial)"
+    elif "s7" in proto or "siemens" in proto:
+        pick, rationale = "python_snap7_plc_enum", "Siemens S7 → python-snap7"
+    elif "dnp3" in proto:
+        pick, rationale = "dnp3_enum_script", "DNP3 → custom enum script (opendnp3 / pydnp3)"
+    elif "enip" in proto or "ethernetip" in proto:
+        pick, rationale = "enip_enum_cip", "EtherNet/IP → CIP enum (pycomm3)"
+    else:
+        pick, rationale = "isf_framework_generic", f"Unknown OT protocol {proto!r} → ISF framework"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_protocol": proto or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_re_tool_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick a reverse-engineering tool from binary kind + size."""
+    step = _step("adapt_re_tool_picker")
+    binary_kind = (str((args or {}).get("binary_kind") or "")).lower()
+    if "apk" in binary_kind or "android" in binary_kind:
+        pick, rationale = "apktool_jadx", "Android APK → apktool (decode/res) + jadx (decompile)"
+    elif "ios" in binary_kind or "macho" in binary_kind or "ipa" in binary_kind:
+        pick, rationale = "ipsw_frida", "iOS IPA / Mach-O → ipsw (parse) + frida (runtime)"
+    elif "pe" in binary_kind or "exe" in binary_kind or "windows" in binary_kind:
+        pick, rationale = "ghidra_or_radare2", "PE/EXE → Ghidra (decompile) or radare2 (RE)"
+    else:
+        pick, rationale = "radare2_generic", f"Unknown binary kind {binary_kind!r} → radare2 generic"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_binary": binary_kind or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_attack_chain_order_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick the chain order: recon → exploit → post-exploit → exfil.
+
+    Uses the attack_surface + phase_hint to decide the optimal
+    next step in the chain. Used by the chain planner to choose
+    the right tool from a polymorphic bundle.
+    """
+    step = _step("adapt_attack_chain_order_picker")
+    surface = (str((args or {}).get("attack_surface") or "")).lower()
+    phase = (str((args or {}).get("phase_hint") or "")).lower()
+    if "wireless" in surface or "wifi" in surface or "ble" in surface:
+        if phase == "recon":
+            pick, rationale = "wireless_recon_first", "wireless surface + recon → start with scan / handshake / probe"
+        else:
+            pick, rationale = "wireless_attack_after_recon", "wireless + attack phase → deauth / handshake / GATT write"
+    elif "cloud" in surface or "aws" in surface or "azure" in surface:
+        if phase == "recon":
+            pick, rationale = "cloud_recon_first", "cloud surface + recon → enumerate IAM / RBAC / public assets"
+        else:
+            pick, rationale = "cloud_privilege_escalation", "cloud + exploit → privilege escalation / lateral move"
+    elif "mobile" in surface or "android" in surface or "ios" in surface:
+        if phase == "recon":
+            pick, rationale = "mobile_recon_first", "mobile + recon → static analysis (apktool / jadx)"
+        else:
+            pick, rationale = "mobile_runtime_hook", "mobile + exploit → Frida hook (SSL pinning / root bypass)"
+    else:
+        pick, rationale = "default_recon_then_exploit", f"Generic {surface}/{phase} → recon first, exploit after"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "detected_surface": surface or "unknown",
+        "detected_phase": phase or "unknown",
+        "model": "target-adaptive (heuristic)",
+    })
+
+
 # ---------------------------------------------------------------------------
 
 POLY_ADAPT_REGISTRY: Dict[str, Any] = {
@@ -965,6 +1713,39 @@ POLY_ADAPT_REGISTRY: Dict[str, Any] = {
     "adapt_c2_framework_picker": adapt_c2_framework_picker,
     "adapt_osint_source_picker": adapt_osint_source_picker,
     "adapt_evidence_format_picker": adapt_evidence_format_picker,
+    # Polymorphic v3 (Phase 3 expansion) — 10 more
+    "poly_wpa3_sae_grammar": poly_wpa3_sae_grammar,
+    "poly_eapol_key_replay_grammar": poly_eapol_key_replay_grammar,
+    "poly_ble_ll_fragment_grammar": poly_ble_ll_fragment_grammar,
+    "poly_gatt_write_payload_grammar": poly_gatt_write_payload_grammar,
+    "poly_email_pattern_grammar": poly_email_pattern_grammar,
+    "poly_dorking_query_grammar": poly_dorking_query_grammar,
+    "poly_disk_carve_signature_grammar": poly_disk_carve_signature_grammar,
+    "poly_memory_yara_pattern_grammar": poly_memory_yara_pattern_grammar,
+    "poly_lateral_movement_grammar": poly_lateral_movement_grammar,
+    "poly_persistence_registry_grammar": poly_persistence_registry_grammar,
+    # Target-adaptive v3 (Phase 3 expansion) — 10 more
+    "adapt_wifi_chipset_picker": adapt_wifi_chipset_picker,
+    "adapt_wifi_channel_width_picker": adapt_wifi_channel_width_picker,
+    "adapt_ble_chipset_picker": adapt_ble_chipset_picker,
+    "adapt_ble_pairing_method_picker": adapt_ble_pairing_method_picker,
+    "adapt_osint_jurisdiction_picker": adapt_osint_jurisdiction_picker,
+    "adapt_osint_query_language_picker": adapt_osint_query_language_picker,
+    "adapt_forensics_image_format_picker": adapt_forensics_image_format_picker,
+    "adapt_forensics_timeline_format_picker": adapt_forensics_timeline_format_picker,
+    "adapt_persistence_mechanism_picker": adapt_persistence_mechanism_picker,
+    "adapt_exfil_channel_picker": adapt_exfil_channel_picker,
+    # T7 expansion (Phase 3) — cloud + mobile + OT + RE
+    "poly_aws_iam_enumeration_grammar": poly_aws_iam_enumeration_grammar,
+    "poly_k8s_lateral_movement_grammar": poly_k8s_lateral_movement_grammar,
+    "poly_mobile_frida_hook_grammar": poly_mobile_frida_hook_grammar,
+    "poly_ics_modbus_payload_grammar": poly_ics_modbus_payload_grammar,
+    "poly_re_yara_rule_grammar": poly_re_yara_rule_grammar,
+    "adapt_cloud_provider_picker": adapt_cloud_provider_picker,
+    "adapt_mobile_target_picker": adapt_mobile_target_picker,
+    "adapt_ot_protocol_picker": adapt_ot_protocol_picker,
+    "adapt_re_tool_picker": adapt_re_tool_picker,
+    "adapt_attack_chain_order_picker": adapt_attack_chain_order_picker,
 }
 
 
@@ -984,6 +1765,16 @@ POLY_ADAPT_RISK: Dict[str, str] = {
         "poly_volatility_plugin_grammar", "poly_disk_carving_grammar",
         "poly_sleuthkit_cmd_grammar", "poly_persistence_mechanism_grammar",
         "poly_exfil_channel_grammar", "poly_osint_user_agent_grammar",
+        # Polymorphic v3
+        "poly_wpa3_sae_grammar", "poly_eapol_key_replay_grammar",
+        "poly_ble_ll_fragment_grammar", "poly_gatt_write_payload_grammar",
+        "poly_email_pattern_grammar", "poly_dorking_query_grammar",
+        "poly_disk_carve_signature_grammar", "poly_memory_yara_pattern_grammar",
+        "poly_lateral_movement_grammar", "poly_persistence_registry_grammar",
+        # Polymorphic T7 (Phase 3)
+        "poly_aws_iam_enumeration_grammar", "poly_k8s_lateral_movement_grammar",
+        "poly_mobile_frida_hook_grammar", "poly_ics_modbus_payload_grammar",
+        "poly_re_yara_rule_grammar",
     ]},
     # Target-adaptive — never destructive
     **{k: "intrusive" for k in [
@@ -1003,6 +1794,16 @@ POLY_ADAPT_RISK: Dict[str, str] = {
         "adapt_ios_version_picker", "adapt_macos_version_picker",
         "adapt_c2_transport_picker", "adapt_c2_framework_picker",
         "adapt_osint_source_picker", "adapt_evidence_format_picker",
+        # Target-adaptive v3
+        "adapt_wifi_chipset_picker", "adapt_wifi_channel_width_picker",
+        "adapt_ble_chipset_picker", "adapt_ble_pairing_method_picker",
+        "adapt_osint_jurisdiction_picker", "adapt_osint_query_language_picker",
+        "adapt_forensics_image_format_picker", "adapt_forensics_timeline_format_picker",
+        "adapt_persistence_mechanism_picker", "adapt_exfil_channel_picker",
+        # Target-adaptive T7 (Phase 3)
+        "adapt_cloud_provider_picker", "adapt_mobile_target_picker",
+        "adapt_ot_protocol_picker", "adapt_re_tool_picker",
+        "adapt_attack_chain_order_picker",
     ]},
 }
 
@@ -1091,6 +1892,69 @@ POLY_ADAPT_DESCRIPTIONS: Dict[str, str] = {
         "Pick OSINT source from target type.",
     "adapt_evidence_format_picker":
         "Pick forensic evidence format from audience.",
+    # Polymorphic v3
+    "poly_wpa3_sae_grammar":
+        "Pick a WPA3-SAE attack variant (commit-flood, timing, etc).",
+    "poly_eapol_key_replay_grammar":
+        "Pick an EAPOL-Key replay counter-mutation strategy.",
+    "poly_ble_ll_fragment_grammar":
+        "Pick a BLE Link-Layer fragment-reassembly pattern.",
+    "poly_gatt_write_payload_grammar":
+        "Pick a GATT-write payload template (long, prepare, signed, etc).",
+    "poly_email_pattern_grammar":
+        "Pick an email-pattern heuristic for OSINT discovery.",
+    "poly_dorking_query_grammar":
+        "Pick a Google-dorking query template (placeholders filled at step time).",
+    "poly_disk_carve_signature_grammar":
+        "Pick a file-carving signature (header/footer, magic, NTFS, ext4).",
+    "poly_memory_yara_pattern_grammar":
+        "Pick a YARA pattern style for memory forensics.",
+    "poly_lateral_movement_grammar":
+        "Pick a lateral-movement vector (psexec/wmi/winrm/rdp/smb/ssh).",
+    "poly_persistence_registry_grammar":
+        "Pick a Windows-Registry Run-key variant for persistence.",
+    # Target-adaptive v3
+    "adapt_wifi_chipset_picker":
+        "Pick a monitor-mode driver from detected WiFi chipset.",
+    "adapt_wifi_channel_width_picker":
+        "Pick the channel width (20/40/80/160 MHz) from band.",
+    "adapt_ble_chipset_picker":
+        "Pick a BLE strategy from detected chipset (MT7922 / U4000 / Intel).",
+    "adapt_ble_pairing_method_picker":
+        "Pick a BLE pairing method from advertised IO capabilities.",
+    "adapt_osint_jurisdiction_picker":
+        "Pick an OSINT source by jurisdiction (PL/EU/US/CN).",
+    "adapt_osint_query_language_picker":
+        "Pick a query language for the OSINT source (boolean/cypher/natural).",
+    "adapt_forensics_image_format_picker":
+        "Pick a forensic image format from audience + tool availability.",
+    "adapt_forensics_timeline_format_picker":
+        "Pick a timeline format (plaso/jsonl/pdf) from audience.",
+    "adapt_persistence_mechanism_picker":
+        "Pick a persistence mechanism from target OS + reboot tolerance.",
+    "adapt_exfil_channel_picker":
+        "Pick an exfiltration channel (DNS/ICMP/HTTPS/SMB) from egress posture.",
+    # T7 expansion (Phase 3) — cloud + mobile + OT + RE
+    "poly_aws_iam_enumeration_grammar":
+        "Polymorphic grammar for AWS IAM enum (full/least-priv/assume-role chain).",
+    "poly_k8s_lateral_movement_grammar":
+        "Polymorphic grammar for K8s lateral movement (SA token / configmap / exec).",
+    "poly_mobile_frida_hook_grammar":
+        "Polymorphic grammar for Frida hook script (SSL pin / root / biometric).",
+    "poly_ics_modbus_payload_grammar":
+        "Polymorphic grammar for ICS payload (modbus / S7 / DNP3 — gated ACCEPT).",
+    "poly_re_yara_rule_grammar":
+        "Polymorphic grammar for YARA / RE rule shape (entropy / imphash / str).",
+    "adapt_cloud_provider_picker":
+        "Pick a cloud-OSINT tool from provider (aws/azure/gcp/k8s).",
+    "adapt_mobile_target_picker":
+        "Pick a mobile strategy from OS + jailbreak/root state.",
+    "adapt_ot_protocol_picker":
+        "Pick an OT/ICS tool from protocol (modbus/s7/dnp3/enip).",
+    "adapt_re_tool_picker":
+        "Pick a reverse-engineering tool from binary kind (apk/ipa/pe).",
+    "adapt_attack_chain_order_picker":
+        "Pick the next chain step from attack_surface + phase_hint.",
 }
 
 

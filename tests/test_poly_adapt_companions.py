@@ -1,6 +1,9 @@
 """Tests for core.refactors.poly_adapt_companions (Phase 2.4 §H).
 
-Verifies the 20 polymorphic / target-adaptive companion methods.
+Verifies the polymorphic / target-adaptive companion methods.
+Phase 2.4 §H.2 doubled to 40; Phase 3 expansion T2 added 20 more
+(30 poly + 30 adapt = 60). T7 expansion adds 10 more
+(35 poly + 35 adapt = 70 total).
 """
 from __future__ import annotations
 
@@ -22,17 +25,18 @@ from core.refactors import (
 # ---------------------------------------------------------------------------
 
 class TestRegistryShape:
-    def test_forty_methods(self):
-        # Phase 2.4 §H.2 doubled the count to 40 (20 poly + 20 adapt)
-        assert len(POLY_ADAPT_REGISTRY) == 40
+    def test_seventy_methods(self):
+        # T7 expansion (Phase 3) added 5 poly + 5 adapt
+        # → 35 polymorphic + 35 target-adaptive = 70 total
+        assert len(POLY_ADAPT_REGISTRY) == 70
 
-    def test_twenty_polymorphic(self):
+    def test_thirty_five_polymorphic(self):
         poly = [m for m in POLY_ADAPT_REGISTRY if m.startswith("poly_")]
-        assert len(poly) == 20
+        assert len(poly) == 35
 
-    def test_twenty_adaptive(self):
+    def test_thirty_five_adaptive(self):
         adapt = [m for m in POLY_ADAPT_REGISTRY if m.startswith("adapt_")]
-        assert len(adapt) == 20
+        assert len(adapt) == 35
 
     def test_all_have_risk(self):
         for m in POLY_ADAPT_REGISTRY:
@@ -185,8 +189,8 @@ class TestLookup:
 
     def test_list_methods(self):
         names = list_poly_adapt_methods()
-        # Phase 2.4 §H.2 doubled the count
-        assert len(names) == 40
+        # T7 expansion (Phase 3) brought the count to 70
+        assert len(names) == 70
         for n in names:
             assert isinstance(n, str)
 
@@ -212,7 +216,7 @@ class TestErrorHandling:
 # ---------------------------------------------------------------------------
 
 class TestPromptStanza:
-    def test_stanza_mentions_all_20(self):
+    def test_stanza_mentions_all(self):
         stanza = build_poly_adapt_prompt_stanza()
         for m in POLY_ADAPT_REGISTRY:
             assert m in stanza, f"missing {m} in stanza"

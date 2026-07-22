@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-BLE Attack / Post-Exploitation Runner (TP-LINK UB500 Plus / hci0)
-==================================================================
+BLE Attack / Post-Exploitation Runner (U4000 BLUETOOTH adapter / hci0)
+=====================================================================
 Real, GATT-subprocess attack + post-exploitation algorithms from the
 implementacja.txt spec (modules 21-30 BLE attack + 1-20 / 51-60 BLE
 post-exploitation), implemented as in-module algorithms following the
@@ -124,7 +124,14 @@ class BLEAttackRunner:
     def __init__(self, adapter: Optional[str] = None,
                  scanner: Optional[Any] = None,
                  args: Optional[Dict[str, Any]] = None):
-        self.adapter = adapter  # None -> default controller (hci0)
+        if adapter is None:
+            # Default to the operator's U4000 BLUETOOTH adapter (hci0,
+            # USB). KFIOSA_BLE_ADAPTER overrides the pick. Mirrors the
+            # WiFi side which hard-codes wlan0mon for the external
+            # MediaTek MT7922.
+            from core.ble.adapter_select import resolve_default_adapter
+            adapter = resolve_default_adapter()
+        self.adapter = adapter  # hci0 (U4000) by default; or env override
         self._scanner = scanner  # injectable for hermetic tests
         self.args = args or {}
 

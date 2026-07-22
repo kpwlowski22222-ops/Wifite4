@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-BLE Probe Runner (TP-LINK UB500 Plus / hci0)
-=============================================
+BLE Probe Runner (U4000 BLUETOOTH adapter / hci0)
+=================================================
 Real, passive BLE recon algorithms from the implementacja.txt spec,
 implemented as in-module algorithms (not wrappers) following the
 ``catalog_recon`` pattern: a ``BLEProbeRunner`` with a
@@ -311,7 +311,16 @@ class BLEProbeRunner:
                  oui_path: Optional[Path] = None,
                  scanner: Optional[Any] = None,
                  args: Optional[Dict[str, Any]] = None):
-        self.adapter = adapter  # None -> default controller (hci0)
+        if adapter is None:
+            # Mirror the WiFi side: the canonical external adapter
+            # is the U4000 BLUETOOTH adapter (hci0). The helper honours
+            # KFIOSA_BLE_ADAPTER (the operator's escape hatch) and
+            # defaults to "hci0" without spawning hciconfig — the
+            # heuristic enumeration is opt-in via
+            # core.ble.adapter_select.select_external_adapter().
+            from core.ble.adapter_select import resolve_default_adapter
+            adapter = resolve_default_adapter()
+        self.adapter = adapter  # hci0 (U4000) by default; or env override
         self.oui_path = oui_path
         self._scanner = scanner  # injectable for hermetic tests
         # Per-probe args (e.g. cross_device_linker_ble needs wifi_mac +

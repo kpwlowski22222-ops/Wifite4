@@ -76,7 +76,8 @@ def test_deep_enhance_one_already_deep_skips():
         catalog.mkdir()
         cpath = catalog / "github_octocat_hello.json"
         data = _write_minimal_catalog(cpath)
-        # Pre-fill with a 'deep' state — all 4 fields
+        # Pre-fill with a 'deep' state — all 5 required fields
+        # (Phase 2.4 added chain_examples as a required field)
         data["documentation"]["arguments"] = [
             {"name": "--target", "description": "target host"}]
         data["documentation"]["function_signatures"] = [
@@ -84,6 +85,9 @@ def test_deep_enhance_one_already_deep_skips():
              "language": "python"}]
         data["documentation"]["file_listing"] = ["main.py", "README.md"]
         data["documentation"]["languages"] = ["python"]
+        data["documentation"]["chain_examples"] = [
+            {"chain": "recon→attack", "predecessor": "nmap",
+             "successor": "exploit", "note": "derived"}]
         cpath.write_text(json.dumps(data, indent=2, ensure_ascii=False),
                          encoding="utf-8")
         out = deep_enhance_one(cpath, toolboxes_dir=None)

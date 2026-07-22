@@ -132,7 +132,7 @@ class BLEService:
 
 
 # ---------------------------------------------------------------------------
-# BLE panel client (real gatttool/hcitool backend)
+# BLE panel client (real gatttool/hcitool backend — U4000 BLUETOOTH adapter)
 # ---------------------------------------------------------------------------
 
 class BLEPanelClient:
@@ -147,7 +147,14 @@ class BLEPanelClient:
 
     def __init__(self, *, adapter: Optional[str] = None,
                  timeout: int = DEFAULT_TIMEOUT):
-        self.adapter = adapter  # e.g. ``hci0``; ``None`` → default
+        if adapter is None:
+            # Default to the operator's U4000 BLUETOOTH adapter (hci0,
+            # USB). KFIOSA_BLE_ADAPTER overrides the pick. Mirrors the
+            # WiFi panel which hard-codes wlan0mon for the external
+            # MediaTek MT7922.
+            from core.ble.adapter_select import resolve_default_adapter
+            adapter = resolve_default_adapter()
+        self.adapter = adapter  # hci0 (U4000) by default; or env override
         self.timeout = timeout
 
     def _hcitool(self) -> Optional[List[str]]:

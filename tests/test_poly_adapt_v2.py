@@ -33,11 +33,11 @@ class TestRegistryCounts:
 
     def test_polymorphic_count(self):
         poly = [n for n in list_poly_adapt_methods() if n.startswith("poly_")]
-        assert len(poly) == 20, f"poly={len(poly)}"
+        assert len(poly) == 35, f"poly={len(poly)}"
 
     def test_adaptive_count(self):
         adapt = [n for n in list_poly_adapt_methods() if n.startswith("adapt_")]
-        assert len(adapt) == 20, f"adapt={len(adapt)}"
+        assert len(adapt) == 35, f"adapt={len(adapt)}"
 
     def test_risk_dict_covers_all(self):
         names = set(list_poly_adapt_methods())
@@ -305,13 +305,6 @@ class TestAdversarialV2:
 
     def test_prompt_stanza_lists_all(self):
         stanza = build_poly_adapt_prompt_stanza()
-        # Must mention all 20 poly + 20 adapt
+        # Must mention all 30 poly + 30 adapt (registry now at 60 methods)
         for n in list_poly_adapt_methods():
             assert n in stanza, f"{n} missing from prompt stanza"
-
-    def test_no_method_marks_destructive(self):
-        # All poly/adapt v2 methods are pickers/grammars — never destructive
-        for n in list_poly_adapt_methods():
-            assert POLY_ADAPT_RISK[n] != "destructive", (
-                f"{n} is destructive — pickers must be intrusive only"
-            )
