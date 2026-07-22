@@ -156,6 +156,39 @@ def _vendor_for_bssid(bssid: str, oui_path: Optional[Path] = None) -> str:
     return "unknown"
 
 
+def _target_identity_snapshot(target: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """Shallow copy of identity fields from a live seed/target dict.
+
+    Used for ``recon["target"]`` so the report never holds a live
+    reference to the operator seed. Holding the live dict + later
+    assigning ``seed["recon"] = recon`` creates a circular reference
+    that breaks ``json.dumps`` in the AI chain planner / re-plan path.
+    """
+    if not isinstance(target, dict):
+        return {}
+    # Identity + engagement flags the planner actually reads from the
+    # recon snapshot. Deliberately excludes nested recon/wifi_attack/
+    # session blobs that can reintroduce cycles.
+    keys = (
+        "bssid", "BSSID", "ssid", "channel", "encryption", "enc",
+        "cipher", "auth", "interface", "power", "vendor", "essid",
+        "signal", "wps", "clients", "aio", "attach_zero_day",
+        "post_exploit", "anti_forensics", "polymorphic", "target_class",
+        "os", "address", "mac", "name",
+    )
+    out: Dict[str, Any] = {}
+    for k in keys:
+        if k in target:
+            v = target[k]
+            # Only copy JSON-safe scalars / short lists; skip nested
+            # dicts that might already be cyclic from a prior run.
+            if isinstance(v, (str, int, float, bool)) or v is None:
+                out[k] = v
+            elif isinstance(v, (list, tuple)) and len(v) <= 32:
+                out[k] = list(v)
+    return out
+
+
 def _step(name: str) -> Dict[str, Any]:
     """Scaffold a per-step result dict with the standard fields."""
     return {"name": name, "ok": False, "started_at": time.time(),
@@ -208,8 +241,14 @@ class CatalogRecon:
         # EMA of per-MAC RSSI across signal_map runs (persisted on the
         # instance so repeated probes smooth noisy single-sample reads).
         self._sig_cache: Dict[str, float] = {}
+        # Snapshot identity fields only — NEVER hold a live reference to
+        # ``self.target``. The TUI merges ``target["recon"] = recon_report``
+        # after run(); if recon["target"] is the same dict, that creates
+        # a cycle (target → recon → target) and every later
+        # ``json.dumps(seed)`` in the chain planner fails with
+        # "Circular reference detected", killing AI chains + re-plan.
         self.recon: Dict[str, Any] = {
-            "target": self.target,
+            "target": _target_identity_snapshot(self.target),
             "vendor": self.vendor,
             "bssid": self.bssid,
             "ssid": self.ssid,
@@ -1570,9 +1609,24 @@ class CatalogRecon:
             ("catalog_runs", self._catalog_iter),
         )
         if with_probes:
-            steps = steps + tuple(
-                (m, getattr(self, f"_{m}")) for m in self.RECON_PROBE_METHODS
-            )
+            # Novel probes only — core steps already listed above with their
+            # legacy method names (_wps_probe, not _wps). Re-deriving via
+            # f"_{m}" for m in RECON_PROBE_METHODS blew up with
+            # AttributeError: 'CatalogRecon' object has no attribute '_wps'
+            # and aborted the entire recon pass before any step ran.
+            core = set(self._CORE_STEP_FNS)
+            novel = []
+            for m in self.RECON_PROBE_METHODS:
+                if m in core:
+                    continue
+                fn = getattr(self, f"_{m}", None)
+                if callable(fn):
+                    novel.append((m, fn))
+                else:
+                    logger.warning(
+                        "recon probe %r has no method _%s; skipping", m, m
+                    )
+            steps = steps + tuple(novel)
         for name, fn in steps:
             try:
                 fn()

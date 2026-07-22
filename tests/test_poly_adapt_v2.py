@@ -32,12 +32,14 @@ class TestRegistryCounts:
         assert len(names) >= 40, f"only {len(names)} methods"
 
     def test_polymorphic_count(self):
+        # Phase 4 T20: 35 (pre-Phase 4) + 26 new poly = 55
         poly = [n for n in list_poly_adapt_methods() if n.startswith("poly_")]
-        assert len(poly) == 35, f"poly={len(poly)}"
+        assert len(poly) == 55, f"poly={len(poly)}"
 
     def test_adaptive_count(self):
+        # Phase 4 T20: 35 (pre-Phase 4) + 11 new adapt = 45
         adapt = [n for n in list_poly_adapt_methods() if n.startswith("adapt_")]
-        assert len(adapt) == 35, f"adapt={len(adapt)}"
+        assert len(adapt) == 45, f"adapt={len(adapt)}"
 
     def test_risk_dict_covers_all(self):
         names = set(list_poly_adapt_methods())

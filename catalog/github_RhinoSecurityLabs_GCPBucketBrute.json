@@ -1,18 +1,22 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
-    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
-    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
-    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST GCPBucketBrute --output $KFIOSA_OUTPUT_DIR/GCPBucketBrute.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST GCPBucketBrute --output $KFIOSA_OUTPUT_DIR/GCPBucketBrute.log"
+    "python3 gcpbucketbrute.py -k test -u",
+    "python3 gcpbucketbrute.py -k test -f ../sa-priv-key.pem -o ./out.txt",
+    "python3 gcpbucketbrute.py -k test -s 10"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "A script to enumerate Google Storage buckets, determine what access you have to them, and determine if they can be privilege escalated.",
+    "usage_sections": [
+      "Installation: 1. git clone https://github.com/RhinoSecurityLabs/GCPBucketBrute.git 2. cd GCPBucketBrute/ 3. pip3 install -r requirements.txt or python3 -m pip install -r requirements.txt",
+      "Usage: First, determine the type of authentication you want to use for enumeration between a user account, service account, or unauthenticated. If you are using a service account, provide the file path to the private key via the -f/--service-account-credential-file-path argument. If you"
+    ],
     "arguments": [
+      {
+        "name": "-credentials",
+        "description": "`-u`/`--unauthenticated`",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +133,11 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python3 gcpbucketbrute.py -k test -u",
+      "python3 gcpbucketbrute.py -k test -f ../sa-priv-key.pem -o ./out.txt",
+      "python3 gcpbucketbrute.py -k test -s 10"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +263,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, gcpbucketbrute, rhinosecuritylabs).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
-      "Step 3: cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: A script to enumerate Google Storage buckets, determine what access you have to them, and determine if they can be privilege escalated.",
+    "why_to_use": "Prefer this tool based on upstream description: A script to enumerate Google Storage buckets, determine what access you have to them, and determine if they can be privilege escalated.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `python3 gcpbucketbrute.py -k test -u`. Further invocations from upstream: `python3 gcpbucketbrute.py -k test -f ../sa-priv-key.pem -o ./out.txt`; `python3 gcpbucketbrute.py -k test -s 10`. A script to enumerate Google Storage buckets, determine what access you have to them, and determine if they can be privilege escalated."
   },
   "full_name": "RhinoSecurityLabs/GCPBucketBrute",
   "id": "github:RhinoSecurityLabs/GCPBucketBrute",
@@ -282,7 +286,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``GCPBucketBrute`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "A script to enumerate Google Storage buckets, determine what access you have to them, and determine if they can be privilege escalated.",
   "tags": [
     "offensive",
     "gcpbucketbrute",
@@ -300,12 +304,12 @@
   },
   "url": "https://github.com/RhinoSecurityLabs/GCPBucketBrute",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use GCPBucketBrute because A script to enumerate Google Storage buckets, determine what access you have to them, and determine if they can be privilege escalated.",
+    "When you need a concrete invocation, run `python3 gcpbucketbrute.py -k test -u` as documented upstream for GCPBucketBrute.",
+    "When you need a concrete invocation, run `python3 gcpbucketbrute.py -k test -f ../sa-priv-key.pem -o ./out.txt` as documented upstream for GCPBucketBrute.",
+    "When you need a concrete invocation, run `python3 gcpbucketbrute.py -k test -s 10` as documented upstream for GCPBucketBrute.",
+    "When chaining recon tools, pair GCPBucketBrute with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `GCPBucketBrute --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +328,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

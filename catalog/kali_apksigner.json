@@ -27,7 +27,151 @@
       "path": "/usr/bin/apksigner",
       "description": "sign and verify Android APKs",
       "usage": "apksigner [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show help about this command and exit",
+          "default": null,
+          "choices": null,
+          "raw": "--help  Show help about this command and exit"
+        },
+        {
+          "flags": [
+            "--ks-key-alias"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": ":Alias under which the private key and certificate are stored in the KeyStore.",
+          "default": null,
+          "choices": null,
+          "raw": "--ks-key-alias  :Alias under which the private key and certificate are stored in the KeyStore."
+        },
+        {
+          "flags": [
+            "--ks-provider-class"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": ":Fully-qualified class name of the JCA Provider from which to request the",
+          "default": null,
+          "choices": null,
+          "raw": "--ks-provider-class  :Fully-qualified class name of the JCA Provider from which to request the"
+        },
+        {
+          "flags": [
+            "--max-sdk-ver"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "sion).",
+          "default": null,
+          "choices": null,
+          "raw": "--max-sdk-ver  sion)."
+        },
+        {
+          "flags": [
+            "--max-sdk-version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "By de-",
+          "default": null,
+          "choices": null,
+          "raw": "--max-sdk-version  By de-"
+        },
+        {
+          "flags": [
+            "--min-sdk-version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": ":Lowest API Level on which this APK's signatures will be verified. By de-",
+          "default": null,
+          "choices": null,
+          "raw": "--min-sdk-version  :Lowest API Level on which this APK's signatures will be verified. By de-"
+        },
+        {
+          "flags": [
+            "--out"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": ":File into which to output the signed APK. By default, the APK is signed in-place,",
+          "default": null,
+          "choices": null,
+          "raw": "--out  :File into which to output the signed APK. By default, the APK is signed in-place,"
+        },
+        {
+          "flags": [
+            "--pass-encoding"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "character encoding (e.g., ibm437 or utf-8) to try for passwords containing",
+          "default": null,
+          "choices": null,
+          "raw": "--pass-encoding  character encoding (e.g., ibm437 or utf-8) to try for passwords containing"
+        },
+        {
+          "flags": [
+            "--print-certs"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show information about the APK's signing certificates",
+          "default": null,
+          "choices": null,
+          "raw": "--print-certs  Show information about the APK's signing certificates"
+        },
+        {
+          "flags": [
+            "--v1-signing-enabled"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": ":Whether to enable signing using JAR signing scheme (aka v1 signing",
+          "default": null,
+          "choices": null,
+          "raw": "--v1-signing-enabled  :Whether to enable signing using JAR signing scheme (aka v1 signing"
+        },
+        {
+          "flags": [
+            "--v2-signing-enabled"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": ":Whether to enable signing using APK Signature Scheme v2 (aka v2 signing",
+          "default": null,
+          "choices": null,
+          "raw": "--v2-signing-enabled  :Whether to enable signing using APK Signature Scheme v2 (aka v2 signing"
+        },
+        {
+          "flags": [
+            "--verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose output mode",
+          "default": null,
+          "choices": null,
+          "raw": "--verbose  Verbose output mode"
+        },
+        {
+          "flags": [
+            "-Werr"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Treat warnings as errors",
+          "default": null,
+          "choices": null,
+          "raw": "-Werr  Treat warnings as errors"
+        }
+      ]
     }
   ],
   "files": [
@@ -41,5 +185,114 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "apksigner  [options] apk",
+    "apksigner --version",
+    "apksigner --help",
+    "apksigner  sign  --ks release.jks app.apk apksigner verify --verbose app.apk apksigner lineage",
+    "Level 15 and higher: $ apksigner verify --min-sdk-version 15 app.apk",
+    "apksigner lineage --in /path/to/existing/lineage --print-certs -v",
+    "apksigner rotate --in /path/to/existing/lineage --out /path/to/new/file",
+    "apksigner rotate --out /path/to/new/file --old-signer --ks release.jks"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use apksigner because command line tool to sign and verify Android APKs.",
+    "When the engagement is in the install phase, use apksigner as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `apksigner  [options] apk` as documented upstream for apksigner.",
+    "When you need a concrete invocation, run `apksigner --version` as documented upstream for apksigner.",
+    "When you need a concrete invocation, run `apksigner --help` as documented upstream for apksigner.",
+    "When you need a concrete invocation, run `apksigner  sign  --ks release.jks app.apk apksigner verify --verbose app.apk apksigner lineage` as documented upstream for apksigner.",
+    "When chaining Kali Linux tools, pair apksigner with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `apksigner --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Show help about this command and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--ks-key-alias",
+        "description": ":Alias under which the private key and certificate are stored in the KeyStore.",
+        "source": "docs"
+      },
+      {
+        "name": "--ks-provider-class",
+        "description": ":Fully-qualified class name of the JCA Provider from which to request the",
+        "source": "docs"
+      },
+      {
+        "name": "--max-sdk-ver",
+        "description": "sion).",
+        "source": "docs"
+      },
+      {
+        "name": "--max-sdk-version",
+        "description": "By de-",
+        "source": "docs"
+      },
+      {
+        "name": "--min-sdk-version",
+        "description": ":Lowest API Level on which this APK's signatures will be verified. By de-",
+        "source": "docs"
+      },
+      {
+        "name": "--out",
+        "description": ":File into which to output the signed APK. By default, the APK is signed in-place,",
+        "source": "docs"
+      },
+      {
+        "name": "--pass-encoding",
+        "description": "character encoding (e.g., ibm437 or utf-8) to try for passwords containing",
+        "source": "docs"
+      },
+      {
+        "name": "--print-certs",
+        "description": "Show information about the APK's signing certificates",
+        "source": "docs"
+      },
+      {
+        "name": "--v1-signing-enabled",
+        "description": ":Whether to enable signing using JAR signing scheme (aka v1 signing",
+        "source": "docs"
+      },
+      {
+        "name": "--v2-signing-enabled",
+        "description": ":Whether to enable signing using APK Signature Scheme v2 (aka v2 signing",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Verbose output mode",
+        "source": "docs"
+      },
+      {
+        "name": "-Werr",
+        "description": "Treat warnings as errors",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "apksigner  [options] apk",
+      "apksigner --version",
+      "apksigner --help",
+      "apksigner  sign  --ks release.jks app.apk apksigner verify --verbose app.apk apksigner lineage",
+      "Level 15 and higher: $ apksigner verify --min-sdk-version 15 app.apk",
+      "apksigner lineage --in /path/to/existing/lineage --print-certs -v",
+      "apksigner rotate --in /path/to/existing/lineage --out /path/to/new/file",
+      "apksigner rotate --out /path/to/new/file --old-signer --ks release.jks"
+    ],
+    "readme": "apksigner - sign and verify Android APKs",
+    "how_to_use": "Install/setup: sudo apt install android-platform-tools-apksig. Run the primary entrypoint as shown in upstream docs, e.g. `apksigner --version`. Further invocations from upstream: `apksigner --help`; `apksigner  sign  --ks release.jks app.apk apksigner verify --verbose app.apk apksigner lineage`. command line tool to sign and verify Android APKs.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: command line tool to sign and verify Android APKs.",
+    "why_to_use": "Prefer this tool because: command line tool to sign and verify Android APKs.",
+    "usage_sections": [
+      "Install with: sudo apt install android-platform-tools-apksig",
+      "Install with: sudo apt install android-platform-tools-apksig"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -8,8 +8,10 @@
   "url": "https://github.com/edonsec/wifi-hawk",
   "summary": "WifiHawk - Wifi Passive Recon",
   "documentation": {
-    "readme": "WifiHawk - Wifi Passive Recon",
-    "usage_sections": [],
+    "readme": "I wrote this as a proof of concept and it is not to be used for for any illegitimate purposes.",
+    "usage_sections": [
+      "Usage: Sort out necessary dependencies: Available options First run the capture (needs to be run as root): View currently captured results (doesn't need root, but ensure db file is readable / writable by non-root): Attempt to plot map: Providing no errors or limits hit - just open /ssid"
+    ],
     "arguments": [
       {
         "name": "--dry",
@@ -193,7 +195,15 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "source ./env/bin/activate",
+      "python setup.py install",
+      "./WifiHawkCapture -h",
+      "./WifiHawkPlot -h",
+      "./WifiHawkCapture -i wlan0mon -d \"~/wifihawk.db\"",
+      "./WifiHawkPlot -d \"~/wifihawk.db\" --dry -v",
+      "./WifiHawkPlot -d \"~/wifihawk.db\" -w resources/rules/uk-router.json -o ~/ssid-map.html -v"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -277,13 +287,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'iots']' as the attack surface (reconnaissance, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/wifi-hawk && python3 wifi-hawk.py --help",
-      "Step 2: cd toolboxes/wifi-hawk && cat README.md",
-      "Step 3: cd toolboxes/wifi-hawk && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, iots] in the Reconnaissance category. Fits when the engagement needs: WifiHawk - Wifi Passive Recon.",
+    "why_to_use": "Prefer this tool based on upstream description: I wrote this as a proof of concept and it is not to be used for for any illegitimate purposes.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `source ./env/bin/activate`. Further invocations from upstream: `python setup.py install`; `./WifiHawkCapture -h`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -314,18 +320,23 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Reconnaissance, use wifi-hawk because WifiHawk - Wifi Passive Recon.",
+    "When the engagement is in the recon phase, use wifi-hawk as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `source ./env/bin/activate` as documented upstream for wifi-hawk.",
+    "When you need a concrete invocation, run `python setup.py install` as documented upstream for wifi-hawk.",
+    "When you need a concrete invocation, run `./WifiHawkCapture -h` as documented upstream for wifi-hawk.",
+    "When you need a concrete invocation, run `./WifiHawkPlot -h` as documented upstream for wifi-hawk.",
+    "When chaining Reconnaissance tools, pair wifi-hawk with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `wifi-hawk --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/wifi-hawk && python3 wifi-hawk.py --help",
-    "cd toolboxes/wifi-hawk && cat README.md",
-    "cd toolboxes/wifi-hawk && ls -la",
-    "cd toolboxes/wifi-hawk && python3 wifi-hawk.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-hawk --output $KFIOSA_OUTPUT_DIR/wifi-hawk.log"
+    "source ./env/bin/activate",
+    "python setup.py install",
+    "./WifiHawkCapture -h",
+    "./WifiHawkPlot -h",
+    "./WifiHawkCapture -i wlan0mon -d \"~/wifihawk.db\"",
+    "./WifiHawkPlot -d \"~/wifihawk.db\" --dry -v",
+    "./WifiHawkPlot -d \"~/wifihawk.db\" -w resources/rules/uk-router.json -o ~/ssid-map.html -v"
   ],
   "attack_surface": [
     "web",
@@ -348,5 +359,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

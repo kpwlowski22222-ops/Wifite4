@@ -6,10 +6,16 @@
   "owner": "GhostPack",
   "category": "Post-Exploitation",
   "url": "https://github.com/GhostPack/SharpDPAPI",
-  "summary": "Curated toolbox entry for **GhostPack/SharpDPAPI** in the Post-Exploitation category.",
+  "summary": "SharpDPAPI is a C# port of some DPAPI functionality from @gentilkiwi's Mimikatz project.",
   "documentation": {
-    "readme": "Curated toolbox entry for **GhostPack/SharpDPAPI** in the Post-Exploitation category.",
-    "usage_sections": [],
+    "readme": "SharpDPAPI is a C# port of some DPAPI functionality from @gentilkiwi's Mimikatz project.",
+    "usage_sections": [
+      "SharpDPAPI Command Line Usage",
+      "SharpChrome Command Line Usage",
+      "certificates /machine",
+      "Targeting other .NET versions",
+      "Sidenote: Running SharpDPAPI Through PowerShell"
+    ],
     "arguments": [
       {
         "name": "--depth",
@@ -187,7 +193,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "SharpDPAPI.exe search /type:registry [/path:HKLM\\path\\to\\key] [/showErrors]",
+      "SharpDPAPI.exe search /type:folder /path:C:\\path\\to\\folder [/maxBytes:<numOfBytes>] [/showErrors]",
+      "SharpDPAPI.exe search /type:file /path:C:\\path\\to\\file [/maxBytes:<numOfBytes>]",
+      "SharpDPAPI.exe search /type:base64 [/base:<base64 string>]"
+    ],
     "file_listing": [
       "README.md"
     ],
@@ -238,13 +249,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['shell_windows', 'shell_linux', 'ad']' as the attack surface (post-exploitation, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/SharpDPAPI && python3 SharpDPAPI.py --help",
-      "Step 2: cd toolboxes/SharpDPAPI && cat README.md",
-      "Step 3: cd toolboxes/SharpDPAPI && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [shell_windows, shell_linux, ad] in the Post-Exploitation category. Fits when the engagement needs: SharpDPAPI is a C# port of some DPAPI functionality from @gentilkiwi's Mimikatz project.",
+    "why_to_use": "Prefer this tool based on upstream description: SharpDPAPI is a C# port of some DPAPI functionality from @gentilkiwi's Mimikatz project.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `SharpDPAPI.exe search /type:registry [/path:HKLM\\path\\to\\key] [/showErrors]`. Further invocations from upstream: `SharpDPAPI.exe search /type:folder /path:C:\\path\\to\\folder [/maxBytes:<numOfBytes>] [/showErrors]`; `SharpDPAPI.exe search /type:file /path:C:\\path\\to\\file [/maxBytes:<numOfBytes>]`. SharpDPAPI is a C# port of some DPAPI functionality from @gentilkiwi's Mimikatz project."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -275,18 +282,20 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Post-Exploitation system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Post-Exploitation, use SharpDPAPI because SharpDPAPI is a C# port of some DPAPI functionality from @gentilkiwi's Mimikatz project.",
+    "When the engagement is in the post_exploit phase, use SharpDPAPI as a cataloged Post-Exploitation tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `SharpDPAPI.exe search /type:registry [/path:HKLM\\path\\to\\key] [/showErrors]` as documented upstream for SharpDPAPI.",
+    "When you need a concrete invocation, run `SharpDPAPI.exe search /type:folder /path:C:\\path\\to\\folder [/maxBytes:<numOfBytes>] [/showErrors]` as documented upstream for SharpDPAPI.",
+    "When you need a concrete invocation, run `SharpDPAPI.exe search /type:file /path:C:\\path\\to\\file [/maxBytes:<numOfBytes>]` as documented upstream for SharpDPAPI.",
+    "When you need a concrete invocation, run `SharpDPAPI.exe search /type:base64 [/base:<base64 string>]` as documented upstream for SharpDPAPI.",
+    "When chaining Post-Exploitation tools, pair SharpDPAPI with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `SharpDPAPI --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/SharpDPAPI && python3 SharpDPAPI.py --help",
-    "cd toolboxes/SharpDPAPI && cat README.md",
-    "cd toolboxes/SharpDPAPI && ls -la",
-    "cd toolboxes/SharpDPAPI && python3 SharpDPAPI.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpDPAPI --output $KFIOSA_OUTPUT_DIR/SharpDPAPI.log"
+    "SharpDPAPI.exe search /type:registry [/path:HKLM\\path\\to\\key] [/showErrors]",
+    "SharpDPAPI.exe search /type:folder /path:C:\\path\\to\\folder [/maxBytes:<numOfBytes>] [/showErrors]",
+    "SharpDPAPI.exe search /type:file /path:C:\\path\\to\\file [/maxBytes:<numOfBytes>]",
+    "SharpDPAPI.exe search /type:base64 [/base:<base64 string>]"
   ],
   "attack_surface": [
     "shell_windows",
@@ -307,5 +316,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -12,6 +12,11 @@
     "usage_sections": [],
     "arguments": [
       {
+        "name": "-Fi",
+        "description": "{name}\")",
+        "source": "docs"
+      },
+      {
         "name": "--help",
         "description": "Show help / usage and exit.",
         "source": "v2_enhancement"
@@ -189,7 +194,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/wifi-hook && python3 wifi-hook.py --help",
+      "cd toolboxes/wifi-hook && cat README.md",
+      "cd toolboxes/wifi-hook && ls -la",
+      "cd toolboxes/wifi-hook && python3 wifi-hook.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-hook --output $KFIOSA_OUTPUT_DIR/wifi-hook.log"
+    ],
     "file_listing": [
       "README.md",
       "wifi hook.exe",
@@ -242,13 +253,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/wifi-hook && python3 wifi-hook.py --help",
-      "Step 2: cd toolboxes/wifi-hook && cat README.md",
-      "Step 3: cd toolboxes/wifi-hook && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: The scanned files will be automatically saved in the “E” directory with the name dat-w.txt change this section to adjust:.",
+    "why_to_use": "Prefer this tool based on upstream description: The scanned files will be automatically saved in the “E” directory with the name dat-w.txt change this section to adjust:.",
+    "how_to_use": "Clone or install `wifi-hook` from its upstream repository, then run `wifi-hook --help` (or the README entrypoint) to confirm flags. The scanned files will be automatically saved in the “E” directory with the name dat-w.txt change this section to adjust:."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -279,11 +286,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use wifi-hook because The scanned files will be automatically saved in the “E” directory with the name dat-w.txt change this section to adjust:.",
+    "When chaining Wireless tools, pair wifi-hook with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `wifi-hook --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/wifi-hook && python3 wifi-hook.py --help",
@@ -313,5 +318,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

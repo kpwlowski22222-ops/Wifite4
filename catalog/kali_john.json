@@ -27,7 +27,41 @@
       "path": "/usr/sbin/SIPdump",
       "description": "Part of SIPcrack, A suite of tools to sniff and crack the digest authentications within the SIP protocol.",
       "usage": "SIPdump [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "set libpcap filter",
+          "default": null,
+          "choices": null,
+          "raw": "-f  set libpcap filter"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "interface to listen on",
+          "default": null,
+          "choices": null,
+          "raw": "-i  interface to listen on"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use pcap data file",
+          "default": null,
+          "choices": null,
+          "raw": "-p  use pcap data file"
+        }
+      ]
     },
     {
       "name": "bitlocker2john",
@@ -253,5 +287,50 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "sipdump [options] <dump_file>",
+    "sipdump -i eth0 logins.dump"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use SIPdump because active password cracking tool.",
+    "When the engagement is in the install phase, use SIPdump as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `sipdump [options] <dump_file>` as documented upstream for SIPdump.",
+    "When you need a concrete invocation, run `sipdump -i eth0 logins.dump` as documented upstream for SIPdump.",
+    "When chaining Kali Linux tools, pair SIPdump with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `SIPdump --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-f",
+        "description": "set libpcap filter",
+        "source": "manpage"
+      },
+      {
+        "name": "-i",
+        "description": "interface to listen on",
+        "source": "manpage"
+      },
+      {
+        "name": "-p",
+        "description": "use pcap data file",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "sipdump [options] <dump_file>",
+      "sipdump -i eth0 logins.dump"
+    ],
+    "readme": "sipdump - Part of SIPcrack, A suite of tools to sniff and crack the digest authentications within the SIP protocol.",
+    "how_to_use": "Install/setup: sudo apt install john. Run the primary entrypoint as shown in upstream docs, e.g. `sipdump [options] <dump_file>`. Further invocations from upstream: `sipdump -i eth0 logins.dump`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: active password cracking tool.",
+    "why_to_use": "Prefer this tool based on upstream description: sipdump - Part of SIPcrack, A suite of tools to sniff and crack the digest authentications within the SIP protocol.",
+    "usage_sections": [
+      "Install with: sudo apt install john",
+      "Install with: sudo apt install john"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

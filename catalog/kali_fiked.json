@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "fiked",
   "title": "fiked",
-  "summary": "### fiked",
+  "summary": "fiked - a fake IKE PSK+XAUTH daemon based on vpnc",
   "version": "0.0.5-1kali8",
   "architectures": [
     "any"
@@ -31,36 +31,25 @@
       "arguments": [
         {
           "flags": [
-            "-r"
-          ],
-          "metavar": "use raw socket",
-          "takes_value": true,
-          "description": "forge ip src addr to match <gateway> (disables -u)",
-          "default": null,
-          "choices": null,
-          "raw": " \t-r\tuse raw socket: forge ip src addr to match <gateway> (disables -u)"
-        },
-        {
-          "flags": [
             "-d"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "detach from tty and run as a daemon (implies -q)",
+          "description": "Detach from TTY and run as a daemon.",
           "default": null,
           "choices": null,
-          "raw": " \t-d\tdetach from tty and run as a daemon (implies -q)"
+          "raw": "-d  Detach from TTY and run as a daemon."
         },
         {
           "flags": [
-            "-q"
+            "-g"
           ],
-          "metavar": "is also given log to file only.",
+          "metavar": null,
           "takes_value": false,
-          "description": "be quiet, don't write anything to stdout",
+          "description": "Impersonate gateway. This IP address is used in the responder ID payload, and as a",
           "default": null,
           "choices": null,
-          "raw": " \t-q\tbe quiet, don't write anything to stdout"
+          "raw": "-g  Impersonate gateway. This IP address is used in the responder ID payload, and as a"
         },
         {
           "flags": [
@@ -68,10 +57,76 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "print help and exit",
+          "description": "Display help and exit.",
           "default": null,
           "choices": null,
-          "raw": " \t-h\tprint help and exit"
+          "raw": "-h  Display help and exit."
+        },
+        {
+          "flags": [
+            "-k"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "secret with key/group id id as pre-shared key in phase 1 authentication. This op-",
+          "default": null,
+          "choices": null,
+          "raw": "-k  secret with key/group id id as pre-shared key in phase 1 authentication. This op-"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Append verbous logging to file instead of just standard output. If -q is also given,",
+          "default": null,
+          "choices": null,
+          "raw": "-L  Append verbous logging to file instead of just standard output. If -q is also given,"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "captured XAUTH user credentials to file using a grep friendly format, including",
+          "default": null,
+          "choices": null,
+          "raw": "-l  captured XAUTH user credentials to file using a grep friendly format, including"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be quiet and do not log to standard output.",
+          "default": null,
+          "choices": null,
+          "raw": "-q  Be quiet and do not log to standard output."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "the source address on sent packets to match gateway. This uses a raw socket to",
+          "default": null,
+          "choices": null,
+          "raw": "-r  the source address on sent packets to match gateway. This uses a raw socket to"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "privileges after opening sockets and files by setting the real, effective and",
+          "default": null,
+          "choices": null,
+          "raw": "-u  privileges after opening sockets and files by setting the real, effective and"
         },
         {
           "flags": [
@@ -79,65 +134,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "print version and exit",
+          "description": "Display version information and exit.",
           "default": null,
           "choices": null,
-          "raw": " \t-V\tprint version and exit"
-        },
-        {
-          "flags": [
-            "-g"
-          ],
-          "metavar": "gw",
-          "takes_value": true,
-          "description": "VPN gateway address to impersonate",
-          "default": null,
-          "choices": null,
-          "raw": " \t-g gw\tVPN gateway address to impersonate"
-        },
-        {
-          "flags": [
-            "-k"
-          ],
-          "metavar": "i",
-          "takes_value": true,
-          "description": "k\tpre-shared key aka. group password, shared secret, prefixed",
-          "default": null,
-          "choices": null,
-          "raw": " \t-k i:k\tpre-shared key aka. group password, shared secret, prefixed"
-        },
-        {
-          "flags": [
-            "-u"
-          ],
-          "metavar": "user",
-          "takes_value": true,
-          "description": "drop privileges to unprivileged user account",
-          "default": null,
-          "choices": null,
-          "raw": " \t-u user\tdrop privileges to unprivileged user account"
-        },
-        {
-          "flags": [
-            "-l"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "append results to credential log file",
-          "default": null,
-          "choices": null,
-          "raw": " \t-l file\tappend results to credential log file"
-        },
-        {
-          "flags": [
-            "-L"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "verbous logging to file instead of stdout",
-          "default": null,
-          "choices": null,
-          "raw": " \t-L file\tverbous logging to file instead of stdout"
+          "raw": "-V  Display version information and exit."
         }
       ],
       "raw_help": "root@kali:~# fiked --help\n fiked: invalid option -- '-'\n Usage: fiked [-rdqhV] -g gw -k id:psk [-k ..] [-u user] [-l file] [-L file]\n \t-r\tuse raw socket: forge ip src addr to match <gateway> (disables -u)\n \t-d\tdetach from tty and run as a daemon (implies -q)\n \t-q\tbe quiet, don't write anything to stdout\n \t-h\tprint help and exit\n \t-V\tprint version and exit\n \t-g gw\tVPN gateway address to impersonate\n \t-k i:k\tpre-shared key aka. group password, shared secret, prefixed\n \t\twith its group/key id (first -k sets default)\n \t-u user\tdrop privileges to unprivileged user account\n \t-l file\tappend results to credential log file\n \t-L file\tverbous logging to file instead of stdout",
@@ -225,21 +225,17 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use fiked because fiked - a fake IKE PSK+XAUTH daemon based on vpnc.",
+    "When you need a concrete invocation, run `fiked [-rdqhV] -g gateway -k id:secret=$KFIOSA_SECRET user] [-l file] [-L file]` as documented upstream for fiked.",
+    "When you need a concrete invocation, run `fiked -g $KFIOSA_TARGET_HOST -k group1:g3h31m -k group2:s3kr3t -l account.log` as documented upstream for fiked.",
+    "When you need a concrete invocation, run `fiked -g $KFIOSA_TARGET_HOST -k group1:g3h31m -l account.log -d -L fiked.log` as documented upstream for fiked.",
+    "When chaining Kali Linux tools, pair fiked with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `fiked --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/fiked && python3 fiked.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/fiked && python3 fiked.py --help",
-    "cd toolboxes/fiked && python3 fiked.py --help",
-    "cd toolboxes/fiked && python3 fiked.py --help",
-    "cd toolboxes/fiked && python3 fiked.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fiked --output $KFIOSA_OUTPUT_DIR/fiked.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fiked --output $KFIOSA_OUTPUT_DIR/fiked.log"
+    "fiked [-rdqhV] -g gateway -k id:secret=$KFIOSA_SECRET user] [-l file] [-L file]",
+    "fiked -g $KFIOSA_TARGET_HOST -k group1:g3h31m -k group2:s3kr3t -l account.log",
+    "fiked -g $KFIOSA_TARGET_HOST -k group1:g3h31m -l account.log -d -L fiked.log"
   ],
   "attack_surface": [
     "web"
@@ -254,5 +250,74 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "Detach from TTY and run as a daemon.",
+        "source": "docs"
+      },
+      {
+        "name": "-g",
+        "description": "Impersonate gateway. This IP address is used in the responder ID payload, and as a",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Display help and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-k",
+        "description": "secret with key/group id id as pre-shared key in phase 1 authentication. This op-",
+        "source": "docs"
+      },
+      {
+        "name": "-L",
+        "description": "Append verbous logging to file instead of just standard output. If -q is also given,",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "captured XAUTH user credentials to file using a grep friendly format, including",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Be quiet and do not log to standard output.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "the source address on sent packets to match gateway. This uses a raw socket to",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "privileges after opening sockets and files by setting the real, effective and",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Display version information and exit.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "fiked [-rdqhV] -g gateway -k id:secret=$KFIOSA_SECRET user] [-l file] [-L file]",
+      "fiked -g $KFIOSA_TARGET_HOST -k group1:g3h31m -k group2:s3kr3t -l account.log",
+      "fiked -g $KFIOSA_TARGET_HOST -k group1:g3h31m -l account.log -d -L fiked.log"
+    ],
+    "readme": "fiked - a fake IKE PSK+XAUTH daemon based on vpnc",
+    "how_to_use": "Install/setup: sudo apt install fiked. Run the primary entrypoint as shown in upstream docs, e.g. `fiked [-rdqhV] -g gateway -k id:secret=$KFIOSA_SECRET user] [-l file] [-L file]`. Further invocations from upstream: `fiked -g $KFIOSA_TARGET_HOST -k group1:g3h31m -k group2:s3kr3t -l account.log`; `fiked -g $KFIOSA_TARGET_HOST -k group1:g3h31m -l account.log -d -L fiked.log`. fiked - a fake IKE PSK+XAUTH daemon based on vpnc.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: fiked - a fake IKE PSK+XAUTH daemon based on vpnc.",
+    "why_to_use": "Prefer this tool based on upstream description: fiked - a fake IKE PSK+XAUTH daemon based on vpnc.",
+    "usage_sections": [
+      "Install with: sudo apt install fiked",
+      "Install with: sudo apt install fiked"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

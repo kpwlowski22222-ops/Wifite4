@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "regripper",
   "title": "regripper",
-  "summary": "### regripper",
+  "summary": "Regripper - forensic analysis of Registry hives",
   "version": "3.0~git20241212.bdf7ac2+dfsg-1",
   "architectures": [
     "all"
@@ -33,158 +33,36 @@
       "arguments": [
         {
           "flags": [
-            "-r"
-          ],
-          "metavar": "hive .........Registry hive file to parse",
-          "takes_value": true,
-          "description": "<hive>  Specify, which Registry hive file to parse. Those can be found",
-          "default": null,
-          "choices": null,
-          "raw": " -r [hive] .........Registry hive file to parse"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": "................Check to see if the hive is dirty",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -d ................Check to see if the hive is dirty"
-        },
-        {
-          "flags": [
-            "-g"
-          ],
-          "metavar": "................Guess the hive file type",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -g ................Guess the hive file type"
-        },
-        {
-          "flags": [
-            "-a"
-          ],
-          "metavar": "................Automatically run hive-specific plugins",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -a ................Automatically run hive-specific plugins"
-        },
-        {
-          "flags": [
-            "-aT"
-          ],
-          "metavar": "...............Automatically run hive-specific TLN plugins",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -aT ...............Automatically run hive-specific TLN plugins"
-        },
-        {
-          "flags": [
             "-f"
           ],
-          "metavar": "profile .......use the profile",
-          "takes_value": true,
-          "description": "be  sam,  secu-",
+          "metavar": null,
+          "takes_value": false,
+          "description": "<hivetype> Specify the hive type/profile to use, could be sam, security, software, system,",
           "default": null,
           "choices": null,
-          "raw": " -f [profile].......use the profile"
+          "raw": "-f  <hivetype> Specify the hive type/profile to use, could be sam, security, software, system,"
         },
         {
           "flags": [
             "-p"
           ],
-          "metavar": "plugin ........use the plugin",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "-l for full",
           "default": null,
           "choices": null,
-          "raw": " -p [plugin]........use the plugin"
+          "raw": "-p  -l for full"
         },
         {
           "flags": [
-            "-l"
+            "-r"
           ],
-          "metavar": "................list all plugins",
-          "takes_value": true,
-          "description": "List  all  available  plugins.  You  could  place  custom  plugins  in",
+          "metavar": null,
+          "takes_value": false,
+          "description": "%SystemRoot%\\Sys-",
           "default": null,
           "choices": null,
-          "raw": " -l ................list all plugins"
-        },
-        {
-          "flags": [
-            "-c",
-            "-l"
-          ],
-          "metavar": "................Output plugin list in CSV format use with",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -c ................Output plugin list in CSV format (use with -l)"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "systemname......system name TLN support",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -s systemname......system name (TLN support)"
-        },
-        {
-          "flags": [
-            "-u"
-          ],
-          "metavar": "username........User name TLN support",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -u username........User name (TLN support)"
-        },
-        {
-          "flags": [
-            "-uP"
-          ],
-          "metavar": "...............Update default profiles",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -uP ...............Update default profiles"
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": ".................Help print this information",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -h.................Help (print this information)"
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": "Output list of plugins as comma-separated values.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -c Output list of plugins as comma-separated values."
+          "raw": "-r  %SystemRoot%\\Sys-"
         }
       ],
       "raw_help": "root@kali:~# regripper -h\n Rip v.3.0 - CLI RegRipper tool\t\n Rip [-r Reg hive file] [-f profile] [-p plugin] [options]\n Parse Windows Registry files, using either a single module, or a profile.\n \n NOTE: This tool does NOT automatically process Registry transaction logs! The tool \n does check to see if the hive is dirty, but does not automatically process the\n transaction logs.  If you need to incorporate transaction logs, please consider \n using yarp + registryFlush.py, or rla.exe from Eric Zimmerman.\n \n -r [hive] .........Registry hive file to parse\n -d ................Check to see if the hive is dirty \n -g ................Guess the hive file type \n -a ................Automatically run hive-specific plugins \n -aT ...............Automatically run hive-specific TLN plugins \n -f [profile].......use the profile \n -p [plugin]........use the plugin\n -l ................list all plugins\n -c ................Output plugin list in CSV format (use with -l)\n -s systemname......system name (TLN support)\n -u username........User name (TLN support)\n -uP ...............Update default profiles\n -h.................Help (print this information)\n \n Ex: C:\\>rip -r c:\\case\\system -f system\n   C:\\>rip -r c:\\case\\ntuser.dat -p userassist\n   C:\\>rip -r c:\\case\\ntuser.dat -a\n   C:\\>rip -l -c\n \n All output goes to STDOUT; use redirection (ie, > or >>) to output to a file.\n \n copyright 2020 Quantum Analytics Research, LLC",
@@ -285,21 +163,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use regripper because Regripper - forensic analysis of Registry hives.",
+    "When you need a concrete invocation, run `regripper  [-r  <hivefile>]  [-f <hivetype>] [-p <plugin>] [-d] [-g] [-aT] [-s systemname] [-u` as documented upstream for regripper.",
+    "When you need a concrete invocation, run `regripper -l` as documented upstream for regripper.",
+    "When you need a concrete invocation, run `regripper -r /hive/NTUSER.DAT -p recentdocs_tln` as documented upstream for regripper.",
+    "When you need a concrete invocation, run `regripper -r /hive/NTUSER.DAT -p run` as documented upstream for regripper.",
+    "When chaining Kali Linux tools, pair regripper with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `regripper --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/regripper && python3 regripper.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/regripper && python3 regripper.py --help",
-    "cd toolboxes/regripper && python3 regripper.py --help",
-    "cd toolboxes/regripper && python3 regripper.py --help",
-    "cd toolboxes/regripper && python3 regripper.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST regripper --output $KFIOSA_OUTPUT_DIR/regripper.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST regripper --output $KFIOSA_OUTPUT_DIR/regripper.log"
+    "regripper  [-r  <hivefile>]  [-f <hivetype>] [-p <plugin>] [-d] [-g] [-aT] [-s systemname] [-u",
+    "regripper -l",
+    "regripper -r /hive/NTUSER.DAT -p recentdocs_tln",
+    "regripper -r /hive/NTUSER.DAT -p run",
+    "regripper -r /mnt/SYSTEM -f system > /mnt/reports/system.txt",
+    "regripper -r /mnt/SAM -f sam > /mnt/SAM.txt"
   ],
   "attack_surface": [
     "web"
@@ -314,5 +192,42 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-f",
+        "description": "<hivetype> Specify the hive type/profile to use, could be sam, security, software, system,",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "-l for full",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "%SystemRoot%\\Sys-",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "regripper  [-r  <hivefile>]  [-f <hivetype>] [-p <plugin>] [-d] [-g] [-aT] [-s systemname] [-u",
+      "regripper -l",
+      "regripper -r /hive/NTUSER.DAT -p recentdocs_tln",
+      "regripper -r /hive/NTUSER.DAT -p run",
+      "regripper -r /mnt/SYSTEM -f system > /mnt/reports/system.txt",
+      "regripper -r /mnt/SAM -f sam > /mnt/SAM.txt"
+    ],
+    "readme": "Regripper - forensic analysis of Registry hives",
+    "how_to_use": "Install/setup: sudo apt install regripper. Run the primary entrypoint as shown in upstream docs, e.g. `regripper  [-r  <hivefile>]  [-f <hivetype>] [-p <plugin>] [-d] [-g] [-aT] [-s systemname] [-u`. Further invocations from upstream: `regripper -l`; `regripper -r /hive/NTUSER.DAT -p recentdocs_tln`. Regripper - forensic analysis of Registry hives.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: Regripper - forensic analysis of Registry hives.",
+    "why_to_use": "Prefer this tool based on upstream description: Regripper - forensic analysis of Registry hives.",
+    "usage_sections": [
+      "Install with: sudo apt install regripper",
+      "Install with: sudo apt install regripper"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

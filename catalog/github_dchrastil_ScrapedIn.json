@@ -1,17 +1,16 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/ScrapedIn && python3 ScrapedIn.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/ScrapedIn && python3 ScrapedIn.py --help",
-    "cd toolboxes/ScrapedIn && python3 ScrapedIn.py --help",
-    "cd toolboxes/ScrapedIn && python3 ScrapedIn.py --help",
-    "cd toolboxes/ScrapedIn && python3 ScrapedIn.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ScrapedIn --output $KFIOSA_OUTPUT_DIR/ScrapedIn.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ScrapedIn --output $KFIOSA_OUTPUT_DIR/ScrapedIn.log"
+    "sudo apt-get install python3-pip -y",
+    "sudo pip install -r requirements.txt",
+    "export LI_USERNAME={username}",
+    "export LI_PASSWORD=$KFIOSA_SECRET"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "This tool assists in performing reconnaissance using the LinkedIn.com website/API for red team or social engineering engagements. It performs a company specific search to extract a detailed list of employees who work for the target company. Enter the name of the target company and the tool will help determine the LinkedIn company ID, which will be used to perform the search.",
+    "usage_sections": [
+      "Full Name, Occupation"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +128,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo apt-get install python3-pip -y",
+      "sudo pip install -r requirements.txt",
+      "export LI_USERNAME={username}",
+      "export LI_PASSWORD=$KFIOSA_SECRET"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +259,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, scrapedin, dchrastil).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/ScrapedIn && python3 ScrapedIn.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/ScrapedIn && python3 ScrapedIn.py --help",
-      "Step 3: cd toolboxes/ScrapedIn && python3 ScrapedIn.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: This tool assists in performing reconnaissance using the LinkedIn.com website/API for red team or social engineering engagements. It performs a company specific search to extract a detailed list of employees who work for.",
+    "why_to_use": "Prefer this tool based on upstream description: This tool assists in performing reconnaissance using the LinkedIn.com website/API for red team or social engineering engagements. It performs a company specific search to extract a detailed list of employees who work for the target company. Enter the name of the target company and the tool will help determine the LinkedIn company ID, which will be used to perform the search.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `sudo apt-get install python3-pip -y`. Further invocations from upstream: `sudo pip install -r requirements.txt`; `export LI_USERNAME={username}`. This tool assists in performing reconnaissance using the LinkedIn.com website/API for red team or social engineering engagements. It performs a company specific search to extract a detailed list of employees who work for the target company. Enter the name of the target company and the tool will help determine the Linke."
   },
   "full_name": "dchrastil/ScrapedIn",
   "id": "github:dchrastil/ScrapedIn",
@@ -282,7 +282,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``ScrapedIn`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "This tool assists in performing reconnaissance using the LinkedIn.com website/API for red team or social engineering engagements. It performs a company specific search to extract a detailed list of employees who work for the target company. Enter the name of the target company and the tool will help determine the LinkedIn company ID, which will be used to perform the search.",
   "tags": [
     "offensive",
     "scrapedin",
@@ -300,12 +300,13 @@
   },
   "url": "https://github.com/dchrastil/ScrapedIn",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use ScrapedIn because This tool assists in performing reconnaissance using the LinkedIn.com website/API for red team or social engineering engagements. It performs a company specific.",
+    "When you need a concrete invocation, run `sudo apt-get install python3-pip -y` as documented upstream for ScrapedIn.",
+    "When you need a concrete invocation, run `sudo pip install -r requirements.txt` as documented upstream for ScrapedIn.",
+    "When you need a concrete invocation, run `export LI_USERNAME={username}` as documented upstream for ScrapedIn.",
+    "When you need a concrete invocation, run `export LI_PASSWORD=$KFIOSA_SECRET` as documented upstream for ScrapedIn.",
+    "When chaining osint tools, pair ScrapedIn with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ScrapedIn --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +325,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

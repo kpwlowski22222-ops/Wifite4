@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "slowhttptest",
   "title": "slowhttptest",
-  "summary": "### slowhttptest",
+  "summary": "slowhttptest -- Denial Of Service attacks simulator",
   "version": "1.9.0-1",
   "architectures": [
     "any"
@@ -31,47 +31,14 @@
       "arguments": [
         {
           "flags": [
-            "-H"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "slow headers a.k.a. Slowloris (default)",
-          "default": null,
-          "choices": null,
-          "raw": " -H               slow headers a.k.a. Slowloris (default)"
-        },
-        {
-          "flags": [
             "-B"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "slow body a.k.a R-U-Dead-Yet",
+          "description": "Starts slowhttptest in Slow POST mode, sending unfinished HTTP message bodies.",
           "default": null,
           "choices": null,
-          "raw": " -B               slow body a.k.a R-U-Dead-Yet"
-        },
-        {
-          "flags": [
-            "-R"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "range attack a.k.a Apache killer",
-          "default": null,
-          "choices": null,
-          "raw": " -R               range attack a.k.a Apache killer"
-        },
-        {
-          "flags": [
-            "-X"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "slow read a.k.a Slow Read",
-          "default": null,
-          "choices": null,
-          "raw": " -X               slow read a.k.a Slow Read"
+          "raw": "-B  Starts slowhttptest in Slow POST mode, sending unfinished HTTP message bodies."
         },
         {
           "flags": [
@@ -79,287 +46,43 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "generate statistics with socket state changes (off)",
+          "description": "Forces slowhttptest to generate CSV and HTML files when test finishes with timestamp",
           "default": null,
           "choices": null,
-          "raw": " -g               generate statistics with socket state changes (off)"
+          "raw": "-g  Forces slowhttptest to generate CSV and HTML files when test finishes with timestamp"
         },
         {
           "flags": [
-            "-o"
+            "-R"
           ],
-          "metavar": "file_prefix",
-          "takes_value": true,
-          "description": "save statistics output in file.html and file.csv (-g required)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Starts slowhttptest in Range Header mode, sending malicious Range Request header data.",
           "default": null,
           "choices": null,
-          "raw": " -o file_prefix   save statistics output in file.html and file.csv (-g required)"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": "level",
-          "takes_value": true,
-          "description": "verbosity level 0-4: Fatal, Info, Error, Warning, Debug",
-          "default": null,
-          "choices": null,
-          "raw": " -v level         verbosity level 0-4: Fatal, Info, Error, Warning, Debug"
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": "connections",
-          "takes_value": true,
-          "description": "target number of connections (50)",
-          "default": null,
-          "choices": null,
-          "raw": " -c connections   target number of connections (50)"
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": "seconds",
-          "takes_value": true,
-          "description": "interval between followup data in seconds (10)",
-          "default": null,
-          "choices": null,
-          "raw": " -i seconds       interval between followup data in seconds (10)"
-        },
-        {
-          "flags": [
-            "-l"
-          ],
-          "metavar": "seconds",
-          "takes_value": true,
-          "description": "target test length in seconds (240)",
-          "default": null,
-          "choices": null,
-          "raw": " -l seconds       target test length in seconds (240)"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": "rate",
-          "takes_value": true,
-          "description": "connections per seconds (50)",
-          "default": null,
-          "choices": null,
-          "raw": " -r rate          connections per seconds (50)"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "bytes",
-          "takes_value": true,
-          "description": "value of Content-Length header if needed (4096)",
-          "default": null,
-          "choices": null,
-          "raw": " -s bytes         value of Content-Length header if needed (4096)"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "verb",
-          "takes_value": true,
-          "description": "verb to use in request, default to GET for",
-          "default": "to GET for",
-          "choices": null,
-          "raw": " -t verb          verb to use in request, default to GET for"
+          "raw": "-R  Starts slowhttptest in Range Header mode, sending malicious Range Request header data."
         },
         {
           "flags": [
             "-u"
           ],
-          "metavar": "URL",
-          "takes_value": true,
-          "description": "absolute URL of target (http://localhost/)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Specifies the URL.",
           "default": null,
           "choices": null,
-          "raw": " -u URL           absolute URL of target (http://localhost/)"
+          "raw": "-u  Specifies the URL."
         },
         {
           "flags": [
-            "-x"
+            "-X"
           ],
-          "metavar": "bytes",
-          "takes_value": true,
-          "description": "max length of each randomized name/value pair of",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Starts slowhttptest in Slow Read mode, reading HTTP responses slowly.",
           "default": null,
           "choices": null,
-          "raw": " -x bytes         max length of each randomized name/value pair of"
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "content-type",
-          "takes_value": true,
-          "description": "value of Content-type header (application/x-www-form-urlencoded)",
-          "default": null,
-          "choices": null,
-          "raw": " -f content-type  value of Content-type header (application/x-www-form-urlencoded)"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "accept",
-          "takes_value": true,
-          "description": "value of Accept header (text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5)",
-          "default": null,
-          "choices": null,
-          "raw": " -m accept        value of Accept header (text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5)"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": "host",
-          "takes_value": true,
-          "description": "port     all traffic directed through HTTP proxy at host:port (off)",
-          "default": null,
-          "choices": null,
-          "raw": " -d host:port     all traffic directed through HTTP proxy at host:port (off)"
-        },
-        {
-          "flags": [
-            "-e"
-          ],
-          "metavar": "host",
-          "takes_value": true,
-          "description": "port     probe traffic directed through HTTP proxy at host:port (off)",
-          "default": null,
-          "choices": null,
-          "raw": " -e host:port     probe traffic directed through HTTP proxy at host:port (off)"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "seconds",
-          "takes_value": true,
-          "description": "timeout to wait for HTTP response on probe connection,",
-          "default": null,
-          "choices": null,
-          "raw": " -p seconds       timeout to wait for HTTP response on probe connection,"
-        },
-        {
-          "flags": [
-            "-j"
-          ],
-          "metavar": "cookies",
-          "takes_value": true,
-          "description": "value of Cookie header (ex.: -j \"user_id=1001; timeout=9000\")",
-          "default": null,
-          "choices": null,
-          "raw": " -j cookies       value of Cookie header (ex.: -j \"user_id=1001; timeout=9000\")"
-        },
-        {
-          "flags": [
-            "-a"
-          ],
-          "metavar": "start",
-          "takes_value": true,
-          "description": "left boundary of range in range header (5)",
-          "default": null,
-          "choices": null,
-          "raw": " -a start        left boundary of range in range header (5)"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": "bytes",
-          "takes_value": true,
-          "description": "limit for range header right boundary values (2000)",
-          "default": null,
-          "choices": null,
-          "raw": " -b bytes        limit for range header right boundary values (2000)"
-        },
-        {
-          "flags": [
-            "-k"
-          ],
-          "metavar": "num",
-          "takes_value": true,
-          "description": "number of times to repeat same request in the connection. Use to",
-          "default": null,
-          "choices": null,
-          "raw": " -k num          number of times to repeat same request in the connection. Use to"
-        },
-        {
-          "flags": [
-            "-n"
-          ],
-          "metavar": "seconds",
-          "takes_value": true,
-          "description": "interval between read operations from recv buffer in seconds (1)",
-          "default": null,
-          "choices": null,
-          "raw": " -n seconds      interval between read operations from recv buffer in seconds (1)"
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": "bytes",
-          "takes_value": true,
-          "description": "start of the range advertised window size would be picked from (1)",
-          "default": null,
-          "choices": null,
-          "raw": " -w bytes        start of the range advertised window size would be picked from (1)"
-        },
-        {
-          "flags": [
-            "-y"
-          ],
-          "metavar": "bytes",
-          "takes_value": true,
-          "description": "end of the range advertised window size would be picked from (512)",
-          "default": null,
-          "choices": null,
-          "raw": " -y bytes        end of the range advertised window size would be picked from (512)"
-        },
-        {
-          "flags": [
-            "-z"
-          ],
-          "metavar": "bytes",
-          "takes_value": true,
-          "description": "bytes to slow read from receive buffer with single read() call (5)",
-          "default": null,
-          "choices": null,
-          "raw": " -z bytes        bytes to slow read from receive buffer with single read() call (5)"
-        },
-        {
-          "flags": [
-            "-t",
-            "-u"
-          ],
-          "metavar": "FAKEVERB http",
-          "takes_value": true,
-          "description": "//host.example.com/loginform.html -x 10 -p 3",
-          "default": null,
-          "choices": null,
-          "raw": "           -t FAKEVERB -u http://host.example.com/loginform.html -x 10 -p 3"
-        },
-        {
-          "flags": [
-            "-b",
-            "-r"
-          ],
-          "metavar": "3000 500",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "           -b 3000 -r 500"
+          "raw": "-X  Starts slowhttptest in Slow Read mode, reading HTTP responses slowly."
         }
       ],
       "raw_help": "root@kali:~# slowhttptest -h\n \n slowhttptest, a tool to test for slow HTTP DoS vulnerabilities - version 1.9.0\n Usage: slowhttptest [options ...]\n Test modes:\n -H               slow headers a.k.a. Slowloris (default)\n -B               slow body a.k.a R-U-Dead-Yet\n -R               range attack a.k.a Apache killer\n -X               slow read a.k.a Slow Read\n \n Reporting options:\n \n -g               generate statistics with socket state changes (off)\n -o file_prefix   save statistics output in file.html and file.csv (-g required)\n -v level         verbosity level 0-4: Fatal, Info, Error, Warning, Debug\n \n General options:\n \n -c connections   target number of connections (50)\n -i seconds       interval between followup data in seconds (10)\n -l seconds       target test length in seconds (240)\n -r rate          connections per seconds (50)\n -s bytes         value of Content-Length header if needed (4096)\n -t verb          verb to use in request, default to GET for\n                  slow headers and response and to POST for slow body\n -u URL           absolute URL of target (http://localhost/)\n -x bytes         max length of each randomized name/value pair of\n                  followup data per tick, e.g. -x 2 generates\n                  X-xx: xx for header or &xx=xx for body, where x\n                  is random character (32)\n -f content-type  value of Content-type header (application/x-www-form-urlencoded)\n -m accept        value of Accept header (text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5)\n \n Probe/Proxy options:\n \n -d host:port     all traffic directed through HTTP proxy at host:port (off)\n -e host:port     probe traffic directed through HTTP proxy at host:port (off)\n -p seconds       timeout to wait for HTTP response on probe connection,\n                  after which server is considered inaccessible (5)\n -j cookies       value of Cookie header (ex.: -j \"user_id=1001; timeout=9000\")\n \n Range attack specific options:\n \n -a start        left boundary of range in range header (5)\n -b bytes        limit for range header right boundary values (2000)\n \n Slow read specific options:\n \n -k num          number of times to repeat same request in the connection. Use to\n                 multiply response size if server supports persistent connections (1)\n -n seconds      interval between read operations from recv buffer in seconds (1)\n -w bytes        start of the range advertised window size would be picked from (1)\n -y bytes        end of the range advertised window size would be picked from (512)\n -z bytes        bytes to slow read from receive buffer with single read() call (5)",
@@ -477,21 +200,23 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use slowhttptest because slowhttptest -- Denial Of Service attacks simulator.",
+    "When you need a concrete invocation, run `slowhttptest [-H|B|R|X] [-g] [-a range start] [-b range limit] [-c number of connections]` as documented upstream for slowhttptest.",
+    "When you need a concrete invocation, run `slowhttptest   -c   1000   -H  -g  -o  my_header_stats  -i  10  -r  200  -t  GET  -u` as documented upstream for slowhttptest.",
+    "When you need a concrete invocation, run `slowhttptest -c 3000 -B -g -o my_body_stats -i 110 -r  200  -s  8192  -t  FAKEVERB  -u` as documented upstream for slowhttptest.",
+    "When you need a concrete invocation, run `slowhttptest -R -u $KFIOSA_TARGET_URL -t HEAD -c 1000 -a 10 -b 3000 -r 500` as documented upstream for slowhttptest.",
+    "When chaining Kali Linux tools, pair slowhttptest with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `slowhttptest --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/slowhttptest && python3 slowhttptest.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/slowhttptest && python3 slowhttptest.py --help",
-    "cd toolboxes/slowhttptest && python3 slowhttptest.py --help",
-    "cd toolboxes/slowhttptest && python3 slowhttptest.py --help",
-    "cd toolboxes/slowhttptest && python3 slowhttptest.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST slowhttptest --output $KFIOSA_OUTPUT_DIR/slowhttptest.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST slowhttptest --output $KFIOSA_OUTPUT_DIR/slowhttptest.log"
+    "slowhttptest [-H|B|R|X] [-g] [-a range start] [-b range limit] [-c number of connections]",
+    "slowhttptest   -c   1000   -H  -g  -o  my_header_stats  -i  10  -r  200  -t  GET  -u",
+    "slowhttptest -c 3000 -B -g -o my_body_stats -i 110 -r  200  -s  8192  -t  FAKEVERB  -u",
+    "slowhttptest -R -u $KFIOSA_TARGET_URL -t HEAD -c 1000 -a 10 -b 3000 -r 500",
+    "slowhttptest  -c  8000  -X  -r  200  -w  512  -y  1024  -n  5   -z   32   -k   3   -u",
+    "slowhttptest       -d       $KFIOSA_TARGET_HOST:8080       -c       8000       -X       -u",
+    "slowhttptest shows valid statistics for availability of server under test:",
+    "slowhttptest       -e       $KFIOSA_TARGET_HOST:8080       -c       8000       -X       -u"
   ],
   "attack_surface": [
     "web"
@@ -506,5 +231,54 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-B",
+        "description": "Starts slowhttptest in Slow POST mode, sending unfinished HTTP message bodies.",
+        "source": "docs"
+      },
+      {
+        "name": "-g",
+        "description": "Forces slowhttptest to generate CSV and HTML files when test finishes with timestamp",
+        "source": "docs"
+      },
+      {
+        "name": "-R",
+        "description": "Starts slowhttptest in Range Header mode, sending malicious Range Request header data.",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "Specifies the URL.",
+        "source": "docs"
+      },
+      {
+        "name": "-X",
+        "description": "Starts slowhttptest in Slow Read mode, reading HTTP responses slowly.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "slowhttptest [-H|B|R|X] [-g] [-a range start] [-b range limit] [-c number of connections]",
+      "slowhttptest   -c   1000   -H  -g  -o  my_header_stats  -i  10  -r  200  -t  GET  -u",
+      "slowhttptest -c 3000 -B -g -o my_body_stats -i 110 -r  200  -s  8192  -t  FAKEVERB  -u",
+      "slowhttptest -R -u $KFIOSA_TARGET_URL -t HEAD -c 1000 -a 10 -b 3000 -r 500",
+      "slowhttptest  -c  8000  -X  -r  200  -w  512  -y  1024  -n  5   -z   32   -k   3   -u",
+      "slowhttptest       -d       $KFIOSA_TARGET_HOST:8080       -c       8000       -X       -u",
+      "slowhttptest shows valid statistics for availability of server under test:",
+      "slowhttptest       -e       $KFIOSA_TARGET_HOST:8080       -c       8000       -X       -u"
+    ],
+    "readme": "slowhttptest -- Denial Of Service attacks simulator",
+    "how_to_use": "Install/setup: sudo apt install slowhttptest. Run the primary entrypoint as shown in upstream docs, e.g. `slowhttptest   -c   1000   -H  -g  -o  my_header_stats  -i  10  -r  200  -t  GET  -u`. Further invocations from upstream: `slowhttptest -c 3000 -B -g -o my_body_stats -i 110 -r  200  -s  8192  -t  FAKEVERB  -u`; `slowhttptest -R -u $KFIOSA_TARGET_URL -t HEAD -c 1000 -a 10 -b 3000 -r 500`. slowhttptest -- Denial Of Service attacks simulator.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: slowhttptest -- Denial Of Service attacks simulator.",
+    "why_to_use": "Prefer this tool based on upstream description: slowhttptest -- Denial Of Service attacks simulator.",
+    "usage_sections": [
+      "Install with: sudo apt install slowhttptest",
+      "Install with: sudo apt install slowhttptest"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

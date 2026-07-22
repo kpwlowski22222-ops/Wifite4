@@ -1,26 +1,163 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "cd toolboxes/nanodump && python3 nanodump.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/nanodump && python3 nanodump.py --help",
-    "cd toolboxes/nanodump && python3 nanodump.py --help",
-    "cd toolboxes/nanodump && python3 nanodump.py --help",
-    "cd toolboxes/nanodump && python3 nanodump.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nanodump --output $KFIOSA_OUTPUT_DIR/nanodump.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nanodump --output $KFIOSA_OUTPUT_DIR/nanodump.log"
+    "Let WerFault.exe (instead of nanodump) create the dump",
+    "force WerFault.exe to dump LSASS via SilentProcessExit",
+    "force WerFault.exe to dump LSASS via Shtinkering",
+    "make -f Makefile.mingw",
+    "nmake -f Makefile.msvc",
+    "If you prefer to stay on linux, you can use the python3 port of mimikatz called [pypykatz]($KFIOSA_TARGET_URL",
+    "Dump LSASS bypassing PPL using the PPLDump exploit, duplicating the handle that csrss.exe has on LSASS:",
+    "Make the WerFault.exe process create a full memory dump in the Temp folder:"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "A flexible tool that creates a minidump of the LSASS process.",
+    "usage_sections": [
+      "skelsec for writing minidump, which was crucial for learning the minidump file format.",
+      "freefirex from CS-Situational-Awareness-BOF at Trustedsec for many cool tricks for BOFs",
+      "JacksonT for SysWhispers2",
+      "BillDemirkapi for Process Forking",
+      "Antonio Cocomazzi for Abusing leaked handles to dump LSASS memory and Racing for LSASS dumps"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-a---",
+        "description": "6/23/2022 7:40 AM 58830409 lsass.exe-(PID-648).dmp",
+        "source": "docs"
+      },
+      {
+        "name": "-a----",
+        "description": "6/23/2022 7:40 AM 58830409 lsass.exe-(PID-648).dmp",
+        "source": "docs"
+      },
+      {
+        "name": "--chunk-size",
+        "description": "chunk size in KiB used to exfiltrate the dump without touching disk (default 900)",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "duplicate a high privileged existing LSASS handle",
+        "source": "docs"
+      },
+      {
+        "name": "-de",
+        "description": "duplicate a low privileged existing LSASS handle and then elevate it",
+        "source": "docs"
+      },
+      {
+        "name": "--duplicate",
+        "description": "duplicate a high privileged existing LSASS handle",
+        "source": "docs"
+      },
+      {
+        "name": "--duplicate-elevate",
+        "description": "duplicate a low privileged existing LSASS handle and then elevate it",
+        "source": "docs"
+      },
+      {
+        "name": "-eh",
+        "description": "open a handle to LSASS with low privileges and duplicate it to gain higher privileges",
+        "source": "docs"
+      },
+      {
+        "name": "--elevate-handle",
+        "description": "open a handle to LSASS with low privileges and duplicate it to gain higher privileges",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "fork the target process before dumping",
+        "source": "docs"
+      },
+      {
+        "name": "--fork",
+        "description": "fork the target process before dumping",
+        "source": "docs"
+      },
+      {
+        "name": "--getpid",
+        "description": "print the PID of LSASS and leave",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "print this help message and leave",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
+        "description": "print this help message and leave",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "snapshot the target process before dumping",
+        "source": "docs"
+      },
+      {
+        "name": "-sc",
+        "description": "open a handle to LSASS using a fake calling stack",
+        "source": "docs"
+      },
+      {
+        "name": "-sd",
+        "description": "make seclogon open a handle to LSASS and duplicate it",
+        "source": "docs"
+      },
+      {
+        "name": "--seclogon-duplicate",
+        "description": "make seclogon open a handle to LSASS and duplicate it",
+        "source": "docs"
+      },
+      {
+        "name": "--seclogon-leak-local",
+        "description": "leak an LSASS handle into nanodump via seclogon",
+        "source": "docs"
+      },
+      {
+        "name": "--shtinkering",
+        "description": "force WerFault.exe to dump LSASS via Shtinkering",
+        "source": "docs"
+      },
+      {
+        "name": "-sk",
+        "description": "force WerFault.exe to dump LSASS via Shtinkering",
+        "source": "docs"
+      },
+      {
+        "name": "-sll",
+        "description": "leak an LSASS handle into nanodump via seclogon",
+        "source": "docs"
+      },
+      {
+        "name": "--snapshot",
+        "description": "snapshot the target process before dumping",
+        "source": "docs"
+      },
+      {
+        "name": "--spoof-callstack",
+        "description": "open a handle to LSASS using a fake calling stack",
+        "source": "docs"
+      },
+      {
+        "name": "-theft",
+        "description": "a hit after a hit-and-miss start](https://www.matteomalvica.com/blog/2019/12/02/win-defender-atp-cred-bypass/)",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "create a dump with a valid signature",
+        "source": "docs"
+      },
+      {
+        "name": "--valid",
+        "description": "create a dump with a valid signature",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -129,7 +266,16 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "Let WerFault.exe (instead of nanodump) create the dump",
+      "force WerFault.exe to dump LSASS via SilentProcessExit",
+      "force WerFault.exe to dump LSASS via Shtinkering",
+      "make -f Makefile.mingw",
+      "nmake -f Makefile.msvc",
+      "If you prefer to stay on linux, you can use the python3 port of mimikatz called [pypykatz]($KFIOSA_TARGET_URL",
+      "Dump LSASS bypassing PPL using the PPLDump exploit, duplicating the handle that csrss.exe has on LSASS:",
+      "Make the WerFault.exe process create a full memory dump in the Temp folder:"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +401,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, nanodump, fortra).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/nanodump && python3 nanodump.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/nanodump && python3 nanodump.py --help",
-      "Step 3: cd toolboxes/nanodump && python3 nanodump.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the post_exploitation category. Fits when the engagement needs: A flexible tool that creates a minidump of the LSASS process.",
+    "why_to_use": "Prefer this tool based on upstream description: A flexible tool that creates a minidump of the LSASS process.",
+    "how_to_use": "Install/setup: git clone https://github.com/fortra/nanodump.git. Run the primary entrypoint as shown in upstream docs, e.g. `Let WerFault.exe (instead of nanodump) create the dump`. Further invocations from upstream: `force WerFault.exe to dump LSASS via SilentProcessExit`; `force WerFault.exe to dump LSASS via Shtinkering`. A flexible tool that creates a minidump of the LSASS process."
   },
   "full_name": "fortra/nanodump",
   "id": "github:fortra/nanodump",
@@ -282,7 +424,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``nanodump`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "A flexible tool that creates a minidump of the LSASS process.",
   "tags": [
     "offensive",
     "nanodump",
@@ -300,12 +442,13 @@
   },
   "url": "https://github.com/fortra/nanodump",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need post_exploitation, use nanodump because A flexible tool that creates a minidump of the LSASS process.",
+    "When you need a concrete invocation, run `Let WerFault.exe (instead of nanodump) create the dump` as documented upstream for nanodump.",
+    "When you need a concrete invocation, run `force WerFault.exe to dump LSASS via SilentProcessExit` as documented upstream for nanodump.",
+    "When you need a concrete invocation, run `force WerFault.exe to dump LSASS via Shtinkering` as documented upstream for nanodump.",
+    "When you need a concrete invocation, run `make -f Makefile.mingw` as documented upstream for nanodump.",
+    "When chaining post_exploitation tools, pair nanodump with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nanodump --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +467,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

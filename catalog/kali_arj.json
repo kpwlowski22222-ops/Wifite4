@@ -27,7 +27,63 @@
       "path": "/usr/bin/arj",
       "description": "Archiver for .arj files",
       "usage": "arj [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-ex"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tractor will accept the appended line as its command line.",
+          "default": null,
+          "choices": null,
+          "raw": "-ex  tractor will accept the appended line as its command line."
+        },
+        {
+          "flags": [
+            "-extractor"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "arj a -va -je /floppy/archive *",
+          "default": null,
+          "choices": null,
+          "raw": "-extractor  arj a -va -je /floppy/archive *"
+        },
+        {
+          "flags": [
+            "-jd1000"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "set error if<1000 free",
+          "default": null,
+          "choices": null,
+          "raw": "-jd1000  set error if<1000 free"
+        },
+        {
+          "flags": [
+            "-jd50K"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "skip file if<50000 free",
+          "default": null,
+          "choices": null,
+          "raw": "-jd50K  skip file if<50000 free"
+        },
+        {
+          "flags": [
+            "-MMDD"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "append YYYY-MMDD",
+          "default": null,
+          "choices": null,
+          "raw": "-MMDD  append YYYY-MMDD"
+        }
+      ]
     },
     {
       "name": "arj-register",
@@ -68,5 +124,74 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "arj  command  [-switch[-|+|option]] archive[.arj] [base directory] [!list name|path name|wild-",
+    "arj a -e archive *",
+    "arj a archive name1 name2",
+    "arj a -jt archive *",
+    "arj a -jm archive *",
+    "arj a archive ... dir1 dir2 dir3",
+    "arj a -hm1 -r archive *",
+    "arj ac archive /foo/dir/* -r"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use arj because archiver for .arj files.",
+    "When the engagement is in the install phase, use arj as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `arj  command  [-switch[-|+|option]] archive[.arj] [base directory] [!list name|path name|wild-` as documented upstream for arj.",
+    "When you need a concrete invocation, run `arj a -e archive *` as documented upstream for arj.",
+    "When you need a concrete invocation, run `arj a archive name1 name2` as documented upstream for arj.",
+    "When you need a concrete invocation, run `arj a -jt archive *` as documented upstream for arj.",
+    "When chaining Kali Linux tools, pair arj with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `arj --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-ex",
+        "description": "tractor will accept the appended line as its command line.",
+        "source": "docs"
+      },
+      {
+        "name": "-extractor",
+        "description": "arj a -va -je /floppy/archive *",
+        "source": "docs"
+      },
+      {
+        "name": "-jd1000",
+        "description": "set error if<1000 free",
+        "source": "docs"
+      },
+      {
+        "name": "-jd50K",
+        "description": "skip file if<50000 free",
+        "source": "docs"
+      },
+      {
+        "name": "-MMDD",
+        "description": "append YYYY-MMDD",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "arj  command  [-switch[-|+|option]] archive[.arj] [base directory] [!list name|path name|wild-",
+      "arj a -e archive *",
+      "arj a archive name1 name2",
+      "arj a -jt archive *",
+      "arj a -jm archive *",
+      "arj a archive ... dir1 dir2 dir3",
+      "arj a -hm1 -r archive *",
+      "arj ac archive /foo/dir/* -r"
+    ],
+    "readme": "arj - Archiver for .arj files",
+    "how_to_use": "Install/setup: sudo apt install arj. Run the primary entrypoint as shown in upstream docs, e.g. `arj  command  [-switch[-|+|option]] archive[.arj] [base directory] [!list name|path name|wild-`. Further invocations from upstream: `arj a -e archive *`; `arj a -jt archive *`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: archiver for .arj files.",
+    "why_to_use": "Prefer this tool because: archiver for .arj files.",
+    "usage_sections": [
+      "Install with: sudo apt install arj",
+      "Install with: sudo apt install arj"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

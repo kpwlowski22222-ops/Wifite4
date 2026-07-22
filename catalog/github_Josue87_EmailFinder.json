@@ -1,17 +1,21 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/EmailFinder && python3 EmailFinder.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/EmailFinder && python3 EmailFinder.py --help",
-    "cd toolboxes/EmailFinder && python3 EmailFinder.py --help",
-    "cd toolboxes/EmailFinder && python3 EmailFinder.py --help",
-    "cd toolboxes/EmailFinder && python3 EmailFinder.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST EmailFinder --output $KFIOSA_OUTPUT_DIR/EmailFinder.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST EmailFinder --output $KFIOSA_OUTPUT_DIR/EmailFinder.log"
+    "emailfinder -d domain.com",
+    "emailfinder -d domain.com -p $KFIOSA_TARGET_URL",
+    "emails1 = get_emails_from_google(\"domain.com\")",
+    "emails2 = get_emails_from_bing(\"domain.com\")",
+    "emails3 = get_emails_from_baidu(\"domain.com\")"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "EmailFinder is designed to find company emails that are filtered by search engines. This is done by searching for @company.com. The goal has to be to have the minimum amount of emails in the search engines.",
+    "usage_sections": [
+      "google: Ok (note cookies policy and Captcha!).",
+      "baidu: OK (few requests).",
+      "bing: Hunting Robots very fast.",
+      "d: Specifies the target domain.",
+      "v: Show EmailFinder version."
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +133,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "emailfinder -d domain.com",
+      "emailfinder -d domain.com -p $KFIOSA_TARGET_URL",
+      "emails1 = get_emails_from_google(\"domain.com\")",
+      "emails2 = get_emails_from_bing(\"domain.com\")",
+      "emails3 = get_emails_from_baidu(\"domain.com\")"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +265,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, emailfinder, josue87).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/EmailFinder && python3 EmailFinder.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/EmailFinder && python3 EmailFinder.py --help",
-      "Step 3: cd toolboxes/EmailFinder && python3 EmailFinder.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: EmailFinder is designed to find company emails that are filtered by search engines. This is done by searching for @company.com. The goal has to be to have the minimum amount of emails in the search engines.",
+    "why_to_use": "Prefer this tool based on upstream description: EmailFinder is designed to find company emails that are filtered by search engines. This is done by searching for @company.com. The goal has to be to have the minimum amount of emails in the search engines.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `emailfinder -d domain.com`. Further invocations from upstream: `emailfinder -d domain.com -p $KFIOSA_TARGET_URL`; `emails1 = get_emails_from_google(\"domain.com\")`. EmailFinder is designed to find company emails that are filtered by search engines. This is done by searching for @company.com. The goal has to be to have the minimum amount of emails in the search engines."
   },
   "full_name": "Josue87/EmailFinder",
   "id": "github:Josue87/EmailFinder",
@@ -282,7 +288,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``EmailFinder`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "EmailFinder is designed to find company emails that are filtered by search engines. This is done by searching for @company.com. The goal has to be to have the minimum amount of emails in the search engines.",
   "tags": [
     "offensive",
     "emailfinder",
@@ -300,12 +306,13 @@
   },
   "url": "https://github.com/Josue87/EmailFinder",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use EmailFinder because EmailFinder is designed to find company emails that are filtered by search engines. This is done by searching for @company.com. The goal has to be to have the m.",
+    "When you need a concrete invocation, run `emailfinder -d domain.com` as documented upstream for EmailFinder.",
+    "When you need a concrete invocation, run `emailfinder -d domain.com -p $KFIOSA_TARGET_URL` as documented upstream for EmailFinder.",
+    "When you need a concrete invocation, run `emails1 = get_emails_from_google(\"domain.com\")` as documented upstream for EmailFinder.",
+    "When you need a concrete invocation, run `emails2 = get_emails_from_bing(\"domain.com\")` as documented upstream for EmailFinder.",
+    "When chaining osint tools, pair EmailFinder with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `EmailFinder --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +331,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

@@ -30,7 +30,19 @@
       "name": "unix-privesc-check",
       "description": "- - -",
       "usage": "unix-privesc-check { standard | detailed }",
-      "arguments": [],
+      "arguments": [
+        {
+          "flags": [
+            "-privesc-check"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Option present in package usage line for unix-privesc-check.",
+          "default": null,
+          "choices": null,
+          "raw": "-privesc-check  Option present in package usage line for unix-privesc-check."
+        }
+      ],
       "raw_help": "root@kali:~# unix-privesc-check -h\n unix-privesc-check v1.4 ( http://pentestmonkey.net/tools/unix-privesc-check )\n \n Usage: unix-privesc-check { standard | detailed }\n \n \"standard\" mode: Speed-optimised check of lots of security settings.\n \n \"detailed\" mode: Same as standard mode, but also checks perms of open file\n                handles and called files (e.g. parsed from shell scripts,\n                linked .so files).  This mode is slow and prone to false \n                positives but might help you find more subtle flaws in 3rd\n                party programs.\n \n This script checks file permissions and other settings that could allow\n local users to escalate privileges.\n \n Use of this script is only permitted on systems which you have been granted\n legal permission to perform a security assessment of.  Apart from this \n condition the GPL v2 applies.\n \n Search the output for the word 'WARNING'.  If you don't see it then this\n script didn't find any problems.",
       "examples": [
         {
@@ -109,21 +121,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use unix-privesc-check because ### unix-privesc-check.",
+    "When you need a concrete invocation, run `unix-privesc-check { standard | detailed }` as documented upstream for unix-privesc-check.",
+    "When chaining Kali Linux tools, pair unix-privesc-check with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `unix-privesc-check --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/unix-privesc-check && python3 unix-privesc-check.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/unix-privesc-check && python3 unix-privesc-check.py --help",
-    "cd toolboxes/unix-privesc-check && python3 unix-privesc-check.py --help",
-    "cd toolboxes/unix-privesc-check && python3 unix-privesc-check.py --help",
-    "cd toolboxes/unix-privesc-check && python3 unix-privesc-check.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST unix-privesc-check --output $KFIOSA_OUTPUT_DIR/unix-privesc-check.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST unix-privesc-check --output $KFIOSA_OUTPUT_DIR/unix-privesc-check.log"
+    "unix-privesc-check { standard | detailed }"
   ],
   "attack_surface": [
     "web"
@@ -138,5 +142,26 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-privesc-check",
+        "description": "Option present in package usage line for unix-privesc-check.",
+        "source": "usage_line"
+      }
+    ],
+    "examples": [
+      "unix-privesc-check { standard | detailed }"
+    ],
+    "readme": "### unix-privesc-check",
+    "how_to_use": "Install/setup: sudo apt install unix-privesc-check. Run the primary entrypoint as shown in upstream docs, e.g. `unix-privesc-check { standard | detailed }`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: ### unix-privesc-check.",
+    "why_to_use": "Prefer this tool because: ### unix-privesc-check.",
+    "usage_sections": [
+      "Install with: sudo apt install unix-privesc-check"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "offline"
 }

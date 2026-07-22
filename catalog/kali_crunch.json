@@ -27,7 +27,52 @@
       "path": "/usr/bin/crunch",
       "description": "generate wordlists from a character set",
       "usage": "crunch [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Please use -p instead.",
+          "default": null,
+          "choices": null,
+          "raw": "-m  Please use -p instead."
+        },
+        {
+          "flags": [
+            "-numeric-all"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "space -o START -c 60 will result in 2 files: a-7.txt and 8-\\ .txt The reason for the",
+          "default": null,
+          "choices": null,
+          "raw": "-numeric-all  space -o START -c 60 will result in 2 files: a-7.txt and 8-\\ .txt The reason for the"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "-r only works if you use -o.",
+          "default": null,
+          "choices": null,
+          "raw": "-r  -r only works if you use -o."
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The -u option disables the printpercentage thread. This should be the last option.",
+          "default": null,
+          "choices": null,
+          "raw": "-u  The -u option disables the printpercentage thread. This should be the last option."
+        }
+      ]
     }
   ],
   "files": [
@@ -41,5 +86,69 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "crunch <min-len> <max-len> [<charset string>] [options]",
+    "crunch 1 8",
+    "crunch will display a wordlist that starts at a and ends at zzzzzzzz",
+    "crunch 1 6 abcdefg",
+    "crunch will display a wordlist using the character set abcdefg that starts at a  and  ends  at",
+    "crunch 1 6 abcdefg\\",
+    "crunch 1 8 -f charset.lst mixalpha-numeric-all-space -o wordlist.txt",
+    "crunch  will  use the mixalpha-numeric-all-space character set from charset.lst and will write"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use crunch because tool for creating wordlist.",
+    "When the engagement is in the install phase, use crunch as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `crunch <min-len> <max-len> [<charset string>] [options]` as documented upstream for crunch.",
+    "When you need a concrete invocation, run `crunch 1 8` as documented upstream for crunch.",
+    "When you need a concrete invocation, run `crunch will display a wordlist that starts at a and ends at zzzzzzzz` as documented upstream for crunch.",
+    "When you need a concrete invocation, run `crunch 1 6 abcdefg` as documented upstream for crunch.",
+    "When chaining Kali Linux tools, pair crunch with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `crunch --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-m",
+        "description": "Please use -p instead.",
+        "source": "docs"
+      },
+      {
+        "name": "-numeric-all",
+        "description": "space -o START -c 60 will result in 2 files: a-7.txt and 8-\\ .txt The reason for the",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "-r only works if you use -o.",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "The -u option disables the printpercentage thread. This should be the last option.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "crunch <min-len> <max-len> [<charset string>] [options]",
+      "crunch 1 8",
+      "crunch will display a wordlist that starts at a and ends at zzzzzzzz",
+      "crunch 1 6 abcdefg",
+      "crunch will display a wordlist using the character set abcdefg that starts at a  and  ends  at",
+      "crunch 1 6 abcdefg\\",
+      "crunch 1 8 -f charset.lst mixalpha-numeric-all-space -o wordlist.txt",
+      "crunch  will  use the mixalpha-numeric-all-space character set from charset.lst and will write"
+    ],
+    "readme": "crunch - generate wordlists from a character set",
+    "how_to_use": "Install/setup: sudo apt install crunch. Run the primary entrypoint as shown in upstream docs, e.g. `crunch <min-len> <max-len> [<charset string>] [options]`. Further invocations from upstream: `crunch 1 8 -f charset.lst mixalpha-numeric-all-space -o wordlist.txt`; `crunch  will  use the mixalpha-numeric-all-space character set from charset.lst and will write`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: tool for creating wordlist.",
+    "why_to_use": "Prefer this tool based on upstream description: crunch - generate wordlists from a character set.",
+    "usage_sections": [
+      "Install with: sudo apt install crunch",
+      "Install with: sudo apt install crunch"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

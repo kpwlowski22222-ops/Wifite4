@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "multimon-ng",
   "title": "multimon-ng",
-  "summary": "### multimon-ng",
+  "summary": "multimon-ng - program to decode radio transmissions",
   "version": "1.3.1+dfsg-1.1",
   "architectures": [
     "any"
@@ -31,36 +31,47 @@
       "arguments": [
         {
           "flags": [
-            "-t"
+            "-A"
           ],
-          "metavar": "type",
-          "takes_value": true,
-          "description": "Input file type (any other type than raw requires sox)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "APRS mode (TNC2 text output).",
           "default": null,
           "choices": null,
-          "raw": " -t <type>  : Input file type (any other type than raw requires sox)"
+          "raw": "-A  APRS mode (TNC2 text output)."
         },
         {
           "flags": [
             "-a"
           ],
-          "metavar": "demod",
-          "takes_value": true,
-          "description": "Add demodulator",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Add demodulator (see below).",
           "default": null,
           "choices": null,
-          "raw": " -a <demod> : Add demodulator"
+          "raw": "-a  Add demodulator (see below)."
         },
         {
           "flags": [
-            "-s"
+            "-b"
           ],
-          "metavar": "demod",
-          "takes_value": true,
-          "description": "Subtract demodulator",
+          "metavar": null,
+          "takes_value": false,
+          "description": "POCSAG: BCH bit error correction level. Set 0 to disable, default is 2. Lower levels",
           "default": null,
           "choices": null,
-          "raw": " -s <demod> : Subtract demodulator"
+          "raw": "-b  POCSAG: BCH bit error correction level. Set 0 to disable, default is 2. Lower levels"
+        },
+        {
+          "flags": [
+            "-C"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "POCSAG: Set charset (default: US), where <cs> is one of: US, FR, DE, SE, SI",
+          "default": null,
+          "choices": null,
+          "raw": "-C  POCSAG: Set charset (default: US), where <cs> is one of: US, FR, DE, SE, SI"
         },
         {
           "flags": [
@@ -68,98 +79,21 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Remove all demodulators (must be added with -a <demod>)",
+          "description": "Remove all demodulators (must be added with -a <demod>).",
           "default": null,
           "choices": null,
-          "raw": " -c         : Remove all demodulators (must be added with -a <demod>)"
+          "raw": "-c  Remove all demodulators (must be added with -a <demod>)."
         },
         {
           "flags": [
-            "-q"
+            "-d"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Quiet",
+          "description": "CW: Dit length in ms (default: 50)",
           "default": null,
           "choices": null,
-          "raw": " -q         : Quiet"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": "level",
-          "takes_value": true,
-          "description": "Level of verbosity (e.g. '-v 3')",
-          "default": null,
-          "choices": null,
-          "raw": " -v <level> : Level of verbosity (e.g. '-v 3')"
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "This help",
-          "default": null,
-          "choices": null,
-          "raw": " -h         : This help"
-        },
-        {
-          "flags": [
-            "-A"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "APRS mode (TNC2 text output)",
-          "default": null,
-          "choices": null,
-          "raw": " -A         : APRS mode (TNC2 text output)"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Mute SoX warnings",
-          "default": null,
-          "choices": null,
-          "raw": " -m         : Mute SoX warnings"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Call SoX in repeatable mode (e.g. fixed random seed for dithering)",
-          "default": null,
-          "choices": null,
-          "raw": " -r         : Call SoX in repeatable mode (e.g. fixed random seed for dithering)"
-        },
-        {
-          "flags": [
-            "-n"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Don't flush stdout, increases performance.",
-          "default": null,
-          "choices": null,
-          "raw": " -n         : Don't flush stdout, increases performance."
-        },
-        {
-          "flags": [
-            "-j"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "FMS: Just output hex data and CRC, no parsing.",
-          "default": null,
-          "choices": null,
-          "raw": " -j         : FMS: Just output hex data and CRC, no parsing."
+          "raw": "-d  CW: Dit length in ms (default: 50)"
         },
         {
           "flags": [
@@ -170,18 +104,40 @@
           "description": "POCSAG: Hide empty messages.",
           "default": null,
           "choices": null,
-          "raw": " -e         : POCSAG: Hide empty messages."
+          "raw": "-e  POCSAG: Hide empty messages."
         },
         {
           "flags": [
-            "-u"
+            "-f"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "POCSAG: Heuristically prune unlikely decodes.",
+          "description": "POCSAG: Disables auto-detection and forces decoding of data as <mode> (<mode> can be",
           "default": null,
           "choices": null,
-          "raw": " -u         : POCSAG: Heuristically prune unlikely decodes."
+          "raw": "-f  POCSAG: Disables auto-detection and forces decoding of data as <mode> (<mode> can be"
+        },
+        {
+          "flags": [
+            "-g"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "CW: Gap length in ms (default: 50)",
+          "default": null,
+          "choices": null,
+          "raw": "-g  CW: Gap length in ms (default: 50)"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print the help.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Print the help."
         },
         {
           "flags": [
@@ -192,7 +148,62 @@
           "description": "POCSAG: Inverts the input samples. Try this if decoding fails.",
           "default": null,
           "choices": null,
-          "raw": " -i         : POCSAG: Inverts the input samples. Try this if decoding fails."
+          "raw": "-i  POCSAG: Inverts the input samples. Try this if decoding fails."
+        },
+        {
+          "flags": [
+            "--label"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Add a label to the front of every printed line",
+          "default": null,
+          "choices": null,
+          "raw": "--label  Add a label to the front of every printed line"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Mute SoX warnings.",
+          "default": null,
+          "choices": null,
+          "raw": "-m  Mute SoX warnings."
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Don't flush stdout, increases performance.",
+          "default": null,
+          "choices": null,
+          "raw": "-n  Don't flush stdout, increases performance."
+        },
+        {
+          "flags": [
+            "-ng"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "program to decode radio transmissions",
+          "default": null,
+          "choices": null,
+          "raw": "-ng  program to decode radio transmissions"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "CW: Set threshold for dit detection (default: 500)",
+          "default": null,
+          "choices": null,
+          "raw": "-o  CW: Set threshold for dit detection (default: 500)"
         },
         {
           "flags": [
@@ -203,95 +214,40 @@
           "description": "POCSAG: Show partially received messages.",
           "default": null,
           "choices": null,
-          "raw": " -p         : POCSAG: Show partially received messages."
+          "raw": "-p  POCSAG: Show partially received messages."
         },
         {
           "flags": [
-            "-f"
-          ],
-          "metavar": "mode",
-          "takes_value": true,
-          "description": "POCSAG: Overrides standards and forces decoding of data as <mode>",
-          "default": null,
-          "choices": null,
-          "raw": " -f <mode>  : POCSAG: Overrides standards and forces decoding of data as <mode>"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": "level",
-          "takes_value": true,
-          "description": "POCSAG: BCH bit error correction level. Set 0 to disable, default is 2.",
-          "default": "is 2",
-          "choices": null,
-          "raw": " -b <level> : POCSAG: BCH bit error correction level. Set 0 to disable, default is 2."
-        },
-        {
-          "flags": [
-            "-C"
-          ],
-          "metavar": "cs",
-          "takes_value": true,
-          "description": "POCSAG: Set Charset.",
-          "default": null,
-          "choices": null,
-          "raw": " -C <cs>    : POCSAG: Set Charset."
-        },
-        {
-          "flags": [
-            "-o"
-          ],
-          "metavar": "time",
-          "takes_value": false,
-          "description": "CW: Set threshold for dit detection (default: 500)",
-          "default": "500",
-          "choices": null,
-          "raw": " -o         : CW: Set threshold for dit detection (default: 500)"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": "time",
-          "takes_value": false,
-          "description": "CW: Dit length in ms (default: 50)",
-          "default": "50",
-          "choices": null,
-          "raw": " -d         : CW: Dit length in ms (default: 50)"
-        },
-        {
-          "flags": [
-            "-g"
-          ],
-          "metavar": "time",
-          "takes_value": false,
-          "description": "CW: Gap length in ms (default: 50)",
-          "default": "50",
-          "choices": null,
-          "raw": " -g         : CW: Gap length in ms (default: 50)"
-        },
-        {
-          "flags": [
-            "-x"
+            "-q"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "CW: Disable auto threshold detection",
+          "description": "Quiet output messages.",
           "default": null,
           "choices": null,
-          "raw": " -x         : CW: Disable auto threshold detection"
+          "raw": "-q  Quiet output messages."
         },
         {
           "flags": [
-            "-y"
+            "-s"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "CW: Disable auto timing detection",
+          "description": "Subtract demodulator.",
           "default": null,
           "choices": null,
-          "raw": " -y         : CW: Disable auto timing detection"
+          "raw": "-s  Subtract demodulator."
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Input file type (any other type than raw requires sox). Allowed types: raw aiff au",
+          "default": null,
+          "choices": null,
+          "raw": "-t  Input file type (any other type than raw requires sox). Allowed types: raw aiff au"
         },
         {
           "flags": [
@@ -302,18 +258,51 @@
           "description": "Add a time stamp in front of every printed line",
           "default": null,
           "choices": null,
-          "raw": " --timestamp: Add a time stamp in front of every printed line"
+          "raw": "--timestamp  Add a time stamp in front of every printed line"
         },
         {
           "flags": [
-            "--label"
+            "-u"
           ],
-          "metavar": "label",
+          "metavar": null,
           "takes_value": false,
-          "description": "Add a label to the front of every printed line",
+          "description": "POCSAG: Heuristically prune unlikely decodes.",
           "default": null,
           "choices": null,
-          "raw": " --label    : Add a label to the front of every printed line"
+          "raw": "-u  POCSAG: Heuristically prune unlikely decodes."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbosity level (0-10). For POCSAG and MORSE_CW '-v1' prints decoding statistics.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Verbosity level (0-10). For POCSAG and MORSE_CW '-v1' prints decoding statistics."
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "CW: Disable auto threshold detection",
+          "default": null,
+          "choices": null,
+          "raw": "-x  CW: Disable auto threshold detection"
+        },
+        {
+          "flags": [
+            "-y"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "CW: Disable auto timing detection",
+          "default": null,
+          "choices": null,
+          "raw": "-y  CW: Disable auto timing detection"
         }
       ],
       "raw_help": "root@kali:~# multimon-ng --help\n multimon-ng: unrecognized option '--help'\n multimon-ng 1.3.1\n (C) 1996/1997 by Tom Sailer HB9JNX/AE4WA\n (C) 2012-2024 by Elias Oenal\n Available demodulators: POCSAG512 POCSAG1200 POCSAG2400 FLEX FLEX_NEXT EAS UFSK1200 CLIPFSK FMSFSK AFSK1200 AFSK2400 AFSK2400_2 AFSK2400_3 HAPN4800 FSK9600 DTMF ZVEI1 ZVEI2 ZVEI3 DZVEI PZVEI EEA EIA CCIR MORSE_CW DUMPCSV X10 SCOPE\n \n Usage: multimon-ng [file] [file] [file] ...\n If no [file] is given, input will be read from your default sound\n hardware. A filename of \"-\" denotes standard input.\n -t <type>  : Input file type (any other type than raw requires sox)\n -a <demod> : Add demodulator\n -s <demod> : Subtract demodulator\n -c         : Remove all demodulators (must be added with -a <demod>)\n -q         : Quiet\n -v <level> : Level of verbosity (e.g. '-v 3')\n              For POCSAG and MORSE_CW '-v1' prints decoding statistics.\n -h         : This help\n -A         : APRS mode (TNC2 text output)\n -m         : Mute SoX warnings\n -r         : Call SoX in repeatable mode (e.g. fixed random seed for dithering)\n -n         : Don't flush stdout, increases performance.\n -j         : FMS: Just output hex data and CRC, no parsing.\n -e         : POCSAG: Hide empty messages.\n -u         : POCSAG: Heuristically prune unlikely decodes.\n -i         : POCSAG: Inverts the input samples. Try this if decoding fails.\n -p         : POCSAG: Show partially received messages.\n -f <mode>  : POCSAG: Overrides standards and forces decoding of data as <mode>\n                      (<mode> can be 'numeric', 'alpha', 'skyper' or 'auto')\n -b <level> : POCSAG: BCH bit error correction level. Set 0 to disable, default is 2.\n                      Lower levels increase performance and lower false positives.\n -C <cs>    : POCSAG: Set Charset.\n -o         : CW: Set threshold for dit detection (default: 500)\n -d         : CW: Dit length in ms (default: 50)\n -g         : CW: Gap length in ms (default: 50)\n -x         : CW: Disable auto threshold detection\n -y         : CW: Disable auto timing detection\n --timestamp: Add a time stamp in front of every printed line\n --label    : Add a label to the front of every printed line\n  Raw input requires one channel, 16 bit, signed integer (platform-native)\n  samples at the demodulator's input sampling rate, which is\n  usually 22050 Hz. Raw input is assumed and required if piped input is used.",
@@ -403,21 +392,17 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use multimon-ng because multimon-ng - program to decode radio transmissions.",
+    "When you need a concrete invocation, run `multimon-ng [options] [input_file]` as documented upstream for multimon-ng.",
+    "When you need a concrete invocation, run `multimon-ng -s SCOPE -t wav /tmp/message.wav` as documented upstream for multimon-ng.",
+    "When you need a concrete invocation, run `multimon-ng -a DTMF` as documented upstream for multimon-ng.",
+    "When chaining Kali Linux tools, pair multimon-ng with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `multimon-ng --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/multimon-ng && python3 multimon-ng.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/multimon-ng && python3 multimon-ng.py --help",
-    "cd toolboxes/multimon-ng && python3 multimon-ng.py --help",
-    "cd toolboxes/multimon-ng && python3 multimon-ng.py --help",
-    "cd toolboxes/multimon-ng && python3 multimon-ng.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST multimon-ng --output $KFIOSA_OUTPUT_DIR/multimon-ng.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST multimon-ng --output $KFIOSA_OUTPUT_DIR/multimon-ng.log"
+    "multimon-ng [options] [input_file]",
+    "multimon-ng -s SCOPE -t wav /tmp/message.wav",
+    "multimon-ng -a DTMF"
   ],
   "attack_surface": [
     "web"
@@ -432,5 +417,149 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-A",
+        "description": "APRS mode (TNC2 text output).",
+        "source": "docs"
+      },
+      {
+        "name": "-a",
+        "description": "Add demodulator (see below).",
+        "source": "docs"
+      },
+      {
+        "name": "-b",
+        "description": "POCSAG: BCH bit error correction level. Set 0 to disable, default is 2. Lower levels",
+        "source": "docs"
+      },
+      {
+        "name": "-C",
+        "description": "POCSAG: Set charset (default: US), where <cs> is one of: US, FR, DE, SE, SI",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "Remove all demodulators (must be added with -a <demod>).",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "CW: Dit length in ms (default: 50)",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "POCSAG: Hide empty messages.",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "POCSAG: Disables auto-detection and forces decoding of data as <mode> (<mode> can be",
+        "source": "docs"
+      },
+      {
+        "name": "-g",
+        "description": "CW: Gap length in ms (default: 50)",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Print the help.",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "POCSAG: Inverts the input samples. Try this if decoding fails.",
+        "source": "docs"
+      },
+      {
+        "name": "--label",
+        "description": "Add a label to the front of every printed line",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "Mute SoX warnings.",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "Don't flush stdout, increases performance.",
+        "source": "docs"
+      },
+      {
+        "name": "-ng",
+        "description": "program to decode radio transmissions",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "CW: Set threshold for dit detection (default: 500)",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "POCSAG: Show partially received messages.",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Quiet output messages.",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Subtract demodulator.",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "Input file type (any other type than raw requires sox). Allowed types: raw aiff au",
+        "source": "docs"
+      },
+      {
+        "name": "--timestamp",
+        "description": "Add a time stamp in front of every printed line",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "POCSAG: Heuristically prune unlikely decodes.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Verbosity level (0-10). For POCSAG and MORSE_CW '-v1' prints decoding statistics.",
+        "source": "docs"
+      },
+      {
+        "name": "-x",
+        "description": "CW: Disable auto threshold detection",
+        "source": "docs"
+      },
+      {
+        "name": "-y",
+        "description": "CW: Disable auto timing detection",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "multimon-ng [options] [input_file]",
+      "multimon-ng -s SCOPE -t wav /tmp/message.wav",
+      "multimon-ng -a DTMF"
+    ],
+    "readme": "multimon-ng - program to decode radio transmissions",
+    "how_to_use": "Install/setup: sudo apt install multimon-ng. Run the primary entrypoint as shown in upstream docs, e.g. `multimon-ng -s SCOPE -t wav /tmp/message.wav`. Further invocations from upstream: `multimon-ng -a DTMF`. multimon-ng - program to decode radio transmissions.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: multimon-ng - program to decode radio transmissions.",
+    "why_to_use": "Prefer this tool based on upstream description: multimon-ng - program to decode radio transmissions.",
+    "usage_sections": [
+      "Install with: sudo apt install multimon-ng",
+      "Install with: sudo apt install multimon-ng"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -9,7 +9,13 @@
   "summary": "A hardware-software hybrid Wi-Fi scanner and security analyzer that uses an ESP8266 microcontroller and a local Mistral LLM to evaluate surrounding wireless networks.",
   "documentation": {
     "readme": "A hardware-software hybrid Wi-Fi scanner and security analyzer that uses an ESP8266 microcontroller and a local Mistral LLM to evaluate surrounding wireless networks.",
-    "usage_sections": [],
+    "usage_sections": [
+      "Boots up and sets the Wi-Fi mode to Station (WIFISTA).",
+      "Listens to serial input commands (specifically $scan).",
+      "Scans 2.4 GHz Wi-Fi networks and returns SSID, RSSI (signal strength), BSSID (MAC Address), Channel, and Encryption type (Open/Secured) over Serial.",
+      "Establishes a serial connection to the ESP8266 (configured for COM7 at 115200 baud).",
+      "Prompts the user to send $scan or exit."
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -189,7 +195,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python WiFi_scan-v1.1.py"
+    ],
     "file_listing": [
       "README.md",
       "WiFi_scan-v1.1.py",
@@ -242,13 +250,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'iots']' as the attack surface (reconnaissance, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/AI-WiFi-Recon-Tool && python3 AI-WiFi-Recon-Tool.py --help",
-      "Step 2: cd toolboxes/AI-WiFi-Recon-Tool && cat README.md",
-      "Step 3: cd toolboxes/AI-WiFi-Recon-Tool && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, iots] in the Reconnaissance category. Fits when the engagement needs: A hardware-software hybrid Wi-Fi scanner and security analyzer that uses an ESP8266 microcontroller and a local Mistral LLM to evaluate surrounding wireless networks.",
+    "why_to_use": "Prefer this tool based on upstream description: A hardware-software hybrid Wi-Fi scanner and security analyzer that uses an ESP8266 microcontroller and a local Mistral LLM to evaluate surrounding wireless networks.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `python WiFi_scan-v1.1.py`. A hardware-software hybrid Wi-Fi scanner and security analyzer that uses an ESP8266 microcontroller and a local Mistral LLM to evaluate surrounding wireless networks."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -279,18 +283,14 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Reconnaissance, use AI-WiFi-Recon-Tool because A hardware-software hybrid Wi-Fi scanner and security analyzer that uses an ESP8266 microcontroller and a local Mistral LLM to evaluate surrounding wireless net.",
+    "When the engagement is in the recon phase, use AI-WiFi-Recon-Tool as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `python WiFi_scan-v1.1.py` as documented upstream for AI-WiFi-Recon-Tool.",
+    "When chaining Reconnaissance tools, pair AI-WiFi-Recon-Tool with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `AI-WiFi-Recon-Tool --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/AI-WiFi-Recon-Tool && python3 AI-WiFi-Recon-Tool.py --help",
-    "cd toolboxes/AI-WiFi-Recon-Tool && cat README.md",
-    "cd toolboxes/AI-WiFi-Recon-Tool && ls -la",
-    "cd toolboxes/AI-WiFi-Recon-Tool && python3 AI-WiFi-Recon-Tool.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AI-WiFi-Recon-Tool --output $KFIOSA_OUTPUT_DIR/AI-WiFi-Recon-Tool.log"
+    "python WiFi_scan-v1.1.py"
   ],
   "attack_surface": [
     "web",
@@ -313,5 +313,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

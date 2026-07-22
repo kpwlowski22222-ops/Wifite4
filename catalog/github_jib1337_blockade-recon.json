@@ -12,9 +12,24 @@
     "usage_sections": [],
     "arguments": [
       {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
         "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Specify a wireless interface to listen on",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "Attempt to retrieve an updated version of the manufacturer",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -189,7 +204,11 @@
         "language": "python"
       }
     ],
-    "examples": [],
+    "examples": [
+      "usage: recon.py [-h] [-i interface] [-u]",
+      "Blockade-Recon 0.2",
+      "root@kali:~/blockade-recon# ./recon.py -i <interfacename>"
+    ],
     "file_listing": [
       "README.md",
       "manuf",
@@ -243,13 +262,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'iots']' as the attack surface (reconnaissance, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
-      "Step 2: cd toolboxes/blockade-recon && cat README.md",
-      "Step 3: cd toolboxes/blockade-recon && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, iots] in the Reconnaissance category. Fits when the engagement needs: This tool captures MAC addresses from wireless data and tallys them based on manufacturer. Data can be imported and exported for use over multiple sessions. Useful for auditing wireless devices that are active at a locat.",
+    "why_to_use": "Prefer this tool based on upstream description: This tool captures MAC addresses from wireless data and tallys them based on manufacturer. Data can be imported and exported for use over multiple sessions. Useful for auditing wireless devices that are active at a location.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `usage: recon.py [-h] [-i interface] [-u]`. Further invocations from upstream: `Blockade-Recon 0.2`; `root@kali:~/blockade-recon# ./recon.py -i <interfacename>`. This tool captures MAC addresses from wireless data and tallys them based on manufacturer. Data can be imported and exported for use over multiple sessions. Useful for auditing wireless devices that are active at a location."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -280,18 +295,18 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Reconnaissance, use blockade-recon because This tool captures MAC addresses from wireless data and tallys them based on manufacturer. Data can be imported and exported for use over multiple sessions. Use.",
+    "When the engagement is in the recon phase, use blockade-recon as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `usage: recon.py [-h] [-i interface] [-u]` as documented upstream for blockade-recon.",
+    "When you need a concrete invocation, run `Blockade-Recon 0.2` as documented upstream for blockade-recon.",
+    "When you need a concrete invocation, run `root@kali:~/blockade-recon# ./recon.py -i <interfacename>` as documented upstream for blockade-recon.",
+    "When chaining Reconnaissance tools, pair blockade-recon with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `blockade-recon --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
-    "cd toolboxes/blockade-recon && cat README.md",
-    "cd toolboxes/blockade-recon && ls -la",
-    "cd toolboxes/blockade-recon && python3 blockade-recon.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blockade-recon --output $KFIOSA_OUTPUT_DIR/blockade-recon.log"
+    "usage: recon.py [-h] [-i interface] [-u]",
+    "Blockade-Recon 0.2",
+    "root@kali:~/blockade-recon# ./recon.py -i <interfacename>"
   ],
   "attack_surface": [
     "web",
@@ -314,5 +329,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

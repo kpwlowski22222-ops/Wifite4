@@ -1,17 +1,26 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/cvemap && python3 cvemap.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/cvemap && python3 cvemap.py --help",
-    "cd toolboxes/cvemap && python3 cvemap.py --help",
-    "cd toolboxes/cvemap && python3 cvemap.py --help",
-    "cd toolboxes/cvemap && python3 cvemap.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cvemap --output $KFIOSA_OUTPUT_DIR/cvemap.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cvemap --output $KFIOSA_OUTPUT_DIR/cvemap.log"
+    "go install github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest",
+    "vulnx --help",
+    "vulnx search --help",
+    "vulnx auth                              # Get free API key at $KFIOSA_TARGET_URL",
+    "vulnx search \"apache || nginx\" --limit 20",
+    "vulnx search \"cvss_score:>8.0 && cve_created_at:2024\"",
+    "vulnx id CVE-2024-1234 --json",
+    "vulnx analyze --fields severity",
+    "vulnx analyze --fields affected_products.vendor",
+    "vulnx search \"apache\" --json              # Machine-readable JSON"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Modern CLI for exploring vulnerability data with powerful search, filtering, and analysis capabilities",
+    "usage_sections": [
+      "Field names and data types",
+      "Descriptions and examples",
+      "Whether fields support sorting and faceting",
+      "Available enum values for specific fields",
+      "Search analyzer types"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +138,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "go install github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest",
+      "vulnx --help",
+      "vulnx search --help",
+      "vulnx auth                              # Get free API key at $KFIOSA_TARGET_URL",
+      "vulnx search \"apache || nginx\" --limit 20",
+      "vulnx search \"cvss_score:>8.0 && cve_created_at:2024\"",
+      "vulnx id CVE-2024-1234 --json",
+      "vulnx analyze --fields severity",
+      "vulnx analyze --fields affected_products.vendor",
+      "vulnx search \"apache\" --json              # Machine-readable JSON"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +275,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, cvemap, projectdiscovery).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/cvemap && python3 cvemap.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/cvemap && python3 cvemap.py --help",
-      "Step 3: cd toolboxes/cvemap && python3 cvemap.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: Modern CLI for exploring vulnerability data with powerful search, filtering, and analysis capabilities.",
+    "why_to_use": "Prefer this tool based on upstream description: Modern CLI for exploring vulnerability data with powerful search, filtering, and analysis capabilities.",
+    "how_to_use": "Install/setup: go install github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest. Run the primary entrypoint as shown in upstream docs, e.g. `go install github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest`. Further invocations from upstream: `vulnx --help`; `vulnx search --help`. Modern CLI for exploring vulnerability data with powerful search, filtering, and analysis capabilities."
   },
   "full_name": "projectdiscovery/cvemap",
   "id": "github:projectdiscovery/cvemap",
@@ -282,7 +298,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``cvemap`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Modern CLI for exploring vulnerability data with powerful search, filtering, and analysis capabilities",
   "tags": [
     "offensive",
     "cvemap",
@@ -300,12 +316,13 @@
   },
   "url": "https://github.com/projectdiscovery/cvemap",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use cvemap because Modern CLI for exploring vulnerability data with powerful search, filtering, and analysis capabilities.",
+    "When you need a concrete invocation, run `go install github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest` as documented upstream for cvemap.",
+    "When you need a concrete invocation, run `vulnx --help` as documented upstream for cvemap.",
+    "When you need a concrete invocation, run `vulnx search --help` as documented upstream for cvemap.",
+    "When you need a concrete invocation, run `vulnx auth                              # Get free API key at $KFIOSA_TARGET_URL` as documented upstream for cvemap.",
+    "When chaining recon tools, pair cvemap with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `cvemap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +341,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

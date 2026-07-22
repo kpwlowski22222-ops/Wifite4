@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "gdb",
   "title": "gdb",
-  "summary": "GNU Debugger",
+  "summary": "gcore - Generate core files for running processes",
   "description": "GNU Debugger\nGDB is a source-level debugger, capable of breaking programs at\nany specific line, displaying variable values, and determining\nwhere errors occurred. Currently, gdb supports C, C++, D,\nObjective-C, Fortran, Java, OpenCL C, Pascal, assembly, Modula-2,\nGo, and Ada. A must-have for any serious programmer.",
   "version": "17.2-1+b1",
   "architectures": [
@@ -27,7 +27,19 @@
       "path": "/usr/bin/gcore",
       "description": "Generate core files for running processes",
       "usage": "gcore [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "(Linux only) ignore /proc/PID/coredump_filter and also dump memory mappings marked with",
+          "default": null,
+          "choices": null,
+          "raw": "-a  (Linux only) ignore /proc/PID/coredump_filter and also dump memory mappings marked with"
+        }
+      ]
     },
     {
       "name": "gdb",
@@ -73,5 +85,37 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "gcore [-a] [-o filename] pid[s]"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use gcore because gcore - Generate core files for running processes.",
+    "When the engagement is in the install phase, use gcore as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `gcore [-a] [-o filename] pid[s]` as documented upstream for gcore.",
+    "When chaining Kali Linux tools, pair gcore with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `gcore --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "(Linux only) ignore /proc/PID/coredump_filter and also dump memory mappings marked with",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "gcore [-a] [-o filename] pid[s]"
+    ],
+    "readme": "gcore - Generate core files for running processes",
+    "how_to_use": "Install/setup: sudo apt install gdb (17.2-1). gcore - Generate core files for running processes.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: gcore - Generate core files for running processes.",
+    "why_to_use": "Prefer this tool based on upstream description: gcore - Generate core files for running processes.",
+    "usage_sections": [
+      "Install with: sudo apt install gdb (17.2-1)",
+      "Install with: sudo apt install gdb (17.2-1)"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

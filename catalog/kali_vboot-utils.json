@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "vboot-utils",
   "title": "vboot-utils",
-  "summary": "### cgpt",
+  "summary": "cgpt - Utility to manipulate GPT partitions with Chromium OS extensions",
   "version": "0~R106-15054.B+dfsg-0.1",
   "architectures": [
     "amd64",
@@ -46,10 +46,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "OPTION - is initiated by a command which tells cgpt the type of opera-",
+          "description": "For more detailed usage, use cgpt COMMAND -h",
           "default": null,
           "choices": null,
-          "raw": "     -h  OPTION - is initiated by a command which tells cgpt the type of opera-"
+          "raw": "-h  For more detailed usage, use cgpt COMMAND -h"
         }
       ],
       "raw_help": "root@kali:~# cgpt -h\n \n Usage: cgpt COMMAND [OPTIONS] DRIVE\n \n Supported COMMANDs:\n \n   create           Create or reset GPT headers and tables\n   add              Add, edit or remove a partition entry\n   show             Show partition table and entries\n   repair           Repair damaged GPT headers and tables\n   boot             Edit the PMBR sector for legacy BIOSes\n   find             Locate a partition by its GUID\n   edit             Edit a drive entry\n   prioritize       Reorder the priority of all kernel partitions\n   legacy           Switch between GPT and Legacy GPT\n \n For more detailed usage, use cgpt COMMAND -h",
@@ -1269,21 +1269,22 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use cgpt because cgpt - Utility to manipulate GPT partitions with Chromium OS extensions.",
+    "When you need a concrete invocation, run `cgpt COMMAND [OPTIONS] DRIVE` as documented upstream for cgpt.",
+    "When you need a concrete invocation, run `cgpt show /dev/mmcblk0` as documented upstream for cgpt.",
+    "When you need a concrete invocation, run `cgpt create /dev/mmcblk0` as documented upstream for cgpt.",
+    "When you need a concrete invocation, run `cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0` as documented upstream for cgpt.",
+    "When chaining Kali Linux tools, pair cgpt with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `cgpt --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/vboot-utils && python3 vboot-utils.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/vboot-utils && python3 vboot-utils.py --help",
-    "cd toolboxes/vboot-utils && python3 vboot-utils.py --help",
-    "cd toolboxes/vboot-utils && python3 vboot-utils.py --help",
-    "cd toolboxes/vboot-utils && python3 vboot-utils.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST vboot-utils --output $KFIOSA_OUTPUT_DIR/vboot-utils.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST vboot-utils --output $KFIOSA_OUTPUT_DIR/vboot-utils.log"
+    "cgpt COMMAND [OPTIONS] DRIVE",
+    "cgpt show /dev/mmcblk0",
+    "cgpt create /dev/mmcblk0",
+    "cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0",
+    "cgpt add -i 1 -t data -l \"STATE\" /dev/mmcblk0",
+    "cgpt add -i 2 -t kernel -l \"KERN-A\" /dev/mmcblk0",
+    "cgpt add -i 3 -t rootfs -l \"ROOT-A\" /dev/mmcblk0"
   ],
   "attack_surface": [
     "web"
@@ -1298,5 +1299,32 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "For more detailed usage, use cgpt COMMAND -h",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "cgpt COMMAND [OPTIONS] DRIVE",
+      "cgpt show /dev/mmcblk0",
+      "cgpt create /dev/mmcblk0",
+      "cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0",
+      "cgpt add -i 1 -t data -l \"STATE\" /dev/mmcblk0",
+      "cgpt add -i 2 -t kernel -l \"KERN-A\" /dev/mmcblk0",
+      "cgpt add -i 3 -t rootfs -l \"ROOT-A\" /dev/mmcblk0"
+    ],
+    "readme": "cgpt - Utility to manipulate GPT partitions with Chromium OS extensions",
+    "how_to_use": "Install/setup: sudo apt install vboot-utils. Run the primary entrypoint as shown in upstream docs, e.g. `cgpt show /dev/mmcblk0`. Further invocations from upstream: `cgpt create /dev/mmcblk0`; `cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0`. cgpt - Utility to manipulate GPT partitions with Chromium OS extensions.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: cgpt - Utility to manipulate GPT partitions with Chromium OS extensions.",
+    "why_to_use": "Prefer this tool based on upstream description: cgpt - Utility to manipulate GPT partitions with Chromium OS extensions.",
+    "usage_sections": [
+      "Install with: sudo apt install vboot-utils"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

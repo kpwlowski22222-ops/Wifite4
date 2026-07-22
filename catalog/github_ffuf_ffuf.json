@@ -1,135 +1,336 @@
 {
   "category": "exploit",
   "command_examples": [
-    "cd toolboxes/ffuf && python3 ffuf.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/ffuf && python3 ffuf.py --help",
-    "cd toolboxes/ffuf && python3 ffuf.py --help",
-    "cd toolboxes/ffuf && python3 ffuf.py --help",
-    "cd toolboxes/ffuf && python3 ffuf.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ffuf --output $KFIOSA_OUTPUT_DIR/ffuf.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ffuf --output $KFIOSA_OUTPUT_DIR/ffuf.log"
+    "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL",
+    "ffuf -w /path/to/vhost/wordlist -u $KFIOSA_TARGET_URL -H \"Host: FUZZ\" -fs 4242",
+    "ffuf -w /path/to/paramnames.txt -u $KFIOSA_TARGET_URL -fs 4242",
+    "ffuf -w /path/to/values.txt -u $KFIOSA_TARGET_URL -fc 401",
+    "ffuf -w /path/to/postdata.txt -X POST -d \"username=admin\\&password=$KFIOSA_SECRET -u $KFIOSA_TARGET_URL -fc 401",
+    "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL -maxtime 60",
+    "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL -maxtime-job 60 -recursion -recursion-depth 2",
+    "ffuf --input-cmd 'radamsa --seed $FFUF_NUM example1.txt example2.txt' -H \"Content-Type: application/json\" -X POST -u $KFIOSA_TARGET_URL -mc all -fc 400",
+    "radamsa -n 1000 -o %n.txt example1.txt example2.txt",
+    "ffuf --input-cmd 'cat $FFUF_NUM.txt' -H \"Content-Type: application/json\" -X POST -u $KFIOSA_TARGET_URL -mc all -fc 400"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "- Installation - Example usage - Content discovery - Vhost discovery - Parameter fuzzing - POST data fuzzing - Using external mutator - Configuration files - Help - Interactive mode",
+    "usage_sections": [
+      "Installation: - Download a prebuilt binary from releases page, unpack and run! or - If you are on Windows with Scoop, ffuf can be installed with: scoop install ffuf or - If you are on Windows with Winget, ffuf can be installed with: winget install ffuf.ffuf or - If you are on macOS with homebr"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-ac",
+        "description": "Automatically calibrate filtering options (default: false)",
+        "source": "docs"
       },
       {
-        "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "name": "-acc",
+        "description": "Custom auto-calibration string. Can be used multiple times. Implies -ac",
+        "source": "docs"
       },
       {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
-        "source": "v2_enhancement"
+        "name": "-ach",
+        "description": "Per host autocalibration (default: false)",
+        "source": "docs"
       },
       {
-        "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
+        "name": "-ack",
+        "description": "Autocalibration keyword (default: FUZZ)",
+        "source": "docs"
       },
       {
-        "name": "--port",
-        "description": "Target port (default: service default).",
-        "source": "generic_kfiosa"
+        "name": "-acs",
+        "description": "Custom auto-calibration strategies. Can be used multiple times. Implies -ac",
+        "source": "docs"
       },
       {
-        "name": "--interface",
-        "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
+        "name": "-b",
+        "description": "Cookie data `\"NAME1=VALUE1; NAME2=VALUE2\"` for copy as curl functionality.",
+        "source": "docs"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
+        "name": "-c",
+        "description": "Colorize output. (default: false)",
+        "source": "docs"
       },
       {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
+        "name": "-cc",
+        "description": "Client cert for authentication. Client key needs to be defined as well for this to work",
+        "source": "docs"
       },
       {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
-        "source": "generic_kfiosa"
+        "name": "-ck",
+        "description": "Client key for authentication. Client certificate needs to be defined as well for this to work",
+        "source": "docs"
       },
       {
-        "name": "--rate",
-        "description": "Packet / request rate limit.",
-        "source": "generic_kfiosa"
+        "name": "-config",
+        "description": "Load configuration from a file",
+        "source": "docs"
       },
       {
-        "name": "--wordlist",
-        "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
+        "name": "-d",
+        "description": "POST data",
+        "source": "docs"
       },
       {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
-        "source": "generic_kfiosa"
+        "name": "-debug-log",
+        "description": "Write all of the internal logging to the specified file.",
+        "source": "docs"
       },
       {
-        "name": "--user-agent",
-        "description": "HTTP User-Agent header.",
-        "source": "generic_kfiosa"
+        "name": "-e",
+        "description": "Comma separated list of extensions. Extends FUZZ keyword.",
+        "source": "docs"
       },
       {
-        "name": "--cookie",
-        "description": "HTTP Cookie header.",
-        "source": "generic_kfiosa"
+        "name": "-enc",
+        "description": "Encoders for keywords, eg. 'FUZZ:urlencode b64encode'",
+        "source": "docs"
       },
       {
-        "name": "--header",
-        "description": "Extra HTTP header (key:value).",
-        "source": "generic_kfiosa"
+        "name": "-fc",
+        "description": "Filter HTTP status codes from response. Comma separated list of codes and ranges",
+        "source": "docs"
       },
       {
-        "name": "--insecure",
-        "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
+        "name": "-fl",
+        "description": "Filter by amount of lines in response. Comma separated list of line counts and ranges",
+        "source": "docs"
       },
       {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
-        "source": "generic_kfiosa"
+        "name": "-fmode",
+        "description": "Filter set operator. Either of: and, or (default: or)",
+        "source": "docs"
       },
       {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
+        "name": "-fr",
+        "description": "Filter regexp",
+        "source": "docs"
       },
       {
-        "name": "--quiet",
-        "description": "Suppress non-error output.",
-        "source": "generic_kfiosa"
+        "name": "-fs",
+        "description": "Filter HTTP response size. Comma separated list of sizes and ranges",
+        "source": "docs"
       },
       {
-        "name": "--dry-run",
-        "description": "Print what would be done without making any changes.",
-        "source": "v2_enhancement"
+        "name": "-ft",
+        "description": "Filter by number of milliseconds to the first response byte, either greater or less than. EG: >100 or <100",
+        "source": "docs"
       },
       {
-        "name": "--yes",
-        "description": "Skip confirmation prompts (use with care).",
-        "source": "v2_enhancement"
+        "name": "-fw",
+        "description": "Filter by amount of words in response. Comma separated list of word counts and ranges",
+        "source": "docs"
       },
       {
-        "name": "--force",
-        "description": "Force the action even if a safety check would block it.",
-        "source": "v2_enhancement"
+        "name": "-http2",
+        "description": "Use HTTP2 protocol (default: false)",
+        "source": "docs"
       },
       {
-        "name": "--no-banner",
-        "description": "Suppress banner / tool-name output.",
-        "source": "v2_enhancement"
+        "name": "-ic",
+        "description": "Ignore wordlist comments (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-ignore-body",
+        "description": "Do not fetch the response content. (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-input-cmd",
+        "description": "Command producing the input. --input-num is required when using this input method. Overrides -w.",
+        "source": "docs"
+      },
+      {
+        "name": "-input-num",
+        "description": "Number of inputs to test. Used in conjunction with --input-cmd. (default: 100)",
+        "source": "docs"
+      },
+      {
+        "name": "-input-shell",
+        "description": "Shell to be used for running command",
+        "source": "docs"
+      },
+      {
+        "name": "-json",
+        "description": "JSON output, printing newline-delimited JSON records (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-maxtime",
+        "description": "Maximum running time in seconds for entire process. (default: 0)",
+        "source": "docs"
+      },
+      {
+        "name": "-maxtime-job",
+        "description": "Maximum running time in seconds per job. (default: 0)",
+        "source": "docs"
+      },
+      {
+        "name": "-mc",
+        "description": "Match HTTP status codes, or \"all\" for everything. (default: 200-299,301,302,307,401,403,405,500)",
+        "source": "docs"
+      },
+      {
+        "name": "-ml",
+        "description": "Match amount of lines in response",
+        "source": "docs"
+      },
+      {
+        "name": "-mmode",
+        "description": "Matcher set operator. Either of: and, or (default: or)",
+        "source": "docs"
+      },
+      {
+        "name": "-mode",
+        "description": "Multi-wordlist operation mode. Available modes: clusterbomb, pitchfork, sniper (default: clusterbomb)",
+        "source": "docs"
+      },
+      {
+        "name": "-mr",
+        "description": "Match regexp",
+        "source": "docs"
+      },
+      {
+        "name": "-ms",
+        "description": "Match HTTP response size",
+        "source": "docs"
+      },
+      {
+        "name": "-mt",
+        "description": "Match how many milliseconds to the first response byte, either greater or less than. EG: >100 or <100",
+        "source": "docs"
+      },
+      {
+        "name": "-mw",
+        "description": "Match amount of words in response",
+        "source": "docs"
+      },
+      {
+        "name": "-noninteractive",
+        "description": "Disable the interactive console functionality (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "Write output to file",
+        "source": "docs"
+      },
+      {
+        "name": "-od",
+        "description": "Directory path to store matched results to.",
+        "source": "docs"
+      },
+      {
+        "name": "-of",
+        "description": "Output file format. Available formats: json, ejson, html, md, csv, ecsv (or, 'all' for all formats) (default: json)",
+        "source": "docs"
+      },
+      {
+        "name": "-or",
+        "description": "Don't create the output file if we don't have results (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Seconds of `delay` between requests, or a range of random delay. For example \"0.1\" or \"0.1-2.0\"",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Follow redirects (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-rate",
+        "description": "Rate of requests per second (default: 0)",
+        "source": "docs"
+      },
+      {
+        "name": "-raw",
+        "description": "Do not encode URI (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-recursion",
+        "description": "Scan recursively. Only FUZZ keyword is supported, and URL (-u) has to end in it. (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-recursion-depth",
+        "description": "Maximum recursion depth. (default: 0)",
+        "source": "docs"
+      },
+      {
+        "name": "-replay-proxy",
+        "description": "Replay matched requests using this proxy.",
+        "source": "docs"
+      },
+      {
+        "name": "-request",
+        "description": "File containing the raw http request",
+        "source": "docs"
+      },
+      {
+        "name": "-request-proto",
+        "description": "Protocol to use along with raw request (default: https)",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Do not print additional information (silent mode) (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-sa",
+        "description": "Stop on all error cases. Implies -sf and -se. (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-scraperfile",
+        "description": "Custom scraper file path",
+        "source": "docs"
+      },
+      {
+        "name": "-scrapers",
+        "description": "Active scraper groups (default: all)",
+        "source": "docs"
+      },
+      {
+        "name": "-se",
+        "description": "Stop on spurious errors (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-search",
+        "description": "Search for a FFUFHASH payload from ffuf history",
+        "source": "docs"
+      },
+      {
+        "name": "-sf",
+        "description": "Stop when > 95% of responses return 403 Forbidden (default: false)",
+        "source": "docs"
+      },
+      {
+        "name": "-sni",
+        "description": "Target TLS SNI, does not support FUZZ keyword",
+        "source": "docs"
       }
     ],
-    "examples": [],
+    "examples": [
+      "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL",
+      "ffuf -w /path/to/vhost/wordlist -u $KFIOSA_TARGET_URL -H \"Host: FUZZ\" -fs 4242",
+      "ffuf -w /path/to/paramnames.txt -u $KFIOSA_TARGET_URL -fs 4242",
+      "ffuf -w /path/to/values.txt -u $KFIOSA_TARGET_URL -fc 401",
+      "ffuf -w /path/to/postdata.txt -X POST -d \"username=admin\\&password=$KFIOSA_SECRET -u $KFIOSA_TARGET_URL -fc 401",
+      "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL -maxtime 60",
+      "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL -maxtime-job 60 -recursion -recursion-depth 2",
+      "ffuf --input-cmd 'radamsa --seed $FFUF_NUM example1.txt example2.txt' -H \"Content-Type: application/json\" -X POST -u $KFIOSA_TARGET_URL -mc all -fc 400",
+      "radamsa -n 1000 -o %n.txt example1.txt example2.txt",
+      "ffuf --input-cmd 'cat $FFUF_NUM.txt' -H \"Content-Type: application/json\" -X POST -u $KFIOSA_TARGET_URL -mc all -fc 400"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +456,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, ffuf, web).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/ffuf && python3 ffuf.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/ffuf && python3 ffuf.py --help",
-      "Step 3: cd toolboxes/ffuf && python3 ffuf.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the exploit category. Fits when the engagement needs: - Installation - Example usage - Content discovery - Vhost discovery - Parameter fuzzing - POST data fuzzing - Using external mutator - Configuration files - Help - Interactive mode.",
+    "why_to_use": "Prefer this tool based on upstream description: - Installation - Example usage - Content discovery - Vhost discovery - Parameter fuzzing - POST data fuzzing - Using external mutator - Configuration files - Help - Interactive mode.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL`. Further invocations from upstream: `ffuf -w /path/to/vhost/wordlist -u $KFIOSA_TARGET_URL -H \"Host: FUZZ\" -fs 4242`; `ffuf -w /path/to/paramnames.txt -u $KFIOSA_TARGET_URL -fs 4242`. - Installation - Example usage - Content discovery - Vhost discovery - Parameter fuzzing - POST data fuzzing - Using external mutator - Configuration files - Help - Interactive mode."
   },
   "full_name": "ffuf/ffuf",
   "id": "github:ffuf/ffuf",
@@ -282,7 +479,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``ffuf`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "- Installation - Example usage - Content discovery - Vhost discovery - Parameter fuzzing - POST data fuzzing - Using external mutator - Configuration files - Help - Interactive mode",
   "tags": [
     "offensive",
     "ffuf",
@@ -299,12 +496,13 @@
   },
   "url": "https://github.com/ffuf/ffuf",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need exploit, use ffuf because - Installation - Example usage - Content discovery - Vhost discovery - Parameter fuzzing - POST data fuzzing - Using external mutator - Configuration files - He.",
+    "When you need a concrete invocation, run `ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL` as documented upstream for ffuf.",
+    "When you need a concrete invocation, run `ffuf -w /path/to/vhost/wordlist -u $KFIOSA_TARGET_URL -H \"Host: FUZZ\" -fs 4242` as documented upstream for ffuf.",
+    "When you need a concrete invocation, run `ffuf -w /path/to/paramnames.txt -u $KFIOSA_TARGET_URL -fs 4242` as documented upstream for ffuf.",
+    "When you need a concrete invocation, run `ffuf -w /path/to/values.txt -u $KFIOSA_TARGET_URL -fc 401` as documented upstream for ffuf.",
+    "When chaining exploit tools, pair ffuf with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ffuf --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -323,5 +521,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

@@ -1,26 +1,46 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/linkedin2username && python3 linkedin2username.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
-    "cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
-    "cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
-    "cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST linkedin2username --output $KFIOSA_OUTPUT_DIR/linkedin2username.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST linkedin2username --output $KFIOSA_OUTPUT_DIR/linkedin2username.log"
+    "uv run python linkedin2username.py -c targetco",
+    "usage: linkedin2username.py [-h] -c COMPANY [-n DOMAIN] [-d DEPTH]",
+    "Append a domain name to username output.",
+    "Search depth (how many loops of 25). If unset, will try to grab them",
+    "potentially bypassing the 1,000 record limit.",
+    "multiple searches split across geographic regions.",
+    "python linkedin2username.py -c targetco",
+    "python linkedin2username.py -c targetco -d 5 -n 'targetco.com'",
+    "driver = webdriver.Firefox() # or webdriver.Chrome()",
+    "driver.get(\"$KFIOSA_TARGET_URL\")"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "linkedin2username OSINT Tool: Generate username lists from companies on LinkedIn.",
+    "usage_sections": [
+      "Examples: You'll need to provide the tool with LinkedIn's company name. You can find that by looking at the URL for the company's page. It should look something like https://linkedin.com/company/targetco. It may or may not be as simple as the exact name of the company. Here's an example to"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-g",
+        "description": "Attempts to bypass the 1,000 record search limit by running",
+        "source": "docs"
+      },
+      {
+        "name": "--geoblast",
+        "description": "Attempts to bypass the 1,000 record search limit by running",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -129,7 +149,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "uv run python linkedin2username.py -c targetco",
+      "usage: linkedin2username.py [-h] -c COMPANY [-n DOMAIN] [-d DEPTH]",
+      "Append a domain name to username output.",
+      "Search depth (how many loops of 25). If unset, will try to grab them",
+      "potentially bypassing the 1,000 record limit.",
+      "multiple searches split across geographic regions.",
+      "python linkedin2username.py -c targetco",
+      "python linkedin2username.py -c targetco -d 5 -n 'targetco.com'",
+      "driver = webdriver.Firefox() # or webdriver.Chrome()",
+      "driver.get(\"$KFIOSA_TARGET_URL\")"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +286,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, linkedin2username, initstring).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/linkedin2username && python3 linkedin2username.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
-      "Step 3: cd toolboxes/linkedin2username && python3 linkedin2username.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: linkedin2username OSINT Tool: Generate username lists from companies on LinkedIn.",
+    "why_to_use": "Prefer this tool based on upstream description: linkedin2username OSINT Tool: Generate username lists from companies on LinkedIn.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `uv run python linkedin2username.py -c targetco`. Further invocations from upstream: `usage: linkedin2username.py [-h] -c COMPANY [-n DOMAIN] [-d DEPTH]`; `Append a domain name to username output.`. linkedin2username OSINT Tool: Generate username lists from companies on LinkedIn."
   },
   "full_name": "initstring/linkedin2username",
   "id": "github:initstring/linkedin2username",
@@ -282,7 +309,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``linkedin2username`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "linkedin2username OSINT Tool: Generate username lists from companies on LinkedIn.",
   "tags": [
     "offensive",
     "linkedin2username",
@@ -300,12 +327,13 @@
   },
   "url": "https://github.com/initstring/linkedin2username",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use linkedin2username because linkedin2username OSINT Tool: Generate username lists from companies on LinkedIn.",
+    "When you need a concrete invocation, run `uv run python linkedin2username.py -c targetco` as documented upstream for linkedin2username.",
+    "When you need a concrete invocation, run `usage: linkedin2username.py [-h] -c COMPANY [-n DOMAIN] [-d DEPTH]` as documented upstream for linkedin2username.",
+    "When you need a concrete invocation, run `Append a domain name to username output.` as documented upstream for linkedin2username.",
+    "When you need a concrete invocation, run `Search depth (how many loops of 25). If unset, will try to grab them` as documented upstream for linkedin2username.",
+    "When chaining osint tools, pair linkedin2username with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `linkedin2username --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +352,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

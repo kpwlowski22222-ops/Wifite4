@@ -1,22 +1,72 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/Empire && python3 Empire.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Empire && python3 Empire.py --help",
-    "cd toolboxes/Empire && python3 Empire.py --help",
-    "cd toolboxes/Empire && python3 Empire.py --help",
-    "cd toolboxes/Empire && python3 Empire.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Empire --output $KFIOSA_OUTPUT_DIR/Empire.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Empire --output $KFIOSA_OUTPUT_DIR/Empire.log"
+    "./setup/checkout-latest-tag.sh",
+    "./ps-empire install -y",
+    "./ps-empire server",
+    "./ps-empire server -h"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Empire Empire is a post-exploitation and adversary emulation framework that is used to aid Red Teams and Penetration Testers. The Empire server is written in Python 3 and is modular to allow operator flexibility. Empire comes built-in with a client that can be used remotely to access the server. There is also a GUI available for remotely accessing the Empire server, Starkiller.",
+    "usage_sections": [
+      "Features: - Server/Client Architecture for Multiplayer Support - Fully encrypted communications - HTTP/S, Malleable HTTP, OneDrive, Dropbox, and PHP Listeners - Massive library (400+) of supported tools in PowerShell, C#, & Python - Donut Integration for shellcode generation - Modular plug",
+      "Quickstart: When cloning this repository, you will need to recurse submodules. Check out the Installation Page for install instructions. Note: The main branch is a reflection of the latest changes and may not always be stable. After cloning the repo, you can checkout the latest stable releas"
+    ],
     "arguments": [
       {
-        "name": "--depth",
-        "description": "CLI flag '--depth' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--clean",
+        "description": "Drop and reinitialize the database. Removes Starkiller/Empire-Compiler files.",
+        "source": "docs"
+      },
+      {
+        "name": "--config",
+        "description": "Specify a config.yaml different from the config.yaml in the empire/server directory.",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Set the logging level to DEBUG",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Set the logging level to DEBUG",
+        "source": "docs"
+      },
+      {
+        "name": "-install",
+        "description": "plugin '{entry.name}' v{entry.version} installed\"",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Set the logging level",
+        "source": "docs"
+      },
+      {
+        "name": "--log-level",
+        "description": "Set the logging level",
+        "source": "docs"
+      },
+      {
+        "name": "--reset",
+        "description": "Drop and reinitialize the database. Keep config and Starkiller/Empire-Compiler files intact.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Display current Empire version.",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Display current Empire version.",
+        "source": "docs"
+      },
+      {
+        "name": "-y",
+        "description": "Automatically say yes to all prompts during installation",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -129,7 +179,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "./setup/checkout-latest-tag.sh",
+      "./ps-empire install -y",
+      "./ps-empire server",
+      "./ps-empire server -h"
+    ],
     "function_signatures": [
       {
         "name": "exec",
@@ -240,13 +295,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, empire, bc-security).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Empire && python3 Empire.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Empire && python3 Empire.py --help",
-      "Step 3: cd toolboxes/Empire && python3 Empire.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: Empire Empire is a post-exploitation and adversary emulation framework that is used to aid Red Teams and Penetration Testers. The Empire server is written in Python 3 and is modular to allow operator flexibility. Empire .",
+    "why_to_use": "Prefer this tool based on upstream description: Empire Empire is a post-exploitation and adversary emulation framework that is used to aid Red Teams and Penetration Testers. The Empire server is written in Python 3 and is modular to allow operator flexibility. Empire comes built-in with a client that can be used remotely to access the server. There is also a GUI available for remotely accessing the Empire server, Starkiller.",
+    "how_to_use": "Install/setup: git clone --recursive https://github.com/BC-SECURITY/Empire.git; git clone --recursive https://github.com/BC-SECURITY/Empire.git. Run the primary entrypoint as shown in upstream docs, e.g. `./setup/checkout-latest-tag.sh`. Further invocations from upstream: `./ps-empire install -y`; `./ps-empire server`. Empire Empire is a post-exploitation and adversary emulation framework that is used to aid Red Teams and Penetration Testers. The Empire server is written in Python 3 and is modular to allow operator flexibility. Empire comes built-in with a client that can be used remotely to access the server. There is also a GUI ava."
   },
   "full_name": "BC-SECURITY/Empire",
   "id": "github:BC-SECURITY/Empire",
@@ -267,7 +318,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Empire`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Empire Empire is a post-exploitation and adversary emulation framework that is used to aid Red Teams and Penetration Testers. The Empire server is written in Python 3 and is modular to allow operator flexibility. Empire comes built-in with a client that can be used remotely to access the server. There is also a GUI available for remotely accessing the Empire server, Starkiller.",
   "tags": [
     "offensive",
     "empire",
@@ -285,12 +336,13 @@
   },
   "url": "https://github.com/BC-SECURITY/Empire",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use Empire because Empire Empire is a post-exploitation and adversary emulation framework that is used to aid Red Teams and Penetration Testers. The Empire server is written in Py.",
+    "When you need a concrete invocation, run `./setup/checkout-latest-tag.sh` as documented upstream for Empire.",
+    "When you need a concrete invocation, run `./ps-empire install -y` as documented upstream for Empire.",
+    "When you need a concrete invocation, run `./ps-empire server` as documented upstream for Empire.",
+    "When you need a concrete invocation, run `./ps-empire server -h` as documented upstream for Empire.",
+    "When chaining frameworks tools, pair Empire with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Empire --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -307,5 +359,7 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

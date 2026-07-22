@@ -1,17 +1,20 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/dnsvalidator && python3 dnsvalidator.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/dnsvalidator && python3 dnsvalidator.py --help",
-    "cd toolboxes/dnsvalidator && python3 dnsvalidator.py --help",
-    "cd toolboxes/dnsvalidator && python3 dnsvalidator.py --help",
-    "cd toolboxes/dnsvalidator && python3 dnsvalidator.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsvalidator --output $KFIOSA_OUTPUT_DIR/dnsvalidator.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsvalidator --output $KFIOSA_OUTPUT_DIR/dnsvalidator.log"
+    "python3 setup.py install",
+    "dnsvalidator -tL $KFIOSA_TARGET_URL -threads 20 -o resolvers.txt",
+    "docker build -t dnsvalidator .",
+    "docker run -v $(pwd):/dnsvalidator/output -t dnsvalidator -tL $KFIOSA_TARGET_URL -threads 20 -o /dnsvalidator/output/resolvers.txt"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "DNS Validator Maintains a list of IPv4 DNS servers by verifying them against baseline servers, and ensuring accurate responses.",
+    "usage_sections": [
+      "Baselines non-geolocated domain names against \"trusted\" public DNS resolvers, 1.1.1.1, 8.8.8.8 and 9.9.9.9",
+      "For each resolver being tested DNS Validator ensures that each baselined domain name resolves to the same IP Address.",
+      "Servers that return an answer that differs from the baseline are immediately skipped",
+      "Performs DNS lookup of known commonly spoofed DNS addresses to ensure NXDOMAIN is returned when expected.",
+      "Resolvers that do not return NXDOMAIN for random subdomains of known target domains are immediately skipped."
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +132,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python3 setup.py install",
+      "dnsvalidator -tL $KFIOSA_TARGET_URL -threads 20 -o resolvers.txt",
+      "docker build -t dnsvalidator .",
+      "docker run -v $(pwd):/dnsvalidator/output -t dnsvalidator -tL $KFIOSA_TARGET_URL -threads 20 -o /dnsvalidator/output/resolvers.txt"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +263,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, dnsvalidator, vortexau).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/dnsvalidator && python3 dnsvalidator.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/dnsvalidator && python3 dnsvalidator.py --help",
-      "Step 3: cd toolboxes/dnsvalidator && python3 dnsvalidator.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: DNS Validator Maintains a list of IPv4 DNS servers by verifying them against baseline servers, and ensuring accurate responses.",
+    "why_to_use": "Prefer this tool based on upstream description: DNS Validator Maintains a list of IPv4 DNS servers by verifying them against baseline servers, and ensuring accurate responses.",
+    "how_to_use": "Install/setup: docker run -v $(pwd):/dnsvalidator/output -t dnsvalidator -tL https://public-dns.info/nameservers.txt -threads 20 -o /dnsvalidator/output/resolvers.txt. Run the primary entrypoint as shown in upstream docs, e.g. `python3 setup.py install`. Further invocations from upstream: `dnsvalidator -tL $KFIOSA_TARGET_URL -threads 20 -o resolvers.txt`; `docker build -t dnsvalidator .`. DNS Validator Maintains a list of IPv4 DNS servers by verifying them against baseline servers, and ensuring accurate responses."
   },
   "full_name": "vortexau/dnsvalidator",
   "id": "github:vortexau/dnsvalidator",
@@ -282,7 +286,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``dnsvalidator`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "DNS Validator Maintains a list of IPv4 DNS servers by verifying them against baseline servers, and ensuring accurate responses.",
   "tags": [
     "offensive",
     "dnsvalidator",
@@ -300,12 +304,13 @@
   },
   "url": "https://github.com/vortexau/dnsvalidator",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use dnsvalidator because DNS Validator Maintains a list of IPv4 DNS servers by verifying them against baseline servers, and ensuring accurate responses.",
+    "When you need a concrete invocation, run `python3 setup.py install` as documented upstream for dnsvalidator.",
+    "When you need a concrete invocation, run `dnsvalidator -tL $KFIOSA_TARGET_URL -threads 20 -o resolvers.txt` as documented upstream for dnsvalidator.",
+    "When you need a concrete invocation, run `docker build -t dnsvalidator .` as documented upstream for dnsvalidator.",
+    "When you need a concrete invocation, run `docker run -v $(pwd):/dnsvalidator/output -t dnsvalidator -tL $KFIOSA_TARGET_URL -threads 20 -o /dnsvalidator/output/resolvers.txt` as documented upstream for dnsvalidator.",
+    "When chaining recon tools, pair dnsvalidator with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dnsvalidator --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +329,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

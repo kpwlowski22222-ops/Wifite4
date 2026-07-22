@@ -27,7 +27,206 @@
       "path": "/usr/bin/xslate",
       "description": "Process Xslate Templates",
       "usage": "xslate [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--ie"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Input encoding (default: UTF-8)",
+          "default": null,
+          "choices": null,
+          "raw": "--ie  Input encoding (default: UTF-8)"
+        },
+        {
+          "flags": [
+            "--oe"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Output encoding (default: UTF-8)",
+          "default": null,
+          "choices": null,
+          "raw": "--oe  Output encoding (default: UTF-8)"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print version information",
+          "default": null,
+          "choices": null,
+          "raw": "--version  Print version information"
+        },
+        {
+          "flags": [
+            "-01-20"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "XSLATE(1p)",
+          "default": null,
+          "choices": null,
+          "raw": "-01-20  XSLATE(1p)"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Define template variables (e.g. foo=bar)",
+          "default": null,
+          "choices": null,
+          "raw": "-D  Define template variables (e.g. foo=bar)"
+        },
+        {
+          "flags": [
+            "-E"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Template engine",
+          "default": null,
+          "choices": null,
+          "raw": "-E  Template engine"
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Include paths",
+          "default": null,
+          "choices": null,
+          "raw": "-I  Include paths"
+        },
+        {
+          "flags": [
+            "-M"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Modules templates will use (e.g. name=sub1,sub2)",
+          "default": null,
+          "choices": null,
+          "raw": "-M  Modules templates will use (e.g. name=sub1,sub2)"
+        },
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Cache level",
+          "default": null,
+          "choices": null,
+          "raw": "-a  Cache level"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Directory the cache files will be saved in",
+          "default": null,
+          "choices": null,
+          "raw": "-c  Directory the cache files will be saved in"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Debugging flags",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Debugging flags"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "One line of template code",
+          "default": null,
+          "choices": null,
+          "raw": "-e  One line of template code"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Regular expression the process will ignore",
+          "default": null,
+          "choices": null,
+          "raw": "-i  Regular expression the process will ignore"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Destination directory",
+          "default": null,
+          "choices": null,
+          "raw": "-o  Destination directory"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Template syntax (e.g. TTerse)",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Template syntax (e.g. TTerse)"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Output content type (html | xml | text)",
+          "default": null,
+          "choices": null,
+          "raw": "-t  Output content type (html | xml | text)"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Warning level (default: 2)",
+          "default": null,
+          "choices": null,
+          "raw": "-w  Warning level (default: 2)"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Output suffix mapping (e.g. tx=html)",
+          "default": null,
+          "choices": null,
+          "raw": "-x  Output suffix mapping (e.g. tx=html)"
+        }
+      ]
     }
   ],
   "files": [
@@ -68,5 +267,128 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "xslate [options...] target",
+    "xslate -e 'Hello, <: $ARGV[0] :> world!' Xslate",
+    "xslate -MDigest::MD5=md5_hex -e '<: md5_hex($ARGV[0]) :>' 'foo bar'"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use xslate because scalable template engine for Perl 5 (C/XS accelerated).",
+    "When the engagement is in the install phase, use xslate as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `xslate [options...] target` as documented upstream for xslate.",
+    "When you need a concrete invocation, run `xslate -e 'Hello, <: $ARGV[0] :> world!' Xslate` as documented upstream for xslate.",
+    "When you need a concrete invocation, run `xslate -MDigest::MD5=md5_hex -e '<: md5_hex($ARGV[0]) :>' 'foo bar'` as documented upstream for xslate.",
+    "When chaining Kali Linux tools, pair xslate with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `xslate --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--ie",
+        "description": "Input encoding (default: UTF-8)",
+        "source": "manpage"
+      },
+      {
+        "name": "--oe",
+        "description": "Output encoding (default: UTF-8)",
+        "source": "manpage"
+      },
+      {
+        "name": "--version",
+        "description": "Print version information",
+        "source": "manpage"
+      },
+      {
+        "name": "-01-20",
+        "description": "XSLATE(1p)",
+        "source": "manpage"
+      },
+      {
+        "name": "-D",
+        "description": "Define template variables (e.g. foo=bar)",
+        "source": "manpage"
+      },
+      {
+        "name": "-E",
+        "description": "Template engine",
+        "source": "manpage"
+      },
+      {
+        "name": "-I",
+        "description": "Include paths",
+        "source": "manpage"
+      },
+      {
+        "name": "-M",
+        "description": "Modules templates will use (e.g. name=sub1,sub2)",
+        "source": "manpage"
+      },
+      {
+        "name": "-a",
+        "description": "Cache level",
+        "source": "manpage"
+      },
+      {
+        "name": "-c",
+        "description": "Directory the cache files will be saved in",
+        "source": "manpage"
+      },
+      {
+        "name": "-d",
+        "description": "Debugging flags",
+        "source": "manpage"
+      },
+      {
+        "name": "-e",
+        "description": "One line of template code",
+        "source": "manpage"
+      },
+      {
+        "name": "-i",
+        "description": "Regular expression the process will ignore",
+        "source": "manpage"
+      },
+      {
+        "name": "-o",
+        "description": "Destination directory",
+        "source": "manpage"
+      },
+      {
+        "name": "-s",
+        "description": "Template syntax (e.g. TTerse)",
+        "source": "manpage"
+      },
+      {
+        "name": "-t",
+        "description": "Output content type (html | xml | text)",
+        "source": "manpage"
+      },
+      {
+        "name": "-w",
+        "description": "Warning level (default: 2)",
+        "source": "manpage"
+      },
+      {
+        "name": "-x",
+        "description": "Output suffix mapping (e.g. tx=html)",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "xslate [options...] target",
+      "xslate -e 'Hello, <: $ARGV[0] :> world!' Xslate",
+      "xslate -MDigest::MD5=md5_hex -e '<: md5_hex($ARGV[0]) :>' 'foo bar'"
+    ],
+    "readme": "xslate - Process Xslate Templates USAGE # process paths $ xslate [options...] target -a --cache Cache level -t --type Output content type (html | xml | text) -E --engine Template engine -D --define Define template variables (e.g. foo=bar) -I --path Include paths --version Print version information --oe --output_encoding Output encoding (default: UTF-8) -M --module Modules templates will use (e.g. name=sub1,sub2) -e --eval One line of template code -s --syntax Template syntax (e.g. TTerse) -d --debug Debugging flags -x --suffix Output suffix mapping (e.g. tx=html) --ie --input_encoding Input encoding (default: UTF-8) -i --ignore Regular expression the process will ignore -c --cache_dir Direct",
+    "how_to_use": "Install/setup: sudo apt install libtext-xslate-perl (3.5.9-2). Run the primary entrypoint as shown in upstream docs, e.g. `xslate [options...] target`. Further invocations from upstream: `xslate -e 'Hello, <: $ARGV[0] :> world!' Xslate`; `xslate -MDigest::MD5=md5_hex -e '<: md5_hex($ARGV[0]) :>' 'foo bar'`. scalable template engine for Perl 5 (C/XS accelerated).",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: scalable template engine for Perl 5 (C/XS accelerated).",
+    "why_to_use": "Prefer this tool based on upstream description: xslate - Process Xslate Templates USAGE # process paths $ xslate [options...] target -a --cache Cache level -t --type Output content type (html | xml | text) -E --engine Template engine -D --define Define template variables (e.g. foo=bar) -I --path Include paths --version Print version information --oe --output_encoding Output encoding (default: UTF-8) -M --module Modules templates will use (e.g. .",
+    "usage_sections": [
+      "Install with: sudo apt install libtext-xslate-perl (3.5.9-2)",
+      "Install with: sudo apt install libtext-xslate-perl (3.5.9-2)"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

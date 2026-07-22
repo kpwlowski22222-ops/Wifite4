@@ -9,7 +9,13 @@
   "summary": "Blu Snu: The Ultimate Offensive Bluetooth Framework",
   "documentation": {
     "readme": "Blu Snu: The Ultimate Offensive Bluetooth Framework",
-    "usage_sections": [],
+    "usage_sections": [
+      "Standard Mode: Uses public Android APIs for scanning and GATT interaction.",
+      "Root Mode: leverages su access to execute low-level system commands, modify the Bluetooth stack, and perform raw HCI injection.",
+      "Hardware Mode: Interfaces with external USB dongles (via OTG) for promiscuous mode sniffing and jamming.",
+      "Dashboard: Real-time overview of the wireless landscape, tracking active devices and signal density.",
+      "Device Management: Detailed fingerprinting of targets, including MAC address, signal strength (RSSI), device class, and supported profiles (SDP/GATT)."
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +199,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "./gradlew assembleDebug"
+    ],
     "file_listing": [
       "AGENTS_SETUP.md",
       "AGENT_GUIDE.md",
@@ -295,13 +303,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/BluSnu && python3 BluSnu.py --help",
-      "Step 2: cd toolboxes/BluSnu && cat README.md",
-      "Step 3: cd toolboxes/BluSnu && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: Blu Snu: The Ultimate Offensive Bluetooth Framework.",
+    "why_to_use": "Prefer this tool based on upstream description: Blu Snu: The Ultimate Offensive Bluetooth Framework.",
+    "how_to_use": "Install/setup: git clone https://github.com/hereliesaz/blusnu.git. Run the primary entrypoint as shown in upstream docs, e.g. `./gradlew assembleDebug`. Blu Snu: The Ultimate Offensive Bluetooth Framework."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -334,18 +338,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use BluSnu because Blu Snu: The Ultimate Offensive Bluetooth Framework.",
+    "When you need a concrete invocation, run `./gradlew assembleDebug` as documented upstream for BluSnu.",
+    "When chaining Bluetooth tools, pair BluSnu with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `BluSnu --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/BluSnu && python3 BluSnu.py --help",
-    "cd toolboxes/BluSnu && cat README.md",
-    "cd toolboxes/BluSnu && ls -la",
-    "cd toolboxes/BluSnu && python3 BluSnu.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST BluSnu --output $KFIOSA_OUTPUT_DIR/BluSnu.log"
+    "./gradlew assembleDebug"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -370,5 +369,7 @@
     "python",
     "shell",
     "javascript"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

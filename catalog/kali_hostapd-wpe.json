@@ -27,7 +27,19 @@
       "path": "/usr/sbin/hostapd-wpe",
       "description": "Binary from hostapd-wpe",
       "usage": "hostapd-wpe [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-wpe"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Option present in package usage line for hostapd-wpe.",
+          "default": null,
+          "choices": null,
+          "raw": "-wpe  Option present in package usage line for hostapd-wpe."
+        }
+      ]
     },
     {
       "name": "hostapd-wpe_cli",
@@ -49,5 +61,37 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "hostapd-wpe [options] [args]"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use hostapd-wpe because Modified hostapd to facilitate AP impersonation attacks.",
+    "When the engagement is in the install phase, use hostapd-wpe as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `hostapd-wpe [options] [args]` as documented upstream for hostapd-wpe.",
+    "When chaining Kali Linux tools, pair hostapd-wpe with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `hostapd-wpe --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-wpe",
+        "description": "Option present in package usage line for hostapd-wpe.",
+        "source": "usage_line"
+      }
+    ],
+    "examples": [
+      "hostapd-wpe [options] [args]"
+    ],
+    "readme": "Modified hostapd to facilitate AP impersonation attacks\nThis package contains hostapd modified with hostapd-wpe.patch.\nIt implements IEEE 802.1x Authenticator and Authentication\nServer impersonation attacks to obtain client credentials,\nestablish connectivity to the client, and launch other attacks\nwhere applicable.\n.\nhostapd-wpe supports the following EAP types for impersonation:\n1. EAP-FAST/MSCHAPv2 (Phase 0)\n2. PEAP/MSCHAPv2\n3. EAP-TTLS/MSCHAPv2\n4. EAP-TTLS/MSCHAP\n5. EAP-TTLS/CHAP\n6. EAP-TTLS/PAP\n.\nOnce impersonation is underway, hostapd-wpe will return an\nEAP-Success message so that the client believes they are connected\nto their legitimate authenticator.\n.\nFor 802.11 clients, hostapd-wpe also implements Karma-style gratuitous\nprobe responses. Inspiration for this was provided by JoMo-Kun's\npatch for older versions of hostapd.\n.\nhttp://www.foofus.net/?page_id=115\n.\nhostapd-wpe also implements CVE-2014-0160 (Heartbleed) attacks against\nvulnerable clients. Inspiration for this was provided by the Cupid PoC:\n.\nhttps://github.com/lgrangeia/cupid\n.\nhostapd-wpe logs all data to stdout and hostapd-wpe.log",
+    "how_to_use": "Install/setup: sudo apt install hostapd-wpe. Modified hostapd to facilitate AP impersonation attacks.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Modified hostapd to facilitate AP impersonation attacks.",
+    "why_to_use": "Prefer this tool based on upstream description: Modified hostapd to facilitate AP impersonation attacks\nThis package contains hostapd modified with hostapd-wpe.patch.\nIt implements IEEE 802.1x Authenticator and Authentication\nServer impersonation attacks to obtain client credentials,\nestablish connectivity to the client, and launch other attacks\nwhere applicable.\n.\nhostapd-wpe supports the following EAP types for impersonation:\n1. EAP-FAST/MSCH.",
+    "usage_sections": [
+      "Install with: sudo apt install hostapd-wpe",
+      "Install with: sudo apt install hostapd-wpe"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "offline"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "magicrescue",
   "title": "magicrescue",
-  "summary": "### magicrescue",
+  "summary": "dupemap - Creates a database of file checksums and uses it to eliminate duplicates",
   "version": "1.1.10+dfsg-3",
   "architectures": [
     "any"
@@ -34,47 +34,113 @@
       "arguments": [
         {
           "flags": [
-            "-d"
+            "-10-16"
           ],
-          "metavar": "DATABASE",
-          "takes_value": true,
-          "description": "Read/write from a database on disk",
+          "metavar": null,
+          "takes_value": false,
+          "description": "DUPEMAP(1)",
           "default": null,
           "choices": null,
-          "raw": " -d DATABASE   Read/write from a database on disk"
+          "raw": "-10-16  DUPEMAP(1)"
         },
         {
           "flags": [
             "-I"
           ],
-          "metavar": "FILE",
-          "takes_value": true,
-          "description": "Read input file names from this file (\"-\" for stdin)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "files from file in addition to those listed on the command line. If file",
           "default": null,
           "choices": null,
-          "raw": " -I FILE       Read input file names from this file (\"-\" for stdin)"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "MINSIZE",
-          "takes_value": true,
-          "description": "Exclude files below this size",
-          "default": null,
-          "choices": null,
-          "raw": " -m MINSIZE    Exclude files below this size"
+          "raw": "-I  files from file in addition to those listed on the command line. If file"
         },
         {
           "flags": [
             "-M"
           ],
-          "metavar": "MAXSIZE",
-          "takes_value": true,
-          "description": "Exclude files above this size",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Ignore files above this size.",
           "default": null,
           "choices": null,
-          "raw": " -M MAXSIZE    Exclude files above this size"
+          "raw": "-M  Ignore files above this size."
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "and on the operation parameter, which must be a comma-seperated list of scan, report,",
+          "default": null,
+          "choices": null,
+          "raw": "-d  and on the operation parameter, which must be a comma-seperated list of scan, report,"
+        },
+        {
+          "flags": [
+            "-files"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "is run to produce a checksum database of all files in a directory tree.",
+          "default": null,
+          "choices": null,
+          "raw": "-files  is run to produce a checksum database of all files in a directory tree."
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Ignore files below this size.",
+          "default": null,
+          "choices": null,
+          "raw": "-m  Ignore files below this size."
+        },
+        {
+          "flags": [
+            "-related"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "It is possible to craft a file to have a known CRC32. You need to keep this in mind if you",
+          "default": null,
+          "choices": null,
+          "raw": "-related  It is possible to craft a file to have a known CRC32. You need to keep this in mind if you"
+        },
+        {
+          "flags": [
+            "-rf"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Now rescue all \"msoffice\" documents from the block device and get rid of everything that's not",
+          "default": null,
+          "choices": null,
+          "raw": "-rf  Now rescue all \"msoffice\" documents from the block device and get rid of everything that's not"
+        },
+        {
+          "flags": [
+            "-standardized"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "library, which must be present on XSI-compliant UNIXes. Implementa-",
+          "default": null,
+          "choices": null,
+          "raw": "-standardized  library, which must be present on XSI-compliant UNIXes. Implementa-"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Remove all the rescued documents that also appear on the file system, and remove duplicates.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Remove all the rescued documents that also appear on the file system, and remove duplicates."
         }
       ],
       "raw_help": "root@kali:~# dupemap -h\n Usage: dupemap [OPTIONS] OPERATION PATH...\n Where OPERATION is one of the operations listed in the manpage.\n \n Options:\n -d DATABASE   Read/write from a database on disk\n -I FILE       Read input file names from this file (\"-\" for stdin)\n -m MINSIZE    Exclude files below this size\n -M MAXSIZE    Exclude files above this size",
@@ -283,21 +349,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use dupemap because dupemap - Creates a database of file checksums and uses it to eliminate duplicates.",
+    "When you need a concrete invocation, run `dupemap [ options ] [ -d database ] operation path...` as documented upstream for dupemap.",
+    "When chaining Kali Linux tools, pair dupemap with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dupemap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/magicrescue && python3 magicrescue.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/magicrescue && python3 magicrescue.py --help",
-    "cd toolboxes/magicrescue && python3 magicrescue.py --help",
-    "cd toolboxes/magicrescue && python3 magicrescue.py --help",
-    "cd toolboxes/magicrescue && python3 magicrescue.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST magicrescue --output $KFIOSA_OUTPUT_DIR/magicrescue.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST magicrescue --output $KFIOSA_OUTPUT_DIR/magicrescue.log"
+    "dupemap [ options ] [ -d database ] operation path..."
   ],
   "attack_surface": [
     "web"
@@ -312,5 +370,72 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-10-16",
+        "description": "DUPEMAP(1)",
+        "source": "manpage"
+      },
+      {
+        "name": "-I",
+        "description": "files from file in addition to those listed on the command line. If file",
+        "source": "manpage"
+      },
+      {
+        "name": "-M",
+        "description": "Ignore files above this size.",
+        "source": "manpage"
+      },
+      {
+        "name": "-d",
+        "description": "and on the operation parameter, which must be a comma-seperated list of scan, report,",
+        "source": "manpage"
+      },
+      {
+        "name": "-files",
+        "description": "is run to produce a checksum database of all files in a directory tree.",
+        "source": "manpage"
+      },
+      {
+        "name": "-m",
+        "description": "Ignore files below this size.",
+        "source": "manpage"
+      },
+      {
+        "name": "-related",
+        "description": "It is possible to craft a file to have a known CRC32. You need to keep this in mind if you",
+        "source": "manpage"
+      },
+      {
+        "name": "-rf",
+        "description": "Now rescue all \"msoffice\" documents from the block device and get rid of everything that's not",
+        "source": "manpage"
+      },
+      {
+        "name": "-standardized",
+        "description": "library, which must be present on XSI-compliant UNIXes. Implementa-",
+        "source": "manpage"
+      },
+      {
+        "name": "-v",
+        "description": "Remove all the rescued documents that also appear on the file system, and remove duplicates.",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "dupemap [ options ] [ -d database ] operation path..."
+    ],
+    "readme": "dupemap - Creates a database of file checksums and uses it to eliminate duplicates",
+    "how_to_use": "Install/setup: sudo apt install magicrescue. Run the primary entrypoint as shown in upstream docs, e.g. `dupemap [ options ] [ -d database ] operation path...`. dupemap - Creates a database of file checksums and uses it to eliminate duplicates.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: dupemap - Creates a database of file checksums and uses it to eliminate duplicates.",
+    "why_to_use": "Prefer this tool based on upstream description: dupemap - Creates a database of file checksums and uses it to eliminate duplicates.",
+    "usage_sections": [
+      "Install with: sudo apt install magicrescue",
+      "Install with: sudo apt install magicrescue"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

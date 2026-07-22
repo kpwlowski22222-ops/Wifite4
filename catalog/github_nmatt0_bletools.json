@@ -8,8 +8,14 @@
   "url": "https://github.com/nmatt0/bletools",
   "summary": "bletools\nBLE pentesting scripts",
   "documentation": {
-    "readme": "bletools\nBLE pentesting scripts",
-    "usage_sections": [],
+    "readme": "- Bluetooth Hacking: Tools And Techniques - great intro to BLE hacking - Bluetooth: With Low Energy Comes Low Security - talk about why Legacy Pairing is bad and how to defeat it - crackle - tool for cracking BLE Legacy Pairing - nRF Connect for Desktop - tool for use with nRF52840 USB dongle - not open source :( - Example Python GATT Server",
+    "usage_sections": [
+      "Bluetooth Hacking: Tools And Techniques",
+      "great intro to BLE hacking",
+      "Bluetooth: With Low Energy Comes Low Security",
+      "talk about why Legacy Pairing is bad and how to defeat it",
+      "tool for cracking BLE Legacy Pairing"
+    ],
     "arguments": [
       {
         "name": "-S",
@@ -189,7 +195,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "pacman -S bluez bluez-utils",
+      "usage: ./scan.py <scan time>",
+      "usage: ./services.py <device MAC>",
+      "usage: ./read.py <device MAC> <characteristic UUID>"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -246,13 +257,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bletools && python3 bletools.py --help",
-      "Step 2: cd toolboxes/bletools && cat README.md",
-      "Step 3: cd toolboxes/bletools && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: bletools\nBLE pentesting scripts.",
+    "why_to_use": "Prefer this tool based on upstream description: - Bluetooth Hacking: Tools And Techniques - great intro to BLE hacking - Bluetooth: With Low Energy Comes Low Security - talk about why Legacy Pairing is bad and how to defeat it - crackle - tool for cracking BLE Legacy Pairing - nRF Connect for Desktop - tool for use with nRF52840 USB dongle - not open source :( - Example Python GATT Server.",
+    "how_to_use": "Install/setup: pip3 install bleak. Run the primary entrypoint as shown in upstream docs, e.g. `pacman -S bluez bluez-utils`. Further invocations from upstream: `usage: ./scan.py <scan time>`; `usage: ./services.py <device MAC>`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -283,18 +290,19 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use bletools because bletools\nBLE pentesting scripts.",
+    "When you need a concrete invocation, run `pacman -S bluez bluez-utils` as documented upstream for bletools.",
+    "When you need a concrete invocation, run `usage: ./scan.py <scan time>` as documented upstream for bletools.",
+    "When you need a concrete invocation, run `usage: ./services.py <device MAC>` as documented upstream for bletools.",
+    "When you need a concrete invocation, run `usage: ./read.py <device MAC> <characteristic UUID>` as documented upstream for bletools.",
+    "When chaining Bluetooth tools, pair bletools with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bletools --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/bletools && python3 bletools.py --help",
-    "cd toolboxes/bletools && cat README.md",
-    "cd toolboxes/bletools && ls -la",
-    "cd toolboxes/bletools && python3 bletools.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bletools --output $KFIOSA_OUTPUT_DIR/bletools.log"
+    "pacman -S bluez bluez-utils",
+    "usage: ./scan.py <scan time>",
+    "usage: ./services.py <device MAC>",
+    "usage: ./read.py <device MAC> <characteristic UUID>"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -317,5 +325,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

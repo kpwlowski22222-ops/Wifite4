@@ -8,13 +8,59 @@
   "url": "https://github.com/graipher/bluewalker",
   "summary": "Bluewalker is a proof-of-concept Bluetooth LE scanner and advertiser which uses\n_HCI user channel_ raw HCI sockets available on Linux to scan for Bluetooth LE\ndevices or to start advertising with user-specified data. User channel sockets\nallow raw access to the Bluetooth controller and bypasses the Linux Bluetooth\nstack. This allows Bluewalker access to all Bluetooth LE Advertisement Data sent\nby nearby Bluetooth LE devices.",
   "documentation": {
-    "readme": "Bluewalker is a proof-of-concept Bluetooth LE scanner and advertiser which uses\n_HCI user channel_ raw HCI sockets available on Linux to scan for Bluetooth LE\ndevices or to start advertising with user-specified data. User channel sockets\nallow raw access to the Bluetooth controller and bypasses the Linux Bluetooth\nstack. This allows Bluewalker access to all Bluetooth LE Advertisement Data sent\nby nearby Bluetooth LE devices.",
-    "usage_sections": [],
+    "readme": "Bluewalker is a proof-of-concept Bluetooth LE scanner and advertiser which uses HCI user channel raw HCI sockets available on Linux to scan for Bluetooth LE devices or to start advertising with user-specified data. User channel sockets allow raw access to the Bluetooth controller and bypasses the Linux Bluetooth stack. This allows Bluewalker access to all Bluetooth LE Advertisement Data sent by nearby Bluetooth LE devices.",
+    "usage_sections": [
+      "In Collector mode it listens for advertising packets",
+      "In Observer mode it prints information about received",
+      "Ruuvi mode is special mode for listening and",
+      "Mijia mode is special mode for listening and",
+      "To display information only about devices with given address, use"
+    ],
     "arguments": [
       {
-        "name": "--index",
-        "description": "CLI flag '--index' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-active",
+        "description": "Active scanning",
+        "source": "docs"
+      },
+      {
+        "name": "-broadcast",
+        "description": "Send advertising data instead of scanning for it",
+        "source": "docs"
+      },
+      {
+        "name": "-debug",
+        "description": "Enable debug messages",
+        "source": "docs"
+      },
+      {
+        "name": "-json",
+        "description": "Output data as json",
+        "source": "docs"
+      },
+      {
+        "name": "-log-trace",
+        "description": "Enable more verbose trace logging in addition to debugging",
+        "source": "docs"
+      },
+      {
+        "name": "-mijia",
+        "description": "Scan and display information about Xiaomi Mijia devices",
+        "source": "docs"
+      },
+      {
+        "name": "-observer",
+        "description": "Do scanning in observer mode (display advertising packets as they are received)",
+        "source": "docs"
+      },
+      {
+        "name": "-ruuvi",
+        "description": "Scan and display information about found Ruuvi tags",
+        "source": "docs"
+      },
+      {
+        "name": "-version",
+        "description": "Print version number of the program",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +239,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "go install github.com/graipher/bluewalker@latest",
+      "./build.sh arm",
+      "Usage of ./bluewalker:",
+      "Advertising data to send on broadcast mode (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
+      "Number of seconds to scan, -1 to scan indefinitely (default 5)",
+      "Only show devices whose Advertising Data matches given filter (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
+      "Scan response data to send on broadcast mode (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
+      "sudo ./bluewalker -device hci0 -active",
+      "Flags : 0x04; [00000100] (BR/EDR not supported)",
+      "Flags : 0x1a; [00011010] (LE General Discoverable,LE & BR/EDR (controller),LE & BR/EDR (host))"
+    ],
     "file_listing": [
       "CHANGELOG",
       "Dockerfile",
@@ -283,13 +340,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bluewalker && python3 bluewalker.py --help",
-      "Step 2: cd toolboxes/bluewalker && cat README.md",
-      "Step 3: cd toolboxes/bluewalker && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: Bluewalker is a proof-of-concept Bluetooth LE scanner and advertiser which uses\n_HCI user channel_ raw HCI sockets available on Linux to scan for Bluetooth LE\ndevices or to start advertising with user-specified data. Use.",
+    "why_to_use": "Prefer this tool based on upstream description: Bluewalker is a proof-of-concept Bluetooth LE scanner and advertiser which uses HCI user channel raw HCI sockets available on Linux to scan for Bluetooth LE devices or to start advertising with user-specified data. User channel sockets allow raw access to the Bluetooth controller and bypasses the Linux Bluetooth stack. This allows Bluewalker access to all Bluetooth LE Advertisement Data sent by ne.",
+    "how_to_use": "Install/setup: go install github.com/graipher/bluewalker@latest. Run the primary entrypoint as shown in upstream docs, e.g. `go install github.com/graipher/bluewalker@latest`. Further invocations from upstream: `./build.sh arm`; `Usage of ./bluewalker:`. Bluewalker is a proof-of-concept Bluetooth LE scanner and advertiser which uses HCI user channel raw HCI sockets available on Linux to scan for Bluetooth LE devices or to start advertising with user-specified data. User channel sockets allow raw access to the Bluetooth controller and bypasses the Linux Bluetooth stack."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -321,18 +374,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use bluewalker because Bluewalker is a proof-of-concept Bluetooth LE scanner and advertiser which uses\n_HCI user channel_ raw HCI sockets available on Linux to scan for Bluetooth LE\nd.",
+    "When you need a concrete invocation, run `go install github.com/graipher/bluewalker@latest` as documented upstream for bluewalker.",
+    "When you need a concrete invocation, run `./build.sh arm` as documented upstream for bluewalker.",
+    "When you need a concrete invocation, run `Usage of ./bluewalker:` as documented upstream for bluewalker.",
+    "When you need a concrete invocation, run `Advertising data to send on broadcast mode (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)` as documented upstream for bluewalker.",
+    "When chaining Bluetooth tools, pair bluewalker with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bluewalker --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/bluewalker && python3 bluewalker.py --help",
-    "cd toolboxes/bluewalker && cat README.md",
-    "cd toolboxes/bluewalker && ls -la",
-    "cd toolboxes/bluewalker && python3 bluewalker.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluewalker --output $KFIOSA_OUTPUT_DIR/bluewalker.log"
+    "go install github.com/graipher/bluewalker@latest",
+    "./build.sh arm",
+    "Usage of ./bluewalker:",
+    "Advertising data to send on broadcast mode (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
+    "Number of seconds to scan, -1 to scan indefinitely (default 5)",
+    "Only show devices whose Advertising Data matches given filter (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
+    "Scan response data to send on broadcast mode (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
+    "sudo ./bluewalker -device hci0 -active",
+    "Flags : 0x04; [00000100] (BR/EDR not supported)",
+    "Flags : 0x1a; [00011010] (LE General Discoverable,LE & BR/EDR (controller),LE & BR/EDR (host))"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -356,5 +416,7 @@
   "_languages": [
     "go",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

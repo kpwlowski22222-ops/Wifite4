@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "sucrack",
   "title": "sucrack",
-  "summary": "### sucrack",
+  "summary": "sucrack - is a multithreaded Linux/UNIX tool for brute-force cracking of local user accounts via su.",
   "version": "1.2.3-8",
   "architectures": [
     "any"
@@ -31,36 +31,25 @@
       "arguments": [
         {
           "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "print help message",
-          "default": null,
-          "choices": null,
-          "raw": "     -h     print help message"
-        },
-        {
-          "flags": [
             "-a"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "use ansi escape codes for nice looking statistics  (requires  --en-",
+          "description": "use ansi escape codes for nice looking statistics (requires --enable-statistics config-",
           "default": null,
           "choices": null,
-          "raw": "     -a     use ansi escape codes for nice looking statistics  (requires  --en-"
+          "raw": "-a  use ansi escape codes for nice looking statistics (requires --enable-statistics config-"
         },
         {
           "flags": [
-            "-s"
+            "-b"
           ],
-          "metavar": "seconds",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "size of the word list buffer",
           "default": null,
           "choices": null,
-          "raw": "     -s <seconds>"
+          "raw": "-b  size of the word list buffer"
         },
         {
           "flags": [
@@ -71,7 +60,29 @@
           "description": "only print statistics if a key other than `q' is pressed",
           "default": null,
           "choices": null,
-          "raw": "     -c     only print statistics if a key other than `q' is pressed"
+          "raw": "-c  only print statistics if a key other than `q' is pressed"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print help message",
+          "default": null,
+          "choices": null,
+          "raw": "-h  print help message"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "specify certain rules for the rewriting process",
+          "default": null,
+          "choices": null,
+          "raw": "-l  specify certain rules for the rewriting process"
         },
         {
           "flags": [
@@ -82,51 +93,40 @@
           "description": "enable rewriting of dictionary words (see rules below)",
           "default": null,
           "choices": null,
-          "raw": "     -r     enable rewriting of dictionary words (see rules below)"
+          "raw": "-r  enable rewriting of dictionary words (see rules below)"
         },
         {
           "flags": [
-            "-w"
+            "-s"
           ],
-          "metavar": "num",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "statistics display intervall (requires --enable-statistics configuration flag)",
           "default": null,
           "choices": null,
-          "raw": "     -w <num>"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": "size",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -b <size>"
+          "raw": "-s  statistics display intervall (requires --enable-statistics configuration flag)"
         },
         {
           "flags": [
             "-u"
           ],
-          "metavar": "user",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "user account to su to",
           "default": null,
           "choices": null,
-          "raw": "     -u <user>"
+          "raw": "-u  user account to su to"
         },
         {
           "flags": [
-            "-l"
+            "-w"
           ],
-          "metavar": "rules",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "number of threads to run with.",
           "default": null,
           "choices": null,
-          "raw": "     -l <rules>"
+          "raw": "-w  number of threads to run with."
         }
       ],
       "raw_help": "root@kali:~# sucrack -h\n yah, very funny!",
@@ -193,21 +193,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use sucrack because sucrack - is a multithreaded Linux/UNIX tool for brute-force cracking of local user accounts via su.",
+    "When you need a concrete invocation, run `sucrack [options] wordlist` as documented upstream for sucrack.",
+    "When chaining Kali Linux tools, pair sucrack with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `sucrack --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/sucrack && python3 sucrack.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/sucrack && python3 sucrack.py --help",
-    "cd toolboxes/sucrack && python3 sucrack.py --help",
-    "cd toolboxes/sucrack && python3 sucrack.py --help",
-    "cd toolboxes/sucrack && python3 sucrack.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sucrack --output $KFIOSA_OUTPUT_DIR/sucrack.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sucrack --output $KFIOSA_OUTPUT_DIR/sucrack.log"
+    "sucrack [options] wordlist"
   ],
   "attack_surface": [
     "web"
@@ -222,5 +214,66 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "use ansi escape codes for nice looking statistics (requires --enable-statistics config-",
+        "source": "docs"
+      },
+      {
+        "name": "-b",
+        "description": "size of the word list buffer",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "only print statistics if a key other than `q' is pressed",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "print help message",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "specify certain rules for the rewriting process",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "enable rewriting of dictionary words (see rules below)",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "statistics display intervall (requires --enable-statistics configuration flag)",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "user account to su to",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "number of threads to run with.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "sucrack [options] wordlist"
+    ],
+    "readme": "sucrack - is a multithreaded Linux/UNIX tool for brute-force cracking of local user accounts via su.",
+    "how_to_use": "Install/setup: sudo apt install sucrack. sucrack - is a multithreaded Linux/UNIX tool for brute-force cracking of local user accounts via su.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: sucrack - is a multithreaded Linux/UNIX tool for brute-force cracking of local user accounts via su.",
+    "why_to_use": "Prefer this tool based on upstream description: sucrack - is a multithreaded Linux/UNIX tool for brute-force cracking of local user accounts via su.",
+    "usage_sections": [
+      "Install with: sudo apt install sucrack"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

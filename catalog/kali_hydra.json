@@ -27,7 +27,19 @@
       "path": "/usr/bin/dpl4hydra",
       "description": "Generates a (d)efault (p)assword (l)ist as input for THC hydra",
       "usage": "dpl4hydra [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-get"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "hydra(1),",
+          "default": null,
+          "choices": null,
+          "raw": "-get  hydra(1),"
+        }
+      ]
     },
     {
       "name": "hydra",
@@ -69,5 +81,40 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "dpl4hydra linksys",
+    "hydra -C ~/.dpl4hydra/dpl4hydra_linksys.lst -t 1 $KFIOSA_TARGET_HOST http-get /index.asp"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use dpl4hydra because very fast network logon cracker.",
+    "When the engagement is in the install phase, use dpl4hydra as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `dpl4hydra linksys` as documented upstream for dpl4hydra.",
+    "When you need a concrete invocation, run `hydra -C ~/.dpl4hydra/dpl4hydra_linksys.lst -t 1 $KFIOSA_TARGET_HOST http-get /index.asp` as documented upstream for dpl4hydra.",
+    "When chaining Kali Linux tools, pair dpl4hydra with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dpl4hydra --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-get",
+        "description": "hydra(1),",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "dpl4hydra linksys",
+      "hydra -C ~/.dpl4hydra/dpl4hydra_linksys.lst -t 1 $KFIOSA_TARGET_HOST http-get /index.asp"
+    ],
+    "readme": "DPL4HYDRA - Generates a (d)efault (p)assword (l)ist as input for THC hydra",
+    "how_to_use": "Install/setup: sudo apt install hydra. Run the primary entrypoint as shown in upstream docs, e.g. `hydra -C ~/.dpl4hydra/dpl4hydra_linksys.lst -t 1 $KFIOSA_TARGET_HOST http-get /index.asp`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: very fast network logon cracker.",
+    "why_to_use": "Prefer this tool based on upstream description: DPL4HYDRA - Generates a (d)efault (p)assword (l)ist as input for THC hydra.",
+    "usage_sections": [
+      "Install with: sudo apt install hydra",
+      "Install with: sudo apt install hydra"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

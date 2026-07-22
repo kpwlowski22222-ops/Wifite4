@@ -9,8 +9,104 @@
   "summary": "Python interface to Bluetooth LE on Linux",
   "documentation": {
     "readme": "Python interface to Bluetooth LE on Linux",
-    "usage_sections": [],
+    "usage_sections": [
+      "New getState() method for Peripheral class",
+      "New exception structure / error reporting (#311, #317, #326)",
+      "Partial merge #311: aids to debugging; bluepy-helper reports version; fix crash",
+      "Partial merge #311 and #302: pair() and unpair() now supported",
+      "Fix #169: 0-byte characteristic writes are now supported"
+    ],
     "arguments": [
+      {
+        "name": "-a",
+        "description": "Display duplicate adv responses, by default show new + updated",
+        "source": "docs"
+      },
+      {
+        "name": "--all",
+        "description": "Display duplicate adv responses, by default show new + updated",
+        "source": "docs"
+      },
+      {
+        "name": "-Apr-2014",
+        "description": "- make btle.py useful from the command line",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Connect and discover service to scanned devices",
+        "source": "docs"
+      },
+      {
+        "name": "--discover",
+        "description": "Connect and discover service to scanned devices",
+        "source": "docs"
+      },
+      {
+        "name": "--hci",
+        "description": "Interface number for scan",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Interface number for scan",
+        "source": "docs"
+      },
+      {
+        "name": "-Jul-2014",
+        "description": "expand AssignedNumbers class definitions",
+        "source": "docs"
+      },
+      {
+        "name": "-Mar-2014",
+        "description": "add exceptions, and clean up better on failure",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "Display only new adv responses, by default show new + updated",
+        "source": "docs"
+      },
+      {
+        "name": "--new",
+        "description": "Display only new adv responses, by default show new + updated",
+        "source": "docs"
+      },
+      {
+        "name": "-Oct-2013",
+        "description": "TO DO list",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "dBm value for filtering far devices",
+        "source": "docs"
+      },
+      {
+        "name": "--sensitivity",
+        "description": "dBm value for filtering far devices",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "Scan delay, 0 for continuous",
+        "source": "docs"
+      },
+      {
+        "name": "--timeout",
+        "description": "Scan delay, 0 for continuous",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Increase output verbosity",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase output verbosity",
+        "source": "docs"
+      },
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
@@ -42,18 +138,8 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--threads",
         "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
         "source": "generic_kfiosa"
       },
       {
@@ -294,13 +380,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bluepy && python3 bluepy.py --help",
-      "Step 2: cd toolboxes/bluepy && cat README.md",
-      "Step 3: cd toolboxes/bluepy && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: Python interface to Bluetooth LE on Linux.",
+    "why_to_use": "Prefer this tool based on upstream description: Python interface to Bluetooth LE on Linux.",
+    "how_to_use": "Install/setup: git clone https://github.com/IanHarvey/bluepy.git. Python interface to Bluetooth LE on Linux."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -332,19 +414,11 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use bluepy because Python interface to Bluetooth LE on Linux.",
+    "When chaining Bluetooth tools, pair bluepy with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bluepy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
-  "command_examples": [
-    "cd toolboxes/bluepy && python3 bluepy.py --help",
-    "cd toolboxes/bluepy && cat README.md",
-    "cd toolboxes/bluepy && ls -la",
-    "cd toolboxes/bluepy && python3 bluepy.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluepy --output $KFIOSA_OUTPUT_DIR/bluepy.log"
-  ],
+  "command_examples": [],
   "attack_surface": [
     "ble_4_x",
     "ble_5_x",
@@ -367,5 +441,7 @@
   "_languages": [
     "c",
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

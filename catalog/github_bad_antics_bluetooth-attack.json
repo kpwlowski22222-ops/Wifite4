@@ -193,7 +193,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "openssl enc -aes-256-cbc -d -pbkdf2 -in bluetooth-attack.sh.enc -out bluetooth-attack.sh",
+      "chmod +x bluetooth-attack.sh"
+    ],
     "file_listing": [
       "CHANGELOG.md",
       "Dockerfile",
@@ -257,13 +260,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bluetooth-attack && python3 bluetooth-attack.py --help",
-      "Step 2: cd toolboxes/bluetooth-attack && cat README.md",
-      "Step 3: cd toolboxes/bluetooth-attack && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: Part of the NULLSEC Framework - Offensive Security Operations.",
+    "why_to_use": "Prefer this tool based on upstream description: Part of the NULLSEC Framework - Offensive Security Operations.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `openssl enc -aes-256-cbc -d -pbkdf2 -in bluetooth-attack.sh.enc -out bluetooth-attack.sh`. Further invocations from upstream: `chmod +x bluetooth-attack.sh`. Part of the NULLSEC Framework - Offensive Security Operations."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -294,18 +293,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use bluetooth-attack because Part of the NULLSEC Framework - Offensive Security Operations.",
+    "When you need a concrete invocation, run `openssl enc -aes-256-cbc -d -pbkdf2 -in bluetooth-attack.sh.enc -out bluetooth-attack.sh` as documented upstream for bluetooth-attack.",
+    "When you need a concrete invocation, run `chmod +x bluetooth-attack.sh` as documented upstream for bluetooth-attack.",
+    "When chaining Bluetooth tools, pair bluetooth-attack with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bluetooth-attack --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/bluetooth-attack && python3 bluetooth-attack.py --help",
-    "cd toolboxes/bluetooth-attack && cat README.md",
-    "cd toolboxes/bluetooth-attack && ls -la",
-    "cd toolboxes/bluetooth-attack && python3 bluetooth-attack.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluetooth-attack --output $KFIOSA_OUTPUT_DIR/bluetooth-attack.log"
+    "openssl enc -aes-256-cbc -d -pbkdf2 -in bluetooth-attack.sh.enc -out bluetooth-attack.sh",
+    "chmod +x bluetooth-attack.sh"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -328,5 +324,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "chkrootkit",
   "title": "chkrootkit",
-  "summary": "rootkit detector",
+  "summary": "chkrootkit - Scan the system for signs of rootkits",
   "description": "rootkit detector\nThe chkrootkit security scanner searches for signs that the system is\ninfected with a 'rootkit'. Rootkits are a form of malware that seek\nto exploit security flaws to grant unauthorised access to a\ncomputer or its services, generally for malicious purposes.\n.\nchkrootkit can identify signs of over 70 different rootkits (see the\nproject's website for a list).\n.\nPlease note that an automated tool like chkrootkit can never\nguarantee a system is uncompromised. Nor does every report always\nsignify a genuine problem: human judgement and further investigation\nwill always be needed to assure the security of your system.",
   "version": "0.59-1",
   "architectures": [
@@ -27,7 +27,118 @@
       "path": "/usr/sbin/chkrootkit",
       "description": "Scan the system for signs of rootkits",
       "usage": "chkrootkit [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "debug mode. This shows exactly what chkrootkit is doing at every step (it in-",
+          "default": null,
+          "choices": null,
+          "raw": "-d  debug mode. This shows exactly what chkrootkit is doing at every step (it in-"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print a short help message and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Print a short help message and exit."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print available tests.",
+          "default": null,
+          "choices": null,
+          "raw": "-l  Print available tests."
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "make some tests ignore NFS-mounted directories.",
+          "default": null,
+          "choices": null,
+          "raw": "-n  make some tests ignore NFS-mounted directories."
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enter quiet mode. This suppresses output of tests that find nothing suspicious.",
+          "default": null,
+          "choices": null,
+          "raw": "-q  Enter quiet mode. This suppresses output of tests that find nothing suspicious."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use DIR as the root directory. For example, you might mount a compromised disk on an",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Use DIR as the root directory. For example, you might mount a compromised disk on an"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Similar to -e but only applies to the result of the sniffer test. This test will class",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Similar to -e but only applies to the result of the sniffer test. This test will class"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "make some tests ignore file systems of type FSTYPE. This uses find(1)'s -fstype option.",
+          "default": null,
+          "choices": null,
+          "raw": "-T  make some tests ignore file systems of type FSTYPE. This uses find(1)'s -fstype option."
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print version information and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-V  Print version information and exit."
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enter expert mode. This makes many tests produces additional output showing what they",
+          "default": null,
+          "choices": null,
+          "raw": "-x  Enter expert mode. This makes many tests produces additional output showing what they"
+        }
+      ]
     },
     {
       "name": "chkrootkit-daily",
@@ -68,5 +179,82 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "chkrootkit [OPTIONS] [TEST...]"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use chkrootkit because chkrootkit - Scan the system for signs of rootkits.",
+    "When the engagement is in the install phase, use chkrootkit as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `chkrootkit [OPTIONS] [TEST...]` as documented upstream for chkrootkit.",
+    "When chaining Kali Linux tools, pair chkrootkit with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `chkrootkit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "debug mode. This shows exactly what chkrootkit is doing at every step (it in-",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Print a short help message and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Print available tests.",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "make some tests ignore NFS-mounted directories.",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Enter quiet mode. This suppresses output of tests that find nothing suspicious.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Use DIR as the root directory. For example, you might mount a compromised disk on an",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Similar to -e but only applies to the result of the sniffer test. This test will class",
+        "source": "docs"
+      },
+      {
+        "name": "-T",
+        "description": "make some tests ignore file systems of type FSTYPE. This uses find(1)'s -fstype option.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Print version information and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-x",
+        "description": "Enter expert mode. This makes many tests produces additional output showing what they",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "chkrootkit [OPTIONS] [TEST...]"
+    ],
+    "readme": "chkrootkit - Scan the system for signs of rootkits",
+    "how_to_use": "Install/setup: sudo apt install chkrootkit. Run the primary entrypoint as shown in upstream docs, e.g. `chkrootkit [OPTIONS] [TEST...]`. chkrootkit - Scan the system for signs of rootkits.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: chkrootkit - Scan the system for signs of rootkits.",
+    "why_to_use": "Prefer this tool based on upstream description: chkrootkit - Scan the system for signs of rootkits.",
+    "usage_sections": [
+      "Install with: sudo apt install chkrootkit",
+      "Install with: sudo apt install chkrootkit"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -27,7 +27,85 @@
       "path": "/usr/bin/json_xs",
       "description": "JSON::XS commandline utility",
       "usage": "json_xs [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-file"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "a Storable file (Storable has two incompatible formats)",
+          "default": null,
+          "choices": null,
+          "raw": "-file  a Storable file (Storable has two incompatible formats)"
+        },
+        {
+          "flags": [
+            "-packed"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "CBOR using extensions to make it smaller",
+          "default": null,
+          "choices": null,
+          "raw": "-packed  CBOR using extensions to make it smaller"
+        },
+        {
+          "flags": [
+            "-pretty"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "as above, but pretty-printed",
+          "default": null,
+          "choices": null,
+          "raw": "-pretty  as above, but pretty-printed"
+        },
+        {
+          "flags": [
+            "-utf-16be"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "little endian/big endian utf-16",
+          "default": null,
+          "choices": null,
+          "raw": "-utf-16be  little endian/big endian utf-16"
+        },
+        {
+          "flags": [
+            "-utf-32be"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "little endian/big endian utf-32",
+          "default": null,
+          "choices": null,
+          "raw": "-utf-32be  little endian/big endian utf-32"
+        },
+        {
+          "flags": [
+            "-utf-8"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "json, utf-8 encoded",
+          "default": null,
+          "choices": null,
+          "raw": "-utf-8  json, utf-8 encoded"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be slightly more verbose.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Be slightly more verbose."
+        }
+      ]
     }
   ],
   "files": [
@@ -44,5 +122,78 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "json_xs [-v] [-f inputformat] [-t outputformat]",
+    "json_xs -t none <isitreally.json",
+    "json_xs -f storable-file <file",
+    "json_xs -f storable-file -t yaml <file",
+    "json_xs -f none -e '$_ = [1, 2, 3]'"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use json_xs because module for manipulating JSON-formatted data (C/XS-accelerated).",
+    "When the engagement is in the install phase, use json_xs as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `json_xs [-v] [-f inputformat] [-t outputformat]` as documented upstream for json_xs.",
+    "When you need a concrete invocation, run `json_xs -t none <isitreally.json` as documented upstream for json_xs.",
+    "When you need a concrete invocation, run `json_xs -f storable-file <file` as documented upstream for json_xs.",
+    "When you need a concrete invocation, run `json_xs -f storable-file -t yaml <file` as documented upstream for json_xs.",
+    "When chaining Kali Linux tools, pair json_xs with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `json_xs --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-file",
+        "description": "a Storable file (Storable has two incompatible formats)",
+        "source": "docs"
+      },
+      {
+        "name": "-packed",
+        "description": "CBOR using extensions to make it smaller",
+        "source": "docs"
+      },
+      {
+        "name": "-pretty",
+        "description": "as above, but pretty-printed",
+        "source": "docs"
+      },
+      {
+        "name": "-utf-16be",
+        "description": "little endian/big endian utf-16",
+        "source": "docs"
+      },
+      {
+        "name": "-utf-32be",
+        "description": "little endian/big endian utf-32",
+        "source": "docs"
+      },
+      {
+        "name": "-utf-8",
+        "description": "json, utf-8 encoded",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Be slightly more verbose.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "json_xs [-v] [-f inputformat] [-t outputformat]",
+      "json_xs -t none <isitreally.json",
+      "json_xs -f storable-file <file",
+      "json_xs -f storable-file -t yaml <file",
+      "json_xs -f none -e '$_ = [1, 2, 3]'"
+    ],
+    "readme": "json_xs - JSON::XS commandline utility",
+    "how_to_use": "Install/setup: sudo apt install libjson-xs-perl. Run the primary entrypoint as shown in upstream docs, e.g. `json_xs -t none <isitreally.json`. Further invocations from upstream: `json_xs -f storable-file <file`; `json_xs -f storable-file -t yaml <file`. module for manipulating JSON-formatted data (C/XS-accelerated).",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: module for manipulating JSON-formatted data (C/XS-accelerated).",
+    "why_to_use": "Prefer this tool because: module for manipulating JSON-formatted data (C/XS-accelerated).",
+    "usage_sections": [
+      "Install with: sudo apt install libjson-xs-perl",
+      "Install with: sudo apt install libjson-xs-perl"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

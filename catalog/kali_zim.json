@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "zim",
   "title": "zim",
-  "summary": "### zim",
+  "summary": "zim - A Desktop Wiki Editor",
   "version": "0.76.3-3",
   "architectures": [
     "all"
@@ -30,25 +30,25 @@
       "arguments": [
         {
           "flags": [
-            "--gui"
+            "--assubpage"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "run the editor (this is the default)",
+          "description": "import files as sub-pages of PATH, this is implicit true",
           "default": null,
           "choices": null,
-          "raw": "      --gui             run the editor (this is the default)"
+          "raw": "--assubpage  import files as sub-pages of PATH, this is implicit true"
         },
         {
           "flags": [
-            "--server"
+            "--debug"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "run the web server",
+          "description": "print debug messages",
           "default": null,
           "choices": null,
-          "raw": "      --server          run the web server"
+          "raw": "--debug  print debug messages"
         },
         {
           "flags": [
@@ -59,132 +59,40 @@
           "description": "export to a different format",
           "default": null,
           "choices": null,
-          "raw": "      --export          export to a different format"
+          "raw": "--export  export to a different format"
         },
         {
           "flags": [
-            "--import"
+            "-f"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "import one or more files into a notebook",
+          "description": "flush the index first and force re-building",
           "default": null,
           "choices": null,
-          "raw": "      --import          import one or more files into a notebook"
+          "raw": "-f  flush the index first and force re-building"
         },
         {
           "flags": [
-            "--search"
+            "--flush"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "run a search query on a notebook",
+          "description": "flush the index first and force re-building",
           "default": null,
           "choices": null,
-          "raw": "      --search          run a search query on a notebook"
+          "raw": "--flush  flush the index first and force re-building"
         },
         {
           "flags": [
-            "--index"
+            "--format"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "build an index for a notebook",
+          "description": "format to use (defaults to 'html')",
           "default": null,
           "choices": null,
-          "raw": "      --index           build an index for a notebook"
-        },
-        {
-          "flags": [
-            "--plugin"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "call a specific plugin function",
-          "default": null,
-          "choices": null,
-          "raw": "      --plugin          call a specific plugin function"
-        },
-        {
-          "flags": [
-            "--manual"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "open the user manual",
-          "default": null,
-          "choices": null,
-          "raw": "      --manual          open the user manual"
-        },
-        {
-          "flags": [
-            "-V",
-            "--verbose"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "print information to terminal",
-          "default": null,
-          "choices": null,
-          "raw": "      -V, --verbose     print information to terminal"
-        },
-        {
-          "flags": [
-            "-D",
-            "--debug"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "print debug messages",
-          "default": null,
-          "choices": null,
-          "raw": "      -D, --debug       print debug messages"
-        },
-        {
-          "flags": [
-            "-v",
-            "--version"
-          ],
-          "metavar": "- ersion",
-          "takes_value": true,
-          "description": "print version and exit",
-          "default": null,
-          "choices": null,
-          "raw": "      -v, --version     print version and exit"
-        },
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "print this text",
-          "default": null,
-          "choices": null,
-          "raw": "      -h, --help        print this text"
-        },
-        {
-          "flags": [
-            "--list"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "show the list with notebooks instead of",
-          "default": null,
-          "choices": null,
-          "raw": "      --list            show the list with notebooks instead of"
-        },
-        {
-          "flags": [
-            "--geometry"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "window size and position as WxH+X+Y",
-          "default": null,
-          "choices": null,
-          "raw": "      --geometry        window size and position as WxH+X+Y"
+          "raw": "--format  format to use (defaults to 'html')"
         },
         {
           "flags": [
@@ -195,96 +103,73 @@
           "description": "start in fullscreen mode",
           "default": null,
           "choices": null,
-          "raw": "      --fullscreen      start in fullscreen mode"
+          "raw": "--fullscreen  start in fullscreen mode"
         },
         {
           "flags": [
-            "--non-unique"
+            "--geometry"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "start  a  new  process, do not connect to an existing",
+          "description": "window size and position as WxH+X+Y",
           "default": null,
           "choices": null,
-          "raw": "      --non-unique       start  a  new  process, do not connect to an existing"
+          "raw": "--geometry  window size and position as WxH+X+Y"
         },
         {
           "flags": [
-            "--standalone"
+            "--gui"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "start a new process per notebook, implies --non-unique",
+          "description": "run the editor (this is the default)",
           "default": null,
           "choices": null,
-          "raw": "      --standalone      start a new process per notebook, implies --non-unique"
+          "raw": "--gui  run the editor (this is the default)"
         },
         {
           "flags": [
-            "--port"
+            "-h"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "port to use (defaults to 8080)",
-          "default": "s to 8080",
-          "choices": null,
-          "raw": "      --port            port to use (defaults to 8080)"
-        },
-        {
-          "flags": [
-            "--template"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "name or filepath of the template to use",
+          "description": "print this text",
           "default": null,
           "choices": null,
-          "raw": "      --template        name or filepath of the template to use"
+          "raw": "-h  print this text"
         },
         {
           "flags": [
-            "--private"
+            "--help"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "serve only to localhost",
+          "description": "print this text",
           "default": null,
           "choices": null,
-          "raw": "      --private         serve only to localhost"
+          "raw": "--help  print this text"
         },
         {
           "flags": [
-            "-o",
-            "--output"
-          ],
-          "metavar": "- utput",
-          "takes_value": true,
-          "description": "output directory (mandatory option)",
-          "default": null,
-          "choices": null,
-          "raw": "      -o, --output      output directory (mandatory option)"
-        },
-        {
-          "flags": [
-            "--format"
+            "--import"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "format to use (defaults to 'html')",
-          "default": "s to 'html'",
+          "description": "import one or more files into a notebook",
+          "default": null,
           "choices": null,
-          "raw": "      --format          format to use (defaults to 'html')"
+          "raw": "--import  import one or more files into a notebook"
         },
         {
           "flags": [
-            "--root-url"
+            "--index"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "url to use for the document root",
+          "description": "build an index for a notebook",
           "default": null,
           "choices": null,
-          "raw": "      --root-url        url to use for the document root"
+          "raw": "--index  build an index for a notebook"
         },
         {
           "flags": [
@@ -295,35 +180,76 @@
           "description": "index page name",
           "default": null,
           "choices": null,
-          "raw": "      --index-page      index page name"
+          "raw": "--index-page  index page name"
         },
         {
           "flags": [
-            "-r",
-            "--recursive"
+            "--list"
           ],
-          "metavar": "- ecursive",
-          "takes_value": true,
-          "description": "when exporting a page, also export sub-pages",
+          "metavar": null,
+          "takes_value": false,
+          "description": "show the list with notebooks instead of",
           "default": null,
           "choices": null,
-          "raw": "      -r, --recursive   when exporting a page, also export sub-pages"
+          "raw": "--list  show the list with notebooks instead of"
         },
         {
           "flags": [
-            "-s",
-            "--singlefile"
+            "--manual"
           ],
-          "metavar": "- inglefile",
-          "takes_value": true,
-          "description": "export all pages to a single output file",
+          "metavar": null,
+          "takes_value": false,
+          "description": "open the user manual",
           "default": null,
           "choices": null,
-          "raw": "      -s, --singlefile  export all pages to a single output file"
+          "raw": "--manual  open the user manual"
         },
         {
           "flags": [
-            "-O",
+            "--non-unique"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "start a new process, do not connect to an existing process",
+          "default": null,
+          "choices": null,
+          "raw": "--non-unique  start a new process, do not connect to an existing process"
+        },
+        {
+          "flags": [
+            "-O"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "force overwriting existing file(s)",
+          "default": null,
+          "choices": null,
+          "raw": "-O  force overwriting existing file(s)"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output directory (mandatory option)",
+          "default": null,
+          "choices": null,
+          "raw": "-o  output directory (mandatory option)"
+        },
+        {
+          "flags": [
+            "--output"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "output directory (mandatory option)",
+          "default": null,
+          "choices": null,
+          "raw": "--output  output directory (mandatory option)"
+        },
+        {
+          "flags": [
             "--overwrite"
           ],
           "metavar": null,
@@ -331,42 +257,183 @@
           "description": "force overwriting existing file(s)",
           "default": null,
           "choices": null,
-          "raw": "      -O, --overwrite   force overwriting existing file(s)"
+          "raw": "--overwrite  force overwriting existing file(s)"
         },
         {
           "flags": [
-            "--assubpage"
+            "--plugin"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "import files as sub-pages of PATH,  this  is  implicit",
+          "description": "call a specific plugin function",
           "default": null,
           "choices": null,
-          "raw": "      --assubpage       import files as sub-pages of PATH,  this  is  implicit"
+          "raw": "--plugin  call a specific plugin function"
         },
         {
           "flags": [
-            "-s",
-            "--with-scores"
+            "--port"
           ],
-          "metavar": "--with cores print score for each page sort by score",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "port to use (defaults to 8080)",
           "default": null,
           "choices": null,
-          "raw": "      -s, --with-scores print score for each page, sort by score"
+          "raw": "--port  port to use (defaults to 8080)"
         },
         {
           "flags": [
-            "-f",
-            "--flush"
+            "--private"
           ],
-          "metavar": "- lush",
-          "takes_value": true,
-          "description": "flush the index first and force re-building",
+          "metavar": null,
+          "takes_value": false,
+          "description": "serve only to localhost",
           "default": null,
           "choices": null,
-          "raw": "      -f, --flush       flush the index first and force re-building"
+          "raw": "--private  serve only to localhost"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "when exporting a page, also export sub-pages",
+          "default": null,
+          "choices": null,
+          "raw": "-r  when exporting a page, also export sub-pages"
+        },
+        {
+          "flags": [
+            "--recursive"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "when exporting a page, also export sub-pages",
+          "default": null,
+          "choices": null,
+          "raw": "--recursive  when exporting a page, also export sub-pages"
+        },
+        {
+          "flags": [
+            "--root-url"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "url to use for the document root",
+          "default": null,
+          "choices": null,
+          "raw": "--root-url  url to use for the document root"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "export all pages to a single output file",
+          "default": null,
+          "choices": null,
+          "raw": "-s  export all pages to a single output file"
+        },
+        {
+          "flags": [
+            "--search"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "run a search query on a notebook",
+          "default": null,
+          "choices": null,
+          "raw": "--search  run a search query on a notebook"
+        },
+        {
+          "flags": [
+            "--server"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "run the web server",
+          "default": null,
+          "choices": null,
+          "raw": "--server  run the web server"
+        },
+        {
+          "flags": [
+            "--singlefile"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "export all pages to a single output file",
+          "default": null,
+          "choices": null,
+          "raw": "--singlefile  export all pages to a single output file"
+        },
+        {
+          "flags": [
+            "--standalone"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "start a new process per notebook, implies --non-unique",
+          "default": null,
+          "choices": null,
+          "raw": "--standalone  start a new process per notebook, implies --non-unique"
+        },
+        {
+          "flags": [
+            "--template"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "name or filepath of the template to use",
+          "default": null,
+          "choices": null,
+          "raw": "--template  name or filepath of the template to use"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print information to terminal",
+          "default": null,
+          "choices": null,
+          "raw": "-V  print information to terminal"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "-v  print version and exit"
+        },
+        {
+          "flags": [
+            "--verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print information to terminal",
+          "default": null,
+          "choices": null,
+          "raw": "--verbose  print information to terminal"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "print version and exit",
+          "default": null,
+          "choices": null,
+          "raw": "--version  print version and exit"
         }
       ],
       "raw_help": "root@kali:~# man zim\n ZIM(1)                           User Commands                           ZIM(1)\n \n NAME\n    zim - A Desktop Wiki Editor\n \n SYNOPSIS\n    usage: zim [OPTIONS] [NOTEBOOK [PAGE_LINK]]\n       or: zim --gui [OPTIONS] [NOTEBOOK [PAGE_LINK]]\n       or: zim --server [OPTIONS] [NOTEBOOK]\n       or: zim --export [OPTIONS] NOTEBOOK [PAGE]\n       or: zim --import [OPTIONS] NOTEBOOK PAGE FILES\n       or: zim --search [OPTIONS] NOTEBOOK QUERY\n       or: zim --index  [OPTIONS] NOTEBOOK\n       or: zim --plugin PLUGIN [ARGUMENTS]\n       or: zim --manual [OPTIONS] [PAGE_LINK]\n       or: zim --help\n \n    NOTEBOOK  can  be  a  local file path, a local file URI or a notebook name\n    PAGE is be a fully specified page name PAGE_LINK is a fully specified page\n    name optionally extended with an anchor ID\n \n DESCRIPTION\n    Zim is a graphical text editor used  to  maintain  a  collection  of  wiki\n    pages.  Each page can contain links to other pages, simple formatting, and\n    images. Pages are stored in a folder structure, like in an  outliner,  and\n    can  have  attachments.   Creating  a  new page is as easy as linking to a\n    nonexistent page. All data is stored in plain text files with wiki format-\n    ting. Various plugins provide additional functionality, like a  task  list\n    manager, an equation editor, a tray icon, and support for version control.\n \n    Zim can be used to:\n \n    *      Keep an archive of notes\n \n    *      Keep a daily or weekly journal\n \n    *      Take notes during meetings or lectures\n \n    *      Organize task lists\n \n    *      Draft blog entries and emails\n \n    *      Do brainstorming\n \n OPTIONS\n    General Options:\n      --gui             run the editor (this is the default)\n      --server          run the web server\n      --export          export to a different format\n      --import          import one or more files into a notebook\n      --search          run a search query on a notebook\n      --index           build an index for a notebook\n      --plugin          call a specific plugin function\n      --manual          open the user manual\n      -V, --verbose     print information to terminal\n      -D, --debug       print debug messages\n      -v, --version     print version and exit\n      -h, --help        print this text\n \n    GUI Options:\n      --list            show the list with notebooks instead of\n                        opening the default notebook\n      --geometry        window size and position as WxH+X+Y\n      --fullscreen      start in fullscreen mode\n      --non-unique       start  a  new  process, do not connect to an existing\n    process\n      --standalone      start a new process per notebook, implies --non-unique\n \n    Server Options:\n      --port            port to use (defaults to 8080)\n      --template        name or filepath of the template to use\n      --private         serve only to localhost\n      --gui             run the gui wrapper for the server\n \n    Export Options:\n      -o, --output      output directory (mandatory option)\n      --format          format to use (defaults to 'html')\n      --template        name or filepath of the template to use\n      --root-url        url to use for the document root\n      --index-page      index page name\n      -r, --recursive   when exporting a page, also export sub-pages\n      -s, --singlefile  export all pages to a single output file\n      -O, --overwrite   force overwriting existing file(s)\n \n    Import Options:\n      --format          format to read (defaults to 'wiki')\n      --assubpage       import files as sub-pages of PATH,  this  is  implicit\n    true\n                        when  PATH  ends with a \":\" or when multiple files are\n    given\n \n    Search Options:\n      -s, --with-scores print score for each page, sort by score\n \n    Index Options:\n      -f, --flush       flush the index first and force re-building\n \n    Try 'zim --manual' for more help.\n \n AUTHOR\n    Jaap Karssenberg <jaap.karssenberg@gmail.com>\n \n SEE ALSO\n    The full documentation for zim is maintained as a zim notebook.  The  com-\n    mand\n \n           zim --manual\n \n    should give you access to the complete manual.\n \n    The website for zim can be found at https://www.zim-wiki.org\n \n zim 0.76.3                         March 2026                            ZIM(1)",
@@ -435,21 +502,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use zim because zim - A Desktop Wiki Editor.",
+    "When you need a concrete invocation, run `zim --manual` as documented upstream for zim.",
+    "When chaining Kali Linux tools, pair zim with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `zim --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/zim && python3 zim.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/zim && python3 zim.py --help",
-    "cd toolboxes/zim && python3 zim.py --help",
-    "cd toolboxes/zim && python3 zim.py --help",
-    "cd toolboxes/zim && python3 zim.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST zim --output $KFIOSA_OUTPUT_DIR/zim.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST zim --output $KFIOSA_OUTPUT_DIR/zim.log"
+    "zim --manual"
   ],
   "attack_surface": [
     "web"
@@ -464,5 +523,206 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--assubpage",
+        "description": "import files as sub-pages of PATH, this is implicit true",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "print debug messages",
+        "source": "docs"
+      },
+      {
+        "name": "--export",
+        "description": "export to a different format",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "flush the index first and force re-building",
+        "source": "docs"
+      },
+      {
+        "name": "--flush",
+        "description": "flush the index first and force re-building",
+        "source": "docs"
+      },
+      {
+        "name": "--format",
+        "description": "format to use (defaults to 'html')",
+        "source": "docs"
+      },
+      {
+        "name": "--fullscreen",
+        "description": "start in fullscreen mode",
+        "source": "docs"
+      },
+      {
+        "name": "--geometry",
+        "description": "window size and position as WxH+X+Y",
+        "source": "docs"
+      },
+      {
+        "name": "--gui",
+        "description": "run the editor (this is the default)",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "print this text",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "print this text",
+        "source": "docs"
+      },
+      {
+        "name": "--import",
+        "description": "import one or more files into a notebook",
+        "source": "docs"
+      },
+      {
+        "name": "--index",
+        "description": "build an index for a notebook",
+        "source": "docs"
+      },
+      {
+        "name": "--index-page",
+        "description": "index page name",
+        "source": "docs"
+      },
+      {
+        "name": "--list",
+        "description": "show the list with notebooks instead of",
+        "source": "docs"
+      },
+      {
+        "name": "--manual",
+        "description": "open the user manual",
+        "source": "docs"
+      },
+      {
+        "name": "--non-unique",
+        "description": "start a new process, do not connect to an existing process",
+        "source": "docs"
+      },
+      {
+        "name": "-O",
+        "description": "force overwriting existing file(s)",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "output directory (mandatory option)",
+        "source": "docs"
+      },
+      {
+        "name": "--output",
+        "description": "output directory (mandatory option)",
+        "source": "docs"
+      },
+      {
+        "name": "--overwrite",
+        "description": "force overwriting existing file(s)",
+        "source": "docs"
+      },
+      {
+        "name": "--plugin",
+        "description": "call a specific plugin function",
+        "source": "docs"
+      },
+      {
+        "name": "--port",
+        "description": "port to use (defaults to 8080)",
+        "source": "docs"
+      },
+      {
+        "name": "--private",
+        "description": "serve only to localhost",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "when exporting a page, also export sub-pages",
+        "source": "docs"
+      },
+      {
+        "name": "--recursive",
+        "description": "when exporting a page, also export sub-pages",
+        "source": "docs"
+      },
+      {
+        "name": "--root-url",
+        "description": "url to use for the document root",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "export all pages to a single output file",
+        "source": "docs"
+      },
+      {
+        "name": "--search",
+        "description": "run a search query on a notebook",
+        "source": "docs"
+      },
+      {
+        "name": "--server",
+        "description": "run the web server",
+        "source": "docs"
+      },
+      {
+        "name": "--singlefile",
+        "description": "export all pages to a single output file",
+        "source": "docs"
+      },
+      {
+        "name": "--standalone",
+        "description": "start a new process per notebook, implies --non-unique",
+        "source": "docs"
+      },
+      {
+        "name": "--template",
+        "description": "name or filepath of the template to use",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "print information to terminal",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "print version and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "print information to terminal",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "print version and exit",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "zim --manual"
+    ],
+    "readme": "zim - A Desktop Wiki Editor",
+    "how_to_use": "Install/setup: sudo apt install zim. Run the primary entrypoint as shown in upstream docs, e.g. `zim --manual`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: zim - A Desktop Wiki Editor.",
+    "why_to_use": "Prefer this tool because: zim - A Desktop Wiki Editor.",
+    "usage_sections": [
+      "Install with: sudo apt install zim"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

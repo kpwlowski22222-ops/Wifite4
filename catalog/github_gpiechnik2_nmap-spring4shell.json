@@ -8,8 +8,13 @@
   "url": "https://github.com/gpiechnik2/nmap-spring4shell",
   "summary": "Nmap-spring4shell\nLog4shell-nmap is an NSE script for detecting Spring4Shell RCE vulnerabilities (CVE-2022-22965) in HTTP services. The script injects the correct payload into the application and then executes the following command on the specified endpoint.",
   "documentation": {
-    "readme": "Nmap-spring4shell\nLog4shell-nmap is an NSE script for detecting Spring4Shell RCE vulnerabilities (CVE-2022-22965) in HTTP services. The script injects the correct payload into the application and then executes the following command on the specified endpoint.",
-    "usage_sections": [],
+    "readme": "Nmap-spring4shell Log4shell-nmap is an NSE script for detecting Spring4Shell RCE vulnerabilities (CVE-2022-22965) in HTTP services. The script injects the correct payload into the application and then executes the following command on the specified endpoint.",
+    "usage_sections": [
+      "endpoint - relative url. On https://bugspace.pl/search/videos it will be /search/videos,",
+      "command - command to be run on the server. The default command is id,",
+      "assertion - the checked string inside the server response. The default assertion is uid,",
+      "filename - file name on the server. For more information see here. The default name is shell."
+    ],
     "arguments": [
       {
         "name": "--script",
@@ -193,7 +198,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "8080/tcp open  http-proxy syn-ack"
+    ],
     "file_listing": [
       "README.md",
       "spring4shell.nse"
@@ -245,13 +252,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web', 'cloud']' as the attack surface (web_application_security, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/nmap-spring4shell && python3 nmap-spring4shell.py --help",
-      "Step 2: cd toolboxes/nmap-spring4shell && cat README.md",
-      "Step 3: cd toolboxes/nmap-spring4shell && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web, cloud] in the Web Application Security category. Fits when the engagement needs: Nmap-spring4shell\nLog4shell-nmap is an NSE script for detecting Spring4Shell RCE vulnerabilities (CVE-2022-22965) in HTTP services. The script injects the correct payload into the application and then executes the follow.",
+    "why_to_use": "Prefer this tool based on upstream description: Nmap-spring4shell Log4shell-nmap is an NSE script for detecting Spring4Shell RCE vulnerabilities (CVE-2022-22965) in HTTP services. The script injects the correct payload into the application and then executes the following command on the specified endpoint.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `8080/tcp open  http-proxy syn-ack`. Nmap-spring4shell Log4shell-nmap is an NSE script for detecting Spring4Shell RCE vulnerabilities (CVE-2022-22965) in HTTP services. The script injects the correct payload into the application and then executes the following command on the specified endpoint."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -281,18 +284,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Web Application Security system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Web Application Security, use nmap-spring4shell because Nmap-spring4shell\nLog4shell-nmap is an NSE script for detecting Spring4Shell RCE vulnerabilities (CVE-2022-22965) in HTTP services. The script injects the corre.",
+    "When you need a concrete invocation, run `8080/tcp open  http-proxy syn-ack` as documented upstream for nmap-spring4shell.",
+    "When chaining Web Application Security tools, pair nmap-spring4shell with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nmap-spring4shell --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/nmap-spring4shell && python3 nmap-spring4shell.py --help",
-    "cd toolboxes/nmap-spring4shell && cat README.md",
-    "cd toolboxes/nmap-spring4shell && ls -la",
-    "cd toolboxes/nmap-spring4shell && python3 nmap-spring4shell.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nmap-spring4shell --output $KFIOSA_OUTPUT_DIR/nmap-spring4shell.log"
+    "8080/tcp open  http-proxy syn-ack"
   ],
   "attack_surface": [
     "web",
@@ -312,5 +310,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -7,128 +7,330 @@
   "category": "Dex to Java decompiler",
   "url": "https://github.com/skylot/jadx",
   "toolbox_path": "toolboxes/android/jadx",
-  "summary": "Repository indexing entry for the ``jadx`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Command line and GUI tools for producing Java source code from Android Dex and Apk files",
   "documentation": {
-    "readme": "toolboxes/android/jadx/README.md",
-    "usage_sections": [],
+    "readme": "Command line and GUI tools for producing Java source code from Android Dex and Apk files",
+    "usage_sections": [
+      "decompile Dalvik bytecode to Java code from APK, dex, aar, aab and zip files",
+      "decode AndroidManifest.xml and other resources from resources.arsc",
+      "deobfuscator included",
+      "view decompiled code with highlighted syntax",
+      "smali debugger, check wiki page for setup and usage"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-a",
+        "description": "- list available plugins from jadx-plugins-list (aka marketplace)",
+        "source": "docs"
+      },
+      {
+        "name": "--add-debug-lines",
+        "description": "- add comments with debug line numbers if available",
+        "source": "docs"
+      },
+      {
+        "name": "-alias",
+        "description": "rename class alias, values: [yes, no], default: yes",
+        "source": "docs"
+      },
+      {
+        "name": "-alias-source-dbg",
+        "description": "rename class alias from SourceDebugExtension, values: [yes, no], default: no",
+        "source": "docs"
+      },
+      {
+        "name": "-args",
+        "description": "rename function arguments, values: [yes, no], default: yes",
+        "source": "docs"
+      },
+      {
+        "name": "--available",
+        "description": "- list available plugins from jadx-plugins-list (aka marketplace)",
+        "source": "docs"
+      },
+      {
+        "name": "--call-graph",
+        "description": "- save app call graph in format: 'dot' or 'json', default: none",
+        "source": "docs"
+      },
+      {
+        "name": "--cfg",
+        "description": "- save methods control flow graph to dot file",
+        "source": "docs"
+      },
+      {
+        "name": "-checksum",
+        "description": "verify dex file checksum before load, values: [yes, no], default: yes",
+        "source": "docs"
+      },
+      {
+        "name": "-class",
+        "description": "add data class modifier, values: [yes, no], default: yes",
+        "source": "docs"
+      },
+      {
+        "name": "--comments-level",
+        "description": "- set code comments level, values: error, warn, info, debug, user-only, none, default: info",
+        "source": "docs"
+      },
+      {
+        "name": "--config",
+        "description": "- load configuration from file, <config-ref> can be:",
+        "source": "docs"
+      },
+      {
+        "name": "-convert",
+        "description": "Convert .class, .jar and .aar files to dex",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "- output directory",
+        "source": "docs"
+      },
+      {
+        "name": "--decompilation-mode",
+        "description": "- code output mode:",
+        "source": "docs"
+      },
+      {
+        "name": "--deobf",
+        "description": "- activate deobfuscation",
+        "source": "docs"
+      },
+      {
+        "name": "--deobf-cfg-file",
+        "description": "- deobfuscation mappings file used for JADX auto-generated names (in the JOBF file format), default: same dir and name as input file with '.jobf' extension",
+        "source": "docs"
+      },
+      {
+        "name": "--deobf-cfg-file-mode",
+        "description": "- set mode for handling the JADX auto-generated names' deobfuscation map file:",
+        "source": "docs"
+      },
+      {
+        "name": "--deobf-max",
+        "description": "- max length of name, renamed if longer, default: 64",
+        "source": "docs"
+      },
+      {
+        "name": "--deobf-min",
+        "description": "- min length of name, renamed if shorter, default: 3",
+        "source": "docs"
+      },
+      {
+        "name": "--deobf-res-name-source",
+        "description": "- better name source for resources:",
+        "source": "docs"
+      },
+      {
+        "name": "--deobf-whitelist",
+        "description": "- space separated list of classes (full name) and packages (ends with '.*') to exclude from deobfuscation, default: android.support.v4.* android.support.v7.* android.support.v4.os.* android.support.an",
+        "source": "docs"
+      },
+      {
+        "name": "-desugar",
+        "description": "use desugar in d8, values: [yes, no], default: no",
+        "source": "docs"
+      },
+      {
+        "name": "--disable",
+        "description": "- disable plugin with pluginId",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-plugins",
+        "description": "- comma separated list of plugin ids to disable",
+        "source": "docs"
+      },
+      {
+        "name": "-dr",
+        "description": "- output directory for resources",
+        "source": "docs"
+      },
+      {
+        "name": "-ds",
+        "description": "- output directory for sources",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "- save as gradle project (set '--export-gradle-type' to 'auto')",
+        "source": "docs"
+      },
+      {
+        "name": "--enable",
+        "description": "- enable plugin with pluginId",
+        "source": "docs"
+      },
+      {
+        "name": "--escape-unicode",
+        "description": "- escape non latin characters in strings (with \\u)",
+        "source": "docs"
+      },
+      {
+        "name": "--export-gradle",
+        "description": "- save as gradle project (set '--export-gradle-type' to 'auto')",
+        "source": "docs"
+      },
+      {
+        "name": "--export-gradle-type",
+        "description": "- Gradle project template for export:",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "- set '--decompilation-mode' to 'fallback' (deprecated)",
+        "source": "docs"
+      },
+      {
+        "name": "--fallback",
+        "description": "- set '--decompilation-mode' to 'fallback' (deprecated)",
+        "source": "docs"
+      },
+      {
+        "name": "--fs-case-sensitive",
+        "description": "- treat filesystem as case sensitive, false by default",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "- print this help",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "description": "- print this help",
+        "source": "docs"
       },
       {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
-        "source": "v2_enhancement"
+        "name": "-i",
+        "description": "- install plugin with locationId",
+        "source": "docs"
       },
       {
-        "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
+        "name": "-input",
+        "description": "Load .dex and .apk files",
+        "source": "docs"
       },
       {
-        "name": "--port",
-        "description": "Target port (default: service default).",
-        "source": "generic_kfiosa"
+        "name": "--install",
+        "description": "- install plugin with locationId",
+        "source": "docs"
       },
       {
-        "name": "--interface",
-        "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
+        "name": "--install-jar",
+        "description": "install plugin from jar file",
+        "source": "docs"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
+        "name": "--integer-format",
+        "description": "- how integers are displayed:",
+        "source": "docs"
       },
       {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
+        "name": "-l",
+        "description": "- list installed plugins",
+        "source": "docs"
       },
       {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
-        "source": "generic_kfiosa"
+        "name": "-level",
+        "description": "Android API level, default: 27",
+        "source": "docs"
       },
       {
-        "name": "--rate",
-        "description": "Packet / request rate limit.",
-        "source": "generic_kfiosa"
+        "name": "--list",
+        "description": "- list installed plugins",
+        "source": "docs"
       },
       {
-        "name": "--wordlist",
-        "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
+        "name": "--list-all",
+        "description": "- list all plugins including bundled and dropins",
+        "source": "docs"
       },
       {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
-        "source": "generic_kfiosa"
+        "name": "--list-versions",
+        "description": "- fetch latest versions of plugin from locationId (will download all artefacts, limited to 10)",
+        "source": "docs"
       },
       {
-        "name": "--user-agent",
-        "description": "HTTP User-Agent header.",
-        "source": "generic_kfiosa"
+        "name": "--log-level",
+        "description": "- set log level, values: quiet, progress, error, warn, info, debug, default: progress",
+        "source": "docs"
       },
       {
-        "name": "--cookie",
-        "description": "HTTP Cookie header.",
-        "source": "generic_kfiosa"
+        "name": "-m",
+        "description": "- code output mode:",
+        "source": "docs"
       },
       {
-        "name": "--header",
-        "description": "Extra HTTP header (key:value).",
-        "source": "generic_kfiosa"
+        "name": "-mappings",
+        "description": "various mappings support",
+        "source": "docs"
       },
       {
-        "name": "--insecure",
-        "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
+        "name": "--mappings-mode",
+        "description": "- set mode for handling the deobfuscation mapping file:",
+        "source": "docs"
       },
       {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
-        "source": "generic_kfiosa"
+        "name": "--mappings-path",
+        "description": "- deobfuscation mappings file or directory. Allowed formats: Tiny and Tiny v2 (both '.tiny'), Enigma (.mapping) or Enigma directory",
+        "source": "docs"
       },
       {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
+        "name": "-metadata",
+        "description": "Use kotlin.Metadata annotation for code generation",
+        "source": "docs"
       },
       {
-        "name": "--quiet",
-        "description": "Suppress non-error output.",
-        "source": "generic_kfiosa"
+        "name": "--no-debug-info",
+        "description": "- disable debug info parsing and processing",
+        "source": "docs"
       },
       {
-        "name": "--max-payload",
-        "description": "Maximum payload size in bytes.",
-        "source": "v2_enhancement"
+        "name": "--no-finally",
+        "description": "- don't extract finally block",
+        "source": "docs"
       },
       {
-        "name": "--dry-run",
-        "description": "Print what would be done without making any changes.",
-        "source": "v2_enhancement"
+        "name": "--no-imports",
+        "description": "- disable use of imports, always write entire package name",
+        "source": "docs"
       },
       {
-        "name": "--yes",
-        "description": "Skip confirmation prompts (use with care).",
-        "source": "v2_enhancement"
+        "name": "--no-inline-anonymous",
+        "description": "- disable anonymous classes inline",
+        "source": "docs"
       },
       {
-        "name": "--force",
-        "description": "Force the action even if a safety check would block it.",
-        "source": "v2_enhancement"
+        "name": "--no-inline-kotlin-lambda",
+        "description": "- disable inline for Kotlin lambdas",
+        "source": "docs"
+      },
+      {
+        "name": "--no-inline-methods",
+        "description": "- disable methods inline",
+        "source": "docs"
+      },
+      {
+        "name": "--no-move-inner-classes",
+        "description": "- disable move inner classes into parent",
+        "source": "docs"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo pacman -S jadx",
+      "flatpak install flathub com.github.skylot.jadx",
+      "./gradlew dist",
+      "jadx[-gui] [command] [options] <input files> (.apk, .dex, .jar, .class, .smali, .zip, .aar, .arsc, .aab, .xapk, .apkm, .jadx.kts)",
+      "commands (use '<command> --help' for command options):",
+      "path to '.json' file",
+      "Plugin options (-P<name>=<value>):",
+      "dex-input: Load .dex and .apk files",
+      "java-convert: Convert .class, .jar and .aar files to dex",
+      "kotlin-metadata: Use kotlin.Metadata annotation for code generation"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -254,13 +456,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web', 'ad']' as the attack surface (offensive, jadx, skylot).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/jadx && python3 jadx.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/jadx && python3 jadx.py --help",
-      "Step 3: cd toolboxes/jadx && python3 jadx.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web, ad] in the Dex to Java decompiler category. Fits when the engagement needs: Command line and GUI tools for producing Java source code from Android Dex and Apk files.",
+    "why_to_use": "Prefer this tool based on upstream description: Command line and GUI tools for producing Java source code from Android Dex and Apk files.",
+    "how_to_use": "Install/setup: brew install jadx; git clone https://github.com/skylot/jadx.git. Run the primary entrypoint as shown in upstream docs, e.g. `sudo pacman -S jadx`. Further invocations from upstream: `flatpak install flathub com.github.skylot.jadx`; `./gradlew dist`. Command line and GUI tools for producing Java source code from Android Dex and Apk files."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -293,21 +491,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Dex to Java decompiler, use jadx because Command line and GUI tools for producing Java source code from Android Dex and Apk files.",
+    "When you need a concrete invocation, run `sudo pacman -S jadx` as documented upstream for jadx.",
+    "When you need a concrete invocation, run `flatpak install flathub com.github.skylot.jadx` as documented upstream for jadx.",
+    "When you need a concrete invocation, run `./gradlew dist` as documented upstream for jadx.",
+    "When you need a concrete invocation, run `jadx[-gui] [command] [options] <input files> (.apk, .dex, .jar, .class, .smali, .zip, .aar, .arsc, .aab, .xapk, .apkm, .jadx.kts)` as documented upstream for jadx.",
+    "When chaining Dex to Java decompiler tools, pair jadx with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `jadx --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/jadx && python3 jadx.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/jadx && python3 jadx.py --help",
-    "cd toolboxes/jadx && python3 jadx.py --help",
-    "cd toolboxes/jadx && python3 jadx.py --help",
-    "cd toolboxes/jadx && python3 jadx.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST jadx --output $KFIOSA_OUTPUT_DIR/jadx.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST jadx --output $KFIOSA_OUTPUT_DIR/jadx.log"
+    "sudo pacman -S jadx",
+    "flatpak install flathub com.github.skylot.jadx",
+    "./gradlew dist",
+    "jadx[-gui] [command] [options] <input files> (.apk, .dex, .jar, .class, .smali, .zip, .aar, .arsc, .aab, .xapk, .apkm, .jadx.kts)",
+    "commands (use '<command> --help' for command options):",
+    "path to '.json' file",
+    "Plugin options (-P<name>=<value>):",
+    "dex-input: Load .dex and .apk files",
+    "java-convert: Convert .class, .jar and .aar files to dex",
+    "kotlin-metadata: Use kotlin.Metadata annotation for code generation"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -327,5 +529,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

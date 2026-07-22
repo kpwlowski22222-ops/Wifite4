@@ -1,0 +1,231 @@
+{
+  "id": "github:WitteShadovv/nails",
+  "kind": "external_repository",
+  "name": "nails",
+  "full_name": "WitteShadovv/nails",
+  "owner": "WitteShadovv",
+  "category": "Penetration Testing",
+  "url": "https://github.com/WitteShadovv/nails",
+  "summary": "NAILS — NixOS Anti-forensics Isolation & Layering System",
+  "documentation": {
+    "readme": "NAILS — NixOS Anti-forensics Isolation & Layering System",
+    "usage_sections": [
+      "a visible decoy NixOS installation that should remain mundane and plausible",
+      "a hidden real environment stored on a mounted backend you control",
+      "NixOS-specific workflow using declarative rebuilds and profile switching",
+      "Storage-agnostic backend model as long as the backend is already mounted and writable",
+      "Overlay-based isolation so writes go to hidden storage rather than the decoy base system"
+    ],
+    "arguments": [
+      {
+        "name": "--allowed-leaf",
+        "description": "Allowed live leaf. Repeat for multiple leaves.",
+        "source": "docs"
+      },
+      {
+        "name": "--expected-requested-target",
+        "description": "Required requestedTargets value in the resolved plan.",
+        "source": "docs"
+      },
+      {
+        "name": "--github-output",
+        "description": "Optional GITHUB_OUTPUT file path.",
+        "source": "docs"
+      },
+      {
+        "name": "--github-step-summary",
+        "description": "Optional GITHUB_STEP_SUMMARY file path.",
+        "source": "docs"
+      },
+      {
+        "name": "--iterations",
+        "description": "Requested iteration count to validate and pass to the planner.",
+        "source": "docs"
+      },
+      {
+        "name": "--max-iterations",
+        "description": "Maximum allowed iteration count.",
+        "source": "docs"
+      },
+      {
+        "name": "--min-iterations",
+        "description": "Minimum allowed iteration count.",
+        "source": "docs"
+      },
+      {
+        "name": "--plan-json",
+        "description": "Use an explicit plan JSON payload instead of invoking the planner script.",
+        "source": "docs"
+      },
+      {
+        "name": "--plan-script",
+        "description": "Planner script used when --plan-json is not provided.",
+        "source": "docs"
+      },
+      {
+        "name": "--summary-title",
+        "description": "Markdown heading used when writing a GitHub step summary.",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Requested target to validate.",
+        "source": "docs"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "main",
+        "signature": "main(--allowed-leaf, --expected-requested-target, --github-output, --github-step-summary, --iterations, --max-iterations)",
+        "file": "README",
+        "language": "cli",
+        "description": "CLI entrypoint for nails",
+        "source": "local_readme"
+      }
+    ],
+    "examples": [
+      "sudo cryptsetup open --type tcrypt --veracrypt --tcrypt-hidden \\",
+      "sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden",
+      "install -m0755 /path/to/downloaded/nails /mnt/hidden/nails",
+      "cd /mnt/hidden/src/nails",
+      "cargo build --release",
+      "install -m0755 ./target/release/nails /mnt/hidden/nails",
+      "nix build .#nails",
+      "install -m0755 ./result/bin/nails /mnt/hidden/nails",
+      "sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden-volume",
+      "nails init /mnt/hidden-volume"
+    ],
+    "file_listing": [
+      "01-basic-workflow.nix",
+      "02-verify.nix",
+      "03-emergency.nix",
+      "04-forensic-clean.nix",
+      "05-standard-deactivation-forensic.nix",
+      "06-snapshot-diff.nix",
+      "07-performance.nix",
+      "08-config-handling.nix",
+      "09-state-integrity.nix",
+      "10-permissions-security.nix",
+      "11-reactivation.nix",
+      "12-status-verify.nix",
+      "13-preflight-hidden-volume.nix",
+      "14-preflight-space.nix",
+      "15-preflight-swap.nix",
+      "16-preflight-storage-readiness.nix",
+      "17-preflight-overlay-compat.nix",
+      "18-preflight-symlink-support.nix",
+      "19-preflight-nixos-config.nix",
+      "20-preflight-state-check.nix",
+      "21-preflight-nixos-build-target.nix",
+      "22-preflight-bypass.nix",
+      "23-config-malformed-yaml.nix",
+      "24-config-extended-overlays.nix",
+      "25-config-ephemeral-mode.nix",
+      "26-config-exclusions.nix",
+      "27-activate-full-rebuild.nix",
+      "28-activate-flake-override.nix",
+      "29-activate-dry-run.nix",
+      "30-rebuild-failure-rollback.nix",
+      "31-verify-base-config-clean.nix",
+      "32-config-inject-hardware-imports.nix",
+      "33-session-kill-graphical.nix",
+      "34-session-kill-headless.nix",
+      "35-session-detection.nix",
+      "36-shell-history-zsh.nix",
+      "37-shell-history-fish.nix",
+      "38-shell-rc-integration-bash.nix",
+      "39-shell-rc-integration-zsh.nix",
+      "40-shell-rc-integration-fish.nix",
+      "41-shell-prompt-indicator.nix",
+      "42-shell-alias-setup.nix",
+      "43-shell-color-scheme.nix",
+      "44-nix-daemon-restart-on-overlay.nix",
+      "45-init-bootstrap.nix",
+      "46-init-idempotency.nix",
+      "47-init-refuse-overwrite.nix",
+      "48-notify-dispatch-signal-flow.nix",
+      "49-notify-autostart-lifecycle.nix",
+      "50-notify-malformed-signal.nix"
+    ],
+    "languages": [
+      "python",
+      "shell"
+    ],
+    "how_to_use": "Install/setup: git clone https://github.com/WitteShadovv/nails /mnt/hidden/src/nails. Run the primary entrypoint as shown in upstream docs, e.g. `sudo cryptsetup open --type tcrypt --veracrypt --tcrypt-hidden \\`. Further invocations from upstream: `sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden`; `install -m0755 /path/to/downloaded/nails /mnt/hidden/nails`. NAILS — NixOS Anti-forensics Isolation & Layering System.",
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: NAILS — NixOS Anti-forensics Isolation & Layering System.",
+    "why_to_use": "Prefer this tool based on upstream description: NAILS — NixOS Anti-forensics Isolation & Layering System."
+  },
+  "metadata_status": "enriched",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
+  },
+  "risk": {
+    "level": "high",
+    "signals": [
+      "intrinsic",
+      "lab_only",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "penetration_testing",
+    "toolbox",
+    "github",
+    "witteshadovv",
+    "lang:python",
+    "lang:shell",
+    "lab_only",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "When you need Penetration Testing, use nails because NAILS — NixOS Anti-forensics Isolation & Layering System.",
+    "When you need a concrete invocation, run `sudo cryptsetup open --type tcrypt --veracrypt --tcrypt-hidden \\` as documented upstream for nails.",
+    "When you need a concrete invocation, run `sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden` as documented upstream for nails.",
+    "When you need a concrete invocation, run `install -m0755 /path/to/downloaded/nails /mnt/hidden/nails` as documented upstream for nails.",
+    "When you need a concrete invocation, run `cd /mnt/hidden/src/nails` as documented upstream for nails.",
+    "When chaining Penetration Testing tools, pair nails with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nails --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "command_examples": [
+    "sudo cryptsetup open --type tcrypt --veracrypt --tcrypt-hidden \\",
+    "sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden",
+    "install -m0755 /path/to/downloaded/nails /mnt/hidden/nails",
+    "cd /mnt/hidden/src/nails",
+    "cargo build --release",
+    "install -m0755 ./target/release/nails /mnt/hidden/nails",
+    "nix build .#nails",
+    "install -m0755 ./result/bin/nails /mnt/hidden/nails",
+    "sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden-volume",
+    "nails init /mnt/hidden-volume"
+  ],
+  "attack_surface": [
+    "shell_linux"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar",
+    "tool_variant_picker"
+  ],
+  "target_adaptive_targets": [
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python",
+    "shell"
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
+}

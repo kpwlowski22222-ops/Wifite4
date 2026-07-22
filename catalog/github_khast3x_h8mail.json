@@ -1,26 +1,90 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/h8mail && python3 h8mail.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/h8mail && python3 h8mail.py --help",
-    "cd toolboxes/h8mail && python3 h8mail.py --help",
-    "cd toolboxes/h8mail && python3 h8mail.py --help",
-    "cd toolboxes/h8mail && python3 h8mail.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST h8mail --output $KFIOSA_OUTPUT_DIR/h8mail.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST h8mail --output $KFIOSA_OUTPUT_DIR/h8mail.log"
+    "usage: h8mail [-h] [-t USER_TARGETS [USER_TARGETS ...]]",
+    "Either string inputs or files. Supports email pattern",
+    "Either string inputs or files. Supports URL pattern",
+    "multiple arguments. Parse URLs page for emails.",
+    "Requires http:// or https:// in URL.",
+    "Perform a custom query. Supports username, password,",
+    "ip, hash, domain. Performs an implicit \"loose\" search",
+    "recognition. Use spaces as pattern seperators",
+    "Configuration file for API keys. Accepts keys from",
+    "Path to the breachcompilation torrent folder. Uses the"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "h8mail is an email OSINT and breach hunting tool using different breach and reconnaissance services, or local breaches such as Troy Hunt's \"Collection1\" and the infamous \"Breach Compilation\" torrent.",
+    "usage_sections": [
+      "Related open source projects",
+      ":magright: Email pattern matching (reg exp), useful for reading from other tool outputs",
+      ":earthafrica: Pass URLs to directly find and target emails in pages",
+      ":dizzy: Loosey patterns for local searchs (\"john.smith\", \"evilcorp\")",
+      ":package: Painless install. Available through pip, only requires requests"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "--debug",
+        "description": "Print request debug information",
+        "source": "docs"
+      },
+      {
+        "name": "-g",
+        "description": "Generates a configuration file template in the current",
+        "source": "docs"
+      },
+      {
+        "name": "--gen-config",
+        "description": "Generates a configuration file template in the current",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--hide",
+        "description": "Only shows the first 4 characters of found passwords",
+        "source": "docs"
+      },
+      {
+        "name": "--loose",
+        "description": "Allow loose search by disabling email pattern",
+        "source": "docs"
+      },
+      {
+        "name": "--power-chase",
+        "description": "Add related emails from ALL API services to ongoing",
+        "source": "docs"
+      },
+      {
+        "name": "-sf",
+        "description": "If breach contains big cleartext or tar.gz files, set",
+        "source": "docs"
+      },
+      {
+        "name": "--single-file",
+        "description": "If breach contains big cleartext or tar.gz files, set",
+        "source": "docs"
+      },
+      {
+        "name": "-sk",
+        "description": "Skips Scylla and HunterIO check. Ideal for local scans",
+        "source": "docs"
+      },
+      {
+        "name": "--skip-defaults",
+        "description": "Skips Scylla and HunterIO check. Ideal for local scans",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -129,7 +193,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "usage: h8mail [-h] [-t USER_TARGETS [USER_TARGETS ...]]",
+      "Either string inputs or files. Supports email pattern",
+      "Either string inputs or files. Supports URL pattern",
+      "multiple arguments. Parse URLs page for emails.",
+      "Requires http:// or https:// in URL.",
+      "Perform a custom query. Supports username, password,",
+      "ip, hash, domain. Performs an implicit \"loose\" search",
+      "recognition. Use spaces as pattern seperators",
+      "Configuration file for API keys. Accepts keys from",
+      "Path to the breachcompilation torrent folder. Uses the"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +330,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, h8mail, khast3x).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/h8mail && python3 h8mail.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/h8mail && python3 h8mail.py --help",
-      "Step 3: cd toolboxes/h8mail && python3 h8mail.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: h8mail is an email OSINT and breach hunting tool using different breach and reconnaissance services, or local breaches such as Troy Hunt's \"Collection1\" and the infamous \"Breach Compilation\" torrent.",
+    "why_to_use": "Prefer this tool based on upstream description: h8mail is an email OSINT and breach hunting tool using different breach and reconnaissance services, or local breaches such as Troy Hunt's \"Collection1\" and the infamous \"Breach Compilation\" torrent.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `usage: h8mail [-h] [-t USER_TARGETS [USER_TARGETS ...]]`. Further invocations from upstream: `Either string inputs or files. Supports email pattern`; `Either string inputs or files. Supports URL pattern`. h8mail is an email OSINT and breach hunting tool using different breach and reconnaissance services, or local breaches such as Troy Hunt's \"Collection1\" and the infamous \"Breach Compilation\" torrent."
   },
   "full_name": "khast3x/h8mail",
   "id": "github:khast3x/h8mail",
@@ -282,7 +353,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``h8mail`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "h8mail is an email OSINT and breach hunting tool using different breach and reconnaissance services, or local breaches such as Troy Hunt's \"Collection1\" and the infamous \"Breach Compilation\" torrent.",
   "tags": [
     "offensive",
     "h8mail",
@@ -300,12 +371,13 @@
   },
   "url": "https://github.com/khast3x/h8mail",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use h8mail because h8mail is an email OSINT and breach hunting tool using different breach and reconnaissance services, or local breaches such as Troy Hunt's \"Collection1\" and the.",
+    "When you need a concrete invocation, run `usage: h8mail [-h] [-t USER_TARGETS [USER_TARGETS ...]]` as documented upstream for h8mail.",
+    "When you need a concrete invocation, run `Either string inputs or files. Supports email pattern` as documented upstream for h8mail.",
+    "When you need a concrete invocation, run `Either string inputs or files. Supports URL pattern` as documented upstream for h8mail.",
+    "When you need a concrete invocation, run `multiple arguments. Parse URLs page for emails.` as documented upstream for h8mail.",
+    "When chaining osint tools, pair h8mail with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `h8mail --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +396,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

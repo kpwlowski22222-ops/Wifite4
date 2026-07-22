@@ -27,7 +27,19 @@
       "path": "/usr/bin/cryptcat",
       "description": "twofish encryption enabled version of nc(1)",
       "usage": "cryptcat [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show summary of options.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Show summary of options."
+        }
+      ]
     }
   ],
   "files": [
@@ -42,5 +54,40 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "cryptcat -k secret=$KFIOSA_SECRET hostname port[s] [ports]",
+    "cryptcat -k secret=$KFIOSA_SECRET -p port [-options] [hostname] [port]"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use cryptcat because lightweight version netcat extended with twofish encryption.",
+    "When the engagement is in the install phase, use cryptcat as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `cryptcat -k secret=$KFIOSA_SECRET hostname port[s] [ports]` as documented upstream for cryptcat.",
+    "When you need a concrete invocation, run `cryptcat -k secret=$KFIOSA_SECRET -p port [-options] [hostname] [port]` as documented upstream for cryptcat.",
+    "When chaining Kali Linux tools, pair cryptcat with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `cryptcat --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "Show summary of options.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "cryptcat -k secret=$KFIOSA_SECRET hostname port[s] [ports]",
+      "cryptcat -k secret=$KFIOSA_SECRET -p port [-options] [hostname] [port]"
+    ],
+    "readme": "cryptcat - twofish encryption enabled version of nc(1)",
+    "how_to_use": "Install/setup: sudo apt install cryptcat. Run the primary entrypoint as shown in upstream docs, e.g. `cryptcat -k secret=$KFIOSA_SECRET hostname port[s] [ports]`. Further invocations from upstream: `cryptcat -k secret=$KFIOSA_SECRET -p port [-options] [hostname] [port]`. lightweight version netcat extended with twofish encryption.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: lightweight version netcat extended with twofish encryption.",
+    "why_to_use": "Prefer this tool based on upstream description: cryptcat - twofish encryption enabled version of nc(1).",
+    "usage_sections": [
+      "Install with: sudo apt install cryptcat",
+      "Install with: sudo apt install cryptcat"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

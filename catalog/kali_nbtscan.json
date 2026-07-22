@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "nbtscan",
   "title": "nbtscan",
-  "summary": "### nbtscan",
+  "summary": "nbtscan - scan networks for NetBIOS name information",
   "version": "1.7.2-3",
   "architectures": [
     "any"
@@ -34,14 +34,14 @@
       "arguments": [
         {
           "flags": [
-            "-v"
+            "-b"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "verbose output. Print all names received",
+          "description": "Output throttling. Slow down output so that it uses no more that bandwidth bps. Useful",
           "default": null,
           "choices": null,
-          "raw": " \t-v\t\tverbose output. Print all names received"
+          "raw": "-b  Output throttling. Slow down output so that it uses no more that bandwidth bps. Useful"
         },
         {
           "flags": [
@@ -49,10 +49,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "dump packets. Print whole packet contents.",
+          "description": "Dump packets. Print whole packet contents. Cannot be used with -v, -s or -h options.",
           "default": null,
           "choices": null,
-          "raw": " \t-d\t\tdump packets. Print whole packet contents."
+          "raw": "-d  Dump packets. Print whole packet contents. Cannot be used with -v, -s or -h options."
         },
         {
           "flags": [
@@ -63,7 +63,29 @@
           "description": "Format output in /etc/hosts format.",
           "default": null,
           "choices": null,
-          "raw": " \t-e\t\tFormat output in /etc/hosts format."
+          "raw": "-e  Format output in /etc/hosts format."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Take IP addresses to scan from file \"filename\"",
+          "default": null,
+          "choices": null,
+          "raw": "-f  Take IP addresses to scan from file \"filename\""
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print human-readable names for services. Can only be used with -v option.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Print human-readable names for services. Can only be used with -v option."
         },
         {
           "flags": [
@@ -74,40 +96,18 @@
           "description": "Format output in lmhosts format.",
           "default": null,
           "choices": null,
-          "raw": " \t-l\t\tFormat output in lmhosts format."
+          "raw": "-l  Format output in lmhosts format."
         },
         {
           "flags": [
-            "-t"
-          ],
-          "metavar": "timeout",
-          "takes_value": true,
-          "description": "wait timeout milliseconds for response.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-t timeout\twait timeout milliseconds for response."
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": "bandwidth",
-          "takes_value": true,
-          "description": "Output throttling. Slow down output",
-          "default": null,
-          "choices": null,
-          "raw": " \t-b bandwidth\tOutput throttling. Slow down output"
-        },
-        {
-          "flags": [
-            "-r"
+            "-m"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "use local port 137 for scans. Win95 boxes",
+          "description": "Number of retransmits. Default 0.",
           "default": null,
           "choices": null,
-          "raw": " \t-r\t\tuse local port 137 for scans. Win95 boxes"
+          "raw": "-m  Number of retransmits. Default 0."
         },
         {
           "flags": [
@@ -115,66 +115,54 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Suppress banners and error messages,",
+          "description": "Suppress banners and error messages.",
           "default": null,
           "choices": null,
-          "raw": " \t-q\t\tSuppress banners and error messages,"
+          "raw": "-q  Suppress banners and error messages."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "local port 137 for scans. Win95 boxes respond to this only. You need to be root to",
+          "default": null,
+          "choices": null,
+          "raw": "-r  local port 137 for scans. Win95 boxes respond to this only. You need to be root to"
         },
         {
           "flags": [
             "-s"
           ],
-          "metavar": "separator",
-          "takes_value": true,
-          "description": "Script-friendly output. Don't print",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Script-friendly output. Don't print column and record headers, separate fields with",
           "default": null,
           "choices": null,
-          "raw": " \t-s separator\tScript-friendly output. Don't print"
+          "raw": "-s  Script-friendly output. Don't print column and record headers, separate fields with"
         },
         {
           "flags": [
-            "-h"
+            "-t"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Print human-readable names for services.",
+          "description": "Wait timeout seconds for response. Default 1.",
           "default": null,
           "choices": null,
-          "raw": " \t-h\t\tPrint human-readable names for services."
+          "raw": "-t  Wait timeout seconds for response. Default 1."
         },
         {
           "flags": [
-            "-m"
+            "-v"
           ],
-          "metavar": "retransmits",
-          "takes_value": true,
-          "description": "Number of retransmits. Default 0.",
-          "default": "0",
-          "choices": null,
-          "raw": " \t-m retransmits\tNumber of retransmits. Default 0."
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "filename",
-          "takes_value": true,
-          "description": "Take IP addresses to scan from file filename.",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose output. Print all names received from each host.",
           "default": null,
           "choices": null,
-          "raw": " \t-f filename\tTake IP addresses to scan from file filename."
-        },
-        {
-          "flags": [
-            "-s",
-            "-h"
-          ],
-          "metavar": "or options.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -s or -h options."
+          "raw": "-v  Verbose output. Print all names received from each host."
         }
       ],
       "raw_help": "root@kali:~# nbtscan --help\n \n NBTscan version 1.7.2.\n This is a free software and it comes with absolutely no warranty.\n You can use, distribute and modify it under terms of GNU GPL 2+.\n \n \n Usage:\n nbtscan [-v] [-d] [-e] [-l] [-t timeout] [-b bandwidth] [-r] [-q] [-s separator] [-m retransmits] (-f filename)|(<scan_range>) \n \t-v\t\tverbose output. Print all names received\n \t\t\tfrom each host\n \t-d\t\tdump packets. Print whole packet contents.\n \t-e\t\tFormat output in /etc/hosts format.\n \t-l\t\tFormat output in lmhosts format.\n \t\t\tCannot be used with -v, -s or -h options.\n \t-t timeout\twait timeout milliseconds for response.\n \t\t\tDefault 1000.\n \t-b bandwidth\tOutput throttling. Slow down output\n \t\t\tso that it uses no more that bandwidth bps.\n \t\t\tUseful on slow links, so that ougoing queries\n \t\t\tdon't get dropped.\n \t-r\t\tuse local port 137 for scans. Win95 boxes\n \t\t\trespond to this only.\n \t\t\tYou need to be root to use this option on Unix.\n \t-q\t\tSuppress banners and error messages,\n \t-s separator\tScript-friendly output. Don't print\n \t\t\tcolumn and record headers, separate fields with separator.\n \t-h\t\tPrint human-readable names for services.\n \t\t\tCan only be used with -v option.\n \t-m retransmits\tNumber of retransmits. Default 0.\n \t-f filename\tTake IP addresses to scan from file filename.\n \t\t\t-f - makes nbtscan take IP addresses from stdin.\n \t<scan_range>\twhat to scan. Can either be single IP\n \t\t\tlike 192.168.1.1 or\n \t\t\trange of addresses in one of two forms: \n \t\t\txxx.xxx.xxx.xxx/xx or xxx.xxx.xxx.xxx-xxx.\n Examples:\n \tnbtscan -r 192.168.1.0/24\n \t\tScans the whole C-class network.\n \tnbtscan 192.168.1.25-137\n \t\tScans a range from 192.168.1.25 to 192.168.1.137\n \tnbtscan -v -s : 192.168.1.0/24\n \t\tScans C-class network. Prints results in script-friendly\n \t\tformat using colon as field separator.\n \t\tProduces output like that:\n \t\t192.168.0.1:NT_SERVER:00U\n \t\t192.168.0.1:MY_DOMAIN:00G\n \t\t192.168.0.1:ADMINISTRATOR:03U\n \t\t192.168.0.2:OTHER_BOX:00U\n \t\t...\n \tnbtscan -f iplist\n \t\tScans IP addresses specified in file iplist.",
@@ -274,21 +262,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use nbtscan because nbtscan - scan networks for NetBIOS name information.",
+    "When you need a concrete invocation, run `nbtscan [-v] [-d] [-e] [-l] [-t timeout] [-b bandwidth] [-r] [-q]` as documented upstream for nbtscan.",
+    "When you need a concrete invocation, run `nbtscan $KFIOSA_TARGET_HOST/24` as documented upstream for nbtscan.",
+    "When you need a concrete invocation, run `nbtscan -r $KFIOSA_TARGET_HOST/24` as documented upstream for nbtscan.",
+    "When you need a concrete invocation, run `nbtscan $KFIOSA_TARGET_HOST-137` as documented upstream for nbtscan.",
+    "When chaining Kali Linux tools, pair nbtscan with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nbtscan --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/nbtscan && python3 nbtscan.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/nbtscan && python3 nbtscan.py --help",
-    "cd toolboxes/nbtscan && python3 nbtscan.py --help",
-    "cd toolboxes/nbtscan && python3 nbtscan.py --help",
-    "cd toolboxes/nbtscan && python3 nbtscan.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nbtscan --output $KFIOSA_OUTPUT_DIR/nbtscan.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nbtscan --output $KFIOSA_OUTPUT_DIR/nbtscan.log"
+    "nbtscan [-v] [-d] [-e] [-l] [-t timeout] [-b bandwidth] [-r] [-q]",
+    "nbtscan $KFIOSA_TARGET_HOST/24",
+    "nbtscan -r $KFIOSA_TARGET_HOST/24",
+    "nbtscan $KFIOSA_TARGET_HOST-137",
+    "nbtscan -v -s : $KFIOSA_TARGET_HOST/24",
+    "nbtscan -f iplist"
   ],
   "attack_surface": [
     "web"
@@ -303,5 +291,87 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-b",
+        "description": "Output throttling. Slow down output so that it uses no more that bandwidth bps. Useful",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Dump packets. Print whole packet contents. Cannot be used with -v, -s or -h options.",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Format output in /etc/hosts format.",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "Take IP addresses to scan from file \"filename\"",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Print human-readable names for services. Can only be used with -v option.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Format output in lmhosts format.",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "Number of retransmits. Default 0.",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Suppress banners and error messages.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "local port 137 for scans. Win95 boxes respond to this only. You need to be root to",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Script-friendly output. Don't print column and record headers, separate fields with",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "Wait timeout seconds for response. Default 1.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Verbose output. Print all names received from each host.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "nbtscan [-v] [-d] [-e] [-l] [-t timeout] [-b bandwidth] [-r] [-q]",
+      "nbtscan $KFIOSA_TARGET_HOST/24",
+      "nbtscan -r $KFIOSA_TARGET_HOST/24",
+      "nbtscan $KFIOSA_TARGET_HOST-137",
+      "nbtscan -v -s : $KFIOSA_TARGET_HOST/24",
+      "nbtscan -f iplist"
+    ],
+    "readme": "nbtscan - scan networks for NetBIOS name information",
+    "how_to_use": "Install/setup: sudo apt install nbtscan. Run the primary entrypoint as shown in upstream docs, e.g. `nbtscan $KFIOSA_TARGET_HOST/24`. Further invocations from upstream: `nbtscan -r $KFIOSA_TARGET_HOST/24`; `nbtscan $KFIOSA_TARGET_HOST-137`. nbtscan - scan networks for NetBIOS name information.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: nbtscan - scan networks for NetBIOS name information.",
+    "why_to_use": "Prefer this tool based on upstream description: nbtscan - scan networks for NetBIOS name information.",
+    "usage_sections": [
+      "Install with: sudo apt install nbtscan",
+      "Install with: sudo apt install nbtscan"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

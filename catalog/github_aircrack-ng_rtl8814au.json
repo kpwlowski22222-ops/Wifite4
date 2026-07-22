@@ -1,17 +1,22 @@
 {
   "category": "wireless_ble_ext",
   "command_examples": [
-    "cd toolboxes/rtl8814au && python3 rtl8814au.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
-    "cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
-    "cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
-    "cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtl8814au --output $KFIOSA_OUTPUT_DIR/rtl8814au.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtl8814au --output $KFIOSA_OUTPUT_DIR/rtl8814au.log"
+    "dpkg-buildpackage -b --no-sign",
+    "cd ..",
+    "dpkg -i rtl8814au-dkms_5.8.5.1-24835.20190115_all.deb",
+    "openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj \"/CN=Descriptive name/\"",
+    "sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 ./MOK.priv ./MOK.der $(modinfo -n rtl8812au)",
+    "sudo mokutil --import MOK.der",
+    "mokutil --test-key MOK.der",
+    "sudo sh -c \"echo '1' > /sys/module/8814au/parameters/rtw_switch_usb_mode\"",
+    "sudo sh -c \"echo '2' > /sys/module/8814au/parameters/rtw_switch_usb_mode\""
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "rtl8814au Drivers for the rtl8814au chipset wireless adapters",
+    "usage_sections": [
+      "Fix injection capabilities again",
+      "Fix USBModeSwitch function (and switch between USB2 and USB3/SuperSpeed)"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +134,17 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "dpkg-buildpackage -b --no-sign",
+      "cd ..",
+      "dpkg -i rtl8814au-dkms_5.8.5.1-24835.20190115_all.deb",
+      "openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj \"/CN=Descriptive name/\"",
+      "sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 ./MOK.priv ./MOK.der $(modinfo -n rtl8812au)",
+      "sudo mokutil --import MOK.der",
+      "mokutil --test-key MOK.der",
+      "sudo sh -c \"echo '1' > /sys/module/8814au/parameters/rtw_switch_usb_mode\"",
+      "sudo sh -c \"echo '2' > /sys/module/8814au/parameters/rtw_switch_usb_mode\""
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +270,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, rtl8814au, aircrack-ng).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/rtl8814au && python3 rtl8814au.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
-      "Step 3: cd toolboxes/rtl8814au && python3 rtl8814au.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the wireless_ble_ext category. Fits when the engagement needs: rtl8814au Drivers for the rtl8814au chipset wireless adapters.",
+    "why_to_use": "Prefer this tool based on upstream description: rtl8814au Drivers for the rtl8814au chipset wireless adapters.",
+    "how_to_use": "Install/setup: git clone https://github.com/aircrack-ng/rtl8814au.git; make install. Run the primary entrypoint as shown in upstream docs, e.g. `dpkg-buildpackage -b --no-sign`. Further invocations from upstream: `cd ..`; `dpkg -i rtl8814au-dkms_5.8.5.1-24835.20190115_all.deb`. rtl8814au Drivers for the rtl8814au chipset wireless adapters."
   },
   "full_name": "aircrack-ng/rtl8814au",
   "id": "github:aircrack-ng/rtl8814au",
@@ -282,7 +293,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``rtl8814au`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "rtl8814au Drivers for the rtl8814au chipset wireless adapters",
   "tags": [
     "offensive",
     "rtl8814au",
@@ -300,12 +311,13 @@
   },
   "url": "https://github.com/aircrack-ng/rtl8814au",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need wireless_ble_ext, use rtl8814au because rtl8814au Drivers for the rtl8814au chipset wireless adapters.",
+    "When you need a concrete invocation, run `dpkg-buildpackage -b --no-sign` as documented upstream for rtl8814au.",
+    "When you need a concrete invocation, run `cd ..` as documented upstream for rtl8814au.",
+    "When you need a concrete invocation, run `dpkg -i rtl8814au-dkms_5.8.5.1-24835.20190115_all.deb` as documented upstream for rtl8814au.",
+    "When you need a concrete invocation, run `openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj \"/CN=Descriptive name/\"` as documented upstream for rtl8814au.",
+    "When chaining wireless_ble_ext tools, pair rtl8814au with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `rtl8814au --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +336,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

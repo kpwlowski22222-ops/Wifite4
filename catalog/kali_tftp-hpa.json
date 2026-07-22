@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "tftp-hpa",
   "title": "tftp-hpa",
-  "summary": "### tftp-hpa",
+  "summary": "tftp - IPv4 Trivial File Transfer Protocol client",
   "version": "5.3+20251209-2",
   "architectures": [
     "any"
@@ -35,69 +35,25 @@
       "arguments": [
         {
           "flags": [
-            "-4"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Connect with IPv4 only, even if IPv6 support was compiled in.",
-          "default": null,
-          "choices": null,
-          "raw": "     -4     Connect with IPv4 only, even if IPv6 support was compiled in."
-        },
-        {
-          "flags": [
-            "-6"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Connect with IPv6 only, if compiled in.",
-          "default": null,
-          "choices": null,
-          "raw": "     -6     Connect with IPv6 only, if compiled in."
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": "command",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -c command"
-        },
-        {
-          "flags": [
             "-l"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Default to literal mode. Used to avoid special processing of ':' in",
-          "default": "to literal mode",
+          "description": "Default to literal mode. Used to avoid special processing of ':' in a file name.",
+          "default": null,
           "choices": null,
-          "raw": "     -l     Default to literal mode. Used to avoid special processing of ':' in"
+          "raw": "-l  Default to literal mode. Used to avoid special processing of ':' in a file name."
         },
         {
           "flags": [
-            "-m"
+            "-V"
           ],
-          "metavar": "mode",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print the version number and configuration to standard output, then exit gracefully.",
           "default": null,
           "choices": null,
-          "raw": "     -m mode"
-        },
-        {
-          "flags": [
-            "-R"
-          ],
-          "metavar": "port",
-          "takes_value": true,
-          "description": "port",
-          "default": null,
-          "choices": null,
-          "raw": "     -R port:port"
+          "raw": "-V  Print the version number and configuration to standard output, then exit gracefully."
         },
         {
           "flags": [
@@ -106,20 +62,9 @@
           "metavar": null,
           "takes_value": false,
           "description": "Default to verbose mode.",
-          "default": "to verbose mode",
-          "choices": null,
-          "raw": "     -v     Default to verbose mode."
-        },
-        {
-          "flags": [
-            "-V"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print the version number and configuration to standard output, then",
           "default": null,
           "choices": null,
-          "raw": "     -V     Print the version number and configuration to standard output, then"
+          "raw": "-v  Default to verbose mode."
         }
       ],
       "raw_help": "root@kali:~# tftp -h\n Usage: tftp [-4][-6][-v][-l][-m mode] [host [port]] [-c command]",
@@ -578,21 +523,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use tftp because tftp - IPv4 Trivial File Transfer Protocol client.",
+    "When you need a concrete invocation, run `tftp [ options... ] [host [port]] [-c command]` as documented upstream for tftp.",
+    "When chaining Kali Linux tools, pair tftp with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `tftp --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --help",
-    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --help",
-    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --help",
-    "cd toolboxes/tftp-hpa && python3 tftp-hpa.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tftp-hpa --output $KFIOSA_OUTPUT_DIR/tftp-hpa.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tftp-hpa --output $KFIOSA_OUTPUT_DIR/tftp-hpa.log"
+    "tftp [ options... ] [host [port]] [-c command]"
   ],
   "attack_surface": [
     "web"
@@ -607,5 +544,36 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-l",
+        "description": "Default to literal mode. Used to avoid special processing of ':' in a file name.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Print the version number and configuration to standard output, then exit gracefully.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Default to verbose mode.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "tftp [ options... ] [host [port]] [-c command]"
+    ],
+    "readme": "tftp - IPv4 Trivial File Transfer Protocol client",
+    "how_to_use": "Install/setup: sudo apt install tftp-hpa. Run the primary entrypoint as shown in upstream docs, e.g. `tftp [ options... ] [host [port]] [-c command]`. tftp - IPv4 Trivial File Transfer Protocol client.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: tftp - IPv4 Trivial File Transfer Protocol client.",
+    "why_to_use": "Prefer this tool based on upstream description: tftp - IPv4 Trivial File Transfer Protocol client.",
+    "usage_sections": [
+      "Install with: sudo apt install tftp-hpa"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

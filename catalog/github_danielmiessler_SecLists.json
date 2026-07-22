@@ -1,18 +1,25 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/SecLists && python3 SecLists.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/SecLists && python3 SecLists.py --help",
-    "cd toolboxes/SecLists && python3 SecLists.py --help",
-    "cd toolboxes/SecLists && python3 SecLists.py --help",
-    "cd toolboxes/SecLists && python3 SecLists.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SecLists --output $KFIOSA_OUTPUT_DIR/SecLists.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SecLists --output $KFIOSA_OUTPUT_DIR/SecLists.log"
+    "wget -c $KFIOSA_TARGET_URL -O SecList.zip && unzip SecList.zip && rm -f SecList.zip",
+    "apt -y install seclists",
+    "sudo pacman -S seclists"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "SecLists is the security tester's companion. It's a collection of multiple types of lists used during security assessments, collected in one place. List types include usernames, passwords, URLs, sensitive data patterns, fuzzing payloads, web shells, and many more. The goal is to enable a security tester to pull this repository onto a new testing box and have access to every type of list that may be needed.",
+    "usage_sections": [
+      "Assetnote Wordlists: High quality wordlists for content and subdomain discovery which are automatically updated every month.",
+      "fuzz.txt: Wordlists of \"potentially dangerous\" files.",
+      "FuzzDB: Dictionary of attack patterns and primitives for black-box application fault injection and resource discovery.",
+      "PayloadsAllTheThings: A list of useful payloads and bypass for Web Application Security and Pentest/CTF",
+      "BiblePass: Wordlists compiled from Bible verses"
+    ],
     "arguments": [
+      {
+        "name": "--offline",
+        "description": "path to sqlmap/data/xml/payloads",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +136,11 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "wget -c $KFIOSA_TARGET_URL -O SecList.zip && unzip SecList.zip && rm -f SecList.zip",
+      "apt -y install seclists",
+      "sudo pacman -S seclists"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +266,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, seclists, danielmiessler).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/SecLists && python3 SecLists.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/SecLists && python3 SecLists.py --help",
-      "Step 3: cd toolboxes/SecLists && python3 SecLists.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: SecLists is the security tester's companion. It's a collection of multiple types of lists used during security assessments, collected in one place. List types include usernames, passwords, URLs, sensitive data patterns, .",
+    "why_to_use": "Prefer this tool based on upstream description: SecLists is the security tester's companion. It's a collection of multiple types of lists used during security assessments, collected in one place. List types include usernames, passwords, URLs, sensitive data patterns, fuzzing payloads, web shells, and many more. The goal is to enable a security tester to pull this repository onto a new testing box and have access to every type of list that may b.",
+    "how_to_use": "Install/setup: git clone --depth 1 https://github.com/danielmiessler/SecLists.git; git clone https://github.com/danielmiessler/SecLists.git. Run the primary entrypoint as shown in upstream docs, e.g. `wget -c $KFIOSA_TARGET_URL -O SecList.zip && unzip SecList.zip && rm -f SecList.zip`. Further invocations from upstream: `apt -y install seclists`; `sudo pacman -S seclists`. SecLists is the security tester's companion. It's a collection of multiple types of lists used during security assessments, collected in one place. List types include usernames, passwords, URLs, sensitive data patterns, fuzzing payloads, web shells, and many more. The goal is to enable a security tester to pull this re."
   },
   "full_name": "danielmiessler/SecLists",
   "id": "github:danielmiessler/SecLists",
@@ -282,7 +289,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``SecLists`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "SecLists is the security tester's companion. It's a collection of multiple types of lists used during security assessments, collected in one place. List types include usernames, passwords, URLs, sensitive data patterns, fuzzing payloads, web shells, and many more. The goal is to enable a security tester to pull this repository onto a new testing box and have access to every type of list that may be needed.",
   "tags": [
     "offensive",
     "seclists",
@@ -300,12 +307,12 @@
   },
   "url": "https://github.com/danielmiessler/SecLists",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use SecLists because SecLists is the security tester's companion. It's a collection of multiple types of lists used during security assessments, collected in one place. List types i.",
+    "When you need a concrete invocation, run `wget -c $KFIOSA_TARGET_URL -O SecList.zip && unzip SecList.zip && rm -f SecList.zip` as documented upstream for SecLists.",
+    "When you need a concrete invocation, run `apt -y install seclists` as documented upstream for SecLists.",
+    "When you need a concrete invocation, run `sudo pacman -S seclists` as documented upstream for SecLists.",
+    "When chaining frameworks tools, pair SecLists with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `SecLists --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +331,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

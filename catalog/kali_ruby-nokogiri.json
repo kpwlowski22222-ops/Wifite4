@@ -27,7 +27,41 @@
       "path": "/usr/bin/nokogiri",
       "description": "an HTML, XML, SAX, and Reader parser",
       "usage": "nokogiri [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--rng"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Validate using this rng file",
+          "default": null,
+          "choices": null,
+          "raw": "--rng  Validate using this rng file"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show the version of the program",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Show the version of the program"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show the version of the program",
+          "default": null,
+          "choices": null,
+          "raw": "--version  Show the version of the program"
+        }
+      ]
     }
   ],
   "files": [
@@ -41,5 +75,53 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "nokogiri $KFIOSA_TARGET_URL",
+    "nokogiri ./public/index.html",
+    "curl -s $KFIOSA_TARGET_URL | nokogiri -e'p $_.css(\"h1\").length'"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use nokogiri because HTML, XML, SAX, and Reader parser for Ruby.",
+    "When the engagement is in the install phase, use nokogiri as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `nokogiri $KFIOSA_TARGET_URL` as documented upstream for nokogiri.",
+    "When you need a concrete invocation, run `nokogiri ./public/index.html` as documented upstream for nokogiri.",
+    "When you need a concrete invocation, run `curl -s $KFIOSA_TARGET_URL | nokogiri -e'p $_.css(\"h1\").length'` as documented upstream for nokogiri.",
+    "When chaining Kali Linux tools, pair nokogiri with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nokogiri --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--rng",
+        "description": "Validate using this rng file",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Show the version of the program",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Show the version of the program",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "nokogiri $KFIOSA_TARGET_URL",
+      "nokogiri ./public/index.html",
+      "curl -s $KFIOSA_TARGET_URL | nokogiri -e'p $_.css(\"h1\").length'"
+    ],
+    "readme": "nokogiri - an HTML, XML, SAX, and Reader parser",
+    "how_to_use": "Install/setup: sudo apt install ruby-nokogiri. Run the primary entrypoint as shown in upstream docs, e.g. `nokogiri $KFIOSA_TARGET_URL`. Further invocations from upstream: `nokogiri ./public/index.html`; `curl -s $KFIOSA_TARGET_URL | nokogiri -e'p $_.css(\"h1\").length'`. HTML, XML, SAX, and Reader parser for Ruby.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: HTML, XML, SAX, and Reader parser for Ruby.",
+    "why_to_use": "Prefer this tool based on upstream description: nokogiri - an HTML, XML, SAX, and Reader parser.",
+    "usage_sections": [
+      "Install with: sudo apt install ruby-nokogiri",
+      "Install with: sudo apt install ruby-nokogiri"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "rifiuti2",
   "title": "rifiuti2",
-  "summary": "### rifiuti2",
+  "summary": "rifiuti2 -- Windows recycle bin analysis tool",
   "version": "0.8.2-1",
   "architectures": [
     "any"
@@ -32,84 +32,36 @@
       "arguments": [
         {
           "flags": [
-            "-h",
             "--help"
           ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "Show help options",
+          "metavar": null,
+          "takes_value": false,
+          "description": "rifiuti [-l codepage] [-f xml | -f json | [-n] [-t delim]] [-z] [-o outfile] [--] info2_file",
           "default": null,
           "choices": null,
-          "raw": " -h, --help            Show help options"
+          "raw": "--help  rifiuti [-l codepage] [-f xml | -f json | [-n] [-t delim]] [-z] [-o outfile] [--] info2_file"
         },
         {
           "flags": [
-            "--help-all"
+            "-and-Examples"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Show all help options",
+          "description": "rifiuti2 is released under Revised BSD license.",
           "default": null,
           "choices": null,
-          "raw": " --help-all            Show all help options"
+          "raw": "-and-Examples  rifiuti2 is released under Revised BSD license."
         },
         {
           "flags": [
-            "--help-format"
+            "-o"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Show output formatting options",
+          "description": "This manpage is now obsolete. Please read corresponding usage help from GitHub Wiki instead.",
           "default": null,
           "choices": null,
-          "raw": " --help-format         Show output formatting options"
-        },
-        {
-          "flags": [
-            "-o",
-            "--output"
-          ],
-          "metavar": "- utput=FILE",
-          "takes_value": true,
-          "description": "Write output to FILE",
-          "default": null,
-          "choices": null,
-          "raw": " -o, --output=FILE     Write output to FILE"
-        },
-        {
-          "flags": [
-            "-z",
-            "--localtime"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Present deletion time in time zone of local system (default is UTC)",
-          "default": "is UTC",
-          "choices": null,
-          "raw": " -z, --localtime       Present deletion time in time zone of local system (default is UTC)"
-        },
-        {
-          "flags": [
-            "-v",
-            "--version"
-          ],
-          "metavar": "- ersion",
-          "takes_value": true,
-          "description": "Print version information and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -v, --version         Print version information and exit"
-        },
-        {
-          "flags": [
-            "--live"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Inspect live system",
-          "default": null,
-          "choices": null,
-          "raw": " --live                Inspect live system"
+          "raw": "-o  This manpage is now obsolete. Please read corresponding usage help from GitHub Wiki instead."
         }
       ],
       "raw_help": "root@kali:~# rifiuti-vista -h\n Usage:\n rifiuti-vista [OPTION…] DIR_OR_FILE\n \n Parse index files in C:\\$Recycle.bin style folder and dump recycle bin data.  Can also dump a single index file.\n \n Help Options:\n -h, --help            Show help options\n --help-all            Show all help options\n --help-format         Show output formatting options\n \n Application Options:\n -o, --output=FILE     Write output to FILE\n -z, --localtime       Present deletion time in time zone of local system (default is UTC)\n -v, --version         Print version information and exit\n --live                Inspect live system\n \n Usage help: https://github.com/abelcheung/rifiuti2/wiki/Usage-and-Examples\n Bug report: https://github.com/abelcheung/rifiuti2/issues\n More info : https://abelcheung.github.io/rifiuti2/",
@@ -305,21 +257,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use rifiuti-vista because rifiuti2 -- Windows recycle bin analysis tool.",
+    "When you need a concrete invocation, run `rifiuti-vista [-f xml | -f json | [-n] [-t delim]] [-z] [-o outfile] [--] recycle_dir_or_file` as documented upstream for rifiuti-vista.",
+    "When chaining Kali Linux tools, pair rifiuti-vista with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `rifiuti-vista --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/rifiuti2 && python3 rifiuti2.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/rifiuti2 && python3 rifiuti2.py --help",
-    "cd toolboxes/rifiuti2 && python3 rifiuti2.py --help",
-    "cd toolboxes/rifiuti2 && python3 rifiuti2.py --help",
-    "cd toolboxes/rifiuti2 && python3 rifiuti2.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rifiuti2 --output $KFIOSA_OUTPUT_DIR/rifiuti2.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rifiuti2 --output $KFIOSA_OUTPUT_DIR/rifiuti2.log"
+    "rifiuti-vista [-f xml | -f json | [-n] [-t delim]] [-z] [-o outfile] [--] recycle_dir_or_file"
   ],
   "attack_surface": [
     "web"
@@ -334,5 +278,37 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "rifiuti [-l codepage] [-f xml | -f json | [-n] [-t delim]] [-z] [-o outfile] [--] info2_file",
+        "source": "manpage"
+      },
+      {
+        "name": "-and-Examples",
+        "description": "rifiuti2 is released under Revised BSD license.",
+        "source": "manpage"
+      },
+      {
+        "name": "-o",
+        "description": "This manpage is now obsolete. Please read corresponding usage help from GitHub Wiki instead.",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "rifiuti-vista [-f xml | -f json | [-n] [-t delim]] [-z] [-o outfile] [--] recycle_dir_or_file"
+    ],
+    "readme": "rifiuti2 -- Windows recycle bin analysis tool",
+    "how_to_use": "Install/setup: sudo apt install rifiuti2. Run the primary entrypoint as shown in upstream docs, e.g. `rifiuti-vista [-f xml | -f json | [-n] [-t delim]] [-z] [-o outfile] [--] recycle_dir_or_file`. rifiuti2 -- Windows recycle bin analysis tool.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: rifiuti2 -- Windows recycle bin analysis tool.",
+    "why_to_use": "Prefer this tool based on upstream description: rifiuti2 -- Windows recycle bin analysis tool.",
+    "usage_sections": [
+      "Install with: sudo apt install rifiuti2",
+      "Install with: sudo apt install rifiuti2"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

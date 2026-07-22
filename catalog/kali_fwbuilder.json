@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "fwbuilder",
   "title": "fwbuilder",
-  "summary": "### fwbuilder",
+  "summary": "fwb_compile_all - Wrapper script that compiles policies for multiple firewall objects",
   "version": "5.3.7-8",
   "architectures": [
     "any",
@@ -41,32 +41,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "The  script processes all firewall objects in the \"/Firewalls\" sub-",
+          "description": "The script processes all firewall objects in the \"/Firewalls\" subtree.",
           "default": null,
           "choices": null,
-          "raw": "    -a     The  script processes all firewall objects in the \"/Firewalls\" sub-"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": "wdirSpecify working directory.",
-          "takes_value": true,
-          "description": "Compiler  creates  file  with  iptables",
-          "default": null,
-          "choices": null,
-          "raw": "    -d wdirSpecify working directory.  Compiler  creates  file  with  iptables"
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "FILESpecify the name of the data file to be processed.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "    -f FILESpecify the name of the data file to be processed."
+          "raw": "-a  The script processes all firewall objects in the \"/Firewalls\" subtree."
         },
         {
           "flags": [
@@ -74,10 +52,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Script  passes this option to the compiler, this makes it print di-",
+          "description": "passes this option to the compiler, this makes it print diagnostic messages in-",
           "default": null,
           "choices": null,
-          "raw": "    -v     Script  passes this option to the compiler, this makes it print di-"
+          "raw": "-v  passes this option to the compiler, this makes it print diagnostic messages in-"
         }
       ],
       "raw_help": "root@kali:~# man fwb_compile_all\n fwb_compile_all(1)              Firewall Builder             fwb_compile_all(1)\n \n NAME\n    fwb_compile_all - Wrapper script that compiles policies for multiple fire-\n    wall objects\n \n SYNOPSIS\n    fwb_compile_all -ffile.xml [-dwdir] [-av] [obj[ obj ...]]\n \n DESCRIPTION\n    fwb_compile_all  is  a  wrapper  script that compiles policies for several\n    firewall objects in one batch job. This script takes a  list  of  firewall\n    object  names on the command line (or '-a' command line option, see below)\n    and calls policy compiler for each one. The  script  correctly  determines\n    which policy compiler is needed depending on the firewall platform of each\n    object.\n \n OPTIONS\n    -a     The  script processes all firewall objects in the \"/Firewalls\" sub-\n           tree.\n \n    -d wdirSpecify working directory.  Compiler  creates  file  with  iptables\n           script in this directory.  If this parameter is missing, then ipta-\n           bles script will be placed in the current working directory.\n \n    -f FILESpecify the name of the data file to be processed.\n \n    -v     Script  passes this option to the compiler, this makes it print di-\n           agnostic messages indicating its progress.\n \n URL\n    Firewall Builder home page is located at the following URL: http://www.fw-\n    builder.org/\n \n BUGS\n    Please report bugs using bug tracking system on SourceForge:\n \n    http://sourceforge.net/tracker/?group_id=5314&atid=105314\n \n SEE ALSO\n    fwbuilder(1), fwb_ipt(1) fwb_ipf(1) fwb_pf(1) fwbedit(1), fwblookup(1)\n \n FWB                                                          fwb_compile_all(1)",
@@ -1166,21 +1144,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use fwb_compile_all because fwb_compile_all - Wrapper script that compiles policies for multiple firewall objects.",
+    "When you need a concrete invocation, run `fwb_compile_all -ffile.xml [-dwdir] [-av] [obj[ obj ...]]` as documented upstream for fwb_compile_all.",
+    "When chaining Kali Linux tools, pair fwb_compile_all with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `fwb_compile_all --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/fwbuilder && python3 fwbuilder.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/fwbuilder && python3 fwbuilder.py --help",
-    "cd toolboxes/fwbuilder && python3 fwbuilder.py --help",
-    "cd toolboxes/fwbuilder && python3 fwbuilder.py --help",
-    "cd toolboxes/fwbuilder && python3 fwbuilder.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fwbuilder --output $KFIOSA_OUTPUT_DIR/fwbuilder.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fwbuilder --output $KFIOSA_OUTPUT_DIR/fwbuilder.log"
+    "fwb_compile_all -ffile.xml [-dwdir] [-av] [obj[ obj ...]]"
   ],
   "attack_surface": [
     "web"
@@ -1195,5 +1165,32 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "The script processes all firewall objects in the \"/Firewalls\" subtree.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "passes this option to the compiler, this makes it print diagnostic messages in-",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "fwb_compile_all -ffile.xml [-dwdir] [-av] [obj[ obj ...]]"
+    ],
+    "readme": "fwb_compile_all - Wrapper script that compiles policies for multiple firewall objects",
+    "how_to_use": "Install/setup: sudo apt install fwbuilder. Run the primary entrypoint as shown in upstream docs, e.g. `fwb_compile_all -ffile.xml [-dwdir] [-av] [obj[ obj ...]]`. fwbcompileall - Wrapper script that compiles policies for multiple firewall objects.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: fwb_compile_all - Wrapper script that compiles policies for multiple firewall objects.",
+    "why_to_use": "Prefer this tool based on upstream description: fwb_compile_all - Wrapper script that compiles policies for multiple firewall objects.",
+    "usage_sections": [
+      "Install with: sudo apt install fwbuilder",
+      "Install with: sudo apt install fwbuilder"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -92,6 +92,63 @@ def test_list_devices_picks_and_stashes_mac(monkeypatch, log):
     assert any("staged for targeted" in l for l in log)
 
 
+# ---- one-click attack ----
+
+def test_one_click_requires_target(log):
+    sc = _wifi(log)
+    sc.interface = "wlan0"
+    sc.one_click_attack()
+    assert any("Select a target first" in l for l in log)
+
+
+def test_one_click_builds_wpa3_plan_and_runs_chain(log):
+    orch = FakeOrchestrator()
+    sc = _wifi(log, orchestrator=orch)
+    sc.interface = "wlan0"
+    sc.adapter_caps = {"mt7921e": True, "injection_capable": True}
+    sc.scan_networks()
+    sc.select_target_by_index(0)
+    # Force WPA3-SAE on the selected AP for the planner branch.
+    sc.selected_target["encryption"] = "WPA3-SAE"
+    sc.selected_target["pmf"] = True
+    sc.one_click_attack()
+    assert sc._last_one_click_plan is not None
+    assert sc._last_one_click_plan.get("is_sae") is True
+    assert "sae_frame_capture" in [
+        s["id"] for s in sc._last_one_click_plan.get("steps") or []
+    ]
+    assert any("One-click plan" in l for l in log)
+    assert orch.runs and orch.runs[0]["domain"] == "wifi"
+
+
+def test_primary_menu_has_one_click_first(log):
+    sc = _wifi(log)
+    labels = [item[0] for item in sc.primary_items]
+    assert any("ATTACK" in lab for lab in labels)
+    assert any(lab.startswith("▶") for lab in labels)
+
+
+def test_aio_attack_requires_target(log):
+    sc = _wifi(log, orchestrator=FakeOrchestrator())
+    sc.interface = "wlan0"
+    sc.aio_attack()
+    assert any("Select a target first" in l for l in log)
+
+
+def test_aio_attack_runs_orchestrator_with_zero_day(log):
+    orch = FakeOrchestrator()
+    sc = _wifi(log, orchestrator=orch)
+    sc.interface = "wlan0"
+    sc.scan_networks()
+    sc.select_target_by_index(0)
+    sc.selected_target["encryption"] = "WPA3-SAE"
+    sc.aio_attack()
+    assert sc.attach_zero_day is True
+    assert orch.runs and orch.runs[0]["domain"] == "wifi"
+    assert orch.runs[0]["target"].get("aio") is True
+    assert any("AIO" in l for l in log)
+
+
 # ---- attack chain ----
 
 def test_run_attack_chain_calls_orchestrator(log):

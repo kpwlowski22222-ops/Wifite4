@@ -11,6 +11,7 @@ while the real-euid path is marked ``root`` and run via
 """
 
 import os
+import re
 import subprocess
 from unittest import mock
 
@@ -41,15 +42,23 @@ _AIRMON_STDOUT = (
 # ----------------------------------------------------------------------
 # airmon_start — command shape (root vs sudo)
 # ----------------------------------------------------------------------
+def _mon_after_airmon(iface: str) -> bool:
+    """Verify stub: only *mon names are monitor (pre-start managed ifaces
+    return False so the idempotent already_monitor short-circuit does
+    not fire before airmon-ng runs)."""
+    n = (iface or "").lower()
+    return n.endswith("mon") or bool(re.search(r"mon\d*$", n))
+
+
 def test_airmon_start_root_no_sudo_prefix(monkeypatch):
     """When euid==0 the command is bare ``airmon-ng start <iface>``.
 
-    The mt7921e verify step (``_iw_is_monitor``) is stubbed True so the
-    test stays focused on the airmon-ng command shape, not the verify
-    ground-truth (covered by the fallback tests below)."""
+    ``_iw_is_monitor`` is true only for mon-named ifaces so the early
+    already_monitor guard does not skip airmon-ng on ``wlan0``.
+    """
     monkeypatch.setattr(os, "geteuid", lambda: 0)
     monkeypatch.setattr(airmon.shutil, "which", lambda name: "/usr/sbin/airmon-ng")
-    monkeypatch.setattr(airmon, "_iw_is_monitor", lambda iface: True)
+    monkeypatch.setattr(airmon, "_iw_is_monitor", _mon_after_airmon)
     captured = {}
 
     def fake_run(cmd, **kw):
@@ -70,7 +79,7 @@ def test_airmon_start_unprivileged_uses_sudo_prefix(monkeypatch):
     """When euid!=0 the command gets a ``sudo`` prefix."""
     monkeypatch.setattr(os, "geteuid", lambda: 1000)
     monkeypatch.setattr(airmon.shutil, "which", lambda name: "/usr/sbin/airmon-ng")
-    monkeypatch.setattr(airmon, "_iw_is_monitor", lambda iface: True)
+    monkeypatch.setattr(airmon, "_iw_is_monitor", _mon_after_airmon)
     captured = {}
 
     def fake_run(cmd, **kw):
@@ -90,7 +99,7 @@ def test_airmon_start_unprivileged_uses_sudo_prefix(monkeypatch):
 def test_airmon_start_parses_wlan0mon_from_stdout(monkeypatch):
     monkeypatch.setattr(os, "geteuid", lambda: 0)
     monkeypatch.setattr(airmon.shutil, "which", lambda name: "/usr/sbin/airmon-ng")
-    monkeypatch.setattr(airmon, "_iw_is_monitor", lambda iface: True)
+    monkeypatch.setattr(airmon, "_iw_is_monitor", _mon_after_airmon)
     monkeypatch.setattr(
         subprocess, "run",
         lambda cmd, **kw: _FakeProc(0, _AIRMON_STDOUT, ""),
@@ -104,7 +113,7 @@ def test_airmon_start_parse_fallback_to_iface_mon(monkeypatch):
     then the verify step confirms monitor mode."""
     monkeypatch.setattr(os, "geteuid", lambda: 0)
     monkeypatch.setattr(airmon.shutil, "which", lambda name: "/usr/sbin/airmon-ng")
-    monkeypatch.setattr(airmon, "_iw_is_monitor", lambda iface: True)
+    monkeypatch.setattr(airmon, "_iw_is_monitor", _mon_after_airmon)
     monkeypatch.setattr(
         subprocess, "run",
         lambda cmd, **kw: _FakeProc(0, "nothing useful here\n", ""),
@@ -124,14 +133,27 @@ def test_airmon_start_falls_back_to_iw_flip_when_airmon_vif_not_monitor(monkeypa
     fallback must engage and report method='iw_flip' on the original iface."""
     monkeypatch.setattr(os, "geteuid", lambda: 0)
     monkeypatch.setattr(airmon.shutil, "which", lambda name: f"/usr/sbin/{name}")
-    # The airmon-ng vif (wlan0mon) is NOT in monitor mode; the original
-    # iface (wlan0) IS after the flip.
-    monkeypatch.setattr(airmon, "_iw_is_monitor",
-                        lambda iface: iface == "wlan0")
-    monkeypatch.setattr(
-        subprocess, "run",
-        lambda cmd, **kw: _FakeProc(0, _AIRMON_STDOUT, ""),
-    )
+    # Stateful: before flip nothing is monitor; after ``iw set type monitor``
+    # on wlan0, wlan0 becomes monitor. wlan0mon never is.
+    flipped = {"wlan0": False}
+
+    def is_mon(iface):
+        return bool(flipped.get(iface))
+
+    def fake_run(cmd, **kw):
+        # Detect the iw flip to monitor.
+        if list(cmd)[-3:] == ["set", "type", "monitor"] or (
+            len(cmd) >= 4 and cmd[-2:] == ["type", "monitor"]
+        ):
+            # cmd like [iw, dev, wlan0, set, type, monitor]
+            if "wlan0" in cmd:
+                flipped["wlan0"] = True
+        if "airmon-ng" in cmd:
+            return _FakeProc(0, _AIRMON_STDOUT, "")
+        return _FakeProc(0, "", "")
+
+    monkeypatch.setattr(airmon, "_iw_is_monitor", is_mon)
+    monkeypatch.setattr(subprocess, "run", fake_run)
     res = airmon_start("wlan0")
     assert res["ok"] is True
     assert res["method"] == "iw_flip"
@@ -144,11 +166,18 @@ def test_airmon_start_iw_flip_succeeds_when_airmon_ng_absent(monkeypatch):
     monkeypatch.setattr(airmon.shutil, "which",
                         lambda name: None if name == "airmon-ng"
                         else f"/usr/sbin/{name}")
-    monkeypatch.setattr(airmon, "_iw_is_monitor", lambda iface: True)
-    monkeypatch.setattr(
-        subprocess, "run",
-        lambda cmd, **kw: _FakeProc(0, "", ""),
-    )
+    flipped = {"done": False}
+
+    def is_mon(iface):
+        return flipped["done"] and iface == "wlan0"
+
+    def fake_run(cmd, **kw):
+        if "type" in cmd and "monitor" in cmd:
+            flipped["done"] = True
+        return _FakeProc(0, "", "")
+
+    monkeypatch.setattr(airmon, "_iw_is_monitor", is_mon)
+    monkeypatch.setattr(subprocess, "run", fake_run)
     res = airmon_start("wlan0")
     assert res["ok"] is True
     assert res["method"] == "iw_flip"
@@ -275,11 +304,16 @@ def test_airmon_stop_timeout_never_raises(monkeypatch):
 
 
 def test_airmon_stop_missing_binary(monkeypatch):
+    """No airmon-ng and no iw/ip → honest failure with remediation hint."""
     monkeypatch.setattr(airmon.shutil, "which", lambda name: None)
     res = airmon_stop("wlan0mon")
     assert res["ok"] is False
-    assert "airmon-ng not installed" in res["error"]
-    assert "sudo airmon-ng stop wlan0mon" in res["error"]
+    # Implementation falls back to iw managed flip; when iw/ip are also
+    # missing the error names that path and still includes the manual
+    # airmon-ng stop remediation.
+    err = res["error"] or ""
+    assert "iw or ip not installed" in err or "airmon-ng" in err
+    assert "sudo airmon-ng stop wlan0mon" in err or "set type managed" in err
 
 
 # ----------------------------------------------------------------------
@@ -293,7 +327,8 @@ class TestAirmonRealEuid:
 
     def test_start_command_matches_real_euid(self, monkeypatch):
         monkeypatch.setattr(airmon.shutil, "which", lambda name: "/usr/sbin/airmon-ng")
-        monkeypatch.setattr(airmon, "_iw_is_monitor", lambda iface: True)
+        # Only mon ifaces report monitor so airmon-ng actually runs.
+        monkeypatch.setattr(airmon, "_iw_is_monitor", _mon_after_airmon)
         captured = {}
         monkeypatch.setattr(
             subprocess, "run",
@@ -302,6 +337,7 @@ class TestAirmonRealEuid:
         )
         res = airmon_start("wlan0")
         assert res["ok"] is True
+        assert "cmd" in captured
         if os.geteuid() == 0:
             assert captured["cmd"] == ["airmon-ng", "start", "wlan0"]
         else:

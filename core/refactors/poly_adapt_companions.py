@@ -270,7 +270,12 @@ def adapt_attack_handshake_strategy_picker(args: Dict[str, Any]) -> Dict[str, An
     step = _pick_step("adapt_attack_handshake_strategy_picker")
     wpa_version = (args or {}).get("wpa_version", "wpa2")
     if wpa_version == "wpa3":
-        pick, rationale = "sae_handshake_capture", "WPA3 → SAE capture + dragonblood"
+        # Honest: SAE auth-frame capture + transition check; not a free
+        # offline crack. Dragonblood is research/vendor-specific.
+        pick, rationale = (
+            "sae_handshake_capture",
+            "WPA3 → SAE commit/confirm capture + transition-mode check",
+        )
     elif wpa_version == "wpa2_enterprise":
         pick, rationale = "eap_tls_capture", "WPA2-Enterprise → EAP-TLS capture"
     else:
@@ -279,6 +284,208 @@ def adapt_attack_handshake_strategy_picker(args: Dict[str, Any]) -> Dict[str, An
         "pick": pick,
         "rationale": rationale,
         "model": "target-adaptive (heuristic)",
+    })
+
+
+def adapt_wifi_adapter_mode_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick how to engage / leave monitor mode for the selected adapter.
+
+    Polymorphic paths (all real):
+      - already_monitor — no-op select
+      - iw_flip — in-place type monitor (mt7921e preferred)
+      - airmon_start — classic mon vif
+      - airmon_stop / iw_managed — leave monitor
+    """
+    step = _pick_step("adapt_wifi_adapter_mode_picker")
+    a = args or {}
+    name = str(a.get("iface") or a.get("name") or "")
+    mode = str(a.get("mode") or "").lower()
+    want = str(a.get("want") or "monitor").lower()
+    driver = str(a.get("driver") or "").lower()
+    mon_name = name.endswith("mon") or bool(
+        __import__("re").search(r"mon\d*$", name)
+    )
+    if want == "monitor":
+        if mode == "monitor":
+            pick, rationale = "already_monitor", "iface already type monitor"
+        elif mon_name or "mt7921" in driver or "mt76" in driver:
+            pick, rationale = "iw_flip", "mt76/mon-named → in-place iw flip"
+        else:
+            pick, rationale = "airmon_start", "managed → airmon-ng mon vif"
+    else:
+        if mode != "monitor":
+            pick, rationale = "already_managed", "iface not in monitor"
+        elif mon_name:
+            pick, rationale = "airmon_stop", "mon-named → airmon-ng stop"
+        else:
+            pick, rationale = "iw_managed", "in-place type managed"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "iface": name,
+        "mode": mode,
+        "want": want,
+        "model": "target-adaptive (adapter state)",
+    })
+
+
+def adapt_ble_adapter_power_picker(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Pick BLE adapter power / unblock strategy."""
+    step = _pick_step("adapt_ble_adapter_power_picker")
+    a = args or {}
+    powered = str(a.get("powered") or "no").lower() in ("yes", "true", "1", "on")
+    note = str(a.get("note") or "").lower()
+    if powered:
+        pick, rationale = "noop", "already powered"
+    elif "block" in note or "rfkill" in note:
+        pick, rationale = "rfkill_unblock_then_power", "soft/hard blocked"
+    else:
+        pick, rationale = "bluetoothctl_power_on", "powered off"
+    return _ok(step, {
+        "pick": pick,
+        "rationale": rationale,
+        "model": "target-adaptive (BLE power)",
+    })
+
+
+def adapt_wpa3_sae_one_click_plan(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Build an honest one-click WiFi attack plan for the selected AP.
+
+    Used by the TUI one-click button. Never invents cracked PSKs or
+    fictional tools (no "fasthandshake", no "Dragonfly4/P-512"). Plans
+    map onto real KFIOSA runners: scan/recon → SAE/WPA2 path → crack
+    only when a hash exists → optional evil-twin (ACCEPT-gated).
+    """
+    step = _pick_step("adapt_wpa3_sae_one_click_plan")
+    a = args or {}
+    enc = str(a.get("encryption") or a.get("enc") or "").upper()
+    pmf = bool(a.get("pmf") or a.get("pmf_supported"))
+    transition = bool(a.get("transition") or a.get("transition_mode")
+                      or ("WPA2" in enc and "WPA3" in enc)
+                      or "SAE" in enc and "PSK" in enc and "WPA2" in enc)
+    is_sae = ("WPA3" in enc or "SAE" in enc)
+    is_wpa2 = ("WPA2" in enc or enc in ("WPA", "WPA2-PSK", "RSN"))
+    injection = bool(a.get("injection_capable")
+                     or (a.get("adapter_caps") or {}).get("injection_capable"))
+    mt = bool(a.get("mt7921e")
+              or (a.get("adapter_caps") or {}).get("mt7921e"))
+    channel = a.get("channel")
+    bssid = a.get("bssid") or ""
+    ssid = a.get("ssid") or "<hidden>"
+
+    steps: List[Dict[str, Any]] = []
+    notes: List[str] = []
+
+    steps.append({
+        "id": "recon_beacon_profile",
+        "action": "beacon_parse",
+        "why": "Classify AKM (SAE/PSK), PMF required/capable, transition RSN IE",
+        "tools": ["airodump-ng", "tshark", "iw"],
+    })
+    steps.append({
+        "id": "recon_clients",
+        "action": "client_enum",
+        "why": "Need a client for deauth-driven reauth or SAE observation",
+        "tools": ["airodump-ng"],
+    })
+
+    if is_sae and transition:
+        steps.append({
+            "id": "sae_transition_check",
+            "action": "sae_downgrade_probe",
+            "why": "WPA3+WPA2 transition APs may still expose WPA2-PSK 4-way",
+            "tools": ["hostapd-mana", "aircrack-ng", "hcxdumptool"],
+            "gated": True,
+        })
+        steps.append({
+            "id": "wpa2_4way_or_pmkid",
+            "action": "handshake_or_pmkid",
+            "why": "If transition allows WPA2, capture EAPOL/PMKID for hashcat 22000",
+            "tools": ["hcxdumptool", "hcxpcapngtool", "hashcat"],
+        })
+        notes.append(
+            "Transition mode is the most practical lab path: treat as WPA2 "
+            "once a 4-way/PMKID is captured. SAE-only remains hard."
+        )
+    elif is_sae:
+        steps.append({
+            "id": "sae_frame_capture",
+            "action": "sae_commit_confirm_capture",
+            "why": "Record SAE auth frames (algo=3) on channel for analysis",
+            "tools": ["airodump-ng", "tshark", "hcxdumptool"],
+        })
+        steps.append({
+            "id": "online_dict_sae",
+            "action": "wpa_supplicant_dict_probe",
+            "why": (
+                "WPA3-SAE resists classic offline dictionary; weak PSKs are "
+                "tested online (slow, rate-limited) or via research tooling"
+            ),
+            "tools": ["wpa_supplicant", "hashcat"],
+            "gated": True,
+        })
+        if not pmf:
+            steps.append({
+                "id": "deauth_reauth",
+                "action": "directed_deauth",
+                "why": "Force client reauth to observe SAE exchange (if PMF off)",
+                "tools": ["aireplay-ng", "mt7921e inject_raw_frame"],
+                "gated": True,
+            })
+        notes.extend([
+            "SAE uses Dragonfly (typically ECC group 19 / P-256), not "
+            "'Dragonfly4' or P-512.",
+            "Classic WPA2 PMKID clientless attack does NOT transfer 1:1 to "
+            "SAE-only networks.",
+            "Strong random passphrases make dictionary attacks infeasible.",
+        ])
+    elif is_wpa2:
+        steps.append({
+            "id": "pmkid_or_4way",
+            "action": "handshake_or_pmkid",
+            "why": "WPA2-PSK: PMKID and/or 4-way → hashcat -m 22000",
+            "tools": ["hcxdumptool", "aireplay-ng", "hashcat"],
+        })
+    else:
+        steps.append({
+            "id": "open_or_wep_path",
+            "action": "profile_and_branch",
+            "why": f"Encryption '{enc or 'unknown'}' — profile then branch",
+            "tools": ["airodump-ng"],
+        })
+
+    if injection:
+        steps.append({
+            "id": "injection_verify",
+            "action": "aireplay_test",
+            "why": "Confirm runtime injection before deauth/evil-twin",
+            "tools": ["aireplay-ng --test"],
+        })
+    if mt:
+        notes.append(
+            "Adapter is mt7921e (MediaTek MT792x): monitor + injection supported "
+            "via mac80211/mt76 when in monitor mode."
+        )
+
+    primary = steps[2]["id"] if len(steps) > 2 else steps[0]["id"]
+    return _ok(step, {
+        "pick": primary,
+        "rationale": f"one-click plan for {ssid} ({bssid}) enc={enc or '?'}",
+        "model": "target-adaptive (honest WPA3/WPA2)",
+        "ssid": ssid,
+        "bssid": bssid,
+        "channel": channel,
+        "encryption": enc,
+        "is_sae": is_sae,
+        "transition": transition,
+        "pmf": pmf,
+        "steps": steps,
+        "notes": notes,
+        "myths_rejected": [
+            "Dragonfly4 / P-512 (fictional naming)",
+            "PMKID collision as generic WPA3 free crack",
+            "fasthandshake as a standard tool",
+        ],
     })
 
 
@@ -1746,6 +1953,9 @@ POLY_ADAPT_REGISTRY: Dict[str, Any] = {
     "adapt_ot_protocol_picker": adapt_ot_protocol_picker,
     "adapt_re_tool_picker": adapt_re_tool_picker,
     "adapt_attack_chain_order_picker": adapt_attack_chain_order_picker,
+    "adapt_wpa3_sae_one_click_plan": adapt_wpa3_sae_one_click_plan,
+    "adapt_wifi_adapter_mode_picker": adapt_wifi_adapter_mode_picker,
+    "adapt_ble_adapter_power_picker": adapt_ble_adapter_power_picker,
 }
 
 
@@ -1780,6 +1990,9 @@ POLY_ADAPT_RISK: Dict[str, str] = {
     **{k: "intrusive" for k in [
         "adapt_attack_deauth_strategy_picker",
         "adapt_attack_handshake_strategy_picker",
+        "adapt_wpa3_sae_one_click_plan",
+        "adapt_wifi_adapter_mode_picker",
+        "adapt_ble_adapter_power_picker",
         "adapt_attack_pmkid_target_picker",
         "adapt_attack_wps_strategy_picker",
         "adapt_attack_evil_twin_strategy_picker",
@@ -1804,6 +2017,37 @@ POLY_ADAPT_RISK: Dict[str, str] = {
         "adapt_cloud_provider_picker", "adapt_mobile_target_picker",
         "adapt_ot_protocol_picker", "adapt_re_tool_picker",
         "adapt_attack_chain_order_picker",
+        "adapt_wpa3_sae_one_click_plan",
+        "adapt_wifi_adapter_mode_picker",
+        "adapt_ble_adapter_power_picker",
+        # Phase 4 T20 expansion (v2) — wifi/BLE/OSINT/forensics/anti-forensic/post-exploit
+        "poly_5ghz_channel_dwell_grammar", "poly_6ghz_wifi6e_grammar",
+        "poly_evil_twin_captive_portal_grammar",
+        "poly_passive_pcap_export_grammar", "poly_ap_fingerprint_grammar",
+        "poly_client_probe_correlator_grammar",
+        "poly_ble_pairing_just_works_bypass_grammar",
+        "poly_ble_advertising_malicious_data_grammar",
+        "poly_ble_service_discovery_grammar",
+        "poly_ble_characteristic_descriptor_grammar",
+        "poly_ble_pairing_event_capture_grammar",
+        "poly_wayback_machine_query_grammar",
+        "poly_subdomain_brute_force_wordlist_grammar",
+        "poly_email_permutation_grammar",
+        "poly_username_platform_walker_grammar",
+        "poly_phone_carrier_lookup_grammar",
+        "poly_timeline_plaso_filter_grammar",
+        "poly_log_wiper_strategy_grammar", "poly_timestomp_strategy_grammar",
+        "poly_secure_erase_strategy_grammar",
+        "adapt_wifi_5ghz_vs_24ghz_picker",
+        "adapt_post_exploit_target_os_picker",
+        "adapt_anti_forensic_log_target_picker",
+        "adapt_chain_phase_picker",
+        "adapt_post_exploit_persistence_picker",
+        "adapt_post_exploit_priv_picker",
+        "adapt_osint_query_dialect_picker",
+        "adapt_forensic_image_format_picker",
+        "adapt_ble_attack_geometry_picker",
+        "adapt_chain_planner_step_picker",
     ]},
 }
 
@@ -1955,6 +2199,83 @@ POLY_ADAPT_DESCRIPTIONS: Dict[str, str] = {
         "Pick a reverse-engineering tool from binary kind (apk/ipa/pe).",
     "adapt_attack_chain_order_picker":
         "Pick the next chain step from attack_surface + phase_hint.",
+    "adapt_wpa3_sae_one_click_plan":
+        "Honest one-click WiFi plan for selected AP (WPA3-SAE / WPA2 / transition).",
+    "adapt_wifi_adapter_mode_picker":
+        "Pick monitor engage/leave path (already/airmon/iw_flip) for adapter state.",
+    "adapt_ble_adapter_power_picker":
+        "Pick BLE power-on path (noop / bluetoothctl / rfkill unblock).",
+    # Phase 4 T20 expansion (v2) — wifi/BLE/OSINT/forensics/anti-forensic/post-exploit
+    "poly_wpa3_sae_grammar":
+        "Pick a WPA3-SAE attack variant (commit-flood, timing, etc).",
+    "poly_eapol_key_replay_grammar":
+        "Pick an EAPOL-Key replay counter-mutation strategy.",
+    "poly_5ghz_channel_dwell_grammar":
+        "Pick a 5 GHz channel-dwell sequence (uniform / DFS-aware / UNII-4).",
+    "poly_6ghz_wifi6e_grammar":
+        "Pick a 6 GHz / WiFi 6E probe or association pattern.",
+    "poly_evil_twin_captive_portal_grammar":
+        "Pick an Evil-Twin captive portal HTML payload template.",
+    "poly_passive_pcap_export_grammar":
+        "Pick a PCAP filter chain for offline analysis.",
+    "poly_ap_fingerprint_grammar":
+        "Pick an AP-fingerprinting variant (OUI / IE tags / radiotap).",
+    "poly_client_probe_correlator_grammar":
+        "Pick a client-probe correlation strategy.",
+    "poly_ble_ll_fragment_grammar":
+        "Pick a BLE link-layer fragment-reassembly sequence.",
+    "poly_gatt_write_payload_grammar":
+        "Pick a GATT-write payload template (with/without response / long).",
+    "poly_ble_pairing_just_works_bypass_grammar":
+        "Pick a Just Works / OOB pairing bypass variant.",
+    "poly_ble_advertising_malicious_data_grammar":
+        "Pick a BLE advertising malicious data payload template.",
+    "poly_ble_service_discovery_grammar":
+        "Pick a BLE primary/secondary service walk pattern.",
+    "poly_ble_characteristic_descriptor_grammar":
+        "Pick a BLE characteristic descriptor walk pattern.",
+    "poly_ble_pairing_event_capture_grammar":
+        "Pick a Wireshark filter for BLE pairing events.",
+    "poly_wayback_machine_query_grammar":
+        "Pick a Wayback Machine CDX API query pattern.",
+    "poly_subdomain_brute_force_wordlist_grammar":
+        "Pick a subdomain brute-force wordlist source + mutation.",
+    "poly_email_permutation_grammar":
+        "Pick an email-permutation pattern (first.last, firstlast, flast).",
+    "poly_username_platform_walker_grammar":
+        "Pick a username platform walker (Sherlock / Maigret / Holehe).",
+    "poly_phone_carrier_lookup_grammar":
+        "Pick a phone carrier classification (BIP / MVNO / VoIP).",
+    "poly_disk_carve_signature_grammar":
+        "Pick a file-carving signature (header / footer / magic / NTFS).",
+    "poly_timeline_plaso_filter_grammar":
+        "Pick a Plaso psort filter chain for timeline analysis.",
+    "poly_log_wiper_strategy_grammar":
+        "Pick a log-wiper strategy (journal / wevtutil / logrotate).",
+    "poly_timestomp_strategy_grammar":
+        "Pick a timestomp strategy (utime / debugfs / SetFileTime).",
+    "poly_secure_erase_strategy_grammar":
+        "Pick a secure-erase strategy (shred / hdparm / nvme format).",
+    "adapt_wifi_5ghz_vs_24ghz_picker":
+        "Pick the 2.4 vs 5 GHz band from the target's frequency.",
+    "adapt_post_exploit_target_os_picker":
+        "Pick post-exploit strategy from target OS (windows/linux/mac/android/ios).",
+    "adapt_anti_forensic_log_target_picker":
+        "Pick the log to wipe from the target OS (wevtutil / journalctl / unified).",
+    "adapt_chain_phase_picker":
+        "Pick the next chain phase from current attack_surface.",
+    "adapt_post_exploit_persistence_picker":
+        "Pick a persistence mechanism from target OS + userland.",
+    "adapt_post_exploit_priv_picker":
+        "Pick user-mode vs kernel-mode payload from operator auth level.",
+    "adapt_osint_query_dialect_picker":
+        "Pick OSINT query dialect (boolean / natural / cypher).",
+    "adapt_forensic_image_format_picker":
+        "Pick a forensic image format (e01 / raw / aff4 / vhd).",
+    "adapt_ble_attack_geometry_picker":
+        "Pick BLE attack geometry (USB external / builtin) from operator adapter.",
+    "adapt_chain_planner_step_picker":
+        "Pick the next chain step from the current state (init/recon/.../exfil).",
 }
 
 
@@ -2015,6 +2336,18 @@ def build_poly_adapt_prompt_stanza() -> str:
         "'polymorphic (heuristic)' or 'target-adaptive (heuristic)'.",
     ]
     return "\n".join(lines)
+
+
+# Phase 4 T20: auto-install the v2 expansions (>=30 new methods) so
+# production code paths that import POLY_ADAPT_REGISTRY see the
+# expanded set without an explicit install() call.  The v2 module
+# is imported lazily and is a no-op if it's already been merged.
+try:
+    from core.refactors import poly_adapt_v2_phase4 as _v2
+    _v2_install = _v2.install()
+except Exception:  # noqa: BLE001
+    # Never let the v2 expansion break the parent module's import.
+    _v2_install = None
 
 
 __all__ = [

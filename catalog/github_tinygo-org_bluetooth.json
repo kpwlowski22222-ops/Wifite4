@@ -8,8 +8,13 @@
   "url": "https://github.com/tinygo-org/bluetooth",
   "summary": "[![Go Bluetooth](./images/gobluetooth.png)](https://tinygo.org/bluetooth)",
   "documentation": {
-    "readme": "[![Go Bluetooth](./images/gobluetooth.png)](https://tinygo.org/bluetooth)",
-    "usage_sections": [],
+    "readme": "Go Bluetooth is a cross-platform package for using Bluetooth Low Energy hardware from the Go programming language.",
+    "usage_sections": [
+      "Installation: You need to have a fairly recent version of BlueZ, for example v5.48 is the latest released version for Ubuntu/Debian. sudo apt update sudo apt install bluez Once you have done this, you can obtain the Go Bluetooth package using Git: git clone https://github.com/tinygo-org/blueto",
+      "Installation: In order to compile Go Bluetooth code targeting macOS, you must do so on macOS itself. In other words, we do not currently have cross compiler support. You must also have XCode tools installed: xcode-select --install Once you have done this, you can obtain the Go Bluetooth packag",
+      "Installation: Only the Go compiler itself is needed to compile Go Bluetooth code targeting Windows. You can obtain the Go Bluetooth package using Git: git clone https://github.com/tinygo-org/bluetooth.git",
+      "Installation: You must install TinyGo to be able to compile bare metal code using Go Bluetooth. Follow the instructions for your operating system at https://tinygo.org/getting-started/ Once you have installed TinyGo, you can install the Go Bluetooth package by running: git clone https://github"
+    ],
     "arguments": [
       {
         "name": "--eraseall",
@@ -293,13 +298,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bluetooth && python3 bluetooth.py --help",
-      "Step 2: cd toolboxes/bluetooth && cat README.md",
-      "Step 3: cd toolboxes/bluetooth && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: [![Go Bluetooth](./images/gobluetooth.png)](https://tinygo.org/bluetooth).",
+    "why_to_use": "Prefer this tool based on upstream description: Go Bluetooth is a cross-platform package for using Bluetooth Low Energy hardware from the Go programming language.",
+    "how_to_use": "Install/setup: git clone https://github.com/tinygo-org/bluetooth.git; git clone https://github.com/tinygo-org/bluetooth.git."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -330,19 +331,11 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use bluetooth because [![Go Bluetooth](./images/gobluetooth.png)](https://tinygo.org/bluetooth).",
+    "When chaining Bluetooth tools, pair bluetooth with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bluetooth --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
-  "command_examples": [
-    "cd toolboxes/bluetooth && python3 bluetooth.py --help",
-    "cd toolboxes/bluetooth && cat README.md",
-    "cd toolboxes/bluetooth && ls -la",
-    "cd toolboxes/bluetooth && python3 bluetooth.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluetooth --output $KFIOSA_OUTPUT_DIR/bluetooth.log"
-  ],
+  "command_examples": [],
   "attack_surface": [
     "ble_4_x",
     "ble_5_x",
@@ -364,5 +357,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "go"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

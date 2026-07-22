@@ -83,3 +83,86 @@ def test_has_pending_reflects_state():
     time.sleep(0.1)
     assert t.has_pending() is True
     th.join(timeout=3)
+
+
+def test_respond_auto_latches_and_accepts():
+    """Operator presses 'a': this prompt ACCEPTs and further confirms
+    auto-return True until clear_auto()."""
+    t = TuiConfirmFn()
+    out = {}
+    th = threading.Thread(
+        target=lambda: out.__setitem__("v", t.confirm("first?", timeout=2.0))
+    )
+    th.start()
+    time.sleep(0.15)
+    t.poll(None, [])
+    assert t.current_prompt == "first?"
+    t.respond_auto()
+    th.join(timeout=3)
+    assert out["v"] is True
+    assert t.auto_until_access is True
+
+    # Subsequent confirms must not block / enqueue.
+    assert t.confirm("second?", timeout=0.5) is True
+    assert t.confirm("third?", timeout=0.5) is True
+    assert t.pending.empty()
+
+
+def test_clear_auto_restores_prompting():
+    t = TuiConfirmFn()
+    t.auto_until_access = True
+    assert t.clear_auto() is True
+    assert t.auto_until_access is False
+    assert t.clear_auto() is False  # already clear
+
+    out = {}
+    th = threading.Thread(
+        target=lambda: out.__setitem__("v", t.confirm("again?", timeout=2.0))
+    )
+    th.start()
+    time.sleep(0.15)
+    t.poll(None, [])
+    assert t.current_prompt == "again?"
+    t.respond(False)
+    th.join(timeout=3)
+    assert out["v"] is False
+
+
+def test_stale_respond_auto_dropped():
+    t = TuiConfirmFn()
+    t.respond_auto()  # no active prompt — must not latch silently via queue
+    # respond_auto with no _current does not set the flag itself
+    # (flag is set inside confirm() when it receives "auto").
+    assert t.auto_until_access is False
+
+
+def test_orchestrator_auto_until_access_clears_on_creds():
+    """After 'a', chain steps auto-run; first access signal clears the latch."""
+    from core.orchestrator.autonomous_orchestrator import AutonomousOrchestrator
+
+    t = TuiConfirmFn()
+    events = []
+    o = AutonomousOrchestrator(
+        confirm_fn=t.confirm,
+        on_event=events.append,
+    )
+    t.auto_until_access = True
+    report = {
+        "executed": [],
+        "skipped": [],
+        "optional_declined": [],
+        "access": {"achieved": False, "creds": None, "session_id": None},
+        "auto_until_access": False,
+    }
+    # Simulate a successful crack result that carries creds.
+    entry = {
+        "desc": "crack",
+        "kind": "ai",
+        "action": "crack",
+        "result": {"ok": True, "creds": "hunter2", "psk": "hunter2"},
+    }
+    o._record_access(report, entry)
+    assert report["access"]["achieved"] is True
+    assert report["access"]["creds"] == "hunter2"
+    assert t.auto_until_access is False
+    assert any("AUTO→access cleared" in e for e in events)

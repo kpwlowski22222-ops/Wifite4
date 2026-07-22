@@ -27,7 +27,96 @@
       "path": "/usr/bin/foremost",
       "description": "Recover files using their headers, footers, and data structures",
       "usage": "foremost [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enables write all headers, perform no error detection in terms of corrupted files.",
+          "default": null,
+          "choices": null,
+          "raw": "-a  Enables write all headers, perform no error detection in terms of corrupted files."
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Turn on indirect block detection, this works well for Unix file systems.",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Turn on indirect block detection, this works well for Unix file systems."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show a help screen and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Show a help screen and exit."
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enables quick mode. In quick mode, only the start of each sector is searched for match-",
+          "default": null,
+          "choices": null,
+          "raw": "-q  Enables quick mode. In quick mode, only the start of each sector is searched for match-"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Time stamp the output directory so you don't have to delete the output dir when running",
+          "default": null,
+          "choices": null,
+          "raw": "-T  Time stamp the output directory so you don't have to delete the output dir when running"
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show copyright information and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-V  Show copyright information and exit."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verbose mode. This causes more information regarding the current state of the",
+          "default": null,
+          "choices": null,
+          "raw": "-v  verbose mode. This causes more information regarding the current state of the"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enables write audit only mode. No files will be extracted.",
+          "default": null,
+          "choices": null,
+          "raw": "-w  Enables write audit only mode. No files will be extracted."
+        }
+      ]
     }
   ],
   "files": [
@@ -41,5 +130,87 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "foremost  [-h]  [-V]  [-d]  [-vqwQT]  [-b  <blocksize>]  [-o <dir>] [-t <type>] [-s <num>] [-i",
+    "foremost -s 100 -t jpg -i image.dd",
+    "foremost -av image.dd",
+    "foremost -t all -i image.dd",
+    "foremost -t gif,pdf -i image.dd",
+    "foremost -vd -t ole,jpeg -i image.dd",
+    "foremost image.dd"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use foremost because forensic program to recover lost files.",
+    "When the engagement is in the install phase, use foremost as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `foremost  [-h]  [-V]  [-d]  [-vqwQT]  [-b  <blocksize>]  [-o <dir>] [-t <type>] [-s <num>] [-i` as documented upstream for foremost.",
+    "When you need a concrete invocation, run `foremost -s 100 -t jpg -i image.dd` as documented upstream for foremost.",
+    "When you need a concrete invocation, run `foremost -av image.dd` as documented upstream for foremost.",
+    "When you need a concrete invocation, run `foremost -t all -i image.dd` as documented upstream for foremost.",
+    "When chaining Kali Linux tools, pair foremost with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `foremost --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "Enables write all headers, perform no error detection in terms of corrupted files.",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Turn on indirect block detection, this works well for Unix file systems.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show a help screen and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Enables quick mode. In quick mode, only the start of each sector is searched for match-",
+        "source": "docs"
+      },
+      {
+        "name": "-T",
+        "description": "Time stamp the output directory so you don't have to delete the output dir when running",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Show copyright information and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "verbose mode. This causes more information regarding the current state of the",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "Enables write audit only mode. No files will be extracted.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "foremost  [-h]  [-V]  [-d]  [-vqwQT]  [-b  <blocksize>]  [-o <dir>] [-t <type>] [-s <num>] [-i",
+      "foremost -s 100 -t jpg -i image.dd",
+      "foremost -av image.dd",
+      "foremost -t all -i image.dd",
+      "foremost -t gif,pdf -i image.dd",
+      "foremost -vd -t ole,jpeg -i image.dd",
+      "foremost image.dd"
+    ],
+    "readme": "foremost - Recover files using their headers, footers, and data structures",
+    "how_to_use": "Install/setup: sudo apt install foremost (1.5.7-11). Run the primary entrypoint as shown in upstream docs, e.g. `foremost  [-h]  [-V]  [-d]  [-vqwQT]  [-b  <blocksize>]  [-o <dir>] [-t <type>] [-s <num>] [-i`. Further invocations from upstream: `foremost -s 100 -t jpg -i image.dd`; `foremost -av image.dd`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: forensic program to recover lost files.",
+    "why_to_use": "Prefer this tool based on upstream description: foremost - Recover files using their headers, footers, and data structures.",
+    "usage_sections": [
+      "Install with: sudo apt install foremost (1.5.7-11)",
+      "Install with: sudo apt install foremost (1.5.7-11)"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

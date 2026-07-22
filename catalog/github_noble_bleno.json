@@ -8,8 +8,14 @@
   "url": "https://github.com/noble/bleno",
   "summary": "[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sandeepmistry/bleno?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)",
   "documentation": {
-    "readme": "[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sandeepmistry/bleno?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)",
-    "usage_sections": [],
+    "readme": "A Node.js module for implementing BLE (Bluetooth Low Energy) peripherals.",
+    "usage_sections": [
+      "Kernel version 3.6 or above",
+      "disabled, if BlueZ 5.14 or later is installed. Use to power Bluetooth adapter up after stopping or disabling .",
+      "install Node.js using the NodeSource package",
+      "node-gyp requirements for Windows",
+      "Visual Studio (Express)"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +199,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "Disable automatic loading of the default Bluetooth stack by putting [no-ubt.conf]($KFIOSA_TARGET_URL into",
+      "Set the primary services available on the peripheral.",
+      "sudo BLENO_HCI_DEVICE_ID=1 node <your file>.js",
+      "sudo BLENO_DEVICE_NAME=\"custom device name\" node <your file>.js",
+      "sudo BLENO_ADVERTISING_INTERVAL=500 node <your file>.js"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -292,13 +304,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bleno && python3 bleno.py --help",
-      "Step 2: cd toolboxes/bleno && cat README.md",
-      "Step 3: cd toolboxes/bleno && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sandeepmistry/bleno?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge).",
+    "why_to_use": "Prefer this tool based on upstream description: A Node.js module for implementing BLE (Bluetooth Low Energy) peripherals.",
+    "how_to_use": "Install/setup: npm install bleno. Run the primary entrypoint as shown in upstream docs, e.g. `Disable automatic loading of the default Bluetooth stack by putting [no-ubt.conf]($KFIOSA_TARGET_URL into`. Further invocations from upstream: `Set the primary services available on the peripheral.`; `sudo BLENO_HCI_DEVICE_ID=1 node <your file>.js`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -329,18 +337,20 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use bleno because [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sandeepmistry/bleno?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=.",
+    "When you need a concrete invocation, run `Disable automatic loading of the default Bluetooth stack by putting [no-ubt.conf]($KFIOSA_TARGET_URL into` as documented upstream for bleno.",
+    "When you need a concrete invocation, run `Set the primary services available on the peripheral.` as documented upstream for bleno.",
+    "When you need a concrete invocation, run `sudo BLENO_HCI_DEVICE_ID=1 node <your file>.js` as documented upstream for bleno.",
+    "When you need a concrete invocation, run `sudo BLENO_DEVICE_NAME=\"custom device name\" node <your file>.js` as documented upstream for bleno.",
+    "When chaining Bluetooth tools, pair bleno with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bleno --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/bleno && python3 bleno.py --help",
-    "cd toolboxes/bleno && cat README.md",
-    "cd toolboxes/bleno && ls -la",
-    "cd toolboxes/bleno && python3 bleno.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bleno --output $KFIOSA_OUTPUT_DIR/bleno.log"
+    "Disable automatic loading of the default Bluetooth stack by putting [no-ubt.conf]($KFIOSA_TARGET_URL into",
+    "Set the primary services available on the peripheral.",
+    "sudo BLENO_HCI_DEVICE_ID=1 node <your file>.js",
+    "sudo BLENO_DEVICE_NAME=\"custom device name\" node <your file>.js",
+    "sudo BLENO_ADVERTISING_INTERVAL=500 node <your file>.js"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -363,5 +373,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "javascript"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

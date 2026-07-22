@@ -169,6 +169,61 @@ def test_kali_tool_wrapper_examples_contain_actual_command():
     assert any("airodump-ng" in ex for ex in rec["examples"])
 
 
+def test_airodump_runner_builds_native_argv():
+    """Designed: airodump-ng -c N --bssid B -w P IFACE (not --channel/--interface)."""
+    captured = {}
+
+    def fake_run(argv, **kw):
+        captured["argv"] = list(argv)
+        class P:
+            returncode = 0
+            stdout = ""
+            stderr = ""
+        return P()
+
+    with mock.patch("core.mcp.tools.subprocess.run", side_effect=fake_run), \
+         mock.patch("core.mcp.tools.shutil.which", return_value="/usr/sbin/airodump-ng"), \
+         mock.patch("core.mcp.tools.os.geteuid", return_value=0):
+        res = mcp_tools._run_airodump({
+            "channel": 6, "bssid": "AA:BB:CC:DD:EE:01",
+            "write": "/tmp/cap", "interface": "wlan0mon",
+        }, timeout=5)
+    assert res["ok"] is True
+    argv = captured["argv"]
+    assert argv[0] == "airodump-ng"
+    assert "-c" in argv and argv[argv.index("-c") + 1] == "6"
+    assert "--bssid" in argv
+    assert "-w" in argv
+    assert argv[-1] == "wlan0mon"
+    assert "--channel" not in argv
+    assert "--interface" not in argv
+
+
+def test_aireplay_runner_builds_deauth_argv():
+    captured = {}
+
+    def fake_run(argv, **kw):
+        captured["argv"] = list(argv)
+        class P:
+            returncode = 0
+            stdout = ""
+            stderr = ""
+        return P()
+
+    with mock.patch("core.mcp.tools.subprocess.run", side_effect=fake_run), \
+         mock.patch("core.mcp.tools.shutil.which", return_value="/usr/sbin/aireplay-ng"), \
+         mock.patch("core.mcp.tools.os.geteuid", return_value=0):
+        res = mcp_tools._run_aireplay({
+            "deauth": 5, "bssid": "AA:BB:CC:DD:EE:01",
+            "interface": "wlan0mon",
+        }, timeout=5)
+    assert res["ok"] is True
+    argv = captured["argv"]
+    assert argv[:3] == ["aireplay-ng", "-0", "5"]
+    assert "-a" in argv
+    assert argv[-1] == "wlan0mon"
+
+
 def test_kali_tool_wrapper_risk_levels_valid():
     valid = {"read", "intrusive", "destructive"}
     for name, w in mcp_tools.KALI_TOOL_WRAPPERS.items():

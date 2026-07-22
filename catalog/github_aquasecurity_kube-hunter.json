@@ -1,18 +1,25 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/kube-hunter && python3 kube-hunter.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/kube-hunter && python3 kube-hunter.py --help",
-    "cd toolboxes/kube-hunter && python3 kube-hunter.py --help",
-    "cd toolboxes/kube-hunter && python3 kube-hunter.py --help",
-    "cd toolboxes/kube-hunter && python3 kube-hunter.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kube-hunter --output $KFIOSA_OUTPUT_DIR/kube-hunter.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kube-hunter --output $KFIOSA_OUTPUT_DIR/kube-hunter.log"
+    "kube-hunter --active --service-account-token=$KFIOSA_SECRET",
+    "kube-hunter --custom <HunterName1> <HunterName2>",
+    "kube-hunter --active --list --raw-hunter-names"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Notice kube-hunter is not under active development anymore. If you're interested in scanning Kubernetes clusters for known vulnerabilities, we recommend using Trivy. Specifically, Trivy's Kubernetes misconfiguration scanning and KBOM vulnerability scanning. Learn more in the Trivy Docs.",
+    "usage_sections": [
+      "Kubernetes ATT&CK Matrix",
+      "Where should I run kube-hunter?",
+      "When runing with --pod flag, kube-hunter uses the service account token mounted inside the pod to authenticate to services it finds during the hunt.",
+      "if specified, --service-account-token flag takes priority when running as a pod",
+      "http (to configure, set the following environment variables:)"
+    ],
     "arguments": [
+      {
+        "name": "-hunter",
+        "description": "### On Machine",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +136,11 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "kube-hunter --active --service-account-token=$KFIOSA_SECRET",
+      "kube-hunter --custom <HunterName1> <HunterName2>",
+      "kube-hunter --active --list --raw-hunter-names"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +266,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, kube, hunter).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/kube-hunter && python3 kube-hunter.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/kube-hunter && python3 kube-hunter.py --help",
-      "Step 3: cd toolboxes/kube-hunter && python3 kube-hunter.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: Notice kube-hunter is not under active development anymore. If you're interested in scanning Kubernetes clusters for known vulnerabilities, we recommend using Trivy. Specifically, Trivy's Kubernetes misconfiguration scan.",
+    "why_to_use": "Prefer this tool based on upstream description: Notice kube-hunter is not under active development anymore. If you're interested in scanning Kubernetes clusters for known vulnerabilities, we recommend using Trivy. Specifically, Trivy's Kubernetes misconfiguration scanning and KBOM vulnerability scanning. Learn more in the Trivy Docs.",
+    "how_to_use": "Install/setup: pip install kube-hunter; git clone https://github.com/aquasecurity/kube-hunter.git. Run the primary entrypoint as shown in upstream docs, e.g. `kube-hunter --active --service-account-token=$KFIOSA_SECRET`. Further invocations from upstream: `kube-hunter --custom <HunterName1> <HunterName2>`; `kube-hunter --active --list --raw-hunter-names`. Notice kube-hunter is not under active development anymore. If you're interested in scanning Kubernetes clusters for known vulnerabilities, we recommend using Trivy. Specifically, Trivy's Kubernetes misconfiguration scanning and KBOM vulnerability scanning. Learn more in the Trivy Docs."
   },
   "full_name": "aquasecurity/kube-hunter",
   "id": "github:aquasecurity/kube-hunter",
@@ -282,7 +289,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``kube-hunter`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Notice kube-hunter is not under active development anymore. If you're interested in scanning Kubernetes clusters for known vulnerabilities, we recommend using Trivy. Specifically, Trivy's Kubernetes misconfiguration scanning and KBOM vulnerability scanning. Learn more in the Trivy Docs.",
   "tags": [
     "offensive",
     "kube",
@@ -301,12 +308,12 @@
   },
   "url": "https://github.com/aquasecurity/kube-hunter",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use kube-hunter because Notice kube-hunter is not under active development anymore. If you're interested in scanning Kubernetes clusters for known vulnerabilities, we recommend using T.",
+    "When you need a concrete invocation, run `kube-hunter --active --service-account-token=$KFIOSA_SECRET` as documented upstream for kube-hunter.",
+    "When you need a concrete invocation, run `kube-hunter --custom <HunterName1> <HunterName2>` as documented upstream for kube-hunter.",
+    "When you need a concrete invocation, run `kube-hunter --active --list --raw-hunter-names` as documented upstream for kube-hunter.",
+    "When chaining frameworks tools, pair kube-hunter with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `kube-hunter --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +332,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

@@ -9,7 +9,13 @@
   "summary": "Network Scanning & Host Enumeration with Nmap",
   "documentation": {
     "readme": "Network Scanning & Host Enumeration with Nmap",
-    "usage_sections": [],
+    "usage_sections": [
+      "Building a segmented, firewalled lab where offensive testing is safely isolated",
+      "Host discovery and service/version enumeration with Nmap",
+      "Reading and interpreting scan output — mapping open ports to real services and known vulnerabilities",
+      "Cross-segment scanning through a firewall (attacker and target on different subnets, routed via OPNsense)",
+      "Identifying a vulnerable service version and confirming it with searchsploit"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +199,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "$KFIOSA_TARGET_HOST/24        $KFIOSA_TARGET_HOST/24",
+      "$KFIOSA_TARGET_HOST         $KFIOSA_TARGET_HOST",
+      "nmap -sn $KFIOSA_TARGET_HOST/24",
+      "nmap -sV $KFIOSA_TARGET_HOST"
+    ],
     "file_listing": [
       "README.md",
       "README.md",
@@ -259,13 +270,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web', 'cloud']' as the attack surface (web_application_security, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/nmap-enumeration-lab && python3 nmap-enumeration-lab.py --help",
-      "Step 2: cd toolboxes/nmap-enumeration-lab && cat README.md",
-      "Step 3: cd toolboxes/nmap-enumeration-lab && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web, cloud] in the Web Application Security category. Fits when the engagement needs: Network Scanning & Host Enumeration with Nmap.",
+    "why_to_use": "Prefer this tool based on upstream description: Network Scanning & Host Enumeration with Nmap.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `$KFIOSA_TARGET_HOST/24        $KFIOSA_TARGET_HOST/24`. Further invocations from upstream: `$KFIOSA_TARGET_HOST         $KFIOSA_TARGET_HOST`; `nmap -sn $KFIOSA_TARGET_HOST/24`. Network Scanning & Host Enumeration with Nmap."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -295,18 +302,19 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Web Application Security system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Web Application Security, use nmap-enumeration-lab because Network Scanning & Host Enumeration with Nmap.",
+    "When you need a concrete invocation, run `$KFIOSA_TARGET_HOST/24        $KFIOSA_TARGET_HOST/24` as documented upstream for nmap-enumeration-lab.",
+    "When you need a concrete invocation, run `$KFIOSA_TARGET_HOST         $KFIOSA_TARGET_HOST` as documented upstream for nmap-enumeration-lab.",
+    "When you need a concrete invocation, run `nmap -sn $KFIOSA_TARGET_HOST/24` as documented upstream for nmap-enumeration-lab.",
+    "When you need a concrete invocation, run `nmap -sV $KFIOSA_TARGET_HOST` as documented upstream for nmap-enumeration-lab.",
+    "When chaining Web Application Security tools, pair nmap-enumeration-lab with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nmap-enumeration-lab --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/nmap-enumeration-lab && python3 nmap-enumeration-lab.py --help",
-    "cd toolboxes/nmap-enumeration-lab && cat README.md",
-    "cd toolboxes/nmap-enumeration-lab && ls -la",
-    "cd toolboxes/nmap-enumeration-lab && python3 nmap-enumeration-lab.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nmap-enumeration-lab --output $KFIOSA_OUTPUT_DIR/nmap-enumeration-lab.log"
+    "$KFIOSA_TARGET_HOST/24        $KFIOSA_TARGET_HOST/24",
+    "$KFIOSA_TARGET_HOST         $KFIOSA_TARGET_HOST",
+    "nmap -sn $KFIOSA_TARGET_HOST/24",
+    "nmap -sV $KFIOSA_TARGET_HOST"
   ],
   "attack_surface": [
     "web",
@@ -326,5 +334,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "edb-debugger",
   "title": "edb-debugger",
-  "summary": "### edb-debugger",
+  "summary": "edb - graphical debugger and disassembler for executables",
   "version": "1.3.0-2.2",
   "architectures": [
     "amd64",
@@ -37,58 +37,14 @@
       "arguments": [
         {
           "flags": [
-            "--help"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "display this help and exit",
-          "default": null,
-          "choices": null,
-          "raw": "    --help"
-        },
-        {
-          "flags": [
-            "--symbols"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "generate symbols for <filename> and exit",
-          "default": null,
-          "choices": null,
-          "raw": "    --symbols <file>"
-        },
-        {
-          "flags": [
             "--attach"
           ],
-          "metavar": "pid",
-          "takes_value": true,
-          "description": "attach to running process",
-          "default": null,
-          "choices": null,
-          "raw": "    --attach <pid>"
-        },
-        {
-          "flags": [
-            "--run"
-          ],
-          "metavar": "program args...",
-          "takes_value": true,
-          "description": "execute specified <program> with <args>",
-          "default": null,
-          "choices": null,
-          "raw": "    --run <program> [args...]"
-        },
-        {
-          "flags": [
-            "--version"
-          ],
           "metavar": null,
           "takes_value": false,
-          "description": "output version information and exit",
+          "description": "attach the process of PID <pid> to debugger",
           "default": null,
           "choices": null,
-          "raw": "    --version"
+          "raw": "--attach  attach the process of PID <pid> to debugger"
         },
         {
           "flags": [
@@ -96,32 +52,43 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "display terse version string and exit",
+          "description": "show version and exit.",
           "default": null,
           "choices": null,
-          "raw": "    --dump-version"
+          "raw": "--dump-version  show version and exit."
         },
         {
           "flags": [
-            "--stdin"
+            "--help"
           ],
-          "metavar": "filename",
-          "takes_value": true,
-          "description": "set the STDIN of the target process (MUST preceded --run)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show usage and exit.",
           "default": null,
           "choices": null,
-          "raw": " --stdin <filename>        : set the STDIN of the target process (MUST preceded --run)"
+          "raw": "--help  Show usage and exit."
         },
         {
           "flags": [
-            "--stdout"
+            "--symbols"
           ],
-          "metavar": "filename",
-          "takes_value": true,
-          "description": "set the STDOUT of the target process (MUST preceded --run)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "generate symbols map for file <file>",
           "default": null,
           "choices": null,
-          "raw": " --stdout <filename>       : set the STDOUT of the target process (MUST preceded --run)"
+          "raw": "--symbols  generate symbols map for file <file>"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show version string and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "--version  show version string and exit."
         }
       ],
       "raw_help": "root@kali:~# man edb\n EDB(1)                                                                   EDB(1)\n \n NAME\n    edb - graphical debugger and disassembler for executables\n \n SYNOPSIS\n     edb [OPTION]... [TARGET]\n \n DESCRIPTION\n    edb  (Evan's  Debugger)  is a modular and modern disassembler and debugger\n    for binary ELF files based on ptrace API and the capstone disassembly  li-\n    brary.\n \n    --help\n           Show usage and exit.\n \n    --symbols <file>\n           generate symbols map for file <file>\n \n    --attach <pid>\n           attach the process of PID <pid> to debugger\n \n    --run <program> [args...]\n           open <program> in debugger with optional [args...]\n \n    --version\n           show version string and exit.\n \n    --dump-version\n           show version and exit.\n \n EXAMPLE\n    edb --symbols /lib/libc.so.6 > libc.so.6.map\n \n         Will generate symbols for libc and save it in a text file. It's useful if you store this map files in the symbols directory configured in edb's preferences.\n \n    for i in $(ls /lib); do edb --symbols $i > $(basename $i).map; done\n \n          Useful to generate maps for all libs you have in /lib.\n \n    edb --run /bin/ls\n \n          Will open the ls program binary in debugger.\n \n    edb --attach 1720\n \n         Attach the process of PID 1720 to debugger.\n \n AUTHOR\n    Written by Evan Teran <evan.teran@gmail.com>\n \n REPORTING BUGS\n    Report    any    bugs    or    requests    for   features   via   BTS   on\n    https://github.com/eteran/edb-debugger/issues\n \n COPYRIGHT\n    Copyright  (C)  2008  CodeF00.  Licensed  GPLv2:   GNU   GPL   version   2\n    <http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>. This is free soft-\n    ware: you are free to change and redistribute it. There is NO WARRANTY, to\n    the extent permitted by law.\n \n                                December 2011                           EDB(1)",
@@ -191,21 +158,19 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use edb because edb - graphical debugger and disassembler for executables.",
+    "When you need a concrete invocation, run `edb [OPTION]... [TARGET]` as documented upstream for edb.",
+    "When you need a concrete invocation, run `edb --symbols /lib/libc.so.6 > libc.so.6.map` as documented upstream for edb.",
+    "When you need a concrete invocation, run `edb --run /bin/ls` as documented upstream for edb.",
+    "When you need a concrete invocation, run `edb --attach 1720` as documented upstream for edb.",
+    "When chaining Kali Linux tools, pair edb with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `edb --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/edb-debugger && python3 edb-debugger.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/edb-debugger && python3 edb-debugger.py --help",
-    "cd toolboxes/edb-debugger && python3 edb-debugger.py --help",
-    "cd toolboxes/edb-debugger && python3 edb-debugger.py --help",
-    "cd toolboxes/edb-debugger && python3 edb-debugger.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST edb-debugger --output $KFIOSA_OUTPUT_DIR/edb-debugger.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST edb-debugger --output $KFIOSA_OUTPUT_DIR/edb-debugger.log"
+    "edb [OPTION]... [TARGET]",
+    "edb --symbols /lib/libc.so.6 > libc.so.6.map",
+    "edb --run /bin/ls",
+    "edb --attach 1720"
   ],
   "attack_surface": [
     "web"
@@ -220,5 +185,50 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--attach",
+        "description": "attach the process of PID <pid> to debugger",
+        "source": "docs"
+      },
+      {
+        "name": "--dump-version",
+        "description": "show version and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "Show usage and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "--symbols",
+        "description": "generate symbols map for file <file>",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "show version string and exit.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "edb [OPTION]... [TARGET]",
+      "edb --symbols /lib/libc.so.6 > libc.so.6.map",
+      "edb --run /bin/ls",
+      "edb --attach 1720"
+    ],
+    "readme": "edb - graphical debugger and disassembler for executables",
+    "how_to_use": "Install/setup: sudo apt install edb-debugger. Run the primary entrypoint as shown in upstream docs, e.g. `edb [OPTION]... [TARGET]`. Further invocations from upstream: `edb --symbols /lib/libc.so.6 > libc.so.6.map`; `edb --run /bin/ls`. edb - graphical debugger and disassembler for executables.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: edb - graphical debugger and disassembler for executables.",
+    "why_to_use": "Prefer this tool based on upstream description: edb - graphical debugger and disassembler for executables.",
+    "usage_sections": [
+      "Install with: sudo apt install edb-debugger",
+      "Install with: sudo apt install edb-debugger"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

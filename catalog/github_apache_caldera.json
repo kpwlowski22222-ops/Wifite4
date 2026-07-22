@@ -1,18 +1,64 @@
 {
   "category": "c2",
   "command_examples": [
-    "cd toolboxes/caldera && python3 caldera.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/caldera && python3 caldera.py --help",
-    "cd toolboxes/caldera && python3 caldera.py --help",
-    "cd toolboxes/caldera && python3 caldera.py --help",
-    "cd toolboxes/caldera && python3 caldera.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST caldera --output $KFIOSA_OUTPUT_DIR/caldera.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST caldera --output $KFIOSA_OUTPUT_DIR/caldera.log"
+    "python3 -m venv .calderavenv",
+    "source .calderavenv/bin/activate",
+    "python3 server.py --insecure --build",
+    "docker build --build-arg VARIANT=full -t caldera .",
+    "docker run -it -p 8888:8888 caldera",
+    "docker run -p 8888:8888 ghcr.io/apache/caldera:latest",
+    "docker stop <container ID>"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Caldera™ is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response.",
+    "usage_sections": [
+      "📜 Documentation, training, and use-cases",
+      "Access (red team initial access tools and techniques)",
+      "Atomic (Atomic Red Team project TTPs)",
+      "Builder (dynamically compile payloads)",
+      "Caldera for OT (ICS/OT capabilities for Caldera)"
+    ],
     "arguments": [
+      {
+        "name": "--build",
+        "description": "Build the VueJS front-end to serve it from the caldera server.",
+        "source": "docs"
+      },
+      {
+        "name": "-E",
+        "description": "Select an env. file to use",
+        "source": "docs"
+      },
+      {
+        "name": "--environment",
+        "description": "Select an env. file to use",
+        "source": "docs"
+      },
+      {
+        "name": "--fresh",
+        "description": "remove object_store on start",
+        "source": "docs"
+      },
+      {
+        "name": "--insecure",
+        "description": "Start caldera with insecure default config values. Equivalent to",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Set the logging level",
+        "source": "docs"
+      },
+      {
+        "name": "--log",
+        "description": "Set the logging level",
+        "source": "docs"
+      },
+      {
+        "name": "--uidev",
+        "description": "Start VueJS dev server for front-end alongside the caldera server. Provide hostname, i.e. localhost.",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -89,11 +135,6 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--insecure",
-        "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--json",
         "description": "Emit JSON output (machine-readable).",
         "source": "generic_kfiosa"
@@ -129,7 +170,15 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python3 -m venv .calderavenv",
+      "source .calderavenv/bin/activate",
+      "python3 server.py --insecure --build",
+      "docker build --build-arg VARIANT=full -t caldera .",
+      "docker run -it -p 8888:8888 caldera",
+      "docker run -p 8888:8888 ghcr.io/apache/caldera:latest",
+      "docker stop <container ID>"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +304,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, caldera, apache).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/caldera && python3 caldera.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/caldera && python3 caldera.py --help",
-      "Step 3: cd toolboxes/caldera && python3 caldera.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the c2 category. Fits when the engagement needs: Caldera&trade; is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response.",
+    "why_to_use": "Prefer this tool based on upstream description: Caldera™ is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response.",
+    "how_to_use": "Install/setup: git clone https://github.com/apache/caldera.git --recursive; pip3 install -r requirements.txt. Run the primary entrypoint as shown in upstream docs, e.g. `python3 -m venv .calderavenv`. Further invocations from upstream: `source .calderavenv/bin/activate`; `python3 server.py --insecure --build`. Caldera™ is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response."
   },
   "full_name": "apache/caldera",
   "id": "github:apache/caldera",
@@ -282,7 +327,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``caldera`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Caldera&trade; is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response.",
   "tags": [
     "offensive",
     "caldera",
@@ -300,12 +345,13 @@
   },
   "url": "https://github.com/apache/caldera",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need c2, use caldera because Caldera&trade; is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response.",
+    "When you need a concrete invocation, run `python3 -m venv .calderavenv` as documented upstream for caldera.",
+    "When you need a concrete invocation, run `source .calderavenv/bin/activate` as documented upstream for caldera.",
+    "When you need a concrete invocation, run `python3 server.py --insecure --build` as documented upstream for caldera.",
+    "When you need a concrete invocation, run `docker build --build-arg VARIANT=full -t caldera .` as documented upstream for caldera.",
+    "When chaining c2 tools, pair caldera with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `caldera --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +370,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

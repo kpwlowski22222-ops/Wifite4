@@ -9,8 +9,31 @@
   "summary": "PoC command injection in BLE service of Norton Core Secure WiFi Router (CVE-2018-5234)",
   "documentation": {
     "readme": "PoC command injection in BLE service of Norton Core Secure WiFi Router (CVE-2018-5234)",
-    "usage_sections": [],
+    "usage_sections": [
+      "Bluetooth dongle adapter;",
+      "BlueZ utility (for testing Bluetooth connection)."
+    ],
     "arguments": [
+      {
+        "name": "--bt_mac",
+        "description": "Set BT MAC address of device manual.",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "Set BT MAC address of device manual.",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Set device serial number manual.",
+        "source": "docs"
+      },
+      {
+        "name": "--serial_number",
+        "description": "Set device serial number manual.",
+        "source": "docs"
+      },
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
@@ -187,7 +210,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "./ble_norton_core.py \"/etc/init.d/dropbear start\"",
+      "ssh root@norton.core"
+    ],
     "file_listing": [
       "README.md",
       "ble_norton_core.py",
@@ -242,13 +268,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/ble_norton_core && python3 ble_norton_core.py --help",
-      "Step 2: cd toolboxes/ble_norton_core && cat README.md",
-      "Step 3: cd toolboxes/ble_norton_core && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: PoC command injection in BLE service of Norton Core Secure WiFi Router (CVE-2018-5234).",
+    "why_to_use": "Prefer this tool based on upstream description: PoC command injection in BLE service of Norton Core Secure WiFi Router (CVE-2018-5234).",
+    "how_to_use": "Install/setup: pip install -r ./requirements.txt. Run the primary entrypoint as shown in upstream docs, e.g. `./ble_norton_core.py \"/etc/init.d/dropbear start\"`. Further invocations from upstream: `ssh root@norton.core`. PoC command injection in BLE service of Norton Core Secure WiFi Router (CVE-2018-5234)."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -279,18 +301,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use ble_norton_core because PoC command injection in BLE service of Norton Core Secure WiFi Router (CVE-2018-5234).",
+    "When you need a concrete invocation, run `./ble_norton_core.py \"/etc/init.d/dropbear start\"` as documented upstream for ble_norton_core.",
+    "When you need a concrete invocation, run `ssh root@norton.core` as documented upstream for ble_norton_core.",
+    "When chaining Bluetooth tools, pair ble_norton_core with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ble_norton_core --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/ble_norton_core && python3 ble_norton_core.py --help",
-    "cd toolboxes/ble_norton_core && cat README.md",
-    "cd toolboxes/ble_norton_core && ls -la",
-    "cd toolboxes/ble_norton_core && python3 ble_norton_core.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ble_norton_core --output $KFIOSA_OUTPUT_DIR/ble_norton_core.log"
+    "./ble_norton_core.py \"/etc/init.d/dropbear start\"",
+    "ssh root@norton.core"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -313,5 +332,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

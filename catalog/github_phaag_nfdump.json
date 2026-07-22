@@ -8,8 +8,10 @@
   "url": "https://github.com/phaag/nfdump",
   "summary": "[![Build Status](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml)",
   "documentation": {
-    "readme": "[![Build Status](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml)",
-    "usage_sections": [],
+    "readme": "nfdump is a powerful suite of tools for collecting, processing, and analyzing NetFlow, IPFIX, and sFlow data from network devices. It supports advanced filtering, aggregation, and enrichment (geolocation, AS, Tor) of flow data with a focus on efficiency, flexibility, and extensibility.",
+    "usage_sections": [
+      "Features: - Collects NetFlow (v1, v5/v7, v9, IPFIX) and sFlow data. - Converts live or file pcap traffic to flow data. - Multi-threaded for high-performance processing and sorting. - Advanced flow filtering and aggregation (filter syntax similar to tcpdump, but optimized for flow data). - "
+    ],
     "arguments": [
       {
         "name": "--enable-devel",
@@ -107,11 +109,6 @@
         "source": "v2_enhancement"
       },
       {
-        "name": "-D",
-        "description": "CLI flag '-D' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
@@ -191,7 +188,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "./nfdump -r old-flowfile -y -w new-flowfile",
+      "./autogen.sh",
+      "./configure",
+      "./configure --enable-native --enable-lto",
+      "CC=clang-10 ./configure ...",
+      "nfcapd -D -S 2 -w /flow_base_dir/router1 -p 23456",
+      "nfdump -r /flow_base_dir/router1/nfcapd.202501011200",
+      "nfdump -r flowfile 'src ip $KFIOSA_TARGET_HOST and dst port 443' -A srcip,dstip",
+      "nfcapd -z=lz4 ...",
+      "nfcapd.YYYYMMDDhhmm (e.g., nfcapd.200907110845 contains data from July 11th 2009 08:45 onward)"
+    ],
     "file_listing": [
       "AUTHORS",
       "BSD-license.txt",
@@ -293,13 +301,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/nfdump && python3 nfdump.py --help",
-      "Step 2: cd toolboxes/nfdump && cat README.md",
-      "Step 3: cd toolboxes/nfdump && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: [![Build Status](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml).",
+    "why_to_use": "Prefer this tool based on upstream description: nfdump is a powerful suite of tools for collecting, processing, and analyzing NetFlow, IPFIX, and sFlow data from network devices. It supports advanced filtering, aggregation, and enrichment (geolocation, AS, Tor) of flow data with a focus on efficiency, flexibility, and extensibility.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `./nfdump -r old-flowfile -y -w new-flowfile`. Further invocations from upstream: `./autogen.sh`; `./configure`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -332,18 +336,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use nfdump because [![Build Status](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml).",
+    "When you need a concrete invocation, run `./nfdump -r old-flowfile -y -w new-flowfile` as documented upstream for nfdump.",
+    "When you need a concrete invocation, run `./autogen.sh` as documented upstream for nfdump.",
+    "When you need a concrete invocation, run `./configure` as documented upstream for nfdump.",
+    "When you need a concrete invocation, run `./configure --enable-native --enable-lto` as documented upstream for nfdump.",
+    "When chaining Penetration Testing tools, pair nfdump with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nfdump --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/nfdump && python3 nfdump.py --help",
-    "cd toolboxes/nfdump && cat README.md",
-    "cd toolboxes/nfdump && ls -la",
-    "cd toolboxes/nfdump && python3 nfdump.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nfdump --output $KFIOSA_OUTPUT_DIR/nfdump.log"
+    "./nfdump -r old-flowfile -y -w new-flowfile",
+    "./autogen.sh",
+    "./configure",
+    "./configure --enable-native --enable-lto",
+    "CC=clang-10 ./configure ...",
+    "nfcapd -D -S 2 -w /flow_base_dir/router1 -p 23456",
+    "nfdump -r /flow_base_dir/router1/nfcapd.202501011200",
+    "nfdump -r flowfile 'src ip $KFIOSA_TARGET_HOST and dst port 443' -A srcip,dstip",
+    "nfcapd -z=lz4 ...",
+    "nfcapd.YYYYMMDDhhmm (e.g., nfcapd.200907110845 contains data from July 11th 2009 08:45 onward)"
   ],
   "attack_surface": [
     "shell_linux"
@@ -366,5 +377,7 @@
     "c",
     "shell",
     "perl"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -1,18 +1,32 @@
 {
   "category": "ios",
   "command_examples": [
-    "cd toolboxes/Clutch && python3 Clutch.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Clutch && python3 Clutch.py --help",
-    "cd toolboxes/Clutch && python3 Clutch.py --help",
-    "cd toolboxes/Clutch && python3 Clutch.py --help",
-    "cd toolboxes/Clutch && python3 Clutch.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Clutch --output $KFIOSA_OUTPUT_DIR/Clutch.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Clutch --output $KFIOSA_OUTPUT_DIR/Clutch.log"
+    "cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/",
+    "sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:CODE_SIGNING_REQUIRED NO\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist",
+    "sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist",
+    "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/iphoneos.toolchain.cmake ..",
+    "make -j$(sysctl -n hw.logicalcpu)",
+    "scp ./build/Clutch root@<your.device.ip>:/usr/bin/Clutch",
+    "scp -P 2222 ./build/Clutch root@localhost:/usr/bin/Clutch",
+    "inject /usr/bin/Clutch"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. Clutch is meant only for educational purposes and security research.",
+    "usage_sections": [
+      "Usage: Clutch may encounter Segmentation Fault: 11 when dumping apps with a large number of frameworks. Increase your device's maximum number of open file descriptors with ulimit -n 512 (default is 256).",
+      "Installation: After building, a copy of the binary named Clutch is placed in the build directory. Copy this to your device: If you are using iproxy, use this line (replace 2222 with a different port if necessary): When you SSH into your device, run Clutch. If you are using the unc0ver jailbrea"
+    ],
     "arguments": [
+      {
+        "name": "--clean",
+        "description": "Clean /var/tmp/clutch directory",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Display version and exit",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -27,11 +41,6 @@
         "name": "--output",
         "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
-      },
-      {
-        "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
       },
       {
         "name": "--port",
@@ -129,7 +138,16 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/",
+      "sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:CODE_SIGNING_REQUIRED NO\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist",
+      "sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist",
+      "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/iphoneos.toolchain.cmake ..",
+      "make -j$(sysctl -n hw.logicalcpu)",
+      "scp ./build/Clutch root@<your.device.ip>:/usr/bin/Clutch",
+      "scp -P 2222 ./build/Clutch root@localhost:/usr/bin/Clutch",
+      "inject /usr/bin/Clutch"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +273,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, clutch, kjcracks).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Clutch && python3 Clutch.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Clutch && python3 Clutch.py --help",
-      "Step 3: cd toolboxes/Clutch && python3 Clutch.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the ios category. Fits when the engagement needs: Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. Clutch is meant only for educational purposes and security r.",
+    "why_to_use": "Prefer this tool based on upstream description: Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. Clutch is meant only for educational purposes and security research.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/`. Further invocations from upstream: `sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:CODE_SIGNING_REQUIRED NO\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist`; `sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist`. Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. Clutch is meant only for educational purposes and security research."
   },
   "full_name": "KJCracks/Clutch",
   "id": "github:KJCracks/Clutch",
@@ -282,7 +296,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Clutch`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. Clutch is meant only for educational purposes and security research.",
   "tags": [
     "offensive",
     "clutch",
@@ -300,12 +314,13 @@
   },
   "url": "https://github.com/KJCracks/Clutch",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need ios, use Clutch because Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. .",
+    "When you need a concrete invocation, run `cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/` as documented upstream for Clutch.",
+    "When you need a concrete invocation, run `sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:CODE_SIGNING_REQUIRED NO\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist` as documented upstream for Clutch.",
+    "When you need a concrete invocation, run `sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist` as documented upstream for Clutch.",
+    "When you need a concrete invocation, run `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/iphoneos.toolchain.cmake ..` as documented upstream for Clutch.",
+    "When chaining ios tools, pair Clutch with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Clutch --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +339,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

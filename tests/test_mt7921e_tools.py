@@ -141,9 +141,62 @@ def test_detect_filters_out_non_mt7921e_drivers():
                     "returncode": 0}
         return {"ok": True, "stdout": "", "stderr": "", "returncode": 0}
 
-    with mock.patch.object(mt7921e_tools, "_run", side_effect=fake_run):
+    # No sysfs mt7921e for this iface either.
+    with mock.patch.object(mt7921e_tools, "_run", side_effect=fake_run), \
+         mock.patch.object(mt7921e_tools, "_sysfs_driver", return_value="iwlwifi"), \
+         mock.patch.object(mt7921e_tools, "_sysfs_phy", return_value="phy0"):
         out = detect_mt7921e_interfaces()
     assert out == []
+
+
+def test_detect_modern_iw_dev_phy_hash_plus_sysfs_driver():
+    """Real ASUS Nitro / mt7921e kernels: ``phy#0`` header, no per-iface
+    ``wiphy`` line, and no ``Driver:`` in ``iw phy`` — driver from sysfs.
+    """
+    iw_dev_output = (
+        "phy#0\n"
+        "\tUnnamed/non-netdev interface\n"
+        "\t\twdev 0x2\n"
+        "\t\ttype P2P-device\n"
+        "\tInterface wlan0\n"
+        "\t\tifindex 3\n"
+        "\t\twdev 0x1\n"
+        "\t\taddr 8e:39:ae:76:d9:16\n"
+        "\t\ttype managed\n"
+        "\t\ttxpower 3.00 dBm\n"
+    )
+    iw_phy_output = (
+        "Wiphy phy0\n"
+        "\twiphy index: 0\n"
+        "\tSupported interface modes:\n"
+        "\t * managed\n"
+        "\t * AP\n"
+        "\t * monitor\n"
+    )
+
+    def fake_run(cmd, timeout=5):
+        if cmd == ["iw", "dev"]:
+            return {"ok": True, "stdout": iw_dev_output, "stderr": "",
+                    "returncode": 0}
+        if cmd == ["iw", "phy"]:
+            return {"ok": True, "stdout": iw_phy_output, "stderr": "",
+                    "returncode": 0}
+        if cmd[:3] == ["iw", "dev", "wlan0"]:
+            return {"ok": True, "stdout":
+                    "Interface wlan0\n\ttype managed\n\twiphy 0\n",
+                    "stderr": "", "returncode": 0}
+        return {"ok": True, "stdout": "", "stderr": "", "returncode": 0}
+
+    with mock.patch.object(mt7921e_tools, "_run", side_effect=fake_run), \
+         mock.patch.object(mt7921e_tools, "_sysfs_driver",
+                           return_value="mt7921e"), \
+         mock.patch.object(mt7921e_tools, "_sysfs_phy", return_value="phy0"):
+        out = detect_mt7921e_interfaces()
+    assert len(out) == 1
+    assert out[0].name == "wlan0"
+    assert out[0].phy == "phy0"
+    assert out[0].driver == "mt7921e"
+    assert out[0].monitor_capable is True
 
 
 # ----------------------------------------------------------------------

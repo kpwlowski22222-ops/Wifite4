@@ -26,21 +26,14 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use during the OSINT phase to enumerate people, domains, subdomains, ASN footprints, leaked credentials (never inlined), and breach data.",
-    "Use as a passive discovery complement to active recon (the operator can run these without touching the target).",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need OSINT and Recon, use meg because Fetch many paths for many hosts.",
+    "When the engagement is in the recon phase, use meg as a cataloged OSINT and Recon tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `meg --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/meg.log` as documented upstream for meg.",
+    "When chaining OSINT and Recon tools, pair meg with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `meg --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/meg && python3 meg.py --target $KFIOSA_TARGET_DOMAIN",
-    "cd toolboxes/meg && python3 meg.py --help",
-    "cd toolboxes/meg && python3 meg.py --help",
-    "cd toolboxes/meg && python3 meg.py --help",
-    "cd toolboxes/meg && python3 meg.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST meg --output $KFIOSA_OUTPUT_DIR/meg.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST meg --output $KFIOSA_OUTPUT_DIR/meg.log"
+    "meg --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/meg.log"
   ],
   "risk": {
     "signals": [
@@ -300,15 +293,19 @@
         "score": 1
       }
     ],
-    "examples": [],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'ad']' as the attack surface (osint, passive, recon).",
-    "why_to_use": "This tool is preferred because: Use during the OSINT phase to enumerate people, domains, subdomains, ASN footprints, leaked credentials (never inlined), and breach data.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/meg && python3 meg.py --target $KFIOSA_TARGET_DOMAIN",
-      "Step 2: cd toolboxes/meg && python3 meg.py --help",
-      "Step 3: cd toolboxes/meg && python3 meg.py --help"
+    "examples": [
+      "meg --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/meg.log"
+    ],
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, ad] in the OSINT and Recon category. Fits when the engagement needs: Fetch many paths for many hosts.",
+    "why_to_use": "Prefer this tool based on upstream description: Curated toolbox entry for tomnomnom/meg in the OSINT category.",
+    "how_to_use": "Install/setup: git clone --depth 1 https://github.com/tomnomnom/meg.git toolboxes/osint/tomnomnom__meg. Run the primary entrypoint as shown in upstream docs, e.g. `meg --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/meg.log`.",
+    "readme": "Curated toolbox entry for tomnomnom/meg in the OSINT category.",
+    "usage_sections": [
+      "Usage: Typical flags: --target selects the target; --port selects the port; --output writes output to a file."
     ]
   },
   "_languages": [],
-  "_kfiosa_enriched_at": "phase4_t16"
+  "_kfiosa_enriched_at": "phase4_t16",
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

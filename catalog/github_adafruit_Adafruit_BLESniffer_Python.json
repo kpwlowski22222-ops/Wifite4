@@ -8,17 +8,52 @@
   "url": "https://github.com/adafruit/Adafruit_BLESniffer_Python",
   "summary": "Python API for Bluefruit LE Sniffer",
   "documentation": {
-    "readme": "Python API for Bluefruit LE Sniffer",
+    "readme": "This repository contains the Python API for Adafruit's Bluefruit LE Sniffer, and our easy to use API wrapper.",
     "usage_sections": [],
     "arguments": [
       {
-        "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "name": "-l",
+        "description": "log packets to file, default:",
+        "source": "docs"
+      },
+      {
+        "name": "--logfile",
+        "description": "log packets to file, default:",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Target device is using random address",
+        "source": "docs"
+      },
+      {
+        "name": "--random_txaddr",
+        "description": "Target device is using random address",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "target device address",
+        "source": "docs"
       },
       {
         "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "description": "target device address",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "verbose mode (all serial traffic is displayed)",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "verbose mode (all serial traffic is displayed)",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "Show help / usage and exit.",
         "source": "v2_enhancement"
       },
       {
@@ -39,11 +74,6 @@
       {
         "name": "--interface",
         "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
         "source": "generic_kfiosa"
       },
       {
@@ -185,7 +215,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python sniffer.py /dev/tty.usbmodem1412311",
+      "Logging data to logs/capture.pcap",
+      "Connecting to sniffer on /dev/tty.usbmodem1412311",
+      "Scanning for BLE devices (5s) ..."
+    ],
     "file_listing": [
       "API Manifest.txt",
       "CaptureFiles.py",
@@ -261,13 +296,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Adafruit_BLESniffer_Python && python3 Adafruit_BLESniffer_Python.py --help",
-      "Step 2: cd toolboxes/Adafruit_BLESniffer_Python && cat README.md",
-      "Step 3: cd toolboxes/Adafruit_BLESniffer_Python && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: Python API for Bluefruit LE Sniffer.",
+    "why_to_use": "Prefer this tool based on upstream description: This repository contains the Python API for Adafruit's Bluefruit LE Sniffer, and our easy to use API wrapper.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `python sniffer.py /dev/tty.usbmodem1412311`. Further invocations from upstream: `Logging data to logs/capture.pcap`; `Connecting to sniffer on /dev/tty.usbmodem1412311`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -299,18 +330,19 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use Adafruit_BLESniffer_Python because Python API for Bluefruit LE Sniffer.",
+    "When you need a concrete invocation, run `python sniffer.py /dev/tty.usbmodem1412311` as documented upstream for Adafruit_BLESniffer_Python.",
+    "When you need a concrete invocation, run `Logging data to logs/capture.pcap` as documented upstream for Adafruit_BLESniffer_Python.",
+    "When you need a concrete invocation, run `Connecting to sniffer on /dev/tty.usbmodem1412311` as documented upstream for Adafruit_BLESniffer_Python.",
+    "When you need a concrete invocation, run `Scanning for BLE devices (5s) ...` as documented upstream for Adafruit_BLESniffer_Python.",
+    "When chaining Bluetooth tools, pair Adafruit_BLESniffer_Python with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Adafruit_BLESniffer_Python --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/Adafruit_BLESniffer_Python && python3 Adafruit_BLESniffer_Python.py --help",
-    "cd toolboxes/Adafruit_BLESniffer_Python && cat README.md",
-    "cd toolboxes/Adafruit_BLESniffer_Python && ls -la",
-    "cd toolboxes/Adafruit_BLESniffer_Python && python3 Adafruit_BLESniffer_Python.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Adafruit_BLESniffer_Python --output $KFIOSA_OUTPUT_DIR/Adafruit_BLESniffer_Python.log"
+    "python sniffer.py /dev/tty.usbmodem1412311",
+    "Logging data to logs/capture.pcap",
+    "Connecting to sniffer on /dev/tty.usbmodem1412311",
+    "Scanning for BLE devices (5s) ..."
   ],
   "attack_surface": [
     "ble_4_x",
@@ -334,5 +366,7 @@
   "_languages": [
     "python",
     "c"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

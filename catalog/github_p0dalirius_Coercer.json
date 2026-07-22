@@ -1,18 +1,232 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "cd toolboxes/Coercer && python3 Coercer.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Coercer && python3 Coercer.py --help",
-    "cd toolboxes/Coercer && python3 Coercer.py --help",
-    "cd toolboxes/Coercer && python3 Coercer.py --help",
-    "cd toolboxes/Coercer && python3 Coercer.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Coercer --output $KFIOSA_OUTPUT_DIR/Coercer.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Coercer --output $KFIOSA_OUTPUT_DIR/Coercer.log"
+    "sudo python3 -m pip install coercer"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "A python script to automatically coerce a Windows server to authenticate on an arbitrary machine through many methods.",
+    "usage_sections": [
+      "Installation: You can now install it from pypi (latest version is ) with this command:",
+      "Quick start: - You want to assess the Remote Procedure Calls listening on a machine to see if they can be leveraged to coerce an authentication? + Use scan mode, example: https://user-images.githubusercontent.com/79218792/204374471-bc5094a3-8539-4df7-842e-faadcaf9c945.mp4 - You want to exploi",
+      "Installation: You can now install it from pypi (latest version is ) with this command:",
+      "Quick start: - You want to assess the Remote Procedure Calls listening on a machine to see if they can be leveraged to coerce an authentication? + Use scan mode, example: https://user-images.githubusercontent.com/79218792/204374471-bc5094a3-8539-4df7-842e-faadcaf9c945.mp4 - You want to exploi"
+    ],
     "arguments": [
+      {
+        "name": "--always-continue",
+        "description": "Always continue to coerce",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Windows domain name to authenticate to the machine.",
+        "source": "docs"
+      },
+      {
+        "name": "--dc-ip",
+        "description": "IP Address of the domain controller. If omitted it will use the domain part (FQDN) specified in the target parameter",
+        "source": "docs"
+      },
+      {
+        "name": "--dce-port",
+        "description": "DCERPC port (default: 135)",
+        "source": "docs"
+      },
+      {
+        "name": "--dce-ports",
+        "description": "DCERPC ports",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Debug mode (default: False)",
+        "source": "docs"
+      },
+      {
+        "name": "--delay",
+        "description": "Delay between attempts (in seconds)",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-escape-codes",
+        "description": "Disable ANSI escape codes",
+        "source": "docs"
+      },
+      {
+        "name": "--domain",
+        "description": "Windows domain name to authenticate to the machine.",
+        "source": "docs"
+      },
+      {
+        "name": "--export-json",
+        "description": "Export results to specified JSON file.",
+        "source": "docs"
+      },
+      {
+        "name": "--export-sqlite",
+        "description": "Export results to specified SQLITE3 database file.",
+        "source": "docs"
+      },
+      {
+        "name": "--export-xlsx",
+        "description": "Export results to specified XLSX file.",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "File containing a list of IP address or hostname of the target machines",
+        "source": "docs"
+      },
+      {
+        "name": "--filter-method-name",
+        "description": "Filter by method name",
+        "source": "docs"
+      },
+      {
+        "name": "--filter-pipe-name",
+        "description": "Filter by pipe name",
+        "source": "docs"
+      },
+      {
+        "name": "--filter-protocol-name",
+        "description": "Filter by protocol name",
+        "source": "docs"
+      },
+      {
+        "name": "--filter-transport-name",
+        "description": "Filter by transport name",
+        "source": "docs"
+      },
+      {
+        "name": "--hashes",
+        "description": "NT/LM hashes (LM hash can be empty)",
+        "source": "docs"
+      },
+      {
+        "name": "--http-port",
+        "description": "HTTP port (default: 80)",
+        "source": "docs"
+      },
+      {
+        "name": "-I",
+        "description": "IP address to listen on incoming authentications.",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Interface to listen on incoming authentications.",
+        "source": "docs"
+      },
+      {
+        "name": "--interface",
+        "description": "Interface to listen on incoming authentications.",
+        "source": "docs"
+      },
+      {
+        "name": "--ip-address",
+        "description": "IP address to listen on incoming authentications.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "IP address or hostname of the listener machine",
+        "source": "docs"
+      },
+      {
+        "name": "--listener-ip",
+        "description": "IP address or hostname of the listener machine",
+        "source": "docs"
+      },
+      {
+        "name": "--log-file",
+        "description": "Path for the file to log to (enables logging).",
+        "source": "docs"
+      },
+      {
+        "name": "--max-http-port",
+        "description": "Maximum HTTP port for listening (default: 65000)",
+        "source": "docs"
+      },
+      {
+        "name": "--min-http-port",
+        "description": "Minimum HTTP port for listening (default: 64000)",
+        "source": "docs"
+      },
+      {
+        "name": "--minimum-log-level",
+        "description": "Minimum logging level (integer).",
+        "source": "docs"
+      },
+      {
+        "name": "--no-pass",
+        "description": "Don",
+        "source": "docs"
+      },
+      {
+        "name": "--only-known-exploit-paths",
+        "description": "Only test known exploit paths for each functions",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Password to authenticate to the remote machine. (if omitted, it will be asked unless -no-pass is specified)",
+        "source": "docs"
+      },
+      {
+        "name": "--password",
+        "description": "Password to authenticate to the remote machine. (if omitted, it will be asked unless -no-pass is specified)",
+        "source": "docs"
+      },
+      {
+        "name": "--path-ip",
+        "description": "IP address to use when generating exploit paths.",
+        "source": "docs"
+      },
+      {
+        "name": "--smb-port",
+        "description": "SMB port (default: 445)",
+        "source": "docs"
+      },
+      {
+        "name": "--stop-on-ntlm-auth",
+        "description": "Move on to next target on successful NTLM authentication.",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "IP address or hostname of the target machine",
+        "source": "docs"
+      },
+      {
+        "name": "--target-ip",
+        "description": "IP address or hostname of the target machine",
+        "source": "docs"
+      },
+      {
+        "name": "--targets-file",
+        "description": "File containing a list of IP address or hostname of the target machines",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "Username to authenticate to the remote machine.",
+        "source": "docs"
+      },
+      {
+        "name": "--username",
+        "description": "Username to authenticate to the remote machine.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Verbose mode (default: False)",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Verbose mode (default: False)",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -36,16 +250,6 @@
       {
         "name": "--port",
         "description": "Target port (default: service default).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--interface",
-        "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
         "source": "generic_kfiosa"
       },
       {
@@ -107,29 +311,11 @@
         "name": "--quiet",
         "description": "Suppress non-error output.",
         "source": "generic_kfiosa"
-      },
-      {
-        "name": "--dry-run",
-        "description": "Print what would be done without making any changes.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--yes",
-        "description": "Skip confirmation prompts (use with care).",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--force",
-        "description": "Force the action even if a safety check would block it.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--no-banner",
-        "description": "Suppress banner / tool-name output.",
-        "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo python3 -m pip install coercer"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +441,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, coercer, p0dalirius).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Coercer && python3 Coercer.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Coercer && python3 Coercer.py --help",
-      "Step 3: cd toolboxes/Coercer && python3 Coercer.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the post_exploitation category. Fits when the engagement needs: Windows Support To build a binary for Windows, download the installer.ps1 script from this repository. Run it simply with no arguments to create a binary in the working directory. Use -h or --help for the help menu with .",
+    "why_to_use": "Prefer this tool based on upstream description: A python script to automatically coerce a Windows server to authenticate on an arbitrary machine through many methods.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `sudo python3 -m pip install coercer`. Windows Support To build a binary for Windows, download the installer.ps1 script from this repository. Run it simply with no arguments to create a binary in the working directory. Use -h or --help for the help menu with options."
   },
   "full_name": "p0dalirius/Coercer",
   "id": "github:p0dalirius/Coercer",
@@ -282,7 +464,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Coercer`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Windows Support To build a binary for Windows, download the installer.ps1 script from this repository. Run it simply with no arguments to create a binary in the working directory. Use -h or --help for the help menu with options.",
   "tags": [
     "offensive",
     "coercer",
@@ -300,12 +482,10 @@
   },
   "url": "https://github.com/p0dalirius/Coercer",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need post_exploitation, use Coercer because Windows Support To build a binary for Windows, download the installer.ps1 script from this repository. Run it simply with no arguments to create a binary in the.",
+    "When you need a concrete invocation, run `sudo python3 -m pip install coercer` as documented upstream for Coercer.",
+    "When chaining post_exploitation tools, pair Coercer with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Coercer --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +504,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

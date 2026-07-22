@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "myrescue",
   "title": "myrescue",
-  "summary": "### myrescue",
+  "summary": "myrescue - Harddisc Rescue",
   "version": "0.9.8-4",
   "architectures": [
     "any"
@@ -32,135 +32,14 @@
       "arguments": [
         {
           "flags": [
-            "-b"
-          ],
-          "metavar": "block-size",
-          "takes_value": true,
-          "description": "block size in bytes, default: 4096",
-          "default": "4096",
-          "choices": null,
-          "raw": " -b <block-size>   block size in bytes, default: 4096"
-        },
-        {
-          "flags": [
-            "-B"
-          ],
-          "metavar": "bitmap-file",
-          "takes_value": true,
-          "description": "bitmap-file, default: <output-file>.bitmap",
-          "default": "<output-file>",
-          "choices": null,
-          "raw": " -B <bitmap-file>  bitmap-file, default: <output-file>.bitmap"
-        },
-        {
-          "flags": [
             "-A"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "abort on error",
+          "description": "Abort when encountering errors.",
           "default": null,
           "choices": null,
-          "raw": " -A                abort on error"
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "skip errors (exponential-step)",
-          "default": null,
-          "choices": null,
-          "raw": " -S                skip errors (exponential-step)"
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "number",
-          "takes_value": true,
-          "description": "skip blocks with <number> or more failures",
-          "default": null,
-          "choices": null,
-          "raw": " -f <number>       skip blocks with <number> or more failures"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": "retry-count",
-          "takes_value": true,
-          "description": "try up to <retry-count> reads per block, default: 1",
-          "default": "1",
-          "choices": null,
-          "raw": " -r <retry-count>  try up to <retry-count> reads per block, default: 1"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "start-block",
-          "takes_value": true,
-          "description": "start block number, default: 0",
-          "default": "0",
-          "choices": null,
-          "raw": " -s <start-block>  start block number, default: 0"
-        },
-        {
-          "flags": [
-            "-e"
-          ],
-          "metavar": "end-block",
-          "takes_value": true,
-          "description": "end block number (excl.), default: size of <input-file>",
-          "default": "size of <input-file>",
-          "choices": null,
-          "raw": " -e <end-block>    end block number (excl.), default: size of <input-file>"
-        },
-        {
-          "flags": [
-            "-G"
-          ],
-          "metavar": "range",
-          "takes_value": true,
-          "description": "only read <range> blocks around good ones",
-          "default": null,
-          "choices": null,
-          "raw": " -G <range>        only read <range> blocks around good ones"
-        },
-        {
-          "flags": [
-            "-F"
-          ],
-          "metavar": "range",
-          "takes_value": true,
-          "description": "skip <range> blocks around failed ones",
-          "default": null,
-          "choices": null,
-          "raw": " -F <range>        skip <range> blocks around failed ones"
-        },
-        {
-          "flags": [
-            "-J"
-          ],
-          "metavar": "number",
-          "takes_value": true,
-          "description": "randomly jump after reading a few sectors",
-          "default": null,
-          "choices": null,
-          "raw": " -J <number>       randomly jump after reading a few sectors"
-        },
-        {
-          "flags": [
-            "-T"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "make -A, -S and -F avoid blocks that took long to read",
-          "default": null,
-          "choices": null,
-          "raw": " -T                make -A, -S and -F avoid blocks that took long to read"
+          "raw": "-A  Abort when encountering errors."
         },
         {
           "flags": [
@@ -168,45 +47,32 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "reverse copy direction",
+          "description": "Reverse reading direction, i.e. from end-block (excluded) to start-block",
           "default": null,
           "choices": null,
-          "raw": " -R                reverse copy direction"
+          "raw": "-R  Reverse reading direction, i.e. from end-block (excluded) to start-block"
         },
         {
           "flags": [
-            "-U"
+            "-S"
           ],
-          "metavar": "dev-file",
-          "takes_value": true,
-          "description": "USB device reset after read error",
+          "metavar": null,
+          "takes_value": false,
+          "description": "skip mode: When encountering errors increase the stepsize exponentially until",
           "default": null,
           "choices": null,
-          "raw": " -U <dev-file>     USB device reset after read error"
+          "raw": "-S  skip mode: When encountering errors increase the stepsize exponentially until"
         },
         {
           "flags": [
-            "-h"
+            "-T"
           ],
-          "metavar": "-?",
-          "takes_value": true,
-          "description": "usage information",
+          "metavar": null,
+          "takes_value": false,
+          "description": "avoid blocks, that were successfully read, but took an unusually long time to",
           "default": null,
           "choices": null,
-          "raw": " -h, -?            usage information"
-        },
-        {
-          "flags": [
-            "-A",
-            "-S",
-            "-F"
-          ],
-          "metavar": "and treat such blocks as defective.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -A, -S and -F treat such blocks as defective."
+          "raw": "-T  avoid blocks, that were successfully read, but took an unusually long time to"
         }
       ],
       "raw_help": "root@kali:~# myrescue --help\n myrescue: invalid option -- '-'\n myrescue [<options>] <input-file> <output-file>\n options:\n -b <block-size>   block size in bytes, default: 4096\n -B <bitmap-file>  bitmap-file, default: <output-file>.bitmap\n -A                abort on error\n -S                skip errors (exponential-step)\n -f <number>       skip blocks with <number> or more failures\n -r <retry-count>  try up to <retry-count> reads per block, default: 1\n -s <start-block>  start block number, default: 0\n -e <end-block>    end block number (excl.), default: size of <input-file>\n -G <range>        only read <range> blocks around good ones\n -F <range>        skip <range> blocks around failed ones\n -J <number>       randomly jump after reading a few sectors\n -T                make -A, -S and -F avoid blocks that took long to read\n -R                reverse copy direction\n -U <dev-file>     USB device reset after read error\n                 (something like /dev/bus/usb/XXX/XXX !)\n -h, -?            usage information",
@@ -369,21 +235,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use myrescue because myrescue - Harddisc Rescue.",
+    "When you need a concrete invocation, run `myrescue  [-b  block-size]  [-B  bitmap-file]  [-A] [-S] [-r retry-count] [-f skip-failed] [-s` as documented upstream for myrescue.",
+    "When chaining Kali Linux tools, pair myrescue with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `myrescue --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/myrescue && python3 myrescue.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/myrescue && python3 myrescue.py --help",
-    "cd toolboxes/myrescue && python3 myrescue.py --help",
-    "cd toolboxes/myrescue && python3 myrescue.py --help",
-    "cd toolboxes/myrescue && python3 myrescue.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST myrescue --output $KFIOSA_OUTPUT_DIR/myrescue.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST myrescue --output $KFIOSA_OUTPUT_DIR/myrescue.log"
+    "myrescue  [-b  block-size]  [-B  bitmap-file]  [-A] [-S] [-r retry-count] [-f skip-failed] [-s"
   ],
   "attack_surface": [
     "web"
@@ -398,5 +256,42 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-A",
+        "description": "Abort when encountering errors.",
+        "source": "docs"
+      },
+      {
+        "name": "-R",
+        "description": "Reverse reading direction, i.e. from end-block (excluded) to start-block",
+        "source": "docs"
+      },
+      {
+        "name": "-S",
+        "description": "skip mode: When encountering errors increase the stepsize exponentially until",
+        "source": "docs"
+      },
+      {
+        "name": "-T",
+        "description": "avoid blocks, that were successfully read, but took an unusually long time to",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "myrescue  [-b  block-size]  [-B  bitmap-file]  [-A] [-S] [-r retry-count] [-f skip-failed] [-s"
+    ],
+    "readme": "myrescue - Harddisc Rescue",
+    "how_to_use": "Install/setup: sudo apt install myrescue.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: myrescue - Harddisc Rescue.",
+    "why_to_use": "Prefer this tool because: myrescue - Harddisc Rescue.",
+    "usage_sections": [
+      "Install with: sudo apt install myrescue",
+      "Install with: sudo apt install myrescue"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

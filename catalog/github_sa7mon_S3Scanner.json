@@ -1,18 +1,74 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/S3Scanner && python3 S3Scanner.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/S3Scanner && python3 S3Scanner.py --help",
-    "cd toolboxes/S3Scanner && python3 S3Scanner.py --help",
-    "cd toolboxes/S3Scanner && python3 S3Scanner.py --help",
-    "cd toolboxes/S3Scanner && python3 S3Scanner.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST S3Scanner --output $KFIOSA_OUTPUT_DIR/S3Scanner.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST S3Scanner --output $KFIOSA_OUTPUT_DIR/S3Scanner.log"
+    "If config file is required these locations will be searched for config.yml: \".\" \"/etc/s3scanner/\" \"$HOME/.s3scanner/\"",
+    "s3scanner -bucket-file names.txt -enumerate",
+    "s3scanner -provider gcp -db -bucket my-bucket -enumerate",
+    "s3scanner -bucket secret_uploads",
+    "s3scanner -bucket-file names.txt",
+    "cat names.txt",
+    "s3scanner -mq",
+    "s3scanner -bucket images -db",
+    "s3scanner -bucket images -json",
+    "s3scanner -bucket-file names.txt -json | jq -r '. | select(.bucket.exists==1) | [.bucket.name, .bucket.region] | join(\" - \")'"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Features - Usage - Quick Start - Installation - Discuss",
+    "usage_sections": [
+      "Features: ⚡️ Multi-threaded scanning 🔭 Supports many built-in S3 storage providers or custom 🕵️‍♀️ Scans all bucket permissions to find misconfigurations 💾 Save results to Postgres database 🐇 Connect to RabbitMQ for automated scanning at scale 🐳 Docker support",
+      "Quick Start: Scan AWS for bucket names listed in a file, enumerate all objects Scan a bucket in GCP, enumerate all objects, and save results to database"
+    ],
     "arguments": [
+      {
+        "name": "-bucket",
+        "description": "string Name of bucket to check.",
+        "source": "docs"
+      },
+      {
+        "name": "-bucket-file",
+        "description": "string File of bucket names to check.",
+        "source": "docs"
+      },
+      {
+        "name": "-db",
+        "description": "Save results to a Postgres database. Requires config file key \"db.uri\". Default: \"false\"",
+        "source": "docs"
+      },
+      {
+        "name": "-enumerate",
+        "description": "Enumerate bucket objects (can be time-consuming). Default: \"false\"",
+        "source": "docs"
+      },
+      {
+        "name": "-json",
+        "description": "Print logs to stdout in JSON format instead of human-readable. Default: \"false\"",
+        "source": "docs"
+      },
+      {
+        "name": "-mq",
+        "description": "Connect to RabbitMQ to get buckets. Requires config file key \"mq\". Default: \"false\"",
+        "source": "docs"
+      },
+      {
+        "name": "-provider",
+        "description": "string Object storage provider: aws, custom, digitalocean, dreamhost, gcp, linode, scaleway - custom requires config file. Default: \"aws\"",
+        "source": "docs"
+      },
+      {
+        "name": "-threads",
+        "description": "int Number of threads to scan with. Default: \"4\"",
+        "source": "docs"
+      },
+      {
+        "name": "-verbose",
+        "description": "Enable verbose logging. Default: \"false\"",
+        "source": "docs"
+      },
+      {
+        "name": "-version",
+        "description": "Print version Default: \"false\"",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +185,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "If config file is required these locations will be searched for config.yml: \".\" \"/etc/s3scanner/\" \"$HOME/.s3scanner/\"",
+      "s3scanner -bucket-file names.txt -enumerate",
+      "s3scanner -provider gcp -db -bucket my-bucket -enumerate",
+      "s3scanner -bucket secret_uploads",
+      "s3scanner -bucket-file names.txt",
+      "cat names.txt",
+      "s3scanner -mq",
+      "s3scanner -bucket images -db",
+      "s3scanner -bucket images -json",
+      "s3scanner -bucket-file names.txt -json | jq -r '. | select(.bucket.exists==1) | [.bucket.name, .bucket.region] | join(\" - \")'"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +322,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, s3scanner, sa7mon).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/S3Scanner && python3 S3Scanner.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/S3Scanner && python3 S3Scanner.py --help",
-      "Step 3: cd toolboxes/S3Scanner && python3 S3Scanner.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: - AWS - DigitalOcean - DreamHost - GCP - Linode - Scaleway - Custom.",
+    "why_to_use": "Prefer this tool based on upstream description: Features - Usage - Quick Start - Installation - Discuss.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `If config file is required these locations will be searched for config.yml: \".\" \"/etc/s3scanner/\" \"$HOME/.s3scanner/\"`. Further invocations from upstream: `s3scanner -bucket-file names.txt -enumerate`; `s3scanner -provider gcp -db -bucket my-bucket -enumerate`. - AWS - DigitalOcean - DreamHost - GCP - Linode - Scaleway - Custom."
   },
   "full_name": "sa7mon/S3Scanner",
   "id": "github:sa7mon/S3Scanner",
@@ -282,7 +345,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``S3Scanner`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "- AWS - DigitalOcean - DreamHost - GCP - Linode - Scaleway - Custom",
   "tags": [
     "offensive",
     "s3scanner",
@@ -300,12 +363,13 @@
   },
   "url": "https://github.com/sa7mon/S3Scanner",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use S3Scanner because - AWS - DigitalOcean - DreamHost - GCP - Linode - Scaleway - Custom.",
+    "When you need a concrete invocation, run `If config file is required these locations will be searched for config.yml: \".\" \"/etc/s3scanner/\" \"$HOME/.s3scanner/\"` as documented upstream for S3Scanner.",
+    "When you need a concrete invocation, run `s3scanner -bucket-file names.txt -enumerate` as documented upstream for S3Scanner.",
+    "When you need a concrete invocation, run `s3scanner -provider gcp -db -bucket my-bucket -enumerate` as documented upstream for S3Scanner.",
+    "When you need a concrete invocation, run `s3scanner -bucket secret_uploads` as documented upstream for S3Scanner.",
+    "When chaining recon tools, pair S3Scanner with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `S3Scanner --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +388,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

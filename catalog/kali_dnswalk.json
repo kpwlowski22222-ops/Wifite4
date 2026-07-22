@@ -27,7 +27,74 @@
       "path": "/usr/bin/dnswalk",
       "description": "A DNS database debugger",
       "usage": "dnswalk [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Turn on warning of duplicate A records. (see below)",
+          "default": null,
+          "choices": null,
+          "raw": "-a  Turn on warning of duplicate A records. (see below)"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print debugging and 'status' information to stderr. (Use only if redirecting stdout)",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Print debugging and 'status' information to stderr. (Use only if redirecting stdout)"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Suppress check for invalid characters in a domain name. (see below)",
+          "default": null,
+          "choices": null,
+          "raw": "-i  Suppress check for invalid characters in a domain name. (see below)"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Perform \"lame delegation\" checking. For every NS record, check to see that the listed",
+          "default": null,
+          "choices": null,
+          "raw": "-l  Perform \"lame delegation\" checking. For every NS record, check to see that the listed"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Perform checks only if the zone has been modified since the previous run.",
+          "default": null,
+          "choices": null,
+          "raw": "-m  Perform checks only if the zone has been modified since the previous run."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Recursively descend sub-domains of the specified domain. Use with care.",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Recursively descend sub-domains of the specified domain. Use with care."
+        }
+      ]
     }
   ],
   "files": [
@@ -42,5 +109,62 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "dnswalk [ -adilrfFm ] domain."
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use dnswalk because Checks dns zone information using nameserver lookups.",
+    "When the engagement is in the install phase, use dnswalk as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `dnswalk [ -adilrfFm ] domain.` as documented upstream for dnswalk.",
+    "When chaining Kali Linux tools, pair dnswalk with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dnswalk --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "Turn on warning of duplicate A records. (see below)",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Print debugging and 'status' information to stderr. (Use only if redirecting stdout)",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Suppress check for invalid characters in a domain name. (see below)",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Perform \"lame delegation\" checking. For every NS record, check to see that the listed",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "Perform checks only if the zone has been modified since the previous run.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Recursively descend sub-domains of the specified domain. Use with care.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "dnswalk [ -adilrfFm ] domain."
+    ],
+    "readme": "dnswalk - A DNS database debugger",
+    "how_to_use": "Install/setup: sudo apt install dnswalk. Run the primary entrypoint as shown in upstream docs, e.g. `dnswalk [ -adilrfFm ] domain.`. Checks dns zone information using nameserver lookups.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Checks dns zone information using nameserver lookups.",
+    "why_to_use": "Prefer this tool because: Checks dns zone information using nameserver lookups.",
+    "usage_sections": [
+      "Install with: sudo apt install dnswalk",
+      "Install with: sudo apt install dnswalk"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

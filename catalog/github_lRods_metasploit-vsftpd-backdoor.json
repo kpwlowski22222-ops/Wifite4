@@ -8,23 +8,29 @@
   "url": "https://github.com/lRods/metasploit-vsftpd-backdoor",
   "summary": "Exploração do Backdoor vsFTPd 2.3.4\nSimulação e exploração do backdoor no serviço vsFTPd v2.3.4 — laboratório com Metasploit e script autônomo em Ruby.",
   "documentation": {
-    "readme": "Exploração do Backdoor vsFTPd 2.3.4\nSimulação e exploração do backdoor no serviço vsFTPd v2.3.4 — laboratório com Metasploit e script autônomo em Ruby.",
-    "usage_sections": [],
+    "readme": "Exploração do Backdoor vsFTPd 2.3.4 Simulação e exploração do backdoor no serviço vsFTPd v2.3.4 — laboratório com Metasploit e script autônomo em Ruby.",
+    "usage_sections": [
+      "Cria um novo processo (para não bloquear o FTP).",
+      "Cria um socket TCP e faz bind na porta 6200 (qualquer IP local).",
+      "Coloca esse socket em modo listen() e aguarda uma conexão (accept()).",
+      "Quando alguém se conecta, ele:",
+      "Redireciona o stdin, stdout e stderr desse socket."
+    ],
     "arguments": [
       {
-        "name": "--open",
-        "description": "CLI flag '--open' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-duplex",
+        "description": "uma thread para receber dados remotos e outra principal para enviar. É suficiente para comandos baseados em linha (ex.: `id`, `ls`, `cat arquivo`). Não cria um PTY, portanto progra",
+        "source": "docs"
       },
       {
-        "name": "-A",
-        "description": "CLI flag '-A' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-la",
+        "description": "é o que transforma um ataque em conhecimento.”",
+        "source": "docs"
       },
       {
-        "name": "-C",
-        "description": "CLI flag '-C' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-only",
+        "description": "aborta (backdoor inacessível por esse caminho).",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -185,7 +191,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "Na máquina vulnerável, criei um arquivo chamado **\"flag.txt\"**, na pasta **\"/home/msfadmin\"**, e o objetivo do ataque será ler este arquivo.",
+      "Conseguimos ler o arquivo **\"flag.txt\"**, concluindo nosso objetivo."
+    ],
     "file_listing": [
       "README.md",
       "flag.txt",
@@ -245,13 +254,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['shell_windows', 'shell_linux', 'ad']' as the attack surface (post-exploitation, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/metasploit-vsftpd-backdoor && python3 metasploit-vsftpd-backdoor.py --help",
-      "Step 2: cd toolboxes/metasploit-vsftpd-backdoor && cat README.md",
-      "Step 3: cd toolboxes/metasploit-vsftpd-backdoor && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [shell_windows, shell_linux, ad] in the Post-Exploitation category. Fits when the engagement needs: Exploração do Backdoor vsFTPd 2.3.4\nSimulação e exploração do backdoor no serviço vsFTPd v2.3.4 — laboratório com Metasploit e script autônomo em Ruby.",
+    "why_to_use": "Prefer this tool based on upstream description: Exploração do Backdoor vsFTPd 2.3.4 Simulação e exploração do backdoor no serviço vsFTPd v2.3.4 — laboratório com Metasploit e script autônomo em Ruby.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `Na máquina vulnerável, criei um arquivo chamado **\"flag.txt\"**, na pasta **\"/home/msfadmin\"**, e o objetivo do ataque será ler este arquivo.`. Further invocations from upstream: `Conseguimos ler o arquivo **\"flag.txt\"**, concluindo nosso objetivo.`. Exploração do Backdoor vsFTPd 2.3.4 Simulação e exploração do backdoor no serviço vsFTPd v2.3.4 — laboratório com Metasploit e script autônomo em Ruby."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -283,18 +288,16 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Post-Exploitation system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Post-Exploitation, use metasploit-vsftpd-backdoor because Exploração do Backdoor vsFTPd 2.3.4\nSimulação e exploração do backdoor no serviço vsFTPd v2.3.4 — laboratório com Metasploit e script autônomo em Ruby.",
+    "When the engagement is in the post_exploit phase, use metasploit-vsftpd-backdoor as a cataloged Post-Exploitation tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `Na máquina vulnerável, criei um arquivo chamado **\"flag.txt\"**, na pasta **\"/home/msfadmin\"**, e o objetivo do ataque será ler este arquivo.` as documented upstream for metasploit-vsftpd-backdoor.",
+    "When you need a concrete invocation, run `Conseguimos ler o arquivo **\"flag.txt\"**, concluindo nosso objetivo.` as documented upstream for metasploit-vsftpd-backdoor.",
+    "When chaining Post-Exploitation tools, pair metasploit-vsftpd-backdoor with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `metasploit-vsftpd-backdoor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/metasploit-vsftpd-backdoor && python3 metasploit-vsftpd-backdoor.py --help",
-    "cd toolboxes/metasploit-vsftpd-backdoor && cat README.md",
-    "cd toolboxes/metasploit-vsftpd-backdoor && ls -la",
-    "cd toolboxes/metasploit-vsftpd-backdoor && python3 metasploit-vsftpd-backdoor.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metasploit-vsftpd-backdoor --output $KFIOSA_OUTPUT_DIR/metasploit-vsftpd-backdoor.log"
+    "Na máquina vulnerável, criei um arquivo chamado **\"flag.txt\"**, na pasta **\"/home/msfadmin\"**, e o objetivo do ataque será ler este arquivo.",
+    "Conseguimos ler o arquivo **\"flag.txt\"**, concluindo nosso objetivo."
   ],
   "attack_surface": [
     "shell_windows",
@@ -317,5 +320,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "ruby"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

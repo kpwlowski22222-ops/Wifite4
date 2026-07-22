@@ -6,20 +6,31 @@
   "owner": "simsong",
   "category": "Penetration Testing",
   "url": "https://github.com/simsong/bulk_extractor",
-  "summary": "[![codecov](https://codecov.io/gh/simsong/bulk_extractor/branch/main/graph/badge.svg?token=3w691sdgLu)](https://codecov.io/gh/simsong/bulk_extractor)\n<a href=\"https://scan.coverity.com/projects/simsong-bulk_extractor\">\n  <img alt=\"Coverity Scan Build Status\" src=\"https://scan.coverity.com/projects/29726/badge.svg\"/></a>",
+  "summary": "bulkextractor is a high-performance digital forensics exploitation tool. It is a \"get evidence\" button that rapidly scans any kind of input (disk images, files, directories of files, etc) and extracts structured information such as email addresses, credit card numbers, JPEGs and JSON snippets without parsing the file system or file system structures. The results are stored in text files that are easily inspected, searched, or used as inputs for other forensic processing. bulkextractor also creat",
   "documentation": {
-    "readme": "[![codecov](https://codecov.io/gh/simsong/bulk_extractor/branch/main/graph/badge.svg?token=3w691sdgLu)](https://codecov.io/gh/simsong/bulk_extractor)\n<a href=\"https://scan.coverity.com/projects/simsong-bulk_extractor\">\n  <img alt=\"Coverity Scan Build Status\" src=\"https://scan.coverity.com/projects/29726/badge.svg\"/></a>",
-    "usage_sections": [],
+    "readme": "bulkextractor is a high-performance digital forensics exploitation tool. It is a \"get evidence\" button that rapidly scans any kind of input (disk images, files, directories of files, etc) and extracts structured information such as email addresses, credit card numbers, JPEGs and JSON snippets without parsing the file system or file system structures. The results are stored in text files that are easily inspected, searched, or used as inputs for other forensic processing. bulkextractor also creates histograms of certain kinds of features that it finds, such as Google search terms and email addresses, as previous research has shown that such histograms are especially useful in investigative and law enforcement applications.",
+    "usage_sections": [
+      "Apple Silicon macOS (local build and make distcheck, 2026-07-19)",
+      "Ubuntu 22.04 and current macOS GitHub Actions runners",
+      "Debian 10 (not supported for native builds)",
+      "Run -xall to run without any scanners.",
+      "Run with a random sampling of 0.001% to debug reading image size and a few quick seeks."
+    ],
     "arguments": [
       {
-        "name": "-P",
-        "description": "CLI flag '-P' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--download",
+        "description": "download files needed",
+        "source": "docs"
       },
       {
-        "name": "-S",
-        "description": "CLI flag '-S' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--tune",
+        "description": "- runs bulk_extractor under a variety of conditions",
+        "source": "docs"
+      },
+      {
+        "name": "--verify",
+        "description": "- verify a single BE report",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +204,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "./bootstrap.sh",
+      "./configure",
+      "author = {Garfinkel, Simson L.},",
+      "title = {Digital Media Triage with Bulk Data Analysis and Bulk_extractor},",
+      "year = {2013},",
+      "publisher = {Elsevier Advanced Technology Publications},",
+      "address = {GBR},",
+      "volume = {32},",
+      "number = {C},",
+      "issn = {0167-4048},"
+    ],
     "file_listing": [
       "1.jpg",
       "1mb_fat32.dmg",
@@ -295,13 +317,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bulk_extractor && python3 bulk_extractor.py --help",
-      "Step 2: cd toolboxes/bulk_extractor && cat README.md",
-      "Step 3: cd toolboxes/bulk_extractor && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: bulkextractor is a high-performance digital forensics exploitation tool. It is a \"get evidence\" button that rapidly scans any kind of input (disk images, files, directories of files, etc) and extracts structured informat.",
+    "why_to_use": "Prefer this tool based on upstream description: bulkextractor is a high-performance digital forensics exploitation tool. It is a \"get evidence\" button that rapidly scans any kind of input (disk images, files, directories of files, etc) and extracts structured information such as email addresses, credit card numbers, JPEGs and JSON snippets without parsing the file system or file system structures. The results are stored in text files that are e.",
+    "how_to_use": "Install/setup: git clone https://github.com/simsong/bulk_extractor.git; make install. Run the primary entrypoint as shown in upstream docs, e.g. `./bootstrap.sh`. Further invocations from upstream: `./configure`; `author = {Garfinkel, Simson L.},`. bulkextractor is a high-performance digital forensics exploitation tool. It is a \"get evidence\" button that rapidly scans any kind of input (disk images, files, directories of files, etc) and extracts structured information such as email addresses, credit card numbers, JPEGs and JSON snippets without parsing the file s."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -334,18 +352,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use bulk_extractor because bulkextractor is a high-performance digital forensics exploitation tool. It is a \"get evidence\" button that rapidly scans any kind of input (disk images, files,.",
+    "When you need a concrete invocation, run `./bootstrap.sh` as documented upstream for bulk_extractor.",
+    "When you need a concrete invocation, run `./configure` as documented upstream for bulk_extractor.",
+    "When you need a concrete invocation, run `author = {Garfinkel, Simson L.},` as documented upstream for bulk_extractor.",
+    "When you need a concrete invocation, run `title = {Digital Media Triage with Bulk Data Analysis and Bulk_extractor},` as documented upstream for bulk_extractor.",
+    "When chaining Penetration Testing tools, pair bulk_extractor with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bulk_extractor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/bulk_extractor && python3 bulk_extractor.py --help",
-    "cd toolboxes/bulk_extractor && cat README.md",
-    "cd toolboxes/bulk_extractor && ls -la",
-    "cd toolboxes/bulk_extractor && python3 bulk_extractor.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bulk_extractor --output $KFIOSA_OUTPUT_DIR/bulk_extractor.log"
+    "./bootstrap.sh",
+    "./configure",
+    "author = {Garfinkel, Simson L.},",
+    "title = {Digital Media Triage with Bulk Data Analysis and Bulk_extractor},",
+    "year = {2013},",
+    "publisher = {Elsevier Advanced Technology Publications},",
+    "address = {GBR},",
+    "volume = {32},",
+    "number = {C},",
+    "issn = {0167-4048},"
   ],
   "attack_surface": [
     "shell_linux"
@@ -368,5 +393,7 @@
     "cpp",
     "python",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -1,17 +1,16 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/puredns && python3 puredns.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/puredns && python3 puredns.py --help",
-    "cd toolboxes/puredns && python3 puredns.py --help",
-    "cd toolboxes/puredns && python3 puredns.py --help",
-    "cd toolboxes/puredns && python3 puredns.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST puredns --output $KFIOSA_OUTPUT_DIR/puredns.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST puredns --output $KFIOSA_OUTPUT_DIR/puredns.log"
+    "go install github.com/d3mondev/puredns/v2@latest",
+    "puredns resolve domains.txt --write valid_domains.txt \\"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Fast domain resolver and subdomain bruteforcing with accurate wildcard filtering",
+    "usage_sections": [
+      "Features: Resolve thousands of DNS queries per second using massdns and a list of public DNS resolvers Bruteforce subdomains using a wordlist and root domains Clean wildcards and detect wildcard roots using the minimal number of queries to ensure precise results Circumvent DNS load-balanci",
+      "Installation: You can download a binary release. Alternatively, you can compile the latest version easily. First make sure that Go is installed on your system - the last two major releases of Go are supported. Refer to the official Go installation page for installation instructions. Then run t",
+      "Usage: Make sure to view the complete list of available commands and options using puredns --help. If a resolvers.txt file exists in the current working directory, puredns will default to using it. Otherwise, if either /.config/puredns/resolvers.txt or /.config/puredns/resolvers-trusted"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +128,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "go install github.com/d3mondev/puredns/v2@latest",
+      "puredns resolve domains.txt --write valid_domains.txt \\"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +257,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, puredns, d3mondev).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/puredns && python3 puredns.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/puredns && python3 puredns.py --help",
-      "Step 3: cd toolboxes/puredns && python3 puredns.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: Fast domain resolver and subdomain bruteforcing with accurate wildcard filtering.",
+    "why_to_use": "Prefer this tool based on upstream description: Fast domain resolver and subdomain bruteforcing with accurate wildcard filtering.",
+    "how_to_use": "Install/setup: git clone https://github.com/blechschmidt/massdns.git; go install github.com/d3mondev/puredns/v2@latest. Run the primary entrypoint as shown in upstream docs, e.g. `go install github.com/d3mondev/puredns/v2@latest`. Further invocations from upstream: `puredns resolve domains.txt --write valid_domains.txt \\`. Fast domain resolver and subdomain bruteforcing with accurate wildcard filtering."
   },
   "full_name": "d3mondev/puredns",
   "id": "github:d3mondev/puredns",
@@ -282,7 +280,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``puredns`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Fast domain resolver and subdomain bruteforcing with accurate wildcard filtering",
   "tags": [
     "offensive",
     "puredns",
@@ -300,12 +298,11 @@
   },
   "url": "https://github.com/d3mondev/puredns",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use puredns because Fast domain resolver and subdomain bruteforcing with accurate wildcard filtering.",
+    "When you need a concrete invocation, run `go install github.com/d3mondev/puredns/v2@latest` as documented upstream for puredns.",
+    "When you need a concrete invocation, run `puredns resolve domains.txt --write valid_domains.txt \\` as documented upstream for puredns.",
+    "When chaining recon tools, pair puredns with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `puredns --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +321,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

@@ -9,32 +9,33 @@
   "summary": "XWorm C2 Absolute Path Traversal Vulnerability",
   "documentation": {
     "readme": "XWorm C2 Absolute Path Traversal Vulnerability",
-    "usage_sections": [],
+    "usage_sections": [
+      "XWorm v7.2 and earlier",
+      "Settings.KEY - Base64-encoded AES key",
+      "Settings.SPL - Base64-encoded message separator",
+      "Settings.Mutex - Mutex string",
+      "type 0 (default): FileZilla .txt"
+    ],
     "arguments": [
       {
         "name": "--key",
-        "description": "CLI flag '--key' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "AES key (base64)",
+        "source": "docs"
       },
       {
         "name": "--mutex",
-        "description": "CLI flag '--mutex' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Mutex string",
+        "source": "docs"
       },
       {
         "name": "--payload",
-        "description": "CLI flag '--payload' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Payload file path",
+        "source": "docs"
       },
       {
         "name": "--spl",
-        "description": "CLI flag '--spl' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--type",
-        "description": "CLI flag '--type' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Separator (base64)",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -245,13 +246,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['web', 'shell_windows', 'shell_linux']' as the attack surface (command_and_control, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/xworm-c2-path-traversal && python3 xworm-c2-path-traversal.py --help",
-      "Step 2: cd toolboxes/xworm-c2-path-traversal && cat README.md",
-      "Step 3: cd toolboxes/xworm-c2-path-traversal && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [web, shell_windows, shell_linux] in the Command and Control category. Fits when the engagement needs: XWorm C2 Absolute Path Traversal Vulnerability.",
+    "why_to_use": "Prefer this tool based on upstream description: XWorm C2 Absolute Path Traversal Vulnerability.",
+    "how_to_use": "Install/setup: pip install pycryptodome. XWorm C2 Absolute Path Traversal Vulnerability."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -283,19 +280,12 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Command and Control system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Command and Control, use xworm-c2-path-traversal because XWorm C2 Absolute Path Traversal Vulnerability.",
+    "When the engagement is in the post_exploit phase, use xworm-c2-path-traversal as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
+    "When chaining Command and Control tools, pair xworm-c2-path-traversal with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `xworm-c2-path-traversal --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
-  "command_examples": [
-    "cd toolboxes/xworm-c2-path-traversal && python3 xworm-c2-path-traversal.py --help",
-    "cd toolboxes/xworm-c2-path-traversal && cat README.md",
-    "cd toolboxes/xworm-c2-path-traversal && ls -la",
-    "cd toolboxes/xworm-c2-path-traversal && python3 xworm-c2-path-traversal.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST xworm-c2-path-traversal --output $KFIOSA_OUTPUT_DIR/xworm-c2-path-traversal.log"
-  ],
+  "command_examples": [],
   "attack_surface": [
     "web",
     "shell_windows",
@@ -317,5 +307,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

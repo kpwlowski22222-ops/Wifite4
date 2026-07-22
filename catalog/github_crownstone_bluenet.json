@@ -6,11 +6,99 @@
   "owner": "crownstone",
   "category": "Bluetooth",
   "url": "https://github.com/crownstone/bluenet",
-  "summary": "<p align=\"center\">\n  <a href=\"https://crownstone.rocks#gh-light-mode-only\">\n    <img src=\"https://raw.githubusercontent.com/crownstone/bluenet/master/docs/images/crownstone_logo_text_black.svg?sanitize=true\" alt=\"Crownstone Logo in Light Mode\" />\n  </a>\n  <a href=\"https://crownstone.rocks#gh-dark-mode-only\">\n    <img src=\"https://raw.githubusercontent.com/crownstone/bluenet/master/docs/images/crownstone_logo_text_white.svg?sanitize=true\" alt=\"Crownstone Logo in Dark Mode\" />\n  </a>\n</p>",
+  "summary": "Bluenet is code running on Crownstone compatible devices such as electronic connectors, electronic EU plugs and grid-powered beacons, Guidestones. Each Crownstone or Guidestone is a node in a network that uses signal strength for indoor localization of smartphones and wearables.",
   "documentation": {
-    "readme": "<p align=\"center\">\n  <a href=\"https://crownstone.rocks#gh-light-mode-only\">\n    <img src=\"https://raw.githubusercontent.com/crownstone/bluenet/master/docs/images/crownstone_logo_text_black.svg?sanitize=true\" alt=\"Crownstone Logo in Light Mode\" />\n  </a>\n  <a href=\"https://crownstone.rocks#gh-dark-mode-only\">\n    <img src=\"https://raw.githubusercontent.com/crownstone/bluenet/master/docs/images/crownstone_logo_text_white.svg?sanitize=true\" alt=\"Crownstone Logo in Dark Mode\" />\n  </a>\n</p>",
-    "usage_sections": [],
+    "readme": "Bluenet is code running on Crownstone compatible devices such as electronic connectors, electronic EU plugs and grid-powered beacons, Guidestones. Each Crownstone or Guidestone is a node in a network that uses signal strength for indoor localization of smartphones and wearables.",
+    "usage_sections": [
+      "Features: - Made for indoor localization. - Includes a mesh network. - Power measuring. - iBeacon compliant. - Configurable over the air.",
+      "Usage: To use a device with bluenet code on it, you only need to know the Bluetooth protocol that bluenet uses. You can find the protocol definitions in the protocol document."
+    ],
     "arguments": [
+      {
+        "name": "-d",
+        "description": "The UART device to use, for example: /dev/ttyACM0",
+        "source": "docs"
+      },
+      {
+        "name": "--device",
+        "description": "The UART device to use, for example: /dev/ttyACM0",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "The output file.",
+        "source": "docs"
+      },
+      {
+        "name": "--hex",
+        "description": "Show raw output as hex values",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "The path of the file with the extracted logs on your system.",
+        "source": "docs"
+      },
+      {
+        "name": "--logStringsFile",
+        "description": "The path of the file with the extracted logs on your system.",
+        "source": "docs"
+      },
+      {
+        "name": "--outputFile",
+        "description": "The output file.",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Also print plaintext logs",
+        "source": "docs"
+      },
+      {
+        "name": "--plaintext",
+        "description": "Also print plaintext logs",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Show raw output (may result in interleaved print statements)",
+        "source": "docs"
+      },
+      {
+        "name": "--raw",
+        "description": "Show raw output (may result in interleaved print statements)",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "The path with the pre-compiled bluenet source code files on your system (.i or .ii files)",
+        "source": "docs"
+      },
+      {
+        "name": "--sourceFilesDir",
+        "description": "The path with the pre-compiled bluenet source code files on your system (.i or .ii files)",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "File names will include the path starting at the root dir, like: /home/joe/workspace/bluenet/source/src/cs_Crownstone.cpp. We want them to start at a dir that",
+        "source": "docs"
+      },
+      {
+        "name": "--topDir",
+        "description": "File names will include the path starting at the root dir, like: /home/joe/workspace/bluenet/source/src/cs_Crownstone.cpp. We want them to start at a dir that",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Show verbose output",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Show verbose output",
+        "source": "docs"
+      },
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
@@ -39,11 +127,6 @@
       {
         "name": "--interface",
         "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
         "source": "generic_kfiosa"
       },
       {
@@ -193,7 +276,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/bluenet && python3 bluenet.py --help",
+      "cd toolboxes/bluenet && cat README.md",
+      "cd toolboxes/bluenet && ls -la",
+      "cd toolboxes/bluenet && python3 bluenet.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluenet --output $KFIOSA_OUTPUT_DIR/bluenet.log"
+    ],
     "file_listing": [
       "20201120_112041.jpg",
       "ADC.md",
@@ -295,13 +384,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bluenet && python3 bluenet.py --help",
-      "Step 2: cd toolboxes/bluenet && cat README.md",
-      "Step 3: cd toolboxes/bluenet && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: Bluenet is code running on Crownstone compatible devices such as electronic connectors, electronic EU plugs and grid-powered beacons, Guidestones. Each Crownstone or Guidestone is a node in a network that uses signal str.",
+    "why_to_use": "Prefer this tool based on upstream description: Bluenet is code running on Crownstone compatible devices such as electronic connectors, electronic EU plugs and grid-powered beacons, Guidestones. Each Crownstone or Guidestone is a node in a network that uses signal strength for indoor localization of smartphones and wearables.",
+    "how_to_use": "Clone or install `bluenet` from its upstream repository, then run `bluenet --help` (or the README entrypoint) to confirm flags. Bluenet is code running on Crownstone compatible devices such as electronic connectors, electronic EU plugs and grid-powered beacons, Guidestones. Each Crownstone or Guidestone is a node in a network that uses signal strength for indoor localization of smartphones and wearables."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -334,11 +419,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use bluenet because Bluenet is code running on Crownstone compatible devices such as electronic connectors, electronic EU plugs and grid-powered beacons, Guidestones. Each Crownsto.",
+    "When chaining Bluetooth tools, pair bluenet with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bluenet --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/bluenet && python3 bluenet.py --help",
@@ -370,5 +453,7 @@
     "cpp",
     "c",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

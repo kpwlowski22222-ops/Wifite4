@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "instaloader",
   "title": "instaloader",
-  "summary": "### instaloader",
+  "summary": "instaloader - instagram automatic photo downloader",
   "version": "4.15.1+ds-1",
   "architectures": [
     "all"
@@ -29,490 +29,58 @@
       "arguments": [
         {
           "flags": [
-            "-shortcode"
-          ],
-          "metavar": "--",
-          "takes_value": true,
-          "description": "Download the post with the given shortcode",
-          "default": null,
-          "choices": null,
-          "raw": " -- -shortcode         Download the post with the given shortcode"
-        },
-        {
-          "flags": [
-            "--slide"
-          ],
-          "metavar": "SLIDE",
-          "takes_value": true,
-          "description": "Set what image/interval of a sidecar you want to",
-          "default": null,
-          "choices": null,
-          "raw": " --slide SLIDE         Set what image/interval of a sidecar you want to"
-        },
-        {
-          "flags": [
-            "--no-pictures"
+            "--filename-pat"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Do not download post pictures. Cannot be used together",
+          "description": "tern`={date_utc}_utc. The tokens {target} and {profile} are replaced like in the dirname pat-",
           "default": null,
           "choices": null,
-          "raw": " --no-pictures         Do not download post pictures. Cannot be used together"
+          "raw": "--filename-pat  tern`={date_utc}_utc. The tokens {target} and {profile} are replaced like in the dirname pat-"
         },
         {
           "flags": [
-            "-V",
-            "--no-videos"
+            "-post"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Do not download videos.",
+          "description": "Replace post with the post's shortcode to download single post. Must be preceded",
           "default": null,
           "choices": null,
-          "raw": " -V, --no-videos       Do not download videos."
+          "raw": "-post  Replace post with the post's shortcode to download single post. Must be preceded"
         },
         {
           "flags": [
-            "--no-video-thumbnails"
+            "--post-meta"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "data-txt` and :option:`--storyitem-metadata-txt`. The default is --post-metadata-txt={caption}",
           "default": null,
           "choices": null,
-          "raw": " --no-video-thumbnails"
+          "raw": "--post-meta  data-txt` and :option:`--storyitem-metadata-txt`. The default is --post-metadata-txt={caption}"
         },
         {
           "flags": [
-            "-G",
-            "--geotags"
+            "--storyitem"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Download geotags when available. Geotags are stored as",
+          "description": "filter`:",
           "default": null,
           "choices": null,
-          "raw": " -G, --geotags         Download geotags when available. Geotags are stored as"
+          "raw": "--storyitem  filter`:"
         },
         {
           "flags": [
-            "-C",
-            "--comments"
+            "--title-pat"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Download and update comments for each post. This",
+          "description": "tern`.",
           "default": null,
           "choices": null,
-          "raw": " -C, --comments        Download and update comments for each post. This"
-        },
-        {
-          "flags": [
-            "--no-captions"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not create txt files.",
-          "default": null,
-          "choices": null,
-          "raw": " --no-captions         Do not create txt files."
-        },
-        {
-          "flags": [
-            "--post-metadata-txt"
-          ],
-          "metavar": "POST_METADATA_TXT",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --post-metadata-txt POST_METADATA_TXT"
-        },
-        {
-          "flags": [
-            "--storyitem-metadata-txt"
-          ],
-          "metavar": "STORYITEM_METADATA_TXT",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --storyitem-metadata-txt STORYITEM_METADATA_TXT"
-        },
-        {
-          "flags": [
-            "--no-metadata-json"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not create a JSON file containing the metadata of",
-          "default": null,
-          "choices": null,
-          "raw": " --no-metadata-json    Do not create a JSON file containing the metadata of"
-        },
-        {
-          "flags": [
-            "--no-compress-json"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not xz compress JSON files, rather create pretty",
-          "default": null,
-          "choices": null,
-          "raw": " --no-compress-json    Do not xz compress JSON files, rather create pretty"
-        },
-        {
-          "flags": [
-            "--no-posts"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not download regular posts.",
-          "default": null,
-          "choices": null,
-          "raw": " --no-posts            Do not download regular posts."
-        },
-        {
-          "flags": [
-            "--no-profile-pic"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not download profile picture.",
-          "default": null,
-          "choices": null,
-          "raw": " --no-profile-pic      Do not download profile picture."
-        },
-        {
-          "flags": [
-            "-s",
-            "--stories"
-          ],
-          "metavar": "- tories",
-          "takes_value": true,
-          "description": "Also download stories of each profile that is",
-          "default": null,
-          "choices": null,
-          "raw": " -s, --stories         Also download stories of each profile that is"
-        },
-        {
-          "flags": [
-            "--highlights"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Also download highlights of each profile that is",
-          "default": null,
-          "choices": null,
-          "raw": " --highlights          Also download highlights of each profile that is"
-        },
-        {
-          "flags": [
-            "--tagged"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Also download posts where each profile is tagged.",
-          "default": null,
-          "choices": null,
-          "raw": " --tagged              Also download posts where each profile is tagged."
-        },
-        {
-          "flags": [
-            "--reels"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Also download Reels videos.",
-          "default": null,
-          "choices": null,
-          "raw": " --reels               Also download Reels videos."
-        },
-        {
-          "flags": [
-            "--igtv"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Also download IGTV videos.",
-          "default": null,
-          "choices": null,
-          "raw": " --igtv                Also download IGTV videos."
-        },
-        {
-          "flags": [
-            "-F",
-            "--fast-update"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "For each target, stop when encountering the first",
-          "default": null,
-          "choices": null,
-          "raw": " -F, --fast-update     For each target, stop when encountering the first"
-        },
-        {
-          "flags": [
-            "--latest-stamps"
-          ],
-          "metavar": "STAMPSFILE",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --latest-stamps [STAMPSFILE]"
-        },
-        {
-          "flags": [
-            "--post-filter",
-            "--only-if"
-          ],
-          "metavar": "filter",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --post-filter, --only-if filter"
-        },
-        {
-          "flags": [
-            "--storyitem-filter"
-          ],
-          "metavar": "filter",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --storyitem-filter filter"
-        },
-        {
-          "flags": [
-            "-c",
-            "--count"
-          ],
-          "metavar": "- ount COUNT",
-          "takes_value": true,
-          "description": "Do not attempt to download more than COUNT posts.",
-          "default": null,
-          "choices": null,
-          "raw": " -c, --count COUNT     Do not attempt to download more than COUNT posts."
-        },
-        {
-          "flags": [
-            "-l",
-            "--login"
-          ],
-          "metavar": "- ogin YOUR-USERNAME",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -l, --login YOUR-USERNAME"
-        },
-        {
-          "flags": [
-            "-b",
-            "--load-cookies"
-          ],
-          "metavar": "BROWSER-NAME",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -b, --load-cookies BROWSER-NAME"
-        },
-        {
-          "flags": [
-            "-B",
-            "--cookiefile"
-          ],
-          "metavar": "COOKIE-FILE",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -B, --cookiefile COOKIE-FILE"
-        },
-        {
-          "flags": [
-            "-f",
-            "--sessionfile"
-          ],
-          "metavar": "SESSIONFILE",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -f, --sessionfile SESSIONFILE"
-        },
-        {
-          "flags": [
-            "-p",
-            "--password"
-          ],
-          "metavar": "- assword YOUR-PASSWORD",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -p, --password YOUR-PASSWORD"
-        },
-        {
-          "flags": [
-            "--dirname-pattern"
-          ],
-          "metavar": "DIRNAME_PATTERN",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --dirname-pattern DIRNAME_PATTERN"
-        },
-        {
-          "flags": [
-            "--filename-pattern"
-          ],
-          "metavar": "FILENAME_PATTERN",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --filename-pattern FILENAME_PATTERN"
-        },
-        {
-          "flags": [
-            "--title-pattern"
-          ],
-          "metavar": "TITLE_PATTERN",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --title-pattern TITLE_PATTERN"
-        },
-        {
-          "flags": [
-            "--resume-prefix"
-          ],
-          "metavar": "PREFIX",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --resume-prefix PREFIX"
-        },
-        {
-          "flags": [
-            "--sanitize-paths"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Sanitize paths so that the resulting file and",
-          "default": null,
-          "choices": null,
-          "raw": " --sanitize-paths      Sanitize paths so that the resulting file and"
-        },
-        {
-          "flags": [
-            "--no-resume"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not resume a previously-aborted download iteration,",
-          "default": null,
-          "choices": null,
-          "raw": " --no-resume           Do not resume a previously-aborted download iteration,"
-        },
-        {
-          "flags": [
-            "--user-agent"
-          ],
-          "metavar": "USER_AGENT",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --user-agent USER_AGENT"
-        },
-        {
-          "flags": [
-            "--max-connection-attempts"
-          ],
-          "metavar": "N",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --max-connection-attempts N"
-        },
-        {
-          "flags": [
-            "--request-timeout"
-          ],
-          "metavar": "N",
-          "takes_value": true,
-          "description": "Seconds to wait before timing out a connection",
-          "default": null,
-          "choices": null,
-          "raw": " --request-timeout N   Seconds to wait before timing out a connection"
-        },
-        {
-          "flags": [
-            "--abort-on"
-          ],
-          "metavar": "STATUS_CODES",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " --abort-on STATUS_CODES"
-        },
-        {
-          "flags": [
-            "--no-iphone"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not attempt to download iPhone version of images",
-          "default": null,
-          "choices": null,
-          "raw": " --no-iphone           Do not attempt to download iPhone version of images"
-        },
-        {
-          "flags": [
-            "-q",
-            "--quiet"
-          ],
-          "metavar": "- uiet",
-          "takes_value": true,
-          "description": "Disable user interaction, i.e. do not print messages",
-          "default": null,
-          "choices": null,
-          "raw": " -q, --quiet           Disable user interaction, i.e. do not print messages"
-        },
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "Show this help message and exit.",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help            Show this help message and exit."
-        },
-        {
-          "flags": [
-            "--version"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Show version number and exit.",
-          "default": null,
-          "choices": null,
-          "raw": " --version             Show version number and exit."
+          "raw": "--title-pat  tern`."
         }
       ],
       "raw_help": "root@kali:~# instaloader -h\n usage: \n instaloader [--comments] [--geotags]\n           [--stories] [--highlights] [--tagged] [--reels] [--igtv]\n           [--login YOUR-USERNAME] [--fast-update]\n           profile | \"#hashtag\" | %location_id | :stories | :feed | :saved\n instaloader --help\n \n Download pictures (or videos) along with their captions and other metadata\n from Instagram.\n \n What to Download:\n Specify a list of targets. For each of these, Instaloader creates a folder\n and downloads all posts. The following targets are supported:\n \n profile               Download profile. If an already-downloaded profile has\n                       been renamed, Instaloader automatically finds it by\n                       its unique ID and renames the folder likewise.\n @profile              Download all followees of profile. Requires login.\n                       Consider using :feed rather than @yourself.\n \"#hashtag\"            Download #hashtag.\n %location_id          Download %location_id. Requires login.\n :feed                 Download pictures from your feed. Requires login.\n :stories              Download the stories of your followees. Requires\n                       login.\n :saved                Download the posts that you marked as saved. Requires\n                       login.\n -- -shortcode         Download the post with the given shortcode\n filename.json[.xz]    Re-Download the given object.\n +args.txt             Read targets (and options) from given textfile.\n \n What to Download of each Post:\n --slide SLIDE         Set what image/interval of a sidecar you want to\n                       download.\n --no-pictures         Do not download post pictures. Cannot be used together\n                       with --fast-update. Implies --no-video-thumbnails,\n                       does not imply --no-videos.\n -V, --no-videos       Do not download videos.\n --no-video-thumbnails\n                       Do not download thumbnails of videos.\n -G, --geotags         Download geotags when available. Geotags are stored as\n                       a text file with the location's name and a Google Maps\n                       link. This requires an additional request to the\n                       Instagram server for each picture. Requires login.\n -C, --comments        Download and update comments for each post. This\n                       requires an additional request to the Instagram server\n                       for each post, which is why it is disabled by default.\n                       Requires login.\n --no-captions         Do not create txt files.\n --post-metadata-txt POST_METADATA_TXT\n                       Template to write in txt file for each Post.\n --storyitem-metadata-txt STORYITEM_METADATA_TXT\n                       Template to write in txt file for each StoryItem.\n --no-metadata-json    Do not create a JSON file containing the metadata of\n                       each post.\n --no-compress-json    Do not xz compress JSON files, rather create pretty\n                       formatted JSONs.\n \n What to Download of each Profile:\n --no-posts            Do not download regular posts.\n --no-profile-pic      Do not download profile picture.\n -s, --stories         Also download stories of each profile that is\n                       downloaded. Requires login.\n --highlights          Also download highlights of each profile that is\n                       downloaded. Requires login.\n --tagged              Also download posts where each profile is tagged.\n --reels               Also download Reels videos.\n --igtv                Also download IGTV videos.\n \n Which Posts to Download:\n -F, --fast-update     For each target, stop when encountering the first\n                       already-downloaded picture. This flag is recommended\n                       when you use Instaloader to update your personal\n                       Instagram archive.\n --latest-stamps [STAMPSFILE]\n                       Store the timestamps of latest media scraped for each\n                       profile. This allows updating your personal Instagram\n                       archive even if you delete the destination\n                       directories. If STAMPSFILE is not provided, defaults\n                       to /root/.config/instaloader/latest-stamps.ini\n --post-filter, --only-if filter\n                       Expression that, if given, must evaluate to True for\n                       each post to be downloaded. Must be a syntactically\n                       valid python expression. Variables are evaluated to\n                       instaloader.Post attributes. Example: --post-\n                       filter=viewer_has_liked.\n --storyitem-filter filter\n                       Expression that, if given, must evaluate to True for\n                       each storyitem to be downloaded. Must be a\n                       syntactically valid python expression. Variables are\n                       evaluated to instaloader.StoryItem attributes.\n -c, --count COUNT     Do not attempt to download more than COUNT posts.\n                       Applies to #hashtag, %location_id, :feed, and :saved.\n \n Login (Download Private Profiles):\n Instaloader can login to Instagram. This allows downloading private\n profiles. To login, pass the --login option. Your session cookie (not your\n password!) will be saved to a local file to be reused next time you want\n Instaloader to login. Instead of --login, the --load-cookies option can be\n used to import a session from a browser.\n \n -l, --login YOUR-USERNAME\n                       Login name (profile name) for your Instagram account.\n -b, --load-cookies BROWSER-NAME\n                       Browser name to load cookies from Instagram\n -B, --cookiefile COOKIE-FILE\n                       Cookie file of a profile to load cookies\n -f, --sessionfile SESSIONFILE\n                       Path for loading and storing session key file.\n                       Defaults to\n                       /root/.config/instaloader/session-<login_name>\n -p, --password YOUR-PASSWORD\n                       Password for your Instagram account. Without this\n                       option, you'll be prompted for your password\n                       interactively if there is not yet a valid session\n                       file.\n \n How to Download:\n --dirname-pattern DIRNAME_PATTERN\n                       Name of directory where to store posts. {profile} is\n                       replaced by the profile name, {target} is replaced by\n                       the target you specified, i.e. either :feed, #hashtag\n                       or the profile name. Defaults to '{target}'.\n --filename-pattern FILENAME_PATTERN\n                       Prefix of filenames for posts and stories, relative to\n                       the directory given with --dirname-pattern. {profile}\n                       is replaced by the profile name,{target} is replaced\n                       by the target you specified, i.e. either :feed#hashtag\n                       or the profile name. Defaults to '{date_utc}_UTC'\n --title-pattern TITLE_PATTERN\n                       Prefix of filenames for profile pics, hashtag profile\n                       pics, and highlight covers. Defaults to\n                       '{date_utc}_UTC_{typename}' if --dirname-pattern\n                       contains '{target}' or '{dirname}', or if --dirname-\n                       pattern is not specified. Otherwise defaults to\n                       '{target}_{date_utc}_UTC_{typename}'.\n --resume-prefix PREFIX\n                       Prefix for filenames that are used to save the\n                       information to resume an interrupted download.\n --sanitize-paths      Sanitize paths so that the resulting file and\n                       directory names are valid on both Windows and Unix.\n --no-resume           Do not resume a previously-aborted download iteration,\n                       and do not save such information when interrupted.\n --user-agent USER_AGENT\n                       User Agent to use for HTTP requests. Defaults to\n                       'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36\n                       (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'.\n --max-connection-attempts N\n                       Maximum number of connection attempts until a request\n                       is aborted. Defaults to 3. If a connection fails, it\n                       can be manually skipped by hitting CTRL+C. Set this to\n                       0 to retry infinitely.\n --request-timeout N   Seconds to wait before timing out a connection\n                       request. Defaults to 300.\n --abort-on STATUS_CODES\n                       Comma-separated list of HTTP status codes that cause\n                       Instaloader to abort, bypassing all retry logic.\n --no-iphone           Do not attempt to download iPhone version of images\n                       and videos.\n \n Miscellaneous Options:\n -q, --quiet           Disable user interaction, i.e. do not print messages\n                       (except errors) and fail if login credentials are\n                       needed but not given. This makes Instaloader suitable\n                       as a cron job.\n -h, --help            Show this help message and exit.\n --version             Show version number and exit.\n \n The complete documentation can be found at https://instaloader.github.io/.",
@@ -673,21 +241,23 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use instaloader because instaloader - instagram automatic photo downloader.",
+    "When you need a concrete invocation, run `instaloader profile [profile ...]` as documented upstream for instaloader.",
+    "When you need a concrete invocation, run `instaloader --fast-update profile [profile ...]` as documented upstream for instaloader.",
+    "When you need a concrete invocation, run `instaloader --latest-stamps -- profile [profile ...]` as documented upstream for instaloader.",
+    "When you need a concrete invocation, run `instaloader --login=your_username` as documented upstream for instaloader.",
+    "When chaining Kali Linux tools, pair instaloader with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `instaloader --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/instaloader && python3 instaloader.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/instaloader && python3 instaloader.py --help",
-    "cd toolboxes/instaloader && python3 instaloader.py --help",
-    "cd toolboxes/instaloader && python3 instaloader.py --help",
-    "cd toolboxes/instaloader && python3 instaloader.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST instaloader --output $KFIOSA_OUTPUT_DIR/instaloader.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST instaloader --output $KFIOSA_OUTPUT_DIR/instaloader.log"
+    "instaloader profile [profile ...]",
+    "instaloader --fast-update profile [profile ...]",
+    "instaloader --latest-stamps -- profile [profile ...]",
+    "instaloader --login=your_username",
+    "instaloader --dirname-pattern={profile}",
+    "instaloader --login=your_username --quiet target [...]",
+    "instaloader --filename-pattern={date_utc}_UTC_{profile} \"#hashtag\"",
+    "instaloader --post-filter=\"date_utc <= datetime(2018, 5, 31)\" target"
   ],
   "attack_surface": [
     "web",
@@ -703,5 +273,54 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--filename-pat",
+        "description": "tern`={date_utc}_utc. The tokens {target} and {profile} are replaced like in the dirname pat-",
+        "source": "docs"
+      },
+      {
+        "name": "-post",
+        "description": "Replace post with the post's shortcode to download single post. Must be preceded",
+        "source": "docs"
+      },
+      {
+        "name": "--post-meta",
+        "description": "data-txt` and :option:`--storyitem-metadata-txt`. The default is --post-metadata-txt={caption}",
+        "source": "docs"
+      },
+      {
+        "name": "--storyitem",
+        "description": "filter`:",
+        "source": "docs"
+      },
+      {
+        "name": "--title-pat",
+        "description": "tern`.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "instaloader profile [profile ...]",
+      "instaloader --fast-update profile [profile ...]",
+      "instaloader --latest-stamps -- profile [profile ...]",
+      "instaloader --login=your_username",
+      "instaloader --dirname-pattern={profile}",
+      "instaloader --login=your_username --quiet target [...]",
+      "instaloader --filename-pattern={date_utc}_UTC_{profile} \"#hashtag\"",
+      "instaloader --post-filter=\"date_utc <= datetime(2018, 5, 31)\" target"
+    ],
+    "readme": "instaloader - instagram automatic photo downloader",
+    "how_to_use": "Install/setup: sudo apt install instaloader. Run the primary entrypoint as shown in upstream docs, e.g. `instaloader profile [profile ...]`. Further invocations from upstream: `instaloader --fast-update profile [profile ...]`; `instaloader --latest-stamps -- profile [profile ...]`. instaloader - instagram automatic photo downloader.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web, ad] in the Kali Linux category. Fits when the engagement needs: instaloader - instagram automatic photo downloader.",
+    "why_to_use": "Prefer this tool based on upstream description: instaloader - instagram automatic photo downloader.",
+    "usage_sections": [
+      "Install with: sudo apt install instaloader",
+      "Install with: sudo apt install instaloader"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -81,6 +81,16 @@ def _patch_pick(monkeypatch, *, airmon_result=None,
                          "original_iface": "wlan0", "method": "airmon",
                          "error": ""}
     monkeypatch.setattr(airmon, "airmon_start", lambda iface: airmon_result)
+    # Default hermetic stop: back to managed wlan0 (tests may override).
+    monkeypatch.setattr(
+        airmon, "airmon_stop",
+        lambda monitor_iface, timeout=15: {
+            "ok": True, "returncode": 0, "stdout": "", "stderr": "",
+            "error": "", "managed_iface": "wlan0",
+        },
+    )
+    # Do not consult live iw (would short-circuit fakes on real mon ifaces).
+    monkeypatch.setattr(airmon, "_iw_is_monitor", lambda iface: False)
     monkeypatch.setattr(mt7921e_tools, "probe_mt7921e_capabilities",
                         lambda *a, **k: [])
     return fake
@@ -126,6 +136,43 @@ class TestPickInterfaceSetsState:
         assert sc.interface == "wlan0mon"
         assert sc.interface_mode == "monitor"
         assert sc.original_iface == "wlan0"
+
+    def test_pick_moves_cursor_off_toggle_to_avoid_enter_bounce(self, monkeypatch, log):
+        """Operator-reported bug: leftover ENTERs after pick re-fire item 0
+        (now the toggle) and immediately flip monitor → managed.
+
+        After a successful pick while Advanced is active, cursor must not
+        stay on the toggle row.
+        """
+        sc = _wifi(log)
+        sc._show_advanced()
+        sc.menu_index = 0
+        _patch_pick(monkeypatch)
+        sc.pick_interface()
+        assert sc.interface_mode == "monitor"
+        assert sc.menu_index != 0
+        assert sc.menu_index == 1
+        # Explicit toggle still works when the operator chooses it.
+        sc.menu_index = 0
+        sc.toggle_interface_mode()
+        assert sc.interface_mode == "managed"
+
+    def test_pick_skips_runtime_injection_test(self, monkeypatch, log):
+        """pick_interface must not block on aireplay-ng --test."""
+        from core.modules import mt7921e_tools
+
+        sc = _wifi(log)
+        _patch_pick(monkeypatch)
+        calls = []
+
+        def spy(*a, **k):
+            calls.append(k)
+            return []
+
+        monkeypatch.setattr(mt7921e_tools, "probe_mt7921e_capabilities", spy)
+        sc.pick_interface()
+        assert calls
+        assert calls[0].get("test") is False
 
     def test_airmon_success_rebuilds_label_to_dynamic(self, monkeypatch, log):
         """After a successful pick, the Advanced menu item text changes

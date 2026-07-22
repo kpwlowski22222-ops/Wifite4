@@ -8,13 +8,15 @@
   "url": "https://github.com/ChrisRyanKelly/airspace-mapper",
   "summary": "**Map and analyse wireless airspace for Red Team operations with geolocation, signal strength, and vendor enrichment. Inspired by CyberArk’s WPA-scale reconnaissance strategy.**",
   "documentation": {
-    "readme": "**Map and analyse wireless airspace for Red Team operations with geolocation, signal strength, and vendor enrichment. Inspired by CyberArk’s WPA-scale reconnaissance strategy.**",
-    "usage_sections": [],
+    "readme": "Map and analyse wireless airspace for Red Team operations with geolocation, signal strength, and vendor enrichment. Inspired by CyberArk’s WPA-scale reconnaissance strategy.",
+    "usage_sections": [
+      "Features: - Parse .22000 WPA handshake files - Perform MAC OUI → vendor enrichment via CSV - Correlate APs with signal strength from .tsv logs - Optionally map GPS coordinates using .gpx waypoints or tracks - Output structured JSON and GPX for geospatial analysis - De-duplicate targets and"
+    ],
     "arguments": [
       {
         "name": "--export-gpx",
-        "description": "CLI flag '--export-gpx' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Export waypoints to GPX format\")",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +195,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python3 airspace_map.py handshakes.22000 signal_log.tsv gps_track.gpx --export-gpx"
+    ],
     "file_listing": [
       "README.md",
       "airspace_map.py"
@@ -245,13 +249,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'iots']' as the attack surface (reconnaissance, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/airspace-mapper && python3 airspace-mapper.py --help",
-      "Step 2: cd toolboxes/airspace-mapper && cat README.md",
-      "Step 3: cd toolboxes/airspace-mapper && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, iots] in the Reconnaissance category. Fits when the engagement needs: **Map and analyse wireless airspace for Red Team operations with geolocation, signal strength, and vendor enrichment. Inspired by CyberArk’s WPA-scale reconnaissance strategy.**.",
+    "why_to_use": "Prefer this tool based on upstream description: Map and analyse wireless airspace for Red Team operations with geolocation, signal strength, and vendor enrichment. Inspired by CyberArk’s WPA-scale reconnaissance strategy.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `python3 airspace_map.py handshakes.22000 signal_log.tsv gps_track.gpx --export-gpx`. Map and analyse wireless airspace for Red Team operations with geolocation, signal strength, and vendor enrichment. Inspired by CyberArk’s WPA-scale reconnaissance strategy."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -282,18 +282,14 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Reconnaissance, use airspace-mapper because **Map and analyse wireless airspace for Red Team operations with geolocation, signal strength, and vendor enrichment. Inspired by CyberArk’s WPA-scale reconnais.",
+    "When the engagement is in the recon phase, use airspace-mapper as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `python3 airspace_map.py handshakes.22000 signal_log.tsv gps_track.gpx --export-gpx` as documented upstream for airspace-mapper.",
+    "When chaining Reconnaissance tools, pair airspace-mapper with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `airspace-mapper --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/airspace-mapper && python3 airspace-mapper.py --help",
-    "cd toolboxes/airspace-mapper && cat README.md",
-    "cd toolboxes/airspace-mapper && ls -la",
-    "cd toolboxes/airspace-mapper && python3 airspace-mapper.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST airspace-mapper --output $KFIOSA_OUTPUT_DIR/airspace-mapper.log"
+    "python3 airspace_map.py handshakes.22000 signal_log.tsv gps_track.gpx --export-gpx"
   ],
   "attack_surface": [
     "web",
@@ -316,5 +312,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -9,7 +9,13 @@
   "summary": "JAWS - Just Another Windows (Enum) Script",
   "documentation": {
     "readme": "JAWS - Just Another Windows (Enum) Script",
-    "usage_sections": [],
+    "usage_sections": [
+      "Network Information (interfaces, arp, netstat)",
+      "Firewall Status and Rules",
+      "Files and Folders with Full Control or Modify Access",
+      "Potentially Interesting Files",
+      "Unquoted Service Paths"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +199,11 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "CMD C:\\temp> powershell.exe -ExecutionPolicy Bypass -File .\\jaws-enum.ps1 -OutputFilename JAWS-Enum.txt",
+      "CMD C:\\temp> powershell.exe -ExecutionPolicy Bypass -File .\\jaws-enum.ps1",
+      "PS C:\\temp> .\\jaws-enum.ps1 -OutputFileName Jaws-Enum.txt"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -246,13 +256,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/JAWS && python3 JAWS.py --help",
-      "Step 2: cd toolboxes/JAWS && cat README.md",
-      "Step 3: cd toolboxes/JAWS && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: JAWS - Just Another Windows (Enum) Script.",
+    "why_to_use": "Prefer this tool based on upstream description: JAWS - Just Another Windows (Enum) Script.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `CMD C:\\temp> powershell.exe -ExecutionPolicy Bypass -File .\\jaws-enum.ps1 -OutputFilename JAWS-Enum.txt`. Further invocations from upstream: `CMD C:\\temp> powershell.exe -ExecutionPolicy Bypass -File .\\jaws-enum.ps1`; `PS C:\\temp> .\\jaws-enum.ps1 -OutputFileName Jaws-Enum.txt`. JAWS - Just Another Windows (Enum) Script."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -283,18 +289,17 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use JAWS because JAWS - Just Another Windows (Enum) Script.",
+    "When you need a concrete invocation, run `CMD C:\\temp> powershell.exe -ExecutionPolicy Bypass -File .\\jaws-enum.ps1 -OutputFilename JAWS-Enum.txt` as documented upstream for JAWS.",
+    "When you need a concrete invocation, run `CMD C:\\temp> powershell.exe -ExecutionPolicy Bypass -File .\\jaws-enum.ps1` as documented upstream for JAWS.",
+    "When you need a concrete invocation, run `PS C:\\temp> .\\jaws-enum.ps1 -OutputFileName Jaws-Enum.txt` as documented upstream for JAWS.",
+    "When chaining Penetration Testing tools, pair JAWS with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `JAWS --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/JAWS && python3 JAWS.py --help",
-    "cd toolboxes/JAWS && cat README.md",
-    "cd toolboxes/JAWS && ls -la",
-    "cd toolboxes/JAWS && python3 JAWS.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST JAWS --output $KFIOSA_OUTPUT_DIR/JAWS.log"
+    "CMD C:\\temp> powershell.exe -ExecutionPolicy Bypass -File .\\jaws-enum.ps1 -OutputFilename JAWS-Enum.txt",
+    "CMD C:\\temp> powershell.exe -ExecutionPolicy Bypass -File .\\jaws-enum.ps1",
+    "PS C:\\temp> .\\jaws-enum.ps1 -OutputFileName Jaws-Enum.txt"
   ],
   "attack_surface": [
     "shell_linux"
@@ -315,5 +320,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "powershell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

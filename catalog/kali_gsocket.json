@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "gsocket",
   "title": "gsocket",
-  "summary": "### gsocket",
+  "summary": "blitz -- Securely transfer files between two workstations through NAT/Firewall.",
   "version": "1.4.43-4",
   "architectures": [
     "any"
@@ -29,58 +29,58 @@
       "arguments": [
         {
           "flags": [
-            "-l"
+            "-f"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Server Mode.",
-          "default": "mode is client",
-          "choices": null,
-          "raw": "  -l           Server Mode."
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "secret",
-          "takes_value": true,
-          "description": "Secret (e.g. password).",
+          "description": "Read list of file names from FILE. If FILE is -, the list will be read from standard",
           "default": null,
           "choices": null,
-          "raw": "  -s <secret>  Secret (e.g. password)."
+          "raw": "-f  Read list of file names from FILE. If FILE is -, the list will be read from standard"
         },
         {
           "flags": [
             "-k"
           ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "Read Secret from file.",
+          "metavar": null,
+          "takes_value": false,
+          "description": "A file containing the password.",
           "default": null,
           "choices": null,
-          "raw": "  -k <file>    Read Secret from file."
+          "raw": "-k  A file containing the password."
         },
         {
           "flags": [
-            "-f"
+            "-l"
           ],
-          "metavar": "list",
-          "takes_value": true,
-          "description": "Read list of file names from FILE [or - for stdin]",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Server mode. The default mode is client.",
           "default": null,
           "choices": null,
-          "raw": "  -f <list>\tRead list of file names from FILE [or - for stdin]"
+          "raw": "-l  Server mode. The default mode is client."
         },
         {
           "flags": [
             "-o"
           ],
-          "metavar": "RSOPT=val Options passed to rsync.",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Options passed to rsync. See rsync(1) for available options.",
           "default": null,
           "choices": null,
-          "raw": "  -o RSOPT=val Options passed to rsync."
+          "raw": "-o  Options passed to rsync. See rsync(1) for available options."
+        },
+        {
+          "flags": [
+            "-system"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "$ blitz -s MySecret -o 'RSOPT=-x' /",
+          "default": null,
+          "choices": null,
+          "raw": "-system  $ blitz -s MySecret -o 'RSOPT=-x' /"
         },
         {
           "flags": [
@@ -88,10 +88,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Use TOR. The blitz tool will connect via TOR to the GSRN. This re-",
+          "description": "Use TOR. The blitz tool will connect via TOR to the GSRN. This requires TOR to be in-",
           "default": null,
           "choices": null,
-          "raw": "     -T      Use TOR. The blitz tool will connect via TOR to the GSRN. This re-"
+          "raw": "-T  Use TOR. The blitz tool will connect via TOR to the GSRN. This requires TOR to be in-"
         }
       ],
       "raw_help": "root@kali:~# blitz -h\n blitz [-k file] [-s password] [-l] [FILES ...]\n  -l           Server Mode.\n  -s <secret>  Secret (e.g. password).\n  -k <file>    Read Secret from file.\n  -f <list>\tRead list of file names from FILE [or - for stdin]\n  -o RSOPT=val Options passed to rsync.\n\nExample:\n   $ blitz -s MySecret -l             # Server\n   $ blitz -s MySecret *.dat          # Client\n \n ...limiting transfer rate to 10kB/sec\n   $ blitz -s MySecret -o 'RSOPT=--bwlimit=10 -v' /etc/*.conf *.dat\n \n ...reading the file list from standard-in\n   $ cd /etc\n   $ find . -name '*.mp3' | blitz -s MySecret -f -\n \n ...limit the amount of path information by inserting a dot and slash\n   $ blitz -s MySecret ~/tools/./upx/mp3\n \n See 'man gs-netcat' and 'man rsync' for more options.",
@@ -967,21 +967,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use blitz because blitz -- Securely transfer files between two workstations through NAT/Firewall.",
+    "When you need a concrete invocation, run `blitz [-lT] [-s secret] [-k keyfile] [-f list] [-o RSOPT=] [files ...]` as documented upstream for blitz.",
+    "When you need a concrete invocation, run `blitz -s MySecret=$KFIOSA_SECRET` as documented upstream for blitz.",
+    "When chaining Kali Linux tools, pair blitz with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `blitz --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/gsocket && python3 gsocket.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/gsocket && python3 gsocket.py --help",
-    "cd toolboxes/gsocket && python3 gsocket.py --help",
-    "cd toolboxes/gsocket && python3 gsocket.py --help",
-    "cd toolboxes/gsocket && python3 gsocket.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gsocket --output $KFIOSA_OUTPUT_DIR/gsocket.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gsocket --output $KFIOSA_OUTPUT_DIR/gsocket.log"
+    "blitz [-lT] [-s secret] [-k keyfile] [-f list] [-o RSOPT=] [files ...]",
+    "blitz -s MySecret=$KFIOSA_SECRET",
+    "blitz -s MySecret=$KFIOSA_SECRET",
+    "blitz -s MySecret=$KFIOSA_SECRET",
+    "blitz -s MySecret=$KFIOSA_SECRET",
+    "blitz -s MySecret=$KFIOSA_SECRET 'RSOPT=--bwlimit=10' /usr/./share",
+    "blitz -s MySecret=$KFIOSA_SECRET 'RSOPT=-x' /",
+    "find . -name '*.conf' | blitz -s MySecret=$KFIOSA_SECRET -"
   ],
   "attack_surface": [
     "web"
@@ -996,5 +996,59 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-f",
+        "description": "Read list of file names from FILE. If FILE is -, the list will be read from standard",
+        "source": "docs"
+      },
+      {
+        "name": "-k",
+        "description": "A file containing the password.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Server mode. The default mode is client.",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "Options passed to rsync. See rsync(1) for available options.",
+        "source": "docs"
+      },
+      {
+        "name": "-system",
+        "description": "$ blitz -s MySecret -o 'RSOPT=-x' /",
+        "source": "docs"
+      },
+      {
+        "name": "-T",
+        "description": "Use TOR. The blitz tool will connect via TOR to the GSRN. This requires TOR to be in-",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "blitz [-lT] [-s secret] [-k keyfile] [-f list] [-o RSOPT=] [files ...]",
+      "blitz -s MySecret=$KFIOSA_SECRET",
+      "blitz -s MySecret=$KFIOSA_SECRET",
+      "blitz -s MySecret=$KFIOSA_SECRET",
+      "blitz -s MySecret=$KFIOSA_SECRET",
+      "blitz -s MySecret=$KFIOSA_SECRET 'RSOPT=--bwlimit=10' /usr/./share",
+      "blitz -s MySecret=$KFIOSA_SECRET 'RSOPT=-x' /",
+      "find . -name '*.conf' | blitz -s MySecret=$KFIOSA_SECRET -"
+    ],
+    "readme": "blitz -- Securely transfer files between two workstations through NAT/Firewall.",
+    "how_to_use": "Install/setup: sudo apt install gsocket. Run the primary entrypoint as shown in upstream docs, e.g. `blitz [-lT] [-s secret] [-k keyfile] [-f list] [-o RSOPT=] [files ...]`. Further invocations from upstream: `blitz -s MySecret=$KFIOSA_SECRET`; `blitz -s MySecret=$KFIOSA_SECRET`. blitz -- Securely transfer files between two workstations through NAT/Firewall.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: blitz -- Securely transfer files between two workstations through NAT/Firewall.",
+    "why_to_use": "Prefer this tool based on upstream description: blitz -- Securely transfer files between two workstations through NAT/Firewall.",
+    "usage_sections": [
+      "Install with: sudo apt install gsocket",
+      "Install with: sudo apt install gsocket"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

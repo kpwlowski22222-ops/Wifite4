@@ -27,7 +27,74 @@
       "path": "/usr/bin/hivexregedit",
       "description": "Merge and export Registry changes from regedit-format files.",
       "usage": "hivexregedit [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "debugging in the hivex library. This is useful for diagnosing bugs and also mal-",
+          "default": null,
+          "choices": null,
+          "raw": "--debug  debugging in the hivex library. This is useful for diagnosing bugs and also mal-"
+        },
+        {
+          "flags": [
+            "--export"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "hivexregedit --export [--prefix prefix] hivefile key > regfile",
+          "default": null,
+          "choices": null,
+          "raw": "--export  hivexregedit --export [--prefix prefix] hivefile key > regfile"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display help.",
+          "default": null,
+          "choices": null,
+          "raw": "--help  Display help."
+        },
+        {
+          "flags": [
+            "--merge"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "hivexregedit --merge [--prefix prefix] [--encoding enc] \\",
+          "default": null,
+          "choices": null,
+          "raw": "--merge  hivexregedit --merge [--prefix prefix] [--encoding enc] \\"
+        },
+        {
+          "flags": [
+            "--unsafe"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use heuristics to tolerate certain levels of corruption within hives.",
+          "default": null,
+          "choices": null,
+          "raw": "--unsafe  Use heuristics to tolerate certain levels of corruption within hives."
+        },
+        {
+          "flags": [
+            "--unsafe-printable-strings"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "When exporting (only), assume strings are UTF-16LE and print them as strings instead of",
+          "default": null,
+          "choices": null,
+          "raw": "--unsafe-printable-strings  When exporting (only), assume strings are UTF-16LE and print them as strings instead of"
+        }
+      ]
     }
   ],
   "files": [
@@ -44,5 +111,71 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "hivexregedit --merge [--prefix prefix] [--encoding enc] \\",
+    "hivexregedit --export [--prefix prefix] hivefile key > regfile",
+    "hivexregedit --export \\",
+    "hivexregedit --merge system.hive \\"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use hivexregedit because Perl bindings to hivex.",
+    "When the engagement is in the install phase, use hivexregedit as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `hivexregedit --merge [--prefix prefix] [--encoding enc] \\` as documented upstream for hivexregedit.",
+    "When you need a concrete invocation, run `hivexregedit --export [--prefix prefix] hivefile key > regfile` as documented upstream for hivexregedit.",
+    "When you need a concrete invocation, run `hivexregedit --export \\` as documented upstream for hivexregedit.",
+    "When you need a concrete invocation, run `hivexregedit --merge system.hive \\` as documented upstream for hivexregedit.",
+    "When chaining Kali Linux tools, pair hivexregedit with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `hivexregedit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--debug",
+        "description": "debugging in the hivex library. This is useful for diagnosing bugs and also mal-",
+        "source": "docs"
+      },
+      {
+        "name": "--export",
+        "description": "hivexregedit --export [--prefix prefix] hivefile key > regfile",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "Display help.",
+        "source": "docs"
+      },
+      {
+        "name": "--merge",
+        "description": "hivexregedit --merge [--prefix prefix] [--encoding enc] \\",
+        "source": "docs"
+      },
+      {
+        "name": "--unsafe",
+        "description": "Use heuristics to tolerate certain levels of corruption within hives.",
+        "source": "docs"
+      },
+      {
+        "name": "--unsafe-printable-strings",
+        "description": "When exporting (only), assume strings are UTF-16LE and print them as strings instead of",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "hivexregedit --merge [--prefix prefix] [--encoding enc] \\",
+      "hivexregedit --export [--prefix prefix] hivefile key > regfile",
+      "hivexregedit --export \\",
+      "hivexregedit --merge system.hive \\"
+    ],
+    "readme": "hivexregedit - Merge and export Registry changes from regedit-format files.",
+    "how_to_use": "Install/setup: sudo apt install hivex (1.3.24-2.1). Run the primary entrypoint as shown in upstream docs, e.g. `hivexregedit --merge [--prefix prefix] [--encoding enc] \\`. Further invocations from upstream: `hivexregedit --export [--prefix prefix] hivefile key > regfile`; `hivexregedit --export \\`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Perl bindings to hivex.",
+    "why_to_use": "Prefer this tool based on upstream description: hivexregedit - Merge and export Registry changes from regedit-format files.",
+    "usage_sections": [
+      "Install with: sudo apt install hivex (1.3.24-2.1)",
+      "Install with: sudo apt install hivex (1.3.24-2.1)"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

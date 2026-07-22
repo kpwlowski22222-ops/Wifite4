@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "skipfish",
   "title": "skipfish",
-  "summary": "### skipfish",
+  "summary": "skipfish - web application security scanner",
   "version": "2.10b-2kali8",
   "architectures": [
     "any"
@@ -33,805 +33,47 @@
       "arguments": [
         {
           "flags": [
-            "-A"
-          ],
-          "metavar": "user",
-          "takes_value": true,
-          "description": "pass      - use specified HTTP authentication credentials",
-          "default": null,
-          "choices": null,
-          "raw": " -A user:pass      - use specified HTTP authentication credentials"
-        },
-        {
-          "flags": [
-            "-F"
-          ],
-          "metavar": "host=IP",
-          "takes_value": true,
-          "description": "- pretend that 'host' resolves to 'IP'",
-          "default": null,
-          "choices": null,
-          "raw": " -F host=IP        - pretend that 'host' resolves to 'IP'"
-        },
-        {
-          "flags": [
-            "-C"
-          ],
-          "metavar": "name=val",
-          "takes_value": true,
-          "description": "- append a custom cookie to all requests",
-          "default": null,
-          "choices": null,
-          "raw": " -C name=val       - append a custom cookie to all requests"
-        },
-        {
-          "flags": [
-            "-H"
-          ],
-          "metavar": "name=val",
-          "takes_value": true,
-          "description": "- append a custom HTTP header to all requests",
-          "default": null,
-          "choices": null,
-          "raw": " -H name=val       - append a custom HTTP header to all requests"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": "i f p",
-          "takes_value": true,
-          "description": "- use headers consistent with MSIE / Firefox / iPhone",
-          "default": null,
-          "choices": null,
-          "raw": " -b (i|f|p)        - use headers consistent with MSIE / Firefox / iPhone"
-        },
-        {
-          "flags": [
-            "-N"
+            "--auth-form"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "- do not accept any new cookies",
+          "description": "The login form to use with form authentication. By default skipfish will use the form's",
           "default": null,
           "choices": null,
-          "raw": " -N                - do not accept any new cookies"
-        },
-        {
-          "flags": [
-            "--auth-form"
-          ],
-          "metavar": "url",
-          "takes_value": true,
-          "description": "- form authentication URL",
-          "default": null,
-          "choices": null,
-          "raw": " --auth-form url   - form authentication URL"
-        },
-        {
-          "flags": [
-            "--auth-user"
-          ],
-          "metavar": "user",
-          "takes_value": true,
-          "description": "- form authentication user",
-          "default": null,
-          "choices": null,
-          "raw": " --auth-user user  - form authentication user"
+          "raw": "--auth-form  The login form to use with form authentication. By default skipfish will use the form's"
         },
         {
           "flags": [
             "--auth-pass"
           ],
-          "metavar": "pass",
-          "takes_value": true,
-          "description": "- form authentication password",
+          "metavar": null,
+          "takes_value": false,
+          "description": "The password to be used during form authentication. Similar to auth-user, the form",
           "default": null,
           "choices": null,
-          "raw": " --auth-pass pass  - form authentication password"
+          "raw": "--auth-pass  The password to be used during form authentication. Similar to auth-user, the form"
+        },
+        {
+          "flags": [
+            "--auth-user"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The username to be used during form authentication. Skipfish will try to detect the",
+          "default": null,
+          "choices": null,
+          "raw": "--auth-user  The username to be used during form authentication. Skipfish will try to detect the"
         },
         {
           "flags": [
             "--auth-verify-url"
           ],
-          "metavar": "-",
-          "takes_value": true,
-          "description": "URL for in-session detection",
-          "default": null,
-          "choices": null,
-          "raw": " --auth-verify-url -  URL for in-session detection"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": "max_depth",
-          "takes_value": true,
-          "description": "- maximum crawl tree depth (16)",
-          "default": null,
-          "choices": null,
-          "raw": " -d max_depth     - maximum crawl tree depth (16)"
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": "max_child",
-          "takes_value": true,
-          "description": "- maximum children to index per node (512)",
-          "default": null,
-          "choices": null,
-          "raw": " -c max_child     - maximum children to index per node (512)"
-        },
-        {
-          "flags": [
-            "-x"
-          ],
-          "metavar": "max_desc",
-          "takes_value": true,
-          "description": "- maximum descendants to index per branch (8192)",
-          "default": null,
-          "choices": null,
-          "raw": " -x max_desc      - maximum descendants to index per branch (8192)"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": "r_limit",
-          "takes_value": true,
-          "description": "- max total number of requests to send (100000000)",
-          "default": null,
-          "choices": null,
-          "raw": " -r r_limit       - max total number of requests to send (100000000)"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "crawl%",
-          "takes_value": true,
-          "description": "- node and link crawl probability (100%)",
-          "default": null,
-          "choices": null,
-          "raw": " -p crawl%        - node and link crawl probability (100%)"
-        },
-        {
-          "flags": [
-            "-q"
-          ],
-          "metavar": "hex",
-          "takes_value": true,
-          "description": "- repeat probabilistic scan with given seed",
-          "default": null,
-          "choices": null,
-          "raw": " -q hex           - repeat probabilistic scan with given seed"
-        },
-        {
-          "flags": [
-            "-I"
-          ],
-          "metavar": "string",
-          "takes_value": true,
-          "description": "- only follow URLs matching 'string'",
-          "default": null,
-          "choices": null,
-          "raw": " -I string        - only follow URLs matching 'string'"
-        },
-        {
-          "flags": [
-            "-X"
-          ],
-          "metavar": "string",
-          "takes_value": true,
-          "description": "- exclude URLs matching 'string'",
-          "default": null,
-          "choices": null,
-          "raw": " -X string        - exclude URLs matching 'string'"
-        },
-        {
-          "flags": [
-            "-K"
-          ],
-          "metavar": "string",
-          "takes_value": true,
-          "description": "- do not fuzz parameters named 'string'",
-          "default": null,
-          "choices": null,
-          "raw": " -K string        - do not fuzz parameters named 'string'"
-        },
-        {
-          "flags": [
-            "-D"
-          ],
-          "metavar": "domain",
-          "takes_value": true,
-          "description": "- crawl cross-site links to another domain",
-          "default": null,
-          "choices": null,
-          "raw": " -D domain        - crawl cross-site links to another domain"
-        },
-        {
-          "flags": [
-            "-B"
-          ],
-          "metavar": "domain",
-          "takes_value": true,
-          "description": "- trust, but do not crawl, another domain",
-          "default": null,
-          "choices": null,
-          "raw": " -B domain        - trust, but do not crawl, another domain"
-        },
-        {
-          "flags": [
-            "-Z"
-          ],
           "metavar": null,
           "takes_value": false,
-          "description": "- do not descend into 5xx locations",
+          "description": "This URL allows skipfish to verify whether authentication was successful. This requires",
           "default": null,
           "choices": null,
-          "raw": " -Z               - do not descend into 5xx locations"
-        },
-        {
-          "flags": [
-            "-O"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- do not submit any forms",
-          "default": null,
-          "choices": null,
-          "raw": " -O               - do not submit any forms"
-        },
-        {
-          "flags": [
-            "-P"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- do not parse HTML, etc, to find new links",
-          "default": null,
-          "choices": null,
-          "raw": " -P               - do not parse HTML, etc, to find new links"
-        },
-        {
-          "flags": [
-            "-o"
-          ],
-          "metavar": "dir",
-          "takes_value": true,
-          "description": "- write output to specified directory (required)",
-          "default": null,
-          "choices": null,
-          "raw": " -o dir          - write output to specified directory (required)"
-        },
-        {
-          "flags": [
-            "-M"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- log warnings about mixed content / non-SSL passwords",
-          "default": null,
-          "choices": null,
-          "raw": " -M              - log warnings about mixed content / non-SSL passwords"
-        },
-        {
-          "flags": [
-            "-E"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- log all HTTP/1.0 / HTTP/1.1 caching intent mismatches",
-          "default": null,
-          "choices": null,
-          "raw": " -E              - log all HTTP/1.0 / HTTP/1.1 caching intent mismatches"
-        },
-        {
-          "flags": [
-            "-U"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- log all external URLs and e-mails seen",
-          "default": null,
-          "choices": null,
-          "raw": " -U              - log all external URLs and e-mails seen"
-        },
-        {
-          "flags": [
-            "-Q"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- completely suppress duplicate nodes in reports",
-          "default": null,
-          "choices": null,
-          "raw": " -Q              - completely suppress duplicate nodes in reports"
-        },
-        {
-          "flags": [
-            "-u"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- be quiet, disable realtime progress stats",
-          "default": null,
-          "choices": null,
-          "raw": " -u              - be quiet, disable realtime progress stats"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- enable runtime logging (to stderr)",
-          "default": null,
-          "choices": null,
-          "raw": " -v              - enable runtime logging (to stderr)"
-        },
-        {
-          "flags": [
-            "-W"
-          ],
-          "metavar": "wordlist",
-          "takes_value": true,
-          "description": "- use a specified read-write wordlist (required)",
-          "default": null,
-          "choices": null,
-          "raw": " -W wordlist     - use a specified read-write wordlist (required)"
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": "wordlist",
-          "takes_value": true,
-          "description": "- load a supplemental read-only wordlist",
-          "default": null,
-          "choices": null,
-          "raw": " -S wordlist     - load a supplemental read-only wordlist"
-        },
-        {
-          "flags": [
-            "-L"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- do not auto-learn new keywords for the site",
-          "default": null,
-          "choices": null,
-          "raw": " -L              - do not auto-learn new keywords for the site"
-        },
-        {
-          "flags": [
-            "-Y"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- do not fuzz extensions in directory brute-force",
-          "default": null,
-          "choices": null,
-          "raw": " -Y              - do not fuzz extensions in directory brute-force"
-        },
-        {
-          "flags": [
-            "-R"
-          ],
-          "metavar": "age",
-          "takes_value": true,
-          "description": "- purge words hit more than 'age' scans ago",
-          "default": null,
-          "choices": null,
-          "raw": " -R age          - purge words hit more than 'age' scans ago"
-        },
-        {
-          "flags": [
-            "-T"
-          ],
-          "metavar": "name=val",
-          "takes_value": true,
-          "description": "- add new form auto-fill rule",
-          "default": null,
-          "choices": null,
-          "raw": " -T name=val     - add new form auto-fill rule"
-        },
-        {
-          "flags": [
-            "-G"
-          ],
-          "metavar": "max_guess",
-          "takes_value": true,
-          "description": "- maximum number of keyword guesses to keep (256)",
-          "default": null,
-          "choices": null,
-          "raw": " -G max_guess    - maximum number of keyword guesses to keep (256)"
-        },
-        {
-          "flags": [
-            "-z"
-          ],
-          "metavar": "sigfile",
-          "takes_value": true,
-          "description": "- load signatures from this file",
-          "default": null,
-          "choices": null,
-          "raw": " -z sigfile      - load signatures from this file"
-        },
-        {
-          "flags": [
-            "-g"
-          ],
-          "metavar": "max_conn",
-          "takes_value": true,
-          "description": "- max simultaneous TCP connections, global (40)",
-          "default": null,
-          "choices": null,
-          "raw": " -g max_conn     - max simultaneous TCP connections, global (40)"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "host_conn",
-          "takes_value": true,
-          "description": "- max simultaneous connections, per target IP (10)",
-          "default": null,
-          "choices": null,
-          "raw": " -m host_conn    - max simultaneous connections, per target IP (10)"
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "max_fail",
-          "takes_value": true,
-          "description": "- max number of consecutive HTTP errors (100)",
-          "default": null,
-          "choices": null,
-          "raw": " -f max_fail     - max number of consecutive HTTP errors (100)"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "req_tmout",
-          "takes_value": true,
-          "description": "- total request response timeout (20 s)",
-          "default": null,
-          "choices": null,
-          "raw": " -t req_tmout    - total request response timeout (20 s)"
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": "rw_tmout",
-          "takes_value": true,
-          "description": "- individual network I/O timeout (10 s)",
-          "default": null,
-          "choices": null,
-          "raw": " -w rw_tmout     - individual network I/O timeout (10 s)"
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": "idle_tmout",
-          "takes_value": true,
-          "description": "- timeout on idle HTTP connections (10 s)",
-          "default": null,
-          "choices": null,
-          "raw": " -i idle_tmout   - timeout on idle HTTP connections (10 s)"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "s_limit",
-          "takes_value": true,
-          "description": "- response size limit (400000 B)",
-          "default": null,
-          "choices": null,
-          "raw": " -s s_limit      - response size limit (400000 B)"
-        },
-        {
-          "flags": [
-            "-e"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- do not keep binary responses for reporting",
-          "default": null,
-          "choices": null,
-          "raw": " -e              - do not keep binary responses for reporting"
-        },
-        {
-          "flags": [
-            "-l"
-          ],
-          "metavar": "max_req",
-          "takes_value": true,
-          "description": "- max requests per second (0.000000)",
-          "default": null,
-          "choices": null,
-          "raw": " -l max_req      - max requests per second (0.000000)"
-        },
-        {
-          "flags": [
-            "-k"
-          ],
-          "metavar": "duration",
-          "takes_value": true,
-          "description": "- stop scanning after the given duration h:m:s",
-          "default": null,
-          "choices": null,
-          "raw": " -k duration     - stop scanning after the given duration h:m:s"
-        },
-        {
-          "flags": [
-            "--config"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "- load the specified configuration file",
-          "default": null,
-          "choices": null,
-          "raw": " --config file   - load the specified configuration file"
-        },
-        {
-          "flags": [
-            "-F",
-            "--host"
-          ],
-          "metavar": "/ ip",
-          "takes_value": true,
-          "description": "hostname>",
-          "default": null,
-          "choices": null,
-          "raw": "     -F/--host <ip:hostname>"
-        },
-        {
-          "flags": [
-            "-H",
-            "--header"
-          ],
-          "metavar": "/ header",
-          "takes_value": true,
-          "description": "value>",
-          "default": null,
-          "choices": null,
-          "raw": "     -H/--header <header:value>"
-        },
-        {
-          "flags": [
-            "-C",
-            "--cookie"
-          ],
-          "metavar": "/ cookie",
-          "takes_value": true,
-          "description": "value>",
-          "default": null,
-          "choices": null,
-          "raw": "     -C/--cookie <cookie:value>"
-        },
-        {
-          "flags": [
-            "-b",
-            "--user-agent"
-          ],
-          "metavar": "/ i f p",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -b/--user-agent <i|f|p>"
-        },
-        {
-          "flags": [
-            "-N",
-            "--reject-cookies"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -N/--reject-cookies"
-        },
-        {
-          "flags": [
-            "-A",
-            "--auth"
-          ],
-          "metavar": "/ username",
-          "takes_value": true,
-          "description": "password>",
-          "default": null,
-          "choices": null,
-          "raw": "     -A/--auth <username:password>"
-        },
-        {
-          "flags": [
-            "-c",
-            "-x"
-          ],
-          "metavar": "limits the number of children per directory; limits the total number",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -c limits the number of children per directory; -x limits the total number"
-        },
-        {
-          "flags": [
-            "-d",
-            "--max-crawl-depth"
-          ],
-          "metavar": "/--max-crawl epth depth",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -d/--max-crawl-depth <depth>"
-        },
-        {
-          "flags": [
-            "-c",
-            "--max-crawl-child"
-          ],
-          "metavar": "/--max rawl hild childs",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -c/--max-crawl-child <childs>"
-        },
-        {
-          "flags": [
-            "-x",
-            "--max-crawl-descendants"
-          ],
-          "metavar": "/ descendants",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -x/--max-crawl-descendants <descendants>"
-        },
-        {
-          "flags": [
-            "-r",
-            "--max-request-total"
-          ],
-          "metavar": "/--max equest-total request",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -r/--max-request-total <request>"
-        },
-        {
-          "flags": [
-            "-p",
-            "--crawl-probability"
-          ],
-          "metavar": "/--crawl robability 0-100",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -p/--crawl-probability <0-100>"
-        },
-        {
-          "flags": [
-            "-q",
-            "--seed"
-          ],
-          "metavar": "/ seed",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -q/--seed <seed>"
-        },
-        {
-          "flags": [
-            "-I",
-            "--include-string"
-          ],
-          "metavar": "/ domain/path",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -I/--include-string <domain/path>"
-        },
-        {
-          "flags": [
-            "-X",
-            "--exclude-string"
-          ],
-          "metavar": "/ domain/path",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -X/--exclude-string <domain/path>"
-        },
-        {
-          "flags": [
-            "-K",
-            "--skip-parameter"
-          ],
-          "metavar": "/ parameter name",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -K/--skip-parameter <parameter name>"
-        },
-        {
-          "flags": [
-            "-D",
-            "--include-domain"
-          ],
-          "metavar": "/ domain",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -D/--include-domain <domain>"
-        },
-        {
-          "flags": [
-            "-B",
-            "--trust-domain"
-          ],
-          "metavar": "/ domain",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -B/--trust-domain <domain>"
-        },
-        {
-          "flags": [
-            "-Z",
-            "--skip-error-pages"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -Z/--skip-error-pages"
-        },
-        {
-          "flags": [
-            "-O",
-            "--no-form-submits"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -O/--no-form-submits"
-        },
-        {
-          "flags": [
-            "-P",
-            "--no-html-parsing"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -P/--no-html-parsing"
+          "raw": "--auth-verify-url  This URL allows skipfish to verify whether authentication was successful. This requires"
         },
         {
           "flags": [
@@ -839,295 +81,21 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "EXPERIMENTAL: Displays the crawler injection tests. The output shows the index number",
           "default": null,
           "choices": null,
-          "raw": "     --checks"
+          "raw": "--checks  EXPERIMENTAL: Displays the crawler injection tests. The output shows the index number"
         },
         {
           "flags": [
             "--checks-toggle"
           ],
-          "metavar": "check1 check2 ..",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     --checks-toggle <check1,check2,..>"
-        },
-        {
-          "flags": [
-            "--no-injection-tests"
-          ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "EXPERIMENTAL: Every injection test can be enabled/disabled with using this flag. As",
           "default": null,
           "choices": null,
-          "raw": "     --no-injection-tests"
-        },
-        {
-          "flags": [
-            "-o",
-            "--output"
-          ],
-          "metavar": "/- utput dir",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -o/--output <dir>"
-        },
-        {
-          "flags": [
-            "-M",
-            "--log-mixed-content"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -M/--log-mixed-content"
-        },
-        {
-          "flags": [
-            "-E",
-            "--log-cache-mismatches"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -E/--log-cache-mismatches"
-        },
-        {
-          "flags": [
-            "-U",
-            "--log-external-urls"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -U/--log-external-urls"
-        },
-        {
-          "flags": [
-            "-Q",
-            "--log-unique-nodes"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -Q/--log-unique-nodes"
-        },
-        {
-          "flags": [
-            "-u",
-            "--quiet"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -u/--quiet"
-        },
-        {
-          "flags": [
-            "-v",
-            "--verbose"
-          ],
-          "metavar": "/- erbose",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -v/--verbose"
-        },
-        {
-          "flags": [
-            "-S",
-            "--wordlist"
-          ],
-          "metavar": "/ file",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -S/--wordlist <file>"
-        },
-        {
-          "flags": [
-            "-W",
-            "--rw-wordlist"
-          ],
-          "metavar": "/ file",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -W/--rw-wordlist <file>"
-        },
-        {
-          "flags": [
-            "-W-"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "or  -W  /dev/null if you don't want to store auto-learned key-",
-          "default": null,
-          "choices": null,
-          "raw": "            -W-  or  -W  /dev/null if you don't want to store auto-learned key-"
-        },
-        {
-          "flags": [
-            "-L",
-            "--no-keyword-learning"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -L/--no-keyword-learning"
-        },
-        {
-          "flags": [
-            "-Y",
-            "--no-extension-brute"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -Y/--no-extension-brute"
-        },
-        {
-          "flags": [
-            "-T",
-            "--form-value"
-          ],
-          "metavar": "/ name=value",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -T/--form-value <name=value>"
-        },
-        {
-          "flags": [
-            "-l",
-            "--max-request-rate"
-          ],
-          "metavar": "/ rate",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -l/--max-request-rate <rate>"
-        },
-        {
-          "flags": [
-            "-g",
-            "--max-connections"
-          ],
-          "metavar": "/ number",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -g/--max-connections <number>"
-        },
-        {
-          "flags": [
-            "-m",
-            "--max-host-connections"
-          ],
-          "metavar": "/- ax-host-connections number",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -m/--max-host-connections <number>"
-        },
-        {
-          "flags": [
-            "-f",
-            "--max-failed-requests"
-          ],
-          "metavar": "/--max ailed-requests number",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -f/--max-failed-requests <number>"
-        },
-        {
-          "flags": [
-            "-t",
-            "--request-timeout"
-          ],
-          "metavar": "/--request imeout timeout",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -t/--request-timeout <timeout>"
-        },
-        {
-          "flags": [
-            "-w",
-            "--network-timeout"
-          ],
-          "metavar": "/ timeout",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -w/--network-timeout <timeout>"
-        },
-        {
-          "flags": [
-            "-i",
-            "--idle-timeout"
-          ],
-          "metavar": "/- dle-timeout timeout",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -i/--idle-timeout <timeout>"
-        },
-        {
-          "flags": [
-            "-s",
-            "--response-size"
-          ],
-          "metavar": "/--response ize size",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -s/--response-size <size>"
-        },
-        {
-          "flags": [
-            "-e",
-            "--discard-binary"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -e/--discard-binary"
+          "raw": "--checks-toggle  EXPERIMENTAL: Every injection test can be enabled/disabled with using this flag. As"
         },
         {
           "flags": [
@@ -1135,10 +103,54 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "This causes request / response data to be flushed to disk instead of being kept in mem-",
           "default": null,
           "choices": null,
-          "raw": "     --flush-to-disk"
+          "raw": "--flush-to-disk  This causes request / response data to be flushed to disk instead of being kept in mem-"
+        },
+        {
+          "flags": [
+            "-G"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "During the scan, a temporary buffer of newly detected keywords is maintained. The size",
+          "default": null,
+          "choices": null,
+          "raw": "-G  During the scan, a temporary buffer of newly detected keywords is maintained. The size"
+        },
+        {
+          "flags": [
+            "--no-injection-tests"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "EXPERIMENTAL: Disables all injection tests for this scan and limits the scan to crawl-",
+          "default": null,
+          "choices": null,
+          "raw": "--no-injection-tests  EXPERIMENTAL: Disables all injection tests for this scan and limits the scan to crawl-"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use of this flag allows old words to be purged from wordlists. It is intended to help",
+          "default": null,
+          "choices": null,
+          "raw": "-R  Use of this flag allows old words to be purged from wordlists. It is intended to help"
+        },
+        {
+          "flags": [
+            "--verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use this flag to enable runtime reporting of, for example, problems that",
+          "default": null,
+          "choices": null,
+          "raw": "--verbose  Use this flag to enable runtime reporting of, for example, problems that"
         }
       ],
       "raw_help": "root@kali:~# skipfish -h\n skipfish web application scanner - version 2.10b\n Usage: skipfish [ options ... ] -W wordlist -o output_dir start_url [ start_url2 ... ]\n \n Authentication and access options:\n \n -A user:pass      - use specified HTTP authentication credentials\n -F host=IP        - pretend that 'host' resolves to 'IP'\n -C name=val       - append a custom cookie to all requests\n -H name=val       - append a custom HTTP header to all requests\n -b (i|f|p)        - use headers consistent with MSIE / Firefox / iPhone\n -N                - do not accept any new cookies\n --auth-form url   - form authentication URL\n --auth-user user  - form authentication user\n --auth-pass pass  - form authentication password\n --auth-verify-url -  URL for in-session detection\n \n Crawl scope options:\n \n -d max_depth     - maximum crawl tree depth (16)\n -c max_child     - maximum children to index per node (512)\n -x max_desc      - maximum descendants to index per branch (8192)\n -r r_limit       - max total number of requests to send (100000000)\n -p crawl%        - node and link crawl probability (100%)\n -q hex           - repeat probabilistic scan with given seed\n -I string        - only follow URLs matching 'string'\n -X string        - exclude URLs matching 'string'\n -K string        - do not fuzz parameters named 'string'\n -D domain        - crawl cross-site links to another domain\n -B domain        - trust, but do not crawl, another domain\n -Z               - do not descend into 5xx locations\n -O               - do not submit any forms\n -P               - do not parse HTML, etc, to find new links\n \n Reporting options:\n \n -o dir          - write output to specified directory (required)\n -M              - log warnings about mixed content / non-SSL passwords\n -E              - log all HTTP/1.0 / HTTP/1.1 caching intent mismatches\n -U              - log all external URLs and e-mails seen\n -Q              - completely suppress duplicate nodes in reports\n -u              - be quiet, disable realtime progress stats\n -v              - enable runtime logging (to stderr)\n \n Dictionary management options:\n \n -W wordlist     - use a specified read-write wordlist (required)\n -S wordlist     - load a supplemental read-only wordlist\n -L              - do not auto-learn new keywords for the site\n -Y              - do not fuzz extensions in directory brute-force\n -R age          - purge words hit more than 'age' scans ago\n -T name=val     - add new form auto-fill rule\n -G max_guess    - maximum number of keyword guesses to keep (256)\n \n -z sigfile      - load signatures from this file\n \n Performance settings:\n \n -g max_conn     - max simultaneous TCP connections, global (40)\n -m host_conn    - max simultaneous connections, per target IP (10)\n -f max_fail     - max number of consecutive HTTP errors (100)\n -t req_tmout    - total request response timeout (20 s)\n -w rw_tmout     - individual network I/O timeout (10 s)\n -i idle_tmout   - timeout on idle HTTP connections (10 s)\n -s s_limit      - response size limit (400000 B)\n -e              - do not keep binary responses for reporting\n \n Other settings:\n \n -l max_req      - max requests per second (0.000000)\n -k duration     - stop scanning after the given duration h:m:s\n --config file   - load the specified configuration file\n \n Send comments and complaints to <heinenn@google.com>.",
@@ -1232,21 +244,23 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use skipfish because skipfish - web application security scanner.",
+    "When you need a concrete invocation, run `skipfish [options] -o output-directory [ start-url | @url-file [ start-url2 ... ]]` as documented upstream for skipfish.",
+    "When you need a concrete invocation, run `skipfish --config config/example.conf $KFIOSA_TARGET_URL` as documented upstream for skipfish.",
+    "When you need a concrete invocation, run `skipfish -o output/dir/ $KFIOSA_TARGET_URL` as documented upstream for skipfish.",
+    "When you need a concrete invocation, run `skipfish [...other options..] -S dictionaries/complete.wl $KFIOSA_TARGET_URL` as documented upstream for skipfish.",
+    "When chaining Kali Linux tools, pair skipfish with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `skipfish --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/skipfish && python3 skipfish.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/skipfish && python3 skipfish.py --help",
-    "cd toolboxes/skipfish && python3 skipfish.py --help",
-    "cd toolboxes/skipfish && python3 skipfish.py --help",
-    "cd toolboxes/skipfish && python3 skipfish.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST skipfish --output $KFIOSA_OUTPUT_DIR/skipfish.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST skipfish --output $KFIOSA_OUTPUT_DIR/skipfish.log"
+    "skipfish [options] -o output-directory [ start-url | @url-file [ start-url2 ... ]]",
+    "skipfish --config config/example.conf $KFIOSA_TARGET_URL",
+    "skipfish -o output/dir/ $KFIOSA_TARGET_URL",
+    "skipfish [...other options..] -S dictionaries/complete.wl $KFIOSA_TARGET_URL",
+    "skipfish [...other options..] -LY $KFIOSA_TARGET_URL",
+    "skipfish [...other options..] -A username:password=$KFIOSA_SECRET",
+    "skipfish [...other options..] -C jsession=myauthcookiehere -X /logout $KFIOSA_TARGET_URL",
+    "skipfish [...other options..] -l 5 -g 2 -t 30 -i 15 $KFIOSA_TARGET_URL"
   ],
   "attack_surface": [
     "web"
@@ -1261,5 +275,84 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--auth-form",
+        "description": "The login form to use with form authentication. By default skipfish will use the form's",
+        "source": "docs"
+      },
+      {
+        "name": "--auth-pass",
+        "description": "The password to be used during form authentication. Similar to auth-user, the form",
+        "source": "docs"
+      },
+      {
+        "name": "--auth-user",
+        "description": "The username to be used during form authentication. Skipfish will try to detect the",
+        "source": "docs"
+      },
+      {
+        "name": "--auth-verify-url",
+        "description": "This URL allows skipfish to verify whether authentication was successful. This requires",
+        "source": "docs"
+      },
+      {
+        "name": "--checks",
+        "description": "EXPERIMENTAL: Displays the crawler injection tests. The output shows the index number",
+        "source": "docs"
+      },
+      {
+        "name": "--checks-toggle",
+        "description": "EXPERIMENTAL: Every injection test can be enabled/disabled with using this flag. As",
+        "source": "docs"
+      },
+      {
+        "name": "--flush-to-disk",
+        "description": "This causes request / response data to be flushed to disk instead of being kept in mem-",
+        "source": "docs"
+      },
+      {
+        "name": "-G",
+        "description": "During the scan, a temporary buffer of newly detected keywords is maintained. The size",
+        "source": "docs"
+      },
+      {
+        "name": "--no-injection-tests",
+        "description": "EXPERIMENTAL: Disables all injection tests for this scan and limits the scan to crawl-",
+        "source": "docs"
+      },
+      {
+        "name": "-R",
+        "description": "Use of this flag allows old words to be purged from wordlists. It is intended to help",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Use this flag to enable runtime reporting of, for example, problems that",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "skipfish [options] -o output-directory [ start-url | @url-file [ start-url2 ... ]]",
+      "skipfish --config config/example.conf $KFIOSA_TARGET_URL",
+      "skipfish -o output/dir/ $KFIOSA_TARGET_URL",
+      "skipfish [...other options..] -S dictionaries/complete.wl $KFIOSA_TARGET_URL",
+      "skipfish [...other options..] -LY $KFIOSA_TARGET_URL",
+      "skipfish [...other options..] -A username:password=$KFIOSA_SECRET",
+      "skipfish [...other options..] -C jsession=myauthcookiehere -X /logout $KFIOSA_TARGET_URL",
+      "skipfish [...other options..] -l 5 -g 2 -t 30 -i 15 $KFIOSA_TARGET_URL"
+    ],
+    "readme": "skipfish - web application security scanner",
+    "how_to_use": "Install/setup: sudo apt install skipfish. Run the primary entrypoint as shown in upstream docs, e.g. `skipfish [options] -o output-directory [ start-url | @url-file [ start-url2 ... ]]`. Further invocations from upstream: `skipfish --config config/example.conf $KFIOSA_TARGET_URL`; `skipfish -o output/dir/ $KFIOSA_TARGET_URL`. skipfish - web application security scanner.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: skipfish - web application security scanner.",
+    "why_to_use": "Prefer this tool based on upstream description: skipfish - web application security scanner.",
+    "usage_sections": [
+      "Install with: sudo apt install skipfish",
+      "Install with: sudo apt install skipfish"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

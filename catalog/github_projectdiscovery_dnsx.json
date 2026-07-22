@@ -1,18 +1,248 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/dnsx && python3 dnsx.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/dnsx && python3 dnsx.py --help",
-    "cd toolboxes/dnsx && python3 dnsx.py --help",
-    "cd toolboxes/dnsx && python3 dnsx.py --help",
-    "cd toolboxes/dnsx && python3 dnsx.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsx --output $KFIOSA_OUTPUT_DIR/dnsx.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsx --output $KFIOSA_OUTPUT_DIR/dnsx.log"
+    "go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest",
+    "dnsx -h",
+    "subfinder -silent -d hackerone.com | dnsx -silent",
+    "subfinder -silent -d hackerone.com | dnsx -silent -a -resp",
+    "www.hackerone.com [$KFIOSA_TARGET_HOST]",
+    "www.hackerone.com [$KFIOSA_TARGET_HOST]",
+    "hackerone.com [$KFIOSA_TARGET_HOST]",
+    "hackerone.com [$KFIOSA_TARGET_HOST]",
+    "api.hackerone.com [$KFIOSA_TARGET_HOST]",
+    "api.hackerone.com [$KFIOSA_TARGET_HOST]"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "A fast and multi-purpose DNS toolkit designed for running DNS queries",
+    "usage_sections": [
+      "Features: - Simple and Handy utility to query DNS records. - A, AAAA, CNAME, PTR, NS, MX, TXT, SRV, SOA query support - DNS Resolution / Brute-force support - Custom resolver input support - Multiple resolver format (TCP/UDP/DOH/DOT) support - stdin and stdout support - Automatic wildcard "
+    ],
     "arguments": [
+      {
+        "name": "-a",
+        "description": "query A record (default)",
+        "source": "docs"
+      },
+      {
+        "name": "-aaaa",
+        "description": "query AAAA record",
+        "source": "docs"
+      },
+      {
+        "name": "-any",
+        "description": "query ANY record",
+        "source": "docs"
+      },
+      {
+        "name": "-asn",
+        "description": "display host asn information",
+        "source": "docs"
+      },
+      {
+        "name": "-auth",
+        "description": "configure projectdiscovery cloud (pdcp) api key (default true)",
+        "source": "docs"
+      },
+      {
+        "name": "-auto-wildcard",
+        "description": "automatically detect wildcard domains for filtering",
+        "source": "docs"
+      },
+      {
+        "name": "-axfr",
+        "description": "query AXFR",
+        "source": "docs"
+      },
+      {
+        "name": "-caa",
+        "description": "query CAA record",
+        "source": "docs"
+      },
+      {
+        "name": "-cdn",
+        "description": "display cdn name",
+        "source": "docs"
+      },
+      {
+        "name": "-cname",
+        "description": "query CNAME record",
+        "source": "docs"
+      },
+      {
+        "name": "-debug",
+        "description": "display raw dns response",
+        "source": "docs"
+      },
+      {
+        "name": "-disable-update-check",
+        "description": "disable automatic dnsx update check",
+        "source": "docs"
+      },
+      {
+        "name": "-duc",
+        "description": "disable automatic dnsx update check",
+        "source": "docs"
+      },
+      {
+        "name": "-hc",
+        "description": "run diagnostic check up",
+        "source": "docs"
+      },
+      {
+        "name": "-health-check",
+        "description": "run diagnostic check up",
+        "source": "docs"
+      },
+      {
+        "name": "-hf",
+        "description": "use system host file",
+        "source": "docs"
+      },
+      {
+        "name": "-hostsfile",
+        "description": "use system host file",
+        "source": "docs"
+      },
+      {
+        "name": "-json",
+        "description": "write output in JSONL(ines) format",
+        "source": "docs"
+      },
+      {
+        "name": "-LIMIT",
+        "description": "-t, -threads int number of concurrent threads to use (default 100)",
+        "source": "docs"
+      },
+      {
+        "name": "-mx",
+        "description": "query MX record",
+        "source": "docs"
+      },
+      {
+        "name": "-nc",
+        "description": "disable color in output",
+        "source": "docs"
+      },
+      {
+        "name": "-no-color",
+        "description": "disable color in output",
+        "source": "docs"
+      },
+      {
+        "name": "-ns",
+        "description": "query NS record",
+        "source": "docs"
+      },
+      {
+        "name": "-omit-raw",
+        "description": "omit raw dns response from jsonl output",
+        "source": "docs"
+      },
+      {
+        "name": "-or",
+        "description": "omit raw dns response from jsonl output",
+        "source": "docs"
+      },
+      {
+        "name": "-ptr",
+        "description": "query PTR record",
+        "source": "docs"
+      },
+      {
+        "name": "-raw",
+        "description": "display raw dns response",
+        "source": "docs"
+      },
+      {
+        "name": "-re",
+        "description": "display dns response",
+        "source": "docs"
+      },
+      {
+        "name": "-recon",
+        "description": "query all the dns records (a,aaaa,cname,ns,txt,srv,ptr,mx,soa,axfr,caa)",
+        "source": "docs"
+      },
+      {
+        "name": "-resp",
+        "description": "display dns response",
+        "source": "docs"
+      },
+      {
+        "name": "-resp-only",
+        "description": "display dns response only",
+        "source": "docs"
+      },
+      {
+        "name": "-resume",
+        "description": "resume existing scan",
+        "source": "docs"
+      },
+      {
+        "name": "-ro",
+        "description": "display dns response only",
+        "source": "docs"
+      },
+      {
+        "name": "-silent",
+        "description": "display only results in the output",
+        "source": "docs"
+      },
+      {
+        "name": "-soa",
+        "description": "query SOA record",
+        "source": "docs"
+      },
+      {
+        "name": "-srv",
+        "description": "query SRV record",
+        "source": "docs"
+      },
+      {
+        "name": "-stats",
+        "description": "display stats of the running scan",
+        "source": "docs"
+      },
+      {
+        "name": "-stream",
+        "description": "stream mode (wordlist, wildcard, stats and stop/resume will be disabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-trace",
+        "description": "perform dns tracing",
+        "source": "docs"
+      },
+      {
+        "name": "-txt",
+        "description": "query TXT record",
+        "source": "docs"
+      },
+      {
+        "name": "-up",
+        "description": "update dnsx to latest version",
+        "source": "docs"
+      },
+      {
+        "name": "-update",
+        "description": "update dnsx to latest version",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "display verbose output",
+        "source": "docs"
+      },
+      {
+        "name": "-verbose",
+        "description": "display verbose output",
+        "source": "docs"
+      },
+      {
+        "name": "-version",
+        "description": "display version of dnsx",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -87,49 +317,20 @@
         "name": "--header",
         "description": "Extra HTTP header (key:value).",
         "source": "generic_kfiosa"
-      },
-      {
-        "name": "--insecure",
-        "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--quiet",
-        "description": "Suppress non-error output.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--dry-run",
-        "description": "Print what would be done without making any changes.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--yes",
-        "description": "Skip confirmation prompts (use with care).",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--force",
-        "description": "Force the action even if a safety check would block it.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--no-banner",
-        "description": "Suppress banner / tool-name output.",
-        "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest",
+      "dnsx -h",
+      "subfinder -silent -d hackerone.com | dnsx -silent",
+      "subfinder -silent -d hackerone.com | dnsx -silent -a -resp",
+      "www.hackerone.com [$KFIOSA_TARGET_HOST]",
+      "www.hackerone.com [$KFIOSA_TARGET_HOST]",
+      "hackerone.com [$KFIOSA_TARGET_HOST]",
+      "hackerone.com [$KFIOSA_TARGET_HOST]",
+      "api.hackerone.com [$KFIOSA_TARGET_HOST]",
+      "api.hackerone.com [$KFIOSA_TARGET_HOST]"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +456,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, dnsx, projectdiscovery).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/dnsx && python3 dnsx.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/dnsx && python3 dnsx.py --help",
-      "Step 3: cd toolboxes/dnsx && python3 dnsx.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: A fast and multi-purpose DNS toolkit designed for running DNS queries.",
+    "why_to_use": "Prefer this tool based on upstream description: A fast and multi-purpose DNS toolkit designed for running DNS queries.",
+    "how_to_use": "Install/setup: go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest. Run the primary entrypoint as shown in upstream docs, e.g. `go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest`. Further invocations from upstream: `dnsx -h`; `subfinder -silent -d hackerone.com | dnsx -silent`. A fast and multi-purpose DNS toolkit designed for running DNS queries."
   },
   "full_name": "projectdiscovery/dnsx",
   "id": "github:projectdiscovery/dnsx",
@@ -282,7 +479,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``dnsx`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "A fast and multi-purpose DNS toolkit designed for running DNS queries",
   "tags": [
     "offensive",
     "dnsx",
@@ -300,12 +497,13 @@
   },
   "url": "https://github.com/projectdiscovery/dnsx",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use dnsx because A fast and multi-purpose DNS toolkit designed for running DNS queries.",
+    "When you need a concrete invocation, run `go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest` as documented upstream for dnsx.",
+    "When you need a concrete invocation, run `dnsx -h` as documented upstream for dnsx.",
+    "When you need a concrete invocation, run `subfinder -silent -d hackerone.com | dnsx -silent` as documented upstream for dnsx.",
+    "When you need a concrete invocation, run `subfinder -silent -d hackerone.com | dnsx -silent -a -resp` as documented upstream for dnsx.",
+    "When chaining recon tools, pair dnsx with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dnsx --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +522,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "libpst",
   "title": "libpst",
-  "summary": "### libpst-dev",
+  "summary": "lspst - list PST (MS Outlook Personal Folders) file data",
   "version": "0.6.76-1.3",
   "architectures": [
     "any"
@@ -38,14 +38,14 @@
       "arguments": [
         {
           "flags": [
-            "-d"
+            "-h"
           ],
-          "metavar": "filename",
-          "takes_value": true,
-          "description": "- Debug to file. This is a binary log. Use readlog to print it",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show summary of options and exit.",
           "default": null,
           "choices": null,
-          "raw": " \t-d <filename> \t- Debug to file. This is a binary log. Use readlog to print it"
+          "raw": "-h  Show summary of options and exit."
         },
         {
           "flags": [
@@ -53,32 +53,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "- Print the date, CC and BCC fields of emails too (by default only the From and Subject)",
-          "default": "only the From and Subject",
-          "choices": null,
-          "raw": " \t-l\t- Print the date, CC and BCC fields of emails too (by default only the From and Subject)"
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "date_format",
-          "takes_value": true,
-          "description": "- Select the date format in ctime format (by default \"%F %T\")",
-          "default": "\"%F %T\"",
-          "choices": null,
-          "raw": " \t-f <date_format> \t- Select the date format in ctime format (by default \"%F %T\")"
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "- Help. This screen",
+          "description": "Use long format listing to show the Date, CC and BCC headers.",
           "default": null,
           "choices": null,
-          "raw": " \t-h\t- Help. This screen"
+          "raw": "-l  Use long format listing to show the Date, CC and BCC headers."
         },
         {
           "flags": [
@@ -86,10 +64,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "- Version. Display program version",
+          "description": "Show program version and exit.",
           "default": null,
           "choices": null,
-          "raw": " \t-V\t- Version. Display program version"
+          "raw": "-V  Show program version and exit."
         }
       ],
       "raw_help": "root@kali:~# lspst -h\n lspst / LibPST v0.6.76\n Little Endian implementation being used.\n Usage: lspst [OPTIONS] {PST FILENAME}\n OPTIONS:\n \t-d <filename> \t- Debug to file. This is a binary log. Use readlog to print it\n \t-l\t- Print the date, CC and BCC fields of emails too (by default only the From and Subject)\n \t-f <date_format> \t- Select the date format in ctime format (by default \"%F %T\")\n \t-h\t- Help. This screen\n \t-V\t- Version. Display program version",
@@ -750,21 +728,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use lspst because lspst - list PST (MS Outlook Personal Folders) file data.",
+    "When you need a concrete invocation, run `lspst [-V] [-d debug-file] [-f date-format] [-l] [-h] pstfile` as documented upstream for lspst.",
+    "When chaining Kali Linux tools, pair lspst with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `lspst --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/libpst && python3 libpst.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/libpst && python3 libpst.py --help",
-    "cd toolboxes/libpst && python3 libpst.py --help",
-    "cd toolboxes/libpst && python3 libpst.py --help",
-    "cd toolboxes/libpst && python3 libpst.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST libpst --output $KFIOSA_OUTPUT_DIR/libpst.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST libpst --output $KFIOSA_OUTPUT_DIR/libpst.log"
+    "lspst [-V] [-d debug-file] [-f date-format] [-l] [-h] pstfile"
   ],
   "attack_surface": [
     "web"
@@ -779,5 +749,37 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "Show summary of options and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Use long format listing to show the Date, CC and BCC headers.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Show program version and exit.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "lspst [-V] [-d debug-file] [-f date-format] [-l] [-h] pstfile"
+    ],
+    "readme": "lspst - list PST (MS Outlook Personal Folders) file data",
+    "how_to_use": "Install/setup: sudo apt install libpst. lspst - list PST (MS Outlook Personal Folders) file data.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: lspst - list PST (MS Outlook Personal Folders) file data.",
+    "why_to_use": "Prefer this tool based on upstream description: lspst - list PST (MS Outlook Personal Folders) file data.",
+    "usage_sections": [
+      "Install with: sudo apt install libpst",
+      "Install with: sudo apt install libpst"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

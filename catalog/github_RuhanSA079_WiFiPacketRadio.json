@@ -8,8 +8,12 @@
   "url": "https://github.com/RuhanSA079/WiFiPacketRadio",
   "summary": "WiFiPacketRadio\nCrude method in transmitting compressed audio over WiFi packet injection and receiving it on monitor mode WiFi radios.",
   "documentation": {
-    "readme": "WiFiPacketRadio\nCrude method in transmitting compressed audio over WiFi packet injection and receiving it on monitor mode WiFi radios.",
-    "usage_sections": [],
+    "readme": "WiFiPacketRadio Crude method in transmitting compressed audio over WiFi packet injection and receiving it on monitor mode WiFi radios.",
+    "usage_sections": [
+      "Implement a small RX audio buffer (consisting about 60ms) sampled audio, and send it to the audio layer. This is to avoid the \"stuttering\" of the packets arriving not on the same timeframe",
+      "Build a \"Pi powered\" HT (handheld transceiver) unit, with a LCD, buttons and LiPo cell. (Will be expensive in small numbers) or a similar system.",
+      "Implement selective private comms by radio ID or MAC, say, between vehicle 1 and 3, without vehicle 2 hearing the conversation."
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +197,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/WiFiPacketRadio && python3 WiFiPacketRadio.py --help",
+      "cd toolboxes/WiFiPacketRadio && cat README.md",
+      "cd toolboxes/WiFiPacketRadio && ls -la",
+      "cd toolboxes/WiFiPacketRadio && python3 WiFiPacketRadio.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WiFiPacketRadio --output $KFIOSA_OUTPUT_DIR/WiFiPacketRadio.log"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -263,13 +273,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/WiFiPacketRadio && python3 WiFiPacketRadio.py --help",
-      "Step 2: cd toolboxes/WiFiPacketRadio && cat README.md",
-      "Step 3: cd toolboxes/WiFiPacketRadio && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: WiFiPacketRadio\nCrude method in transmitting compressed audio over WiFi packet injection and receiving it on monitor mode WiFi radios.",
+    "why_to_use": "Prefer this tool based on upstream description: WiFiPacketRadio Crude method in transmitting compressed audio over WiFi packet injection and receiving it on monitor mode WiFi radios.",
+    "how_to_use": "Clone or install `WiFiPacketRadio` from its upstream repository, then run `WiFiPacketRadio --help` (or the README entrypoint) to confirm flags. WiFiPacketRadio Crude method in transmitting compressed audio over WiFi packet injection and receiving it on monitor mode WiFi radios."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -301,11 +307,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use WiFiPacketRadio because WiFiPacketRadio\nCrude method in transmitting compressed audio over WiFi packet injection and receiving it on monitor mode WiFi radios.",
+    "When chaining Wireless tools, pair WiFiPacketRadio with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `WiFiPacketRadio --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/WiFiPacketRadio && python3 WiFiPacketRadio.py --help",
@@ -336,5 +340,7 @@
   "_languages": [
     "c",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

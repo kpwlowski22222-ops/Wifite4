@@ -1,26 +1,111 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/DonPAPI && python3 DonPAPI.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
-    "cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
-    "cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
-    "cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST DonPAPI --output $KFIOSA_OUTPUT_DIR/DonPAPI.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST DonPAPI --output $KFIOSA_OUTPUT_DIR/DonPAPI.log"
+    "pipx install git+$KFIOSA_TARGET_URL",
+    "donpapi collect -u admin -p '$KFIOSA_SECRET' -d domain.local -t ALL --fetch-pvk",
+    "usage: DonPAPI [-h] [-v] [-o DIRNAME] {collect,gui} ...",
+    "Dump revelant information on compromised targets without AV detection. Version: 2.0.0",
+    "usage: dpp collect [-h] [--keep-collecting seconds] [--threads Number of threads] [--no-config] [-t TARGET [TARGET ...]] [-d domain.local]"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "DonPAPI automates secrets dump remotely on multiple Windows computers, with defense evasion in mind.",
+    "usage_sections": [
+      "Installation: This tool should be install with pipx or in a dedicated virtual environment or (with latest commits) or (to dev)"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "--bind",
+        "description": "HTTP Server bind address (default=127.0.0.1)",
+        "source": "docs"
+      },
+      {
+        "name": "--dc-ip",
+        "description": "IP Address of the domain controller. If omitted it will use the domain part (FQDN) specified in the target parameter",
+        "source": "docs"
+      },
+      {
+        "name": "--fetch-pvk",
+        "description": "Will automatically use domain backup key from database, and if not already dumped, will dump it on a domain controller",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-k",
+        "description": "Use Kerberos authentication. Grabs credentials from ccache file (KRB5CCNAME) based on target parameters. If valid",
+        "source": "docs"
+      },
+      {
+        "name": "--laps",
+        "description": "use LAPS to request local admin password. The laps parameter value is the local admin account use to connect",
+        "source": "docs"
+      },
+      {
+        "name": "--mkfile",
+        "description": "File containing {GUID}:SHA1 masterkeys mappings",
+        "source": "docs"
+      },
+      {
+        "name": "--no-config",
+        "description": "Do not load donpapi config file (~/.donpapi/donpapi.conf)",
+        "source": "docs"
+      },
+      {
+        "name": "--no-pass",
+        "description": "don't ask for password (useful for -k)",
+        "source": "docs"
+      },
+      {
+        "name": "--no-remoteops",
+        "description": "Disable Remote Ops operations (basically no Remote Registry operations, no DPAPI System Credentials)",
+        "source": "docs"
+      },
+      {
+        "name": "-nr",
+        "description": "Disable Remote Ops operations (basically no Remote Registry operations, no DPAPI System Credentials)",
+        "source": "docs"
+      },
+      {
+        "name": "--ntfile",
+        "description": "File containing username:nthash that will be used eventually to decrypt masterkeys",
+        "source": "docs"
+      },
+      {
+        "name": "--port",
+        "description": "HTTP Server port (default=8088)",
+        "source": "docs"
+      },
+      {
+        "name": "--pvkfile",
+        "description": "Pvk file with domain backup key",
+        "source": "docs"
+      },
+      {
+        "name": "--pwdfile",
+        "description": "File containing username:password that will be used eventually to decrypt masterkeys",
+        "source": "docs"
+      },
+      {
+        "name": "--ssl",
+        "description": "Use an encrypted connection",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Verbosity level (-v or -vv)",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -31,11 +116,6 @@
       {
         "name": "--version",
         "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--port",
-        "description": "Target port (default: service default).",
         "source": "generic_kfiosa"
       },
       {
@@ -129,7 +209,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "pipx install git+$KFIOSA_TARGET_URL",
+      "donpapi collect -u admin -p '$KFIOSA_SECRET' -d domain.local -t ALL --fetch-pvk",
+      "usage: DonPAPI [-h] [-v] [-o DIRNAME] {collect,gui} ...",
+      "Dump revelant information on compromised targets without AV detection. Version: 2.0.0",
+      "usage: dpp collect [-h] [--keep-collecting seconds] [--threads Number of threads] [--no-config] [-t TARGET [TARGET ...]] [-d domain.local]"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +341,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, donpapi, login-securite).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/DonPAPI && python3 DonPAPI.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
-      "Step 3: cd toolboxes/DonPAPI && python3 DonPAPI.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: DonPAPI automates secrets dump remotely on multiple Windows computers, with defense evasion in mind.",
+    "why_to_use": "Prefer this tool based on upstream description: DonPAPI automates secrets dump remotely on multiple Windows computers, with defense evasion in mind.",
+    "how_to_use": "Install/setup: git clone git+https://github.com/login-securite/DonPAPI.git. Run the primary entrypoint as shown in upstream docs, e.g. `pipx install git+$KFIOSA_TARGET_URL`. Further invocations from upstream: `donpapi collect -u admin -p '$KFIOSA_SECRET' -d domain.local -t ALL --fetch-pvk`; `usage: DonPAPI [-h] [-v] [-o DIRNAME] {collect,gui} ...`. DonPAPI automates secrets dump remotely on multiple Windows computers, with defense evasion in mind."
   },
   "full_name": "login-securite/DonPAPI",
   "id": "github:login-securite/DonPAPI",
@@ -282,7 +364,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``DonPAPI`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "DonPAPI automates secrets dump remotely on multiple Windows computers, with defense evasion in mind.",
   "tags": [
     "offensive",
     "donpapi",
@@ -300,12 +382,13 @@
   },
   "url": "https://github.com/login-securite/DonPAPI",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use DonPAPI because DonPAPI automates secrets dump remotely on multiple Windows computers, with defense evasion in mind.",
+    "When you need a concrete invocation, run `pipx install git+$KFIOSA_TARGET_URL` as documented upstream for DonPAPI.",
+    "When you need a concrete invocation, run `donpapi collect -u admin -p '$KFIOSA_SECRET' -d domain.local -t ALL --fetch-pvk` as documented upstream for DonPAPI.",
+    "When you need a concrete invocation, run `usage: DonPAPI [-h] [-v] [-o DIRNAME] {collect,gui} ...` as documented upstream for DonPAPI.",
+    "When you need a concrete invocation, run `Dump revelant information on compromised targets without AV detection. Version: 2.0.0` as documented upstream for DonPAPI.",
+    "When chaining frameworks tools, pair DonPAPI with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `DonPAPI --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +407,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

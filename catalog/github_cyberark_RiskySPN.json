@@ -8,7 +8,7 @@
   "url": "https://github.com/cyberark/RiskySPN",
   "summary": "RiskySPNs\nRiskySPNs is a collection of PowerShell scripts focused on detecting and abusing accounts associated with SPNs (Service Principal Name). This module can assist blue teams to identify potentially risky SPNs as well as red teams to escalate privileges by leveraging Kerberos and Active Directory.",
   "documentation": {
-    "readme": "RiskySPNs\nRiskySPNs is a collection of PowerShell scripts focused on detecting and abusing accounts associated with SPNs (Service Principal Name). This module can assist blue teams to identify potentially risky SPNs as well as red teams to escalate privileges by leveraging Kerberos and Active Directory.",
+    "readme": "RiskySPNs RiskySPNs is a collection of PowerShell scripts focused on detecting and abusing accounts associated with SPNs (Service Principal Name). This module can assist blue teams to identify potentially risky SPNs as well as red teams to escalate privileges by leveraging Kerberos and Active Directory.",
     "usage_sections": [],
     "arguments": [
       {
@@ -193,7 +193,14 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "Import-Module .\\RiskySPNs.psm1",
+      "Get-Help Get-TGSCipher -Full",
+      "Get-TGSCipher -SPN \"MSSQLSvc/prodDB.company.com:1433\"",
+      "Find-PotentiallyCrackableAccounts -Stealth -GetSPNs | Get-TGSCipher",
+      "Find-PotentiallyCrackableAccounts -Sensitive -Stealth -GetSPNs | Get-TGSCipher -Format \"Hashcat\" | Out-File crack.txt",
+      "oclHashcat64.exe -m 13100 crack.txt -a 3"
+    ],
     "file_listing": [
       "Export-PotentiallyCrackableAccounts.ps1",
       "Find-PotentiallyCrackableAccounts.ps1",
@@ -250,13 +257,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/RiskySPN && python3 RiskySPN.py --help",
-      "Step 2: cd toolboxes/RiskySPN && cat README.md",
-      "Step 3: cd toolboxes/RiskySPN && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: RiskySPNs\nRiskySPNs is a collection of PowerShell scripts focused on detecting and abusing accounts associated with SPNs (Service Principal Name). This module can assist blue teams to identify potentially risky SPNs as w.",
+    "why_to_use": "Prefer this tool based on upstream description: RiskySPNs RiskySPNs is a collection of PowerShell scripts focused on detecting and abusing accounts associated with SPNs (Service Principal Name). This module can assist blue teams to identify potentially risky SPNs as well as red teams to escalate privileges by leveraging Kerberos and Active Directory.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `Import-Module .\\RiskySPNs.psm1`. Further invocations from upstream: `Get-Help Get-TGSCipher -Full`; `Get-TGSCipher -SPN \"MSSQLSvc/prodDB.company.com:1433\"`. RiskySPNs RiskySPNs is a collection of PowerShell scripts focused on detecting and abusing accounts associated with SPNs (Service Principal Name). This module can assist blue teams to identify potentially risky SPNs as well as red teams to escalate privileges by leveraging Kerberos and Active Directory."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -287,18 +290,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use RiskySPN because RiskySPNs\nRiskySPNs is a collection of PowerShell scripts focused on detecting and abusing accounts associated with SPNs (Service Principal Name). This module c.",
+    "When you need a concrete invocation, run `Import-Module .\\RiskySPNs.psm1` as documented upstream for RiskySPN.",
+    "When you need a concrete invocation, run `Get-Help Get-TGSCipher -Full` as documented upstream for RiskySPN.",
+    "When you need a concrete invocation, run `Get-TGSCipher -SPN \"MSSQLSvc/prodDB.company.com:1433\"` as documented upstream for RiskySPN.",
+    "When you need a concrete invocation, run `Find-PotentiallyCrackableAccounts -Stealth -GetSPNs | Get-TGSCipher` as documented upstream for RiskySPN.",
+    "When chaining Penetration Testing tools, pair RiskySPN with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `RiskySPN --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/RiskySPN && python3 RiskySPN.py --help",
-    "cd toolboxes/RiskySPN && cat README.md",
-    "cd toolboxes/RiskySPN && ls -la",
-    "cd toolboxes/RiskySPN && python3 RiskySPN.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST RiskySPN --output $KFIOSA_OUTPUT_DIR/RiskySPN.log"
+    "Import-Module .\\RiskySPNs.psm1",
+    "Get-Help Get-TGSCipher -Full",
+    "Get-TGSCipher -SPN \"MSSQLSvc/prodDB.company.com:1433\"",
+    "Find-PotentiallyCrackableAccounts -Stealth -GetSPNs | Get-TGSCipher",
+    "Find-PotentiallyCrackableAccounts -Sensitive -Stealth -GetSPNs | Get-TGSCipher -Format \"Hashcat\" | Out-File crack.txt",
+    "oclHashcat64.exe -m 13100 crack.txt -a 3"
   ],
   "attack_surface": [
     "shell_linux"
@@ -319,5 +325,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "powershell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

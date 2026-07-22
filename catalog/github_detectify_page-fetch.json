@@ -1,18 +1,102 @@
 {
   "category": "web",
   "command_examples": [
-    "cd toolboxes/page-fetch && python3 page-fetch.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/page-fetch && python3 page-fetch.py --help",
-    "cd toolboxes/page-fetch && python3 page-fetch.py --help",
-    "cd toolboxes/page-fetch && python3 page-fetch.py --help",
-    "cd toolboxes/page-fetch && python3 page-fetch.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST page-fetch --output $KFIOSA_OUTPUT_DIR/page-fetch.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST page-fetch --output $KFIOSA_OUTPUT_DIR/page-fetch.log"
+    "GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8",
+    "GET $KFIOSA_TARGET_URL 200 text/css",
+    "GET $KFIOSA_TARGET_URL 200 image/svg+xml",
+    "GET $KFIOSA_TARGET_URL 200 text/css; charset=utf-8",
+    "page-fetch [options] < urls.txt",
+    "GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8",
+    "JS ($KFIOSA_TARGET_URL example.com",
+    "JS ($KFIOSA_TARGET_URL [$KFIOSA_TARGET_URL"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "page-fetch is a tool for researchers that lets you:",
+    "usage_sections": [
+      "Installation: page-fetch is written with Go and can be installed with go install: Or you can clone the respository and build it manually:",
+      "Options: You can get the page-fetch help output by running page-fetch -h:"
+    ],
     "arguments": [
+      {
+        "name": "-c",
+        "description": "Concurrency Level (default 2)",
+        "source": "docs"
+      },
+      {
+        "name": "--concurrency",
+        "description": "Concurrency Level (default 2)",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Milliseconds to wait between requests (default 0)",
+        "source": "docs"
+      },
+      {
+        "name": "--delay",
+        "description": "Milliseconds to wait between requests (default 0)",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Do not save responses matching the provided string (can be specified multiple times)",
+        "source": "docs"
+      },
+      {
+        "name": "--exclude",
+        "description": "Do not save responses matching the provided string (can be specified multiple times)",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Only save requests matching the provided string (can be specified multiple times)",
+        "source": "docs"
+      },
+      {
+        "name": "--include",
+        "description": "Only save requests matching the provided string (can be specified multiple times)",
+        "source": "docs"
+      },
+      {
+        "name": "--no-third-party",
+        "description": "Do not save responses to requests on third-party domains",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "Output directory name (default 'out')",
+        "source": "docs"
+      },
+      {
+        "name": "--output",
+        "description": "Output directory name (default 'out')",
+        "source": "docs"
+      },
+      {
+        "name": "--overwrite",
+        "description": "Overwrite output files when they already exist",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Use proxy on given URL",
+        "source": "docs"
+      },
+      {
+        "name": "--proxy",
+        "description": "Use proxy on given URL",
+        "source": "docs"
+      },
+      {
+        "name": "--third-party",
+        "description": "Only save responses to requests on third-party domains",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "Overwrite output files when they already exist",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -21,11 +105,6 @@
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
       },
       {
@@ -66,11 +145,6 @@
       {
         "name": "--wordlist",
         "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
         "source": "generic_kfiosa"
       },
       {
@@ -129,7 +203,16 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8",
+      "GET $KFIOSA_TARGET_URL 200 text/css",
+      "GET $KFIOSA_TARGET_URL 200 image/svg+xml",
+      "GET $KFIOSA_TARGET_URL 200 text/css; charset=utf-8",
+      "page-fetch [options] < urls.txt",
+      "GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8",
+      "JS ($KFIOSA_TARGET_URL example.com",
+      "JS ($KFIOSA_TARGET_URL [$KFIOSA_TARGET_URL"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +338,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, page, fetch).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/page-fetch && python3 page-fetch.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/page-fetch && python3 page-fetch.py --help",
-      "Step 3: cd toolboxes/page-fetch && python3 page-fetch.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the web category. Fits when the engagement needs: page-fetch is a tool for researchers that lets you:.",
+    "why_to_use": "Prefer this tool based on upstream description: page-fetch is a tool for researchers that lets you:.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8`. Further invocations from upstream: `GET $KFIOSA_TARGET_URL 200 text/css`; `GET $KFIOSA_TARGET_URL 200 image/svg+xml`. page-fetch is a tool for researchers that lets you:."
   },
   "full_name": "detectify/page-fetch",
   "id": "github:detectify/page-fetch",
@@ -282,7 +361,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``page-fetch`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "page-fetch is a tool for researchers that lets you:",
   "tags": [
     "offensive",
     "page",
@@ -301,12 +380,13 @@
   },
   "url": "https://github.com/detectify/page-fetch",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need web, use page-fetch because page-fetch is a tool for researchers that lets you:.",
+    "When you need a concrete invocation, run `GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8` as documented upstream for page-fetch.",
+    "When you need a concrete invocation, run `GET $KFIOSA_TARGET_URL 200 text/css` as documented upstream for page-fetch.",
+    "When you need a concrete invocation, run `GET $KFIOSA_TARGET_URL 200 image/svg+xml` as documented upstream for page-fetch.",
+    "When you need a concrete invocation, run `GET $KFIOSA_TARGET_URL 200 text/css; charset=utf-8` as documented upstream for page-fetch.",
+    "When chaining web tools, pair page-fetch with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `page-fetch --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +405,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

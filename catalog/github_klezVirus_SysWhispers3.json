@@ -1,26 +1,75 @@
 {
   "category": "c2",
   "command_examples": [
-    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
-    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
-    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
-    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SysWhispers3 --output $KFIOSA_OUTPUT_DIR/SysWhispers3.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SysWhispers3 --output $KFIOSA_OUTPUT_DIR/SysWhispers3.log"
+    "usage: syswhispers.py [-h] [-p PRESET] [-a {x86,x64}] [-m {embedded,egg_hunter,jumper,jumper_randomized}] [-f FUNCTIONS] -o OUT_FILE [--int2eh] [--wow64] [-v] [-d]",
+    "py .\\syswhispers.py --preset all -o syscalls_all",
+    "py .\\syswhispers.py --preset common -o syscalls_common",
+    "py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem",
+    "py .\\syswhispers.py --preset all -o syscalls_all -m jumper --arch x86",
+    "py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem --arch x86 --wow64",
+    "py .\\syswhispers.py --preset common -o syscalls_common -m egg_hunter",
+    "py .\\syswhispers.py --preset all -o syscalls_all -m jumper -c mingw",
+    "PS C:\\Projects\\SysWhispers2> py .\\syswhispers.py --preset common --out-file temp\\syscalls_common -v",
+    "Common functions selected."
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
+    "usage_sections": [
+      "SysWhispers3 is the de-facto \"fork\" used by [Inceptor][1], and implements some utils class which are not relevant to the",
+      "SysWhispers2 is moving towards supporting NASM compilation (for gcc/mingw), while this version is specifically designed and",
+      "SysWhispers3 contains partially implemented features (such as egg-hunting) which would not be sensible to include",
+      "It also supports x86/WoW64",
+      "It supports syscalls instruction replacement with an EGG (to be dynamically replaced)"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-d",
+        "description": "Enable syscall debug (insert software breakpoint)",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Enable syscall debug (insert software breakpoint)",
+        "source": "docs"
+      },
+      {
+        "name": "-GR",
+        "description": "-EHa -Oi -GS-",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--int2eh",
+        "description": "Use the old `int 2eh` instruction in place of `syscall`",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Enable debug output",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Enable debug output",
+        "source": "docs"
+      },
+      {
+        "name": "--wow64",
+        "description": "Use Wow64 to run x86 on x64 (only usable with x86 architecture)",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -41,11 +90,6 @@
       {
         "name": "--interface",
         "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
         "source": "generic_kfiosa"
       },
       {
@@ -129,7 +173,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "usage: syswhispers.py [-h] [-p PRESET] [-a {x86,x64}] [-m {embedded,egg_hunter,jumper,jumper_randomized}] [-f FUNCTIONS] -o OUT_FILE [--int2eh] [--wow64] [-v] [-d]",
+      "py .\\syswhispers.py --preset all -o syscalls_all",
+      "py .\\syswhispers.py --preset common -o syscalls_common",
+      "py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem",
+      "py .\\syswhispers.py --preset all -o syscalls_all -m jumper --arch x86",
+      "py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem --arch x86 --wow64",
+      "py .\\syswhispers.py --preset common -o syscalls_common -m egg_hunter",
+      "py .\\syswhispers.py --preset all -o syscalls_all -m jumper -c mingw",
+      "PS C:\\Projects\\SysWhispers2> py .\\syswhispers.py --preset common --out-file temp\\syscalls_common -v",
+      "Common functions selected."
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +310,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, syswhispers3, klezvirus).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
-      "Step 3: cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the c2 category. Fits when the engagement needs: SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
+    "why_to_use": "Prefer this tool based on upstream description: SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `usage: syswhispers.py [-h] [-p PRESET] [-a {x86,x64}] [-m {embedded,egg_hunter,jumper,jumper_randomized}] [-f FUNCTIONS] -o OUT_FILE [--int2eh] [--wow64] [-v] [-d]`. Further invocations from upstream: `py .\\syswhispers.py --preset all -o syscalls_all`; `py .\\syswhispers.py --preset common -o syscalls_common`. SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls."
   },
   "full_name": "klezVirus/SysWhispers3",
   "id": "github:klezVirus/SysWhispers3",
@@ -282,7 +333,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``SysWhispers3`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
   "tags": [
     "offensive",
     "syswhispers3",
@@ -300,12 +351,13 @@
   },
   "url": "https://github.com/klezVirus/SysWhispers3",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need c2, use SysWhispers3 because SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
+    "When you need a concrete invocation, run `usage: syswhispers.py [-h] [-p PRESET] [-a {x86,x64}] [-m {embedded,egg_hunter,jumper,jumper_randomized}] [-f FUNCTIONS] -o OUT_FILE [--int2eh] [--wow64] [-v] [-d]` as documented upstream for SysWhispers3.",
+    "When you need a concrete invocation, run `py .\\syswhispers.py --preset all -o syscalls_all` as documented upstream for SysWhispers3.",
+    "When you need a concrete invocation, run `py .\\syswhispers.py --preset common -o syscalls_common` as documented upstream for SysWhispers3.",
+    "When you need a concrete invocation, run `py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem` as documented upstream for SysWhispers3.",
+    "When chaining c2 tools, pair SysWhispers3 with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `SysWhispers3 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +376,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

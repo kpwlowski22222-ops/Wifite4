@@ -1,18 +1,42 @@
 {
   "category": "exploit",
   "command_examples": [
-    "cd toolboxes/ctf-katana && python3 ctf-katana.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/ctf-katana && python3 ctf-katana.py --help",
-    "cd toolboxes/ctf-katana && python3 ctf-katana.py --help",
-    "cd toolboxes/ctf-katana && python3 ctf-katana.py --help",
-    "cd toolboxes/ctf-katana && python3 ctf-katana.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ctf-katana --output $KFIOSA_OUTPUT_DIR/ctf-katana.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ctf-katana --output $KFIOSA_OUTPUT_DIR/ctf-katana.log"
+    "smbmap -H $KFIOSA_TARGET_HOST -u anonymous",
+    "smbmap -H $KFIOSA_TARGET_HOST",
+    "smbmap -H $KFIOSA_TARGET_HOST -u anonymous -d HTB.LOCAL",
+    "smbmap -H $KFIOSA_TARGET_HOST -u anonymous -d localhost",
+    "enum4linux $KFIOSA_TARGET_HOST",
+    "smbclient -m SMB2 -N -L //$KFIOSA_TARGET_HOST/",
+    "smbclient -m SMB2 -N //$KFIOSA_TARGET_HOST/Reports",
+    "mssqlclient.py username@$KFIOSA_TARGET_HOST",
+    "mssqlclient.py username@$KFIOSA_TARGET_HOST -windows-auth",
+    "SQL> enable_xp_cmdshell"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "This repository, at the time of writing, will just host a listing of tools and commands that may help with CTF challenges. I hope to keep it as a \"live document,\" and ideally it will not die out like the old \"tools\" page I had made (https://github.com/USCGA/tools).",
+    "usage_sections": [
+      "impacket -> mssqlclient.py",
+      "[StegCracker][StegCracker]",
+      "[openstego][OpenStego]",
+      "[Stegsolve.jar][Stegsolve.jar]",
+      "Digital Invisible Ink Stego Tool"
+    ],
     "arguments": [
+      {
+        "name": "-gui",
+        "description": "https://github.com/pxb1988/dex2jar",
+        "source": "docs"
+      },
+      {
+        "name": "-signals-code",
+        "description": "https://github.com/andrew-d/static-binaries",
+        "source": "docs"
+      },
+      {
+        "name": "-site_scripting",
+        "description": "https://en.wikipedia.org/wiki/Cross-site_scripting",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +153,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "smbmap -H $KFIOSA_TARGET_HOST -u anonymous",
+      "smbmap -H $KFIOSA_TARGET_HOST",
+      "smbmap -H $KFIOSA_TARGET_HOST -u anonymous -d HTB.LOCAL",
+      "smbmap -H $KFIOSA_TARGET_HOST -u anonymous -d localhost",
+      "enum4linux $KFIOSA_TARGET_HOST",
+      "smbclient -m SMB2 -N -L //$KFIOSA_TARGET_HOST/",
+      "smbclient -m SMB2 -N //$KFIOSA_TARGET_HOST/Reports",
+      "mssqlclient.py username@$KFIOSA_TARGET_HOST",
+      "mssqlclient.py username@$KFIOSA_TARGET_HOST -windows-auth",
+      "SQL> enable_xp_cmdshell"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +290,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, ctf, katana).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/ctf-katana && python3 ctf-katana.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/ctf-katana && python3 ctf-katana.py --help",
-      "Step 3: cd toolboxes/ctf-katana && python3 ctf-katana.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the exploit category. Fits when the engagement needs: This repository, at the time of writing, will just host a listing of tools and commands that may help with CTF challenges. I hope to keep it as a \"live document,\" and ideally it will not die out like the old \"tools\" page.",
+    "why_to_use": "Prefer this tool based on upstream description: This repository, at the time of writing, will just host a listing of tools and commands that may help with CTF challenges. I hope to keep it as a \"live document,\" and ideally it will not die out like the old \"tools\" page I had made (https://github.com/USCGA/tools).",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `smbmap -H $KFIOSA_TARGET_HOST -u anonymous`. Further invocations from upstream: `smbmap -H $KFIOSA_TARGET_HOST`; `smbmap -H $KFIOSA_TARGET_HOST -u anonymous -d HTB.LOCAL`. This repository, at the time of writing, will just host a listing of tools and commands that may help with CTF challenges. I hope to keep it as a \"live document,\" and ideally it will not die out like the old \"tools\" page I had made (https://github.com/USCGA/tools)."
   },
   "full_name": "JohnHammond/ctf-katana",
   "id": "github:JohnHammond/ctf-katana",
@@ -282,7 +313,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``ctf-katana`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "This repository, at the time of writing, will just host a listing of tools and commands that may help with CTF challenges. I hope to keep it as a \"live document,\" and ideally it will not die out like the old \"tools\" page I had made (https://github.com/USCGA/tools).",
   "tags": [
     "offensive",
     "ctf",
@@ -301,12 +332,13 @@
   },
   "url": "https://github.com/JohnHammond/ctf-katana",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need exploit, use ctf-katana because This repository, at the time of writing, will just host a listing of tools and commands that may help with CTF challenges. I hope to keep it as a \"live document.",
+    "When you need a concrete invocation, run `smbmap -H $KFIOSA_TARGET_HOST -u anonymous` as documented upstream for ctf-katana.",
+    "When you need a concrete invocation, run `smbmap -H $KFIOSA_TARGET_HOST` as documented upstream for ctf-katana.",
+    "When you need a concrete invocation, run `smbmap -H $KFIOSA_TARGET_HOST -u anonymous -d HTB.LOCAL` as documented upstream for ctf-katana.",
+    "When you need a concrete invocation, run `smbmap -H $KFIOSA_TARGET_HOST -u anonymous -d localhost` as documented upstream for ctf-katana.",
+    "When chaining exploit tools, pair ctf-katana with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ctf-katana --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +357,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

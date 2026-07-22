@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "polenum",
   "title": "polenum",
-  "summary": "### polenum",
+  "summary": "POLENUM - Extracts the password policy from a Windows system",
   "version": "1.7-1",
   "architectures": [
     "all"
@@ -37,62 +37,14 @@
       "arguments": [
         {
           "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": "  -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
-            "--username",
-            "-u"
-          ],
-          "metavar": "USERNAME",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "  --username, -u USERNAME"
-        },
-        {
-          "flags": [
-            "--password",
-            "-p"
-          ],
-          "metavar": "PASSWORD",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "  --password, -p PASSWORD"
-        },
-        {
-          "flags": [
-            "--domain",
-            "-d"
-          ],
-          "metavar": "DOMAIN",
-          "takes_value": true,
-          "description": "The domain or IP",
-          "default": null,
-          "choices": null,
-          "raw": "  --domain, -d DOMAIN   The domain or IP"
-        },
-        {
-          "flags": [
             "--protocols"
           ],
-          "metavar": "PROTOCOLS ...",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "This is a simple security-oriented tool. Aims to help system administrators to improve secu-",
           "default": null,
           "choices": null,
-          "raw": "  --protocols [PROTOCOLS ...]"
+          "raw": "--protocols  This is a simple security-oriented tool. Aims to help system administrators to improve secu-"
         }
       ],
       "raw_help": "root@kali:~# polenum victim:s3cr3t@192.168.1.200 '445/SMB'\n\n[+] Attaching to 192.168.1.200 using victim:s3cr3t\n\n    [+] Trying protocol 445/SMB...\n\n[+] Found domain(s):\n\n    [+] WIN7-X86\n    [+] Builtin\n\n[+] Password Info for Domain: WIN7-X86\n\n    [+] Minimum password length: None\n    [+] Password history length: None\n    [+] Maximum password age: Not Set\n    [+] Password Complexity Flags: 000000\n\n        [+] Domain Refuse Password Change: 0\n        [+] Domain Password Store Cleartext: 0\n        [+] Domain Password Lockout Admins: 0\n        [+] Domain Password No Clear Change: 0\n        [+] Domain Password No Anon Change: 0\n        [+] Domain Password Complex: 0\n\n    [+] Minimum password age: None\n    [+] Reset Account Lockout Counter: 30 minutes\n    [+] Locked Account Duration: 30 minutes\n    [+] Account Lockout Threshold: None\n    [+] Forced Log off Time: Not Set",
@@ -168,21 +120,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use polenum because POLENUM - Extracts the password policy from a Windows system.",
+    "When you need a concrete invocation, run `polenum [username[:password]@]<address> [--protocols [protocol list...]]` as documented upstream for polenum.",
+    "When you need a concrete invocation, run `polenum user:password@$KFIOSA_TARGET_HOST --protocols '445/SMB'` as documented upstream for polenum.",
+    "When chaining Kali Linux tools, pair polenum with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `polenum --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/polenum && python3 polenum.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/polenum && python3 polenum.py --help",
-    "cd toolboxes/polenum && python3 polenum.py --help",
-    "cd toolboxes/polenum && python3 polenum.py --help",
-    "cd toolboxes/polenum && python3 polenum.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST polenum --output $KFIOSA_OUTPUT_DIR/polenum.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST polenum --output $KFIOSA_OUTPUT_DIR/polenum.log"
+    "polenum [username[:password]@]<address> [--protocols [protocol list...]]",
+    "polenum user:password@$KFIOSA_TARGET_HOST --protocols '445/SMB'"
   ],
   "attack_surface": [
     "web"
@@ -197,5 +143,28 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--protocols",
+        "description": "This is a simple security-oriented tool. Aims to help system administrators to improve secu-",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "polenum [username[:password]@]<address> [--protocols [protocol list...]]",
+      "polenum user:password@$KFIOSA_TARGET_HOST --protocols '445/SMB'"
+    ],
+    "readme": "POLENUM - Extracts the password policy from a Windows system",
+    "how_to_use": "Install/setup: sudo apt install polenum. Run the primary entrypoint as shown in upstream docs, e.g. `polenum [username[:password]@]<address> [--protocols [protocol list...]]`. Further invocations from upstream: `polenum user:password@$KFIOSA_TARGET_HOST --protocols '445/SMB'`. POLENUM - Extracts the password policy from a Windows system.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: POLENUM - Extracts the password policy from a Windows system.",
+    "why_to_use": "Prefer this tool based on upstream description: POLENUM - Extracts the password policy from a Windows system.",
+    "usage_sections": [
+      "Install with: sudo apt install polenum",
+      "Install with: sudo apt install polenum"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

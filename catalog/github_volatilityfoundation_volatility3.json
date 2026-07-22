@@ -9,12 +9,74 @@
   "summary": "Volatility 3: The volatile memory extraction framework",
   "documentation": {
     "readme": "Volatility 3: The volatile memory extraction framework",
-    "usage_sections": [],
+    "usage_sections": [
+      "Quick Start: 1. Install the required dependencies: 2. See available options: 3. To get more information on a Windows memory sample and to make sure Volatility supports that sample type, run vol -f windows.info: 4. Run some other plugins. The -f or --single-location is not strictly required, b"
+    ],
     "arguments": [
       {
-        "name": "--single-location",
-        "description": "CLI flag '--single-location' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-d",
+        "description": "Path to the dwarf2json binary",
+        "source": "docs"
+      },
+      {
+        "name": "--dwarf2json",
+        "description": "Path to the dwarf2json binary",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "PDB file to translate to ISF",
+        "source": "docs"
+      },
+      {
+        "name": "--file",
+        "description": "PDB file to translate to ISF",
+        "source": "docs"
+      },
+      {
+        "name": "-g",
+        "description": "GUID + Age string for the required PDB file",
+        "source": "docs"
+      },
+      {
+        "name": "--guid",
+        "description": "GUID + Age string for the required PDB file",
+        "source": "docs"
+      },
+      {
+        "name": "-k",
+        "description": "Keep the downloaded PDB file",
+        "source": "docs"
+      },
+      {
+        "name": "--keep",
+        "description": "Keep the downloaded PDB file",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "Filename for data output",
+        "source": "docs"
+      },
+      {
+        "name": "--output",
+        "description": "Filename for data output",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Filename pattern to recover PDB file",
+        "source": "docs"
+      },
+      {
+        "name": "--pattern",
+        "description": "Filename pattern to recover PDB file",
+        "source": "docs"
+      },
+      {
+        "name": "--urlprefix",
+        "description": "Web prefix that will eventually serve the ISF files",
+        "source": "docs"
       },
       {
         "name": "--user",
@@ -34,11 +96,6 @@
       {
         "name": "--interface",
         "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
       },
       {
@@ -193,7 +250,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "vol -h",
+      "vol -f /home/user/samples/stuxnet.vmem windows.info",
+      "cd volatility3/",
+      "python3 -m venv venv && . venv/bin/activate"
+    ],
     "file_listing": [
       "API_CHANGES.md",
       "CITATION.cff",
@@ -294,13 +356,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/volatility3 && python3 volatility3.py --help",
-      "Step 2: cd toolboxes/volatility3 && cat README.md",
-      "Step 3: cd toolboxes/volatility3 && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: Volatility 3: The volatile memory extraction framework.",
+    "why_to_use": "Prefer this tool based on upstream description: Volatility 3: The volatile memory extraction framework.",
+    "how_to_use": "Install/setup: pip install --user -e \".[full]\"; pip install volatility3. Run the primary entrypoint as shown in upstream docs, e.g. `vol -h`. Further invocations from upstream: `vol -f /home/user/samples/stuxnet.vmem windows.info`; `cd volatility3/`. Volatility 3: The volatile memory extraction framework."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -332,18 +390,19 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use volatility3 because Volatility 3: The volatile memory extraction framework.",
+    "When you need a concrete invocation, run `vol -h` as documented upstream for volatility3.",
+    "When you need a concrete invocation, run `vol -f /home/user/samples/stuxnet.vmem windows.info` as documented upstream for volatility3.",
+    "When you need a concrete invocation, run `cd volatility3/` as documented upstream for volatility3.",
+    "When you need a concrete invocation, run `python3 -m venv venv && . venv/bin/activate` as documented upstream for volatility3.",
+    "When chaining Penetration Testing tools, pair volatility3 with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `volatility3 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/volatility3 && python3 volatility3.py --help",
-    "cd toolboxes/volatility3 && cat README.md",
-    "cd toolboxes/volatility3 && ls -la",
-    "cd toolboxes/volatility3 && python3 volatility3.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST volatility3 --output $KFIOSA_OUTPUT_DIR/volatility3.log"
+    "vol -h",
+    "vol -f /home/user/samples/stuxnet.vmem windows.info",
+    "cd volatility3/",
+    "python3 -m venv venv && . venv/bin/activate"
   ],
   "attack_surface": [
     "shell_linux"
@@ -365,5 +424,7 @@
   "_languages": [
     "python",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

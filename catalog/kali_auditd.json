@@ -27,7 +27,63 @@
       "path": "/usr/bin/aulast",
       "description": "a program similar to last",
       "usage": "aulast [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--bad"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Report on the bad logins.",
+          "default": null,
+          "choices": null,
+          "raw": "--bad  Report on the bad logins."
+        },
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print debug messages to stderr.",
+          "default": null,
+          "choices": null,
+          "raw": "--debug  Print debug messages to stderr."
+        },
+        {
+          "flags": [
+            "--extract"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Write raw audit records used to create the displayed report into a file aulast.log in",
+          "default": null,
+          "choices": null,
+          "raw": "--extract  Write raw audit records used to create the displayed report into a file aulast.log in"
+        },
+        {
+          "flags": [
+            "--proof"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "out the audit event serial numbers used to determine the preceding line of the",
+          "default": null,
+          "choices": null,
+          "raw": "--proof  out the audit event serial numbers used to determine the preceding line of the"
+        },
+        {
+          "flags": [
+            "--stdin"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Take audit records from stdin. The audit events must be in the raw format.",
+          "default": null,
+          "choices": null,
+          "raw": "--stdin  Take audit records from stdin. The audit events must be in the raw format."
+        }
+      ]
     },
     {
       "name": "aulastlog",
@@ -136,5 +192,60 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "aulast [ options ]",
+    "ausearch --start this-month --raw | aulast --stdin"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use aulast because User space tools for security auditing.",
+    "When the engagement is in the install phase, use aulast as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `aulast [ options ]` as documented upstream for aulast.",
+    "When you need a concrete invocation, run `ausearch --start this-month --raw | aulast --stdin` as documented upstream for aulast.",
+    "When chaining Kali Linux tools, pair aulast with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `aulast --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--bad",
+        "description": "Report on the bad logins.",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Print debug messages to stderr.",
+        "source": "docs"
+      },
+      {
+        "name": "--extract",
+        "description": "Write raw audit records used to create the displayed report into a file aulast.log in",
+        "source": "docs"
+      },
+      {
+        "name": "--proof",
+        "description": "out the audit event serial numbers used to determine the preceding line of the",
+        "source": "docs"
+      },
+      {
+        "name": "--stdin",
+        "description": "Take audit records from stdin. The audit events must be in the raw format.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "aulast [ options ]",
+      "ausearch --start this-month --raw | aulast --stdin"
+    ],
+    "readme": "aulast - a program similar to last",
+    "how_to_use": "Install/setup: sudo apt install audit (1:4.1.2-1). Run the primary entrypoint as shown in upstream docs, e.g. `ausearch --start this-month --raw | aulast --stdin`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: User space tools for security auditing.",
+    "why_to_use": "Prefer this tool because: User space tools for security auditing.",
+    "usage_sections": [
+      "Install with: sudo apt install audit (1:4.1.2-1)",
+      "Install with: sudo apt install audit (1:4.1.2-1)"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -1,18 +1,22 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/kube-bench && python3 kube-bench.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/kube-bench && python3 kube-bench.py --help",
-    "cd toolboxes/kube-bench && python3 kube-bench.py --help",
-    "cd toolboxes/kube-bench && python3 kube-bench.py --help",
-    "cd toolboxes/kube-bench && python3 kube-bench.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kube-bench --output $KFIOSA_OUTPUT_DIR/kube-bench.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kube-bench --output $KFIOSA_OUTPUT_DIR/kube-bench.log"
+    "kubectl apply -f job.yaml",
+    "job.batch/kube-bench created",
+    "kube-bench-j76s9   0/1     ContainerCreating   0          3s",
+    "kube-bench-j76s9   0/1     Completed   0          11s"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "[![GitHub Release][release-img]][release] [![Downloads][download]][release] [![Docker Pulls][docker-pull]][docker] [![Go Report Card][report-card-img]][report-card]",
+    "usage_sections": [
+      "Quick start: There are multiple ways to run kube-bench. You can run kube-bench inside a pod, but it will need access to the host's PID namespace in order to check the running processes, as well as access to some directories on the host where config files and other files are stored. The suppli"
+    ],
     "arguments": [
+      {
+        "name": "-bench",
+        "description": "https://hub.docker.com/r/aquasec/kube-bench",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +133,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "kubectl apply -f job.yaml",
+      "job.batch/kube-bench created",
+      "kube-bench-j76s9   0/1     ContainerCreating   0          3s",
+      "kube-bench-j76s9   0/1     Completed   0          11s"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +264,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, kube, bench).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/kube-bench && python3 kube-bench.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/kube-bench && python3 kube-bench.py --help",
-      "Step 3: cd toolboxes/kube-bench && python3 kube-bench.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: [![GitHub Release][release-img]][release] [![Downloads][download]][release] [![Docker Pulls][docker-pull]][docker] [![Go Report Card][report-card-img]][report-card].",
+    "why_to_use": "Prefer this tool based on upstream description: [![GitHub Release][release-img]][release] [![Downloads][download]][release] [![Docker Pulls][docker-pull]][docker] [![Go Report Card][report-card-img]][report-card].",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `kubectl apply -f job.yaml`. Further invocations from upstream: `job.batch/kube-bench created`; `kube-bench-j76s9   0/1     ContainerCreating   0          3s`. [![GitHub Release][release-img]][release] [![Downloads][download]][release] [![Docker Pulls][docker-pull]][docker] [![Go Report Card][report-card-img]][report-card]."
   },
   "full_name": "aquasecurity/kube-bench",
   "id": "github:aquasecurity/kube-bench",
@@ -282,7 +287,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``kube-bench`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "[![GitHub Release][release-img]][release] [![Downloads][download]][release] [![Docker Pulls][docker-pull]][docker] [![Go Report Card][report-card-img]][report-card]",
   "tags": [
     "offensive",
     "kube",
@@ -301,12 +306,13 @@
   },
   "url": "https://github.com/aquasecurity/kube-bench",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use kube-bench because [![GitHub Release][release-img]][release] [![Downloads][download]][release] [![Docker Pulls][docker-pull]][docker] [![Go Report Card][report-card-img]][report-c.",
+    "When you need a concrete invocation, run `kubectl apply -f job.yaml` as documented upstream for kube-bench.",
+    "When you need a concrete invocation, run `job.batch/kube-bench created` as documented upstream for kube-bench.",
+    "When you need a concrete invocation, run `kube-bench-j76s9   0/1     ContainerCreating   0          3s` as documented upstream for kube-bench.",
+    "When you need a concrete invocation, run `kube-bench-j76s9   0/1     Completed   0          11s` as documented upstream for kube-bench.",
+    "When chaining frameworks tools, pair kube-bench with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `kube-bench --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +331,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

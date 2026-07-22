@@ -1,17 +1,22 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/metabigor && python3 metabigor.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/metabigor && python3 metabigor.py --help",
-    "cd toolboxes/metabigor && python3 metabigor.py --help",
-    "cd toolboxes/metabigor && python3 metabigor.py --help",
-    "cd toolboxes/metabigor && python3 metabigor.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metabigor --output $KFIOSA_OUTPUT_DIR/metabigor.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metabigor --output $KFIOSA_OUTPUT_DIR/metabigor.log"
+    "metabigor net --input AS13335",
+    "echo \"$KFIOSA_TARGET_HOST\" | metabigor net --ip",
+    "echo \"cloudflare.com\" | metabigor net --domain",
+    "echo \"Cloudflare\" | metabigor net --org",
+    "echo \"AS13335\" | metabigor net --dynamic",
+    "metabigor net -I asn-list.txt -o results.txt",
+    "echo \"13335\" | metabigor net --asn",
+    "echo \"hackerone.com\" | metabigor cert",
+    "echo \"example.com\" | metabigor cert --clean",
+    "echo \"example.com\" | metabigor cert --wildcard"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Metabigor - OSINT power without API key hassle",
+    "usage_sections": [
+      "Features: - Network Discovery - Find IP ranges (CIDRs) from ASN, organization, domain, or IP address - Certificate Transparency - Discover subdomains via crt.sh certificate logs - IP Enrichment - Get port, service, and vulnerability data via Shodan InternetDB (free, no API key) - GitHub Co"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +134,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "metabigor net --input AS13335",
+      "echo \"$KFIOSA_TARGET_HOST\" | metabigor net --ip",
+      "echo \"cloudflare.com\" | metabigor net --domain",
+      "echo \"Cloudflare\" | metabigor net --org",
+      "echo \"AS13335\" | metabigor net --dynamic",
+      "metabigor net -I asn-list.txt -o results.txt",
+      "echo \"13335\" | metabigor net --asn",
+      "echo \"hackerone.com\" | metabigor cert",
+      "echo \"example.com\" | metabigor cert --clean",
+      "echo \"example.com\" | metabigor cert --wildcard"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +271,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, metabigor, j3ssie).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/metabigor && python3 metabigor.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/metabigor && python3 metabigor.py --help",
-      "Step 3: cd toolboxes/metabigor && python3 metabigor.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: Metabigor - OSINT power without API key hassle.",
+    "why_to_use": "Prefer this tool based on upstream description: Metabigor - OSINT power without API key hassle.",
+    "how_to_use": "Install/setup: git clone https://github.com/j3ssie/metabigor.git. Run the primary entrypoint as shown in upstream docs, e.g. `metabigor net --input AS13335`. Further invocations from upstream: `echo \"$KFIOSA_TARGET_HOST\" | metabigor net --ip`; `echo \"cloudflare.com\" | metabigor net --domain`. Metabigor - OSINT power without API key hassle."
   },
   "full_name": "j3ssie/metabigor",
   "id": "github:j3ssie/metabigor",
@@ -282,7 +294,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``metabigor`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Metabigor - OSINT power without API key hassle",
   "tags": [
     "offensive",
     "metabigor",
@@ -300,12 +312,13 @@
   },
   "url": "https://github.com/j3ssie/metabigor",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use metabigor because Metabigor - OSINT power without API key hassle.",
+    "When you need a concrete invocation, run `metabigor net --input AS13335` as documented upstream for metabigor.",
+    "When you need a concrete invocation, run `echo \"$KFIOSA_TARGET_HOST\" | metabigor net --ip` as documented upstream for metabigor.",
+    "When you need a concrete invocation, run `echo \"cloudflare.com\" | metabigor net --domain` as documented upstream for metabigor.",
+    "When you need a concrete invocation, run `echo \"Cloudflare\" | metabigor net --org` as documented upstream for metabigor.",
+    "When chaining osint tools, pair metabigor with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `metabigor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +337,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

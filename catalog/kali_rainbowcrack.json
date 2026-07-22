@@ -33,45 +33,12 @@
           "flags": [
             "-h"
           ],
-          "metavar": "hash",
-          "takes_value": true,
-          "description": "load single hash",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Option present in package usage line for rcrack.",
           "default": null,
           "choices": null,
-          "raw": " -h hash:           load single hash"
-        },
-        {
-          "flags": [
-            "-l"
-          ],
-          "metavar": "hash_list_file",
-          "takes_value": true,
-          "description": "load hashes from a file, each hash in a line",
-          "default": null,
-          "choices": null,
-          "raw": " -l hash_list_file: load hashes from a file, each hash in a line"
-        },
-        {
-          "flags": [
-            "-lm"
-          ],
-          "metavar": "pwdump_file",
-          "takes_value": true,
-          "description": "load lm hashes from pwdump file",
-          "default": null,
-          "choices": null,
-          "raw": " -lm pwdump_file:   load lm hashes from pwdump file"
-        },
-        {
-          "flags": [
-            "-ntlm"
-          ],
-          "metavar": "pwdump_file",
-          "takes_value": true,
-          "description": "load ntlm hashes from pwdump file",
-          "default": null,
-          "choices": null,
-          "raw": " -ntlm pwdump_file: load ntlm hashes from pwdump file"
+          "raw": "-h  Option present in package usage line for rcrack."
         }
       ],
       "raw_help": "root@kali:~# rcrack -h\n RainbowCrack 1.8\n Copyright 2020 RainbowCrack Project. All rights reserved.\n http://project-rainbowcrack.com/\n \n usage: ./rcrack path [path] [...] -h hash\n      ./rcrack path [path] [...] -l hash_list_file\n      ./rcrack path [path] [...] -lm pwdump_file\n      ./rcrack path [path] [...] -ntlm pwdump_file\n path:              directory where rainbow tables (*.rt, *.rtc) are stored\n -h hash:           load single hash\n -l hash_list_file: load hashes from a file, each hash in a line\n -lm pwdump_file:   load lm hashes from pwdump file\n -ntlm pwdump_file: load ntlm hashes from pwdump file\n \n implemented hash algorithms:\n   lm HashLen=8 PlaintextLen=0-7\n   ntlm HashLen=16 PlaintextLen=0-15\n   md5 HashLen=16 PlaintextLen=0-15\n   sha1 HashLen=20 PlaintextLen=0-20\n   sha256 HashLen=32 PlaintextLen=0-20\n \n examples:\n   ./rcrack . -h 5d41402abc4b2a76b9719d911017c592\n   ./rcrack . -l hash.txt",
@@ -281,21 +248,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use rcrack because ### rainbowcrack.",
+    "When you need a concrete invocation, run `./rcrack path [path] [...] -h hash` as documented upstream for rcrack.",
+    "When chaining Kali Linux tools, pair rcrack with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `rcrack --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/rainbowcrack && python3 rainbowcrack.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/rainbowcrack && python3 rainbowcrack.py --help",
-    "cd toolboxes/rainbowcrack && python3 rainbowcrack.py --help",
-    "cd toolboxes/rainbowcrack && python3 rainbowcrack.py --help",
-    "cd toolboxes/rainbowcrack && python3 rainbowcrack.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rainbowcrack --output $KFIOSA_OUTPUT_DIR/rainbowcrack.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rainbowcrack --output $KFIOSA_OUTPUT_DIR/rainbowcrack.log"
+    "./rcrack path [path] [...] -h hash"
   ],
   "attack_surface": [
     "web"
@@ -310,5 +269,26 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "Option present in package usage line for rcrack.",
+        "source": "usage_line"
+      }
+    ],
+    "examples": [
+      "./rcrack path [path] [...] -h hash"
+    ],
+    "readme": "### rainbowcrack",
+    "how_to_use": "Install/setup: sudo apt install rainbowcrack. Run the primary entrypoint as shown in upstream docs, e.g. `./rcrack path [path] [...] -h hash`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: ### rainbowcrack.",
+    "why_to_use": "Prefer this tool because: ### rainbowcrack.",
+    "usage_sections": [
+      "Install with: sudo apt install rainbowcrack"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "offline"
 }

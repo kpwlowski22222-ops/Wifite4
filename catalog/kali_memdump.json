@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "memdump",
   "title": "memdump",
-  "summary": "### memdump",
+  "summary": "memdump - memory dumper",
   "version": "1.01-9",
   "architectures": [
     "any"
@@ -32,58 +32,14 @@
       "arguments": [
         {
           "flags": [
-            "-b"
-          ],
-          "metavar": "read_buffer_size",
-          "takes_value": true,
-          "description": "(default 0, use the system page size)",
-          "default": "0",
-          "choices": null,
-          "raw": " -b read_buffer_size     (default 0, use the system page size)"
-        },
-        {
-          "flags": [
             "-k"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "(dump kernel memory instead of physical memory)",
+          "description": "Attempt to dump kernel memory (/dev/kmem) rather than physical memory.",
           "default": null,
           "choices": null,
-          "raw": " -k                      (dump kernel memory instead of physical memory)"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "map_file",
-          "takes_value": true,
-          "description": "(print memory map)",
-          "default": null,
-          "choices": null,
-          "raw": " -m map_file             (print memory map)"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "memory_page_size",
-          "takes_value": true,
-          "description": "(default 0, use the system page size)",
-          "default": "0",
-          "choices": null,
-          "raw": " -p memory_page_size     (default 0, use the system page size)"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "memory_dump ize",
-          "takes_value": true,
-          "description": "(default 0, dump all memory)",
-          "default": "0",
-          "choices": null,
-          "raw": " -s memory_dump-size     (default 0, dump all memory)"
+          "raw": "-k  Attempt to dump kernel memory (/dev/kmem) rather than physical memory."
         },
         {
           "flags": [
@@ -91,10 +47,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "(verbose mode for debugging)",
+          "description": "verbose logging for debugging purposes. Multiple -v options make the program",
           "default": null,
           "choices": null,
-          "raw": " -v                      (verbose mode for debugging)"
+          "raw": "-v  verbose logging for debugging purposes. Multiple -v options make the program"
         }
       ],
       "raw_help": "root@kali:~# memdump -h\n memdump: invalid option -- 'h'\n memdump: usage: memdump [options]\n -b read_buffer_size     (default 0, use the system page size)\n -k                      (dump kernel memory instead of physical memory)\n -m map_file             (print memory map)\n -p memory_page_size     (default 0, use the system page size)\n -s memory_dump-size     (default 0, dump all memory)\n -v                      (verbose mode for debugging)",
@@ -183,21 +139,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use memdump because memdump - memory dumper.",
+    "When you need a concrete invocation, run `memdump [-kv] [-b buffer_size] [-d dump_size] [-m map_file] [-p page_size]` as documented upstream for memdump.",
+    "When chaining Kali Linux tools, pair memdump with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `memdump --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/memdump && python3 memdump.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/memdump && python3 memdump.py --help",
-    "cd toolboxes/memdump && python3 memdump.py --help",
-    "cd toolboxes/memdump && python3 memdump.py --help",
-    "cd toolboxes/memdump && python3 memdump.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST memdump --output $KFIOSA_OUTPUT_DIR/memdump.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST memdump --output $KFIOSA_OUTPUT_DIR/memdump.log"
+    "memdump [-kv] [-b buffer_size] [-d dump_size] [-m map_file] [-p page_size]"
   ],
   "attack_surface": [
     "web"
@@ -212,5 +160,32 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-k",
+        "description": "Attempt to dump kernel memory (/dev/kmem) rather than physical memory.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "verbose logging for debugging purposes. Multiple -v options make the program",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "memdump [-kv] [-b buffer_size] [-d dump_size] [-m map_file] [-p page_size]"
+    ],
+    "readme": "memdump - memory dumper",
+    "how_to_use": "Install/setup: sudo apt install memdump.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: memdump - memory dumper.",
+    "why_to_use": "Prefer this tool because: memdump - memory dumper.",
+    "usage_sections": [
+      "Install with: sudo apt install memdump",
+      "Install with: sudo apt install memdump"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -1,17 +1,26 @@
 {
   "category": "c2",
   "command_examples": [
-    "cd toolboxes/gost && python3 gost.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/gost && python3 gost.py --help",
-    "cd toolboxes/gost && python3 gost.py --help",
-    "cd toolboxes/gost && python3 gost.py --help",
-    "cd toolboxes/gost && python3 gost.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gost --output $KFIOSA_OUTPUT_DIR/gost.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gost --output $KFIOSA_OUTPUT_DIR/gost.log"
+    "cd gost/cmd/gost",
+    "docker run --rm ginuerzh/gost -V",
+    "gost -L=:8080",
+    "gost -L=admin:123456@localhost:8080",
+    "gost -L=http2://:443 -L=socks5://:1080 -L=ss://aes-128-cfb:123456@:8338",
+    "gost -L=:8080 -F=$KFIOSA_TARGET_HOST:8081",
+    "gost -L=:8080 -F=$KFIOSA_TARGET_URL",
+    "gost -L=:8080 -F=quic://$KFIOSA_TARGET_HOST:6121 -F=socks5+wss://$KFIOSA_TARGET_HOST:1080 -F=http2://$KFIOSA_TARGET_HOST:443 ... -F=a.b.c.d:NNNN",
+    "gost -L=tcp://:2222/$KFIOSA_TARGET_HOST:22 [-F=...]",
+    "gost -L=tcp://:2222/$KFIOSA_TARGET_HOST:22 -F forward+ssh://:2222"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "多端口监听 可设置转发代理，支持多级转发(代理链) 支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议 Web代理支持探测防御 支持多种隧道类型 SOCKS5代理支持TLS协商加密 Tunnel UDP over TCP TCP/UDP透明代理 本地/远程TCP/UDP端口转发 支持Shadowsocks(TCP/UDP)协议 支持SNI代理 权限控制 负载均衡 路由控制 DNS解析和代理 TUN/TAP设备",
+    "usage_sections": [
+      "支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议",
+      "支持Shadowsocks(TCP/UDP)协议",
+      "作为标准的HTTP2代理，并向下兼容HTTPS代理。",
+      "作为转发通道，配合本地/远程TCP端口转发使用。",
+      "在gost运行目录放置cert.pem(公钥)和key.pem(私钥)两个文件即可，gost会自动加载运行目录下的cert.pem和key.pem文件。"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +138,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd gost/cmd/gost",
+      "docker run --rm ginuerzh/gost -V",
+      "gost -L=:8080",
+      "gost -L=admin:123456@localhost:8080",
+      "gost -L=http2://:443 -L=socks5://:1080 -L=ss://aes-128-cfb:123456@:8338",
+      "gost -L=:8080 -F=$KFIOSA_TARGET_HOST:8081",
+      "gost -L=:8080 -F=$KFIOSA_TARGET_URL",
+      "gost -L=:8080 -F=quic://$KFIOSA_TARGET_HOST:6121 -F=socks5+wss://$KFIOSA_TARGET_HOST:1080 -F=http2://$KFIOSA_TARGET_HOST:443 ... -F=a.b.c.d:NNNN",
+      "gost -L=tcp://:2222/$KFIOSA_TARGET_HOST:22 [-F=...]",
+      "gost -L=tcp://:2222/$KFIOSA_TARGET_HOST:22 -F forward+ssh://:2222"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +275,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, gost, ginuerzh).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/gost && python3 gost.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/gost && python3 gost.py --help",
-      "Step 3: cd toolboxes/gost && python3 gost.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the c2 category. Fits when the engagement needs: 多端口监听 可设置转发代理，支持多级转发(代理链) 支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议 Web代理支持探测防御 支持多种隧道类型 SOCKS5代理支持TLS协商加密 Tunnel UDP over TCP TCP/UDP透明代理 本地/远程TCP/UDP端口转发 支持Shadowsocks(TCP/UDP)协议 支持SNI代理 权限控制 负载均衡 路由控制 DNS解析和代理 TUN/TAP.",
+    "why_to_use": "Prefer this tool based on upstream description: 多端口监听 可设置转发代理，支持多级转发(代理链) 支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议 Web代理支持探测防御 支持多种隧道类型 SOCKS5代理支持TLS协商加密 Tunnel UDP over TCP TCP/UDP透明代理 本地/远程TCP/UDP端口转发 支持Shadowsocks(TCP/UDP)协议 支持SNI代理 权限控制 负载均衡 路由控制 DNS解析和代理 TUN/TAP设备.",
+    "how_to_use": "Install/setup: git clone https://github.com/ginuerzh/gost.git; docker run --rm ginuerzh/gost -V. Run the primary entrypoint as shown in upstream docs, e.g. `cd gost/cmd/gost`. Further invocations from upstream: `docker run --rm ginuerzh/gost -V`; `gost -L=:8080`. 多端口监听 可设置转发代理，支持多级转发(代理链) 支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议 Web代理支持探测防御 支持多种隧道类型 SOCKS5代理支持TLS协商加密 Tunnel UDP over TCP TCP/UDP透明代理 本地/远程TCP/UDP端口转发 支持Shadowsocks(TCP/UDP)协议 支持SNI代理 权限控制 负载均衡 路由控制 DNS解析和代理 TUN/TAP设备."
   },
   "full_name": "ginuerzh/gost",
   "id": "github:ginuerzh/gost",
@@ -282,7 +298,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``gost`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "多端口监听 可设置转发代理，支持多级转发(代理链) 支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议 Web代理支持探测防御 支持多种隧道类型 SOCKS5代理支持TLS协商加密 Tunnel UDP over TCP TCP/UDP透明代理 本地/远程TCP/UDP端口转发 支持Shadowsocks(TCP/UDP)协议 支持SNI代理 权限控制 负载均衡 路由控制 DNS解析和代理 TUN/TAP设备",
   "tags": [
     "offensive",
     "gost",
@@ -300,12 +316,13 @@
   },
   "url": "https://github.com/ginuerzh/gost",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need c2, use gost because 多端口监听 可设置转发代理，支持多级转发(代理链) 支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议 Web代理支持探测防御 支持多种隧道类型 SOCKS5代理支持TLS协商加密 Tunnel UDP over TCP TCP/UDP透明代理 本地/远程TCP/UDP端口转发 支持Sh.",
+    "When you need a concrete invocation, run `cd gost/cmd/gost` as documented upstream for gost.",
+    "When you need a concrete invocation, run `docker run --rm ginuerzh/gost -V` as documented upstream for gost.",
+    "When you need a concrete invocation, run `gost -L=:8080` as documented upstream for gost.",
+    "When you need a concrete invocation, run `gost -L=admin:123456@localhost:8080` as documented upstream for gost.",
+    "When chaining c2 tools, pair gost with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `gost --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +341,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

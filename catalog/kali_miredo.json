@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "miredo",
   "title": "miredo",
-  "summary": "### miredo",
+  "summary": "miredo - Teredo IPv6 tunneling for Unix",
   "version": "1.2.6-7.2",
   "architectures": [
     "any"
@@ -36,87 +36,102 @@
       "arguments": [
         {
           "flags": [
-            "-c",
             "--config"
           ],
-          "metavar": "- onfig",
-          "takes_value": true,
-          "description": "specify an configuration file",
+          "metavar": null,
+          "takes_value": false,
+          "description": "alternate configuration file for Miredo instead of the default,",
           "default": null,
           "choices": null,
-          "raw": " -c, --config     specify an configuration file"
+          "raw": "--config  alternate configuration file for Miredo instead of the default,"
         },
         {
           "flags": [
-            "-f",
-            "--foreground"
-          ],
-          "metavar": "- oreground run in the foreground",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -f, --foreground run in the foreground"
-        },
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "display this help and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help       display this help and exit"
-        },
-        {
-          "flags": [
-            "-p",
-            "--pidfile"
-          ],
-          "metavar": "- idfile",
-          "takes_value": true,
-          "description": "override the location of the PID file",
-          "default": null,
-          "choices": null,
-          "raw": " -p, --pidfile    override the location of the PID file"
-        },
-        {
-          "flags": [
-            "-u",
             "--user"
           ],
-          "metavar": "- ser",
-          "takes_value": true,
-          "description": "override the user to set UID to",
-          "default": null,
-          "choices": null,
-          "raw": " -u, --user       override the user to set UID to"
-        },
-        {
-          "flags": [
-            "-V",
-            "--version"
-          ],
-          "metavar": "or",
+          "metavar": null,
           "takes_value": false,
-          "description": "display program version and exit",
+          "description": "Override the user that the program will run as. By default, it runs as nobody.",
           "default": null,
           "choices": null,
-          "raw": " -V, --version    display program version and exit"
+          "raw": "--user  Override the user that the program will run as. By default, it runs as nobody."
         },
         {
           "flags": [
-            "-t",
-            "--chrootdir"
+            "-V"
           ],
-          "metavar": "or",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display program version and license and exit.",
           "default": null,
           "choices": null,
-          "raw": "     -t or --chrootdir"
+          "raw": "-V  Display program version and license and exit."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not detach from the console. Run the program in the foreground.",
+          "default": null,
+          "choices": null,
+          "raw": "-f  Do not detach from the console. Run the program in the foreground."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display some help and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Display some help and exit."
+        },
+        {
+          "flags": [
+            "-id"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "miredo.conf(5), miredo-server(8), ipv6(7), route(8), ip(8)",
+          "default": null,
+          "choices": null,
+          "raw": "-id  miredo.conf(5), miredo-server(8), ipv6(7), route(8), ip(8)"
+        },
+        {
+          "flags": [
+            "-only"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Translator (a.k.a. NAT), and encapsulates its IPv6 traffic inside UDP over IPv4 packets.",
+          "default": null,
+          "choices": null,
+          "raw": "-only  Translator (a.k.a. NAT), and encapsulates its IPv6 traffic inside UDP over IPv4 packets."
+        },
+        {
+          "flags": [
+            "-over-IPv4"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "A Teredo relay is an IPv6 router which forwards IPv6 packets between the IPv6 Internet and",
+          "default": null,
+          "choices": null,
+          "raw": "-over-IPv4  A Teredo relay is an IPv6 router which forwards IPv6 packets between the IPv6 Internet and"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Miredo is a daemon program providing a Teredo tunnel service compatible with the \"Teredo: Tun-",
+          "default": null,
+          "choices": null,
+          "raw": "-t  Miredo is a daemon program providing a Teredo tunnel service compatible with the \"Teredo: Tun-"
         }
       ],
       "raw_help": "root@kali:~# miredo -h\n Usage: miredo [OPTIONS] [SERVER_NAME]\n Creates a Teredo tunneling interface for encapsulation of IPv6 over UDP.\n \n -c, --config     specify an configuration file\n -f, --foreground run in the foreground\n -h, --help       display this help and exit\n -p, --pidfile    override the location of the PID file\n -u, --user       override the user to set UID to\n -V, --version    display program version and exit",
@@ -385,21 +400,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use miredo because miredo - Teredo IPv6 tunneling for Unix.",
+    "When you need a concrete invocation, run `miredo [-c config_file] [-f] [-u user] [ -t chrootdir] [server_name]` as documented upstream for miredo.",
+    "When you need a concrete invocation, run `Miredo is a daemon program providing a Teredo tunnel service compatible with the \"Teredo: Tun-` as documented upstream for miredo.",
+    "When chaining Kali Linux tools, pair miredo with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `miredo --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/miredo && python3 miredo.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/miredo && python3 miredo.py --help",
-    "cd toolboxes/miredo && python3 miredo.py --help",
-    "cd toolboxes/miredo && python3 miredo.py --help",
-    "cd toolboxes/miredo && python3 miredo.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST miredo --output $KFIOSA_OUTPUT_DIR/miredo.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST miredo --output $KFIOSA_OUTPUT_DIR/miredo.log"
+    "miredo [-c config_file] [-f] [-u user] [ -t chrootdir] [server_name]",
+    "Miredo is a daemon program providing a Teredo tunnel service compatible with the \"Teredo: Tun-"
   ],
   "attack_surface": [
     "web"
@@ -414,5 +423,68 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--config",
+        "description": "alternate configuration file for Miredo instead of the default,",
+        "source": "manpage"
+      },
+      {
+        "name": "--user",
+        "description": "Override the user that the program will run as. By default, it runs as nobody.",
+        "source": "manpage"
+      },
+      {
+        "name": "-V",
+        "description": "Display program version and license and exit.",
+        "source": "manpage"
+      },
+      {
+        "name": "-f",
+        "description": "Do not detach from the console. Run the program in the foreground.",
+        "source": "manpage"
+      },
+      {
+        "name": "-h",
+        "description": "Display some help and exit.",
+        "source": "manpage"
+      },
+      {
+        "name": "-id",
+        "description": "miredo.conf(5), miredo-server(8), ipv6(7), route(8), ip(8)",
+        "source": "manpage"
+      },
+      {
+        "name": "-only",
+        "description": "Translator (a.k.a. NAT), and encapsulates its IPv6 traffic inside UDP over IPv4 packets.",
+        "source": "manpage"
+      },
+      {
+        "name": "-over-IPv4",
+        "description": "A Teredo relay is an IPv6 router which forwards IPv6 packets between the IPv6 Internet and",
+        "source": "manpage"
+      },
+      {
+        "name": "-t",
+        "description": "Miredo is a daemon program providing a Teredo tunnel service compatible with the \"Teredo: Tun-",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "miredo [-c config_file] [-f] [-u user] [ -t chrootdir] [server_name]",
+      "Miredo is a daemon program providing a Teredo tunnel service compatible with the \"Teredo: Tun-"
+    ],
+    "readme": "miredo - Teredo IPv6 tunneling for Unix",
+    "how_to_use": "Install/setup: sudo apt install miredo. Run the primary entrypoint as shown in upstream docs, e.g. `miredo [-c config_file] [-f] [-u user] [ -t chrootdir] [server_name]`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: miredo - Teredo IPv6 tunneling for Unix.",
+    "why_to_use": "Prefer this tool because: miredo - Teredo IPv6 tunneling for Unix.",
+    "usage_sections": [
+      "Install with: sudo apt install miredo",
+      "Install with: sudo apt install miredo"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

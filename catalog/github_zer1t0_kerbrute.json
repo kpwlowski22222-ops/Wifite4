@@ -1,26 +1,81 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/kerbrute && python3 kerbrute.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/kerbrute && python3 kerbrute.py --help",
-    "cd toolboxes/kerbrute && python3 kerbrute.py --help",
-    "cd toolboxes/kerbrute && python3 kerbrute.py --help",
-    "cd toolboxes/kerbrute && python3 kerbrute.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kerbrute --output $KFIOSA_OUTPUT_DIR/kerbrute.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kerbrute --output $KFIOSA_OUTPUT_DIR/kerbrute.log"
+    "Impacket v0.9.18 - Copyright 2018 SecureAuth Corporation",
+    "usage: kerbrute.py [-h] [-debug] (-user USER | -users USERS)",
+    "./kerbrute.py -users users_file.txt -passwords passwords_file.txt -domain contoso.com",
+    "root@kali:~# kerbrute -domain jurassic.park -users users.txt -passwords passwords.txt -outputfile jurassic_passwords.txt"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "kerbrute An script to perform kerberos bruteforcing by using the Impacket library.",
+    "usage_sections": [
+      "Valid username/passwords pairs",
+      "Usernames without pre-authentication required"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-dc-ip",
+        "description": "IP Address of the domain controller",
+        "source": "docs"
+      },
+      {
+        "name": "-debug",
+        "description": "Turn DEBUG output ON",
+        "source": "docs"
+      },
+      {
+        "name": "-domain",
+        "description": "Domain to perform bruteforcing",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-no-save-ticket",
+        "description": "Do not save retrieved TGTs with correct credentials",
+        "source": "docs"
+      },
+      {
+        "name": "-outputfile",
+        "description": "File to save discovered user:password",
+        "source": "docs"
+      },
+      {
+        "name": "-password",
+        "description": "Password to perform bruteforcing",
+        "source": "docs"
+      },
+      {
+        "name": "-passwords",
+        "description": "File with password per line",
+        "source": "docs"
+      },
+      {
+        "name": "-threads",
+        "description": "Number of threads to perform bruteforcing. Default = 1",
+        "source": "docs"
+      },
+      {
+        "name": "-user",
+        "description": "User to perform bruteforcing",
+        "source": "docs"
+      },
+      {
+        "name": "-users",
+        "description": "File with user per line",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -129,7 +184,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "Impacket v0.9.18 - Copyright 2018 SecureAuth Corporation",
+      "usage: kerbrute.py [-h] [-debug] (-user USER | -users USERS)",
+      "./kerbrute.py -users users_file.txt -passwords passwords_file.txt -domain contoso.com",
+      "root@kali:~# kerbrute -domain jurassic.park -users users.txt -passwords passwords.txt -outputfile jurassic_passwords.txt"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +315,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, kerbrute, zer1t0).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/kerbrute && python3 kerbrute.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/kerbrute && python3 kerbrute.py --help",
-      "Step 3: cd toolboxes/kerbrute && python3 kerbrute.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: kerbrute An script to perform kerberos bruteforcing by using the Impacket library.",
+    "why_to_use": "Prefer this tool based on upstream description: kerbrute An script to perform kerberos bruteforcing by using the Impacket library.",
+    "how_to_use": "Install/setup: pip3 install kerbrute; git clone https://github.com/TarlogicSecurity/kerbrute. Run the primary entrypoint as shown in upstream docs, e.g. `Impacket v0.9.18 - Copyright 2018 SecureAuth Corporation`. Further invocations from upstream: `usage: kerbrute.py [-h] [-debug] (-user USER | -users USERS)`; `./kerbrute.py -users users_file.txt -passwords passwords_file.txt -domain contoso.com`. kerbrute An script to perform kerberos bruteforcing by using the Impacket library."
   },
   "full_name": "zer1t0/kerbrute",
   "id": "github:zer1t0/kerbrute",
@@ -282,7 +338,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``kerbrute`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "kerbrute An script to perform kerberos bruteforcing by using the Impacket library.",
   "tags": [
     "offensive",
     "kerbrute",
@@ -300,12 +356,13 @@
   },
   "url": "https://github.com/zer1t0/kerbrute",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use kerbrute because kerbrute An script to perform kerberos bruteforcing by using the Impacket library.",
+    "When you need a concrete invocation, run `Impacket v0.9.18 - Copyright 2018 SecureAuth Corporation` as documented upstream for kerbrute.",
+    "When you need a concrete invocation, run `usage: kerbrute.py [-h] [-debug] (-user USER | -users USERS)` as documented upstream for kerbrute.",
+    "When you need a concrete invocation, run `./kerbrute.py -users users_file.txt -passwords passwords_file.txt -domain contoso.com` as documented upstream for kerbrute.",
+    "When you need a concrete invocation, run `root@kali:~# kerbrute -domain jurassic.park -users users.txt -passwords passwords.txt -outputfile jurassic_passwords.txt` as documented upstream for kerbrute.",
+    "When chaining frameworks tools, pair kerbrute with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `kerbrute --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +381,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

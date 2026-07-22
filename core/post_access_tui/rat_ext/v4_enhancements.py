@@ -125,26 +125,47 @@ def adaptive_session_filter(sessions: List[Dict[str, Any]],
                             ) -> List[Dict[str, Any]]:
     """Filter a list of session dicts by attack surface + risk.
 
-    Target-adaptive: a wifi session whose attack_surface doesn't
-    include the operator's wifi chipset is filtered out (it would
-    fail at the orchestrator anyway).  A ble session is filtered
-    out if the operator's hardware doesn't include a BLE adapter.
-    Never raises; never modifies the input list.
+    Target-adaptive: a wifi session is kept only when the operator
+    hardware profile includes a wifi chipset; ble requires a BLE
+    adapter. Surface match is case-insensitive and works for both
+    string and list ``attack_surface`` fields. Never raises; never
+    modifies the input list.
     """
     if not isinstance(sessions, list):
         return []
     if not isinstance(target_attack_surface, str):
         target_attack_surface = ""
-    target = target_attack_surface.lower()
+    target = target_attack_surface.lower().strip()
     out: List[Dict[str, Any]] = []
     risk_order = {"low": 0, "medium": 1, "high": 2, "critical": 3}
-    max_risk = risk_order.get(risk_max.lower(), 3) if risk_max else 3
+    max_risk = risk_order.get((risk_max or "critical").lower(), 3)
+    hw = OPERATOR_HARDWARE or {}
+    has_wifi = bool(hw.get("wifi_chipset"))
+    has_ble = bool(hw.get("ble_adapter"))
     for s in sessions:
         if not isinstance(s, dict):
             continue
-        sess_surf = s.get("attack_surface", "")
-        if isinstance(sess_surf, str) and target and target not in sess_surf.lower():
+        # Hardware gate (honest: no wifi chipset → drop wifi sessions)
+        surf_blob = s.get("attack_surface", "")
+        if isinstance(surf_blob, list):
+            surf_tokens = " ".join(str(x).lower() for x in surf_blob)
+        else:
+            surf_tokens = str(surf_blob or "").lower()
+        kind = str(s.get("kind") or s.get("transport") or "").lower()
+        is_wifi = (
+            "wifi" in surf_tokens or "wireless" in surf_tokens
+            or kind in ("wifi", "wlan")
+        )
+        is_ble = "ble" in surf_tokens or "bluetooth" in surf_tokens or kind == "ble"
+        if is_wifi and not has_wifi:
             continue
+        if is_ble and not has_ble:
+            continue
+        # Surface filter: match target against list/str surface + kind
+        if target:
+            hay = f"{surf_tokens} {kind} {s.get('session_id', '')} {s.get('id', '')}"
+            if target not in hay:
+                continue
         # Risk filter
         risk = s.get("risk", "low")
         if isinstance(risk, str):
@@ -206,9 +227,19 @@ def exfil_progress(job: Dict[str, Any],
         return {"ok": False, "error": "job must be a dict"}
     if now is None:
         now = time.time()
-    bytes_total = int(job.get("bytes_total", 0) or 0)
-    bytes_sent = int(job.get("bytes_sent", 0) or 0)
-    started_at = float(job.get("started_at", now) or now)
+    try:
+        bytes_total = int(job.get("bytes_total", 0) or 0)
+    except (TypeError, ValueError):
+        bytes_total = 0
+    try:
+        bytes_sent = int(job.get("bytes_sent", 0) or 0)
+    except (TypeError, ValueError):
+        bytes_sent = 0
+    try:
+        started_raw = job.get("started_at", now)
+        started_at = float(started_raw) if started_raw not in (None, "") else float(now)
+    except (TypeError, ValueError):
+        started_at = float(now)
     elapsed = max(0.001, now - started_at)
     throughput = bytes_sent / elapsed
     if bytes_total > 0 and bytes_sent < bytes_total:
@@ -236,7 +267,8 @@ def ai_status() -> Dict[str, Any]:
 
     Reads the current primary model from
     :data:`core.ai_backend.MODEL_CATALOG['primary']` and the
-    reachability via :func:`core.ai_backend.ollama_cloud_reachable`.
+    reachability via :func:`core.ai_backend.ollama_cloud_debug.ollama_cloud_reachable`
+    (with local Ollama ``/api/tags`` fallback).
     NEVER inlines the operator's token.  Returns the model name,
     reachability, and last-known latency (or null).
     """
@@ -245,22 +277,51 @@ def ai_status() -> Dict[str, Any]:
         "model": "unknown",
         "reachable": False,
         "latency_ms": None,
+        "provider": "unknown",
+        "deepseek": False,
+        "ollama_local": False,
     }
     try:
         from core.ai_backend import MODEL_CATALOG
         out["model"] = MODEL_CATALOG.get("primary", "unknown")
     except Exception:  # noqa: BLE001
         pass
+    # Prefer cloud reachability helper when present; else probe local.
     try:
-        from core.ai_backend import ollama_cloud_reachable
+        from core.ai_backend.ollama_cloud_debug import ollama_cloud_reachable
         reach = ollama_cloud_reachable()
         if isinstance(reach, dict):
             out["reachable"] = bool(reach.get("ok", False))
             latency = reach.get("latency_ms")
             if isinstance(latency, (int, float)):
                 out["latency_ms"] = int(latency)
+            if out["reachable"]:
+                out["provider"] = "ollama_cloud"
     except Exception:  # noqa: BLE001
         pass
+    # Local offline Ollama (always useful for the dashboard pill).
+    try:
+        from core.ai_backend import AIBackend
+        st = AIBackend().status()
+        out["ollama_local"] = bool(st.get("ollama"))
+        out["deepseek"] = bool(st.get("deepseek"))
+        if not out["reachable"] and st.get("ollama"):
+            out["reachable"] = True
+            out["provider"] = "ollama"
+            # Prefer showing an installed local model when primary is cloud-only.
+            models = st.get("ollama_models") or []
+            if models and str(out.get("model") or "").endswith(":cloud"):
+                out["model_local"] = models[0]
+        if not out["reachable"] and st.get("deepseek"):
+            out["reachable"] = True
+            out["provider"] = "deepseek"
+            out["model"] = st.get("deepseek_model") or out["model"]
+        out["active"] = st.get("active")
+    except Exception:  # noqa: BLE001
+        pass
+    # Never expose secrets
+    for bad in ("token", "api_key", "secret", "password", "authorization"):
+        out.pop(bad, None)
     return out
 
 

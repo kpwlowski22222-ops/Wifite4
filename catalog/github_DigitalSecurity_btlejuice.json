@@ -8,8 +8,12 @@
   "url": "https://github.com/DigitalSecurity/btlejuice",
   "summary": "BtleJuice Framework\n===================",
   "documentation": {
-    "readme": "BtleJuice Framework\n===================",
-    "usage_sections": [],
+    "readme": "BtleJuice is a complete framework to perform Man-in-the-Middle attacks on Bluetooth Smart devices (also known as Bluetooth Low Energy). It is composed of:",
+    "usage_sections": [
+      "an interception proxy",
+      "a dedicated web interface",
+      "Python and Node.js bindings"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +197,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo npm install -g btlejuice",
+      "hci0:\tType: BR/EDR  Bus: USB",
+      "sudo btlejuice -u <Proxy IP address> -w",
+      "sudo npm install -g btlejuice-bindings"
+    ],
     "file_listing": [
       "CHANGELOG.md",
       "FontAwesome.otf",
@@ -293,13 +302,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/btlejuice && python3 btlejuice.py --help",
-      "Step 2: cd toolboxes/btlejuice && cat README.md",
-      "Step 3: cd toolboxes/btlejuice && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: BtleJuice Framework\n===================.",
+    "why_to_use": "Prefer this tool based on upstream description: BtleJuice is a complete framework to perform Man-in-the-Middle attacks on Bluetooth Smart devices (also known as Bluetooth Low Energy). It is composed of:.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `sudo npm install -g btlejuice`. Further invocations from upstream: `hci0:\tType: BR/EDR  Bus: USB`; `sudo btlejuice -u <Proxy IP address> -w`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -330,18 +335,19 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use btlejuice because BtleJuice Framework\n===================.",
+    "When you need a concrete invocation, run `sudo npm install -g btlejuice` as documented upstream for btlejuice.",
+    "When you need a concrete invocation, run `hci0:\tType: BR/EDR  Bus: USB` as documented upstream for btlejuice.",
+    "When you need a concrete invocation, run `sudo btlejuice -u <Proxy IP address> -w` as documented upstream for btlejuice.",
+    "When you need a concrete invocation, run `sudo npm install -g btlejuice-bindings` as documented upstream for btlejuice.",
+    "When chaining Bluetooth tools, pair btlejuice with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `btlejuice --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/btlejuice && python3 btlejuice.py --help",
-    "cd toolboxes/btlejuice && cat README.md",
-    "cd toolboxes/btlejuice && ls -la",
-    "cd toolboxes/btlejuice && python3 btlejuice.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST btlejuice --output $KFIOSA_OUTPUT_DIR/btlejuice.log"
+    "sudo npm install -g btlejuice",
+    "hci0:\tType: BR/EDR  Bus: USB",
+    "sudo btlejuice -u <Proxy IP address> -w",
+    "sudo npm install -g btlejuice-bindings"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -364,5 +370,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "javascript"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

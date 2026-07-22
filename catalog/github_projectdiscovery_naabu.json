@@ -1,135 +1,332 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/naabu && python3 naabu.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/naabu && python3 naabu.py --help",
-    "cd toolboxes/naabu && python3 naabu.py --help",
-    "cd toolboxes/naabu && python3 naabu.py --help",
-    "cd toolboxes/naabu && python3 naabu.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST naabu --output $KFIOSA_OUTPUT_DIR/naabu.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST naabu --output $KFIOSA_OUTPUT_DIR/naabu.log"
+    "naabu -h",
+    "Download the ready to run [binary]($KFIOSA_TARGET_URL / [docker]($KFIOSA_TARGET_URL or install with GO",
+    "naabu -host hackerone.com",
+    "naabu -p 80,443,21-23,u:53 -host hackerone.com",
+    "naabu -p u:53 -host example.com -cp \"DNS query payload\"",
+    "naabu -p - -exclude-ports 80,443",
+    "naabu -list hosts.txt",
+    "naabu -host $KFIOSA_TARGET_HOST -json"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Features • Installation • Usage • Running naabu • Config • NMAP integration • CDN/WAF Exclusion • Discord",
+    "usage_sections": [
+      "Features: - Fast And Simple SYN/CONNECT/UDP probe based scanning - Optimized for ease of use and lightweight on resources - DNS Port scan - Automatic IP Deduplication for DNS port scan - IPv4/IPv6 Port scan (experimental) - Passive Port enumeration using Shodan Internetdb - Host Discovery "
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-arp",
+        "description": "ARP ping (host discovery needs to be enabled)",
+        "source": "docs"
       },
       {
-        "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "name": "-arp-ping",
+        "description": "ARP ping (host discovery needs to be enabled)",
+        "source": "docs"
       },
       {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
-        "source": "v2_enhancement"
+        "name": "-auth",
+        "description": "configure projectdiscovery cloud (pdcp) api key (default true)",
+        "source": "docs"
       },
       {
-        "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
+        "name": "-cdn",
+        "description": "display cdn in use",
+        "source": "docs"
       },
       {
-        "name": "--port",
-        "description": "Target port (default: service default).",
-        "source": "generic_kfiosa"
+        "name": "-csv",
+        "description": "write output in csv format",
+        "source": "docs"
       },
       {
-        "name": "--interface",
-        "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
+        "name": "-dashboard",
+        "description": "upload / view output in projectdiscovery cloud (pdcp) UI dashboard",
+        "source": "docs"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
+        "name": "-debug",
+        "description": "display debugging information",
+        "source": "docs"
       },
       {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
+        "name": "-disable-update-check",
+        "description": "disable automatic naabu update check",
+        "source": "docs"
       },
       {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
-        "source": "generic_kfiosa"
+        "name": "-DISCOVERY",
+        "description": "-sD, -service-discovery identify services by port number",
+        "source": "docs"
       },
       {
-        "name": "--rate",
-        "description": "Packet / request rate limit.",
-        "source": "generic_kfiosa"
+        "name": "-display-cdn",
+        "description": "display cdn in use",
+        "source": "docs"
       },
       {
-        "name": "--wordlist",
-        "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
+        "name": "-duc",
+        "description": "disable automatic naabu update check",
+        "source": "docs"
       },
       {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
-        "source": "generic_kfiosa"
+        "name": "-ec",
+        "description": "skip full port scans for CDN/WAF (only scan for port 80,443)",
+        "source": "docs"
       },
       {
-        "name": "--user-agent",
-        "description": "HTTP User-Agent header.",
-        "source": "generic_kfiosa"
+        "name": "-exclude-cdn",
+        "description": "skip full port scans for CDN/WAF (only scan for port 80,443)",
+        "source": "docs"
       },
       {
-        "name": "--cookie",
-        "description": "HTTP Cookie header.",
-        "source": "generic_kfiosa"
+        "name": "-hc",
+        "description": "run diagnostic check up",
+        "source": "docs"
       },
       {
-        "name": "--header",
-        "description": "Extra HTTP header (key:value).",
-        "source": "generic_kfiosa"
+        "name": "-health-check",
+        "description": "run diagnostic check up",
+        "source": "docs"
       },
       {
-        "name": "--insecure",
-        "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
+        "name": "-host-discovery",
+        "description": "Perform Only Host Discovery",
+        "source": "docs"
       },
       {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
-        "source": "generic_kfiosa"
+        "name": "-il",
+        "description": "list available interfaces and public ip",
+        "source": "docs"
       },
       {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
+        "name": "-interface-list",
+        "description": "list available interfaces and public ip",
+        "source": "docs"
       },
       {
-        "name": "--quiet",
-        "description": "Suppress non-error output.",
-        "source": "generic_kfiosa"
+        "name": "-json",
+        "description": "write output in JSON lines format",
+        "source": "docs"
       },
       {
-        "name": "--dry-run",
-        "description": "Print what would be done without making any changes.",
-        "source": "v2_enhancement"
+        "name": "-LIMIT",
+        "description": "-c int general internal worker threads (default 25)",
+        "source": "docs"
       },
       {
-        "name": "--yes",
-        "description": "Skip confirmation prompts (use with care).",
-        "source": "v2_enhancement"
+        "name": "-nc",
+        "description": "disable colors in CLI output",
+        "source": "docs"
       },
       {
-        "name": "--force",
-        "description": "Force the action even if a safety check would block it.",
-        "source": "v2_enhancement"
+        "name": "-nd",
+        "description": "IPv6 Neighbor Discovery (host discovery needs to be enabled)",
+        "source": "docs"
       },
       {
-        "name": "--no-banner",
-        "description": "Suppress banner / tool-name output.",
-        "source": "v2_enhancement"
+        "name": "-nd-ping",
+        "description": "IPv6 Neighbor Discovery (host discovery needs to be enabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-nmap",
+        "description": "invoke nmap scan on targets (nmap must be installed) - Deprecated",
+        "source": "docs"
+      },
+      {
+        "name": "-no-color",
+        "description": "disable colors in CLI output",
+        "source": "docs"
+      },
+      {
+        "name": "-no-stdin",
+        "description": "Disable Stdin processing",
+        "source": "docs"
+      },
+      {
+        "name": "-passive",
+        "description": "display passive open ports using shodan internetdb api (automatically enables stream mode)",
+        "source": "docs"
+      },
+      {
+        "name": "-pd",
+        "description": "upload / view output in projectdiscovery cloud (pdcp) UI dashboard",
+        "source": "docs"
+      },
+      {
+        "name": "-pe",
+        "description": "ICMP echo request Ping (host discovery needs to be enabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-ping",
+        "description": "ping probes for verification of host",
+        "source": "docs"
+      },
+      {
+        "name": "-pm",
+        "description": "ICMP address mask request Ping (host discovery needs to be enabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-Pn",
+        "description": "Skip Host discovery (Deprecated: use -wn/-with-host-discovery instead)",
+        "source": "docs"
+      },
+      {
+        "name": "-pp",
+        "description": "ICMP timestamp request Ping (host discovery needs to be enabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-probe-icmp-address-mask",
+        "description": "ICMP address mask request Ping (host discovery needs to be enabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-probe-icmp-echo",
+        "description": "ICMP echo request Ping (host discovery needs to be enabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-probe-icmp-timestamp",
+        "description": "ICMP timestamp request Ping (host discovery needs to be enabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-resume",
+        "description": "resume scan using resume.cfg",
+        "source": "docs"
+      },
+      {
+        "name": "-rev-ptr",
+        "description": "Reverse PTR lookup for input ips",
+        "source": "docs"
+      },
+      {
+        "name": "-sa",
+        "description": "scan all the IP's associated with DNS record",
+        "source": "docs"
+      },
+      {
+        "name": "-scan-all-ips",
+        "description": "scan all the IP's associated with DNS record",
+        "source": "docs"
+      },
+      {
+        "name": "-sD",
+        "description": "identify services by port number",
+        "source": "docs"
+      },
+      {
+        "name": "-service-discovery",
+        "description": "identify services by port number",
+        "source": "docs"
+      },
+      {
+        "name": "-service-probes",
+        "description": "Multiple input support - **STDIN/HOST/IP/CIDR/ASN**",
+        "source": "docs"
+      },
+      {
+        "name": "-service-version",
+        "description": "detect service versions using nmap-service-probes",
+        "source": "docs"
+      },
+      {
+        "name": "-show-dead",
+        "description": "show hosts that did not respond to host discovery (requires host discovery)",
+        "source": "docs"
+      },
+      {
+        "name": "-silent",
+        "description": "display only results in output",
+        "source": "docs"
+      },
+      {
+        "name": "-skip-host-discovery",
+        "description": "Skip Host discovery (Deprecated: use -wn/-with-host-discovery instead)",
+        "source": "docs"
+      },
+      {
+        "name": "-smart-scan",
+        "description": "predictive port scanning using port correlation model (not compatible with stream mode)",
+        "source": "docs"
+      },
+      {
+        "name": "-sn",
+        "description": "Perform Only Host Discovery",
+        "source": "docs"
+      },
+      {
+        "name": "-sr",
+        "description": "use system DNS as fallback resolver",
+        "source": "docs"
+      },
+      {
+        "name": "-ss",
+        "description": "predictive port scanning using port correlation model (not compatible with stream mode)",
+        "source": "docs"
+      },
+      {
+        "name": "-stats",
+        "description": "display stats of the running scan (deprecated)",
+        "source": "docs"
+      },
+      {
+        "name": "-stream",
+        "description": "stream mode (disables resume, nmap, verify, retries, shuffling, etc)",
+        "source": "docs"
+      },
+      {
+        "name": "-sV",
+        "description": "detect service versions using nmap-service-probes",
+        "source": "docs"
+      },
+      {
+        "name": "-sV-fast",
+        "description": "only probe port-hinted services (faster, skips fallback)",
+        "source": "docs"
+      },
+      {
+        "name": "-system-resolver",
+        "description": "use system DNS as fallback resolver",
+        "source": "docs"
+      },
+      {
+        "name": "-udp-probes",
+        "description": "send protocol-specific payloads on UDP scans using nmap-service-probes",
+        "source": "docs"
+      },
+      {
+        "name": "-uP",
+        "description": "send protocol-specific payloads on UDP scans using nmap-service-probes",
+        "source": "docs"
+      },
+      {
+        "name": "-up",
+        "description": "update naabu to latest version",
+        "source": "docs"
+      },
+      {
+        "name": "-update",
+        "description": "update naabu to latest version",
+        "source": "docs"
       }
     ],
-    "examples": [],
+    "examples": [
+      "naabu -h",
+      "Download the ready to run [binary]($KFIOSA_TARGET_URL / [docker]($KFIOSA_TARGET_URL or install with GO",
+      "naabu -host hackerone.com",
+      "naabu -p 80,443,21-23,u:53 -host hackerone.com",
+      "naabu -p u:53 -host example.com -cp \"DNS query payload\"",
+      "naabu -p - -exclude-ports 80,443",
+      "naabu -list hosts.txt",
+      "naabu -host $KFIOSA_TARGET_HOST -json"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +452,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, naabu, projectdiscovery).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/naabu && python3 naabu.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/naabu && python3 naabu.py --help",
-      "Step 3: cd toolboxes/naabu && python3 naabu.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: Features • Installation • Usage • Running naabu • Config • NMAP integration • CDN/WAF Exclusion • Discord.",
+    "why_to_use": "Prefer this tool based on upstream description: Features • Installation • Usage • Running naabu • Config • NMAP integration • CDN/WAF Exclusion • Discord.",
+    "how_to_use": "Install/setup: go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest. Run the primary entrypoint as shown in upstream docs, e.g. `naabu -h`. Further invocations from upstream: `Download the ready to run [binary]($KFIOSA_TARGET_URL / [docker]($KFIOSA_TARGET_URL or install with GO`; `naabu -host hackerone.com`. Features • Installation • Usage • Running naabu • Config • NMAP integration • CDN/WAF Exclusion • Discord."
   },
   "full_name": "projectdiscovery/naabu",
   "id": "github:projectdiscovery/naabu",
@@ -282,7 +475,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``naabu`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Features • Installation • Usage • Running naabu • Config • NMAP integration • CDN/WAF Exclusion • Discord",
   "tags": [
     "offensive",
     "naabu",
@@ -300,12 +493,13 @@
   },
   "url": "https://github.com/projectdiscovery/naabu",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use naabu because Features • Installation • Usage • Running naabu • Config • NMAP integration • CDN/WAF Exclusion • Discord.",
+    "When you need a concrete invocation, run `naabu -h` as documented upstream for naabu.",
+    "When you need a concrete invocation, run `Download the ready to run [binary]($KFIOSA_TARGET_URL / [docker]($KFIOSA_TARGET_URL or install with GO` as documented upstream for naabu.",
+    "When you need a concrete invocation, run `naabu -host hackerone.com` as documented upstream for naabu.",
+    "When you need a concrete invocation, run `naabu -p 80,443,21-23,u:53 -host hackerone.com` as documented upstream for naabu.",
+    "When chaining recon tools, pair naabu with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `naabu --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +518,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

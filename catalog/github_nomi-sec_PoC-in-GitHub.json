@@ -10,9 +10,30 @@
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PoC-in-GitHub --output $KFIOSA_OUTPUT_DIR/PoC-in-GitHub.log"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "In setupLayout of PickActivity.java, there is a possible way to start any activity as a DocumentsUI app due to a confused deputy. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation.",
+    "usage_sections": [
+      "inforcqb/cve-2026-0013-exploit",
+      "QM4RS/CVE-2026-0023-Update-Ownership-PoC",
+      "paul-goon/bootlicka-POC",
+      "xqi1337/poc-CVE-2026-0073",
+      "tc4dy/CVE-2026-0073-PoC-Exploit"
+    ],
     "arguments": [
+      {
+        "name": "-Fetch-Mode",
+        "description": "no-cors as same-origin requests, bypassing XSRF checks. The JSON API is not affected, only HTTP form endpoints, such as /hub/spawn and /hub/accept-share, meaning attackers could tr",
+        "source": "docs"
+      },
+      {
+        "name": "-jms",
+        "description": "and the equivalent JmsBinding in camel-sjms - deserializes the payload of an incoming JMS ObjectMessage via jakarta.jms.ObjectMessage.getObject() whenever the mapJmsMessage option",
+        "source": "docs"
+      },
+      {
+        "name": "-software",
+        "description": "from &lt;= 1.0.4 before 1.0.5.",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -42,94 +63,17 @@
         "name": "--interface",
         "description": "Network interface to bind to.",
         "source": "generic_kfiosa"
-      },
-      {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--rate",
-        "description": "Packet / request rate limit.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--wordlist",
-        "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--user-agent",
-        "description": "HTTP User-Agent header.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--cookie",
-        "description": "HTTP Cookie header.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--header",
-        "description": "Extra HTTP header (key:value).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--insecure",
-        "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--quiet",
-        "description": "Suppress non-error output.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--dry-run",
-        "description": "Print what would be done without making any changes.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--yes",
-        "description": "Skip confirmation prompts (use with care).",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--force",
-        "description": "Force the action even if a safety check would block it.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--no-banner",
-        "description": "Suppress banner / tool-name output.",
-        "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/PoC-in-GitHub && python3 PoC-in-GitHub.py --target $KFIOSA_TARGET_HOST",
+      "cd toolboxes/PoC-in-GitHub && python3 PoC-in-GitHub.py --help",
+      "cd toolboxes/PoC-in-GitHub && python3 PoC-in-GitHub.py --help",
+      "cd toolboxes/PoC-in-GitHub && python3 PoC-in-GitHub.py --help",
+      "cd toolboxes/PoC-in-GitHub && python3 PoC-in-GitHub.py --help",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PoC-in-GitHub --output $KFIOSA_OUTPUT_DIR/PoC-in-GitHub.log",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PoC-in-GitHub --output $KFIOSA_OUTPUT_DIR/PoC-in-GitHub.log"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +199,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, poc, github).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/PoC-in-GitHub && python3 PoC-in-GitHub.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/PoC-in-GitHub && python3 PoC-in-GitHub.py --help",
-      "Step 3: cd toolboxes/PoC-in-GitHub && python3 PoC-in-GitHub.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the exploit category. Fits when the engagement needs: In setupLayout of PickActivity.java, there is a possible way to start any activity as a DocumentsUI app due to a confused deputy. This could lead to local escalation of privilege with no additional execution privileges n.",
+    "why_to_use": "Prefer this tool based on upstream description: In setupLayout of PickActivity.java, there is a possible way to start any activity as a DocumentsUI app due to a confused deputy. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation.",
+    "how_to_use": "Clone or install `PoC-in-GitHub` from its upstream repository, then run `PoC-in-GitHub --help` (or the README entrypoint) to confirm flags. In setupLayout of PickActivity.java, there is a possible way to start any activity as a DocumentsUI app due to a confused deputy. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation."
   },
   "full_name": "nomi-sec/PoC-in-GitHub",
   "id": "github:nomi-sec/PoC-in-GitHub",
@@ -282,7 +222,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``PoC-in-GitHub`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "In setupLayout of PickActivity.java, there is a possible way to start any activity as a DocumentsUI app due to a confused deputy. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation.",
   "tags": [
     "offensive",
     "poc",
@@ -301,12 +241,9 @@
   },
   "url": "https://github.com/nomi-sec/PoC-in-GitHub",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need exploit, use PoC-in-GitHub because In setupLayout of PickActivity.java, there is a possible way to start any activity as a DocumentsUI app due to a confused deputy. This could lead to local escal.",
+    "When chaining exploit tools, pair PoC-in-GitHub with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `PoC-in-GitHub --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +262,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

@@ -8,8 +8,14 @@
   "url": "https://github.com/DanMcInerney/wifijammer",
   "summary": "wifijammer\n==========",
   "documentation": {
-    "readme": "wifijammer\n==========",
-    "usage_sections": [],
+    "readme": "Continuously jam all wifi clients and access points within range. The effectiveness of this script is constrained by your wireless card. Alfa cards seem to effectively jam within about a block radius with heavy access point saturation. Granularity is given in the options for more effective targeting.",
+    "usage_sections": [
+      "c, Set the monitor mode interface to only listen and deauth clients or APs on channel 1",
+      "p, Send 5 packets to the client from the AP and 5 packets to the AP from the client along with 5 packets to the broadcast address of the AP",
+      "t, Set a time interval of .00001 seconds between sending each deauth (try this if you get a scapy error like 'no buffer space')",
+      "d, Do not send deauths to access points' broadcast address; this will speed up the deauths to the clients that are found",
+      "world, Set the max channel to 13. In N. America the max channel standard is 11, but the rest of the world uses 13 channels so use this option if you're not in N. America"
+    ],
     "arguments": [
       {
         "name": "--world",
@@ -246,13 +252,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/wifijammer && python3 wifijammer.py --help",
-      "Step 2: cd toolboxes/wifijammer && cat README.md",
-      "Step 3: cd toolboxes/wifijammer && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: wifijammer\n==========.",
+    "why_to_use": "Prefer this tool based on upstream description: Continuously jam all wifi clients and access points within range. The effectiveness of this script is constrained by your wireless card. Alfa cards seem to effectively jam within about a block radius with heavy access point saturation. Granularity is given in the options for more effective targeting.",
+    "how_to_use": "Clone or install `wifijammer` from its upstream repository, then run `wifijammer --help` (or the README entrypoint) to confirm flags."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -283,19 +285,11 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use wifijammer because wifijammer\n==========.",
+    "When chaining Wireless tools, pair wifijammer with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `wifijammer --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
-  "command_examples": [
-    "cd toolboxes/wifijammer && python3 wifijammer.py --help",
-    "cd toolboxes/wifijammer && cat README.md",
-    "cd toolboxes/wifijammer && ls -la",
-    "cd toolboxes/wifijammer && python3 wifijammer.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifijammer --output $KFIOSA_OUTPUT_DIR/wifijammer.log"
-  ],
+  "command_examples": [],
   "attack_surface": [
     "wifi_2_4_ghz",
     "wifi_5_ghz",
@@ -317,5 +311,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -9,7 +9,13 @@
   "summary": "A lightweight, modular bash-based toolkit for WiFi reconnaissance, authentication testing, and WPA/WPA2 handshake capture & cracking. Designed for penetration testers and red teamers working in Linux environments.",
   "documentation": {
     "readme": "A lightweight, modular bash-based toolkit for WiFi reconnaissance, authentication testing, and WPA/WPA2 handshake capture & cracking. Designed for penetration testers and red teamers working in Linux environments.",
-    "usage_sections": [],
+    "usage_sections": [
+      "Scan nearby WiFi networks",
+      "Connect to open or password-protected networks (via NetworkManager)",
+      "Enable/disable monitor mode automatically",
+      "Capture WPA/WPA2 handshakes using airodump-ng",
+      "Force client disconnection via deauthentication attacks"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +199,17 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "chmod +x wifi_tool.sh",
+      "./wifi_tool.sh -s",
+      "./wifi_tool.sh -c \"MyWiFi\" \"MyPassword\"",
+      "./wifi_tool.sh -p <BSSID> <CHANNEL>",
+      "./wifi_tool.sh -d <BSSID>",
+      "./wifi_tool.sh -k handshake",
+      "./wifi_tool.sh -h",
+      "gunzip /usr/share/wordlists/rockyou.txt.gz  # if available",
+      "cp /usr/share/wordlists/rockyou.txt wordlists/wordlist.txt"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -256,13 +272,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'iots']' as the attack surface (reconnaissance, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/wifi_auth_tool && python3 wifi_auth_tool.py --help",
-      "Step 2: cd toolboxes/wifi_auth_tool && cat README.md",
-      "Step 3: cd toolboxes/wifi_auth_tool && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, iots] in the Reconnaissance category. Fits when the engagement needs: A lightweight, modular bash-based toolkit for WiFi reconnaissance, authentication testing, and WPA/WPA2 handshake capture & cracking. Designed for penetration testers and red teamers working in Linux environments.",
+    "why_to_use": "Prefer this tool based on upstream description: A lightweight, modular bash-based toolkit for WiFi reconnaissance, authentication testing, and WPA/WPA2 handshake capture & cracking. Designed for penetration testers and red teamers working in Linux environments.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `chmod +x wifi_tool.sh`. Further invocations from upstream: `./wifi_tool.sh -s`; `./wifi_tool.sh -c \"MyWiFi\" \"MyPassword\"`. A lightweight, modular bash-based toolkit for WiFi reconnaissance, authentication testing, and WPA/WPA2 handshake capture & cracking. Designed for penetration testers and red teamers working in Linux environments."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -293,18 +305,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Reconnaissance, use wifi_auth_tool because A lightweight, modular bash-based toolkit for WiFi reconnaissance, authentication testing, and WPA/WPA2 handshake capture & cracking. Designed for penetration t.",
+    "When the engagement is in the recon phase, use wifi_auth_tool as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `chmod +x wifi_tool.sh` as documented upstream for wifi_auth_tool.",
+    "When you need a concrete invocation, run `./wifi_tool.sh -s` as documented upstream for wifi_auth_tool.",
+    "When you need a concrete invocation, run `./wifi_tool.sh -c \"MyWiFi\" \"MyPassword\"` as documented upstream for wifi_auth_tool.",
+    "When you need a concrete invocation, run `./wifi_tool.sh -p <BSSID> <CHANNEL>` as documented upstream for wifi_auth_tool.",
+    "When chaining Reconnaissance tools, pair wifi_auth_tool with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `wifi_auth_tool --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/wifi_auth_tool && python3 wifi_auth_tool.py --help",
-    "cd toolboxes/wifi_auth_tool && cat README.md",
-    "cd toolboxes/wifi_auth_tool && ls -la",
-    "cd toolboxes/wifi_auth_tool && python3 wifi_auth_tool.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi_auth_tool --output $KFIOSA_OUTPUT_DIR/wifi_auth_tool.log"
+    "chmod +x wifi_tool.sh",
+    "./wifi_tool.sh -s",
+    "./wifi_tool.sh -c \"MyWiFi\" \"MyPassword\"",
+    "./wifi_tool.sh -p <BSSID> <CHANNEL>",
+    "./wifi_tool.sh -d <BSSID>",
+    "./wifi_tool.sh -k handshake",
+    "./wifi_tool.sh -h",
+    "gunzip /usr/share/wordlists/rockyou.txt.gz  # if available",
+    "cp /usr/share/wordlists/rockyou.txt wordlists/wordlist.txt"
   ],
   "attack_surface": [
     "web",
@@ -327,5 +346,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

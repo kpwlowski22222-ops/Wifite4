@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "wifite",
   "title": "wifite",
-  "summary": "### wifite",
+  "summary": "wifite - Python script to automate wireless auditing using aircrack-ng tools",
   "version": "2.8.2-1",
   "architectures": [
     "all"
@@ -35,406 +35,333 @@
       "arguments": [
         {
           "flags": [
-            "-h",
-            "--help"
+            "-all"
           ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
+          "metavar": null,
+          "takes_value": false,
+          "description": "attack all targets. [off]",
           "default": null,
           "choices": null,
-          "raw": " -h, --help                    show this help message and exit"
+          "raw": "-all  attack all targets. [off]"
         },
         {
           "flags": [
-            "-v",
-            "--verbose"
+            "-arpreplay"
           ],
-          "metavar": "- erbose",
-          "takes_value": true,
-          "description": "Shows more options (-h -v). Prints commands and outputs. (default: quiet)",
-          "default": "quiet",
+          "metavar": null,
+          "takes_value": false,
+          "description": "use arpreplay attack [on]",
+          "default": null,
           "choices": null,
-          "raw": " -v, --verbose                 Shows more options (-h -v). Prints commands and outputs. (default: quiet)"
+          "raw": "-arpreplay  use arpreplay attack [on]"
         },
         {
           "flags": [
-            "-i"
+            "-b"
           ],
-          "metavar": "interface",
-          "takes_value": true,
-          "description": "Wireless interface to use, e.g. wlan0mon (default: ask)",
-          "default": "ask",
+          "metavar": null,
+          "takes_value": false,
+          "description": "target a specific access point by bssid (mac) [auto]",
+          "default": null,
           "choices": null,
-          "raw": " -i [interface]                Wireless interface to use, e.g. wlan0mon (default: ask)"
+          "raw": "-b  target a specific access point by bssid (mac) [auto]"
         },
         {
           "flags": [
             "-c"
           ],
-          "metavar": "channel",
-          "takes_value": true,
-          "description": "Wireless channel to scan e.g. 1,3-6 (default: all 2Ghz channels)",
-          "default": "all 2Ghz channels",
-          "choices": null,
-          "raw": " -c [channel]                  Wireless channel to scan e.g. 1,3-6 (default: all 2Ghz channels)"
-        },
-        {
-          "flags": [
-            "-inf",
-            "--infinite"
-          ],
-          "metavar": "- inite",
-          "takes_value": true,
-          "description": "Enable infinite attack mode. Modify scanning time with -p (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " -inf, --infinite              Enable infinite attack mode. Modify scanning time with -p (default: off)"
-        },
-        {
-          "flags": [
-            "-mac",
-            "--random-mac"
-          ],
-          "metavar": "--random",
-          "takes_value": true,
-          "description": "Randomize wireless card MAC address (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " -mac, --random-mac            Randomize wireless card MAC address (default: off)"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "scan_time",
-          "takes_value": true,
-          "description": "Pillage: Attack all targets after scan_time (seconds)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "channel to scan for targets [auto]",
           "default": null,
           "choices": null,
-          "raw": " -p [scan_time]                Pillage: Attack all targets after scan_time (seconds)"
+          "raw": "-c  channel to scan for targets [auto]"
         },
         {
           "flags": [
-            "--kill"
+            "-caffelatte"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Kill processes that conflict with Airmon/Airodump (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --kill                        Kill processes that conflict with Airmon/Airodump (default: off)"
-        },
-        {
-          "flags": [
-            "-pow",
-            "--power"
-          ],
-          "metavar": "- er min_power",
-          "takes_value": true,
-          "description": "Attacks any targets with at least min_power signal strength",
+          "description": "use caffe-latte attack [on]",
           "default": null,
           "choices": null,
-          "raw": " -pow, --power [min_power]     Attacks any targets with at least min_power signal strength"
+          "raw": "-caffelatte  use caffe-latte attack [on]"
         },
         {
           "flags": [
-            "--skip-crack"
+            "-check"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Skip cracking captured handshakes/pmkid (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --skip-crack                  Skip cracking captured handshakes/pmkid (default: off)"
-        },
-        {
-          "flags": [
-            "-first",
-            "--first"
-          ],
-          "metavar": "- attack_max",
-          "takes_value": true,
-          "description": "Attacks the first attack_max targets",
+          "description": "check capfile <file> for handshakes.",
           "default": null,
           "choices": null,
-          "raw": " -first, --first [attack_max]  Attacks the first attack_max targets"
+          "raw": "-check  check capfile <file> for handshakes."
         },
         {
           "flags": [
-            "-ic",
-            "--ignore-cracked"
+            "-crack"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Hides previously-cracked targets. (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " -ic, --ignore-cracked         Hides previously-cracked targets. (default: off)"
-        },
-        {
-          "flags": [
-            "--clients-only"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Only show targets that have associated clients (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --clients-only                Only show targets that have associated clients (default: off)"
-        },
-        {
-          "flags": [
-            "--nodeauths"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Passive mode: Never deauthenticates clients (default: deauth targets)",
-          "default": "deauth targets",
-          "choices": null,
-          "raw": " --nodeauths                   Passive mode: Never deauthenticates clients (default: deauth targets)"
-        },
-        {
-          "flags": [
-            "--daemon"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Puts device back in managed mode after quitting (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --daemon                      Puts device back in managed mode after quitting (default: off)"
-        },
-        {
-          "flags": [
-            "--wep"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Show only WEP-encrypted networks",
+          "description": "crack WPA handshakes using <dic> wordlist file [off]",
           "default": null,
           "choices": null,
-          "raw": " --wep                         Show only WEP-encrypted networks"
+          "raw": "-crack  crack WPA handshakes using <dic> wordlist file [off]"
         },
         {
           "flags": [
-            "--require-fakeauth"
+            "-cracked"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Fails attacks if fake-auth fails (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --require-fakeauth            Fails attacks if fake-auth fails (default: off)"
-        },
-        {
-          "flags": [
-            "--keep-ivs"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Retain .IVS files and reuse when cracking (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --keep-ivs                    Retain .IVS files and reuse when cracking (default: off)"
-        },
-        {
-          "flags": [
-            "--wpa"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Show only WPA/WPA2-encrypted networks (may include WPS)",
+          "description": "display previously-cracked access points",
           "default": null,
           "choices": null,
-          "raw": " --wpa                         Show only WPA/WPA2-encrypted networks (may include WPS)"
+          "raw": "-cracked  display previously-cracked access points"
         },
         {
           "flags": [
-            "--wpa3"
+            "-dict"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Show only WPA3-encrypted networks (SAE/OWE)",
+          "description": "specify dictionary to use when cracking WPA [phpbb.txt]",
           "default": null,
           "choices": null,
-          "raw": " --wpa3                        Show only WPA3-encrypted networks (SAE/OWE)"
+          "raw": "-dict  specify dictionary to use when cracking WPA [phpbb.txt]"
         },
         {
           "flags": [
-            "--owe"
+            "-e"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Show only OWE-encrypted networks (Enhanced Open)",
+          "description": "target a specific access point by ssid (name) [ask]",
           "default": null,
           "choices": null,
-          "raw": " --owe                         Show only OWE-encrypted networks (Enhanced Open)"
+          "raw": "-e  target a specific access point by ssid (name) [ask]"
         },
         {
           "flags": [
-            "--new-hs"
+            "-hirte"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Captures new handshakes, ignores existing handshakes in hs (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --new-hs                      Captures new handshakes, ignores existing handshakes in hs (default: off)"
-        },
-        {
-          "flags": [
-            "--dict"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "File containing passwords for cracking (default: /usr/share/dict/wordlist-probable.txt)",
-          "default": "/usr/share/dict/wordlist-probable",
-          "choices": null,
-          "raw": " --dict [file]                 File containing passwords for cracking (default: /usr/share/dict/wordlist-probable.txt)"
-        },
-        {
-          "flags": [
-            "--wps"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Show only WPS-enabled networks",
+          "description": "use hirte (cfrag) attack [on]",
           "default": null,
           "choices": null,
-          "raw": " --wps                         Show only WPS-enabled networks"
+          "raw": "-hirte  use hirte (cfrag) attack [on]"
         },
         {
           "flags": [
-            "--wps-only"
+            "-i"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Only use WPS PIN & Pixie-Dust attacks (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --wps-only                    Only use WPS PIN & Pixie-Dust attacks (default: off)"
-        },
-        {
-          "flags": [
-            "--bully"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Use bully program for WPS PIN & Pixie-Dust attacks (default: reaver)",
-          "default": "reaver",
-          "choices": null,
-          "raw": " --bully                       Use bully program for WPS PIN & Pixie-Dust attacks (default: reaver)"
-        },
-        {
-          "flags": [
-            "--reaver"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Use reaver program for WPS PIN & Pixie-Dust attacks (default: reaver)",
-          "default": "reaver",
-          "choices": null,
-          "raw": " --reaver                      Use reaver program for WPS PIN & Pixie-Dust attacks (default: reaver)"
-        },
-        {
-          "flags": [
-            "--ignore-locks"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not stop WPS PIN attack if AP becomes locked (default: stop)",
-          "default": "stop",
-          "choices": null,
-          "raw": " --ignore-locks                Do not stop WPS PIN attack if AP becomes locked (default: stop)"
-        },
-        {
-          "flags": [
-            "--pmkid"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Only use PMKID capture, avoids other WPS & WPA attacks (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --pmkid                       Only use PMKID capture, avoids other WPS & WPA attacks (default: off)"
-        },
-        {
-          "flags": [
-            "--no-pmkid"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Don't use PMKID capture (default: off)",
-          "default": "off",
-          "choices": null,
-          "raw": " --no-pmkid                    Don't use PMKID capture (default: off)"
-        },
-        {
-          "flags": [
-            "--pmkid-timeout"
-          ],
-          "metavar": "sec",
-          "takes_value": true,
-          "description": "Time to wait for PMKID capture (default: 300 seconds)",
-          "default": "300 seconds",
-          "choices": null,
-          "raw": " --pmkid-timeout [sec]         Time to wait for PMKID capture (default: 300 seconds)"
-        },
-        {
-          "flags": [
-            "--cracked"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print previously-cracked access points",
+          "description": "wireless interface for capturing [auto]",
           "default": null,
           "choices": null,
-          "raw": " --cracked                     Print previously-cracked access points"
+          "raw": "-i  wireless interface for capturing [auto]"
         },
         {
           "flags": [
-            "--ignored"
+            "-mac"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Print ignored access points",
+          "description": "Changes MAC address of 'iface' to a random MAC. [off]",
           "default": null,
           "choices": null,
-          "raw": " --ignored                     Print ignored access points"
+          "raw": "-mac  Changes MAC address of 'iface' to a random MAC. [off]"
         },
         {
           "flags": [
-            "--check"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "Check a .cap file (or all hs/*.cap files) for WPA handshakes",
-          "default": null,
-          "choices": null,
-          "raw": " --check [file]                Check a .cap file (or all hs/*.cap files) for WPA handshakes"
-        },
-        {
-          "flags": [
-            "--crack"
+            "-nofakeauth"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Show commands to crack a captured handshake",
+          "description": "stop attack if fake authentication fails [off]",
           "default": null,
           "choices": null,
-          "raw": " --crack                       Show commands to crack a captured handshake"
+          "raw": "-nofakeauth  stop attack if fake authentication fails [off]"
         },
         {
           "flags": [
-            "--update-db"
+            "-p0841"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Update the local MAC address prefix database from IEEE registries",
+          "description": "use -p0841 attack [on]",
           "default": null,
           "choices": null,
-          "raw": " --update-db                   Update the local MAC address prefix database from IEEE registries"
+          "raw": "-p0841  use -p0841 attack [on]"
+        },
+        {
+          "flags": [
+            "-pps"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "set the number of packets per second to inject [600]",
+          "default": null,
+          "choices": null,
+          "raw": "-pps  set the number of packets per second to inject [600]"
+        },
+        {
+          "flags": [
+            "-pyrit"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verify handshake using pyrit [off]",
+          "default": null,
+          "choices": null,
+          "raw": "-pyrit  verify handshake using pyrit [off]"
+        },
+        {
+          "flags": [
+            "-showb"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display target BSSIDs after scan [off]",
+          "default": null,
+          "choices": null,
+          "raw": "-showb  display target BSSIDs after scan [off]"
+        },
+        {
+          "flags": [
+            "-strip"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "strip handshake using tshark or pyrit [off]",
+          "default": null,
+          "choices": null,
+          "raw": "-strip  strip handshake using tshark or pyrit [off]"
+        },
+        {
+          "flags": [
+            "-tshark"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verify handshake using tshark [on]",
+          "default": null,
+          "choices": null,
+          "raw": "-tshark  verify handshake using tshark [on]"
+        },
+        {
+          "flags": [
+            "-update"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Checks for new version",
+          "default": null,
+          "choices": null,
+          "raw": "-update  Checks for new version"
+        },
+        {
+          "flags": [
+            "-upgrade"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Checks for new version",
+          "default": null,
+          "choices": null,
+          "raw": "-upgrade  Checks for new version"
+        },
+        {
+          "flags": [
+            "-wep"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "only target WEP networks [off]",
+          "default": null,
+          "choices": null,
+          "raw": "-wep  only target WEP networks [off]"
+        },
+        {
+          "flags": [
+            "-wepca"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "start cracking when number of ivs surpass n [10000]",
+          "default": null,
+          "choices": null,
+          "raw": "-wepca  start cracking when number of ivs surpass n [10000]"
+        },
+        {
+          "flags": [
+            "-wepsave"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "save a copy of .cap files to this directory [off]",
+          "default": null,
+          "choices": null,
+          "raw": "-wepsave  save a copy of .cap files to this directory [off]"
+        },
+        {
+          "flags": [
+            "-wept"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "sec to wait for each attack, 0 implies endless [600]",
+          "default": null,
+          "choices": null,
+          "raw": "-wept  sec to wait for each attack, 0 implies endless [600]"
+        },
+        {
+          "flags": [
+            "-wpa"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "only target WPA networks (works with -wps -wep) [off]",
+          "default": null,
+          "choices": null,
+          "raw": "-wpa  only target WPA networks (works with -wps -wep) [off]"
+        },
+        {
+          "flags": [
+            "-wpadt"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "time to wait between sending deauth packets (sec) [10]",
+          "default": null,
+          "choices": null,
+          "raw": "-wpadt  time to wait between sending deauth packets (sec) [10]"
+        },
+        {
+          "flags": [
+            "-wpat"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "time to wait for WPA attack to complete (seconds) [500]",
+          "default": null,
+          "choices": null,
+          "raw": "-wpat  time to wait for WPA attack to complete (seconds) [500]"
+        },
+        {
+          "flags": [
+            "-wps"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "only target WPS networks [off]",
+          "default": null,
+          "choices": null,
+          "raw": "-wps  only target WPS networks [off]"
         }
       ],
       "raw_help": "root@kali:~# wifite -h\n  .               .    \n.´  ·  .     .  ·  `.  wifite2 2.8.1\n:  :  :  (¯)  :  :  :  a wireless auditor by derv82\n`.  ·  ` /¯\\ ´  ·  .´  maintained by kimocoder\n  `     /¯¯¯\\     ´    https://github.com/kimocoder/wifite2\n \n options:\n -h, --help                    show this help message and exit\n \n SETTINGS:\n -v, --verbose                 Shows more options (-h -v). Prints commands and outputs. (default: quiet)\n -i [interface]                Wireless interface to use, e.g. wlan0mon (default: ask)\n -c [channel]                  Wireless channel to scan e.g. 1,3-6 (default: all 2Ghz channels)\n -inf, --infinite              Enable infinite attack mode. Modify scanning time with -p (default: off)\n -mac, --random-mac            Randomize wireless card MAC address (default: off)\n -p [scan_time]                Pillage: Attack all targets after scan_time (seconds)\n --kill                        Kill processes that conflict with Airmon/Airodump (default: off)\n -pow, --power [min_power]     Attacks any targets with at least min_power signal strength\n --skip-crack                  Skip cracking captured handshakes/pmkid (default: off)\n -first, --first [attack_max]  Attacks the first attack_max targets\n -ic, --ignore-cracked         Hides previously-cracked targets. (default: off)\n --clients-only                Only show targets that have associated clients (default: off)\n --nodeauths                   Passive mode: Never deauthenticates clients (default: deauth targets)\n --daemon                      Puts device back in managed mode after quitting (default: off)\n \n WEP:\n --wep                         Show only WEP-encrypted networks\n --require-fakeauth            Fails attacks if fake-auth fails (default: off)\n --keep-ivs                    Retain .IVS files and reuse when cracking (default: off)\n \n WPA:\n --wpa                         Show only WPA/WPA2-encrypted networks (may include WPS)\n --wpa3                        Show only WPA3-encrypted networks (SAE/OWE)\n --owe                         Show only OWE-encrypted networks (Enhanced Open)\n --new-hs                      Captures new handshakes, ignores existing handshakes in hs (default: off)\n --dict [file]                 File containing passwords for cracking (default: /usr/share/dict/wordlist-probable.txt)\n \n WPS:\n --wps                         Show only WPS-enabled networks\n --wps-only                    Only use WPS PIN & Pixie-Dust attacks (default: off)\n --bully                       Use bully program for WPS PIN & Pixie-Dust attacks (default: reaver)\n --reaver                      Use reaver program for WPS PIN & Pixie-Dust attacks (default: reaver)\n --ignore-locks                Do not stop WPS PIN attack if AP becomes locked (default: stop)\n \n PMKID:\n --pmkid                       Only use PMKID capture, avoids other WPS & WPA attacks (default: off)\n --no-pmkid                    Don't use PMKID capture (default: off)\n --pmkid-timeout [sec]         Time to wait for PMKID capture (default: 300 seconds)\n \n COMMANDS:\n --cracked                     Print previously-cracked access points\n --ignored                     Print ignored access points\n --check [file]                Check a .cap file (or all hs/*.cap files) for WPA handshakes\n --crack                       Show commands to crack a captured handshake\n --update-db                   Update the local MAC address prefix database from IEEE registries",
@@ -501,21 +428,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use wifite because wifite - Python script to automate wireless auditing using aircrack-ng tools.",
+    "When you need a concrete invocation, run `wifite [SETTINGS] [FILTERS]` as documented upstream for wifite.",
+    "When you need a concrete invocation, run `./wifite.py -wps -wep -c 6 -pps 600` as documented upstream for wifite.",
+    "When chaining Kali Linux tools, pair wifite with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `wifite --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/wifite && python3 wifite.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/wifite && python3 wifite.py --help",
-    "cd toolboxes/wifite && python3 wifite.py --help",
-    "cd toolboxes/wifite && python3 wifite.py --help",
-    "cd toolboxes/wifite && python3 wifite.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifite --output $KFIOSA_OUTPUT_DIR/wifite.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifite --output $KFIOSA_OUTPUT_DIR/wifite.log"
+    "wifite [SETTINGS] [FILTERS]",
+    "./wifite.py -wps -wep -c 6 -pps 600"
   ],
   "attack_surface": [
     "web",
@@ -532,5 +453,172 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-all",
+        "description": "attack all targets. [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-arpreplay",
+        "description": "use arpreplay attack [on]",
+        "source": "docs"
+      },
+      {
+        "name": "-b",
+        "description": "target a specific access point by bssid (mac) [auto]",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "channel to scan for targets [auto]",
+        "source": "docs"
+      },
+      {
+        "name": "-caffelatte",
+        "description": "use caffe-latte attack [on]",
+        "source": "docs"
+      },
+      {
+        "name": "-check",
+        "description": "check capfile <file> for handshakes.",
+        "source": "docs"
+      },
+      {
+        "name": "-crack",
+        "description": "crack WPA handshakes using <dic> wordlist file [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-cracked",
+        "description": "display previously-cracked access points",
+        "source": "docs"
+      },
+      {
+        "name": "-dict",
+        "description": "specify dictionary to use when cracking WPA [phpbb.txt]",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "target a specific access point by ssid (name) [ask]",
+        "source": "docs"
+      },
+      {
+        "name": "-hirte",
+        "description": "use hirte (cfrag) attack [on]",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "wireless interface for capturing [auto]",
+        "source": "docs"
+      },
+      {
+        "name": "-mac",
+        "description": "Changes MAC address of 'iface' to a random MAC. [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-nofakeauth",
+        "description": "stop attack if fake authentication fails [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-p0841",
+        "description": "use -p0841 attack [on]",
+        "source": "docs"
+      },
+      {
+        "name": "-pps",
+        "description": "set the number of packets per second to inject [600]",
+        "source": "docs"
+      },
+      {
+        "name": "-pyrit",
+        "description": "verify handshake using pyrit [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-showb",
+        "description": "display target BSSIDs after scan [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-strip",
+        "description": "strip handshake using tshark or pyrit [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-tshark",
+        "description": "verify handshake using tshark [on]",
+        "source": "docs"
+      },
+      {
+        "name": "-update",
+        "description": "Checks for new version",
+        "source": "docs"
+      },
+      {
+        "name": "-upgrade",
+        "description": "Checks for new version",
+        "source": "docs"
+      },
+      {
+        "name": "-wep",
+        "description": "only target WEP networks [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-wepca",
+        "description": "start cracking when number of ivs surpass n [10000]",
+        "source": "docs"
+      },
+      {
+        "name": "-wepsave",
+        "description": "save a copy of .cap files to this directory [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-wept",
+        "description": "sec to wait for each attack, 0 implies endless [600]",
+        "source": "docs"
+      },
+      {
+        "name": "-wpa",
+        "description": "only target WPA networks (works with -wps -wep) [off]",
+        "source": "docs"
+      },
+      {
+        "name": "-wpadt",
+        "description": "time to wait between sending deauth packets (sec) [10]",
+        "source": "docs"
+      },
+      {
+        "name": "-wpat",
+        "description": "time to wait for WPA attack to complete (seconds) [500]",
+        "source": "docs"
+      },
+      {
+        "name": "-wps",
+        "description": "only target WPS networks [off]",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "wifite [SETTINGS] [FILTERS]",
+      "./wifite.py -wps -wep -c 6 -pps 600"
+    ],
+    "readme": "wifite - Python script to automate wireless auditing using aircrack-ng tools",
+    "how_to_use": "Install/setup: sudo apt install wifite. Run the primary entrypoint as shown in upstream docs, e.g. `./wifite.py -wps -wep -c 6 -pps 600`. wifite - Python script to automate wireless auditing using aircrack-ng tools.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web, wifi_2_4_ghz, wifi_5_ghz] in the Kali Linux category. Fits when the engagement needs: wifite - Python script to automate wireless auditing using aircrack-ng tools.",
+    "why_to_use": "Prefer this tool based on upstream description: wifite - Python script to automate wireless auditing using aircrack-ng tools.",
+    "usage_sections": [
+      "Install with: sudo apt install wifite"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

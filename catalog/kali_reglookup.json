@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "reglookup",
   "title": "reglookup",
-  "summary": "### libregfi-dev",
+  "summary": "reglookup - Windows NT+ registry reader/lookup tool",
   "version": "1.0.1+svn296-2",
   "architectures": [
     "any",
@@ -46,28 +46,6 @@
       "arguments": [
         {
           "flags": [
-            "-p"
-          ],
-          "metavar": "prefix-filter",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "    -p prefix-filter"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "type-filter",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "    -t type-filter"
-        },
-        {
-          "flags": [
             "-h"
           ],
           "metavar": null,
@@ -75,7 +53,7 @@
           "description": "Enables the printing of a column header row. (default)",
           "default": null,
           "choices": null,
-          "raw": "    -h     Enables the printing of a column header row. (default)"
+          "raw": "-h  Enables the printing of a column header row. (default)"
         },
         {
           "flags": [
@@ -83,32 +61,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Printed  values inherit the timestamp of their parent key, which is",
+          "description": "values inherit the timestamp of their parent key, which is printed along with",
           "default": null,
           "choices": null,
-          "raw": "    -i     Printed  values inherit the timestamp of their parent key, which is"
-        },
-        {
-          "flags": [
-            "-H"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Disables the printing of a column header row.",
-          "default": null,
-          "choices": null,
-          "raw": "    -H     Disables the printing of a column header row."
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Adds five additional columns to output containing information  from",
-          "default": null,
-          "choices": null,
-          "raw": "    -s     Adds five additional columns to output containing information  from"
+          "raw": "-i  values inherit the timestamp of their parent key, which is printed along with"
         },
         {
           "flags": [
@@ -119,7 +75,18 @@
           "description": "Disables the printing of security descriptor information. (default)",
           "default": null,
           "choices": null,
-          "raw": "    -S     Disables the printing of security descriptor information. (default)"
+          "raw": "-S  Disables the printing of security descriptor information. (default)"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Adds five additional columns to output containing information from key security de-",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Adds five additional columns to output containing information from key security de-"
         },
         {
           "flags": [
@@ -130,7 +97,7 @@
           "description": "Verbose output.",
           "default": null,
           "choices": null,
-          "raw": "    -v     Verbose output."
+          "raw": "-v  Verbose output."
         }
       ],
       "raw_help": "root@kali:~# man reglookup\n reglookup(1)                                                       reglookup(1)\n \n NAME\n    reglookup - Windows NT+ registry reader/lookup tool\n \n SYNOPSIS\n    reglookup [options] registry-file\n \n DESCRIPTION\n    reglookup is designed to read windows registry elements and print them out\n    to stdout in a CSV-like format. It has filtering options to narrow the fo-\n    cus  of the output. This tool is designed to work with on Windows NT-based\n    registries.\n \n OPTIONS\n    reglookup accepts the following parameters:\n \n    -p prefix-filter\n           Specify a path prefix filter. Only keys/values under this  registry\n           path will be output.\n \n    -t type-filter\n           Specify a type filter. Only elements which match this registry data\n           type  will  be printed. Acceptable values are: NONE, SZ, EXPAND_SZ,\n           BINARY, DWORD,  DWORD_BE,  LINK,  MULTI_SZ,  RSRC_LIST,  RSRC_DESC,\n           RSRC_REQ_LIST, QWORD and KEY .\n \n    -h     Enables the printing of a column header row. (default)\n \n    -i     Printed  values inherit the timestamp of their parent key, which is\n           printed along with them. Note that this timestamp is not  necessar-\n           ily  meaningful  for  any given value values because timestamps are\n           saved on keys only and you cannot tell which value has  been  modi-\n           fied  since  a  change to any value of a given key would update the\n           time stamp.\n \n    -H     Disables the printing of a column header row.\n \n    -s     Adds five additional columns to output containing information  from\n           key  security  descriptors and rarely used fields. The columns are:\n           owner, group, sacl, dacl, class.  (This feature's  output  has  not\n           been extensively tested.)\n \n    -S     Disables the printing of security descriptor information. (default)\n \n    -v     Verbose output.\n \n    registry-file\n           Required  argument.  Specifies the location of the registry file to\n           read. The system registry files should  be  found  under:  %System-\n           Root%/system32/config.\n \n OUTPUT\n    reglookup  generates  comma-separated values (CSV) and writes them to std-\n    out. The format is designed to simplify parsing algorithms of other  tools\n    by  quoting  CSV  special  characters  using  a common hexadecimal format.\n    Specifically, special characters or non-ascii bytes are converted to \"%XX\"\n    where XX is the hexadecimal value for the byte.\n \n    The number of columns or fields in each line is fixed for a given  run  of\n    the program, but may vary based on the command line options provided.  See\n    the  header  line  for  information on which fields are available and what\n    they contain.\n \n    Some fields in some lines may contain sub-fields which require  additional\n    delimiters.  If  these  sub-delimiters occur in these sub-fields, they are\n    also encoded in the same way as commas or other  special  characters  are.\n    Currently,  the  second,  third, and fourth level delimiters are \"|\", \":\",\n    and \" \", respectively. These are particularly important to  take  note  of\n    when  security  attributes  are printed. Please note that these delimiters\n    may occur in fields that are not sub-delimited, and should not  be  inter-\n    preted as special.\n \n    Security  attributes  of  registry  keys have a complex structure which is\n    outlined here. Each key will generally have an associated ACL (Access Con-\n    trol List), which is made up of ACEs (Access Control Entries). Each ACE is\n    delimited by the secondary delimiter  mentioned  above,  \"|\".  The  fields\n    within an ACE are delimited by the third-level delimiter, \":\", and consist\n    of  a SID, the ACE type (ALLOW, DENY, etc), a list of access rights, and a\n    list of flags. The last two fields are delimited by the  fourth-level  de-\n    limiter  \"  \". These final lists are simply human-readable interpretations\n    of bits. The access rights abbreviations are listed below along with their\n    Microsoft-assigned names:\n \n          QRY_VAL        KEY_QUERY_VALUE\n          SET_VAL        KEY_SET_VALUE\n          CREATE_KEY     KEY_CREATE_SUB_KEY\n          ENUM_KEYS      KEY_ENUMERATE_SUB_KEYS\n          NOTIFY         KEY_NOTIFY\n          CREATE_LNK     KEY_CREATE_LINK\n          WOW64_64       KEY_WOW64_64KEY\n          WOW64_32       KEY_WOW64_32KEY\n          DELETE         DELETE\n          R_CONT         READ_CONTROL\n          W_DAC          WRITE_DAC\n          W_OWNER        WRITE_OWNER\n          SYNC      SYNCHRONIZE\n          SYS_SEC        ACCESS_SYSTEM_SECURITY\n          MAX_ALLWD      MAXIMUM_ALLOWED\n          GEN_A          GENERIC_ALL\n          GEN_X          GENERIC_EXECUTE\n          GEN_W          GENERIC_WRITE\n          GEN_R          GENERIC_READ\n \n    And the meaning of each flag is:\n \n          OI   Object Inherit\n          CI   Container Inherit\n          NP   Non-Propagate\n          IO   Inherit Only\n          IA   Inherited ACE\n \n    Please see the following references for more information:\n \n            http://msdn2.microsoft.com/en-gb/library/ms724878.aspx\n            http://msdn2.microsoft.com/en-gb/library/aa374892.aspx\n            http://msdn2.microsoft.com/en-us/library/aa772242.aspx\n            http://support.microsoft.com/kb/220167\n \n    Note that some of the bits listed above have either not been allocated  by\n    Microsoft,  or  simply aren't documented. If any bits are set in the above\n    two fields that aren't recognized, a hexadecimal representation of all  of\n    these  mystery  bits  will be included in the output. For instance, if the\n    lowest bit and third lowest bit were not recognized while being  set,  the\n    number \"0x5\" would be included as an element in the list.\n \n    While  the  ACL/ACE  output  format  is mostly stable at this point, minor\n    changes may be introduced in future versions.\n \n EXAMPLES\n    To read and print the contents of an entire system registry file:\n \n         reglookup /mnt/win/c/WINNT/system32/config/system\n \n    To limit the output to just those entries under the Services key:\n \n         reglookup -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system\n \n    To limit the output to all registry values of type BINARY:\n \n         reglookup -t BINARY /mnt/win/c/WINNT/system32/config/system\n \n    And to limit the output to BINARY values under the Services key:\n \n         reglookup -t BINARY -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system\n \n BUGS\n    This program has been smoke-tested against  most  current  Windows  target\n    platforms,  but  a  comprehensive  test  suite has not yet been developed.\n    (Please report results to the development mailing list  if  you  encounter\n    any bugs. Sample registry files and/or patches are greatly appreciated.)\n \n    The SID conversions haven't been carefully checked for accuracy.\n \n    The  MTIME  conversions appear correctly produce the stored UTC timestamp.\n    However, due to the periodicity of registry writes, and the complexity  of\n    the  conversion,  a small amount of error (on the order of seconds) may be\n    possible. The documentation available online from Microsoft on this  field\n    is very poor.\n \n    For   more  information  on  registry  format  details,  see:  http://sen-\n    tinelchicken.com/research/registry_format/\n \n CREDITS\n    This program was initially based on editreg.c by Richard  Sharpe.  It  has\n    since  been rewritten to use a modified version the regfio library written\n    by Gerald Carter. Heavy modifications to the library and the original com-\n    mand line interface have been done by Timothy D. Morgan.\n \n    Please see source code for a full list of copyrights.\n \n LICENSE\n    Please see the file \"LICENSE\" included with this software distribution.\n \n    This program is distributed in the hope that it will be useful, but  WITH-\n    OUT  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License  ver-\n    sion 3 for more details.\n \n SEE ALSO\n    reglookup-timeline(1) reglookup-recover(1)\n \n File Conversion Utilities        7 October 2025                    reglookup(1)",
@@ -363,21 +330,20 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use reglookup because reglookup - Windows NT+ registry reader/lookup tool.",
+    "When you need a concrete invocation, run `reglookup [options] registry-file` as documented upstream for reglookup.",
+    "When you need a concrete invocation, run `reglookup /mnt/win/c/WINNT/system32/config/system` as documented upstream for reglookup.",
+    "When you need a concrete invocation, run `reglookup -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system` as documented upstream for reglookup.",
+    "When you need a concrete invocation, run `reglookup -t BINARY /mnt/win/c/WINNT/system32/config/system` as documented upstream for reglookup.",
+    "When chaining Kali Linux tools, pair reglookup with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `reglookup --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/reglookup && python3 reglookup.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/reglookup && python3 reglookup.py --help",
-    "cd toolboxes/reglookup && python3 reglookup.py --help",
-    "cd toolboxes/reglookup && python3 reglookup.py --help",
-    "cd toolboxes/reglookup && python3 reglookup.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST reglookup --output $KFIOSA_OUTPUT_DIR/reglookup.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST reglookup --output $KFIOSA_OUTPUT_DIR/reglookup.log"
+    "reglookup [options] registry-file",
+    "reglookup /mnt/win/c/WINNT/system32/config/system",
+    "reglookup -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system",
+    "reglookup -t BINARY /mnt/win/c/WINNT/system32/config/system",
+    "reglookup -t BINARY -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system"
   ],
   "attack_surface": [
     "web"
@@ -392,5 +358,51 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "Enables the printing of a column header row. (default)",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "values inherit the timestamp of their parent key, which is printed along with",
+        "source": "docs"
+      },
+      {
+        "name": "-S",
+        "description": "Disables the printing of security descriptor information. (default)",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Adds five additional columns to output containing information from key security de-",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Verbose output.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "reglookup [options] registry-file",
+      "reglookup /mnt/win/c/WINNT/system32/config/system",
+      "reglookup -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system",
+      "reglookup -t BINARY /mnt/win/c/WINNT/system32/config/system",
+      "reglookup -t BINARY -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system"
+    ],
+    "readme": "reglookup - Windows NT+ registry reader/lookup tool",
+    "how_to_use": "Install/setup: sudo apt install reglookup. Run the primary entrypoint as shown in upstream docs, e.g. `reglookup /mnt/win/c/WINNT/system32/config/system`. Further invocations from upstream: `reglookup -p /ControlSet002/Services /mnt/win/c/WINNT/system32/config/system`; `reglookup -t BINARY /mnt/win/c/WINNT/system32/config/system`. reglookup - Windows NT+ registry reader/lookup tool.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: reglookup - Windows NT+ registry reader/lookup tool.",
+    "why_to_use": "Prefer this tool based on upstream description: reglookup - Windows NT+ registry reader/lookup tool.",
+    "usage_sections": [
+      "Install with: sudo apt install reglookup",
+      "Install with: sudo apt install reglookup"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

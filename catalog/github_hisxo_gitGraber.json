@@ -1,26 +1,125 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/gitGraber && python3 gitGraber.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/gitGraber && python3 gitGraber.py --help",
-    "cd toolboxes/gitGraber && python3 gitGraber.py --help",
-    "cd toolboxes/gitGraber && python3 gitGraber.py --help",
-    "cd toolboxes/gitGraber && python3 gitGraber.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gitGraber --output $KFIOSA_OUTPUT_DIR/gitGraber.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gitGraber --output $KFIOSA_OUTPUT_DIR/gitGraber.log"
+    "usage: gitGraber.py [-h] [-k KEYWORDSFILE] [-q QUERY] [-s] [-w WORDLIST]",
+    "python3 gitGraber.py -k keywordsfile.txt -q YOURWORD -s",
+    "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s",
+    "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s -w mysuperwordlist.txt",
+    "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s -m"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "gitGraber is a tool developed in Python3 to monitor GitHub to search and find sensitive data in real time for different online services such as: Google, Amazon (AWS), Paypal, Github, Mailgun, Facebook, Twitter, Heroku, Stripe, Twilio...",
+    "usage_sections": [
+      "Add your own Github tokens (Personal access tokens) : `GITHUBTOKENS = ['yourToken1Here','yourToken2Here']`",
+      "Add your own Discord Webhook : `DISCORDWEBHOOKURL = 'https://discordapp.com/api/webhooks/7XXXX/XXXXXX'`",
+      "Add your own Slack Webhook : `SLACKWEBHOOKURL = 'https://hooks.slack.com/services/TXXXX/BXXXX/XXXXXXX'`",
+      "Add your own Telegram Config : ``TELEGRAMCONFIG = {",
+      "GOOGLEOAUTHACCESSTOKEN"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-d",
+        "description": "Enable discord notifications",
+        "source": "docs"
+      },
+      {
+        "name": "--discord",
+        "description": "Enable discord notifications",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
+        "description": "Show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-k",
+        "description": "Specify a keywords file (-k keywordsfile.txt)",
+        "source": "docs"
+      },
+      {
+        "name": "--keyword",
+        "description": "Specify a keywords file (-k keywordsfile.txt)",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Limit the results to commits less than N days old",
+        "source": "docs"
+      },
+      {
+        "name": "--limit",
+        "description": "Limit the results to commits less than N days old",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "Enable monitoring of your search query by creating cron job [Every 30 mins]",
+        "source": "docs"
+      },
+      {
+        "name": "--monitor",
+        "description": "Enable monitoring of your search query by creating cron job [Every 30 mins]",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Specify your query (-q",
+        "source": "docs"
+      },
+      {
+        "name": "--query",
+        "description": "Specify your query (-q",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Enable slack notifications",
+        "source": "docs"
+      },
+      {
+        "name": "--slack",
+        "description": "Enable slack notifications",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "Max threads to speed the requests on Github (take care about the rate limit)",
+        "source": "docs"
+      },
+      {
+        "name": "--telegram",
+        "description": "Enable telegram notifications",
+        "source": "docs"
+      },
+      {
+        "name": "-tg",
+        "description": "Enable telegram notifications",
+        "source": "docs"
+      },
+      {
+        "name": "--threads",
+        "description": "Max threads to speed the requests on Github (take care about the rate limit)",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "Create a wordlist that fills dynamically with discovered filenames on GitHub",
+        "source": "docs"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Create a wordlist that fills dynamically with discovered filenames on GitHub",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -49,11 +148,6 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--timeout",
         "description": "Per-operation timeout in seconds.",
         "source": "generic_kfiosa"
@@ -61,11 +155,6 @@
       {
         "name": "--rate",
         "description": "Packet / request rate limit.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--wordlist",
-        "description": "Path to a wordlist (users, passwords, paths).",
         "source": "generic_kfiosa"
       },
       {
@@ -129,7 +218,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "usage: gitGraber.py [-h] [-k KEYWORDSFILE] [-q QUERY] [-s] [-w WORDLIST]",
+      "python3 gitGraber.py -k keywordsfile.txt -q YOURWORD -s",
+      "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s",
+      "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s -w mysuperwordlist.txt",
+      "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s -m"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +350,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, gitgraber, hisxo).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/gitGraber && python3 gitGraber.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/gitGraber && python3 gitGraber.py --help",
-      "Step 3: cd toolboxes/gitGraber && python3 gitGraber.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: gitGraber is a tool developed in Python3 to monitor GitHub to search and find sensitive data in real time for different online services such as: Google, Amazon (AWS), Paypal, Github, Mailgun, Facebook, Twitter, Heroku, S.",
+    "why_to_use": "Prefer this tool based on upstream description: gitGraber is a tool developed in Python3 to monitor GitHub to search and find sensitive data in real time for different online services such as: Google, Amazon (AWS), Paypal, Github, Mailgun, Facebook, Twitter, Heroku, Stripe, Twilio.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `usage: gitGraber.py [-h] [-k KEYWORDSFILE] [-q QUERY] [-s] [-w WORDLIST]`. Further invocations from upstream: `python3 gitGraber.py -k keywordsfile.txt -q YOURWORD -s`; `python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s`. gitGraber is a tool developed in Python3 to monitor GitHub to search and find sensitive data in real time for different online services such as: Google, Amazon (AWS), Paypal, Github, Mailgun, Facebook, Twitter, Heroku, Stripe, Twilio."
   },
   "full_name": "hisxo/gitGraber",
   "id": "github:hisxo/gitGraber",
@@ -282,7 +373,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``gitGraber`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "gitGraber is a tool developed in Python3 to monitor GitHub to search and find sensitive data in real time for different online services such as: Google, Amazon (AWS), Paypal, Github, Mailgun, Facebook, Twitter, Heroku, Stripe, Twilio...",
   "tags": [
     "offensive",
     "gitgraber",
@@ -300,12 +391,13 @@
   },
   "url": "https://github.com/hisxo/gitGraber",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use gitGraber because gitGraber is a tool developed in Python3 to monitor GitHub to search and find sensitive data in real time for different online services such as: Google, Amazon .",
+    "When you need a concrete invocation, run `usage: gitGraber.py [-h] [-k KEYWORDSFILE] [-q QUERY] [-s] [-w WORDLIST]` as documented upstream for gitGraber.",
+    "When you need a concrete invocation, run `python3 gitGraber.py -k keywordsfile.txt -q YOURWORD -s` as documented upstream for gitGraber.",
+    "When you need a concrete invocation, run `python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s` as documented upstream for gitGraber.",
+    "When you need a concrete invocation, run `python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s -w mysuperwordlist.txt` as documented upstream for gitGraber.",
+    "When chaining osint tools, pair gitGraber with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `gitGraber --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +416,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

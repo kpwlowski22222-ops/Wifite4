@@ -48,6 +48,52 @@ from typing import Any, Callable, Dict, List, Optional
 logger = logging.getLogger(__name__)
 
 
+def _safe_json_dumps(obj: Any, *, limit: Optional[int] = None,
+                     default: Any = str) -> str:
+    """``json.dumps`` that never raises on circular references.
+
+    The seed/target dict can grow live recon merges and runner
+    results that accidentally re-point at the seed (classic cycle:
+    ``seed["recon"]["target"] is seed``). A bare ``json.dumps`` then
+    raises ``ValueError: Circular reference detected`` and kills the
+    whole AI chain / re-plan path. Walk with a seen-id set and replace
+    cycles with a short marker so the prompt still builds.
+    """
+    def _scrub(value: Any, seen: set) -> Any:
+        if value is None or isinstance(value, (str, int, float, bool)):
+            return value
+        oid = id(value)
+        if oid in seen:
+            return "<circular>"
+        if isinstance(value, dict):
+            seen.add(oid)
+            try:
+                return {str(k): _scrub(v, seen) for k, v in value.items()}
+            finally:
+                seen.discard(oid)
+        if isinstance(value, (list, tuple)):
+            seen.add(oid)
+            try:
+                return [_scrub(v, seen) for v in value]
+            finally:
+                seen.discard(oid)
+        try:
+            return default(value) if default else str(value)
+        except Exception:  # noqa: BLE001
+            return f"<unserializable {type(value).__name__}>"
+
+    try:
+        text = json.dumps(_scrub(obj, set()), default=default)
+    except Exception:  # noqa: BLE001 — last-resort never break planning
+        try:
+            text = json.dumps(str(obj)[: max(limit or 2000, 200)])
+        except Exception:  # noqa: BLE001
+            text = "\"<unserializable>\""
+    if limit is not None and limit >= 0:
+        return text[:limit]
+    return text
+
+
 # Specialized 0-day algorithms directive — teach the LLM about the
 # 10 new chain actions in :mod:`core.ai_backend.zero_day_algorithms`.
 # Each is READ-only on the target; the operator runs the destructive
@@ -1463,7 +1509,8 @@ def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str,
     bssid = target.get("bssid", "TARGET_BSSID")
     channel = target.get("channel", 1)
     iface = target.get("interface", "wlan0mon")
-    essid = target.get("essid", "TARGET_ESSID")
+    essid = (target.get("essid") or target.get("ssid")
+             or "TARGET_ESSID")
 
     steps: List[Dict[str, Any]] = []
     # mt7921e adapter: run an injection-quality probe before attacking so
@@ -1545,8 +1592,33 @@ def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str,
             },
         ])
 
+    # Prefer a pcap already produced by catalog recon (handshake_harvest /
+    # eapol_monitor) so we don't waste a capture slot when one exists.
+    recon = target.get("recon") if isinstance(target.get("recon"), dict) else {}
+    for key in ("handshake_harvest", "eapol_monitor"):
+        data = ((recon.get(key) or {}).get("data") or {})
+        pcap_hit = data.get("pcap") or data.get("cap_file")
+        if pcap_hit:
+            cap_path = str(pcap_hit)
+            break
+    if target.get("cap_file") or target.get("pcap"):
+        cap_path = str(target.get("cap_file") or target.get("pcap"))
+
     if enc in ("wep",):
-        # WEP: replay ARP to grow IVs, then crack with aircrack -a 1.
+        # WEP: capture IVs, optional mt7921e replay, then crack -a 1.
+        steps.append({
+            "action": "mcp_call",
+            "tool": "airodump-ng",
+            "args": {
+                "channel": channel, "bssid": bssid,
+                "write": f"/tmp/kfiosa-{bssid.replace(':', '')}",
+                "interface": iface, "output_format": "both",
+            },
+            "rationale": f"Capture WEP traffic/IVs for {bssid} on ch{channel}.",
+            "expected_outcome": "IV-rich .cap written",
+            "risk_level": "intrusive",
+            "expected_runtime_seconds": 45,
+        })
         if target.get("adapter_caps", {}).get("mt7921e"):
             for mode in ("arp_replay", "chopchop", "fragmentation"):
                 steps.append({
@@ -1581,24 +1653,39 @@ def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str,
             "interface": iface,
             "output_format": "both",
         },
-        "rationale": f"Lock onto {bssid} on ch{channel} and capture WPA handshake.",
+        "rationale": (
+            f"Lock onto {bssid} ({essid}) on ch{channel} and capture "
+            f"WPA handshake to {cap_path}."
+        ),
         "expected_outcome": "handshake captured in .cap file",
         "risk_level": "intrusive",
         "expected_runtime_seconds": 30,
     })
-    # Clientless PMKID first when indicated (or when no client is
-    # associated — PMKID needs no handshake).
-    if has_pmkid:
-        steps.append({
-            "action": "pmkid",
-            "tool": "hashcat",
-            "args": {"cap_file": cap_path, "bssid": bssid},
-            "rationale": "PMKID available: clientless attack via hashcat "
-                         "-m 22000 (no handshake needed).",
-            "expected_outcome": "WPA PSK recovered from PMKID",
-            "risk_level": "intrusive",
-            "expected_runtime_seconds": 120,
-        })
+    # Deauth to force a fresh handshake (always useful; not mt7921e-only).
+    steps.append({
+        "action": "deauth",
+        "tool": "aireplay-ng",
+        "args": {"bssid": bssid, "interface": iface, "channel": channel},
+        "rationale": (
+            "Force associated clients to re-auth so airodump / PMKID "
+            "capture sees EAPOL frames."
+        ),
+        "expected_outcome": "client reconnect; EAPOL visible",
+        "risk_level": "destructive",
+        "expected_runtime_seconds": 15,
+    })
+    # Clientless PMKID (always try once — cheap, no client required).
+    steps.append({
+        "action": "pmkid",
+        "tool": "hashcat",
+        "args": {"cap_file": cap_path, "bssid": bssid, "channel": channel,
+                 "interface": iface},
+        "rationale": "Clientless PMKID capture+crack via hcxtools/hashcat "
+                     "-m 22000.",
+        "expected_outcome": "WPA PSK recovered from PMKID",
+        "risk_level": "intrusive",
+        "expected_runtime_seconds": 120,
+    })
     # Dictionary crack (the orchestrator resolves weakpass → rockyou).
     steps.append({
         "action": "crack",
@@ -1818,15 +1905,66 @@ def _strip_code_fence(text: str) -> str:
     return s.strip()
 
 
+def _extract_json_blob(text: str) -> str:
+    """Pull the first top-level JSON object or array out of free-form text.
+
+    Models often wrap the chain in prose or a code fence. Prefer the
+    first balanced ``{...}`` / ``[...]`` so chain planning still works
+    when the model ignores the JSON-only instruction.
+    """
+    s = (text or "").strip()
+    if not s:
+        return s
+    # Fast path: already pure JSON.
+    if s[0] in "{[":
+        return s
+    # Find the first { or [ and walk to its matching close, respecting
+    # strings so braces inside strings don't confuse the scanner.
+    start = None
+    for i, ch in enumerate(s):
+        if ch in "{[":
+            start = i
+            open_ch = ch
+            close_ch = "}" if ch == "{" else "]"
+            break
+    if start is None:
+        return s
+    depth = 0
+    in_str = False
+    esc = False
+    for j in range(start, len(s)):
+        c = s[j]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+            continue
+        if c == '"':
+            in_str = True
+            continue
+        if c == open_ch:
+            depth += 1
+        elif c == close_ch:
+            depth -= 1
+            if depth == 0:
+                return s[start:j + 1]
+    return s[start:]
+
+
 def _parse_chain_json(text: str) -> List[Dict[str, Any]]:
     """Parse the LLM's JSON chain. Raises ``ChainPlanError`` on failure.
 
     Accepts:
       - strict ``{"chain": [...]}``
       - bare ``[...]`` (we wrap it)
+      - JSON embedded in prose / code fences
       - a ``{"refusal": true, ...}`` (raises so the caller can swap models)
     """
     raw = _strip_code_fence(text)
+    raw = _extract_json_blob(raw)
     if not raw:
         raise ChainPlanError("LLM returned empty response")
     try:
@@ -1985,7 +2123,7 @@ class AIChainPlanner:
                 recent = list(reversed(prior_results[-12:]))
                 prior_block = (
                     "PRIOR STEP OUTCOMES (live, most recent first):\n"
-                    + json.dumps(recent, default=str)[:2000]
+                    + _safe_json_dumps(recent, limit=2000)
                     + "\n\nGiven those live outcomes, emit the NEXT 1-3 steps "
                       "only (not the whole chain). Do NOT repeat steps that "
                       "already succeeded (same action+tool). If a CVE/exploit "
@@ -1998,11 +2136,11 @@ class AIChainPlanner:
 
         prompt = (
             f"Build an attack chain for domain={domain}.\n"
-            f"Target: {json.dumps(target, default=str)[:1200]}\n"
+            f"Target: {_safe_json_dumps(target, limit=1200)}\n"
             f"Matched CVEs (top {len(cves)}): "
-            f"{json.dumps(cves[:10], default=str)[:1500]}\n"
+            f"{_safe_json_dumps(cves[:10], limit=1500)}\n"
             f"KB-suggested tools (top {len(kb_tools)}): "
-            f"{json.dumps(kb_tools[:10], default=str)[:1000]}\n"
+            f"{_safe_json_dumps(kb_tools[:10], limit=1000)}\n"
             + (f"AVAILABLE MCP TOOLS (schemas + examples + risk):\n"
                f"{mcp_block}\n" if mcp_block else "")
             + prior_block
@@ -2010,15 +2148,45 @@ class AIChainPlanner:
 
         steps: Optional[List[Dict[str, Any]]] = None
 
-        # 1) Primary LLM call.
+        # Detect persona models known to ignore the JSON contract
+        # (return product blurbs). Prefer instruction models first for
+        # those so chaining is not permanently stuck on heuristic.
+        primary_tag = ""
         try:
-            text = self._query_primary(domain, prompt, ctx,
-                                         target_class=target_class)
-            steps = _parse_chain_json(text)
-        except ChainPlanError as e:
-            self._emit(f"[chain-planner] primary LLM failed: {e}")
-        except Exception as e:  # noqa: BLE001
-            self._emit(f"[chain-planner] primary LLM errored: {e}")
+            mf = getattr(self.ai_backend, "_model_for", None)
+            if callable(mf):
+                primary_tag = str(mf(domain) or "")
+            else:
+                dm = getattr(self.ai_backend, "domain_models", {}) or {}
+                primary_tag = str(dm.get(domain) or "")
+        except Exception:  # noqa: BLE001
+            primary_tag = ""
+        persona_skips_json = any(
+            x in primary_tag.lower()
+            for x in ("xploiter/pentester", "pentester:latest")
+        )
+
+        # 1) Primary LLM call (skipped for known non-JSON persona models).
+        if not persona_skips_json:
+            try:
+                text = self._query_primary(domain, prompt, ctx,
+                                             target_class=target_class)
+                steps = _parse_chain_json(text)
+            except ChainPlanError as e:
+                self._emit(f"[chain-planner] primary LLM failed: {e}")
+            except Exception as e:  # noqa: BLE001
+                self._emit(f"[chain-planner] primary LLM errored: {e}")
+        else:
+            self._emit(
+                f"[chain-planner] domain model {primary_tag!r} skips JSON "
+                f"contracts — trying instruction models first"
+            )
+
+        # 1b) Instruction-following models (or persona fallback when
+        # primary returned prose / was skipped).
+        if steps is None:
+            steps = self._plan_with_alt_models(
+                domain, prompt, ctx, target_class=target_class)
 
         # 2) Uncensored model swap (if the manager is wired in).
         if steps is None and self.exploit_gen_manager is not None:
@@ -2045,20 +2213,47 @@ class AIChainPlanner:
                 self._emit(f"[chain-planner] uncensored model errored: {e}")
 
         # 3) Deterministic heuristic fallback.
+        used_heuristic = False
         if steps is None:
             steps = _heuristic_for_domain(domain, target)
             if not steps:
                 raise ChainPlanError(
                     f"no LLM reachable and no heuristic chain for domain={domain}"
                 )
+            used_heuristic = True
             self._emit(
                 f"[chain-planner] using heuristic chain ({len(steps)} steps); "
                 f"AI was unavailable"
             )
 
+        # Re-plan path: drop steps whose (action, tool) already ran so the
+        # orchestrator gets a true *remaining* tail (not a full replay).
+        if prior_results and steps:
+            done_sigs = set()
+            for e in prior_results:
+                if not isinstance(e, dict):
+                    continue
+                a = e.get("action") or e.get("desc") or ""
+                t = e.get("tool") or ""
+                if a:
+                    done_sigs.add((a, t))
+            before = len(steps)
+            steps = [
+                s for s in steps
+                if (s.get("action") or "", s.get("tool") or "") not in done_sigs
+            ]
+            if before != len(steps):
+                self._emit(
+                    f"[chain-planner] re-plan filter: dropped "
+                    f"{before - len(steps)} already-executed step(s); "
+                    f"{len(steps)} remain"
+                )
+
         # Optional 0-day exploit-generator tail (opt-in). Each step is
         # operator-gated; appended only when the operator opts in.
-        if attach_zero_day:
+        # Skip on re-plan (prior_results) so the tail is offered once
+        # at the initial plan, not re-appended every step.
+        if attach_zero_day and not prior_results:
             tail = _zero_day_tail(target)
             if tail:
                 steps = steps + tail
@@ -2068,20 +2263,10 @@ class AIChainPlanner:
                 )
 
         # Phase 2.1.F: PostExploitSelector — deterministic anti-forensic
-        # step injection. The LLM emits the high-level plan; the
-        # selector maps the engagement context (target_class, used
-        # actions, anonymity_required, detaching) to a 1-3 module
-        # sequence from POST_EXPLOIT_ANTI_FORENSIC_METHODS. Each
-        # injected step is operator-gated by the per-step ACCEPT
-        # gate in _walk_ai_step. Destructive modules are NEVER
-        # injected by default — the operator opts in by setting
-        # ``include_destructive=True`` on the seed (or the chain
-        # has a ``detaching: True`` flag in the prior results).
-        # The injection is opt-in via ``attach_post_exploit=True``
-        # (mirroring ``attach_zero_day=True``) so legacy callers
-        # that expect a chain length equal to the LLM's response
-        # are unaffected.
-        if attach_post_exploit:
+        # step injection. Only on the *initial* plan (not every re-plan),
+        # otherwise each re-plan re-injects the same OPSEC steps and the
+        # chain never converges.
+        if attach_post_exploit and not prior_results:
             try:
                 from .post_exploit_selector import (
                     select_anti_forensic_sequence, explain_sequence,
@@ -2137,9 +2322,15 @@ class AIChainPlanner:
                 pass
 
         # Stash the context for introspection (the orchestrator reads
-        # ``_last_context.get("uncensored_swap")`` to label the chain
-        # source; this was previously a dead branch because _last_context
-        # was never set).
+        # ``_last_context.get("uncensored_swap")`` / ``chain_source`` to
+        # label the chain; without chain_source, heuristic chains were
+        # mis-reported as source=llm).
+        if used_heuristic:
+            ctx["chain_source"] = "heuristic"
+        elif ctx.get("uncensored_swap"):
+            ctx["chain_source"] = "uncensored_swap"
+        else:
+            ctx["chain_source"] = "llm"
         self._last_context = ctx
         self._last_prior_results = prior_results
         # Enrich mt7921e_inject steps that have no args.mode with the
@@ -2189,6 +2380,95 @@ class AIChainPlanner:
         except Exception:
             pass
 
+    def _plan_with_alt_models(self, domain: str, prompt: str,
+                              context: Dict[str, Any],
+                              target_class: str = ""
+                              ) -> Optional[List[Dict[str, Any]]]:
+        """Retry chain planning with instruction-following models.
+
+        Returns a parsed step list or ``None``. Never raises. Models are
+        only tried if they appear in the local Ollama inventory.
+        """
+        if self.ai_backend is None:
+            return None
+        # Keep this list SHORT and prefer small/fast instruction models —
+        # large uncensored tags can hang the TUI for minutes per retry.
+        candidates: List[str] = [
+            "llama3.1:8b",
+            "wizard-vicuna-uncensored:latest",
+            "llama2-uncensored:latest",
+        ]
+        try:
+            from core.ai_backend import MODEL_CATALOG
+            # Prefer catalog fallbacks only if they look like small tags.
+            for key in ("fallback", "legacy_fallback"):
+                tag = MODEL_CATALOG.get(key)
+                if tag and tag not in candidates:
+                    candidates.append(tag)
+        except Exception:  # noqa: BLE001
+            pass
+        installed: List[str] = []
+        try:
+            if getattr(self.ai_backend, "ollama", None) is not None:
+                installed = list(self.ai_backend.ollama.list_models() or [])
+        except Exception:  # noqa: BLE001
+            installed = []
+        # De-dupe, keep order, only installed. Cap at 2 retries so a bad
+        # primary never turns into a multi-minute multi-model crawl.
+        seen = set()
+        ordered: List[str] = []
+        for tag in candidates:
+            if not tag or tag in seen:
+                continue
+            seen.add(tag)
+            if not installed:
+                ordered.append(tag)
+                continue
+            if tag in installed:
+                ordered.append(tag)
+                continue
+            root = tag.split(":")[0]
+            match = next((m for m in installed if m == tag or m.startswith(root)), None)
+            if match and match not in seen:
+                ordered.append(match)
+                seen.add(match)
+        dm = getattr(self.ai_backend, "domain_models", None)
+        if not isinstance(dm, dict):
+            return None
+        prev = dm.get(domain)
+        # Skip the currently configured domain model (already failed).
+        current = prev or ""
+        ordered = [t for t in ordered if t != current][:2]
+        for tag in ordered:
+            try:
+                dm[domain] = tag
+                self._emit(
+                    f"[chain-planner] retrying chain JSON with model: {tag}"
+                )
+                text = self._query_primary(domain, prompt, context,
+                                           target_class=target_class)
+                steps = _parse_chain_json(text)
+                if steps:
+                    context["chain_model"] = tag
+                    return steps
+            except ChainPlanError as e:
+                self._emit(
+                    f"[chain-planner] alt model {tag} failed: {e}"
+                )
+            except Exception as e:  # noqa: BLE001
+                self._emit(
+                    f"[chain-planner] alt model {tag} errored: {e}"
+                )
+            finally:
+                try:
+                    if prev is None:
+                        dm.pop(domain, None)
+                    else:
+                        dm[domain] = prev
+                except Exception:
+                    pass
+        return None
+
     def _query_primary(self, domain: str, prompt: str,
                        context: Dict[str, Any],
                        target_class: str = "") -> str:
@@ -2208,22 +2488,24 @@ class AIChainPlanner:
         """
         if self.ai_backend is None:
             raise ChainPlanError("no AI backend wired into the planner")
-        # Inject the strict JSON system prompt by reusing the backend's
-        # domain prompt as a prefix (the backend's prompt already
-        # establishes the persona); the strict schema is appended as
-        # extra system context via a wrapper.
+        # ALWAYS append the strict JSON chain schema to the domain
+        # system prompt for this call. Older code only injected when
+        # ``domain`` was missing from ``domain_prompts`` — but wifi/ble/
+        # osint are always pre-registered, so the schema was never
+        # applied and models returned free-form prose → "non-JSON"
+        # → permanent heuristic fallback.
         original = getattr(self.ai_backend, "domain_prompts", {}) or {}
-        if domain not in original:
-            try:
+        prev_prompt = original.get(domain)
+        restore_prompt = False
+        try:
+            base = prev_prompt if prev_prompt is not None else ""
+            if _SYSTEM_PROMPT not in base:
                 self.ai_backend.domain_prompts[domain] = (
-                    original.get(domain, "")
-                    + "\n\n" + _SYSTEM_PROMPT
+                    (base + "\n\n" if base else "") + _SYSTEM_PROMPT
                 )
-                restore = True
-            except Exception:
-                restore = False
-        else:
-            restore = False
+                restore_prompt = True
+        except Exception:
+            restore_prompt = False
         # Phase 2.0.P: consult the target-class model picker. The
         # picker sets ``domain_models[domain]`` so that the
         # backend's ``_model_for`` returns the picker-selected
@@ -2237,11 +2519,22 @@ class AIChainPlanner:
             except Exception:
                 prev_model = None
         try:
-            return self.ai_backend.query(domain, prompt, context=context)
+            # Also put the schema at the top of the user prompt so models
+            # that ignore system messages still see the JSON contract.
+            forced = (
+                "OUTPUT CONTRACT (mandatory):\n"
+                "Return ONLY a JSON object: {\"chain\": [ ...steps... ]}.\n"
+                "No markdown fences, no prose before/after the JSON.\n\n"
+                + prompt
+            )
+            return self.ai_backend.query(domain, forced, context=context)
         finally:
-            if restore:
+            if restore_prompt:
                 try:
-                    self.ai_backend.domain_prompts.pop(domain, None)
+                    if prev_prompt is None:
+                        self.ai_backend.domain_prompts.pop(domain, None)
+                    else:
+                        self.ai_backend.domain_prompts[domain] = prev_prompt
                 except Exception:
                     pass
             if prev_model is not None:

@@ -30,15 +30,14 @@
       "arguments": [
         {
           "flags": [
-            "-h",
-            "--help"
+            "-h"
           ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Option present in package usage line for odat.",
           "default": null,
           "choices": null,
-          "raw": " -h, --help          show this help message and exit"
+          "raw": "-h  Option present in package usage line for odat."
         },
         {
           "flags": [
@@ -46,10 +45,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "show program's version number and exit",
+          "description": "Option present in package usage line for odat.",
           "default": null,
           "choices": null,
-          "raw": " --version           show program's version number and exit"
+          "raw": "--version  Option present in package usage line for odat."
         }
       ],
       "raw_help": "root@kali:~# odat -h\n usage: odat.py [-h] [--version]\n              {all,tnscmd,tnspoison,sidguesser,snguesser,passwordguesser,utlhttp,httpuritype,utltcp,ctxsys,externaltable,dbmsxslprocessor,dbmsadvisor,utlfile,dbmsscheduler,java,passwordstealer,oradbg,dbmslob,stealremotepwds,userlikepwd,smb,privesc,cve,search,unwrapper,clean} ...\n \n           _  __   _  ___ \n          / \\|  \\ / \\|_ _|\n         ( o ) o ) o || | \n          \\_/|__/|_n_||_| \n -------------------------------------------\n _        __           _           ___ \n/ \\      |  \\         / \\         |_ _|\n ( o )       o )         o |         | | \n\\_/racle |__/atabase |_n_|ttacking |_|ool \n -------------------------------------------\n \n By Quentin Hardy (quentin.hardy@protonmail.com or quentin.hardy@bt.com)\n \n positional arguments:\n {all,tnscmd,tnspoison,sidguesser,snguesser,passwordguesser,utlhttp,httpuritype,utltcp,ctxsys,externaltable,dbmsxslprocessor,dbmsadvisor,utlfile,dbmsscheduler,java,passwordstealer,oradbg,dbmslob,stealremotepwds,userlikepwd,smb,privesc,cve,search,unwrapper,clean}\n                     \n                     Choose a main command\n   all               to run all modules in order to know what it is possible to do\n   tnscmd            to communicate with the TNS listener\n   tnspoison         to exploit TNS poisoning attack (SID required)\n   sidguesser        to know valid SIDs\n   snguesser         to know valid Service Name(s)\n   passwordguesser   to know valid credentials\n   utlhttp           to send HTTP requests or to scan ports\n   httpuritype       to send HTTP requests or to scan ports\n   utltcp            to scan ports\n   ctxsys            to read files\n   externaltable     to read files or to execute system commands/scripts\n   dbmsxslprocessor  to upload files\n   dbmsadvisor       to upload files\n   utlfile           to download/upload/delete files\n   dbmsscheduler     to execute system commands without a standard output\n   java              to execute system commands\n   passwordstealer   to get hashed Oracle passwords\n   oradbg            to execute a bin or script\n   dbmslob           to download files\n   stealremotepwds   to steal hashed passwords thanks an authentication sniffing (CVE-2012-3137)\n   userlikepwd       to try each Oracle username stored in the DB like the corresponding pwd\n   smb               to capture the SMB authentication\n   privesc           to gain elevated access\n   cve               to exploit a CVE\n   search            to search in databases, tables and columns\n   unwrapper         to unwrap PL/SQL source code (no for 9i version)\n   clean             clean traces and logs\n \n options:\n -h, --help          show this help message and exit\n --version           show program's version number and exit",
@@ -117,21 +116,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use odat because ### odat.",
+    "When you need a concrete invocation, run `odat.py [-h] [--version]` as documented upstream for odat.",
+    "When chaining Kali Linux tools, pair odat with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `odat --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/odat && python3 odat.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/odat && python3 odat.py --help",
-    "cd toolboxes/odat && python3 odat.py --help",
-    "cd toolboxes/odat && python3 odat.py --help",
-    "cd toolboxes/odat && python3 odat.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST odat --output $KFIOSA_OUTPUT_DIR/odat.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST odat --output $KFIOSA_OUTPUT_DIR/odat.log"
+    "odat.py [-h] [--version]"
   ],
   "attack_surface": [
     "web"
@@ -146,5 +137,32 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "Option present in package usage line for odat.",
+        "source": "usage_line"
+      },
+      {
+        "name": "--version",
+        "description": "Option present in package usage line for odat.",
+        "source": "usage_line"
+      }
+    ],
+    "examples": [
+      "odat.py [-h] [--version]"
+    ],
+    "readme": "### odat",
+    "how_to_use": "Install/setup: sudo apt install odat. Run the primary entrypoint as shown in upstream docs, e.g. `odat.py [-h] [--version]`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: ### odat.",
+    "why_to_use": "Prefer this tool because: ### odat.",
+    "usage_sections": [
+      "Install with: sudo apt install odat",
+      "Install with: sudo apt install odat"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "offline"
 }

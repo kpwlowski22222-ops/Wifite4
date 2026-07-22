@@ -9,7 +9,13 @@
   "summary": "FORENSIC ANALYSIS: MALWARE ON RASPBERRY PI (RBFEEDER / RADARBOX)",
   "documentation": {
     "readme": "FORENSIC ANALYSIS: MALWARE ON RASPBERRY PI (RBFEEDER / RADARBOX)",
-    "usage_sections": [],
+    "usage_sections": [
+      "User installs rbfeeder from the official RadarBox repository",
+      "A permanent connection to the AirNav server is established",
+      "A command is sent through the proprietary protocol",
+      "rbfeeder receives it and executes it via system shell (more on this later)",
+      "The command downloads and runs a malicious script from the domain apt.transponderlive.org"
+    ],
     "arguments": [
       {
         "name": "-B",
@@ -191,7 +197,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "$KFIOSA_TARGET_URL"
+    ],
     "file_listing": [
       "README.md",
       "README_ITA.md"
@@ -243,13 +251,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['web', 'shell_windows', 'shell_linux']' as the attack surface (command_and_control, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/rbfeeder-backdoor && python3 rbfeeder-backdoor.py --help",
-      "Step 2: cd toolboxes/rbfeeder-backdoor && cat README.md",
-      "Step 3: cd toolboxes/rbfeeder-backdoor && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [web, shell_windows, shell_linux] in the Command and Control category. Fits when the engagement needs: FORENSIC ANALYSIS: MALWARE ON RASPBERRY PI (RBFEEDER / RADARBOX).",
+    "why_to_use": "Prefer this tool based on upstream description: FORENSIC ANALYSIS: MALWARE ON RASPBERRY PI (RBFEEDER / RADARBOX).",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `$KFIOSA_TARGET_URL`. FORENSIC ANALYSIS: MALWARE ON RASPBERRY PI (RBFEEDER / RADARBOX)."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -280,18 +284,14 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Command and Control system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Command and Control, use rbfeeder-backdoor because FORENSIC ANALYSIS: MALWARE ON RASPBERRY PI (RBFEEDER / RADARBOX).",
+    "When the engagement is in the post_exploit phase, use rbfeeder-backdoor as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `$KFIOSA_TARGET_URL` as documented upstream for rbfeeder-backdoor.",
+    "When chaining Command and Control tools, pair rbfeeder-backdoor with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `rbfeeder-backdoor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/rbfeeder-backdoor && python3 rbfeeder-backdoor.py --help",
-    "cd toolboxes/rbfeeder-backdoor && cat README.md",
-    "cd toolboxes/rbfeeder-backdoor && ls -la",
-    "cd toolboxes/rbfeeder-backdoor && python3 rbfeeder-backdoor.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rbfeeder-backdoor --output $KFIOSA_OUTPUT_DIR/rbfeeder-backdoor.log"
+    "$KFIOSA_TARGET_URL"
   ],
   "attack_surface": [
     "web",
@@ -312,5 +312,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

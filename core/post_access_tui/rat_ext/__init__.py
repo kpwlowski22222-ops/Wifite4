@@ -55,6 +55,8 @@ __all__ = [
     "NETWORK_CAPABILITIES",
     "build_session_roster",
     "default_dashboard_html",
+    # re-export dynamic RAT helpers
+    "rat_dynamic",
 ]
 
 
@@ -334,7 +336,7 @@ def build_session_roster(
 
     Each session dict must have at least:
       * ``id`` (str) — unique session id
-      * ``transport`` (str) — "ble" or "network"
+      * ``transport`` (str) — "ble", "network", or "wifi"
       * ``achieved`` (set[str] or list[str]) — the achievements earned
         during the attack chain
       * ``target`` (str) — BSSID / address / hostname
@@ -342,17 +344,30 @@ def build_session_roster(
 
     The returned list contains one entry per session, each entry
     listing the capabilities that should be shown for that session
-    based on its ``achieved`` set.
+    based on its ``achieved`` set. Entries are also enriched with
+    friendly RAT menus (``rat_menu``) and kind labels for the
+    multi-session switcher UI.
     """
+    from . import rat_dynamic as _rd
+
     roster: List[Dict[str, Any]] = []
     for s in sessions or []:
-        sid = s.get("id") or ""
-        transport = (s.get("transport") or "network").lower()
+        sid = s.get("id") or s.get("session_id") or ""
+        transport = (s.get("transport") or s.get("kind") or "network").lower()
         achieved = set(s.get("achieved") or [])
-        if transport == "ble":
+        if transport in ("ble", "bluetooth", "gatt"):
             pool = BLUETOOTH_CAPABILITIES
+            transport = "ble"
+        elif transport in ("wifi", "wpa", "wpa2", "wpa3"):
+            # Wi-Fi sessions reuse network caps when a shell was earned,
+            # plus always surface channel-map style read probes via
+            # the dynamic RAT menu (rat_dynamic).
+            pool = NETWORK_CAPABILITIES
+            transport = "wifi"
         else:
             pool = NETWORK_CAPABILITIES
+            if transport not in ("network", "host", "ssh", "msf", "msfconsole"):
+                transport = "network"
         visible = []
         for cap in pool:
             if not cap.required_achievements:
@@ -373,14 +388,18 @@ def build_session_roster(
                     "description": cap.description,
                     "required": list(cap.required_achievements),
                 })
-        roster.append({
+        entry = {
             "id": sid,
             "transport": transport,
             "target": s.get("target", ""),
             "meta": s.get("meta", {}),
             "achieved": sorted(achieved),
             "capabilities": visible,
-        })
+            "phase": s.get("phase") or s.get("attack_phase") or "",
+            "note": s.get("note") or "",
+            "last_activity": s.get("last_activity"),
+        }
+        roster.append(_rd.enrich_roster_entry(entry, s))
     return roster
 
 
@@ -399,89 +418,44 @@ def _esc(s: str) -> str:
 
 
 def default_dashboard_html(roster: List[Dict[str, Any]]) -> str:
-    """Render the dashboard HTML for the given session roster.
+    """Render the RAT-like multi-session dashboard HTML.
 
-    Returns a single self-contained HTML string with inline CSS.
-    No external assets are loaded. Phase 2.4 §B.10 — dark
-    monospace palette, single accent colour, one-line table
-    layout, per-session PDF report button.
+    Uses :func:`rat_dynamic.build_rat_dashboard_html` for kind tabs,
+    friendly action groups, and attack-state summary. Falls back to a
+    minimal empty page if the dynamic module is unavailable.
     """
-    parts = [
-        "<!doctype html>",
-        "<html><head><meta charset='utf-8'>",
-        "<title>KFIOSA RAT dashboard</title>",
-        "<style>",
-        "body { font-family: monospace; background: #111; color: #eee; "
-        "margin: 1em; }",
-        "h1 { color: #4ec; }",
-        ".session { border: 1px solid #444; margin: 0.5em 0; "
-        "padding: 0.5em; border-radius: 4px; }",
-        ".cap { display: inline-block; margin: 2px; padding: 4px 8px; "
-        "background: #222; border: 1px solid #555; border-radius: 3px; "
-        "text-decoration: none; color: #ccc; cursor: pointer; }",
-        ".cap.read { border-color: #284; }",
-        ".cap.destructive { border-color: #a44; }",
-        ".meta { color: #888; font-size: 0.9em; }",
-        ".achieved { color: #fb5; font-size: 0.9em; }",
-        ".pdf-btn { display: inline-block; padding: 4px 10px; "
-        "background: #222; border: 1px solid #4ec; border-radius: 3px; "
-        "color: #4ec; text-decoration: none; margin-left: 0.5em; }",
-        ".topbar { margin-bottom: 1em; }",
-        ".topbar a { color: #4ec; margin-right: 1em; }",
-        "</style></head><body>",
-        "<h1>KFIOSA RAT dashboard</h1>",
-        "<div class='topbar'>",
-        f"<span class='meta'>{len(roster)} active session(s)</span>",
-        "<a href='/aggregate'>[aggregate view]</a>",
-        "<a href='/api/transport_summary'>[transport summary JSON]</a>",
-        "<a href='/api/sql_health'>[SQL health]</a>",
-        "<a href='/api/sql/sessions'>[SQL sessions]</a>",
-        "<a href='/api/sql/snapshot/default'>[SQL snapshot (default sid)]</a>",
-        "<a href='/api/sql/log/default?limit=20'>[SQL log (default sid)]</a>",
-        "<a href='/api/sql/history/default?limit=20'>[SQL history (default sid)]</a>",
-        "</div>",
-    ]
-    if not roster:
-        parts.append("<p><em>No active sessions.</em></p>")
-    for s in roster:
-        parts.append("<div class='session'>")
-        parts.append(
-            f"<h2>{_esc(s.get('id', '?'))} "
-            f"<span class='meta'>({_esc(s.get('transport', '?'))} → "
-            f"{_esc(s.get('target', '?'))})</span>"
-            f"<a class='pdf-btn' href='/api/session/"
-            f"{_esc(s.get('id', ''))}/report.pdf'>[export PDF]</a>"
-            f"<a class='pdf-btn' href='/api/session/"
-            f"{_esc(s.get('id', ''))}/recommend'>[recommend]</a>"
-            f"<a class='pdf-btn' href='/api/session/"
-            f"{_esc(s.get('id', ''))}/exfil'>[exfil]</a>"
-            f"<a class='pdf-btn' href='/api/session/"
-            f"{_esc(s.get('id', ''))}/persistence'>[persistence]</a>"
-            f"<a class='pdf-btn' href='/stream/"
-            f"{_esc(s.get('id', ''))}'>[stream]</a>"
-            "</h2>"
+    try:
+        from . import rat_dynamic as _rd
+        # Prefer global registry active id when set.
+        active = None
+        try:
+            act = _rd.GLOBAL_REGISTRY.active()
+            if act:
+                active = act.get("id")
+        except Exception:
+            active = None
+        state = None
+        try:
+            state = _rd.GLOBAL_REGISTRY.attack_state()
+        except Exception:
+            state = _rd.build_attack_state(
+                [{"id": r.get("id"), "transport": r.get("transport"),
+                  "target": r.get("target"), "achieved": r.get("achieved"),
+                  "kind": r.get("kind")} for r in (roster or [])],
+                active_session_id=active,
+            )
+        return _rd.build_rat_dashboard_html(
+            roster or [], attack_state=state, active_session_id=active,
         )
-        achieved = s.get("achieved") or []
-        if achieved:
-            parts.append(
-                "<div class='achieved'>achieved: "
-                f"{_esc(', '.join(achieved))}</div>"
-            )
-        caps = s.get("capabilities") or []
-        if not caps:
-            parts.append("<p class='meta'><em>No capabilities earned "
-                         "yet for this session.</em></p>")
-        for c in caps:
-            parts.append(
-                f"<a class='cap {_esc(c.get('risk', 'read'))}' "
-                f"href='/cap/{_esc(s.get('id', ''))}"
-                f"/{_esc(c.get('name', ''))}' "
-                f"title='{_esc(c.get('description', ''))}'>"
-                f"{_esc(c.get('label', '?'))}</a>"
-            )
-        parts.append("</div>")
-    parts.append("</body></html>")
-    return "".join(parts)
+    except Exception:
+        # Minimal fallback (never raise to the browser).
+        n = len(roster or [])
+        return (
+            "<!doctype html><html><body style='background:#111;color:#eee;"
+            f"font-family:monospace'><h1>KFIOSA RAT</h1>"
+            f"<p>{n} session(s)</p>"
+            "<a href='/api/attack_state'>attack state</a></body></html>"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -529,6 +503,7 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
     from . import persistence_ui as _pers
     from . import pdf_export as _pdf
     from . import v3_enhancements as _v3
+    from . import rat_dynamic as _rd
 
     sessions_list = sessions if sessions is not None else [
         r for r in (roster or [])
@@ -537,6 +512,11 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
         (s.get("session_id") or s.get("id") or ""): s
         for s in sessions_list if isinstance(s, dict)
     }
+    # Seed the multi-session registry (WiFi/BLE/host switcher).
+    try:
+        _rd.GLOBAL_REGISTRY.load(sessions_list)
+    except Exception:
+        pass
     auth_state = _auth.AuthState()
 
     def _require_auth(environ) -> bool:
@@ -626,6 +606,85 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
         if (parts[0] == "api" and len(parts) >= 2
                 and parts[1] == "transport_summary"):
             return _json(_agg.build_transport_summary(sessions_list))
+        # Dynamic RAT: attack state + multi-session switch (WiFi/BLE/host)
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "attack_state" and method == "GET"):
+            return _json(_rd.GLOBAL_REGISTRY.attack_state())
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "sessions" and method == "GET"):
+            # Unified sessions API: kind filter (rat_dynamic) + free-text
+            # search / compact mode (v3) + optional adaptive surface
+            # filter (v4). Always exposes matched/total so clients and
+            # tests do not hit a silent route-shadowing bug.
+            qs = _qs(environ)
+            kind = qs.get("kind") or None
+            rows = _rd.GLOBAL_REGISTRY.list_sessions(kind=kind)
+            # If registry empty, fall back to in-memory list
+            if not rows:
+                rows = list(sessions_list)
+                if kind:
+                    rows = [
+                        s for s in rows
+                        if _rd.normalize_kind(s) == (
+                            "host" if kind == "network" else kind
+                        )
+                    ]
+            total_before_q = len(rows)
+            # T6.2 — free-text capability / session search
+            query = qs.get("q", "") or ""
+            filtered = _v3.filter_sessions(rows, query)
+            # T19 / v4 — optional adaptive attack-surface filter
+            surface = (qs.get("surface") or qs.get("attack_surface") or "").strip()
+            if surface:
+                try:
+                    from . import v4_enhancements as _v4
+                    filtered = _v4.adaptive_session_filter(
+                        filtered, surface,
+                        risk_max=(qs.get("risk_max") or "critical"),
+                    )
+                except Exception:  # noqa: BLE001
+                    pass
+            active_id = (_rd.GLOBAL_REGISTRY.active() or {}).get("id")
+            if _v3.is_compact_mode(qs):
+                return _json({
+                    "ok": True,
+                    "matched": len(filtered),
+                    "total": total_before_q,
+                    "sids": [
+                        s.get("session_id") or s.get("id") for s in filtered
+                    ],
+                    "compact": True,
+                    "kind": kind or "all",
+                    "query": query,
+                    "model": "rat-dashboard-v4",
+                })
+            return _json({
+                "ok": True,
+                "kind": kind or "all",
+                "count": len(filtered),
+                "total": total_before_q,
+                "matched": len(filtered),
+                "sessions": filtered,
+                "query": query,
+                "active_session_id": active_id,
+                "model": "rat-dashboard-v4",
+            })
+        if (parts[0] == "api" and len(parts) >= 4
+                and parts[1] == "session"
+                and parts[3] == "switch"
+                and method in ("GET", "POST")):
+            sid = parts[2]
+            return _json(_rd.GLOBAL_REGISTRY.switch(sid))
+        if (parts[0] == "api" and len(parts) >= 4
+                and parts[1] == "session"
+                and parts[3] == "rat_menu"
+                and method == "GET"):
+            sid = parts[2]
+            sess = _rd.GLOBAL_REGISTRY.get(sid) or sessions_by_sid.get(sid)
+            if not sess:
+                return _json({"ok": False, "error": f"unknown session {sid}"},
+                             status="404 Not Found")
+            return _json(_rd.rat_menu_for_session(sess))
         # SQL store (B.11 / v3) — read-only view of the
         # persistent log + history + exfil + persistence rows.
         # The /api/sql_health endpoint reports the active
@@ -940,34 +999,66 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
                     body, ct = _pdf.build_session_report_bytes(sess)
                     return _bytes(body, ct)
         # ---------------------------------------------------------------
-        # T6 v3 enhancements (Phase 3 expansion)
+        # T19 v4 enhancements + remaining T6 routes
+        # (sessions list is handled earlier — unified with kind filter)
         # ---------------------------------------------------------------
-        # T6.6 — compact mode: ?compact=1 returns a minimal body
-        # (operator-friendly for terminal embedding)
-        # T6.2 — capability search + filter on the JSON roster
         if (parts[0] == "api" and len(parts) >= 2
-                and parts[1] == "sessions" and method == "GET"):
+                and parts[1] == "v4" and method == "GET"):
+            from . import v4_enhancements as _v4
+            sub = parts[2] if len(parts) >= 3 else ""
             q = _qs(environ)
-            query = q.get("q", "")
-            filtered = _v3.filter_sessions(sessions_list, query)
-            payload = {
-                "ok": True,
-                "total": len(sessions_list),
-                "matched": len(filtered),
-                "sessions": filtered,
-                "query": query,
-                "model": "rat-dashboard-v3",
-            }
-            if _v3.is_compact_mode(q):
-                # T6.6 — minimal: just the sids + match count
-                payload = {
+            if sub == "scan_options":
+                surface = q.get("surface") or q.get("attack_surface") or ""
+                opts = _v4.poly_scan_options(surface)
+                return _json({
                     "ok": True,
-                    "matched": len(filtered),
-                    "sids": [s.get("session_id") or s.get("id")
-                             for s in filtered],
-                    "compact": True,
+                    "attack_surface": surface.lower() if surface else "",
+                    "options": opts,
+                    "count": len(opts),
+                    "model": "rat-dashboard-v4",
+                })
+            if sub == "ai_status":
+                return _json(_v4.ai_status())
+            if sub == "exfil_progress":
+                # Accept job fields as query params for simple gauges.
+                job = {
+                    "job_id": q.get("job_id", ""),
+                    "bytes_total": q.get("bytes_total", 0),
+                    "bytes_sent": q.get("bytes_sent", 0),
+                    "started_at": q.get("started_at"),
+                    "status": q.get("status", "unknown"),
                 }
-            return _json(payload)
+                return _json(_v4.exfil_progress(job))
+            if sub == "hardware":
+                return _json({
+                    "ok": True,
+                    "hardware": _v4.OPERATOR_HARDWARE,
+                    "model": "rat-dashboard-v4",
+                })
+            return _json({
+                "ok": False,
+                "error": f"unknown v4 endpoint {sub!r}",
+                "endpoints": [
+                    "scan_options", "ai_status", "exfil_progress",
+                    "hardware", "plan_preview",
+                ],
+                "model": "rat-dashboard-v4",
+            }, status="404 Not Found")
+        if (parts[0] == "api" and len(parts) >= 3
+                and parts[1] == "v4" and parts[2] == "plan_preview"
+                and method == "POST"):
+            from . import v4_enhancements as _v4
+            try:
+                size = int(environ.get("CONTENT_LENGTH", 0) or 0)
+                raw = environ["wsgi.input"].read(size) if size else b""
+                payload_in = _json_mod.loads(raw) if raw else {}
+            except Exception:  # noqa: BLE001
+                payload_in = {}
+            return _json(_v4.chain_plan_preview(
+                str(payload_in.get("target") or ""),
+                str(payload_in.get("attack_surface") or ""),
+                payload_in.get("planner_state") or payload_in.get("state"),
+            ))
         # T6.4 — live tail (HTTP-poll; the browser hits this with
         # ?since=<ts> and gets only the new lines back)
         if (parts[0] == "api" and len(parts) >= 4

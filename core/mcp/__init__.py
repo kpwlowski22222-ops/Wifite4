@@ -577,6 +577,21 @@ if __name__ == "__main__":
 
 
 # ---------------------------------------------------------------------------
+# Convenience re-exports for dashboard / orchestrator DI
+# ---------------------------------------------------------------------------
+def call_mcp_tool(name: str, args: Optional[Dict[str, Any]] = None,
+                  timeout: int = 30) -> Dict[str, Any]:
+    """In-process MCP tool dispatch (Kali / mt7921e / recon / …).
+
+    Re-exported from :mod:`core.mcp.tools` so callers can write
+    ``from core.mcp import call_mcp_tool`` (the dashboard MCP client
+    wiring depends on this). Lazy import avoids import cycles.
+    """
+    from core.mcp.tools import call_mcp_tool as _call
+    return _call(name, args or {}, timeout=timeout)
+
+
+# ---------------------------------------------------------------------------
 # 4-touchpoint pattern: explicit public surface.
 # ---------------------------------------------------------------------------
 __all__ = [
@@ -591,6 +606,8 @@ __all__ = [
     "t_list_tools",
     "t_run_tool",
     "t_search_tools",
+    # In-process tool dispatch (dashboard / orchestrator)
+    "call_mcp_tool",
     # Resource handlers
     "resources_list",
     "resources_read",

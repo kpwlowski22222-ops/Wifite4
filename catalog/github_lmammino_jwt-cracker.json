@@ -1,17 +1,16 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/jwt-cracker && python3 jwt-cracker.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/jwt-cracker && python3 jwt-cracker.py --help",
-    "cd toolboxes/jwt-cracker && python3 jwt-cracker.py --help",
-    "cd toolboxes/jwt-cracker && python3 jwt-cracker.py --help",
-    "cd toolboxes/jwt-cracker && python3 jwt-cracker.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST jwt-cracker --output $KFIOSA_OUTPUT_DIR/jwt-cracker.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST jwt-cracker --output $KFIOSA_OUTPUT_DIR/jwt-cracker.log"
+    "jwt-cracker -t <token> [-a <alphabet>] [--max <maxLength>] [-d <dictionaryFilePath>] [-f]",
+    "jwt-cracker -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ -a abcdefghijklmnopqrstuwxyz --max 6",
+    "jwt-cracker -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ -d darkweb2017-top10000.txt"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Simple HS256, HS384 & HS512 JWT token brute force cracker.",
+    "usage_sections": [
+      "Usage: From command line: Where: token: the full HS256-512 JWT token string to crack alphabet: the alphabet to use for the brute force (default: \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\") maxLength: the max length of the string generated during the brute force (de",
+      "Example: Cracking the default jwt.io example: It takes about 2 hours in a Macbook Pro (2.5GHz quad-core Intel Core i7). Or using a list of passwords taken from https://github.com/danielmiessler/SecLists It takes less than a second."
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +128,11 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "jwt-cracker -t <token> [-a <alphabet>] [--max <maxLength>] [-d <dictionaryFilePath>] [-f]",
+      "jwt-cracker -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ -a abcdefghijklmnopqrstuwxyz --max 6",
+      "jwt-cracker -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ -d darkweb2017-top10000.txt"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +258,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, jwt, cracker).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/jwt-cracker && python3 jwt-cracker.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/jwt-cracker && python3 jwt-cracker.py --help",
-      "Step 3: cd toolboxes/jwt-cracker && python3 jwt-cracker.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: Simple HS256, HS384 & HS512 JWT token brute force cracker.",
+    "why_to_use": "Prefer this tool based on upstream description: Simple HS256, HS384 & HS512 JWT token brute force cracker.",
+    "how_to_use": "Install/setup: npm install --global jwt-cracker. Run the primary entrypoint as shown in upstream docs, e.g. `jwt-cracker -t <token> [-a <alphabet>] [--max <maxLength>] [-d <dictionaryFilePath>] [-f]`. Further invocations from upstream: `jwt-cracker -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ -a abcdefghijklmnopqrstuwxyz --max 6`; `jwt-cracker -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ -d darkweb2017-top10000.txt`. Simple HS256, HS384 & HS512 JWT token brute force cracker."
   },
   "full_name": "lmammino/jwt-cracker",
   "id": "github:lmammino/jwt-cracker",
@@ -282,7 +281,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``jwt-cracker`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Simple HS256, HS384 & HS512 JWT token brute force cracker.",
   "tags": [
     "offensive",
     "jwt",
@@ -301,12 +300,12 @@
   },
   "url": "https://github.com/lmammino/jwt-cracker",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use jwt-cracker because Simple HS256, HS384 & HS512 JWT token brute force cracker.",
+    "When you need a concrete invocation, run `jwt-cracker -t <token> [-a <alphabet>] [--max <maxLength>] [-d <dictionaryFilePath>] [-f]` as documented upstream for jwt-cracker.",
+    "When you need a concrete invocation, run `jwt-cracker -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ -a abcdefghijklmnopqrstuwxyz --max 6` as documented upstream for jwt-cracker.",
+    "When you need a concrete invocation, run `jwt-cracker -t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ -d darkweb2017-top10000.txt` as documented upstream for jwt-cracker.",
+    "When chaining frameworks tools, pair jwt-cracker with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `jwt-cracker --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +324,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

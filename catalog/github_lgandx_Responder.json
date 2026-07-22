@@ -7,11 +7,32 @@
   "category": "LLMNR/NBNS/mDNS poisoner",
   "url": "https://github.com/lgandx/Responder",
   "toolbox_path": "toolboxes/microsoft/Responder",
-  "summary": "Repository indexing entry for the ``Responder`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Responder is a LLMNR, NBT-NS, and MDNS poisoner with built-in rogue authentication servers for HTTP, SMB, MSSQL, FTP, LDAP, Kerberos, DNS, and more. It supports NTLMv1/NTLMv2/LMv2, Extended Security NTLMSSP, and various authentication methods across 15+ protocols.",
   "documentation": {
-    "readme": "toolboxes/microsoft/Responder/README.md",
-    "usage_sections": [],
+    "readme": "Responder is a LLMNR, NBT-NS, and MDNS poisoner with built-in rogue authentication servers for HTTP, SMB, MSSQL, FTP, LDAP, Kerberos, DNS, and more. It supports NTLMv1/NTLMv2/LMv2, Extended Security NTLMSSP, and various authentication methods across 15+ protocols.",
+    "usage_sections": [
+      "NetNTLMv1/v2 hashes - Crackable with hashcat/john",
+      "Kerberos AS-REQ hashes - Offline cracking (hashcat -m 7500)",
+      "Cleartext credentials - HTTP Basic, FTP, SMTP, IMAP, LDAP, SQL, etc.",
+      "Challenge-response - CRAM-MD5, DIGEST-MD5",
+      "✅ DHCPv6 INFORMATION-REQUEST - Full Windows 10/11 compatibility"
+    ],
     "arguments": [
+      {
+        "name": "-ip",
+        "description": "Port: 25 or 587",
+        "source": "docs"
+      },
+      {
+        "name": "-MD5",
+        "description": "✅ AUTH DIGEST-MD5",
+        "source": "docs"
+      },
+      {
+        "name": "-Sec",
+        "description": "http://www.open-sec.com/",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -128,7 +149,14 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo python3 Responder.py --help",
+      "sudo python3 Responder.py -I eth0 -v",
+      "sudo python3 Responder.py -I eth0 -A -v",
+      "sudo python3 Responder.py -I eth0 --dhcpv6 -v",
+      "sudo python3 Responder.py -I eth0 -b -v",
+      "sudo python3 Responder.py -I eth0 -Pvd"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -254,13 +282,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, responder, lgandx).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Responder && python3 Responder.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Responder && python3 Responder.py --help",
-      "Step 3: cd toolboxes/Responder && python3 Responder.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the LLMNR/NBNS/mDNS poisoner category. Fits when the engagement needs: Responder is a LLMNR, NBT-NS, and MDNS poisoner with built-in rogue authentication servers for HTTP, SMB, MSSQL, FTP, LDAP, Kerberos, DNS, and more. It supports NTLMv1/NTLMv2/LMv2, Extended Security NTLMSSP, and various .",
+    "why_to_use": "Prefer this tool based on upstream description: Responder is a LLMNR, NBT-NS, and MDNS poisoner with built-in rogue authentication servers for HTTP, SMB, MSSQL, FTP, LDAP, Kerberos, DNS, and more. It supports NTLMv1/NTLMv2/LMv2, Extended Security NTLMSSP, and various authentication methods across 15+ protocols.",
+    "how_to_use": "Install/setup: git clone https://github.com/lgandx/Responder.git; pip3 install -r requirements.txt. Run the primary entrypoint as shown in upstream docs, e.g. `sudo python3 Responder.py --help`. Further invocations from upstream: `sudo python3 Responder.py -I eth0 -v`; `sudo python3 Responder.py -I eth0 -A -v`. Responder is a LLMNR, NBT-NS, and MDNS poisoner with built-in rogue authentication servers for HTTP, SMB, MSSQL, FTP, LDAP, Kerberos, DNS, and more. It supports NTLMv1/NTLMv2/LMv2, Extended Security NTLMSSP, and various authentication methods across 15+ protocols."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -292,21 +316,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need LLMNR/NBNS/mDNS poisoner, use Responder because Responder is a LLMNR, NBT-NS, and MDNS poisoner with built-in rogue authentication servers for HTTP, SMB, MSSQL, FTP, LDAP, Kerberos, DNS, and more. It supports.",
+    "When you need a concrete invocation, run `sudo python3 Responder.py --help` as documented upstream for Responder.",
+    "When you need a concrete invocation, run `sudo python3 Responder.py -I eth0 -v` as documented upstream for Responder.",
+    "When you need a concrete invocation, run `sudo python3 Responder.py -I eth0 -A -v` as documented upstream for Responder.",
+    "When you need a concrete invocation, run `sudo python3 Responder.py -I eth0 --dhcpv6 -v` as documented upstream for Responder.",
+    "When chaining LLMNR/NBNS/mDNS poisoner tools, pair Responder with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Responder --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/Responder && python3 Responder.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Responder && python3 Responder.py --help",
-    "cd toolboxes/Responder && python3 Responder.py --help",
-    "cd toolboxes/Responder && python3 Responder.py --help",
-    "cd toolboxes/Responder && python3 Responder.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Responder --output $KFIOSA_OUTPUT_DIR/Responder.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Responder --output $KFIOSA_OUTPUT_DIR/Responder.log"
+    "sudo python3 Responder.py --help",
+    "sudo python3 Responder.py -I eth0 -v",
+    "sudo python3 Responder.py -I eth0 -A -v",
+    "sudo python3 Responder.py -I eth0 --dhcpv6 -v",
+    "sudo python3 Responder.py -I eth0 -b -v",
+    "sudo python3 Responder.py -I eth0 -Pvd"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +349,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

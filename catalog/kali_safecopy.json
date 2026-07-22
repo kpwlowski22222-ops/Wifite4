@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "safecopy",
   "title": "safecopy",
-  "summary": "### safecopy",
+  "summary": "safecopy - rescue data from a source that causes IO errors",
   "version": "1.7-8",
   "architectures": [
     "any"
@@ -32,135 +32,58 @@
       "arguments": [
         {
           "flags": [
-            "--stage1"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Preset to rescue most of the data fast,",
-          "default": null,
-          "choices": null,
-          "raw": " \t--stage1 : Preset to rescue most of the data fast,"
-        },
-        {
-          "flags": [
-            "-o"
-          ],
-          "metavar": "stage1.badblocks",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " \t                    -o stage1.badblocks"
-        },
-        {
-          "flags": [
-            "--stage2"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Preset to rescue more data, using no retries",
-          "default": null,
-          "choices": null,
-          "raw": " \t--stage2 : Preset to rescue more data, using no retries"
-        },
-        {
-          "flags": [
-            "-I"
-          ],
-          "metavar": "stage1.badblocks",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " \t                    -I stage1.badblocks"
-        },
-        {
-          "flags": [
-            "--stage3"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Preset to rescue everything that can be rescued",
-          "default": null,
-          "choices": null,
-          "raw": " \t--stage3 : Preset to rescue everything that can be rescued"
-        },
-        {
-          "flags": [
             "-b"
           ],
-          "metavar": "size",
-          "takes_value": true,
-          "description": "Blocksize for default read operations.",
-          "default": "read operations",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Blocksize for default read operations. Set this to the physical sectorsize of your me-",
+          "default": null,
           "choices": null,
-          "raw": " \t-b <size> : Blocksize for default read operations."
+          "raw": "-b  Blocksize for default read operations. Set this to the physical sectorsize of your me-"
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Continue copying at this position. This allows continuing if the output is a block de-",
+          "default": null,
+          "choices": null,
+          "raw": "-c  Continue copying at this position. This allows continuing if the output is a block de-"
+        },
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable debug output. Level is a bit field, add values together for more information:",
+          "default": null,
+          "choices": null,
+          "raw": "--debug  Enable debug output. Level is a bit field, add values together for more information:"
         },
         {
           "flags": [
             "-f"
           ],
-          "metavar": "size",
-          "takes_value": true,
-          "description": "Blocksize when skipping over badblocks.",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Blocksize in bytes when skipping over badblocks. Higher settings put less strain on",
           "default": null,
           "choices": null,
-          "raw": " \t-f <size> : Blocksize when skipping over badblocks."
+          "raw": "-f  Blocksize in bytes when skipping over badblocks. Higher settings put less strain on"
         },
         {
           "flags": [
-            "-r"
-          ],
-          "metavar": "size",
-          "takes_value": true,
-          "description": "Resolution in bytes when searching for the exact",
-          "default": null,
-          "choices": null,
-          "raw": " \t-r <size> : Resolution in bytes when searching for the exact"
-        },
-        {
-          "flags": [
-            "-R"
-          ],
-          "metavar": "number",
-          "takes_value": true,
-          "description": "At least that many read attempts are made on the first",
-          "default": null,
-          "choices": null,
-          "raw": " \t-R <number> : At least that many read attempts are made on the first"
-        },
-        {
-          "flags": [
-            "-Z"
-          ],
-          "metavar": "number",
-          "takes_value": true,
-          "description": "On each error, force seek the read head from start to",
-          "default": null,
-          "choices": null,
-          "raw": " \t-Z <number> : On each error, force seek the read head from start to"
-        },
-        {
-          "flags": [
-            "-L"
-          ],
-          "metavar": "mode",
-          "takes_value": true,
-          "description": "Use low level device calls as specified:",
-          "default": null,
-          "choices": null,
-          "raw": " \t-L <mode> : Use low level device calls as specified:"
-        },
-        {
-          "flags": [
-            "--sync"
+            "-file"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Use synchronized read calls (disable driver buffering).",
+          "description": "create an filesystem image of a damaged disk/cdrom:",
           "default": null,
           "choices": null,
-          "raw": " \t--sync : Use synchronized read calls (disable driver buffering)."
+          "raw": "-file  create an filesystem image of a damaged disk/cdrom:"
         },
         {
           "flags": [
@@ -168,234 +91,219 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Keep trying to reopen the source after a read errer",
+          "description": "Keep trying to reopen the source after a read errer useful for USB drives that go away",
           "default": null,
           "choices": null,
-          "raw": " \t--forceopen : Keep trying to reopen the source after a read errer"
+          "raw": "--forceopen  Keep trying to reopen the source after a read errer useful for USB drives that go away"
         },
         {
           "flags": [
-            "-s"
+            "-h"
           ],
-          "metavar": "blocks",
-          "takes_value": true,
-          "description": "Start position where to start reading.",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show the program help text.",
           "default": null,
           "choices": null,
-          "raw": " \t-s <blocks> : Start position where to start reading."
+          "raw": "-h  Show the program help text."
         },
         {
           "flags": [
-            "-l"
+            "--help"
           ],
-          "metavar": "blocks",
-          "takes_value": true,
-          "description": "Maximum length of data to be read.",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show the program help text.",
           "default": null,
           "choices": null,
-          "raw": " \t-l <blocks> : Maximum length of data to be read."
+          "raw": "--help  Show the program help text."
+        },
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Incremental mode. Assume the target file already exists and has holes specified in the",
+          "default": null,
+          "choices": null,
+          "raw": "-I  Incremental mode. Assume the target file already exists and has holes specified in the"
         },
         {
           "flags": [
             "-i"
           ],
-          "metavar": "bytes",
-          "takes_value": true,
+          "metavar": null,
+          "takes_value": false,
           "description": "Blocksize to interpret the badblockfile given with -I.",
           "default": null,
           "choices": null,
-          "raw": " \t-i <bytes> : Blocksize to interpret the badblockfile given with -I."
+          "raw": "-i  Blocksize to interpret the badblockfile given with -I."
         },
         {
           "flags": [
-            "-c"
+            "-L"
           ],
-          "metavar": "blocks",
-          "takes_value": true,
-          "description": "Continue copying at this position.",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use low level device calls as specified:",
           "default": null,
           "choices": null,
-          "raw": " \t-c <blocks> : Continue copying at this position."
+          "raw": "-L  Use low level device calls as specified:"
         },
         {
           "flags": [
-            "-X"
+            "-l"
           ],
-          "metavar": "badblockfile",
-          "takes_value": true,
-          "description": "Exclusion mode. If used together with -I,",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Maximum length of data to be read.",
           "default": null,
           "choices": null,
-          "raw": " \t-X <badblockfile> : Exclusion mode. If used together with -I,"
-        },
-        {
-          "flags": [
-            "-x"
-          ],
-          "metavar": "bytes",
-          "takes_value": true,
-          "description": "Blocksize to interpret the badblockfile given with -X.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-x <bytes> : Blocksize to interpret the badblockfile given with -X."
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": "seekscript",
-          "takes_value": true,
-          "description": "Use external script for seeking in input file.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-S <seekscript> : Use external script for seeking in input file."
+          "raw": "-l  Maximum length of data to be read."
         },
         {
           "flags": [
             "-M"
           ],
-          "metavar": "string",
-          "takes_value": true,
-          "description": "Mark unrecovered data with this string instead of",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Mark unrecovered data with this string instead of skipping it. This helps in later",
           "default": null,
           "choices": null,
-          "raw": " \t-M <string> : Mark unrecovered data with this string instead of"
+          "raw": "-M  Mark unrecovered data with this string instead of skipping it. This helps in later"
         },
         {
           "flags": [
-            "--debug"
+            "-o"
           ],
-          "metavar": "level",
-          "takes_value": true,
-          "description": "Enable debug output. Level is a bit field,",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Write a badblocks/e2fsck compatible bad block file.",
           "default": null,
           "choices": null,
-          "raw": " \t--debug <level> : Enable debug output. Level is a bit field,"
+          "raw": "-o  Write a badblocks/e2fsck compatible bad block file."
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "At least that many read attempts are made on the first bad block of a damaged area with",
+          "default": null,
+          "choices": null,
+          "raw": "-R  At least that many read attempts are made on the first bad block of a damaged area with"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Resolution in bytes when searching for the exact beginning or end of a bad area. If",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Resolution in bytes when searching for the exact beginning or end of a bad area. If"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use external script for seeking in input file. (Might be useful for tape devices and",
+          "default": null,
+          "choices": null,
+          "raw": "-S  Use external script for seeking in input file. (Might be useful for tape devices and"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Start position where to start reading. Will correspond to position 0 in the destina-",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Start position where to start reading. Will correspond to position 0 in the destina-"
+        },
+        {
+          "flags": [
+            "--stage1"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Preset to rescue most of the data fast, using no retries and avoiding bad areas.",
+          "default": null,
+          "choices": null,
+          "raw": "--stage1  Preset to rescue most of the data fast, using no retries and avoiding bad areas."
+        },
+        {
+          "flags": [
+            "--stage2"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Preset to rescue more data, using no retries but searching for exact ends of bad areas.",
+          "default": null,
+          "choices": null,
+          "raw": "--stage2  Preset to rescue more data, using no retries but searching for exact ends of bad areas."
+        },
+        {
+          "flags": [
+            "--stage3"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Preset to rescue everything that can be rescued using maximum retries, head realignment",
+          "default": null,
+          "choices": null,
+          "raw": "--stage3  Preset to rescue everything that can be rescued using maximum retries, head realignment"
+        },
+        {
+          "flags": [
+            "--sync"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "synchronized read calls (disable driver buffering). Safecopy will use O_DIRECT if",
+          "default": null,
+          "choices": null,
+          "raw": "--sync  synchronized read calls (disable driver buffering). Safecopy will use O_DIRECT if"
         },
         {
           "flags": [
             "-T"
           ],
-          "metavar": "timingfile",
-          "takes_value": true,
-          "description": "Write sector read timing information into",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Write sector read timing information into this file for later analysis.",
           "default": null,
           "choices": null,
-          "raw": " \t-T <timingfile> : Write sector read timing information into"
+          "raw": "-T  Write sector read timing information into this file for later analysis."
         },
         {
           "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "Show this text",
-          "default": null,
-          "choices": null,
-          "raw": " \t-h | --help : Show this text"
-        },
-        {
-          "flags": [
-            "-f",
-            "-r",
-            "-b"
-          ],
-          "metavar": "and only number times the value of",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -f and -r only, number times the value of -b"
-        },
-        {
-          "flags": [
-            "-X",
-            "-x"
-          ],
-          "metavar": "image1.badblocks blocksize1",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -X image1.badblocks -x blocksize1"
-        },
-        {
-          "flags": [
-            "-CDRW"
-          ],
-          "metavar": "drives usually do better than read-only CD drives.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -CDRW drives usually do better than read-only CD drives."
-        },
-        {
-          "flags": [
-            "-CD"
-          ],
-          "metavar": "only drives sometimes do better on CDs than DVD drives.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -CD only drives sometimes do better on CDs than DVD drives."
-        },
-        {
-          "flags": [
-            "-PC"
-          ],
-          "metavar": "drives are sometimes better than laptop ones.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -PC drives are sometimes better than laptop ones."
-        },
-        {
-          "flags": [
-            "-A"
-          ],
-          "metavar": "drive with a clean lens does better than a dirtball.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -A drive with a clean lens does better than a dirtball."
-        },
-        {
-          "flags": [
-            "-Cleaning"
-          ],
-          "metavar": "up CDs helps.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -Cleaning up CDs helps."
-        },
-        {
-          "flags": [
-            "-Unless"
-          ],
-          "metavar": "you use chemicals.",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "            -Unless you use chemicals."
-        },
-        {
-          "flags": [
-            "-Using"
+            "-X"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "sticky tape on a CD will rip of the reflective layer perma-",
+          "description": "Exclusion mode. If used together with -I, excluded blocks override included blocks.",
           "default": null,
           "choices": null,
-          "raw": "            -Using  sticky tape on a CD will rip of the reflective layer perma-"
+          "raw": "-X  Exclusion mode. If used together with -I, excluded blocks override included blocks."
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Blocksize to interpret the badblockfile given with -X.",
+          "default": null,
+          "choices": null,
+          "raw": "-x  Blocksize to interpret the badblockfile given with -X."
         }
       ],
       "raw_help": "root@kali:~# safecopy -h\n Safecopy 1.7 by CorvusCorax\n Usage: safecopy [options] <source> <target>\n Options:\n \t--stage1 : Preset to rescue most of the data fast,\n \t           using no retries and avoiding bad areas.\n \t           Presets: -f 10% -r 10% -R 1 -Z 0 -L 2 -M BaDbLoCk\n \t                    -o stage1.badblocks\n \t--stage2 : Preset to rescue more data, using no retries\n \t           but searching for exact ends of bad areas.\n \t           Presets: -f 128* -r 1* -R 1 -Z 0 -L 2\n \t                    -I stage1.badblocks\n \t                    -o stage2.badblocks\n \t--stage3 : Preset to rescue everything that can be rescued\n \t           using maximum retries, head realignment tricks\n \t           and low level access.\n \t           Presets: -f 1* -r 1* -R 4 -Z 1 -L 2\n \t                    -I stage2.badblocks\n \t                    -o stage3.badblocks\n \tAll stage presets can be overridden by individual options.\n \t-b <size> : Blocksize for default read operations.\n \t            Set this to the physical sectorsize of your media.\n \t            Default: 1*\n \t            Hardware block size if reported by OS, otherwise 4096\n \t-f <size> : Blocksize when skipping over badblocks.\n \t            Higher settings put less strain on your hardware,\n \t            but you might miss good areas in between two bad ones.\n \t            Default: 16*\n \t-r <size> : Resolution in bytes when searching for the exact\n \t            beginning or end of a bad area.\n \t            If you read data directly from a device there is no\n \t            need to set this lower than the hardware blocksize.\n \t            On mounted filesystems however, read blocks\n \t            and physical blocks could be misaligned.\n \t            Smaller values lead to very thorough attempts to read\n \t            data at the edge of damaged areas,\n \t            but increase the strain on the damaged media.\n \t            Default: 1*\n \t-R <number> : At least that many read attempts are made on the first\n \t              bad block of a damaged area with minimum resolution.\n \t              More retries can sometimes recover a weak sector,\n \t              but at the cost of additional strain.\n \t              Default: 3\n \t-Z <number> : On each error, force seek the read head from start to\n \t              end of the source device as often as specified.\n \t              That takes time, creates additional strain and might\n \t              not be supported by all devices or drivers.\n \t              Default: 1\n \t-L <mode> : Use low level device calls as specified:\n \t                   0  Do not use low level device calls\n \t                   1  Attempt low level device calls\n \t                      for error recovery only\n \t                   2  Always use low level device calls\n \t                      if available\n \t            Supported low level features in this version are:\n \t                SYSTEM  DEVICE TYPE   FEATURE\n \t                Linux   cdrom/dvd     bus/device reset\n \t                Linux   cdrom         read sector in raw mode\n \t                Linux   floppy        controller reset, twaddle\n \t            Default: 1\n \t--sync : Use synchronized read calls (disable driver buffering).\n \t         Safecopy will use O_DIRECT if supported by the OS\n \t         and O_SYNC otherwise.\n \t         Default: Asynchronous read buffering by the OS is allowed\n \t--forceopen : Keep trying to reopen the source after a read errer\n \t              useful for USB drives that go away temporarily.\n \t              Warning: This can cause safecopy to hang\n \t                       until aborted manually!\n \t              Default: Abort on fopen() error\n \t-s <blocks> : Start position where to start reading.\n \t              Will correspond to position 0 in the destination file.\n \t              Default: block 0\n \t-l <blocks> : Maximum length of data to be read.\n \t              Default: Entire size of input file\n \t-I <badblockfile> : Incremental mode. Assume the target file already\n \t                    exists and has holes specified in the badblockfile.\n \t                    It will be attempted to retrieve more data from\n \t                    the listed blocks or from beyond the file size\n \t                    of the target file only.\n \t                    Warning: Without this option, the destination file\n \t                    will be emptied prior to writing.\n \t                    Use -I /dev/null if you want to continue a previous\n \t                    run of safecopy without a badblock list.\n \t                    Implies: -c 0 if -c is not specified\n \t                    Default: none ( /dev/null if -c is given )\n \t-i <bytes> : Blocksize to interpret the badblockfile given with -I.\n \t             Default: Blocksize as specified by -b\n \t-c <blocks> : Continue copying at this position.\n \t              This allows continuing if the output is a block device\n \t              with a fixed size as opposed to a growable file,\n \t              where safecopy cannot determine how far it already got.\n \t              The blocksize used is the same as for the -I option.\n \t              -c 0 will continue at the current destination size.\n \t              Implies: -I /dev/null if -I is not specified\n \t              Default: none, 0 if -I is specified\n \t-X <badblockfile> : Exclusion mode. If used together with -I,\n \t                    excluded blocks override included blocks.\n \t                    Safecopy will not read or write any data from\n \t                    areas covered by exclude blocks.\n \t                    Default: none ( 0 if -I is given ) \n \t-x <bytes> : Blocksize to interpret the badblockfile given with -X.\n \t             Default: Blocksize as specified by -b\n \t-o <badblockfile> : Write a badblocks/e2fsck compatible bad block file.\n \t                    Default: none\n \t-S <seekscript> : Use external script for seeking in input file.\n \t                  (Might be useful for tape devices and similar).\n \t                  Seekscript must be an executable that takes the\n \t                  number of blocks to be skipped as argv1 (1-64)\n \t                  the blocksize in bytes as argv2\n \t                  and the current position (in bytes) as argv3.\n \t                  Return value needs to be the number of blocks\n \t                  successfully skipped, or 0 to indicate seek failure.\n \t                  The external seekscript will only be used\n \t                  if lseek() fails and we need to skip over data.\n \t                  Default: none\n \t-M <string> : Mark unrecovered data with this string instead of\n \t              skipping it. This helps in later finding corrupted\n \t              files on rescued file system images.\n \t              The default is to zero unreadable data on creation\n \t              of output files, and leaving the data as it is\n \t              on any later run.\n \t              Warning: When used in combination with\n \t              incremental mode (-I) this may overwrite data\n \t              in any block that occurs in the -I file.\n \t              Blocks not in the -I file, or covered by the file\n \t              specified with -X are save from being overwritten.\n \t              Default: none\n \t--debug <level> : Enable debug output. Level is a bit field,\n \t                  add values together for more information:\n \t                     program flow:     1\n \t                     IO control:       2\n \t                     badblock marking: 4\n \t                     seeking:          8\n \t                     incremental mode: 16\n \t                     exclude mode:     32\n \t                  or for all debug output: 255\n \t                  Default: 0\n \t-T <timingfile> : Write sector read timing information into\n \t                  this file for later analysis.\n \t                  Default: none\n \t-h | --help : Show this text\n \n Valid parameters for -f -r -b <size> options are:\n \t<integer>\tAmount in bytes - i.e. 1024\n \t<percentage>%\tPercentage of whole file/device size - e.g. 10%\n \t<number>*\t-b only, number times blocksize reported by OS\n \t<number>*\t-f and -r only, number times the value of -b\n \n Description of output:\n \t. : Between 1 and 1024 blocks successfully read.\n \t_ : Read of block was incomplete. (possibly end of file)\n \t    The blocksize is now reduced to read the rest.\n \t|/| : Seek failed, source can only be read sequentially.\n \t> : Read failed, reducing blocksize to read partial data.\n \t! : A low level error on read attempt of smallest allowed size\n \t    leads to a retry attempt.\n \t[xx](+yy){ : Current block and number of bytes continuously\n \t             read successfully up to this point.\n \tX : Read failed on a block with minimum blocksize and is skipped.\n \t    Unrecoverable error, destination file is padded with zeros.\n \t    Data is now skipped until end of the unreadable area is reached.\n \t< : Successful read after the end of a bad area causes\n \t    backtracking with smaller blocksizes to search for the first\n \t    readable data.\n \t}[xx](+yy) : current block and number of bytes of recent\n \t             continuous unreadable data.\n \n Copyright 2012 CorvusCorax\n This is free software. You may redistribute copies of it under\n the terms of the GNU General Public License version 2 or above.\n \t<http://www.gnu.org/licenses/gpl2.html>.\n There is NO WARRANTY, to the extent permitted by law.",
@@ -464,21 +372,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use safecopy because safecopy - rescue data from a source that causes IO errors.",
+    "When you need a concrete invocation, run `safecopy [OPTION]... SOURCE DEST` as documented upstream for safecopy.",
+    "When chaining Kali Linux tools, pair safecopy with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `safecopy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/safecopy && python3 safecopy.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/safecopy && python3 safecopy.py --help",
-    "cd toolboxes/safecopy && python3 safecopy.py --help",
-    "cd toolboxes/safecopy && python3 safecopy.py --help",
-    "cd toolboxes/safecopy && python3 safecopy.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST safecopy --output $KFIOSA_OUTPUT_DIR/safecopy.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST safecopy --output $KFIOSA_OUTPUT_DIR/safecopy.log"
+    "safecopy [OPTION]... SOURCE DEST"
   ],
   "attack_surface": [
     "web"
@@ -493,5 +393,147 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-b",
+        "description": "Blocksize for default read operations. Set this to the physical sectorsize of your me-",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "Continue copying at this position. This allows continuing if the output is a block de-",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Enable debug output. Level is a bit field, add values together for more information:",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "Blocksize in bytes when skipping over badblocks. Higher settings put less strain on",
+        "source": "docs"
+      },
+      {
+        "name": "-file",
+        "description": "create an filesystem image of a damaged disk/cdrom:",
+        "source": "docs"
+      },
+      {
+        "name": "--forceopen",
+        "description": "Keep trying to reopen the source after a read errer useful for USB drives that go away",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show the program help text.",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "Show the program help text.",
+        "source": "docs"
+      },
+      {
+        "name": "-I",
+        "description": "Incremental mode. Assume the target file already exists and has holes specified in the",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Blocksize to interpret the badblockfile given with -I.",
+        "source": "docs"
+      },
+      {
+        "name": "-L",
+        "description": "Use low level device calls as specified:",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Maximum length of data to be read.",
+        "source": "docs"
+      },
+      {
+        "name": "-M",
+        "description": "Mark unrecovered data with this string instead of skipping it. This helps in later",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "Write a badblocks/e2fsck compatible bad block file.",
+        "source": "docs"
+      },
+      {
+        "name": "-R",
+        "description": "At least that many read attempts are made on the first bad block of a damaged area with",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Resolution in bytes when searching for the exact beginning or end of a bad area. If",
+        "source": "docs"
+      },
+      {
+        "name": "-S",
+        "description": "Use external script for seeking in input file. (Might be useful for tape devices and",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Start position where to start reading. Will correspond to position 0 in the destina-",
+        "source": "docs"
+      },
+      {
+        "name": "--stage1",
+        "description": "Preset to rescue most of the data fast, using no retries and avoiding bad areas.",
+        "source": "docs"
+      },
+      {
+        "name": "--stage2",
+        "description": "Preset to rescue more data, using no retries but searching for exact ends of bad areas.",
+        "source": "docs"
+      },
+      {
+        "name": "--stage3",
+        "description": "Preset to rescue everything that can be rescued using maximum retries, head realignment",
+        "source": "docs"
+      },
+      {
+        "name": "--sync",
+        "description": "synchronized read calls (disable driver buffering). Safecopy will use O_DIRECT if",
+        "source": "docs"
+      },
+      {
+        "name": "-T",
+        "description": "Write sector read timing information into this file for later analysis.",
+        "source": "docs"
+      },
+      {
+        "name": "-X",
+        "description": "Exclusion mode. If used together with -I, excluded blocks override included blocks.",
+        "source": "docs"
+      },
+      {
+        "name": "-x",
+        "description": "Blocksize to interpret the badblockfile given with -X.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "safecopy [OPTION]... SOURCE DEST"
+    ],
+    "readme": "safecopy - rescue data from a source that causes IO errors",
+    "how_to_use": "Install/setup: sudo apt install safecopy. Run the primary entrypoint as shown in upstream docs, e.g. `safecopy [OPTION]... SOURCE DEST`. safecopy - rescue data from a source that causes IO errors.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: safecopy - rescue data from a source that causes IO errors.",
+    "why_to_use": "Prefer this tool based on upstream description: safecopy - rescue data from a source that causes IO errors.",
+    "usage_sections": [
+      "Install with: sudo apt install safecopy",
+      "Install with: sudo apt install safecopy"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

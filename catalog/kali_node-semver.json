@@ -27,7 +27,52 @@
       "path": "/usr/bin/semver",
       "description": "The semantic versioner for npm",
       "usage": "semver [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--ltr"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Coerce version strings left to right (default)",
+          "default": null,
+          "choices": null,
+          "raw": "--ltr  Coerce version strings left to right (default)"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Base number for prerelease identifier (default: 0).",
+          "default": null,
+          "choices": null,
+          "raw": "-n  Base number for prerelease identifier (default: 0)."
+        },
+        {
+          "flags": [
+            "--preid"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Identifier to be used to prefix premajor, preminor,",
+          "default": null,
+          "choices": null,
+          "raw": "--preid  Identifier to be used to prefix premajor, preminor,"
+        },
+        {
+          "flags": [
+            "--rtl"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Coerce version strings right to left",
+          "default": null,
+          "choices": null,
+          "raw": "--rtl  Coerce version strings right to left"
+        }
+      ]
     }
   ],
   "files": [
@@ -41,5 +86,67 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "semver -h",
+    "semver 1.2.3 -i prerelease --preid beta",
+    "semver 1.2.4-beta.0 -i prerelease",
+    "semver 1.2.4-beta.1 -i release",
+    "semver 1.2.3 -i prerelease --preid beta -n 1",
+    "semver 1.2.3 -i prerelease --preid beta -n false",
+    "semver component is Number.MAX_SAFE_INTEGER || (2**53 - 1); higher value"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use semver because Semantic Versioning for Node.js.",
+    "When the engagement is in the install phase, use semver as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `semver -h` as documented upstream for semver.",
+    "When you need a concrete invocation, run `semver 1.2.3 -i prerelease --preid beta` as documented upstream for semver.",
+    "When you need a concrete invocation, run `semver 1.2.4-beta.0 -i prerelease` as documented upstream for semver.",
+    "When you need a concrete invocation, run `semver 1.2.4-beta.1 -i release` as documented upstream for semver.",
+    "When chaining Kali Linux tools, pair semver with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `semver --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--ltr",
+        "description": "Coerce version strings left to right (default)",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "Base number for prerelease identifier (default: 0).",
+        "source": "docs"
+      },
+      {
+        "name": "--preid",
+        "description": "Identifier to be used to prefix premajor, preminor,",
+        "source": "docs"
+      },
+      {
+        "name": "--rtl",
+        "description": "Coerce version strings right to left",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "semver -h",
+      "semver 1.2.3 -i prerelease --preid beta",
+      "semver 1.2.4-beta.0 -i prerelease",
+      "semver 1.2.4-beta.1 -i release",
+      "semver 1.2.3 -i prerelease --preid beta -n 1",
+      "semver 1.2.3 -i prerelease --preid beta -n false",
+      "semver component is Number.MAX_SAFE_INTEGER || (2**53 - 1); higher value"
+    ],
+    "readme": "semver - The semantic versioner for npm Install npm install semver Usage As a node module: const semver = require('semver') semver.valid('1.2.3') // '1.2.3' semver.valid('a.b.c') // null semver.clean(' =v1.2.3 ') // '1.2.3' semver.satisfies('1.2.3', '1.x || >=2.5.0 || 5.0.0 - 7.2.3') // true semver.gt('1.2.3', '9.8.7') // false semver.lt('1.2.3', '9.8.7') // true semver.minVersion('>=1.0.0') // '1.0.0' semver.valid(semver.coerce('v2')) // '2.0.0' semver.valid(semver.coerce('42.6.7.9.3-alpha')) // '42.6.7' You can also just load the module for the function that you care about if you'd like to minimize your footprint. // load the whole API at once in a single object const semver = require('sem",
+    "how_to_use": "Install/setup: sudo apt install node-semver. Run the primary entrypoint as shown in upstream docs, e.g. `semver -h`. Further invocations from upstream: `semver 1.2.3 -i prerelease --preid beta`; `semver 1.2.4-beta.0 -i prerelease`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Semantic Versioning for Node.js.",
+    "why_to_use": "Prefer this tool based on upstream description: semver - The semantic versioner for npm Install npm install semver Usage As a node module: const semver = require('semver') semver.valid('1.2.3') // '1.2.3' semver.valid('a.b.c') // null semver.clean(' =v1.2.3 ') // '1.2.3' semver.satisfies('1.2.3', '1.x || >=2.5.0 || 5.0.0 - 7.2.3') // true semver.gt('1.2.3', '9.8.7') // false semver.lt('1.2.3', '9.8.7') // true semver.minVersion('>=1.0.0') // '1.",
+    "usage_sections": [
+      "Install with: sudo apt install node-semver",
+      "Install with: sudo apt install node-semver"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

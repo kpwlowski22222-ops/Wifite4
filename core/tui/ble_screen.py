@@ -235,17 +235,41 @@ class BLEScreen(BaseScreen):
             self.render_kb_tool(t)
 
     def pick_adapter(self):
+        """Pick BLE adapter, power it on if needed, record adaptive plan."""
         try:
-            from core.tui.interface_picker import pick_ble_interface
+            import importlib
+            # import_module honours sys.modules patches used by tests
+            _ip = importlib.import_module("core.tui.interface_picker")
+            pick_ble_interface = _ip.pick_ble_interface
         except Exception as e:
             self.activity_log.append(f"[!] interface picker unavailable: {e}")
             return
         iface = pick_ble_interface(self.stdscr, self.activity_log)
-        if iface:
-            self.interface = iface
-            self.activity_log.append(f"[+] Selected BLE adapter: {iface}")
-        else:
+        if not iface:
             self.activity_log.append("[i] No adapter selected.")
+            return
+        self.interface = iface
+        self.activity_log.append(f"[+] Selected BLE adapter: {iface}")
+        # Stamp polymorphic power strategy for the chain (best-effort).
+        try:
+            from core.refactors.poly_adapt_companions import (
+                adapt_ble_adapter_power_picker,
+            )
+            detect = getattr(_ip, "detect_ble_interfaces", None)
+            ads = detect() if callable(detect) else []
+            match = next((a for a in ads if a.get("name") == iface), {}) or {}
+            plan = adapt_ble_adapter_power_picker({
+                "powered": match.get("powered"),
+                "note": match.get("note"),
+                "name": iface,
+                "address": match.get("address"),
+            })
+            data = (plan or {}).get("data") or {}
+            self.activity_log.append(
+                f"[i] BLE adapter plan: {data.get('pick')} — {data.get('rationale')}"
+            )
+        except Exception as e:
+            self.activity_log.append(f"[i] BLE adapter plan skip: {e}")
 
     def connect_and_enumerate(self):
         """Real GATT enumeration via gatttool/bluetoothctl (no fake services)."""

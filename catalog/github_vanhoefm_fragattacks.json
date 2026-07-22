@@ -1,17 +1,17 @@
 {
   "category": "wireless_ble_ext",
   "command_examples": [
-    "cd toolboxes/fragattacks && python3 fragattacks.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/fragattacks && python3 fragattacks.py --help",
-    "cd toolboxes/fragattacks && python3 fragattacks.py --help",
-    "cd toolboxes/fragattacks && python3 fragattacks.py --help",
-    "cd toolboxes/fragattacks && python3 fragattacks.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fragattacks --output $KFIOSA_OUTPUT_DIR/fragattacks.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fragattacks --output $KFIOSA_OUTPUT_DIR/fragattacks.log"
+    "options mt76_usb disable_usb_sg=1"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "FragAttacks: Fragmentation & Aggregation Attacks",
+    "usage_sections": [
+      "The USENIX Security presentation gives a summary of the discovered vulnerabilities.",
+      "An overview of all assigned CVEs is available.",
+      "Slides that summarize the root cause and impact of each vulnerability.",
+      "A 2-page summary of resulting attacks and preconditions.",
+      "Handouts that give extra background and explain the vulnerabilities in more detail."
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +129,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "options mt76_usb disable_usb_sg=1"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +257,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web', 'ble_4_x']' as the attack surface (offensive, fragattacks, vanhoefm).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/fragattacks && python3 fragattacks.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/fragattacks && python3 fragattacks.py --help",
-      "Step 3: cd toolboxes/fragattacks && python3 fragattacks.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web, ble_4_x] in the wireless_ble_ext category. Fits when the engagement needs: FragAttacks: Fragmentation & Aggregation Attacks.",
+    "why_to_use": "Prefer this tool based on upstream description: FragAttacks: Fragmentation & Aggregation Attacks.",
+    "how_to_use": "Install/setup: git clone https://github.com/vanhoefm/fragattacks.git fragattacks; git clone https://github.com/vanhoefm/fragattacks-drivers58.git fragattacks-drivers58. Run the primary entrypoint as shown in upstream docs, e.g. `options mt76_usb disable_usb_sg=1`. FragAttacks: Fragmentation & Aggregation Attacks."
   },
   "full_name": "vanhoefm/fragattacks",
   "id": "github:vanhoefm/fragattacks",
@@ -282,7 +280,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``fragattacks`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "FragAttacks: Fragmentation & Aggregation Attacks",
   "tags": [
     "offensive",
     "fragattacks",
@@ -301,12 +299,10 @@
   },
   "url": "https://github.com/vanhoefm/fragattacks",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need wireless_ble_ext, use fragattacks because FragAttacks: Fragmentation & Aggregation Attacks.",
+    "When you need a concrete invocation, run `options mt76_usb disable_usb_sg=1` as documented upstream for fragattacks.",
+    "When chaining wireless_ble_ext tools, pair fragattacks with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `fragattacks --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -326,5 +322,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

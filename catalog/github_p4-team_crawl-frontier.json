@@ -6,10 +6,12 @@
   "owner": "p4-team",
   "category": "OSINT",
   "url": "https://github.com/p4-team/crawl-frontier",
-  "summary": "Curated toolbox entry for **p4-team/crawl-frontier** in the OSINT category.",
+  "summary": "Curated toolbox entry for p4-team/crawl-frontier in the OSINT category.",
   "documentation": {
-    "readme": "Curated toolbox entry for **p4-team/crawl-frontier** in the OSINT category.",
-    "usage_sections": [],
+    "readme": "Curated toolbox entry for p4-team/crawl-frontier in the OSINT category.",
+    "usage_sections": [
+      "Usage: Typical flags: --target selects the target; --port selects the port; --output writes output to a file."
+    ],
     "arguments": [
       {
         "name": "--depth",
@@ -187,7 +189,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "crawl-frontier --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/crawl-frontier.log"
+    ],
     "file_listing": [
       "README.md"
     ],
@@ -238,13 +242,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web']' as the attack surface (osint, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/crawl-frontier && python3 crawl-frontier.py --help",
-      "Step 2: cd toolboxes/crawl-frontier && cat README.md",
-      "Step 3: cd toolboxes/crawl-frontier && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category.",
+    "why_to_use": "Prefer this tool based on upstream description: Curated toolbox entry for p4-team/crawl-frontier in the OSINT category.",
+    "how_to_use": "Install/setup: git clone --depth 1 https://github.com/p4-team/crawl-frontier.git toolboxes/osint/p4-team__crawl-frontier. Run the primary entrypoint as shown in upstream docs, e.g. `crawl-frontier --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/crawl-frontier.log`. Curated toolbox entry for p4-team/crawl-frontier in the OSINT category."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -274,18 +274,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the OSINT system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When the engagement is in the recon phase, use crawl-frontier as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `crawl-frontier --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/crawl-frontier.log` as documented upstream for crawl-frontier.",
+    "When chaining OSINT tools, pair crawl-frontier with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `crawl-frontier --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/crawl-frontier && python3 crawl-frontier.py --help",
-    "cd toolboxes/crawl-frontier && cat README.md",
-    "cd toolboxes/crawl-frontier && ls -la",
-    "cd toolboxes/crawl-frontier && python3 crawl-frontier.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST crawl-frontier --output $KFIOSA_OUTPUT_DIR/crawl-frontier.log"
+    "crawl-frontier --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/crawl-frontier.log"
   ],
   "attack_surface": [
     "web"
@@ -304,5 +299,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

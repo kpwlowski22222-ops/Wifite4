@@ -8,8 +8,12 @@
   "url": "https://github.com/abdullah2993/zong-wifi",
   "summary": "Zong FiberHome 4G Device",
   "documentation": {
-    "readme": "Zong FiberHome 4G Device",
-    "usage_sections": [],
+    "readme": "## Vulnerabilities and Exploits Although the device use a wierd authentication method, it is nothing more than a gimmick used by the UI code to give an illusion of authentication. All the endpoints are accessible directly without authentication and the best part of it all is you can use the admin endpoint to get the username and password for the router.",
+    "usage_sections": [
+      "80 - HTTP (Admin Panel)",
+      "uapxbwlanbasicsettings",
+      "uapxbwlansecuritysettings"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +197,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "adb connect $KFIOSA_TARGET_HOST:5555",
+      "cat /proc/mtd"
+    ],
     "file_listing": [
       "192_168_8_default.html",
       "Cellular-1.png",
@@ -293,13 +300,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/zong-wifi && python3 zong-wifi.py --help",
-      "Step 2: cd toolboxes/zong-wifi && cat README.md",
-      "Step 3: cd toolboxes/zong-wifi && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: Zong FiberHome 4G Device.",
+    "why_to_use": "Prefer this tool based on upstream description: ## Vulnerabilities and Exploits Although the device use a wierd authentication method, it is nothing more than a gimmick used by the UI code to give an illusion of authentication. All the endpoints are accessible directly without authentication and the best part of it all is you can use the admin endpoint to get the username and password for the router.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `adb connect $KFIOSA_TARGET_HOST:5555`. Further invocations from upstream: `cat /proc/mtd`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -330,18 +333,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use zong-wifi because Zong FiberHome 4G Device.",
+    "When you need a concrete invocation, run `adb connect $KFIOSA_TARGET_HOST:5555` as documented upstream for zong-wifi.",
+    "When you need a concrete invocation, run `cat /proc/mtd` as documented upstream for zong-wifi.",
+    "When chaining Wireless tools, pair zong-wifi with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `zong-wifi --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/zong-wifi && python3 zong-wifi.py --help",
-    "cd toolboxes/zong-wifi && cat README.md",
-    "cd toolboxes/zong-wifi && ls -la",
-    "cd toolboxes/zong-wifi && python3 zong-wifi.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST zong-wifi --output $KFIOSA_OUTPUT_DIR/zong-wifi.log"
+    "adb connect $KFIOSA_TARGET_HOST:5555",
+    "cat /proc/mtd"
   ],
   "attack_surface": [
     "wifi_2_4_ghz",
@@ -364,5 +364,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "javascript"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -27,7 +27,63 @@
       "path": "/usr/bin/shtab",
       "description": "Automagic shell tab completion for Python CLI applications",
       "usage": "shtab [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--error-unimportable"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Raise errors if the specified parser is not found in $PYTHONPATH. By default, import",
+          "default": null,
+          "choices": null,
+          "raw": "--error-unimportable  Raise errors if the specified parser is not found in $PYTHONPATH. By default, import"
+        },
+        {
+          "flags": [
+            "-func"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tions/_myapp",
+          "default": null,
+          "choices": null,
+          "raw": "-func  tions/_myapp"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Raise errors if the specified parser is not found in $PYTHONPATH. By default, import",
+          "default": null,
+          "choices": null,
+          "raw": "-u  Raise errors if the specified parser is not found in $PYTHONPATH. By default, import"
+        },
+        {
+          "flags": [
+            "--verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable debug logging.",
+          "default": null,
+          "choices": null,
+          "raw": "--verbose  Enable debug logging."
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display version information and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "--version  Display version information and exit."
+        }
+      ]
     }
   ],
   "files": [
@@ -42,5 +98,72 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "shtab [OPTIONS] PARSER",
+    "shtab --shell=bash myapp.main.get_parser | sudo tee \"$BASH_COMPLETION_COMPAT_DIR\"/myapp",
+    "shtab --shell=zsh  myapp.main.get_parser  |  sudo  tee  /usr/local/share/zsh/site-func-",
+    "shtab --shell=tcsh myapp.main.get_parser | sudo tee /etc/profile.d/myapp.completion.csh",
+    "echo 'eval \"$(shtab --shell=bash myapp.main.get_parser)\"' >> ~/.bash_completion",
+    "shtab --shell=zsh myapp.main.get_parser -o ~/.zsh/completions/_myapp",
+    "shtab --prog=myprog myapp.main.get_parser"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use shtab because Automagic shell tab completion for Python CLI applications.",
+    "When the engagement is in the install phase, use shtab as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `shtab [OPTIONS] PARSER` as documented upstream for shtab.",
+    "When you need a concrete invocation, run `shtab --shell=bash myapp.main.get_parser | sudo tee \"$BASH_COMPLETION_COMPAT_DIR\"/myapp` as documented upstream for shtab.",
+    "When you need a concrete invocation, run `shtab --shell=zsh  myapp.main.get_parser  |  sudo  tee  /usr/local/share/zsh/site-func-` as documented upstream for shtab.",
+    "When you need a concrete invocation, run `shtab --shell=tcsh myapp.main.get_parser | sudo tee /etc/profile.d/myapp.completion.csh` as documented upstream for shtab.",
+    "When chaining Kali Linux tools, pair shtab with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `shtab --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--error-unimportable",
+        "description": "Raise errors if the specified parser is not found in $PYTHONPATH. By default, import",
+        "source": "docs"
+      },
+      {
+        "name": "-func",
+        "description": "tions/_myapp",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "Raise errors if the specified parser is not found in $PYTHONPATH. By default, import",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Enable debug logging.",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Display version information and exit.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "shtab [OPTIONS] PARSER",
+      "shtab --shell=bash myapp.main.get_parser | sudo tee \"$BASH_COMPLETION_COMPAT_DIR\"/myapp",
+      "shtab --shell=zsh  myapp.main.get_parser  |  sudo  tee  /usr/local/share/zsh/site-func-",
+      "shtab --shell=tcsh myapp.main.get_parser | sudo tee /etc/profile.d/myapp.completion.csh",
+      "echo 'eval \"$(shtab --shell=bash myapp.main.get_parser)\"' >> ~/.bash_completion",
+      "shtab --shell=zsh myapp.main.get_parser -o ~/.zsh/completions/_myapp",
+      "shtab --prog=myprog myapp.main.get_parser"
+    ],
+    "readme": "shtab - Automagic shell tab completion for Python CLI applications",
+    "how_to_use": "Install/setup: sudo apt install python-shtab. Run the primary entrypoint as shown in upstream docs, e.g. `shtab --shell=bash myapp.main.get_parser | sudo tee \"$BASH_COMPLETION_COMPAT_DIR\"/myapp`. Further invocations from upstream: `shtab --shell=zsh  myapp.main.get_parser  |  sudo  tee  /usr/local/share/zsh/site-func-`; `shtab --shell=tcsh myapp.main.get_parser | sudo tee /etc/profile.d/myapp.completion.csh`. Automagic shell tab completion for Python CLI applications.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Automagic shell tab completion for Python CLI applications.",
+    "why_to_use": "Prefer this tool based on upstream description: shtab - Automagic shell tab completion for Python CLI applications.",
+    "usage_sections": [
+      "Install with: sudo apt install python-shtab",
+      "Install with: sudo apt install python-shtab"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

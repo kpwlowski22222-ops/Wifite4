@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "braa",
   "title": "braa",
-  "summary": "Mass SNMP scanner",
+  "summary": "braa - Mass SNMP scanner",
   "description": "Mass SNMP scanner\nBraa is a mass snmp scanner. The intended usage of such a tool is of course\nmaking SNMP queries - but unlike snmpget or snmpwalk from net-snmp, it is able\nto query dozens or hundreds of hosts simultaneously, and in a single process.\nThus, it consumes very few system resources and does the scanning VERY fast.\n.\nBraa implements its OWN snmp stack, so it does NOT need any SNMP libraries\nlike net-snmp. The implementation is very dirty, supports only several data\ntypes, and in any case cannot be stated 'standard-conforming'! It was designed\nto be fast, and it is fast. For this reason (well, and also because of author\nlaziness ;), there is no ASN.1 parser in braa - the user HAVE to know the\nnumerical values of OID's\n(for instance .1.3.6.1.2.1.1.5.0 instead of system.sysName.0).",
   "version": "0.90.1-1",
   "architectures": [
@@ -27,7 +27,107 @@
       "path": "/usr/bin/braa",
       "description": "Mass SNMP scanner",
       "usage": "braa [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Quit after <time> seconds, independent on what happens.",
+          "default": null,
+          "choices": null,
+          "raw": "-a  Quit after <time> seconds, independent on what happens."
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Wait <s> microseconds after sending each packet.",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Wait <s> microseconds after sending each packet."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Load queries from file <file> (one by line).",
+          "default": null,
+          "choices": null,
+          "raw": "-f  Load queries from file <file> (one by line)."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show help.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Show help."
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Wait <s> milliseconds between subsequent passes.",
+          "default": null,
+          "choices": null,
+          "raw": "-p  Wait <s> milliseconds between subsequent passes."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Retry count (default: 3).",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Retry count (default: 3)."
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Wait <s> seconds for responses.",
+          "default": null,
+          "choices": null,
+          "raw": "-t  Wait <s> seconds for responses."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show short summary after doing all queries.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Show short summary after doing all queries."
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Hexdump octet-strings",
+          "default": null,
+          "choices": null,
+          "raw": "-x  Hexdump octet-strings"
+        }
+      ]
     }
   ],
   "files": [
@@ -42,5 +142,86 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "braa  [-h]  [-2] [-v] [-t <s>] [-f <file] [-a <time>] [-r <retries>] [-d <delay>] [querylist1]",
+    "braa public@$KFIOSA_TARGET_HOST:161:.1.3.6.*",
+    "braa $KFIOSA_TARGET_HOST-$KFIOSA_TARGET_HOST:.$KFIOSA_TARGET_HOST.$KFIOSA_TARGET_HOST.0",
+    "braa private@$KFIOSA_TARGET_HOST:.$KFIOSA_TARGET_HOST.$KFIOSA_TARGET_HOST.0=sMy network"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use braa because braa - Mass SNMP scanner.",
+    "When the engagement is in the install phase, use braa as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `braa  [-h]  [-2] [-v] [-t <s>] [-f <file] [-a <time>] [-r <retries>] [-d <delay>] [querylist1]` as documented upstream for braa.",
+    "When you need a concrete invocation, run `braa public@$KFIOSA_TARGET_HOST:161:.1.3.6.*` as documented upstream for braa.",
+    "When you need a concrete invocation, run `braa $KFIOSA_TARGET_HOST-$KFIOSA_TARGET_HOST:.$KFIOSA_TARGET_HOST.$KFIOSA_TARGET_HOST.0` as documented upstream for braa.",
+    "When you need a concrete invocation, run `braa private@$KFIOSA_TARGET_HOST:.$KFIOSA_TARGET_HOST.$KFIOSA_TARGET_HOST.0=sMy network` as documented upstream for braa.",
+    "When chaining Kali Linux tools, pair braa with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `braa --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "Quit after <time> seconds, independent on what happens.",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Wait <s> microseconds after sending each packet.",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "Load queries from file <file> (one by line).",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show help.",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Wait <s> milliseconds between subsequent passes.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Retry count (default: 3).",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "Wait <s> seconds for responses.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Show short summary after doing all queries.",
+        "source": "docs"
+      },
+      {
+        "name": "-x",
+        "description": "Hexdump octet-strings",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "braa  [-h]  [-2] [-v] [-t <s>] [-f <file] [-a <time>] [-r <retries>] [-d <delay>] [querylist1]",
+      "braa public@$KFIOSA_TARGET_HOST:161:.1.3.6.*",
+      "braa $KFIOSA_TARGET_HOST-$KFIOSA_TARGET_HOST:.$KFIOSA_TARGET_HOST.$KFIOSA_TARGET_HOST.0",
+      "braa private@$KFIOSA_TARGET_HOST:.$KFIOSA_TARGET_HOST.$KFIOSA_TARGET_HOST.0=sMy network"
+    ],
+    "readme": "braa - Mass SNMP scanner",
+    "how_to_use": "Install/setup: sudo apt install braa. Run the primary entrypoint as shown in upstream docs, e.g. `braa  [-h]  [-2] [-v] [-t <s>] [-f <file] [-a <time>] [-r <retries>] [-d <delay>] [querylist1]`. Further invocations from upstream: `braa public@$KFIOSA_TARGET_HOST:161:.1.3.6.*`; `braa $KFIOSA_TARGET_HOST-$KFIOSA_TARGET_HOST:.$KFIOSA_TARGET_HOST.$KFIOSA_TARGET_HOST.0`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: braa - Mass SNMP scanner.",
+    "why_to_use": "Prefer this tool because: braa - Mass SNMP scanner.",
+    "usage_sections": [
+      "Install with: sudo apt install braa",
+      "Install with: sudo apt install braa"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

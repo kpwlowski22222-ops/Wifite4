@@ -7,11 +7,22 @@
   "category": "Display and control Android from a desktop",
   "url": "https://github.com/genymobile/scrcpy",
   "toolbox_path": "toolboxes/android/scrcpy",
-  "summary": "Repository indexing entry for the ``scrcpy`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "> [!WARNING] > This GitHub repo ( ) is the only official source for the project. Do not download releases from random websites, even if their name contains scrcpy.",
   "documentation": {
-    "readme": "toolboxes/android/scrcpy/README.md",
-    "usage_sections": [],
+    "readme": "> [!WARNING] > This GitHub repo ( ) is the only official source for the project. Do not download releases from random websites, even if their name contains scrcpy.",
+    "usage_sections": [
+      "lightness: native, displays only the device screen",
+      "performance: 30120fps, depending on the device",
+      "quality: 1920×1080 or above",
+      "low latency: [3570ms][lowlatency]",
+      "low startup time: 1 second to display the first image"
+    ],
     "arguments": [
+      {
+        "name": "-keyboard-simulation",
+        "description": "doc/mouse.md#physical-mouse-simulation",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -128,7 +139,17 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "scrcpy --video-codec=h265 --max-size=1920 --max-fps=60 --no-audio --keyboard=uhid",
+      "scrcpy --video-codec=h265 -m1920 --max-fps=60 --no-audio -K  # short version",
+      "scrcpy --new-display=1920x1080 --start-app=org.videolan.vlc",
+      "scrcpy --new-display -x --keep-active --start-app=org.videolan.vlc --video-codec=h265 -b16M",
+      "scrcpy --video-source=camera --video-codec=h265 --camera-size=1920x1080 --record=file.mp4",
+      "scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=front --v4l2-sink=/dev/video2 --no-playback",
+      "scrcpy --otg",
+      "scrcpy --gamepad=uhid",
+      "scrcpy -G  # short version"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -254,13 +275,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, scrcpy, genymobile).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/scrcpy && python3 scrcpy.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/scrcpy && python3 scrcpy.py --help",
-      "Step 3: cd toolboxes/scrcpy && python3 scrcpy.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Display and control Android from a desktop category. Fits when the engagement needs: > [!WARNING] > This GitHub repo ( ) is the only official source for the project. Do not download releases from random websites, even if their name contains scrcpy.",
+    "why_to_use": "Prefer this tool based on upstream description: > [!WARNING] > This GitHub repo ( ) is the only official source for the project. Do not download releases from random websites, even if their name contains scrcpy.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `scrcpy --video-codec=h265 --max-size=1920 --max-fps=60 --no-audio --keyboard=uhid`. Further invocations from upstream: `scrcpy --video-codec=h265 -m1920 --max-fps=60 --no-audio -K  # short version`; `scrcpy --new-display=1920x1080 --start-app=org.videolan.vlc`. > [!WARNING] > This GitHub repo ( ) is the only official source for the project. Do not download releases from random websites, even if their name contains scrcpy."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -292,21 +309,24 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Display and control Android from a desktop, use scrcpy because > [!WARNING] > This GitHub repo ( ) is the only official source for the project. Do not download releases from random websites, even if their name contains scrc.",
+    "When you need a concrete invocation, run `scrcpy --video-codec=h265 --max-size=1920 --max-fps=60 --no-audio --keyboard=uhid` as documented upstream for scrcpy.",
+    "When you need a concrete invocation, run `scrcpy --video-codec=h265 -m1920 --max-fps=60 --no-audio -K  # short version` as documented upstream for scrcpy.",
+    "When you need a concrete invocation, run `scrcpy --new-display=1920x1080 --start-app=org.videolan.vlc` as documented upstream for scrcpy.",
+    "When you need a concrete invocation, run `scrcpy --new-display -x --keep-active --start-app=org.videolan.vlc --video-codec=h265 -b16M` as documented upstream for scrcpy.",
+    "When chaining Display and control Android from a desktop tools, pair scrcpy with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `scrcpy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/scrcpy && python3 scrcpy.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/scrcpy && python3 scrcpy.py --help",
-    "cd toolboxes/scrcpy && python3 scrcpy.py --help",
-    "cd toolboxes/scrcpy && python3 scrcpy.py --help",
-    "cd toolboxes/scrcpy && python3 scrcpy.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scrcpy --output $KFIOSA_OUTPUT_DIR/scrcpy.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scrcpy --output $KFIOSA_OUTPUT_DIR/scrcpy.log"
+    "scrcpy --video-codec=h265 --max-size=1920 --max-fps=60 --no-audio --keyboard=uhid",
+    "scrcpy --video-codec=h265 -m1920 --max-fps=60 --no-audio -K  # short version",
+    "scrcpy --new-display=1920x1080 --start-app=org.videolan.vlc",
+    "scrcpy --new-display -x --keep-active --start-app=org.videolan.vlc --video-codec=h265 -b16M",
+    "scrcpy --video-source=camera --video-codec=h265 --camera-size=1920x1080 --record=file.mp4",
+    "scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=front --v4l2-sink=/dev/video2 --no-playback",
+    "scrcpy --otg",
+    "scrcpy --gamepad=uhid",
+    "scrcpy -G  # short version"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +345,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

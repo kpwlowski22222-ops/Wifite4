@@ -8,38 +8,56 @@
   "url": "https://github.com/4equest/recon-sploit",
   "summary": "recon-sploit\nTool to list vulnerabilities that may be exploitable without access to the target (with shodan)",
   "documentation": {
-    "readme": "recon-sploit\nTool to list vulnerabilities that may be exploitable without access to the target (with shodan)",
-    "usage_sections": [],
+    "readme": "recon-sploit Tool to list vulnerabilities that may be exploitable without access to the target (with shodan)",
+    "usage_sections": [
+      "Features: Get version information and vulnerability list from Shodan and Censys Search for exploit in Exploit-DB and Vulners",
+      "Usage: If you want to use censys, rename .env.sample to .env and fill in your credentials."
+    ],
     "arguments": [
       {
         "name": "--cpe",
-        "description": "CLI flag '--cpe' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "specify single CPE",
+        "source": "docs"
       },
       {
         "name": "--cve",
-        "description": "CLI flag '--cve' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "specify single CVE",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "specify single domain or IP",
+        "source": "docs"
       },
       {
         "name": "--domain",
-        "description": "Active Directory or Windows domain name.",
-        "source": "v2_enhancement"
+        "description": "specify single domain or IP",
+        "source": "docs"
       },
       {
         "name": "--domain-list",
-        "description": "CLI flag '--domain-list' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "specify target domain list file",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "specify target domain list file",
+        "source": "docs"
       },
       {
         "name": "--show-duplicate",
-        "description": "CLI flag '--show-duplicate' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "show duplicate exploits",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -177,7 +195,13 @@
         "language": "python"
       }
     ],
-    "examples": [],
+    "examples": [
+      "usage: recon-sploit.py [-h] (-l DOMAIN_LIST | -d DOMAIN | --cpe CPE | --cve CVE) [--show-duplicate SHOW_DUPLICATE]",
+      "Run recon-sploit.py with arguments",
+      "python3 recon-sploit.py -d example.com",
+      "assetfinder example.com | sort | uniq > domains.txt",
+      "python3 recon-sploit.py -l domains.txt"
+    ],
     "file_listing": [
       "README.md",
       "censys_cpe.py",
@@ -235,13 +259,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web']' as the attack surface (osint, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/recon-sploit && python3 recon-sploit.py --help",
-      "Step 2: cd toolboxes/recon-sploit && cat README.md",
-      "Step 3: cd toolboxes/recon-sploit && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category. Fits when the engagement needs: recon-sploit\nTool to list vulnerabilities that may be exploitable without access to the target (with shodan).",
+    "why_to_use": "Prefer this tool based on upstream description: recon-sploit Tool to list vulnerabilities that may be exploitable without access to the target (with shodan).",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `usage: recon-sploit.py [-h] (-l DOMAIN_LIST | -d DOMAIN | --cpe CPE | --cve CVE) [--show-duplicate SHOW_DUPLICATE]`. Further invocations from upstream: `Run recon-sploit.py with arguments`; `python3 recon-sploit.py -d example.com`. recon-sploit Tool to list vulnerabilities that may be exploitable without access to the target (with shodan)."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -272,18 +292,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the OSINT system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need OSINT, use recon-sploit because recon-sploit\nTool to list vulnerabilities that may be exploitable without access to the target (with shodan).",
+    "When the engagement is in the recon phase, use recon-sploit as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `usage: recon-sploit.py [-h] (-l DOMAIN_LIST | -d DOMAIN | --cpe CPE | --cve CVE) [--show-duplicate SHOW_DUPLICATE]` as documented upstream for recon-sploit.",
+    "When you need a concrete invocation, run `Run recon-sploit.py with arguments` as documented upstream for recon-sploit.",
+    "When you need a concrete invocation, run `python3 recon-sploit.py -d example.com` as documented upstream for recon-sploit.",
+    "When you need a concrete invocation, run `assetfinder example.com | sort | uniq > domains.txt` as documented upstream for recon-sploit.",
+    "When chaining OSINT tools, pair recon-sploit with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `recon-sploit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/recon-sploit && python3 recon-sploit.py --help",
-    "cd toolboxes/recon-sploit && cat README.md",
-    "cd toolboxes/recon-sploit && ls -la",
-    "cd toolboxes/recon-sploit && python3 recon-sploit.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recon-sploit --output $KFIOSA_OUTPUT_DIR/recon-sploit.log"
+    "usage: recon-sploit.py [-h] (-l DOMAIN_LIST | -d DOMAIN | --cpe CPE | --cve CVE) [--show-duplicate SHOW_DUPLICATE]",
+    "Run recon-sploit.py with arguments",
+    "python3 recon-sploit.py -d example.com",
+    "assetfinder example.com | sort | uniq > domains.txt",
+    "python3 recon-sploit.py -l domains.txt"
   ],
   "attack_surface": [
     "web"
@@ -304,5 +327,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "afflib",
   "title": "afflib",
-  "summary": "### afflib-tools",
+  "summary": "affcat - Output contents of an image file to stdout.",
   "version": "3.7.22-2",
   "architectures": [
     "any"
@@ -40,80 +40,14 @@
       "arguments": [
         {
           "flags": [
-            "-s"
-          ],
-          "metavar": "name --- Just output segment name",
-          "takes_value": true,
-          "description": "way",
-          "default": null,
-          "choices": null,
-          "raw": "   -s name --- Just output segment name"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "###",
-          "takes_value": true,
-          "description": "--- just output data page number ###",
-          "default": null,
-          "choices": null,
-          "raw": "   -p ###  --- just output data page number ###"
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": "###",
-          "takes_value": true,
-          "description": "--- Just output data sector ### (assumes 512-byte sectors). Sector #0 is first",
-          "default": null,
-          "choices": null,
-          "raw": "   -S ###  --- Just output data sector ### (assumes 512-byte sectors). Sector #0 is first"
-        },
-        {
-          "flags": [
-            "-q"
+            "-b"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "--- quiet; don't print to STDERR if a page is skipped",
+          "description": "Output BADFALG for bad blocks (default is to output NULLs).",
           "default": null,
           "choices": null,
-          "raw": "   -q      --- quiet; don't print to STDERR if a page is skipped"
-        },
-        {
-          "flags": [
-            "-n"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--- noisy; tell when pages are skipped.",
-          "default": null,
-          "choices": null,
-          "raw": "   -n      --- noisy; tell when pages are skipped."
-        },
-        {
-          "flags": [
-            "-l"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--- List all of the segment names",
-          "default": null,
-          "choices": null,
-          "raw": "   -l      --- List all of the segment names"
-        },
-        {
-          "flags": [
-            "-L"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--- List segment names, lengths, and args",
-          "default": null,
-          "choices": null,
-          "raw": "   -L      --- List segment names, lengths, and args"
+          "raw": "-b  Output BADFALG for bad blocks (default is to output NULLs)."
         },
         {
           "flags": [
@@ -121,21 +55,54 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "--- debug. Print the page numbers to stderr as data goes to stdout",
+          "description": "Debug mode. Print the page numbers to stderr as data goes to stdout.",
           "default": null,
           "choices": null,
-          "raw": "   -d      --- debug. Print the page numbers to stderr as data goes to stdout"
+          "raw": "-d  Debug mode. Print the page numbers to stderr as data goes to stdout."
         },
         {
           "flags": [
-            "-b"
+            "-L"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "--- Output BADFALG for bad blocks (default is NULLs)",
-          "default": "is NULLs",
+          "description": "List Long. Prints segment names, lengths, and args.",
+          "default": null,
           "choices": null,
-          "raw": "   -b      --- Output BADFALG for bad blocks (default is NULLs)"
+          "raw": "-L  List Long. Prints segment names, lengths, and args."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "List all the segment names, rather than outputting data.",
+          "default": null,
+          "choices": null,
+          "raw": "-l  List all the segment names, rather than outputting data."
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Noisy mode. Tell when pages are skipped.",
+          "default": null,
+          "choices": null,
+          "raw": "-n  Noisy mode. Tell when pages are skipped."
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Quiet mode (default). Don't print to STDERR if a page is skipped because it is not",
+          "default": null,
+          "choices": null,
+          "raw": "-q  Quiet mode (default). Don't print to STDERR if a page is skipped because it is not"
         },
         {
           "flags": [
@@ -143,21 +110,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "--- Just print the version number and exit.",
+          "description": "Just print the version number and exit.",
           "default": null,
           "choices": null,
-          "raw": "   -v      --- Just print the version number and exit."
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": "offset",
-          "takes_value": true,
-          "description": "count --- seek to offset and output count characters in each file; may be repeated",
-          "default": null,
-          "choices": null,
-          "raw": "   -r offset:count --- seek to offset and output count characters in each file; may be repeated"
+          "raw": "-v  Just print the version number and exit."
         }
       ],
       "raw_help": "root@kali:~# affcat -h\n affcat version 3.7.22\n usage: affcat [options] infile [... more infiles]\n options:\n   -s name --- Just output segment name\n   -p ###  --- just output data page number ###\n   -S ###  --- Just output data sector ### (assumes 512-byte sectors). Sector #0 is first\n   -q      --- quiet; don't print to STDERR if a page is skipped\n   -n      --- noisy; tell when pages are skipped.\n   -l      --- List all of the segment names\n   -L      --- List segment names, lengths, and args\n   -d      --- debug. Print the page numbers to stderr as data goes to stdout\n   -b      --- Output BADFALG for bad blocks (default is NULLs)\n   -v      --- Just print the version number and exit.\n   -r offset:count --- seek to offset and output count characters in each file; may be repeated",
@@ -2157,21 +2113,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use affcat because affcat - Output contents of an image file to stdout.",
+    "When you need a concrete invocation, run `affcat [options] image [images]` as documented upstream for affcat.",
+    "When chaining Kali Linux tools, pair affcat with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `affcat --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/afflib && python3 afflib.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/afflib && python3 afflib.py --help",
-    "cd toolboxes/afflib && python3 afflib.py --help",
-    "cd toolboxes/afflib && python3 afflib.py --help",
-    "cd toolboxes/afflib && python3 afflib.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST afflib --output $KFIOSA_OUTPUT_DIR/afflib.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST afflib --output $KFIOSA_OUTPUT_DIR/afflib.log"
+    "affcat [options] image [images]"
   ],
   "attack_surface": [
     "web"
@@ -2186,5 +2134,57 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-b",
+        "description": "Output BADFALG for bad blocks (default is to output NULLs).",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Debug mode. Print the page numbers to stderr as data goes to stdout.",
+        "source": "docs"
+      },
+      {
+        "name": "-L",
+        "description": "List Long. Prints segment names, lengths, and args.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "List all the segment names, rather than outputting data.",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "Noisy mode. Tell when pages are skipped.",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Quiet mode (default). Don't print to STDERR if a page is skipped because it is not",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Just print the version number and exit.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "affcat [options] image [images]"
+    ],
+    "readme": "affcat - Output contents of an image file to stdout.",
+    "how_to_use": "Install/setup: sudo apt install afflib. affcat - Output contents of an image file to stdout.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: affcat - Output contents of an image file to stdout.",
+    "why_to_use": "Prefer this tool based on upstream description: affcat - Output contents of an image file to stdout.",
+    "usage_sections": [
+      "Install with: sudo apt install afflib",
+      "Install with: sudo apt install afflib"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

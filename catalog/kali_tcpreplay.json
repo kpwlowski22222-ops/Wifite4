@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "tcpreplay",
   "title": "tcpreplay",
-  "summary": "### tcpreplay",
+  "summary": "tcpbridge - Bridge network traffic across two interfaces",
   "version": "4.5.2-1",
   "architectures": [
     "any"
@@ -35,734 +35,47 @@
       "arguments": [
         {
           "flags": [
-            "-r",
-            "--portmap"
+            "-e"
           ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Rewrite TCP/UDP ports",
-          "default": null,
-          "choices": null,
-          "raw": "  -r, --portmap=str          Rewrite TCP/UDP ports"
-        },
-        {
-          "flags": [
-            "-s",
-            "--seed"
-          ],
-          "metavar": "- eed=num",
-          "takes_value": true,
-          "description": "Randomize src/dst IPv4/v6 addresses w/ given seed",
-          "default": null,
-          "choices": null,
-          "raw": "  -s, --seed=num             Randomize src/dst IPv4/v6 addresses w/ given seed"
-        },
-        {
-          "flags": [
-            "-N",
-            "--pnat"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Rewrite IPv4/v6 addresses using pseudo-NAT",
-          "default": null,
-          "choices": null,
-          "raw": "  -N, --pnat=str             Rewrite IPv4/v6 addresses using pseudo-NAT"
-        },
-        {
-          "flags": [
-            "-S",
-            "--srcipmap"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Rewrite source IPv4/v6 addresses using pseudo-NAT",
-          "default": null,
-          "choices": null,
-          "raw": "  -S, --srcipmap=str         Rewrite source IPv4/v6 addresses using pseudo-NAT"
-        },
-        {
-          "flags": [
-            "-D",
-            "--dstipmap"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Rewrite destination IPv4/v6 addresses using pseudo-NAT",
-          "default": null,
-          "choices": null,
-          "raw": "  -D, --dstipmap=str         Rewrite destination IPv4/v6 addresses using pseudo-NAT"
-        },
-        {
-          "flags": [
-            "--tcp-sequence"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Change TCP Sequence (and ACK) numbers /w given seed",
-          "default": null,
-          "choices": null,
-          "raw": "      --tcp-sequence=num     Change TCP Sequence (and ACK) numbers /w given seed"
-        },
-        {
-          "flags": [
-            "-b",
-            "--skipbroadcast"
-          ],
-          "metavar": "Skip rewriting broadcast/multicast IPv4/v6 addresses.",
+          "metavar": null,
           "takes_value": false,
-          "description": "Skip rewriting broadcast/multicast IPv4/v6 addresses",
+          "description": "string, --endpoints=string Rewrite IP addresses to be between two endpoints. This option",
           "default": null,
           "choices": null,
-          "raw": "  -b, --skipbroadcast        Skip rewriting broadcast/multicast IPv4/v6 addresses"
+          "raw": "-e  string, --endpoints=string Rewrite IP addresses to be between two endpoints. This option"
         },
         {
           "flags": [
-            "-C",
-            "--fixcsum"
+            "-m"
           ],
-          "metavar": "Force recalculation of IPv4/TCP/UDP header checksums.",
+          "metavar": null,
           "takes_value": false,
-          "description": "Force recalculation of IPv4/TCP/UDP header checksums",
+          "description": "number, --mtu=number Override default MTU length (1500 bytes). This option may appear up",
           "default": null,
           "choices": null,
-          "raw": "  -C, --fixcsum              Force recalculation of IPv4/TCP/UDP header checksums"
-        },
-        {
-          "flags": [
-            "--fixhdrlen"
-          ],
-          "metavar": "Alter IP/TCP header len to match packet length.",
-          "takes_value": false,
-          "description": "Alter IP/TCP header len to match packet length",
-          "default": null,
-          "choices": null,
-          "raw": "      --fixhdrlen            Alter IP/TCP header len to match packet length"
-        },
-        {
-          "flags": [
-            "-m",
-            "--mtu"
-          ],
-          "metavar": "- tu=num",
-          "takes_value": true,
-          "description": "Override default MTU length (1500 bytes)",
-          "default": "MTU length (1500 bytes",
-          "choices": null,
-          "raw": "  -m, --mtu=num              Override default MTU length (1500 bytes)"
+          "raw": "-m  number, --mtu=number Override default MTU length (1500 bytes). This option may appear up"
         },
         {
           "flags": [
             "--mtu-trunc"
           ],
-          "metavar": "Truncate packets larger then specified MTU.",
+          "metavar": null,
           "takes_value": false,
-          "description": "Truncate packets larger then specified MTU",
+          "description": "This option may appear up to 1 times.",
           "default": null,
           "choices": null,
-          "raw": "      --mtu-trunc            Truncate packets larger then specified MTU"
-        },
-        {
-          "flags": [
-            "-E",
-            "--efcs"
-          ],
-          "metavar": "Remove Ethernet checksums FCS from end of frames.",
-          "takes_value": false,
-          "description": "Remove Ethernet checksums (FCS) from end of frames",
-          "default": null,
-          "choices": null,
-          "raw": "  -E, --efcs                 Remove Ethernet checksums (FCS) from end of frames"
-        },
-        {
-          "flags": [
-            "--ttl"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Modify the IPv4/v6 TTL/Hop Limit",
-          "default": null,
-          "choices": null,
-          "raw": "      --ttl=str              Modify the IPv4/v6 TTL/Hop Limit"
-        },
-        {
-          "flags": [
-            "--tos"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Set the IPv4 TOS/DiffServ/ECN byte",
-          "default": null,
-          "choices": null,
-          "raw": "      --tos=num              Set the IPv4 TOS/DiffServ/ECN byte"
-        },
-        {
-          "flags": [
-            "--tclass"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Set the IPv6 Traffic Class byte",
-          "default": null,
-          "choices": null,
-          "raw": "      --tclass=num           Set the IPv6 Traffic Class byte"
-        },
-        {
-          "flags": [
-            "--flowlabel"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Set the IPv6 Flow Label",
-          "default": null,
-          "choices": null,
-          "raw": "      --flowlabel=num        Set the IPv6 Flow Label"
-        },
-        {
-          "flags": [
-            "-F",
-            "--fixlen"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Pad or truncate packet data to match header length",
-          "default": null,
-          "choices": null,
-          "raw": "  -F, --fixlen=str           Pad or truncate packet data to match header length"
-        },
-        {
-          "flags": [
-            "--fuzz-seed"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Fuzz 1 in X packets.  Edit bytes, length, or emulate packet drop",
-          "default": null,
-          "choices": null,
-          "raw": "      --fuzz-seed=num        Fuzz 1 in X packets.  Edit bytes, length, or emulate packet drop"
-        },
-        {
-          "flags": [
-            "--fuzz-factor"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Set the Fuzz 1 in X packet ratio (default 1 in 8 packets)",
-          "default": "1 in 8 packets",
-          "choices": null,
-          "raw": "      --fuzz-factor=num      Set the Fuzz 1 in X packet ratio (default 1 in 8 packets)"
-        },
-        {
-          "flags": [
-            "--skipl2broadcast"
-          ],
-          "metavar": "Skip rewriting broadcast/multicast Layer 2 addresses.",
-          "takes_value": false,
-          "description": "Skip rewriting broadcast/multicast Layer 2 addresses",
-          "default": null,
-          "choices": null,
-          "raw": "      --skipl2broadcast      Skip rewriting broadcast/multicast Layer 2 addresses"
-        },
-        {
-          "flags": [
-            "--dlt"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Override output DLT encapsulation",
-          "default": null,
-          "choices": null,
-          "raw": "      --dlt=str              Override output DLT encapsulation"
-        },
-        {
-          "flags": [
-            "--enet-dmac"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Override destination ethernet MAC addresses",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-dmac=str        Override destination ethernet MAC addresses"
-        },
-        {
-          "flags": [
-            "--enet-smac"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Override source ethernet MAC addresses",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-smac=str        Override source ethernet MAC addresses"
-        },
-        {
-          "flags": [
-            "--enet-subsmac"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Substitute MAC addresses",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-subsmac=str     Substitute MAC addresses"
-        },
-        {
-          "flags": [
-            "--enet-mac-seed"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Randomize MAC addresses",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-mac-seed=num    Randomize MAC addresses"
-        },
-        {
-          "flags": [
-            "--enet-mac-seed-keep-bytes"
-          ],
-          "metavar": "=num Randomize MAC addresses",
-          "takes_value": true,
-          "description": "Randomize  MAC  addresses.  This option",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-mac-seed-keep-bytes=num Randomize MAC addresses"
-        },
-        {
-          "flags": [
-            "--enet-vlan"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Specify ethernet 802.1q VLAN tag mode",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-vlan=str        Specify ethernet 802.1q VLAN tag mode"
-        },
-        {
-          "flags": [
-            "--enet-vlan-tag"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Specify the new ethernet 802.1q VLAN tag value",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-vlan-tag=num    Specify the new ethernet 802.1q VLAN tag value"
-        },
-        {
-          "flags": [
-            "--enet-vlan-cfi"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Specify the ethernet 802.1q VLAN CFI value",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-vlan-cfi=num    Specify the ethernet 802.1q VLAN CFI value"
-        },
-        {
-          "flags": [
-            "--enet-vlan-pri"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Specify the ethernet 802.1q VLAN priority",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-vlan-pri=num    Specify the ethernet 802.1q VLAN priority"
-        },
-        {
-          "flags": [
-            "--enet-vlan-proto"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Specify VLAN tag protocol 802.1q or 802.1ad",
-          "default": null,
-          "choices": null,
-          "raw": "      --enet-vlan-proto=str  Specify VLAN tag protocol 802.1q or 802.1ad"
-        },
-        {
-          "flags": [
-            "--hdlc-control"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Specify HDLC control value",
-          "default": null,
-          "choices": null,
-          "raw": "      --hdlc-control=num     Specify HDLC control value"
-        },
-        {
-          "flags": [
-            "--hdlc-address"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Specify HDLC address",
-          "default": null,
-          "choices": null,
-          "raw": "      --hdlc-address=num     Specify HDLC address"
-        },
-        {
-          "flags": [
-            "--user-dlt"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Set output file DLT type",
-          "default": null,
-          "choices": null,
-          "raw": "      --user-dlt=num         Set output file DLT type"
-        },
-        {
-          "flags": [
-            "--user-dlink"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Rewrite Data-Link layer with user specified data",
-          "default": null,
-          "choices": null,
-          "raw": "      --user-dlink=str       Rewrite Data-Link layer with user specified data"
-        },
-        {
-          "flags": [
-            "-d",
-            "--dbug"
-          ],
-          "metavar": "- bug=num",
-          "takes_value": true,
-          "description": "Enable debugging output",
-          "default": null,
-          "choices": null,
-          "raw": "  -d, --dbug=num             Enable debugging output"
-        },
-        {
-          "flags": [
-            "-i",
-            "--intf1"
-          ],
-          "metavar": "- ntf1=str",
-          "takes_value": true,
-          "description": "Primary interface (listen in uni-directional mode)",
-          "default": null,
-          "choices": null,
-          "raw": "  -i, --intf1=str            Primary interface (listen in uni-directional mode)"
-        },
-        {
-          "flags": [
-            "-I",
-            "--intf2"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Secondary interface (send in uni-directional mode)",
-          "default": null,
-          "choices": null,
-          "raw": "  -I, --intf2=str            Secondary interface (send in uni-directional mode)"
-        },
-        {
-          "flags": [
-            "-u",
-            "--unidir"
-          ],
-          "metavar": "- nidir",
-          "takes_value": true,
-          "description": "Send and receive in only one direction",
-          "default": null,
-          "choices": null,
-          "raw": "  -u, --unidir               Send and receive in only one direction"
-        },
-        {
-          "flags": [
-            "--listnics"
-          ],
-          "metavar": "List available network interfaces and exit.",
-          "takes_value": false,
-          "description": "List available network interfaces and exit",
-          "default": null,
-          "choices": null,
-          "raw": "      --listnics             List available network interfaces and exit"
-        },
-        {
-          "flags": [
-            "-L",
-            "--limit"
-          ],
-          "metavar": "=num",
-          "takes_value": true,
-          "description": "Limit the number of packets to send",
-          "default": null,
-          "choices": null,
-          "raw": "  -L, --limit=num            Limit the number of packets to send"
-        },
-        {
-          "flags": [
-            "-M",
-            "--mac"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "MAC addresses of local NIC's",
-          "default": null,
-          "choices": null,
-          "raw": "  -M, --mac=str              MAC addresses of local NIC's"
-        },
-        {
-          "flags": [
-            "-x",
-            "--include"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Include only packets matching rule",
-          "default": null,
-          "choices": null,
-          "raw": "  -x, --include=str          Include only packets matching rule"
-        },
-        {
-          "flags": [
-            "-X",
-            "--exclude"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Exclude any packet matching this rule",
-          "default": null,
-          "choices": null,
-          "raw": "  -X, --exclude=str          Exclude any packet matching this rule"
-        },
-        {
-          "flags": [
-            "-P",
-            "--pid"
-          ],
-          "metavar": "Print the PID of tcpbridge at startup.",
-          "takes_value": false,
-          "description": "Print the PID of tcpbridge at startup",
-          "default": null,
-          "choices": null,
-          "raw": "  -P, --pid                  Print the PID of tcpbridge at startup"
-        },
-        {
-          "flags": [
-            "-v",
-            "--verbose"
-          ],
-          "metavar": "- erbose",
-          "takes_value": true,
-          "description": "Print decoded packets via tcpdump to STDOUT",
-          "default": null,
-          "choices": null,
-          "raw": "  -v, --verbose              Print decoded packets via tcpdump to STDOUT"
-        },
-        {
-          "flags": [
-            "-A",
-            "--decode"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "Arguments passed to tcpdump decoder",
-          "default": null,
-          "choices": null,
-          "raw": "  -A, --decode=str           Arguments passed to tcpdump decoder"
-        },
-        {
-          "flags": [
-            "-V",
-            "--version"
-          ],
-          "metavar": "Print version information.",
-          "takes_value": false,
-          "description": "Print version information",
-          "default": null,
-          "choices": null,
-          "raw": "  -V, --version              Print version information"
-        },
-        {
-          "flags": [
-            "-h",
-            "--less-help"
-          ],
-          "metavar": "--less elp",
-          "takes_value": true,
-          "description": "Display less usage information and exit",
-          "default": null,
-          "choices": null,
-          "raw": "  -h, --less-help            Display less usage information and exit"
-        },
-        {
-          "flags": [
-            "-w",
-            "--suppress-warnings"
-          ],
-          "metavar": "--suppress arnings",
-          "takes_value": true,
-          "description": "suppress printing warning messages",
-          "default": null,
-          "choices": null,
-          "raw": "  -w, --suppress-warnings    suppress printing warning messages"
-        },
-        {
-          "flags": [
-            "-H",
-            "--help"
-          ],
-          "metavar": "Display usage information and exit.",
-          "takes_value": false,
-          "description": "display extended usage information and exit",
-          "default": null,
-          "choices": null,
-          "raw": "  -H, --help                 display extended usage information and exit"
-        },
-        {
-          "flags": [
-            "--more-help"
-          ],
-          "metavar": "-!",
-          "takes_value": true,
-          "description": "extended usage information passed thru pager",
-          "default": null,
-          "choices": null,
-          "raw": "  -!, --more-help            extended usage information passed thru pager"
+          "raw": "--mtu-trunc  This option may appear up to 1 times."
         },
         {
           "flags": [
             "--save-opts"
           ],
-          "metavar": "=arg",
-          "takes_value": true,
-          "description": "save the option state to a config file",
-          "default": "is",
-          "choices": null,
-          "raw": "      --save-opts[=arg]      save the option state to a config file"
-        },
-        {
-          "flags": [
-            "--load-opts"
-          ],
-          "metavar": "=str",
-          "takes_value": true,
-          "description": "load options from a config file",
-          "default": null,
-          "choices": null,
-          "raw": "      --load-opts=str        load options from a config file"
-        },
-        {
-          "flags": [
-            "--no-load-opts"
-          ],
-          "metavar": "- disabled as ' '",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " \t\t\t\t- disabled as '--no-load-opts'"
-        },
-        {
-          "flags": [
-            "--portmap"
-          ],
-          "metavar": "=80",
-          "takes_value": true,
-          "description": "8000 --portmap=8080:80    # 80->8000 and 8080->80",
-          "default": null,
-          "choices": null,
-          "raw": "         --portmap=80:8000 --portmap=8080:80    # 80->8000 and 8080->80"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
           "metavar": null,
           "takes_value": false,
-          "description": "number,  --seed=number  Randomize  src/dst  IPv4/v6 addresses w/ given",
+          "description": "Save the option state to cfgfile. The default is the last configura-",
           "default": null,
           "choices": null,
-          "raw": "     -s  number,  --seed=number  Randomize  src/dst  IPv4/v6 addresses w/ given"
-        },
-        {
-          "flags": [
-            "--pnat"
-          ],
-          "metavar": "=192.168.0.0/16",
-          "takes_value": true,
-          "description": "10.77.0.0/16,172.16.0.0/12:10.1.0.0/24",
-          "default": null,
-          "choices": null,
-          "raw": "         --pnat=192.168.0.0/16:10.77.0.0/16,172.16.0.0/12:10.1.0.0/24"
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "string,  --srcipmap=string  Rewrite  source  IPv4/v6  addresses  using",
-          "default": null,
-          "choices": null,
-          "raw": "     -S  string,  --srcipmap=string  Rewrite  source  IPv4/v6  addresses  using"
-        },
-        {
-          "flags": [
-            "-e",
-            "--endpoints"
-          ],
-          "metavar": "string - ndpoints=string Rewrite IP addresses to be between two",
-          "takes_value": true,
-          "description": "end-",
-          "default": null,
-          "choices": null,
-          "raw": "     -e string, --endpoints=string Rewrite IP addresses to be between two  end-"
-        },
-        {
-          "flags": [
-            "--endpoints"
-          ],
-          "metavar": "=172.16.0.1",
-          "takes_value": true,
-          "description": "172.16.0.2",
-          "default": null,
-          "choices": null,
-          "raw": "         --endpoints=172.16.0.1:172.16.0.2"
-        },
-        {
-          "flags": [
-            "--ttl",
-            "-64"
-          ],
-          "metavar": "=",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "         --ttl=-64"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "number, --dbug=number Enable debugging output.  This option may appear",
-          "default": null,
-          "choices": null,
-          "raw": "     -d  number, --dbug=number Enable debugging output.  This option may appear"
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "string,  --intf1=string  Primary  interface (listen in uni-directional",
-          "default": null,
-          "choices": null,
-          "raw": "     -i  string,  --intf1=string  Primary  interface (listen in uni-directional"
+          "raw": "--save-opts  Save the option state to cfgfile. The default is the last configura-"
         },
         {
           "flags": [
@@ -770,43 +83,43 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "--unidir Send and receive in only one direction.  This option may ap-",
+          "description": "This option may appear up to 1 times.",
           "default": null,
           "choices": null,
-          "raw": "     -u,  --unidir Send and receive in only one direction.  This option may ap-"
+          "raw": "-u  This option may appear up to 1 times."
         },
         {
           "flags": [
-            "-1"
+            "--unidir"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "This option may appear up to 1 times.",
           "default": null,
           "choices": null,
-          "raw": "          -1"
+          "raw": "--unidir  This option may appear up to 1 times."
         },
         {
           "flags": [
-            "-x"
+            "-v"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "string, --include=string Include only packets matching rule.  This op-",
+          "description": "decoded packets via tcpdump to STDOUT. This option may appear up to 1",
           "default": null,
           "choices": null,
-          "raw": "     -x  string, --include=string Include only packets matching rule.  This op-"
+          "raw": "-v  decoded packets via tcpdump to STDOUT. This option may appear up to 1"
         },
         {
           "flags": [
-            "--include"
+            "--verbose"
           ],
-          "metavar": "=P",
-          "takes_value": true,
-          "description": "1-5,9,15,72-",
+          "metavar": null,
+          "takes_value": false,
+          "description": "decoded packets via tcpdump to STDOUT. This option may appear up to 1",
           "default": null,
           "choices": null,
-          "raw": "         --include=P:1-5,9,15,72-"
+          "raw": "--verbose  decoded packets via tcpdump to STDOUT. This option may appear up to 1"
         },
         {
           "flags": [
@@ -814,44 +127,21 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "string,  --exclude=string Exclude any packet matching this rule.  This",
+          "description": "string, --exclude=string Exclude any packet matching this rule. This option may appear up",
           "default": null,
           "choices": null,
-          "raw": "     -X  string,  --exclude=string Exclude any packet matching this rule.  This"
+          "raw": "-X  string, --exclude=string Exclude any packet matching this rule. This option may appear up"
         },
         {
           "flags": [
-            "--exclude"
-          ],
-          "metavar": "=P",
-          "takes_value": true,
-          "description": "1-5,9,15,72-",
-          "default": null,
-          "choices": null,
-          "raw": "         --exclude=P:1-5,9,15,72-"
-        },
-        {
-          "flags": [
-            "-A"
+            "-x"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "string, --decode=string Arguments passed to tcpdump decoder.  This op-",
+          "description": "string, --include=string Include only packets matching rule. This option may appear up to",
           "default": null,
           "choices": null,
-          "raw": "     -A  string, --decode=string Arguments passed to tcpdump decoder.  This op-"
-        },
-        {
-          "flags": [
-            "--load-opts",
-            "--no-load-opts"
-          ],
-          "metavar": "=cfgfile Load options from",
-          "takes_value": true,
-          "description": "cfgfile.   The  no-",
-          "default": null,
-          "choices": null,
-          "raw": "     --load-opts=cfgfile, --no-load-opts Load options from  cfgfile.   The  no-"
+          "raw": "-x  string, --include=string Include only packets matching rule. This option may appear up to"
         }
       ],
       "raw_help": "root@kali:~# tcpbridge --help\n tcpbridge (tcpbridge) - Bridge network traffic across two interfaces\n Usage:  tcpbridge [ -<flag> [<val>] | --<name>[{=| }<val>] ]...\n \n \n :\n \n  -r, --portmap=str          Rewrite TCP/UDP ports\n \t\t\t\t- may appear up to 9999 times\n  -s, --seed=num             Randomize src/dst IPv4/v6 addresses w/ given seed\n \t\t\t\t- prohibits the option 'fuzz-seed'\n  -N, --pnat=str             Rewrite IPv4/v6 addresses using pseudo-NAT\n \t\t\t\t- prohibits the option 'srcipmap'\n \t\t\t\t- may appear up to 2 times\n  -S, --srcipmap=str         Rewrite source IPv4/v6 addresses using pseudo-NAT\n \t\t\t\t- prohibits the option 'pnat'\n  -D, --dstipmap=str         Rewrite destination IPv4/v6 addresses using pseudo-NAT\n \t\t\t\t- prohibits the option 'pnat'\n      --tcp-sequence=num     Change TCP Sequence (and ACK) numbers /w given seed\n \t\t\t\t- it must be in the range:\n \t\t\t\t  greater than or equal to 1\n  -b, --skipbroadcast        Skip rewriting broadcast/multicast IPv4/v6 addresses\n  -C, --fixcsum              Force recalculation of IPv4/TCP/UDP header checksums\n      --fixhdrlen            Alter IP/TCP header len to match packet length\n  -m, --mtu=num              Override default MTU length (1500 bytes)\n \t\t\t\t- it must be in the range:\n \t\t\t\t  1 to 262144\n      --mtu-trunc            Truncate packets larger then specified MTU\n  -E, --efcs                 Remove Ethernet checksums (FCS) from end of frames\n      --ttl=str              Modify the IPv4/v6 TTL/Hop Limit\n      --tos=num              Set the IPv4 TOS/DiffServ/ECN byte\n \t\t\t\t- it must be in the range:\n \t\t\t\t  0 to 255\n      --tclass=num           Set the IPv6 Traffic Class byte\n \t\t\t\t- it must be in the range:\n \t\t\t\t  0 to 255\n      --flowlabel=num        Set the IPv6 Flow Label\n \t\t\t\t- it must be in the range:\n \t\t\t\t  0 to 1048575\n  -F, --fixlen=str           Pad or truncate packet data to match header length\n      --fuzz-seed=num        Fuzz 1 in X packets.  Edit bytes, length, or emulate packet drop\n \t\t\t\t- it must be in the range:\n \t\t\t\t  greater than or equal to 0\n      --fuzz-factor=num      Set the Fuzz 1 in X packet ratio (default 1 in 8 packets)\n \t\t\t\t- requires the option 'fuzz-seed'\n \t\t\t\t- it must be in the range:\n \t\t\t\t  greater than or equal to 1\n      --skipl2broadcast      Skip rewriting broadcast/multicast Layer 2 addresses\n      --dlt=str              Override output DLT encapsulation\n      --enet-dmac=str        Override destination ethernet MAC addresses\n      --enet-smac=str        Override source ethernet MAC addresses\n      --enet-subsmac=str     Substitute MAC addresses\n \t\t\t\t- may appear up to 9999 times\n      --enet-mac-seed=num    Randomize MAC addresses\n \t\t\t\t- prohibits these options:\n \t\t\t\tenet-smac\n \t\t\t\tenet-dmac\n \t\t\t\tenet-subsmac\n      --enet-mac-seed-keep-bytes=num Randomize MAC addresses\n \t\t\t\t- requires the option 'enet-mac-seed'\n \t\t\t\t- it must be in the range:\n \t\t\t\t  1 to 6\n      --enet-vlan=str        Specify ethernet 802.1q VLAN tag mode\n      --enet-vlan-tag=num    Specify the new ethernet 802.1q VLAN tag value\n \t\t\t\t- requires the option 'enet-vlan'\n \t\t\t\t- it must be in the range:\n \t\t\t\t  0 to 4095\n      --enet-vlan-cfi=num    Specify the ethernet 802.1q VLAN CFI value\n \t\t\t\t- requires the option 'enet-vlan'\n \t\t\t\t- it must be in the range:\n \t\t\t\t  0 to 1\n      --enet-vlan-pri=num    Specify the ethernet 802.1q VLAN priority\n \t\t\t\t- requires the option 'enet-vlan'\n \t\t\t\t- it must be in the range:\n \t\t\t\t  0 to 7\n      --enet-vlan-proto=str  Specify VLAN tag protocol 802.1q or 802.1ad\n      --hdlc-control=num     Specify HDLC control value\n      --hdlc-address=num     Specify HDLC address\n      --user-dlt=num         Set output file DLT type\n      --user-dlink=str       Rewrite Data-Link layer with user specified data\n \t\t\t\t- may appear up to 2 times\n  -d, --dbug=num             Enable debugging output\n \t\t\t\t- it must be in the range:\n \t\t\t\t  0 to 5\n  -i, --intf1=str            Primary interface (listen in uni-directional mode)\n  -I, --intf2=str            Secondary interface (send in uni-directional mode)\n  -u, --unidir               Send and receive in only one direction\n      --listnics             List available network interfaces and exit\n  -L, --limit=num            Limit the number of packets to send\n \t\t\t\t- it must be in the range:\n \t\t\t\t  greater than or equal to 1\n  -M, --mac=str              MAC addresses of local NIC's\n \t\t\t\t- may appear up to 2 times\n  -x, --include=str          Include only packets matching rule\n \t\t\t\t- prohibits the option 'exclude'\n  -X, --exclude=str          Exclude any packet matching this rule\n \t\t\t\t- prohibits the option 'include'\n  -P, --pid                  Print the PID of tcpbridge at startup\n  -v, --verbose              Print decoded packets via tcpdump to STDOUT\n  -A, --decode=str           Arguments passed to tcpdump decoder\n \t\t\t\t- requires the option 'verbose'\n  -V, --version              Print version information\n  -h, --less-help            Display less usage information and exit\n  -w, --suppress-warnings    suppress printing warning messages\n \n Version, usage and configuration options:\n \n  -H, --help                 display extended usage information and exit\n  -!, --more-help            extended usage information passed thru pager\n      --save-opts[=arg]      save the option state to a config file\n      --load-opts=str        load options from a config file\n \t\t\t\t- disabled as '--no-load-opts'\n \t\t\t\t- may appear multiple times\n \n Options are specified by doubled hyphens and their name or by a single\n hyphen and the flag character.\n tcpbridge is a tool for selectively bridging network traffic across two\n interfaces and optionally modifying the packets in between\n \n The following option preset mechanisms are supported:\n- reading file /usr/bin/.tcpbridgerc\n The basic operation of tcpbridge is to be a network bridge between two\n subnets.  All packets received on one interface are sent via the other.\n \n Optionally, packets can be edited in a variety of ways according to your\n needs.\n \n For more details, please see the Tcpreplay Manual at:\n http://tcpreplay.appneta.com\n \n Please send bug reports to:  <tcpreplay-users@lists.sourceforge.net>",
@@ -4261,21 +3551,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use tcpbridge because tcpbridge - Bridge network traffic across two interfaces.",
+    "When you need a concrete invocation, run `tcpbridge [-flags] [-flag [value]] [--option-name[[=| ]value]]` as documented upstream for tcpbridge.",
+    "When you need a concrete invocation, run `tcpbridge is a tool for selectively bridging network traffic across two interfaces and option-` as documented upstream for tcpbridge.",
+    "When chaining Kali Linux tools, pair tcpbridge with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `tcpbridge --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/tcpreplay && python3 tcpreplay.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/tcpreplay && python3 tcpreplay.py --help",
-    "cd toolboxes/tcpreplay && python3 tcpreplay.py --help",
-    "cd toolboxes/tcpreplay && python3 tcpreplay.py --help",
-    "cd toolboxes/tcpreplay && python3 tcpreplay.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tcpreplay --output $KFIOSA_OUTPUT_DIR/tcpreplay.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tcpreplay --output $KFIOSA_OUTPUT_DIR/tcpreplay.log"
+    "tcpbridge [-flags] [-flag [value]] [--option-name[[=| ]value]]",
+    "tcpbridge is a tool for selectively bridging network traffic across two interfaces and option-"
   ],
   "attack_surface": [
     "web"
@@ -4290,5 +3574,72 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-e",
+        "description": "string, --endpoints=string Rewrite IP addresses to be between two endpoints. This option",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "number, --mtu=number Override default MTU length (1500 bytes). This option may appear up",
+        "source": "docs"
+      },
+      {
+        "name": "--mtu-trunc",
+        "description": "This option may appear up to 1 times.",
+        "source": "docs"
+      },
+      {
+        "name": "--save-opts",
+        "description": "Save the option state to cfgfile. The default is the last configura-",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "This option may appear up to 1 times.",
+        "source": "docs"
+      },
+      {
+        "name": "--unidir",
+        "description": "This option may appear up to 1 times.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "decoded packets via tcpdump to STDOUT. This option may appear up to 1",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "decoded packets via tcpdump to STDOUT. This option may appear up to 1",
+        "source": "docs"
+      },
+      {
+        "name": "-X",
+        "description": "string, --exclude=string Exclude any packet matching this rule. This option may appear up",
+        "source": "docs"
+      },
+      {
+        "name": "-x",
+        "description": "string, --include=string Include only packets matching rule. This option may appear up to",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "tcpbridge [-flags] [-flag [value]] [--option-name[[=| ]value]]",
+      "tcpbridge is a tool for selectively bridging network traffic across two interfaces and option-"
+    ],
+    "readme": "tcpbridge - Bridge network traffic across two interfaces",
+    "how_to_use": "Install/setup: sudo apt install tcpreplay. Run the primary entrypoint as shown in upstream docs, e.g. `tcpbridge [-flags] [-flag [value]] [--option-name[[=| ]value]]`. tcpbridge - Bridge network traffic across two interfaces.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: tcpbridge - Bridge network traffic across two interfaces.",
+    "why_to_use": "Prefer this tool based on upstream description: tcpbridge - Bridge network traffic across two interfaces.",
+    "usage_sections": [
+      "Install with: sudo apt install tcpreplay"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

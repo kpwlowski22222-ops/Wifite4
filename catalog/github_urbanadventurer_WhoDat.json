@@ -26,21 +26,14 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use during the OSINT phase to enumerate people, domains, subdomains, ASN footprints, leaked credentials (never inlined), and breach data.",
-    "Use as a passive discovery complement to active recon (the operator can run these without touching the target).",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need OSINT and Recon, use WhoDat because Threat intel / domain reputation.",
+    "When the engagement is in the recon phase, use WhoDat as a cataloged OSINT and Recon tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `WhoDat --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/WhoDat.log` as documented upstream for WhoDat.",
+    "When chaining OSINT and Recon tools, pair WhoDat with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `WhoDat --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/WhoDat && python3 WhoDat.py --target $KFIOSA_TARGET_DOMAIN",
-    "cd toolboxes/WhoDat && python3 WhoDat.py --help",
-    "cd toolboxes/WhoDat && python3 WhoDat.py --help",
-    "cd toolboxes/WhoDat && python3 WhoDat.py --help",
-    "cd toolboxes/WhoDat && python3 WhoDat.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WhoDat --output $KFIOSA_OUTPUT_DIR/WhoDat.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WhoDat --output $KFIOSA_OUTPUT_DIR/WhoDat.log"
+    "WhoDat --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/WhoDat.log"
   ],
   "risk": {
     "signals": [
@@ -300,15 +293,19 @@
         "score": 1
       }
     ],
-    "examples": [],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'ad']' as the attack surface (osint, passive, recon).",
-    "why_to_use": "This tool is preferred because: Use during the OSINT phase to enumerate people, domains, subdomains, ASN footprints, leaked credentials (never inlined), and breach data.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/WhoDat && python3 WhoDat.py --target $KFIOSA_TARGET_DOMAIN",
-      "Step 2: cd toolboxes/WhoDat && python3 WhoDat.py --help",
-      "Step 3: cd toolboxes/WhoDat && python3 WhoDat.py --help"
+    "examples": [
+      "WhoDat --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/WhoDat.log"
+    ],
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, ad] in the OSINT and Recon category. Fits when the engagement needs: Threat intel / domain reputation.",
+    "why_to_use": "Prefer this tool based on upstream description: Curated toolbox entry for urbanadventurer/WhoDat in the OSINT category.",
+    "how_to_use": "Install/setup: git clone --depth 1 https://github.com/urbanadventurer/WhoDat.git toolboxes/osint/urbanadventurer__WhoDat. Run the primary entrypoint as shown in upstream docs, e.g. `WhoDat --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/WhoDat.log`.",
+    "readme": "Curated toolbox entry for urbanadventurer/WhoDat in the OSINT category.",
+    "usage_sections": [
+      "Usage: Typical flags: --target selects the target; --port selects the port; --output writes output to a file."
     ]
   },
   "_languages": [],
-  "_kfiosa_enriched_at": "phase4_t16"
+  "_kfiosa_enriched_at": "phase4_t16",
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

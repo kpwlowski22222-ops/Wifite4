@@ -1,135 +1,337 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/tlsx && python3 tlsx.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/tlsx && python3 tlsx.py --help",
-    "cd toolboxes/tlsx && python3 tlsx.py --help",
-    "cd toolboxes/tlsx && python3 tlsx.py --help",
-    "cd toolboxes/tlsx && python3 tlsx.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tlsx --output $KFIOSA_OUTPUT_DIR/tlsx.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tlsx --output $KFIOSA_OUTPUT_DIR/tlsx.log"
+    "go install github.com/projectdiscovery/tlsx/cmd/tlsx@latest",
+    "tlsx -h",
+    "$KFIOSA_TARGET_HOST/24 # CIDR input",
+    "$KFIOSA_TARGET_HOST # IP input",
+    "$KFIOSA_TARGET_URL # URL input port",
+    "tlsx -u $KFIOSA_TARGET_HOST,example.com,example.com:443,$KFIOSA_TARGET_URL -silent",
+    "tlsx -list host_list.txt",
+    "tlsx -u hackerone.com -p 443,8443",
+    "tlsx -u hackerone.com -p port_list.txt",
+    "echo $KFIOSA_TARGET_HOST/24 | tlsx"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Features • Installation • Usage • Running tlsx • Join Discord",
+    "usage_sections": [
+      "Features: - Fast And fully configurable TLS Connection - Multiple Modes for TLS Connection - Multiple TLS probes - Auto TLS Fallback for older TLS version - Pre Handshake TLS connection (early termination) - Customizable Cipher / SNI / TLS selection - JARM/JA3 TLS Fingerprint - TLS Misconf",
+      "Installation: tlsx requires Go 1.24 to install successfully. To install, just run the below command or download pre-compiled binary from release page."
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-ce",
+        "description": "enumerate and display supported cipher",
+        "source": "docs"
       },
       {
-        "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "name": "-cert",
+        "description": "include certificates in json output (PEM format)",
+        "source": "docs"
       },
       {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
-        "source": "v2_enhancement"
+        "name": "-certificate",
+        "description": "include certificates in json output (PEM format)",
+        "source": "docs"
       },
       {
-        "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
+        "name": "-ch",
+        "description": "include client hello in json output (ztls mode only)",
+        "source": "docs"
       },
       {
-        "name": "--port",
-        "description": "Target port (default: service default).",
-        "source": "generic_kfiosa"
+        "name": "-cipher",
+        "description": "display used cipher",
+        "source": "docs"
       },
       {
-        "name": "--interface",
-        "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
+        "name": "-cipher-enum",
+        "description": "enumerate and display supported cipher",
+        "source": "docs"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
+        "name": "-client-hello",
+        "description": "include client hello in json output (ztls mode only)",
+        "source": "docs"
       },
       {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
+        "name": "-cn",
+        "description": "display subject common names",
+        "source": "docs"
       },
       {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
-        "source": "generic_kfiosa"
+        "name": "-dashboard",
+        "description": "upload or view output in the PDCP UI dashboard",
+        "source": "docs"
       },
       {
-        "name": "--rate",
-        "description": "Packet / request rate limit.",
-        "source": "generic_kfiosa"
+        "name": "-disable-update-check",
+        "description": "disable automatic tlsx update check",
+        "source": "docs"
       },
       {
-        "name": "--wordlist",
-        "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
+        "name": "-dns",
+        "description": "display unique hostname from SSL certificate response",
+        "source": "docs"
       },
       {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
-        "source": "generic_kfiosa"
+        "name": "-duc",
+        "description": "disable automatic tlsx update check",
+        "source": "docs"
       },
       {
-        "name": "--user-agent",
-        "description": "HTTP User-Agent header.",
-        "source": "generic_kfiosa"
+        "name": "-ex",
+        "description": "display host with host expired certificate",
+        "source": "docs"
       },
       {
-        "name": "--cookie",
-        "description": "HTTP Cookie header.",
-        "source": "generic_kfiosa"
+        "name": "-expired",
+        "description": "display host with host expired certificate",
+        "source": "docs"
       },
       {
-        "name": "--header",
-        "description": "Extra HTTP header (key:value).",
-        "source": "generic_kfiosa"
+        "name": "-hardfail",
+        "description": "strategy to use if encountered errors while checking revocation status",
+        "source": "docs"
       },
       {
-        "name": "--insecure",
-        "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
+        "name": "-hc",
+        "description": "run diagnostic check up",
+        "source": "docs"
       },
       {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
-        "source": "generic_kfiosa"
+        "name": "-health-check",
+        "description": "run diagnostic check up",
+        "source": "docs"
       },
       {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
+        "name": "-hf",
+        "description": "strategy to use if encountered errors while checking revocation status",
+        "source": "docs"
       },
       {
-        "name": "--quiet",
-        "description": "Suppress non-error output.",
-        "source": "generic_kfiosa"
+        "name": "-ja3",
+        "description": "display ja3 fingerprint hash (using ztls)",
+        "source": "docs"
       },
       {
-        "name": "--dry-run",
-        "description": "Print what would be done without making any changes.",
-        "source": "v2_enhancement"
+        "name": "-jarm",
+        "description": "display jarm fingerprint hash",
+        "source": "docs"
       },
       {
-        "name": "--yes",
-        "description": "Skip confirmation prompts (use with care).",
-        "source": "v2_enhancement"
+        "name": "-json",
+        "description": "display output in jsonline format",
+        "source": "docs"
       },
       {
-        "name": "--force",
-        "description": "Force the action even if a safety check would block it.",
-        "source": "v2_enhancement"
+        "name": "-mismatched",
+        "description": "display host with mismatched certificate",
+        "source": "docs"
       },
       {
-        "name": "--no-banner",
-        "description": "Suppress banner / tool-name output.",
-        "source": "v2_enhancement"
+        "name": "-mm",
+        "description": "display host with mismatched certificate",
+        "source": "docs"
+      },
+      {
+        "name": "-MODE",
+        "description": "-sm, -scan-mode string tls connection mode to use (ctls, ztls, openssl, auto) (default \"auto\")",
+        "source": "docs"
+      },
+      {
+        "name": "-nc",
+        "description": "disable colors in cli output",
+        "source": "docs"
+      },
+      {
+        "name": "-no-color",
+        "description": "disable colors in cli output",
+        "source": "docs"
+      },
+      {
+        "name": "-pd",
+        "description": "upload or view output in the PDCP UI dashboard",
+        "source": "docs"
+      },
+      {
+        "name": "-pre-handshake",
+        "description": "enable pre-handshake tls connection (early termination) using ztls",
+        "source": "docs"
+      },
+      {
+        "name": "-probe-status",
+        "description": "display tls probe status",
+        "source": "docs"
+      },
+      {
+        "name": "-ps",
+        "description": "enable pre-handshake tls connection (early termination) using ztls",
+        "source": "docs"
+      },
+      {
+        "name": "-random-sni",
+        "description": "use random sni when empty",
+        "source": "docs"
+      },
+      {
+        "name": "-re",
+        "description": "display host with revoked certificate",
+        "source": "docs"
+      },
+      {
+        "name": "-resp-only",
+        "description": "display tls response only",
+        "source": "docs"
+      },
+      {
+        "name": "-rev-ptr-sni",
+        "description": "perform reverse PTR to retrieve SNI from IP",
+        "source": "docs"
+      },
+      {
+        "name": "-revoked",
+        "description": "display host with revoked certificate",
+        "source": "docs"
+      },
+      {
+        "name": "-ro",
+        "description": "display tls response only",
+        "source": "docs"
+      },
+      {
+        "name": "-rps",
+        "description": "perform reverse PTR to retrieve SNI from IP",
+        "source": "docs"
+      },
+      {
+        "name": "-rs",
+        "description": "use random sni when empty",
+        "source": "docs"
+      },
+      {
+        "name": "-sa",
+        "description": "scan all ips for a host (default false)",
+        "source": "docs"
+      },
+      {
+        "name": "-san",
+        "description": "display subject alternative names",
+        "source": "docs"
+      },
+      {
+        "name": "-scan-all-ips",
+        "description": "scan all ips for a host (default false)",
+        "source": "docs"
+      },
+      {
+        "name": "-se",
+        "description": "display certificate serial number",
+        "source": "docs"
+      },
+      {
+        "name": "-self-signed",
+        "description": "display host with self-signed certificate",
+        "source": "docs"
+      },
+      {
+        "name": "-serial",
+        "description": "display certificate serial number",
+        "source": "docs"
+      },
+      {
+        "name": "-server-hello",
+        "description": "include server hello in json output (ztls mode only)",
+        "source": "docs"
+      },
+      {
+        "name": "-sh",
+        "description": "include server hello in json output (ztls mode only)",
+        "source": "docs"
+      },
+      {
+        "name": "-silent",
+        "description": "display silent output",
+        "source": "docs"
+      },
+      {
+        "name": "-so",
+        "description": "display subject organization name",
+        "source": "docs"
+      },
+      {
+        "name": "-ss",
+        "description": "display host with self-signed certificate",
+        "source": "docs"
+      },
+      {
+        "name": "-tc",
+        "description": "include certificates chain in json output",
+        "source": "docs"
+      },
+      {
+        "name": "-tls-chain",
+        "description": "include certificates chain in json output",
+        "source": "docs"
+      },
+      {
+        "name": "-tls-version",
+        "description": "display used tls version",
+        "source": "docs"
+      },
+      {
+        "name": "-tps",
+        "description": "display tls probe status",
+        "source": "docs"
+      },
+      {
+        "name": "-tv",
+        "description": "display used tls version",
+        "source": "docs"
+      },
+      {
+        "name": "-un",
+        "description": "display host with untrusted certificate",
+        "source": "docs"
+      },
+      {
+        "name": "-untrusted",
+        "description": "display host with untrusted certificate",
+        "source": "docs"
+      },
+      {
+        "name": "-up",
+        "description": "update tlsx to latest version",
+        "source": "docs"
+      },
+      {
+        "name": "-update",
+        "description": "update tlsx to latest version",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "display verbose output",
+        "source": "docs"
+      },
+      {
+        "name": "-vc",
+        "description": "enable verification of server certificate",
+        "source": "docs"
       }
     ],
-    "examples": [],
+    "examples": [
+      "go install github.com/projectdiscovery/tlsx/cmd/tlsx@latest",
+      "tlsx -h",
+      "$KFIOSA_TARGET_HOST/24 # CIDR input",
+      "$KFIOSA_TARGET_HOST # IP input",
+      "$KFIOSA_TARGET_URL # URL input port",
+      "tlsx -u $KFIOSA_TARGET_HOST,example.com,example.com:443,$KFIOSA_TARGET_URL -silent",
+      "tlsx -list host_list.txt",
+      "tlsx -u hackerone.com -p 443,8443",
+      "tlsx -u hackerone.com -p port_list.txt",
+      "echo $KFIOSA_TARGET_HOST/24 | tlsx"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +457,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, tlsx, projectdiscovery).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/tlsx && python3 tlsx.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/tlsx && python3 tlsx.py --help",
-      "Step 3: cd toolboxes/tlsx && python3 tlsx.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: Features • Installation • Usage • Running tlsx • Join Discord.",
+    "why_to_use": "Prefer this tool based on upstream description: Features • Installation • Usage • Running tlsx • Join Discord.",
+    "how_to_use": "Install/setup: go install github.com/projectdiscovery/tlsx/cmd/tlsx@latest. Run the primary entrypoint as shown in upstream docs, e.g. `go install github.com/projectdiscovery/tlsx/cmd/tlsx@latest`. Further invocations from upstream: `tlsx -h`; `$KFIOSA_TARGET_HOST/24 # CIDR input`. Features • Installation • Usage • Running tlsx • Join Discord."
   },
   "full_name": "projectdiscovery/tlsx",
   "id": "github:projectdiscovery/tlsx",
@@ -282,7 +480,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``tlsx`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Features • Installation • Usage • Running tlsx • Join Discord",
   "tags": [
     "offensive",
     "tlsx",
@@ -300,12 +498,13 @@
   },
   "url": "https://github.com/projectdiscovery/tlsx",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use tlsx because Features • Installation • Usage • Running tlsx • Join Discord.",
+    "When you need a concrete invocation, run `go install github.com/projectdiscovery/tlsx/cmd/tlsx@latest` as documented upstream for tlsx.",
+    "When you need a concrete invocation, run `tlsx -h` as documented upstream for tlsx.",
+    "When you need a concrete invocation, run `$KFIOSA_TARGET_HOST/24 # CIDR input` as documented upstream for tlsx.",
+    "When you need a concrete invocation, run `$KFIOSA_TARGET_HOST # IP input` as documented upstream for tlsx.",
+    "When chaining recon tools, pair tlsx with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `tlsx --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +523,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

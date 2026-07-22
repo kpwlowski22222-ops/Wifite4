@@ -8,7 +8,8 @@ attack-plan generation. All actions are curses-free callable (injectable
 """
 
 import logging
-from typing import List, Dict, Any
+import sys
+from typing import List, Dict, Any, Optional
 
 from core.tui.base_screen import BaseScreen
 from core.ai_backend import AIBackend
@@ -65,16 +66,18 @@ class WiFiScreen(BaseScreen):
         self.attach_zero_day = False
         self._post_plan = None  # last computed post-exploit plan
         self._last_report = None
+        self._last_one_click_plan = None
 
-        # ---- wifite-style primary flow ----
+        # ---- simplified primary flow (scan + AIO first) ----
         self.primary_items = [
-            ("Scan Wireless Networks", self.scan_networks),
-            ("Select Target (number keys)", self._select_target_prompt),
-            ("Run All Attacks (AI-orchestrated, ACCEPT/CANCEL)", self.run_attack_chain),
-            ("Show Report (last engagement)", self.show_report),
-            ("List Discovered Devices (airgeddon-style)", self.list_devices),
+            ("Scan Networks (external airgeddon/wifite window)", self.scan_networks),
+            ("▶ AIO ATTACK selected target", self.aio_attack),
+            ("▶ One-click plan + attack", self.one_click_attack),
+            ("Select Target (in-dashboard)", self._select_target_prompt),
+            ("Report", self.show_report),
+            ("Clients", self.list_devices),
             ("Advanced…", self._show_advanced),
-            ("Back to Main Menu", self.parent_callback),
+            ("Back", self.parent_callback),
         ]
         self.advanced_items = [
             ("Pick Wireless Interface (auto-detect + monitor)", self.pick_interface),
@@ -109,8 +112,231 @@ class WiFiScreen(BaseScreen):
         t = self.selected_target
         self.activity_log.append(
             f"[+] Target #{idx + 1} selected: {t.get('ssid') or '<hidden>'} "
-            f"({t.get('bssid')}) — Run All Attacks to engage."
+            f"({t.get('bssid')}) — press ▶ ATTACK for one-click engagement."
         )
+
+    # ------------------------------------------------------------------
+    # One-click attack (primary button)
+    # ------------------------------------------------------------------
+    def one_click_attack(self):
+        """One-click attack on the currently selected AP.
+
+        1. Require a selected target (scan → number key).
+        2. Auto-detect mt7921e adapter caps if not probed yet.
+        3. Build an honest encryption-aware plan (WPA3-SAE / WPA2 /
+           transition) via ``adapt_wpa3_sae_one_click_plan``.
+        4. Hand off to the existing ACCEPT-gated ``run_attack_chain``.
+
+        Never auto-cracks, never fabricates a PSK. Intrusive steps stay
+        behind the orchestrator ACCEPT/CANCEL gate.
+        """
+        if not self.selected_target:
+            self.activity_log.append(
+                "[!] Select a target first (Scan → number key), then ATTACK."
+            )
+            return
+        if not self.interface:
+            # Best-effort: pick first mt7921e / wireless iface without
+            # forcing monitor yet (chain / pick_interface does that).
+            try:
+                from core.modules.mt7921e_tools import detect_mt7921e_interfaces
+                found = detect_mt7921e_interfaces()
+                if found:
+                    self.interface = found[0].name
+                    self.activity_log.append(
+                        f"[+] Auto-selected interface {self.interface} "
+                        f"(driver={found[0].driver})"
+                    )
+            except Exception as e:
+                self.activity_log.append(f"[i] auto-iface skip: {e}")
+        if not self.interface:
+            self.activity_log.append(
+                "[!] No interface — Advanced → Pick Wireless Interface first."
+            )
+            return
+
+        # Probe adapter caps if missing (read-only detect; injection test
+        # still needs root + monitor and runs inside the chain).
+        if not self.adapter_caps:
+            try:
+                from core.modules.mt7921e_tools import detect_mt7921e_interfaces
+                ads = detect_mt7921e_interfaces()
+                if ads:
+                    a = ads[0]
+                    self.adapter_caps = {
+                        "mt7921e": True,
+                        "driver": a.driver,
+                        "injection_capable": bool(
+                            a.injection_capable_runtime
+                            or a.injection_capable_static
+                        ),
+                        "quality": a.injection_quality,
+                        "monitor_iface": self.interface,
+                    }
+                else:
+                    self.adapter_caps = {"mt7921e": False}
+            except Exception:
+                self.adapter_caps = {"mt7921e": False}
+
+        t = dict(self.selected_target)
+        plan_args = {
+            "ssid": t.get("ssid"),
+            "bssid": t.get("bssid"),
+            "channel": t.get("channel"),
+            "encryption": t.get("encryption") or t.get("enc") or "",
+            "pmf": t.get("pmf") or t.get("pmf_supported"),
+            "transition": t.get("transition") or t.get("transition_mode"),
+            "adapter_caps": self.adapter_caps or {},
+            "mt7921e": bool((self.adapter_caps or {}).get("mt7921e")),
+            "injection_capable": bool(
+                (self.adapter_caps or {}).get("injection_capable")
+            ),
+        }
+        try:
+            from core.refactors.poly_adapt_companions import (
+                adapt_wpa3_sae_one_click_plan,
+            )
+            env = adapt_wpa3_sae_one_click_plan(plan_args)
+            data = (env or {}).get("data") or {}
+            self._last_one_click_plan = data
+            self.activity_log.append(
+                f"[▶] One-click plan: {data.get('rationale') or data.get('pick')}"
+            )
+            for note in (data.get("notes") or [])[:4]:
+                self.activity_log.append(f"[plan] {note}")
+            for s in (data.get("steps") or [])[:8]:
+                gate = " [ACCEPT]" if s.get("gated") else ""
+                self.activity_log.append(
+                    f"[plan] · {s.get('id')}: {s.get('why')}{gate}"
+                )
+            # Stash plan on target so the orchestrator / AI chain can use it.
+            if self.selected_target is not None:
+                self.selected_target["one_click_plan"] = data
+                self.selected_target["attack_plan"] = data
+        except Exception as e:
+            self.activity_log.append(f"[!] one-click planner failed: {e}")
+
+        # Reuse the full recon + gated attack chain.
+        self.run_attack_chain()
+
+    def aio_attack(self):
+        """All-In-One attack on the selected AP (ACCEPT-gated).
+
+        Pipeline (polymorphic / target-adaptive where possible):
+          1. Catalog recon (WPS, clients, beacons, weakpass, …)
+          2. CVE / NVD lookup for vendor+chipset+encryption
+          3. Honest WPA3/WPA2 one-click plan (poly companions)
+          4. AI-orchestrated chain (use_ai_chain=True)
+          5. Optional 0-day propose→build (attach_zero_day=True)
+          6. Post-exploit + anti-forensics OPSEC tail when access lands
+
+        Requires orchestrator (fixed at dashboard boot). Never auto-ACCEPT.
+        """
+        if not self.selected_target:
+            # Try loading last external scan selection.
+            loaded = self._load_external_scan_selection()
+            if not loaded:
+                self.activity_log.append(
+                    "[!] Select a target first (Scan → external window → ENTER/A)."
+                )
+                return
+        if not self.orchestrator:
+            self.activity_log.append(
+                "[!] Orchestrator unavailable — restart the tool "
+                "(dashboard must finish Ollama + orchestrator init)."
+            )
+            return
+        if not self.interface:
+            try:
+                from core.modules.mt7921e_tools import detect_mt7921e_interfaces
+                found = detect_mt7921e_interfaces()
+                if found:
+                    self.interface = found[0].name
+            except Exception:
+                pass
+        if not self.interface:
+            self.activity_log.append(
+                "[!] No interface — Advanced → Pick Wireless Interface."
+            )
+            return
+
+        # Force full AIO options on the engagement.
+        self.attach_zero_day = True
+        t = dict(self.selected_target)
+        t["aio"] = True
+        t["attach_zero_day"] = True
+        t["post_exploit"] = True
+        t["anti_forensics"] = True
+        t["polymorphic"] = True
+        t.setdefault("interface", self.interface)
+
+        # Build polymorphic plan stamp.
+        try:
+            from core.refactors.poly_adapt_companions import (
+                adapt_wpa3_sae_one_click_plan,
+                poly_wpa3_sae_grammar,
+            )
+            plan = adapt_wpa3_sae_one_click_plan({
+                "ssid": t.get("ssid"),
+                "bssid": t.get("bssid"),
+                "channel": t.get("channel"),
+                "encryption": t.get("encryption") or t.get("enc") or "",
+                "adapter_caps": self.adapter_caps or {},
+                "mt7921e": bool((self.adapter_caps or {}).get("mt7921e")),
+                "injection_capable": bool(
+                    (self.adapter_caps or {}).get("injection_capable")
+                ),
+            })
+            poly = poly_wpa3_sae_grammar({"seed": t.get("bssid") or "aio"})
+            t["one_click_plan"] = (plan or {}).get("data") or {}
+            t["poly_variants"] = ((poly or {}).get("data") or {}).get("variants")
+            self._last_one_click_plan = t["one_click_plan"]
+            self.activity_log.append(
+                f"[AIO] Plan: {t['one_click_plan'].get('rationale', '')}"
+            )
+            for note in (t["one_click_plan"].get("notes") or [])[:3]:
+                self.activity_log.append(f"[AIO] {note}")
+            if t.get("poly_variants"):
+                self.activity_log.append(
+                    f"[AIO] Poly variants: {', '.join(t['poly_variants'][:3])}"
+                )
+        except Exception as e:
+            self.activity_log.append(f"[i] AIO planner note: {e}")
+
+        self.selected_target = t
+        self.activity_log.append(
+            "[AIO] Starting full chain: recon → CVE/NVD → exploits/0-day → "
+            "post-exploit → anti-forensics (each step ACCEPT/CANCEL)."
+        )
+        self.run_attack_chain()
+
+    def _load_external_scan_selection(self) -> bool:
+        """Load target written by ``wifi_scan_external`` if present."""
+        from pathlib import Path
+        import json
+        path = Path("logs") / "wifi_scan_selection.json"
+        if not path.is_file():
+            return False
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            return False
+        sel = data.get("selected")
+        if not isinstance(sel, dict) or not sel.get("bssid"):
+            return False
+        self.selected_target = sel
+        nets = data.get("networks") or []
+        if nets:
+            self.scan_results = list(nets)
+            self.targets = list(nets)
+        self.activity_log.append(
+            f"[+] Loaded external selection: {sel.get('ssid')} "
+            f"[{sel.get('bssid')}] aio={bool(data.get('aio_attack'))}"
+        )
+        if data.get("aio_attack"):
+            # Parent may call aio_attack right after load.
+            pass
+        return True
 
     def show_report(self):
         """Re-emit a summary of the last engagement (curses-free, testable)."""
@@ -265,7 +491,50 @@ class WiFiScreen(BaseScreen):
                             (kb_step.get("data", {}) or {}).get("hits", [])
                             or []
                         )
-                        target["recon"] = recon_report
+                        # Drop any live back-reference before attaching.
+                        # Older catalog_recon builds stored
+                        # recon["target"] = self.target (same object as
+                        # ``target``); assigning target["recon"] = recon
+                        # then creates a cycle that breaks AI chaining.
+                        if isinstance(recon_report, dict):
+                            recon_attach = dict(recon_report)
+                            nested = recon_attach.get("target")
+                            if nested is target or (
+                                isinstance(nested, dict)
+                                and nested is self.selected_target
+                            ):
+                                recon_attach["target"] = {
+                                    k: nested.get(k)
+                                    for k in (
+                                        "bssid", "ssid", "channel",
+                                        "encryption", "enc", "interface",
+                                        "vendor",
+                                    )
+                                    if isinstance(nested, dict) and k in nested
+                                }
+                            target["recon"] = recon_attach
+                        else:
+                            target["recon"] = recon_report
+                        # Surface any recon-produced capture so crack/pmkid
+                        # steps do not report "no cap_file" after a successful
+                        # handshake_harvest / eapol_monitor probe.
+                        for key in ("handshake_harvest", "eapol_monitor"):
+                            data = ((recon_report.get(key) or {}).get("data")
+                                    or {})
+                            pcap = data.get("pcap") or data.get("cap_file")
+                            if pcap:
+                                target.setdefault("cap_file", pcap)
+                                target.setdefault("pcap", pcap)
+                                self.activity_log.append(
+                                    f"[+] recon pcap wired into seed: {pcap}"
+                                )
+                                break
+                        # Weakpass wordlist path if recon generated one.
+                        wp = (recon_report.get("weakpass") or {}).get("data") or {}
+                        wl = wp.get("path") or wp.get("wordlist") or wp.get("file")
+                        if wl:
+                            target.setdefault("wordlist", wl)
+                            target.setdefault("weakpass", wl)
                     except Exception as e:
                         self.activity_log.append(
                             f"[i] recon-merge skipped: {e}"
@@ -332,26 +601,81 @@ class WiFiScreen(BaseScreen):
         self.interface = iface
         self.activity_log.append(f"[+] Selected interface: {iface}")
 
-        # Auto-enable monitor mode immediately via sudo airmon-ng start.
-        self.activity_log.append(f"[*] Engaging monitor mode on {iface}...")
-        mon_ok = False
+        # Polymorphic path: already_monitor | iw_flip | airmon_start
         try:
-            from core.utils.airmon import airmon_start
-            mon = airmon_start(iface)
-        except Exception as e:
-            self.activity_log.append(f"[!] monitor-mode error: {e}")
-            mon = {"ok": False, "error": f"airmon_start: {e}"}
+            from core.refactors.poly_adapt_companions import (
+                adapt_wifi_adapter_mode_picker,
+            )
+            from core.utils.airmon import _iw_is_monitor
+            cur_mode = "monitor" if _iw_is_monitor(iface) else "managed"
+            drv = ""
+            try:
+                import os as _os
+                drv = _os.path.basename(
+                    _os.path.realpath(
+                        f"/sys/class/net/{iface}/device/driver"
+                    )
+                )
+            except OSError:
+                pass
+            apick = adapt_wifi_adapter_mode_picker({
+                "iface": iface, "mode": cur_mode, "want": "monitor",
+                "driver": drv,
+            })
+            self.activity_log.append(
+                f"[i] Adapter mode plan: "
+                f"{(apick.get('data') or {}).get('pick')} — "
+                f"{(apick.get('data') or {}).get('rationale')}"
+            )
+        except Exception:
+            pass
+
+        # If already monitor, skip airmon (prevents wlan0monmon).
+        try:
+            from core.utils.airmon import _iw_is_monitor, airmon_start
+            if _iw_is_monitor(iface):
+                self.interface = iface
+                self.interface_mode = "monitor"
+                self.activity_log.append(
+                    f"[+] {iface} already in monitor mode — no re-engage."
+                )
+                mon = {"ok": True, "monitor_iface": iface,
+                       "method": "already_monitor"}
+                mon_ok = True
+            else:
+                mon = None
+                mon_ok = False
+        except Exception:
+            mon = None
+            mon_ok = False
+
+        if not mon_ok:
+            # Auto-enable monitor mode via airmon / iw flip.
+            self.activity_log.append(f"[*] Engaging monitor mode on {iface}...")
+            try:
+                from core.utils.airmon import airmon_start
+                mon = airmon_start(iface)
+            except Exception as e:
+                self.activity_log.append(f"[!] monitor-mode error: {e}")
+                mon = {"ok": False, "error": f"airmon_start: {e}"}
+        if mon is None:
+            mon = {"ok": False, "error": "monitor engage not attempted"}
 
         if mon.get("ok"):
             mon_iface = mon.get("monitor_iface") or iface
             self.interface = mon_iface
             method = mon.get("method", "airmon")
-            via = ("sudo airmon-ng start" if method == "airmon"
-                   else "iw dev set type monitor (flip)")
-            self.activity_log.append(
-                f"[+] Monitor mode ACTIVE on {self.interface} "
-                f"(via {via} {iface})"
-            )
+            via_map = {
+                "airmon": "sudo airmon-ng start",
+                "iw_flip": "iw set type monitor",
+                "already_monitor": "already monitor",
+            }
+            via = via_map.get(method, method)
+            if method != "already_monitor":
+                self.activity_log.append(
+                    f"[+] Monitor mode ACTIVE on {self.interface} "
+                    f"(via {via} {iface})"
+                )
             if mon_iface != iface:
                 self.activity_log.append(
                     f"[i] Original interface {iface} left in managed mode."
@@ -405,33 +729,39 @@ class WiFiScreen(BaseScreen):
             self._append_monitor_remediation(iface)
 
         # mt7921e capability probe — runs after monitor mode succeeds
-        # (either airmon or iw fallback). Surfaces injection capability
-        # + quality to the operator and stores a compact caps dict on
-        # self.adapter_caps for the chain planner to branch on. No-op
-        # (caps absent) when the adapter is not mt7921e; every other path
-        # is unchanged.
+        # (either airmon or iw fallback). Uses test=False on pick so we
+        # never block on ``aireplay-ng --test`` (15s+) while the operator
+        # is still in the Advanced menu; static caps are enough for the
+        # planner. Runtime injection is verified later by the chain /
+        # orchestrator when actually needed.
         self.adapter_caps = None
         if mon_ok:
             try:
                 from core.modules import mt7921e_tools
                 adapters = mt7921e_tools.probe_mt7921e_capabilities(
-                    iface=self.interface, test=True,
-                    bssid="FF:FF:FF:FF:FF:FF",
+                    iface=self.interface, test=False,
                 )
                 if adapters:
                     a = adapters[0]
                     self.adapter_caps = {
                         "mt7921e": True,
                         "driver": a.driver,
-                        "injection_capable": bool(a.injection_capable_runtime),
+                        # Prefer runtime if ever set; else static phy bit.
+                        "injection_capable": bool(
+                            a.injection_capable_runtime
+                            if a.injection_capable_runtime is not None
+                            else a.injection_capable_static
+                        ),
                         "quality": a.injection_quality,
                         "monitor_iface": self.interface,
                         "original_iface": iface,
+                        "injection_tested": False,
                     }
                     self.activity_log.append(
-                        f"[+] mt7921e adapter {self.interface}: injection "
-                        f"{'OK' if a.injection_capable_runtime else 'FAIL'} "
-                        f"(quality={a.injection_quality})"
+                        f"[+] mt7921e adapter {self.interface}: "
+                        f"static inject="
+                        f"{'yes' if a.injection_capable_static else 'no'} "
+                        f"(runtime test deferred to attack chain)"
                     )
                 else:
                     self.adapter_caps = {
@@ -471,6 +801,22 @@ class WiFiScreen(BaseScreen):
             # Rebuild the Advanced items so the menu label reflects
             # the new state ("...currently monitor on wlan0mon").
             self._rebuild_advanced_items()
+            # Leave highlight OFF the toggle item. After a slow airmon
+            # path the operator often has leftover ENTERs queued; if the
+            # cursor stayed on item 0 those would immediately flip
+            # monitor → managed (operator-reported bug).
+            if (
+                getattr(self, "flow_state", None) == "advanced"
+                and len(self.menu_items) > 1
+            ):
+                self.menu_index = 1
+
+        # Always drop pending keys after pick (success or fail).
+        try:
+            from core.tui.interface_picker import flush_curses_input
+            flush_curses_input(self.stdscr)
+        except Exception:
+            pass
 
     def _append_monitor_remediation(self, iface: str):
         """Append the standard monitor-mode remediation to the activity log.
@@ -521,35 +867,32 @@ class WiFiScreen(BaseScreen):
 
         cur = self.interface_mode
         if cur == "monitor":
-            # Flip back to managed. Two paths: airmon-ng (when a
-            # separate ``wlan[id]mon`` vif was created) or iw-fallback
-            # (in-place flip, same name). airmon_stop handles both:
-            # it tears down the vif when there is one, else falls
-            # back to the iw+ip flip via WiFiScanner.
+            # Flip back to managed.
+            #   - Separate mon vif (original_iface set) → airmon_stop
+            #   - In-place iw flip (original_iface is None) → restore_managed
+            #     on the same iface (no airmon mon vif to tear down).
             self.activity_log.append(
                 f"[*] Tearing down monitor mode on {self.interface}..."
             )
-            try:
-                from core.utils.airmon import airmon_stop
-                res = airmon_stop(self.interface)
-            except Exception as e:  # noqa: BLE001
-                self.activity_log.append(
-                    f"[!] airmon_stop import/call failed: {e}"
-                )
-                res = {"ok": False, "error": f"airmon_stop: {e}"}
-            if not res.get("ok"):
-                # Fallback: iw+ip managed flip via the scanner.
+            use_inplace = self.original_iface is None
+            res = {"ok": False, "error": ""}
+            if not use_inplace:
+                try:
+                    from core.utils.airmon import airmon_stop
+                    res = airmon_stop(self.interface)
+                except Exception as e:  # noqa: BLE001
+                    self.activity_log.append(
+                        f"[!] airmon_stop import/call failed: {e}"
+                    )
+                    res = {"ok": False, "error": f"airmon_stop: {e}"}
+            if use_inplace or not res.get("ok"):
+                # In-place path, or airmon_stop failed → iw managed flip.
                 try:
                     from core.scanners.wifi_scanner import WiFiScanner
                     target = self.original_iface or self.interface
                     _sc = WiFiScanner(interface=target)
                     _sc.initialize()
                     _sc.restore_managed(target)
-                    # restore_managed is fire-and-forget (no return
-                    # value); we assume the iw+ip flip succeeded when
-                    # we get here — a verification probe would add
-                    # latency to a hot path. The next scan will fail
-                    # honestly if the flip did not take.
                     self.interface = target
                     self.activity_log.append(
                         f"[i] Managed flip via iw+ip on {target} "
@@ -565,14 +908,18 @@ class WiFiScreen(BaseScreen):
                     )
                     return
             else:
-                # airmon_stop succeeded. ``managed_iface`` is the
-                # post-stop managed name; fall back to
-                # ``original_iface`` (which the caller already has).
-                self.interface = (
-                    res.get("managed_iface")
-                    or self.original_iface
-                    or self.interface
-                )
+                # airmon_stop succeeded. Prefer a non-mon managed name.
+                mi = res.get("managed_iface") or ""
+                if mi and not str(mi).lower().endswith("mon"):
+                    self.interface = mi
+                elif self.original_iface:
+                    self.interface = self.original_iface
+                elif mi:
+                    import re as _re
+                    stripped = _re.sub(r"(mon)+$", "", str(mi))
+                    self.interface = stripped or mi
+                else:
+                    self.interface = self.interface
             # Update the dashboard tracker (mirror the pick path).
             dashboard = getattr(self, "dashboard", None)
             if dashboard is not None:
@@ -586,6 +933,17 @@ class WiFiScreen(BaseScreen):
                 f"[+] Managed mode ACTIVE on {self.interface}"
             )
             self._rebuild_advanced_items()
+            # Same leftover-ENTER guard as pick_interface.
+            if (
+                getattr(self, "flow_state", None) == "advanced"
+                and len(self.menu_items) > 1
+            ):
+                self.menu_index = 1
+            try:
+                from core.tui.interface_picker import flush_curses_input
+                flush_curses_input(self.stdscr)
+            except Exception:
+                pass
             return
 
         if cur == "managed":
@@ -668,14 +1026,170 @@ class WiFiScreen(BaseScreen):
         )
 
     def scan_networks(self):
-        """Perform a real background WiFi scan (no fake APs). On success,
-        populate ``self.targets`` and enter the numbered-targets view."""
+        """Open an external airgeddon/wifite-like scan TUI, then load selection.
+
+        Prefer launching ``core.tui.wifi_scan_external`` in a separate
+        terminal (xterm/gnome-terminal/…). Arrows move, SPACE/ENTER
+        select, **A** queues AIO ATTACK. Fallback: in-process enhanced
+        scanner + numbered targets view (tests inject ``scanner_cls``).
+        """
+        # Tests: injected scanner_cls → hermetic in-process path (no auto
+        # iface pick, no external terminal).
+        if self.scanner_cls is not None:
+            if not getattr(self, "interface", None):
+                self.activity_log.append(
+                    "[!] No interface selected — pick one first "
+                    "(Advanced → Pick Interface)."
+                )
+                return
+            return self._scan_networks_inprocess()
+
+        if not getattr(self, "interface", None):
+            # Auto-pick mt7921e if present (production only).
+            try:
+                from core.modules.mt7921e_tools import detect_mt7921e_interfaces
+                found = detect_mt7921e_interfaces()
+                if found:
+                    self.interface = found[0].name
+                    self.activity_log.append(
+                        f"[+] Auto-selected {self.interface} for scan"
+                    )
+            except Exception:
+                pass
         if not getattr(self, "interface", None):
             self.activity_log.append(
                 "[!] No interface selected — pick one first "
                 "(Advanced → Pick Interface)."
             )
             return
+
+        out_path = "logs/wifi_scan_selection.json"
+        try:
+            Path = __import__("pathlib").Path
+            Path("logs").mkdir(parents=True, exist_ok=True)
+            # Clear previous selection so we don't auto-load stale AIO.
+            p = Path(out_path)
+            if p.is_file():
+                p.unlink()
+        except Exception:
+            pass
+
+        # Run from project root with a real TERM so curses works in xterm.
+        # Nested/dumb TTY auto-falls back to text UI inside wifi_scan_external.
+        from pathlib import Path as _P
+        _root = str(_P(__file__).resolve().parents[2])
+        cmd_argv = [
+            sys.executable, "-m", "core.tui.wifi_scan_external",
+            "--iface", str(self.interface),
+            "--out", out_path,
+            "--seconds", "12",
+        ]
+        log_path = "logs/steps/wifi_scan_external.log"
+        import shlex
+        shell_cmd = (
+            f"cd {shlex.quote(_root)} && "
+            f"export TERM=xterm-256color && "
+            f"export PYTHONPATH={shlex.quote(_root)}"
+            f"${{PYTHONPATH:+:$PYTHONPATH}} && "
+            + " ".join(shlex.quote(c) for c in cmd_argv)
+            + "; echo; echo '[scan done — close window or press Enter]'; read _"
+        )
+        launched = False
+        if self.external_terminal is not None:
+            try:
+                launch = getattr(self.external_terminal, "launch", None)
+                if callable(launch):
+                    # Prefer shell form so TERM/cwd are set in a real TTY.
+                    launch(
+                        ["bash", "-lc", shell_cmd],
+                        log_path,
+                        title=f"KFIOSA WiFi Scan — {self.interface}",
+                    )
+                    launched = True
+            except Exception as e:
+                self.activity_log.append(f"[i] External terminal launch: {e}")
+
+        if not launched:
+            # Direct Popen with detected terminal (must be a real TTY).
+            import subprocess
+            import shutil
+            term = None
+            for t in ("xterm", "gnome-terminal", "konsole", "xfce4-terminal"):
+                if shutil.which(t):
+                    term = t
+                    break
+            try:
+                if term == "xterm":
+                    subprocess.Popen(
+                        ["xterm", "-T", f"KFIOSA Scan {self.interface}",
+                         "-e", "bash", "-lc", shell_cmd],
+                        start_new_session=True,
+                        cwd=_root,
+                    )
+                    launched = True
+                elif term == "gnome-terminal":
+                    subprocess.Popen(
+                        ["gnome-terminal", "--", "bash", "-lc", shell_cmd],
+                        start_new_session=True,
+                        cwd=_root,
+                    )
+                    launched = True
+                elif term:
+                    subprocess.Popen(
+                        [term, "-e", f"bash -lc {shell_cmd}"],
+                        start_new_session=True,
+                        cwd=_root,
+                    )
+                    launched = True
+            except Exception as e:
+                self.activity_log.append(f"[i] term spawn failed: {e}")
+
+        if launched:
+            self.activity_log.append(
+                f"[+] External scan window opened on {self.interface}. "
+                "Use ↑↓, SPACE/ENTER to select, A for AIO ATTACK, q when done."
+            )
+            self.activity_log.append(
+                "[*] After the window closes, press ▶ AIO ATTACK (or wait — "
+                "auto-load on next AIO)."
+            )
+            # Poll once shortly for selection (non-blocking style via spawn).
+            def _wait_selection():
+                import time
+                from pathlib import Path
+                deadline = time.time() + 180
+                while time.time() < deadline:
+                    if Path(out_path).is_file():
+                        time.sleep(0.5)  # allow write to finish
+                        if self._load_external_scan_selection():
+                            # If external set aio_attack, start AIO.
+                            try:
+                                import json
+                                data = json.loads(
+                                    Path(out_path).read_text(encoding="utf-8")
+                                )
+                                if data.get("aio_attack"):
+                                    self.activity_log.append(
+                                        "[AIO] External window requested AIO ATTACK"
+                                    )
+                                    self.aio_attack()
+                            except Exception:
+                                pass
+                        return
+                    time.sleep(1.0)
+                self.activity_log.append(
+                    "[i] No external selection yet — press AIO ATTACK after picking."
+                )
+            self._spawn(_wait_selection)
+            return
+
+        self.activity_log.append(
+            "[i] No external terminal — falling back to in-dashboard scan."
+        )
+        self._scan_networks_inprocess()
+
+    def _scan_networks_inprocess(self):
+        """Original in-dashboard scan (also used by pytest via scanner_cls)."""
         self.activity_log.append(
             f"[*] Starting WiFi scan on {self.interface} (10s timeout)..."
         )
@@ -699,7 +1213,6 @@ class WiFiScreen(BaseScreen):
                 if error:
                     self.activity_log.append(f"[!] Scan error: {error}")
                 if not networks:
-                    # No fake targets — report honestly.
                     if not error:
                         self.activity_log.append(
                             "[i] No networks discovered on this interface."
@@ -718,7 +1231,6 @@ class WiFiScreen(BaseScreen):
                         f"[i] SSID: {net.get('ssid')} | BSSID: {net.get('bssid')} "
                         f"| CH: {net.get('channel')} | Enc: {net.get('encryption')}"
                     )
-                # Enter the wifite numbered-target view.
                 self._enter_targets_view()
             except Exception as e:
                 logger.error(f"WiFi scan error: {e}")

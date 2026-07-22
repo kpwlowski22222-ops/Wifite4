@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "ldap-utils",
   "title": "ldap-utils",
-  "summary": "OpenLDAP utilities",
+  "summary": "ldapcompare - LDAP compare tool",
   "description": "OpenLDAP utilities\nThis package provides utilities from the OpenLDAP (Lightweight\nDirectory Access Protocol) package. These utilities can access a\nlocal or remote LDAP server and contain all the client programs\nrequired to access LDAP servers.",
   "version": "2.6.10+dfsg-1+b2",
   "architectures": [
@@ -27,7 +27,63 @@
       "path": "/usr/bin/ldapcompare",
       "description": "LDAP compare tool",
       "usage": "ldapcompare [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-I"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable SASL Interactive mode. Always prompt. Default is to prompt only as needed.",
+          "default": null,
+          "choices": null,
+          "raw": "-I  Enable SASL Interactive mode. Always prompt. Default is to prompt only as needed."
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "what would be done, but don't actually perform the compare. Useful for debugging",
+          "default": null,
+          "choices": null,
+          "raw": "-n  what would be done, but don't actually perform the compare. Useful for debugging"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Run in verbose mode, with many diagnostics written to standard output.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Run in verbose mode, with many diagnostics written to standard output."
+        },
+        {
+          "flags": [
+            "-W"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Prompt for simple authentication. This is used instead of specifying the password on",
+          "default": null,
+          "choices": null,
+          "raw": "-W  Prompt for simple authentication. This is used instead of specifying the password on"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use simple authentication instead of SASL.",
+          "default": null,
+          "choices": null,
+          "raw": "-x  Use simple authentication instead of SASL."
+        }
+      ]
     },
     {
       "name": "ldapdelete",
@@ -124,5 +180,63 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "ldapcompare  [-V[V]]  [-d debuglevel] [-n] [-v] [-z] [-M[M]] [-x] [-D binddn] [-W] [-w passwd]",
+    "ldapcompare \"uid=babs,dc=example,dc=com\"  sn:Jensen",
+    "ldapcompare \"uid=babs,dc=example,dc=com\"  sn::SmVuc2Vu"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use ldapcompare because ldapcompare - LDAP compare tool.",
+    "When the engagement is in the install phase, use ldapcompare as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `ldapcompare  [-V[V]]  [-d debuglevel] [-n] [-v] [-z] [-M[M]] [-x] [-D binddn] [-W] [-w passwd]` as documented upstream for ldapcompare.",
+    "When you need a concrete invocation, run `ldapcompare \"uid=babs,dc=example,dc=com\"  sn:Jensen` as documented upstream for ldapcompare.",
+    "When you need a concrete invocation, run `ldapcompare \"uid=babs,dc=example,dc=com\"  sn::SmVuc2Vu` as documented upstream for ldapcompare.",
+    "When chaining Kali Linux tools, pair ldapcompare with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ldapcompare --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-I",
+        "description": "Enable SASL Interactive mode. Always prompt. Default is to prompt only as needed.",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "what would be done, but don't actually perform the compare. Useful for debugging",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Run in verbose mode, with many diagnostics written to standard output.",
+        "source": "docs"
+      },
+      {
+        "name": "-W",
+        "description": "Prompt for simple authentication. This is used instead of specifying the password on",
+        "source": "docs"
+      },
+      {
+        "name": "-x",
+        "description": "Use simple authentication instead of SASL.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "ldapcompare  [-V[V]]  [-d debuglevel] [-n] [-v] [-z] [-M[M]] [-x] [-D binddn] [-W] [-w passwd]",
+      "ldapcompare \"uid=babs,dc=example,dc=com\"  sn:Jensen",
+      "ldapcompare \"uid=babs,dc=example,dc=com\"  sn::SmVuc2Vu"
+    ],
+    "readme": "ldapcompare - LDAP compare tool",
+    "how_to_use": "Install/setup: sudo apt install openldap (2.6.10+dfsg-1). Run the primary entrypoint as shown in upstream docs, e.g. `ldapcompare \"uid=babs,dc=example,dc=com\"  sn:Jensen`. Further invocations from upstream: `ldapcompare \"uid=babs,dc=example,dc=com\"  sn::SmVuc2Vu`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: ldapcompare - LDAP compare tool.",
+    "why_to_use": "Prefer this tool because: ldapcompare - LDAP compare tool.",
+    "usage_sections": [
+      "Install with: sudo apt install openldap (2.6.10+dfsg-1)",
+      "Install with: sudo apt install openldap (2.6.10+dfsg-1)"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

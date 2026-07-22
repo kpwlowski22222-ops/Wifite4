@@ -8,8 +8,14 @@
   "url": "https://github.com/5ky9uy/Apple-System-Spoofing-C2",
   "summary": "(Original Fork Network Left)",
   "documentation": {
-    "readme": "(Original Fork Network Left)",
-    "usage_sections": [],
+    "readme": "This repository documents an active post-exploitation infrastructure leveraging Apple system services and iOS framework spoofing. The findings are based on direct observation of anomalous device behavior, C2 traffic patterns, and spoofed native components intended to evade detection.",
+    "usage_sections": [
+      "Date Identified: August 20, 2025",
+      "Targeted Platform: iOS (SpringBoard, MediaRemoteUI, accessoryd, others)",
+      "Technique: Bundle ID spoofing, memory-resident binaries, TLS-based C2",
+      "Traffic Profile: Low-noise, encrypted over port 443 (TLS 1.3), obfuscated SNI",
+      "Detection Status: Previously undocumented; evidence of stealthy persistence and native process abuse"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +199,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --help",
+      "cd toolboxes/Apple-System-Spoofing-C2 && cat README.md",
+      "cd toolboxes/Apple-System-Spoofing-C2 && ls -la",
+      "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Apple-System-Spoofing-C2 --output $KFIOSA_OUTPUT_DIR/Apple-System-Spoofing-C2.log"
+    ],
     "file_listing": [
       "README.md",
       "Threat Report .md"
@@ -245,13 +257,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['web', 'shell_windows', 'shell_linux']' as the attack surface (command_and_control, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --help",
-      "Step 2: cd toolboxes/Apple-System-Spoofing-C2 && cat README.md",
-      "Step 3: cd toolboxes/Apple-System-Spoofing-C2 && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [web, shell_windows, shell_linux] in the Command and Control category. Fits when the engagement needs: (Original Fork Network Left).",
+    "why_to_use": "Prefer this tool based on upstream description: This repository documents an active post-exploitation infrastructure leveraging Apple system services and iOS framework spoofing. The findings are based on direct observation of anomalous device behavior, C2 traffic patterns, and spoofed native components intended to evade detection.",
+    "how_to_use": "Clone or install `Apple-System-Spoofing-C2` from its upstream repository, then run `Apple-System-Spoofing-C2 --help` (or the README entrypoint) to confirm flags."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -282,11 +290,10 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Command and Control system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Command and Control, use Apple-System-Spoofing-C2 because (Original Fork Network Left).",
+    "When the engagement is in the post_exploit phase, use Apple-System-Spoofing-C2 as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
+    "When chaining Command and Control tools, pair Apple-System-Spoofing-C2 with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Apple-System-Spoofing-C2 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --help",
@@ -314,5 +321,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "gpart",
   "title": "gpart",
-  "summary": "### gpart",
+  "summary": "gpart - guess PC-type hard disk partitions",
   "version": "1:0.3-10",
   "architectures": [
     "any"
@@ -31,36 +31,14 @@
       "arguments": [
         {
           "flags": [
-            "-b"
-          ],
-          "metavar": "backupfile",
-          "takes_value": false,
-          "description": "Save a backup of the original MBR to specified file.",
-          "default": null,
-          "choices": null,
-          "raw": "-b  Save a backup of the original MBR to specified file."
-        },
-        {
-          "flags": [
-            "-C"
-          ],
-          "metavar": "c h s",
-          "takes_value": false,
-          "description": "Set c/h/s to be used in the scan.",
-          "default": null,
-          "choices": null,
-          "raw": "-C  Set c/h/s to be used in the scan."
-        },
-        {
-          "flags": [
             "-c"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Check/compare mode.",
+          "description": "Check/compare mode (implies the -q quiet option). After the scan is done, the resulting",
           "default": null,
           "choices": null,
-          "raw": "-c  Check/compare mode."
+          "raw": "-c  Check/compare mode (implies the -q quiet option). After the scan is done, the resulting"
         },
         {
           "flags": [
@@ -68,10 +46,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Do not start the guessing loop.",
+          "description": "Do not start the guessing loop. Useful if the partition table should be printed (in",
           "default": null,
           "choices": null,
-          "raw": "-d  Do not start the guessing loop."
+          "raw": "-d  Do not start the guessing loop. Useful if the partition table should be printed (in"
         },
         {
           "flags": [
@@ -79,10 +57,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Do not try to identify extended partition tables.",
+          "description": "not try to identify extended partition tables. If there are extended partitions on",
           "default": null,
           "choices": null,
-          "raw": "-E  Do not try to identify extended partition tables."
+          "raw": "-E  not try to identify extended partition tables. If there are extended partitions on"
         },
         {
           "flags": [
@@ -90,10 +68,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Do not skip disk read errors.",
+          "description": "Do not skip disk read errors. If this option is given, and short disk reads or general",
           "default": null,
           "choices": null,
-          "raw": "-e  Do not skip disk read errors."
+          "raw": "-e  Do not skip disk read errors. If this option is given, and short disk reads or general"
         },
         {
           "flags": [
@@ -101,10 +79,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Full scan.",
+          "description": "Full scan. When a possible partition is found, gpart normally skips all sectors this",
           "default": null,
           "choices": null,
-          "raw": "-f  Full scan."
+          "raw": "-f  Full scan. When a possible partition is found, gpart normally skips all sectors this"
         },
         {
           "flags": [
@@ -112,10 +90,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Do not try to get the disk geometry.",
+          "description": "Do not try to get the disk geometry from the OS. If the device is no block or character",
           "default": null,
           "choices": null,
-          "raw": "-g  Do not try to get the disk geometry."
+          "raw": "-g  Do not try to get the disk geometry from the OS. If the device is no block or character"
         },
         {
           "flags": [
@@ -123,10 +101,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Show this help.",
+          "description": "Show some help.",
           "default": null,
           "choices": null,
-          "raw": "-h  Show this help."
+          "raw": "-h  Show some help."
         },
         {
           "flags": [
@@ -134,32 +112,21 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Run interactively (ask for confirmation).",
+          "description": "Run interactively. Each time a possible partition is identified the user is asked for",
           "default": null,
           "choices": null,
-          "raw": "-i  Run interactively (ask for confirmation)."
+          "raw": "-i  Run interactively. Each time a possible partition is identified the user is asked for"
         },
         {
           "flags": [
-            "-K"
+            "-identi"
           ],
-          "metavar": "last sector",
+          "metavar": null,
           "takes_value": false,
-          "description": "Scan only up to given sector.",
+          "description": "fying a partition.",
           "default": null,
           "choices": null,
-          "raw": "-K  Scan only up to given sector."
-        },
-        {
-          "flags": [
-            "-k"
-          ],
-          "metavar": "sectors",
-          "takes_value": false,
-          "description": "Skip sectors before scan.",
-          "default": null,
-          "choices": null,
-          "raw": "-k  Skip sectors before scan."
+          "raw": "-identi  fying a partition."
         },
         {
           "flags": [
@@ -167,32 +134,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "List available modules and their weights, then exit.",
+          "description": "List available filesystem/partition type modules and their weights, then exit.",
           "default": null,
           "choices": null,
-          "raw": "-L  List available modules and their weights, then exit."
-        },
-        {
-          "flags": [
-            "-l"
-          ],
-          "metavar": "logfile",
-          "takes_value": false,
-          "description": "Logfile name.",
-          "default": null,
-          "choices": null,
-          "raw": "-l  Logfile name."
-        },
-        {
-          "flags": [
-            "-n"
-          ],
-          "metavar": "increment",
-          "takes_value": false,
-          "description": "Scan increment: number or 's' sector, 'h' head, 'c' cylinder.",
-          "default": null,
-          "choices": null,
-          "raw": "-n  Scan increment: number or 's' sector, 'h' head, 'c' cylinder."
+          "raw": "-L  List available filesystem/partition type modules and their weights, then exit."
         },
         {
           "flags": [
@@ -200,21 +145,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Run quiet (however log file is written if specified).",
+          "description": "Quiet/no output mode. However if a logfile was specified (see -l option) all output is",
           "default": null,
           "choices": null,
-          "raw": "-q  Run quiet (however log file is written if specified)."
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "sector size",
-          "takes_value": false,
-          "description": "Sector size to use (disable sector size probing).",
-          "default": null,
-          "choices": null,
-          "raw": "-s  Sector size to use (disable sector size probing)."
+          "raw": "-q  Quiet/no output mode. However if a logfile was specified (see -l option) all output is"
         },
         {
           "flags": [
@@ -222,10 +156,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Show version.",
+          "description": "Show version number.",
           "default": null,
           "choices": null,
-          "raw": "-V  Show version."
+          "raw": "-V  Show version number."
         },
         {
           "flags": [
@@ -233,32 +167,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Verbose mode. Can be given more than once.",
+          "description": "Be verbose. This option can be given more than once resulting in quite a lot of infor-",
           "default": null,
           "choices": null,
-          "raw": "-v  Verbose mode. Can be given more than once."
-        },
-        {
-          "flags": [
-            "-W"
-          ],
-          "metavar": "device",
-          "takes_value": false,
-          "description": "Write guessed primary partition table to given device or file.",
-          "default": null,
-          "choices": null,
-          "raw": "-W  Write guessed primary partition table to given device or file."
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": "module name weight",
-          "takes_value": false,
-          "description": "Weight factor of module.",
-          "default": null,
-          "choices": null,
-          "raw": "-w  Weight factor of module."
+          "raw": "-v  Be verbose. This option can be given more than once resulting in quite a lot of infor-"
         }
       ],
       "raw_help": "root@kali:~# gpart --help\n gpart: invalid option -- '-'\n Usage: gpart [options] device\n Options: [-b <backup MBR>][-C c,h,s][-c][-d][-E][-e][-f][-g][-h][-i]\n        [-K <last sector>][-k <# of sectors>][-L][-l <log file>]\n        [-n <increment>][-q][-s <sector-size>]\n        [-V][-v][-W <device>][-w <module-name,weight>]\n gpart v0.2.3-dev (c) 1999-2001 Michail Brzitwa <michail@brzitwa.de>.\n Guess PC-type hard disk partitions.\n \n Options:\n-b  Save a backup of the original MBR to specified file.\n-C  Set c/h/s to be used in the scan.\n-c  Check/compare mode.\n-d  Do not start the guessing loop.\n-E  Do not try to identify extended partition tables.\n-e  Do not skip disk read errors.\n-f  Full scan.\n-g  Do not try to get the disk geometry.\n-h  Show this help.\n-i  Run interactively (ask for confirmation).\n-K  Scan only up to given sector.\n-k  Skip sectors before scan.\n-L  List available modules and their weights, then exit.\n-l  Logfile name.\n-n  Scan increment: number or 's' sector, 'h' head, 'c' cylinder.\n-q  Run quiet (however log file is written if specified).\n-s  Sector size to use (disable sector size probing).\n-V  Show version.\n-v  Verbose mode. Can be given more than once.\n-W  Write guessed primary partition table to given device or file.\n-w  Weight factor of module.",
@@ -383,21 +295,23 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use gpart because gpart - guess PC-type hard disk partitions.",
+    "When you need a concrete invocation, run `gpart [options] device` as documented upstream for gpart.",
+    "When you need a concrete invocation, run `gpart /dev/hda` as documented upstream for gpart.",
+    "When you need a concrete invocation, run `gpart -vvd /dev/wd2` as documented upstream for gpart.",
+    "When you need a concrete invocation, run `gpart -vdg /boot/boot.0300` as documented upstream for gpart.",
+    "When chaining Kali Linux tools, pair gpart with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `gpart --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/gpart && python3 gpart.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/gpart && python3 gpart.py --help",
-    "cd toolboxes/gpart && python3 gpart.py --help",
-    "cd toolboxes/gpart && python3 gpart.py --help",
-    "cd toolboxes/gpart && python3 gpart.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gpart --output $KFIOSA_OUTPUT_DIR/gpart.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gpart --output $KFIOSA_OUTPUT_DIR/gpart.log"
+    "gpart [options] device",
+    "gpart /dev/hda",
+    "gpart -vvd /dev/wd2",
+    "gpart -vdg /boot/boot.0300",
+    "gpart -k 1 -n s /dev/hdb",
+    "gpart -w ntfs,1.5 /dev/hdb",
+    "gpart -W /dev/sdc /dev/sdc",
+    "gpart -k 1008 -n 126 /dev/sda"
   ],
   "attack_surface": [
     "web"
@@ -412,5 +326,94 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-c",
+        "description": "Check/compare mode (implies the -q quiet option). After the scan is done, the resulting",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Do not start the guessing loop. Useful if the partition table should be printed (in",
+        "source": "docs"
+      },
+      {
+        "name": "-E",
+        "description": "not try to identify extended partition tables. If there are extended partitions on",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Do not skip disk read errors. If this option is given, and short disk reads or general",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "Full scan. When a possible partition is found, gpart normally skips all sectors this",
+        "source": "docs"
+      },
+      {
+        "name": "-g",
+        "description": "Do not try to get the disk geometry from the OS. If the device is no block or character",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show some help.",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Run interactively. Each time a possible partition is identified the user is asked for",
+        "source": "docs"
+      },
+      {
+        "name": "-identi",
+        "description": "fying a partition.",
+        "source": "docs"
+      },
+      {
+        "name": "-L",
+        "description": "List available filesystem/partition type modules and their weights, then exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Quiet/no output mode. However if a logfile was specified (see -l option) all output is",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Show version number.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Be verbose. This option can be given more than once resulting in quite a lot of infor-",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "gpart [options] device",
+      "gpart /dev/hda",
+      "gpart -vvd /dev/wd2",
+      "gpart -vdg /boot/boot.0300",
+      "gpart -k 1 -n s /dev/hdb",
+      "gpart -w ntfs,1.5 /dev/hdb",
+      "gpart -W /dev/sdc /dev/sdc",
+      "gpart -k 1008 -n 126 /dev/sda"
+    ],
+    "readme": "gpart - guess PC-type hard disk partitions",
+    "how_to_use": "Install/setup: sudo apt install gpart. Run the primary entrypoint as shown in upstream docs, e.g. `gpart /dev/hda`. Further invocations from upstream: `gpart -vvd /dev/wd2`; `gpart -vdg /boot/boot.0300`. gpart - guess PC-type hard disk partitions.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: gpart - guess PC-type hard disk partitions.",
+    "why_to_use": "Prefer this tool based on upstream description: gpart - guess PC-type hard disk partitions.",
+    "usage_sections": [
+      "Install with: sudo apt install gpart",
+      "Install with: sudo apt install gpart"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

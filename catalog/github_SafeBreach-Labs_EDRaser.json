@@ -1,0 +1,303 @@
+{
+  "id": "github:SafeBreach-Labs/EDRaser",
+  "kind": "external_repository",
+  "name": "EDRaser",
+  "full_name": "SafeBreach-Labs/EDRaser",
+  "owner": "SafeBreach-Labs",
+  "category": "Penetration Testing",
+  "url": "https://github.com/SafeBreach-Labs/EDRaser",
+  "summary": "EDRaser is a powerful tool for remotely deleting access logs, Windows event logs, databases, and other files on remote machines.\nIt offers two modes of operation: automated and manual.",
+  "documentation": {
+    "readme": "EDRaser is a powerful tool for remotely deleting access logs, Windows event logs, databases, and other files on remote machines. It offers two modes of operation: automated and manual.",
+    "usage_sections": [
+      "Remote deletion of web server logs.",
+      "SysLog deletion (on Linux).",
+      "Local deletion of Windows Application event logs.",
+      "Remote deletion of Windows event logs.",
+      "ip: scan IP addresses in the specified range and attack vulnerable systems (default: localhost)."
+    ],
+    "arguments": [
+      {
+        "name": "-auto",
+        "description": "Automatically scan the curernt C LAN network and perform every possible attack",
+        "source": "docs"
+      },
+      {
+        "name": "-db_password",
+        "description": "A password for remote connection to database (used in remote_db_attack)",
+        "source": "docs"
+      },
+      {
+        "name": "-db_username",
+        "description": "A username for remote connection to database (used in remote_db_attack)",
+        "source": "docs"
+      },
+      {
+        "name": "-ip",
+        "description": "A IP address for remote attack (default: localhost)",
+        "source": "docs"
+      },
+      {
+        "name": "-port",
+        "description": "Port number for remote connection to DB / WebServer / EventLog",
+        "source": "docs"
+      },
+      {
+        "name": "-sigfile",
+        "description": "A Path to the encrypted signatures file",
+        "source": "docs"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "run_syslog_attack",
+        "signature": "def run_syslog_attack()",
+        "file": "EDRaser.py",
+        "language": "python"
+      },
+      {
+        "name": "run_auto_mode",
+        "signature": "def run_auto_mode()",
+        "file": "EDRaser.py",
+        "language": "python"
+      },
+      {
+        "name": "run_access_logs_attack",
+        "signature": "def run_access_logs_attack(ip: str, port: int = 80, log_insertion: int = 10)",
+        "file": "EDRaser.py",
+        "language": "python"
+      },
+      {
+        "name": "run_VMDK_attack",
+        "signature": "def run_VMDK_attack()",
+        "file": "EDRaser.py",
+        "language": "python"
+      },
+      {
+        "name": "run_VMX_attack",
+        "signature": "def run_VMX_attack(path_to_rpctools: str)",
+        "file": "EDRaser.py",
+        "language": "python"
+      },
+      {
+        "name": "parse_args",
+        "signature": "def parse_args()",
+        "file": "EDRaser.py",
+        "language": "python"
+      },
+      {
+        "name": "main",
+        "signature": "def main()",
+        "file": "EDRaser.py",
+        "language": "python"
+      },
+      {
+        "name": "init_logger",
+        "signature": "def init_logger()",
+        "file": "EDRaser_logger.py",
+        "language": "python"
+      },
+      {
+        "name": "run_local_database_attack",
+        "signature": "def run_local_database_attack(db_name: str, table_name: str , signature_DB: list)",
+        "file": "database.py",
+        "language": "python"
+      },
+      {
+        "name": "run_remote_database_attack",
+        "signature": "def run_remote_database_attack(signature_DB: list ,  DB_type: str , username: str , password: str, host: str, port: int, DB_name: str = None, table_name: str = None)",
+        "file": "database.py",
+        "language": "python"
+      },
+      {
+        "name": "report_event_to_event_log",
+        "signature": "def report_event_to_event_log(log_name: str,\n                              event_type: int,\n                              event_category: int,\n                              event_id: int,\n                              sid: pywintypes.SIDType = None,\n                              event_description: List[str] = None,\n                              data: str = None)",
+        "file": "event_log.py",
+        "language": "python"
+      },
+      {
+        "name": "run_local_application_event_log_attack",
+        "signature": "def run_local_application_event_log_attack(log_insertions: int = DEFAULT_LOG_INSERTION)",
+        "file": "event_log.py",
+        "language": "python"
+      },
+      {
+        "name": "run_remote_security_event_log_deletion",
+        "signature": "def run_remote_security_event_log_deletion(signatureDB: List[Signature], server_ip: str, port: int = 445, log_insertions: int = 20000)",
+        "file": "event_log.py",
+        "language": "python"
+      },
+      {
+        "name": "detect_charset",
+        "signature": "def detect_charset(input_string: str)",
+        "file": "signatures.py",
+        "language": "python"
+      },
+      {
+        "name": "create_new_signatureDB",
+        "signature": "def create_new_signatureDB(signature_list: list, path_to_sigDB: str = \"evilSignatures_new.db\")",
+        "file": "signatures.py",
+        "language": "python"
+      },
+      {
+        "name": "load_malicous_signatureDB",
+        "signature": "def load_malicous_signatureDB(path_to_sigDB: str = \"evilSignatures.db\")",
+        "file": "signatures.py",
+        "language": "python"
+      },
+      {
+        "name": "get_host_ip",
+        "signature": "def get_host_ip()",
+        "file": "utils.py",
+        "language": "python"
+      },
+      {
+        "name": "get_host_name",
+        "signature": "def get_host_name(host_ip)",
+        "file": "utils.py",
+        "language": "python"
+      },
+      {
+        "name": "is_under_vmware",
+        "signature": "def is_under_vmware()",
+        "file": "utils.py",
+        "language": "python"
+      },
+      {
+        "name": "decode_CPUID_values",
+        "signature": "def decode_CPUID_values(ebx, ecx, edx)",
+        "file": "utils.py",
+        "language": "python"
+      },
+      {
+        "name": "get_HyperVisorName",
+        "signature": "def get_HyperVisorName()",
+        "file": "utils.py",
+        "language": "python"
+      },
+      {
+        "name": "is_running_under_VMware",
+        "signature": "def is_running_under_VMware()",
+        "file": "utils.py",
+        "language": "python"
+      },
+      {
+        "name": "run_process",
+        "signature": "def run_process(process, args)",
+        "file": "utils.py",
+        "language": "python"
+      },
+      {
+        "name": "index",
+        "signature": "def index()",
+        "file": "website_db.py",
+        "language": "python"
+      },
+      {
+        "name": "getdata",
+        "signature": "def getdata()",
+        "file": "website_db.py",
+        "language": "python"
+      },
+      {
+        "name": "run_web_server",
+        "signature": "def run_web_server(DB_server_ip: str, db_type: str, port: int, db_username: str, db_password: str, table_name: str)",
+        "file": "website_db.py",
+        "language": "python"
+      }
+    ],
+    "examples": [
+      "python edraser.py --auto",
+      "python edraser.py --ip <ip_addr> --attack <attack_name> [--sigfile <signature file>]",
+      "python edraser.py --attack windows_event_log --ip $KFIOSA_TARGET_HOST",
+      "python EDRaser.py -attack remote_db -db_type mysql -db_username test_user -db_password=$KFIOSA_SECRET -ip $KFIOSA_TARGET_HOST"
+    ],
+    "file_listing": [
+      "EDRaser.py",
+      "EDRaser_logger.py",
+      "LICENSE",
+      "README.md",
+      "cpuid.py",
+      "database.py",
+      "event_log.py",
+      "evilSignatures.db",
+      "index.html",
+      "requirements.txt",
+      "signatures.py",
+      "utils.py",
+      "view_db.html",
+      "website_db.py"
+    ],
+    "languages": [
+      "python"
+    ],
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `python edraser.py --auto`. Further invocations from upstream: `python edraser.py --ip <ip_addr> --attack <attack_name> [--sigfile <signature file>]`; `python edraser.py --attack windows_event_log --ip $KFIOSA_TARGET_HOST`. EDRaser is a powerful tool for remotely deleting access logs, Windows event logs, databases, and other files on remote machines. It offers two modes of operation: automated and manual.",
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: EDRaser is a powerful tool for remotely deleting access logs, Windows event logs, databases, and other files on remote machines.\nIt offers two modes of operation: automated and manual.",
+    "why_to_use": "Prefer this tool based on upstream description: EDRaser is a powerful tool for remotely deleting access logs, Windows event logs, databases, and other files on remote machines. It offers two modes of operation: automated and manual."
+  },
+  "metadata_status": "enriched",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
+  },
+  "risk": {
+    "level": "high",
+    "signals": [
+      "intrinsic",
+      "lab_only",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "penetration_testing",
+    "toolbox",
+    "github",
+    "safebreach-labs",
+    "lang:python",
+    "lab_only",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "When you need Penetration Testing, use EDRaser because EDRaser is a powerful tool for remotely deleting access logs, Windows event logs, databases, and other files on remote machines.\nIt offers two modes of operatio.",
+    "When you need a concrete invocation, run `python edraser.py --auto` as documented upstream for EDRaser.",
+    "When you need a concrete invocation, run `python edraser.py --ip <ip_addr> --attack <attack_name> [--sigfile <signature file>]` as documented upstream for EDRaser.",
+    "When you need a concrete invocation, run `python edraser.py --attack windows_event_log --ip $KFIOSA_TARGET_HOST` as documented upstream for EDRaser.",
+    "When you need a concrete invocation, run `python EDRaser.py -attack remote_db -db_type mysql -db_username test_user -db_password=$KFIOSA_SECRET -ip $KFIOSA_TARGET_HOST` as documented upstream for EDRaser.",
+    "When chaining Penetration Testing tools, pair EDRaser with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `EDRaser --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "command_examples": [
+    "python edraser.py --auto",
+    "python edraser.py --ip <ip_addr> --attack <attack_name> [--sigfile <signature file>]",
+    "python edraser.py --attack windows_event_log --ip $KFIOSA_TARGET_HOST",
+    "python EDRaser.py -attack remote_db -db_type mysql -db_username test_user -db_password=$KFIOSA_SECRET -ip $KFIOSA_TARGET_HOST"
+  ],
+  "attack_surface": [
+    "shell_linux"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar",
+    "tool_variant_picker"
+  ],
+  "target_adaptive_targets": [
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
+}

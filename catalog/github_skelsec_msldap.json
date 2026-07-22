@@ -1,18 +1,30 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/msldap && python3 msldap.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/msldap && python3 msldap.py --help",
-    "cd toolboxes/msldap && python3 msldap.py --help",
-    "cd toolboxes/msldap && python3 msldap.py --help",
-    "cd toolboxes/msldap && python3 msldap.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msldap --output $KFIOSA_OUTPUT_DIR/msldap.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msldap --output $KFIOSA_OUTPUT_DIR/msldap.log"
+    "OPTIONAL. Specifies the root tree of all queries",
+    "ldap://$KFIOSA_TARGET_HOST (anonymous bind)",
+    "ldaps://test.corp (anonymous bind)",
+    "ldap+sspi-ntlm://test.corp",
+    "ldap+sspi-kerberos://test.corp",
+    "ldap://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (defaults to SASL GSSAPI NTLM)",
+    "ldap+simple://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (SASL SIMPLE auth)",
+    "ldap+plain://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (SASL SIMPLE auth)",
+    "ldap+ntlm-password=$KFIOSA_SECRET",
+    "ldap+ntlm-nt://TEST\\\\victim:<nthash>@$KFIOSA_TARGET_HOST"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "If you like this project, consider purchasing licenses of OctoPwn, our full pentesting suite that runs in your browser! For notifications on new builds/releases and other info, hop on to our Discord",
+    "usage_sections": [
+      "Features: - Comes with a built-in console LDAP client - All parameters can be conrolled via a conveinent URL (see below) - Supports integrated windows authentication (SSPI) both with NTLM and with KERBEROS - Supports channel binding (for ntlm and kerberos not SSPI) - Supports encryption (f",
+      "Installation: Via GIT python3 setup.py install OR pip install msldap",
+      "Usage: Please note that this is a library, and was not intended to be used as a command line program. Whit this noted, the projects packs a fully functional LDAP interactive client. When installing the msldap module with setup.py install a new binary will appear called msldap (shocking "
+    ],
     "arguments": [
+      {
+        "name": "-nt",
+        "description": "kerberos-password (dc option param must be used)",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +141,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "OPTIONAL. Specifies the root tree of all queries",
+      "ldap://$KFIOSA_TARGET_HOST (anonymous bind)",
+      "ldaps://test.corp (anonymous bind)",
+      "ldap+sspi-ntlm://test.corp",
+      "ldap+sspi-kerberos://test.corp",
+      "ldap://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (defaults to SASL GSSAPI NTLM)",
+      "ldap+simple://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (SASL SIMPLE auth)",
+      "ldap+plain://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (SASL SIMPLE auth)",
+      "ldap+ntlm-password=$KFIOSA_SECRET",
+      "ldap+ntlm-nt://TEST\\\\victim:<nthash>@$KFIOSA_TARGET_HOST"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +278,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web', 'ad']' as the attack surface (offensive, msldap, skelsec).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/msldap && python3 msldap.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/msldap && python3 msldap.py --help",
-      "Step 3: cd toolboxes/msldap && python3 msldap.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web, ad] in the frameworks category. Fits when the engagement needs: If you like this project, consider purchasing licenses of OctoPwn, our full pentesting suite that runs in your browser! For notifications on new builds/releases and other info, hop on to our Discord.",
+    "why_to_use": "Prefer this tool based on upstream description: If you like this project, consider purchasing licenses of OctoPwn, our full pentesting suite that runs in your browser! For notifications on new builds/releases and other info, hop on to our Discord.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `OPTIONAL. Specifies the root tree of all queries`. Further invocations from upstream: `ldap://$KFIOSA_TARGET_HOST (anonymous bind)`; `ldaps://test.corp (anonymous bind)`. If you like this project, consider purchasing licenses of OctoPwn, our full pentesting suite that runs in your browser! For notifications on new builds/releases and other info, hop on to our Discord."
   },
   "full_name": "skelsec/msldap",
   "id": "github:skelsec/msldap",
@@ -282,7 +301,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``msldap`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "If you like this project, consider purchasing licenses of OctoPwn, our full pentesting suite that runs in your browser! For notifications on new builds/releases and other info, hop on to our Discord",
   "tags": [
     "offensive",
     "msldap",
@@ -301,12 +320,13 @@
   },
   "url": "https://github.com/skelsec/msldap",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use msldap because If you like this project, consider purchasing licenses of OctoPwn, our full pentesting suite that runs in your browser! For notifications on new builds/releases.",
+    "When you need a concrete invocation, run `OPTIONAL. Specifies the root tree of all queries` as documented upstream for msldap.",
+    "When you need a concrete invocation, run `ldap://$KFIOSA_TARGET_HOST (anonymous bind)` as documented upstream for msldap.",
+    "When you need a concrete invocation, run `ldaps://test.corp (anonymous bind)` as documented upstream for msldap.",
+    "When you need a concrete invocation, run `ldap+sspi-ntlm://test.corp` as documented upstream for msldap.",
+    "When chaining frameworks tools, pair msldap with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `msldap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -326,5 +346,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

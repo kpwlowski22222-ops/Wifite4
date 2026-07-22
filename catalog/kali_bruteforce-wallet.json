@@ -27,7 +27,129 @@
       "path": "/usr/bin/bruteforce-wallet",
       "description": "try to find the password of an encrypted wallet file",
       "usage": "bruteforce-wallet [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Beginning of the password. The default value is \"\".",
+          "default": null,
+          "choices": null,
+          "raw": "-b  Beginning of the password. The default value is \"\"."
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "End of the password. Default: \"\".",
+          "default": null,
+          "choices": null,
+          "raw": "-e  End of the password. Default: \"\"."
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Read the passwords from a file instead of generating them.",
+          "default": null,
+          "choices": null,
+          "raw": "-f  Read the passwords from a file instead of generating them."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show help and quit.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Show help and quit."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Minimum password length (beginning and end included). Default: 1.",
+          "default": null,
+          "choices": null,
+          "raw": "-l  Minimum password length (beginning and end included). Default: 1."
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Maximum password length (beginning and end included). Default: 8.",
+          "default": null,
+          "choices": null,
+          "raw": "-m  Maximum password length (beginning and end included). Default: 8."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Password character set. Default value is \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcde-",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Password character set. Default value is \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcde-"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Number of threads to use. Default: 1.",
+          "default": null,
+          "choices": null,
+          "raw": "-t  Number of threads to use. Default: 1."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print progress info every n seconds.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Print progress info every n seconds."
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Restore the state of a previous session if the file exists, then write the state to the",
+          "default": null,
+          "choices": null,
+          "raw": "-w  Restore the state of a previous session if the file exists, then write the state to the"
+        },
+        {
+          "flags": [
+            "-wallet"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "try to find the password of an encrypted wallet file",
+          "default": null,
+          "choices": null,
+          "raw": "-wallet  try to find the password of an encrypted wallet file"
+        }
+      ]
     }
   ],
   "files": [
@@ -41,5 +163,104 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "bruteforce-wallet [options] <filename>",
+    "bruteforce-wallet -t 4 -l 5 -m 5 wallet.dat",
+    "bruteforce-wallet -t 8 -l 5 -m 10 -b \"W4l\" -e \"z\" wallet.dat",
+    "bruteforce-wallet -t 8 -l 10 -m 10 -s \"P8\" wallet.dat",
+    "bruteforce-wallet -t 6 -f dictionary.txt wallet.dat",
+    "pkill -USR1 -f bruteforce-wallet",
+    "bruteforce-wallet -t 6 -f dictionary.txt -v 30 wallet.dat",
+    "bruteforce-wallet -t 6 -f dictionary.txt -w state.txt wallet.dat"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use bruteforce-wallet because try to find the password of an encrypted wallet file.",
+    "When the engagement is in the install phase, use bruteforce-wallet as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `bruteforce-wallet [options] <filename>` as documented upstream for bruteforce-wallet.",
+    "When you need a concrete invocation, run `bruteforce-wallet -t 4 -l 5 -m 5 wallet.dat` as documented upstream for bruteforce-wallet.",
+    "When you need a concrete invocation, run `bruteforce-wallet -t 8 -l 5 -m 10 -b \"W4l\" -e \"z\" wallet.dat` as documented upstream for bruteforce-wallet.",
+    "When you need a concrete invocation, run `bruteforce-wallet -t 8 -l 10 -m 10 -s \"P8\" wallet.dat` as documented upstream for bruteforce-wallet.",
+    "When chaining Kali Linux tools, pair bruteforce-wallet with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bruteforce-wallet --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-b",
+        "description": "Beginning of the password. The default value is \"\".",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "End of the password. Default: \"\".",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "Read the passwords from a file instead of generating them.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show help and quit.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Minimum password length (beginning and end included). Default: 1.",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "Maximum password length (beginning and end included). Default: 8.",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Password character set. Default value is \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcde-",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "Number of threads to use. Default: 1.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Print progress info every n seconds.",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "Restore the state of a previous session if the file exists, then write the state to the",
+        "source": "docs"
+      },
+      {
+        "name": "-wallet",
+        "description": "try to find the password of an encrypted wallet file",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "bruteforce-wallet [options] <filename>",
+      "bruteforce-wallet -t 4 -l 5 -m 5 wallet.dat",
+      "bruteforce-wallet -t 8 -l 5 -m 10 -b \"W4l\" -e \"z\" wallet.dat",
+      "bruteforce-wallet -t 8 -l 10 -m 10 -s \"P8\" wallet.dat",
+      "bruteforce-wallet -t 6 -f dictionary.txt wallet.dat",
+      "pkill -USR1 -f bruteforce-wallet",
+      "bruteforce-wallet -t 6 -f dictionary.txt -v 30 wallet.dat",
+      "bruteforce-wallet -t 6 -f dictionary.txt -w state.txt wallet.dat"
+    ],
+    "readme": "bruteforce-wallet - try to find the password of an encrypted wallet file",
+    "how_to_use": "Install/setup: sudo apt install bruteforce-wallet. Run the primary entrypoint as shown in upstream docs, e.g. `bruteforce-wallet [options] <filename>`. Further invocations from upstream: `bruteforce-wallet -t 4 -l 5 -m 5 wallet.dat`; `bruteforce-wallet -t 8 -l 5 -m 10 -b \"W4l\" -e \"z\" wallet.dat`. try to find the password of an encrypted wallet file.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: try to find the password of an encrypted wallet file.",
+    "why_to_use": "Prefer this tool based on upstream description: bruteforce-wallet - try to find the password of an encrypted wallet file.",
+    "usage_sections": [
+      "Install with: sudo apt install bruteforce-wallet",
+      "Install with: sudo apt install bruteforce-wallet"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

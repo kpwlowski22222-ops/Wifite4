@@ -1,18 +1,151 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/Blackbird && python3 Blackbird.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Blackbird && python3 Blackbird.py --help",
-    "cd toolboxes/Blackbird && python3 Blackbird.py --help",
-    "cd toolboxes/Blackbird && python3 Blackbird.py --help",
-    "cd toolboxes/Blackbird && python3 Blackbird.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Blackbird --output $KFIOSA_OUTPUT_DIR/Blackbird.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Blackbird --output $KFIOSA_OUTPUT_DIR/Blackbird.log"
+    "python blackbird.py --username johndoe",
+    "python blackbird.py --email johndoe@example.com",
+    "python blackbird.py --email  --pdf",
+    "python blackbird.py --setup-ai",
+    "python blackbird.py --username johndoe --ai",
+    "programs. The author or any Internet provider bears NO responsibility for content or misuse",
+    "of these programs or any derivatives thereof. By using these programs you accept the fact",
+    "programs is not P1ngul1n0's responsibility."
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "> Blackbird is a powerful OSINT tool that combines fast username and email searches across more than 600 platforms with free AI-powered profiling. By leveraging community-driven projects like WhatsMyName, it ensures low false positive rates and high-quality results. Features include smart filters, polished PDF/CSV exports, and fully automated analysis — all from a single CLI.",
+    "usage_sections": [
+      "Usage: Search by username Search by email Export results to PDF"
+    ],
     "arguments": [
+      {
+        "name": "--about",
+        "description": "Show about information and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "--ai",
+        "description": "Use AI features.",
+        "source": "docs"
+      },
+      {
+        "name": "-ai",
+        "description": "Use AI features.",
+        "source": "docs"
+      },
+      {
+        "name": "--csv",
+        "description": "Generate a CSV with the results.",
+        "source": "docs"
+      },
+      {
+        "name": "--dump",
+        "description": "Dump HTML content for found accounts.",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "One or more email to search.",
+        "source": "docs"
+      },
+      {
+        "name": "-ef",
+        "description": "The list of emails to be searched.",
+        "source": "docs"
+      },
+      {
+        "name": "--email",
+        "description": "One or more email to search.",
+        "source": "docs"
+      },
+      {
+        "name": "--email-file",
+        "description": "The list of emails to be searched.",
+        "source": "docs"
+      },
+      {
+        "name": "--filter",
+        "description": "Filter sites to be searched by list property value.E.g --filter",
+        "source": "docs"
+      },
+      {
+        "name": "--json",
+        "description": "Generate a JSON with the results.",
+        "source": "docs"
+      },
+      {
+        "name": "--max-concurrent-requests",
+        "description": "Specify the maximum number of concurrent requests allowed. Default is 30.",
+        "source": "docs"
+      },
+      {
+        "name": "--no-nsfw",
+        "description": "Removes NSFW sites from the search.",
+        "source": "docs"
+      },
+      {
+        "name": "--no-update",
+        "description": "Don",
+        "source": "docs"
+      },
+      {
+        "name": "--pdf",
+        "description": "Generate a PDF with the results.",
+        "source": "docs"
+      },
+      {
+        "name": "--permute",
+        "description": "Permute usernames, ignoring single elements.",
+        "source": "docs"
+      },
+      {
+        "name": "--permuteall",
+        "description": "Permute usernames, all elements.",
+        "source": "docs"
+      },
+      {
+        "name": "--proxy",
+        "description": "Proxy to send HTTP requests though.",
+        "source": "docs"
+      },
+      {
+        "name": "--setup-ai",
+        "description": "Configure the API key required for AI features.",
+        "source": "docs"
+      },
+      {
+        "name": "--timeout",
+        "description": "Timeout in seconds for each HTTP request (Default is 30).",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "One or more usernames to search.",
+        "source": "docs"
+      },
+      {
+        "name": "-uf",
+        "description": "The list of usernames to be searched.",
+        "source": "docs"
+      },
+      {
+        "name": "--username",
+        "description": "One or more usernames to search.",
+        "source": "docs"
+      },
+      {
+        "name": "--username-file",
+        "description": "The list of usernames to be searched.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Show verbose output.",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Show verbose output.",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -44,18 +177,8 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--threads",
         "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
         "source": "generic_kfiosa"
       },
       {
@@ -66,11 +189,6 @@
       {
         "name": "--wordlist",
         "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
         "source": "generic_kfiosa"
       },
       {
@@ -91,11 +209,6 @@
       {
         "name": "--insecure",
         "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
         "source": "generic_kfiosa"
       },
       {
@@ -129,7 +242,16 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python blackbird.py --username johndoe",
+      "python blackbird.py --email johndoe@example.com",
+      "python blackbird.py --email  --pdf",
+      "python blackbird.py --setup-ai",
+      "python blackbird.py --username johndoe --ai",
+      "programs. The author or any Internet provider bears NO responsibility for content or misuse",
+      "of these programs or any derivatives thereof. By using these programs you accept the fact",
+      "programs is not P1ngul1n0's responsibility."
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +377,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, blackbird, p1ngul1n0).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Blackbird && python3 Blackbird.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Blackbird && python3 Blackbird.py --help",
-      "Step 3: cd toolboxes/Blackbird && python3 Blackbird.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: > Blackbird is a powerful OSINT tool that combines fast username and email searches across more than 600 platforms with free AI-powered profiling. By leveraging community-driven projects like WhatsMyName, it ensures low .",
+    "why_to_use": "Prefer this tool based on upstream description: > Blackbird is a powerful OSINT tool that combines fast username and email searches across more than 600 platforms with free AI-powered profiling. By leveraging community-driven projects like WhatsMyName, it ensures low false positive rates and high-quality results. Features include smart filters, polished PDF/CSV exports, and fully automated analysis — all from a single CLI.",
+    "how_to_use": "Install/setup: git clone https://github.com/p1ngul1n0/blackbird; pip install -r requirements.txt. Run the primary entrypoint as shown in upstream docs, e.g. `python blackbird.py --username johndoe`. Further invocations from upstream: `python blackbird.py --email johndoe@example.com`; `python blackbird.py --email  --pdf`. > Blackbird is a powerful OSINT tool that combines fast username and email searches across more than 600 platforms with free AI-powered profiling. By leveraging community-driven projects like WhatsMyName, it ensures low false positive rates and high-quality results. Features include smart filters, polished PDF/CSV expo."
   },
   "full_name": "p1ngul1n0/Blackbird",
   "id": "github:p1ngul1n0/Blackbird",
@@ -282,7 +400,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Blackbird`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "> Blackbird is a powerful OSINT tool that combines fast username and email searches across more than 600 platforms with free AI-powered profiling. By leveraging community-driven projects like WhatsMyName, it ensures low false positive rates and high-quality results. Features include smart filters, polished PDF/CSV exports, and fully automated analysis — all from a single CLI.",
   "tags": [
     "offensive",
     "blackbird",
@@ -300,12 +418,13 @@
   },
   "url": "https://github.com/p1ngul1n0/Blackbird",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use Blackbird because > Blackbird is a powerful OSINT tool that combines fast username and email searches across more than 600 platforms with free AI-powered profiling. By leveraging.",
+    "When you need a concrete invocation, run `python blackbird.py --username johndoe` as documented upstream for Blackbird.",
+    "When you need a concrete invocation, run `python blackbird.py --email johndoe@example.com` as documented upstream for Blackbird.",
+    "When you need a concrete invocation, run `python blackbird.py --email  --pdf` as documented upstream for Blackbird.",
+    "When you need a concrete invocation, run `python blackbird.py --setup-ai` as documented upstream for Blackbird.",
+    "When chaining osint tools, pair Blackbird with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Blackbird --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +443,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

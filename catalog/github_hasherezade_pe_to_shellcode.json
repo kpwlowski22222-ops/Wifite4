@@ -1,17 +1,17 @@
 {
   "category": "c2",
   "command_examples": [
-    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
-    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
-    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
-    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pe_to_shellcode --output $KFIOSA_OUTPUT_DIR/pe_to_shellcode.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pe_to_shellcode --output $KFIOSA_OUTPUT_DIR/pe_to_shellcode.log"
+    "pe2shc.exe <path to your PE> [output path*]",
+    "runshc.exe <converted file>"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Converts PE so that it can be then injected just like a normal shellcode. (At the same time, the output file remains to be a valid PE). Supports both 32 and 64 bit PEs",
+    "usage_sections": [
+      "TLS callbacks (called once, before the Entry Point is executed)",
+      "exceptions (if the executable you converted will be run as a shellcode, and throw the exception, the appropriate exception handler will not be found, and the application will crash)",
+      "Delay Load Imports (only the basic Import Table support is implemented)",
+      "MUI files (if the executable you converted expects some elements of the GUI have to be loaded from a MUI file, it won't work)"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +129,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "pe2shc.exe <path to your PE> [output path*]",
+      "runshc.exe <converted file>"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +258,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, pe, shellcode).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
-      "Step 3: cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the c2 category. Fits when the engagement needs: Converts PE so that it can be then injected just like a normal shellcode. (At the same time, the output file remains to be a valid PE). Supports both 32 and 64 bit PEs.",
+    "why_to_use": "Prefer this tool based on upstream description: Converts PE so that it can be then injected just like a normal shellcode. (At the same time, the output file remains to be a valid PE). Supports both 32 and 64 bit PEs.",
+    "how_to_use": "Install/setup: git clone --recursive https://github.com/hasherezade/pe_to_shellcode.git. Run the primary entrypoint as shown in upstream docs, e.g. `pe2shc.exe <path to your PE> [output path*]`. Further invocations from upstream: `runshc.exe <converted file>`. Converts PE so that it can be then injected just like a normal shellcode. (At the same time, the output file remains to be a valid PE). Supports both 32 and 64 bit PEs."
   },
   "full_name": "hasherezade/pe_to_shellcode",
   "id": "github:hasherezade/pe_to_shellcode",
@@ -282,7 +281,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``pe_to_shellcode`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Converts PE so that it can be then injected just like a normal shellcode. (At the same time, the output file remains to be a valid PE). Supports both 32 and 64 bit PEs",
   "tags": [
     "offensive",
     "pe",
@@ -301,12 +300,11 @@
   },
   "url": "https://github.com/hasherezade/pe_to_shellcode",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need c2, use pe_to_shellcode because Converts PE so that it can be then injected just like a normal shellcode. (At the same time, the output file remains to be a valid PE). Supports both 32 and 64 .",
+    "When you need a concrete invocation, run `pe2shc.exe <path to your PE> [output path*]` as documented upstream for pe_to_shellcode.",
+    "When you need a concrete invocation, run `runshc.exe <converted file>` as documented upstream for pe_to_shellcode.",
+    "When chaining c2 tools, pair pe_to_shellcode with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `pe_to_shellcode --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +323,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

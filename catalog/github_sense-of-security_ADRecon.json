@@ -1,18 +1,84 @@
 {
   "category": "microsoft",
   "command_examples": [
-    "cd toolboxes/ADRecon && python3 ADRecon.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/ADRecon && python3 ADRecon.py --help",
-    "cd toolboxes/ADRecon && python3 ADRecon.py --help",
-    "cd toolboxes/ADRecon && python3 ADRecon.py --help",
-    "cd toolboxes/ADRecon && python3 ADRecon.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ADRecon --output $KFIOSA_OUTPUT_DIR/ADRecon.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ADRecon --output $KFIOSA_OUTPUT_DIR/ADRecon.log"
+    "PS C:\\> .\\ADRecon.ps1",
+    "PS C:\\>.\\ADRecon.ps1 -DomainController <IP or FQDN> -Credential <domain\\username>",
+    "PS C:\\>.\\ADRecon.ps1 -Protocol LDAP -DomainController <IP or FQDN> -Credential <domain\\username>",
+    "PS C:\\>.\\ADRecon.ps1 -Protocol ADWS -DomainController <IP or FQDN> -Credential <domain\\username> -Collect Domain, DomainControllers",
+    "PS C:\\>.\\ADRecon.ps1 -GenExcel C:\\ADRecon-Report-<timestamp>",
+    "Domain Controller IP Address or Domain FQDN.",
+    "Domain Credentials.",
+    "Path for ADRecon output folder to save the CSV/XML/JSON/HTML files and the ADRecon-Report.xlsx. (The folder specified will be created if it doesn't exist) (Default pwd)",
+    "Timespan for Dormant accounts. (Default 90 days)",
+    "Maximum machine account password=$KFIOSA_SECRET (Default 30 days)"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Download from https://github.com/adrecon/ADRecon",
+    "usage_sections": [
+      "Getting Started: These instructions will get you a copy of the tool up and running on your local machine.",
+      "Examples: To run ADRecon on a domain member host. To run ADRecon on a domain member host as a different user. To run ADRecon on a non-member host using LDAP. To run ADRecon with specific modules on a non-member host with RSAT. (Default OutputType is STDOUT with -Collect parameter) To gener"
+    ],
     "arguments": [
+      {
+        "name": "-Collect",
+        "description": "Which modules to run (Comma separated; e.g Forest,Domain. Default all except Kerberoast)",
+        "source": "docs"
+      },
+      {
+        "name": "-Credential",
+        "description": "Domain Credentials.",
+        "source": "docs"
+      },
+      {
+        "name": "-DomainController",
+        "description": "Domain Controller IP Address or Domain FQDN.",
+        "source": "docs"
+      },
+      {
+        "name": "-DormantTimeSpan",
+        "description": "Timespan for Dormant accounts. (Default 90 days)",
+        "source": "docs"
+      },
+      {
+        "name": "-GenExcel",
+        "description": "Path for ADRecon output folder containing the CSV files to generate the ADRecon-Report.xlsx. Use it to generate the ADRecon-Report.xlsx when Microsoft Excel is not installed on the host used to run AD",
+        "source": "docs"
+      },
+      {
+        "name": "-Log",
+        "description": "Create ADRecon Log using Start-Transcript",
+        "source": "docs"
+      },
+      {
+        "name": "-OutputDir",
+        "description": "Path for ADRecon output folder to save the CSV/XML/JSON/HTML files and the ADRecon-Report.xlsx. (The folder specified will be created if it doesn't exist) (Default pwd)",
+        "source": "docs"
+      },
+      {
+        "name": "-OutputType",
+        "description": "Output Type; Comma seperated; e.g CSV,STDOUT,Excel (Default STDOUT with -Collect parameter, else CSV and Excel).",
+        "source": "docs"
+      },
+      {
+        "name": "-PageSize",
+        "description": "The PageSize to set for the LDAP searcher object. (Default 200)",
+        "source": "docs"
+      },
+      {
+        "name": "-PassMaxAge",
+        "description": "Maximum machine account password age. (Default 30 days)",
+        "source": "docs"
+      },
+      {
+        "name": "-Protocol",
+        "description": "Which protocol to use; ADWS (default) or LDAP",
+        "source": "docs"
+      },
+      {
+        "name": "-Threads",
+        "description": "The number of threads to use during processing objects (Default 10)",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +195,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "PS C:\\> .\\ADRecon.ps1",
+      "PS C:\\>.\\ADRecon.ps1 -DomainController <IP or FQDN> -Credential <domain\\username>",
+      "PS C:\\>.\\ADRecon.ps1 -Protocol LDAP -DomainController <IP or FQDN> -Credential <domain\\username>",
+      "PS C:\\>.\\ADRecon.ps1 -Protocol ADWS -DomainController <IP or FQDN> -Credential <domain\\username> -Collect Domain, DomainControllers",
+      "PS C:\\>.\\ADRecon.ps1 -GenExcel C:\\ADRecon-Report-<timestamp>",
+      "Domain Controller IP Address or Domain FQDN.",
+      "Domain Credentials.",
+      "Path for ADRecon output folder to save the CSV/XML/JSON/HTML files and the ADRecon-Report.xlsx. (The folder specified will be created if it doesn't exist) (Default pwd)",
+      "Timespan for Dormant accounts. (Default 90 days)",
+      "Maximum machine account password=$KFIOSA_SECRET (Default 30 days)"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +332,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web', 'ad']' as the attack surface (offensive, adrecon, sense-of-security).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/ADRecon && python3 ADRecon.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/ADRecon && python3 ADRecon.py --help",
-      "Step 3: cd toolboxes/ADRecon && python3 ADRecon.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web, ad] in the microsoft category. Fits when the engagement needs: Download from https://github.com/adrecon/ADRecon.",
+    "why_to_use": "Prefer this tool based on upstream description: Download from https://github.com/adrecon/ADRecon.",
+    "how_to_use": "Install/setup: git clone https://github.com/sense-of-security/ADRecon.git. Run the primary entrypoint as shown in upstream docs, e.g. `PS C:\\> .\\ADRecon.ps1`. Further invocations from upstream: `PS C:\\>.\\ADRecon.ps1 -DomainController <IP or FQDN> -Credential <domain\\username>`; `PS C:\\>.\\ADRecon.ps1 -Protocol LDAP -DomainController <IP or FQDN> -Credential <domain\\username>`. Download from https://github.com/adrecon/ADRecon."
   },
   "full_name": "sense-of-security/ADRecon",
   "id": "github:sense-of-security/ADRecon",
@@ -282,7 +355,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``ADRecon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Download from https://github.com/adrecon/ADRecon",
   "tags": [
     "offensive",
     "adrecon",
@@ -301,12 +374,13 @@
   },
   "url": "https://github.com/sense-of-security/ADRecon",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need microsoft, use ADRecon because Download from https://github.com/adrecon/ADRecon.",
+    "When you need a concrete invocation, run `PS C:\\> .\\ADRecon.ps1` as documented upstream for ADRecon.",
+    "When you need a concrete invocation, run `PS C:\\>.\\ADRecon.ps1 -DomainController <IP or FQDN> -Credential <domain\\username>` as documented upstream for ADRecon.",
+    "When you need a concrete invocation, run `PS C:\\>.\\ADRecon.ps1 -Protocol LDAP -DomainController <IP or FQDN> -Credential <domain\\username>` as documented upstream for ADRecon.",
+    "When you need a concrete invocation, run `PS C:\\>.\\ADRecon.ps1 -Protocol ADWS -DomainController <IP or FQDN> -Credential <domain\\username> -Collect Domain, DomainControllers` as documented upstream for ADRecon.",
+    "When chaining microsoft tools, pair ADRecon with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ADRecon --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -326,5 +400,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

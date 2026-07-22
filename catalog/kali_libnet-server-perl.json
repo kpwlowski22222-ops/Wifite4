@@ -27,7 +27,19 @@
       "path": "/usr/bin/net-server",
       "description": "Base Net::Server starting module",
       "usage": "net-server [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-server"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Base Net::Server starting module",
+          "default": null,
+          "choices": null,
+          "raw": "-server  Base Net::Server starting module"
+        }
+      ]
     }
   ],
   "files": [
@@ -65,5 +77,50 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "net-server [base type] [net server arguments]",
+    "net-server PreFork ipv '*'",
+    "net-server HTTP",
+    "net-server HTTP app foo.cgi",
+    "net-server HTTP app foo.cgi app /=bar.cgi",
+    "net-server HTTP port 8080 port 8443/ssl ipv '*' server_type PreFork --SSL_key_file=my.key --SSL_cert_file=my.crt access_log_file STDERR"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use net-server because extensible, general perl server engine.",
+    "When the engagement is in the install phase, use net-server as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `net-server [base type] [net server arguments]` as documented upstream for net-server.",
+    "When you need a concrete invocation, run `net-server PreFork ipv '*'` as documented upstream for net-server.",
+    "When you need a concrete invocation, run `net-server HTTP` as documented upstream for net-server.",
+    "When you need a concrete invocation, run `net-server HTTP app foo.cgi` as documented upstream for net-server.",
+    "When chaining Kali Linux tools, pair net-server with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `net-server --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-server",
+        "description": "Base Net::Server starting module",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "net-server [base type] [net server arguments]",
+      "net-server PreFork ipv '*'",
+      "net-server HTTP",
+      "net-server HTTP app foo.cgi",
+      "net-server HTTP app foo.cgi app /=bar.cgi",
+      "net-server HTTP port 8080 port 8443/ssl ipv '*' server_type PreFork --SSL_key_file=my.key --SSL_cert_file=my.crt access_log_file STDERR"
+    ],
+    "readme": "net-server - Base Net::Server starting module",
+    "how_to_use": "Install/setup: sudo apt install libnet-server-perl. Run the primary entrypoint as shown in upstream docs, e.g. `net-server HTTP app foo.cgi`. Further invocations from upstream: `net-server HTTP app foo.cgi app /=bar.cgi`; `net-server HTTP port 8080 port 8443/ssl ipv '*' server_type PreFork --SSL_key_file=my.key --SSL_cert_file=my.crt access_log_file STDERR`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: extensible, general perl server engine.",
+    "why_to_use": "Prefer this tool based on upstream description: net-server - Base Net::Server starting module.",
+    "usage_sections": [
+      "Install with: sudo apt install libnet-server-perl",
+      "Install with: sudo apt install libnet-server-perl"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

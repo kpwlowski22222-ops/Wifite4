@@ -1,18 +1,185 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/Photon && python3 Photon.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Photon && python3 Photon.py --help",
-    "cd toolboxes/Photon && python3 Photon.py --help",
-    "cd toolboxes/Photon && python3 Photon.py --help",
-    "cd toolboxes/Photon && python3 Photon.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Photon --output $KFIOSA_OUTPUT_DIR/Photon.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Photon --output $KFIOSA_OUTPUT_DIR/Photon.log"
+    "docker build -t photon .",
+    "docker run -it --name photon photon:latest -u google.com",
+    "docker run -it --name photon -v \"$PWD:/Photon/google.com\" photon:latest -u google.com"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Incredibly fast crawler designed for OSINT.",
+    "usage_sections": [
+      "URLs (in-scope & out-of-scope)",
+      "URLs with parameters (example.com/gallery.php?id=2)",
+      "Intel (emails, social media accounts, amazon buckets etc.)",
+      "Files (pdf, png, xml etc.)",
+      "Secret keys (auth/API keys & hashes)"
+    ],
     "arguments": [
+      {
+        "name": "-c",
+        "description": "cookie",
+        "source": "docs"
+      },
+      {
+        "name": "--clone",
+        "description": "clone the website locally",
+        "source": "docs"
+      },
+      {
+        "name": "--cookie",
+        "description": "cookie",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "delay between requests",
+        "source": "docs"
+      },
+      {
+        "name": "--delay",
+        "description": "delay between requests",
+        "source": "docs"
+      },
+      {
+        "name": "--dns",
+        "description": "enumerate subdomains and DNS data",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "export format",
+        "source": "docs"
+      },
+      {
+        "name": "--exclude",
+        "description": "exclude URLs matching this regex",
+        "source": "docs"
+      },
+      {
+        "name": "--export",
+        "description": "export format",
+        "source": "docs"
+      },
+      {
+        "name": "--headers",
+        "description": "add headers",
+        "source": "docs"
+      },
+      {
+        "name": "--keys",
+        "description": "find secret keys",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "levels to crawl",
+        "source": "docs"
+      },
+      {
+        "name": "--level",
+        "description": "levels to crawl",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "output directory",
+        "source": "docs"
+      },
+      {
+        "name": "--only-urls",
+        "description": "only extract URLs",
+        "source": "docs"
+      },
+      {
+        "name": "--output",
+        "description": "output directory",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Proxy server IP:PORT or DOMAIN:PORT",
+        "source": "docs"
+      },
+      {
+        "name": "--proxy",
+        "description": "Proxy server IP:PORT or DOMAIN:PORT",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "regex pattern",
+        "source": "docs"
+      },
+      {
+        "name": "--regex",
+        "description": "regex pattern",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "additional seed URLs",
+        "source": "docs"
+      },
+      {
+        "name": "--seeds",
+        "description": "additional seed URLs",
+        "source": "docs"
+      },
+      {
+        "name": "--stdout",
+        "description": "send variables to stdout",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "number of threads",
+        "source": "docs"
+      },
+      {
+        "name": "--threads",
+        "description": "number of threads",
+        "source": "docs"
+      },
+      {
+        "name": "--timeout",
+        "description": "http request timeout",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "root url",
+        "source": "docs"
+      },
+      {
+        "name": "--update",
+        "description": "update photon",
+        "source": "docs"
+      },
+      {
+        "name": "--url",
+        "description": "root url",
+        "source": "docs"
+      },
+      {
+        "name": "--user-agent",
+        "description": "custom user agent(s)",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "verbose output",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "verbose output",
+        "source": "docs"
+      },
+      {
+        "name": "--wayback",
+        "description": "fetch URLs from archive.org as seeds",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -21,11 +188,6 @@
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
       },
       {
@@ -44,21 +206,6 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--rate",
         "description": "Packet / request rate limit.",
         "source": "generic_kfiosa"
@@ -66,21 +213,6 @@
       {
         "name": "--wordlist",
         "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--user-agent",
-        "description": "HTTP User-Agent header.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--cookie",
-        "description": "HTTP Cookie header.",
         "source": "generic_kfiosa"
       },
       {
@@ -129,7 +261,11 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "docker build -t photon .",
+      "docker run -it --name photon photon:latest -u google.com",
+      "docker run -it --name photon -v \"$PWD:/Photon/google.com\" photon:latest -u google.com"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +391,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, photon, s0md3v).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Photon && python3 Photon.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Photon && python3 Photon.py --help",
-      "Step 3: cd toolboxes/Photon && python3 Photon.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: Incredibly fast crawler designed for OSINT.",
+    "why_to_use": "Prefer this tool based on upstream description: Incredibly fast crawler designed for OSINT.",
+    "how_to_use": "Install/setup: git clone https://github.com/s0md3v/Photon.git; docker run -it --name photon photon:latest -u google.com. Run the primary entrypoint as shown in upstream docs, e.g. `docker build -t photon .`. Further invocations from upstream: `docker run -it --name photon photon:latest -u google.com`; `docker run -it --name photon -v \"$PWD:/Photon/google.com\" photon:latest -u google.com`. Incredibly fast crawler designed for OSINT."
   },
   "full_name": "s0md3v/Photon",
   "id": "github:s0md3v/Photon",
@@ -282,7 +414,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Photon`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Incredibly fast crawler designed for OSINT.",
   "tags": [
     "offensive",
     "photon",
@@ -300,12 +432,12 @@
   },
   "url": "https://github.com/s0md3v/Photon",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use Photon because Incredibly fast crawler designed for OSINT.",
+    "When you need a concrete invocation, run `docker build -t photon .` as documented upstream for Photon.",
+    "When you need a concrete invocation, run `docker run -it --name photon photon:latest -u google.com` as documented upstream for Photon.",
+    "When you need a concrete invocation, run `docker run -it --name photon -v \"$PWD:/Photon/google.com\" photon:latest -u google.com` as documented upstream for Photon.",
+    "When chaining frameworks tools, pair Photon with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Photon --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +456,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

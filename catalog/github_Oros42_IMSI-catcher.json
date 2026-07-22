@@ -1,26 +1,82 @@
 {
   "category": "ble",
   "command_examples": [
-    "cd toolboxes/IMSI-catcher && python3 IMSI-catcher.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/IMSI-catcher && python3 IMSI-catcher.py --help",
-    "cd toolboxes/IMSI-catcher && python3 IMSI-catcher.py --help",
-    "cd toolboxes/IMSI-catcher && python3 IMSI-catcher.py --help",
-    "cd toolboxes/IMSI-catcher && python3 IMSI-catcher.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST IMSI-catcher --output $KFIOSA_OUTPUT_DIR/IMSI-catcher.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST IMSI-catcher --output $KFIOSA_OUTPUT_DIR/IMSI-catcher.log"
+    "wget $KFIOSA_TARGET_URL && unzip -q master.zip",
+    "docker run -ti --net=host -e DISPLAY=$DISPLAY --privileged -v /dev/bus/usb:/dev/bus/usb  atomicpowerman/imsi-catcher bash",
+    "python3 simple_IMSI-catcher.py -h",
+    "Usage: simple_IMSI-catcher.py: [options]",
+    "sudo python3 simple_IMSI-catcher.py -s",
+    "sudo wireshark -k -Y '!icmp && gsmtap' -i lo",
+    "ARFCN:  974, Freq:  925.0M, CID:     2, LAC:   1337, MCC: 208, MNC:  20, Pwr: -41",
+    "ARFCN:  976, Freq:  925.4M, CID:  4242, LAC:   1007, MCC: 208, MNC:  20, Pwr: -45",
+    "grgsm_livemon -f 925.4M",
+    "cd kalibrate-hackrf/"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "This program shows you IMSI numbers, country, brand and operator of cellphones around you.",
+    "usage_sections": [
+      "Ubuntu 20.04/LinuxMint 22.2",
+      "USB DVB-T key (RTL2832U) with antenna (less than 15$)"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-a",
+        "description": "Show TMSI who haven't got IMSI (default : false)",
+        "source": "docs"
+      },
+      {
+        "name": "--alltmsi",
+        "description": "Show TMSI who haven't got IMSI (default : false)",
+        "source": "docs"
+      },
+      {
+        "name": "-Gsm",
+        "description": "https://osmocom.org/projects/gr-gsm/wiki/Installation and https://github.com/velichkov/gr-gsm",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "IMSI to track (default : None, Example:",
+        "source": "docs"
+      },
+      {
+        "name": "--mysql",
+        "description": "Save observed IMSI values to specified MYSQL DB (copy",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Port (default : 4729)",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "sniff on interface instead of listening on port",
+        "source": "docs"
+      },
+      {
+        "name": "--sniff",
+        "description": "sniff on interface instead of listening on port",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "Save observed IMSI values to specified TXT file",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -129,7 +185,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "wget $KFIOSA_TARGET_URL && unzip -q master.zip",
+      "docker run -ti --net=host -e DISPLAY=$DISPLAY --privileged -v /dev/bus/usb:/dev/bus/usb  atomicpowerman/imsi-catcher bash",
+      "python3 simple_IMSI-catcher.py -h",
+      "Usage: simple_IMSI-catcher.py: [options]",
+      "sudo python3 simple_IMSI-catcher.py -s",
+      "sudo wireshark -k -Y '!icmp && gsmtap' -i lo",
+      "ARFCN:  974, Freq:  925.0M, CID:     2, LAC:   1337, MCC: 208, MNC:  20, Pwr: -41",
+      "ARFCN:  976, Freq:  925.4M, CID:  4242, LAC:   1007, MCC: 208, MNC:  20, Pwr: -45",
+      "grgsm_livemon -f 925.4M",
+      "cd kalibrate-hackrf/"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +322,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, imsi, catcher).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/IMSI-catcher && python3 IMSI-catcher.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/IMSI-catcher && python3 IMSI-catcher.py --help",
-      "Step 3: cd toolboxes/IMSI-catcher && python3 IMSI-catcher.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the ble category. Fits when the engagement needs: This program shows you IMSI numbers, country, brand and operator of cellphones around you.",
+    "why_to_use": "Prefer this tool based on upstream description: This program shows you IMSI numbers, country, brand and operator of cellphones around you.",
+    "how_to_use": "Install/setup: git clone https://github.com/Oros42/IMSI-catcher.git; apt install python3-pip. Run the primary entrypoint as shown in upstream docs, e.g. `wget $KFIOSA_TARGET_URL && unzip -q master.zip`. Further invocations from upstream: `docker run -ti --net=host -e DISPLAY=$DISPLAY --privileged -v /dev/bus/usb:/dev/bus/usb  atomicpowerman/imsi-catcher bash`; `python3 simple_IMSI-catcher.py -h`. This program shows you IMSI numbers, country, brand and operator of cellphones around you."
   },
   "full_name": "Oros42/IMSI-catcher",
   "id": "github:Oros42/IMSI-catcher",
@@ -282,7 +345,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``IMSI-catcher`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "This program shows you IMSI numbers, country, brand and operator of cellphones around you.",
   "tags": [
     "offensive",
     "imsi",
@@ -301,12 +364,13 @@
   },
   "url": "https://github.com/Oros42/IMSI-catcher",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need ble, use IMSI-catcher because This program shows you IMSI numbers, country, brand and operator of cellphones around you.",
+    "When you need a concrete invocation, run `wget $KFIOSA_TARGET_URL && unzip -q master.zip` as documented upstream for IMSI-catcher.",
+    "When you need a concrete invocation, run `docker run -ti --net=host -e DISPLAY=$DISPLAY --privileged -v /dev/bus/usb:/dev/bus/usb  atomicpowerman/imsi-catcher bash` as documented upstream for IMSI-catcher.",
+    "When you need a concrete invocation, run `python3 simple_IMSI-catcher.py -h` as documented upstream for IMSI-catcher.",
+    "When you need a concrete invocation, run `Usage: simple_IMSI-catcher.py: [options]` as documented upstream for IMSI-catcher.",
+    "When chaining ble tools, pair IMSI-catcher with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `IMSI-catcher --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +389,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

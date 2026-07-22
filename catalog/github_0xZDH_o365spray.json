@@ -1,37 +1,150 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "cd toolboxes/o365spray && python3 o365spray.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/o365spray && python3 o365spray.py --help",
-    "cd toolboxes/o365spray && python3 o365spray.py --help",
-    "cd toolboxes/o365spray && python3 o365spray.py --help",
-    "cd toolboxes/o365spray && python3 o365spray.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST o365spray --output $KFIOSA_OUTPUT_DIR/o365spray.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST o365spray --output $KFIOSA_OUTPUT_DIR/o365spray.log"
+    "o365spray | Microsoft O365 User Enumerator and Password=$KFIOSA_SECRET -- v3.0.4",
+    "Target domain for validation, user enumeration, and/or",
+    "password=$KFIOSA_SECRET",
+    "Username(s) delimited using commas.",
+    "Password(s) delimited using commas.",
+    "File containing list of usernames.",
+    "File containing list of passwords.",
+    "Lockout policy's reset time (in minutes).",
+    "Specify which valiadtion module to run.",
+    "Specify which enumeration module to run."
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "o365spray is a username enumeration and password spraying tool aimed at Microsoft Office 365 (O365). This tool reimplements a collection of enumeration and spray techniques researched and identified by those mentioned in Acknowledgments.",
+    "usage_sections": [
+      "User Agent Randomization",
+      "getuserrealm (default)",
+      "https://github.com/sqlmapproject/sqlmap/blob/master/data/txt/user-agents.txt",
+      "https://www.useragentstring.com/pages/useragentstring.php?name="
+    ],
     "arguments": [
+      {
+        "name": "--adfs-url",
+        "description": "AuthURL of the target domain's ADFS login page for password",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Enable debug output.",
+        "source": "docs"
+      },
+      {
+        "name": "--enum",
+        "description": "Run username enumeration.",
+        "source": "docs"
+      },
+      {
+        "name": "--enum-module",
+        "description": "Specify which enumeration module to run.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--jitter",
+        "description": "Jitter extends --sleep period by percentage given (0-100).",
+        "source": "docs"
+      },
+      {
+        "name": "--output",
+        "description": "Output directory for results and test case files.",
+        "source": "docs"
+      },
+      {
+        "name": "--paired",
+        "description": "File containing list of credentials in username:password",
+        "source": "docs"
+      },
+      {
+        "name": "--poolsize",
+        "description": "Maximum size of the ThreadPoolExecutor.",
+        "source": "docs"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/S proxy to pass traffic through",
+        "source": "docs"
+      },
+      {
+        "name": "--proxy-url",
+        "description": "FireProx API URL.",
+        "source": "docs"
+      },
+      {
+        "name": "--rate",
+        "description": "Number of concurrent connections (attempts) during",
+        "source": "docs"
+      },
+      {
+        "name": "--safe",
+        "description": "Terminate password spraying run if `N` locked accounts",
+        "source": "docs"
+      },
+      {
+        "name": "--sleep",
+        "description": "Throttle HTTP requests every `N` seconds. This can be randomized",
+        "source": "docs"
+      },
+      {
+        "name": "--spray",
+        "description": "Run password spraying.",
+        "source": "docs"
+      },
+      {
+        "name": "-spray",
+        "description": "ADFS password spraying | [adfs-spray](https://github.com/Mr-Un1k0d3r/RedTeamScripts/blob/master/adfs-spray.py) |",
+        "source": "docs"
+      },
+      {
+        "name": "--spray-module",
+        "description": "Specify which password spraying module to run.",
+        "source": "docs"
+      },
+      {
+        "name": "--timeout",
+        "description": "HTTP request timeout in seconds. Default: 25",
+        "source": "docs"
+      },
+      {
+        "name": "--useragents",
+        "description": "File containing list of user agents for randomization.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Print the tool version.",
+        "source": "docs"
+      },
+      {
+        "name": "--validate",
+        "description": "Run domain validation only.",
+        "source": "docs"
+      },
+      {
+        "name": "--validate-module",
+        "description": "Specify which valiadtion module to run.",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version.",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
-      },
-      {
-        "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
       },
       {
         "name": "--port",
@@ -54,23 +167,8 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--rate",
-        "description": "Packet / request rate limit.",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--wordlist",
         "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
         "source": "generic_kfiosa"
       },
       {
@@ -129,7 +227,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "o365spray | Microsoft O365 User Enumerator and Password=$KFIOSA_SECRET -- v3.0.4",
+      "Target domain for validation, user enumeration, and/or",
+      "password=$KFIOSA_SECRET",
+      "Username(s) delimited using commas.",
+      "Password(s) delimited using commas.",
+      "File containing list of usernames.",
+      "File containing list of passwords.",
+      "Lockout policy's reset time (in minutes).",
+      "Specify which valiadtion module to run.",
+      "Specify which enumeration module to run."
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +364,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, o365spray, 0xzdh).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/o365spray && python3 o365spray.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/o365spray && python3 o365spray.py --help",
-      "Step 3: cd toolboxes/o365spray && python3 o365spray.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the post_exploitation category. Fits when the engagement needs: o365spray is a username enumeration and password spraying tool aimed at Microsoft Office 365 (O365). This tool reimplements a collection of enumeration and spray techniques researched and identified by those mentioned in.",
+    "why_to_use": "Prefer this tool based on upstream description: o365spray is a username enumeration and password spraying tool aimed at Microsoft Office 365 (O365). This tool reimplements a collection of enumeration and spray techniques researched and identified by those mentioned in Acknowledgments.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `o365spray | Microsoft O365 User Enumerator and Password=$KFIOSA_SECRET -- v3.0.4`. Further invocations from upstream: `Target domain for validation, user enumeration, and/or`; `password=$KFIOSA_SECRET`. o365spray is a username enumeration and password spraying tool aimed at Microsoft Office 365 (O365). This tool reimplements a collection of enumeration and spray techniques researched and identified by those mentioned in Acknowledgments."
   },
   "full_name": "0xZDH/o365spray",
   "id": "github:0xZDH/o365spray",
@@ -282,7 +387,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``o365spray`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "o365spray is a username enumeration and password spraying tool aimed at Microsoft Office 365 (O365). This tool reimplements a collection of enumeration and spray techniques researched and identified by those mentioned in Acknowledgments.",
   "tags": [
     "offensive",
     "o365spray",
@@ -300,12 +405,13 @@
   },
   "url": "https://github.com/0xZDH/o365spray",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need post_exploitation, use o365spray because o365spray is a username enumeration and password spraying tool aimed at Microsoft Office 365 (O365). This tool reimplements a collection of enumeration and spra.",
+    "When you need a concrete invocation, run `o365spray | Microsoft O365 User Enumerator and Password=$KFIOSA_SECRET -- v3.0.4` as documented upstream for o365spray.",
+    "When you need a concrete invocation, run `Target domain for validation, user enumeration, and/or` as documented upstream for o365spray.",
+    "When you need a concrete invocation, run `password=$KFIOSA_SECRET` as documented upstream for o365spray.",
+    "When you need a concrete invocation, run `Username(s) delimited using commas.` as documented upstream for o365spray.",
+    "When chaining post_exploitation tools, pair o365spray with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `o365spray --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +430,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

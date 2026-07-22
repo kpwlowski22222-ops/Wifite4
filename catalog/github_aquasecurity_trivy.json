@@ -1,18 +1,26 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/trivy && python3 trivy.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/trivy && python3 trivy.py --help",
-    "cd toolboxes/trivy && python3 trivy.py --help",
-    "cd toolboxes/trivy && python3 trivy.py --help",
-    "cd toolboxes/trivy && python3 trivy.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST trivy --output $KFIOSA_OUTPUT_DIR/trivy.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST trivy --output $KFIOSA_OUTPUT_DIR/trivy.log"
+    "trivy <target> [--scanners <scanner1,scanner2>] <subject>",
+    "trivy image python:3.4-alpine",
+    "trivy fs --scanners vuln,secret,misconfig myproject/",
+    "trivy k8s --report summary cluster"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "[![GitHub Release][release-img]][release] [![Test][test-img]][test] [![Go Report Card][go-report-img]][go-report] [![License: Apache-2.0][license-img]][license] [![GitHub Downloads][github-downloads-img]][release] ![Docker Pulls][docker-pulls]",
+    "usage_sections": [
+      "Git Repository (remote)",
+      "Virtual Machine Image",
+      "OS packages and software dependencies in use (SBOM)",
+      "Known vulnerabilities (CVEs)",
+      "IaC issues and misconfigurations"
+    ],
     "arguments": [
+      {
+        "name": "-to-pronounce-the-name-trivy",
+        "description": "https://github.com/aquasecurity/community/blob/main/CODE_OF_CONDUCT.md",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +137,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "trivy <target> [--scanners <scanner1,scanner2>] <subject>",
+      "trivy image python:3.4-alpine",
+      "trivy fs --scanners vuln,secret,misconfig myproject/",
+      "trivy k8s --report summary cluster"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +268,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, trivy, aquasecurity).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/trivy && python3 trivy.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/trivy && python3 trivy.py --help",
-      "Step 3: cd toolboxes/trivy && python3 trivy.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: [![GitHub Release][release-img]][release] [![Test][test-img]][test] [![Go Report Card][go-report-img]][go-report] [![License: Apache-2.0][license-img]][license] [![GitHub Downloads][github-downloads-img]][release] ![Dock.",
+    "why_to_use": "Prefer this tool based on upstream description: [![GitHub Release][release-img]][release] [![Test][test-img]][test] [![Go Report Card][go-report-img]][go-report] [![License: Apache-2.0][license-img]][license] [![GitHub Downloads][github-downloads-img]][release] ![Docker Pulls][docker-pulls].",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `trivy <target> [--scanners <scanner1,scanner2>] <subject>`. Further invocations from upstream: `trivy image python:3.4-alpine`; `trivy fs --scanners vuln,secret,misconfig myproject/`. [![GitHub Release][release-img]][release] [![Test][test-img]][test] [![Go Report Card][go-report-img]][go-report] [![License: Apache-2.0][license-img]][license] [![GitHub Downloads][github-downloads-img]][release] ![Docker Pulls][docker-pulls]."
   },
   "full_name": "aquasecurity/trivy",
   "id": "github:aquasecurity/trivy",
@@ -282,7 +291,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``trivy`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "[![GitHub Release][release-img]][release] [![Test][test-img]][test] [![Go Report Card][go-report-img]][go-report] [![License: Apache-2.0][license-img]][license] [![GitHub Downloads][github-downloads-img]][release] ![Docker Pulls][docker-pulls]",
   "tags": [
     "offensive",
     "trivy",
@@ -300,12 +309,13 @@
   },
   "url": "https://github.com/aquasecurity/trivy",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use trivy because [![GitHub Release][release-img]][release] [![Test][test-img]][test] [![Go Report Card][go-report-img]][go-report] [![License: Apache-2.0][license-img]][license].",
+    "When you need a concrete invocation, run `trivy <target> [--scanners <scanner1,scanner2>] <subject>` as documented upstream for trivy.",
+    "When you need a concrete invocation, run `trivy image python:3.4-alpine` as documented upstream for trivy.",
+    "When you need a concrete invocation, run `trivy fs --scanners vuln,secret,misconfig myproject/` as documented upstream for trivy.",
+    "When you need a concrete invocation, run `trivy k8s --report summary cluster` as documented upstream for trivy.",
+    "When chaining frameworks tools, pair trivy with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `trivy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +334,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

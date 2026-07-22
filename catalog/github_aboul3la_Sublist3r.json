@@ -1,18 +1,106 @@
 {
   "category": "exploit",
   "command_examples": [
-    "cd toolboxes/Sublist3r && python3 Sublist3r.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Sublist3r && python3 Sublist3r.py --help",
-    "cd toolboxes/Sublist3r && python3 Sublist3r.py --help",
-    "cd toolboxes/Sublist3r && python3 Sublist3r.py --help",
-    "cd toolboxes/Sublist3r && python3 Sublist3r.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Sublist3r --output $KFIOSA_OUTPUT_DIR/Sublist3r.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Sublist3r --output $KFIOSA_OUTPUT_DIR/Sublist3r.log"
+    "sudo pip install -r requirements.txt",
+    "Sublist3r currently supports **Python 2** and **Python 3**."
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Sublist3r is a python tool designed to enumerate subdomains of websites using OSINT. It helps penetration testers and bug hunters collect and gather subdomains for the domain they are targeting. Sublist3r enumerates subdomains using many search engines such as Google, Yahoo, Bing, Baidu and Ask. Sublist3r also enumerates subdomains using Netcraft, Virustotal, ThreatCrowd, DNSdumpster and ReverseDNS.",
+    "usage_sections": [
+      "Usage: Short Form | Long Form | Description ------------- | ------------- |------------- -d | --domain | Domain name to enumerate subdomains of -b | --bruteforce | Enable the subbrute bruteforce module -p | --ports | Scan the found subdomains against specific tcp ports -v | --verbose | ",
+      "Examples: To list all the basic options and switches use -h switch: To enumerate subdomains of specific domain: `python sublist3r.py -d example.com To enumerate subdomains of specific domain and show only subdomains which have open ports 80 and 443 : python sublist3r.py -d example.com -p 8"
+    ],
     "arguments": [
+      {
+        "name": "-b",
+        "description": "| --bruteforce | Enable the subbrute bruteforce module",
+        "source": "docs"
+      },
+      {
+        "name": "--bruteforce",
+        "description": "Enable the subbrute bruteforce module",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "| --domain | Domain name to enumerate subdomains of",
+        "source": "docs"
+      },
+      {
+        "name": "--domain",
+        "description": "Domain name to enumerate it",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "| --engines | Specify a comma-separated list of search engines",
+        "source": "docs"
+      },
+      {
+        "name": "-Ela",
+        "description": "twitter.com/aboul3la",
+        "source": "docs"
+      },
+      {
+        "name": "--engines",
+        "description": "Specify a comma-separated list of search engines",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "| --help | show the help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "Output without color",
+        "source": "docs"
+      },
+      {
+        "name": "--no-color",
+        "description": "Output without color",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "| --output | Save the results to text file",
+        "source": "docs"
+      },
+      {
+        "name": "--output",
+        "description": "Save the results to text file",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "| --ports | Scan the found subdomains against specific tcp ports",
+        "source": "docs"
+      },
+      {
+        "name": "--ports",
+        "description": "Scan the found subdomains against specified tcp ports",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "| --threads | Number of threads to use for subbrute bruteforce",
+        "source": "docs"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of threads to use for subbrute bruteforce",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "| --verbose | Enable the verbose mode and display results in realtime",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Enable Verbosity and display results in realtime",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -21,11 +109,6 @@
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
       },
       {
@@ -41,16 +124,6 @@
       {
         "name": "--interface",
         "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
         "source": "generic_kfiosa"
       },
       {
@@ -99,11 +172,6 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--quiet",
         "description": "Suppress non-error output.",
         "source": "generic_kfiosa"
@@ -129,7 +197,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo pip install -r requirements.txt",
+      "Sublist3r currently supports **Python 2** and **Python 3**."
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +326,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, sublist3r, aboul3la).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Sublist3r && python3 Sublist3r.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Sublist3r && python3 Sublist3r.py --help",
-      "Step 3: cd toolboxes/Sublist3r && python3 Sublist3r.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the exploit category. Fits when the engagement needs: Sublist3r is a python tool designed to enumerate subdomains of websites using OSINT. It helps penetration testers and bug hunters collect and gather subdomains for the domain they are targeting. Sublist3r enumerates subd.",
+    "why_to_use": "Prefer this tool based on upstream description: Sublist3r is a python tool designed to enumerate subdomains of websites using OSINT. It helps penetration testers and bug hunters collect and gather subdomains for the domain they are targeting. Sublist3r enumerates subdomains using many search engines such as Google, Yahoo, Bing, Baidu and Ask. Sublist3r also enumerates subdomains using Netcraft, Virustotal, ThreatCrowd, DNSdumpster and ReverseDN.",
+    "how_to_use": "Install/setup: git clone https://github.com/aboul3la/Sublist3r.git. Run the primary entrypoint as shown in upstream docs, e.g. `sudo pip install -r requirements.txt`. Further invocations from upstream: `Sublist3r currently supports **Python 2** and **Python 3**.`. Sublist3r is a python tool designed to enumerate subdomains of websites using OSINT. It helps penetration testers and bug hunters collect and gather subdomains for the domain they are targeting. Sublist3r enumerates subdomains using many search engines such as Google, Yahoo, Bing, Baidu and Ask. Sublist3r also enumerat."
   },
   "full_name": "aboul3la/Sublist3r",
   "id": "github:aboul3la/Sublist3r",
@@ -282,7 +349,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Sublist3r`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Sublist3r is a python tool designed to enumerate subdomains of websites using OSINT. It helps penetration testers and bug hunters collect and gather subdomains for the domain they are targeting. Sublist3r enumerates subdomains using many search engines such as Google, Yahoo, Bing, Baidu and Ask. Sublist3r also enumerates subdomains using Netcraft, Virustotal, ThreatCrowd, DNSdumpster and ReverseDNS.",
   "tags": [
     "offensive",
     "sublist3r",
@@ -300,12 +367,11 @@
   },
   "url": "https://github.com/aboul3la/Sublist3r",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need exploit, use Sublist3r because Sublist3r is a python tool designed to enumerate subdomains of websites using OSINT. It helps penetration testers and bug hunters collect and gather subdomains .",
+    "When you need a concrete invocation, run `sudo pip install -r requirements.txt` as documented upstream for Sublist3r.",
+    "When you need a concrete invocation, run `Sublist3r currently supports **Python 2** and **Python 3**.` as documented upstream for Sublist3r.",
+    "When chaining exploit tools, pair Sublist3r with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Sublist3r --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +390,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

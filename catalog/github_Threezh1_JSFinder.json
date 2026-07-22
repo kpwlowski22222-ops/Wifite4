@@ -1,17 +1,22 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/JSFinder && python3 JSFinder.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/JSFinder && python3 JSFinder.py --help",
-    "cd toolboxes/JSFinder && python3 JSFinder.py --help",
-    "cd toolboxes/JSFinder && python3 JSFinder.py --help",
-    "cd toolboxes/JSFinder && python3 JSFinder.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST JSFinder --output $KFIOSA_OUTPUT_DIR/JSFinder.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST JSFinder --output $KFIOSA_OUTPUT_DIR/JSFinder.log"
+    "python JSFinder.py -u $KFIOSA_TARGET_URL",
+    "url:$KFIOSA_TARGET_URL",
+    "$KFIOSA_TARGET_URL",
+    "$KFIOSA_TARGET_URL",
+    "$KFIOSA_TARGET_URL",
+    "$KFIOSA_TARGET_URL",
+    "python JSFinder.py -u $KFIOSA_TARGET_URL -d",
+    "python JSFinder.py -u $KFIOSA_TARGET_URL -d -ou mi_url.txt -os mi_subdomain.txt",
+    "python JSFinder.py -f text.txt",
+    "python JSFinder.py -f text.txt -j"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "JSFinder is a tool for quickly extracting URLs and subdomains from JS files on a website.",
+    "usage_sections": [
+      "增加油猴脚本用于在浏览器上访问页面时获取域名与接口，具体可见：https://github.com/Threezh1/Deconstruct/tree/main/DevToolsJSFinder"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +134,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python JSFinder.py -u $KFIOSA_TARGET_URL",
+      "url:$KFIOSA_TARGET_URL",
+      "$KFIOSA_TARGET_URL",
+      "$KFIOSA_TARGET_URL",
+      "$KFIOSA_TARGET_URL",
+      "$KFIOSA_TARGET_URL",
+      "python JSFinder.py -u $KFIOSA_TARGET_URL -d",
+      "python JSFinder.py -u $KFIOSA_TARGET_URL -d -ou mi_url.txt -os mi_subdomain.txt",
+      "python JSFinder.py -f text.txt",
+      "python JSFinder.py -f text.txt -j"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +271,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, jsfinder, threezh1).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/JSFinder && python3 JSFinder.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/JSFinder && python3 JSFinder.py --help",
-      "Step 3: cd toolboxes/JSFinder && python3 JSFinder.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: JSFinder is a tool for quickly extracting URLs and subdomains from JS files on a website.",
+    "why_to_use": "Prefer this tool based on upstream description: JSFinder is a tool for quickly extracting URLs and subdomains from JS files on a website.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `python JSFinder.py -u $KFIOSA_TARGET_URL`. Further invocations from upstream: `url:$KFIOSA_TARGET_URL`; `$KFIOSA_TARGET_URL`. JSFinder is a tool for quickly extracting URLs and subdomains from JS files on a website."
   },
   "full_name": "Threezh1/JSFinder",
   "id": "github:Threezh1/JSFinder",
@@ -282,7 +294,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``JSFinder`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "JSFinder is a tool for quickly extracting URLs and subdomains from JS files on a website.",
   "tags": [
     "offensive",
     "jsfinder",
@@ -300,12 +312,12 @@
   },
   "url": "https://github.com/Threezh1/JSFinder",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use JSFinder because JSFinder is a tool for quickly extracting URLs and subdomains from JS files on a website.",
+    "When you need a concrete invocation, run `python JSFinder.py -u $KFIOSA_TARGET_URL` as documented upstream for JSFinder.",
+    "When you need a concrete invocation, run `url:$KFIOSA_TARGET_URL` as documented upstream for JSFinder.",
+    "When you need a concrete invocation, run `$KFIOSA_TARGET_URL` as documented upstream for JSFinder.",
+    "When chaining osint tools, pair JSFinder with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `JSFinder --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +336,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

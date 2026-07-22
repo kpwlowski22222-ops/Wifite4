@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "fierce",
   "title": "fierce",
-  "summary": "Domain DNS scanner",
+  "summary": "fierce - DNS scanner that helps locate non-contiguous IP space and hostnames against specified domains.",
   "description": "Domain DNS scanner\nFierce is a semi-lightweight scanner that helps locate non-contiguous\nIP space and hostnames against specified domains. It's really meant as\na pre-cursor to nmap, unicornscan, nessus, nikto, etc, since all of\nthose require that you already know what IP space you are looking for.\nThis does not perform exploitation and does not scan the whole internet\nindiscriminately. It is meant specifically to locate likely targets both\ninside and outside a corporate network.\n.\nBecause it uses DNS primarily you will often find mis-configured networks\nthat leak internal address space. That's especially useful in targeted malware.\nOriginally written by RSnake along with others at http://ha.ckers.org/.\nThis is simply a conversion to Python 3 to simplify and modernize the codebase.",
   "version": "1.6.0-2",
   "architectures": [
@@ -27,7 +27,129 @@
       "path": "/usr/bin/fierce",
       "description": "DNS scanner that helps locate non-contiguous IP space and hostnames against specified domains.",
       "usage": "fierce [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--connect"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "attempt HTTP connection to non-RFC 1918 hosts",
+          "default": null,
+          "choices": null,
+          "raw": "--connect  attempt HTTP connection to non-RFC 1918 hosts"
+        },
+        {
+          "flags": [
+            "--delay"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "time to wait between lookups",
+          "default": null,
+          "choices": null,
+          "raw": "--delay  time to wait between lookups"
+        },
+        {
+          "flags": [
+            "--dns-file"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use dns servers specified in this file for reverse lookups (one per line)",
+          "default": null,
+          "choices": null,
+          "raw": "--dns-file  use dns servers specified in this file for reverse lookups (one per line)"
+        },
+        {
+          "flags": [
+            "--domain"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "domain name to test",
+          "default": null,
+          "choices": null,
+          "raw": "--domain  domain name to test"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": "-h  show this help message and exit"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": "--help  show this help message and exit"
+        },
+        {
+          "flags": [
+            "--range"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "scan an internal IP range, use cidr notation",
+          "default": null,
+          "choices": null,
+          "raw": "--range  scan an internal IP range, use cidr notation"
+        },
+        {
+          "flags": [
+            "--subdomain-file"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "SUBDOMAIN_FILE] [--dns-servers DNS_SERVERS [DNS_SERVERS ...] | --dns-file",
+          "default": null,
+          "choices": null,
+          "raw": "--subdomain-file  SUBDOMAIN_FILE] [--dns-servers DNS_SERVERS [DNS_SERVERS ...] | --dns-file"
+        },
+        {
+          "flags": [
+            "--tcp"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use TCP instead of UDP",
+          "default": null,
+          "choices": null,
+          "raw": "--tcp  use TCP instead of UDP"
+        },
+        {
+          "flags": [
+            "--traverse"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "scan NUMBER IPs before and after discovered records. This respects Class C boundaries and",
+          "default": null,
+          "choices": null,
+          "raw": "--traverse  scan NUMBER IPs before and after discovered records. This respects Class C boundaries and"
+        },
+        {
+          "flags": [
+            "--wide"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "scan entire class c of discovered records",
+          "default": null,
+          "choices": null,
+          "raw": "--wide  scan entire class c of discovered records"
+        }
+      ]
     }
   ],
   "files": [
@@ -42,5 +164,104 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "fierce  [-h]  [--domain  DOMAIN]  [--connect]  [--wide]  [--traverse  NUMBER] [--search SEARCH",
+    "fierce --domain google.com --subdomains accounts admin ads",
+    "fierce --domain facebook.com --subdomains admin --traverse 10",
+    "fierce --domain facebook.com --subdomains admin --search fb.com fb.net",
+    "fierce --domain stackoverflow.com --subdomains mail --connect",
+    "fierce --domain facebook.com --wide",
+    "fierce --domain zonetransfer.me",
+    "fierce --domain zonetransfer.me > output.txt"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use fierce because fierce - DNS scanner that helps locate non-contiguous IP space and hostnames against specified domains.",
+    "When the engagement is in the install phase, use fierce as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `fierce  [-h]  [--domain  DOMAIN]  [--connect]  [--wide]  [--traverse  NUMBER] [--search SEARCH` as documented upstream for fierce.",
+    "When you need a concrete invocation, run `fierce --domain google.com --subdomains accounts admin ads` as documented upstream for fierce.",
+    "When you need a concrete invocation, run `fierce --domain facebook.com --subdomains admin --traverse 10` as documented upstream for fierce.",
+    "When you need a concrete invocation, run `fierce --domain facebook.com --subdomains admin --search fb.com fb.net` as documented upstream for fierce.",
+    "When chaining Kali Linux tools, pair fierce with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `fierce --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--connect",
+        "description": "attempt HTTP connection to non-RFC 1918 hosts",
+        "source": "docs"
+      },
+      {
+        "name": "--delay",
+        "description": "time to wait between lookups",
+        "source": "docs"
+      },
+      {
+        "name": "--dns-file",
+        "description": "use dns servers specified in this file for reverse lookups (one per line)",
+        "source": "docs"
+      },
+      {
+        "name": "--domain",
+        "description": "domain name to test",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--range",
+        "description": "scan an internal IP range, use cidr notation",
+        "source": "docs"
+      },
+      {
+        "name": "--subdomain-file",
+        "description": "SUBDOMAIN_FILE] [--dns-servers DNS_SERVERS [DNS_SERVERS ...] | --dns-file",
+        "source": "docs"
+      },
+      {
+        "name": "--tcp",
+        "description": "use TCP instead of UDP",
+        "source": "docs"
+      },
+      {
+        "name": "--traverse",
+        "description": "scan NUMBER IPs before and after discovered records. This respects Class C boundaries and",
+        "source": "docs"
+      },
+      {
+        "name": "--wide",
+        "description": "scan entire class c of discovered records",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "fierce  [-h]  [--domain  DOMAIN]  [--connect]  [--wide]  [--traverse  NUMBER] [--search SEARCH",
+      "fierce --domain google.com --subdomains accounts admin ads",
+      "fierce --domain facebook.com --subdomains admin --traverse 10",
+      "fierce --domain facebook.com --subdomains admin --search fb.com fb.net",
+      "fierce --domain stackoverflow.com --subdomains mail --connect",
+      "fierce --domain facebook.com --wide",
+      "fierce --domain zonetransfer.me",
+      "fierce --domain zonetransfer.me > output.txt"
+    ],
+    "readme": "fierce - DNS scanner that helps locate non-contiguous IP space and hostnames against specified domains.",
+    "how_to_use": "Install/setup: sudo apt install fierce. Run the primary entrypoint as shown in upstream docs, e.g. `fierce --domain google.com --subdomains accounts admin ads`. Further invocations from upstream: `fierce --domain facebook.com --subdomains admin --traverse 10`; `fierce --domain facebook.com --subdomains admin --search fb.com fb.net`. fierce - DNS scanner that helps locate non-contiguous IP space and hostnames against specified domains.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: fierce - DNS scanner that helps locate non-contiguous IP space and hostnames against specified domains.",
+    "why_to_use": "Prefer this tool based on upstream description: fierce - DNS scanner that helps locate non-contiguous IP space and hostnames against specified domains.",
+    "usage_sections": [
+      "Install with: sudo apt install fierce",
+      "Install with: sudo apt install fierce"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

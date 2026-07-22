@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "tightvnc",
   "title": "tightvnc",
-  "summary": "### tightvncpasswd",
+  "summary": "vncpasswd - set passwords for VNC server",
   "version": "1:1.3.10-11",
   "architectures": [
     "any"
@@ -37,25 +37,25 @@
       "arguments": [
         {
           "flags": [
-            "-t"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Write   passwords   into   /tmp/$USER-vnc/passwd,   creating    the",
-          "default": null,
-          "choices": null,
-          "raw": "    -t     Write   passwords   into   /tmp/$USER-vnc/passwd,   creating    the"
-        },
-        {
-          "flags": [
             "-f"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Filter  mode. Read plain-text passwords from stdin, write encrypted",
+          "description": "Filter mode. Read plain-text passwords from stdin, write encrypted versions to stdout.",
           "default": null,
           "choices": null,
-          "raw": "    -f     Filter  mode. Read plain-text passwords from stdin, write encrypted"
+          "raw": "-f  Filter mode. Read plain-text passwords from stdin, write encrypted versions to stdout."
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "passwords into /tmp/$USER-vnc/passwd, creating the /tmp/$USER-vnc/ directory if",
+          "default": null,
+          "choices": null,
+          "raw": "-t  passwords into /tmp/$USER-vnc/passwd, creating the /tmp/$USER-vnc/ directory if"
         }
       ],
       "raw_help": "root@kali:~# man tightvncpasswd\n vncpasswd(1)                        TightVNC                       vncpasswd(1)\n \n NAME\n    vncpasswd - set passwords for VNC server\n \n SYNOPSIS\n    vncpasswd [file]\n    vncpasswd -t\n    vncpasswd -f\n \n DESCRIPTION\n    The  vncpasswd  utility  should be used to create and change passwords for\n    the TightVNC server authentication. Xvnc uses such passwords when  started\n    with  the -rfbauth command-line option (or when started from the vncserver\n    script).\n \n    vncpasswd allows one to enter either one or two passwords. The first pass-\n    word is the primary one, the second password can be used for view-only au-\n    thentication. Xvnc will restrict mouse and keyboard input from clients who\n    authenticated with the view-only password. The vncpasswd utility asks  in-\n    teractively if it should set the second password.\n \n    The  password  file  name defaults to $HOME/.vnc/passwd unless the -t com-\n    mand-line option was used (see the OPTIONS section below). The $HOME/.vnc/\n    directory will be created if it does not exist.\n \n    Each password has to be longer than five characters (unless  the  -f  com-\n    mand-line  option  was  used,  see its description below).  Only the first\n    eight characters are significant. If the primary password  is  too  short,\n    the  program will abort. If the view-only password is too short, then only\n    the primary password will be saved.\n \n    Unless a file name was provided in the command-line explicitly, this util-\n    ity may perform certain sanity checks to prevent writing a  password  file\n    into some hazardous place.\n \n    If  at least one password was saved successfully, vncpasswd will exit with\n    status code 0. Otherwise the returned status code will be set to 1.\n \n OPTIONS\n    -t     Write   passwords   into   /tmp/$USER-vnc/passwd,   creating    the\n           /tmp/$USER-vnc/  directory  if  it does not exist, and checking the\n           permissions on that directory (the mode must be 700).  This  option\n           can help to improve security when your home partition may be shared\n           via network (e.g. when using NFS).\n \n    -f     Filter  mode. Read plain-text passwords from stdin, write encrypted\n           versions to stdout. One or two passwords  (full-control  and  view-\n           only)  can  be  supplied  in the input stream, newline terminates a\n           password.  Note that in the filter mode, short or even empty  pass-\n           words will be silently accepted.\n \n SEE ALSO\n    vncserver(1), Xvnc(1), vncviewer(1), vncconnect(1)\n \n AUTHORS\n    Original  VNC was developed in AT&T Laboratories Cambridge. TightVNC addi-\n    tions were implemented by Constantin Kaplinsky. Many other people partici-\n    pated in development, testing and support.\n \n    Man page authors:\n    Marcus Brinkmann <Marcus.Brinkmann@ruhr-uni-bochum.de>,\n    Tim Waugh <twaugh@redhat.com>,\n    Constantin Kaplinsky <const@tightvnc.com>\n \n                                 August 2006                      vncpasswd(1)",
@@ -1324,12 +1324,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use tightvncpasswd because vncpasswd - set passwords for VNC server.",
+    "When chaining Kali Linux tools, pair tightvncpasswd with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `tightvncpasswd --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/tightvnc && python3 tightvnc.py --target $KFIOSA_TARGET_HOST",
@@ -1353,5 +1350,28 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-f",
+        "description": "Filter mode. Read plain-text passwords from stdin, write encrypted versions to stdout.",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "passwords into /tmp/$USER-vnc/passwd, creating the /tmp/$USER-vnc/ directory if",
+        "source": "docs"
+      }
+    ],
+    "readme": "vncpasswd - set passwords for VNC server",
+    "how_to_use": "Install/setup: sudo apt install tightvnc.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: vncpasswd - set passwords for VNC server.",
+    "why_to_use": "Prefer this tool because: vncpasswd - set passwords for VNC server.",
+    "usage_sections": [
+      "Install with: sudo apt install tightvnc"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

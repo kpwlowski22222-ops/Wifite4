@@ -7,10 +7,13 @@
   "category": "IPA dumper (decrypted App Store apps)",
   "url": "https://github.com/AloneMonkey/frida-ios-dump",
   "toolbox_path": "toolboxes/ios/frida-ios-dump",
-  "summary": "Repository indexing entry for the ``frida-ios-dump`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "frida-ios-dump Pull a decrypted IPA from a jailbroken device",
   "documentation": {
-    "readme": "toolboxes/ios/frida-ios-dump/README.md",
-    "usage_sections": [],
+    "readme": "frida-ios-dump Pull a decrypted IPA from a jailbroken device",
+    "usage_sections": [
+      "causes device to reboot",
+      "unexpected error while probing dyld of target process"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -128,7 +131,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "./dump.py Aftenposten",
+      "Dumping Aftenposten to /var/folders/wn/9v1hs8ds6nv_xj7g95zxyl140000gn/T",
+      "start dump /var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/AftenpostenApp",
+      "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/AFNetworking.framework/AFNetworking",
+      "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/ATInternet_iOS_ObjC_SDK.framework/ATInternet_iOS_ObjC_SDK",
+      "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/SPTEventCollector.framework/SPTEventCollector",
+      "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/SPiDSDK.framework/SPiDSDK",
+      "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCore.dylib",
+      "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCoreData.dylib",
+      "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCoreGraphics.dylib"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -254,13 +268,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, frida, ios).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
-      "Step 3: cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the IPA dumper (decrypted App Store apps) category. Fits when the engagement needs: frida-ios-dump Pull a decrypted IPA from a jailbroken device.",
+    "why_to_use": "Prefer this tool based on upstream description: frida-ios-dump Pull a decrypted IPA from a jailbroken device.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `./dump.py Aftenposten`. Further invocations from upstream: `Dumping Aftenposten to /var/folders/wn/9v1hs8ds6nv_xj7g95zxyl140000gn/T`; `start dump /var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/AftenpostenApp`. frida-ios-dump Pull a decrypted IPA from a jailbroken device."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -294,21 +304,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need IPA dumper (decrypted App Store apps), use frida-ios-dump because frida-ios-dump Pull a decrypted IPA from a jailbroken device.",
+    "When you need a concrete invocation, run `./dump.py Aftenposten` as documented upstream for frida-ios-dump.",
+    "When you need a concrete invocation, run `Dumping Aftenposten to /var/folders/wn/9v1hs8ds6nv_xj7g95zxyl140000gn/T` as documented upstream for frida-ios-dump.",
+    "When you need a concrete invocation, run `start dump /var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/AftenpostenApp` as documented upstream for frida-ios-dump.",
+    "When you need a concrete invocation, run `start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/AFNetworking.framework/AFNetworking` as documented upstream for frida-ios-dump.",
+    "When chaining IPA dumper (decrypted App Store apps) tools, pair frida-ios-dump with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `frida-ios-dump --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
-    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
-    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
-    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST frida-ios-dump --output $KFIOSA_OUTPUT_DIR/frida-ios-dump.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST frida-ios-dump --output $KFIOSA_OUTPUT_DIR/frida-ios-dump.log"
+    "./dump.py Aftenposten",
+    "Dumping Aftenposten to /var/folders/wn/9v1hs8ds6nv_xj7g95zxyl140000gn/T",
+    "start dump /var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/AftenpostenApp",
+    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/AFNetworking.framework/AFNetworking",
+    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/ATInternet_iOS_ObjC_SDK.framework/ATInternet_iOS_ObjC_SDK",
+    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/SPTEventCollector.framework/SPTEventCollector",
+    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/SPiDSDK.framework/SPiDSDK",
+    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCore.dylib",
+    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCoreData.dylib",
+    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCoreGraphics.dylib"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -327,5 +341,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

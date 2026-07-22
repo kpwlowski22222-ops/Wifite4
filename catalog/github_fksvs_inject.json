@@ -9,16 +9,17 @@
   "summary": "Inject is a command line network tool for crafting, injecting, and sniffing a wide range of network protocols. It is designed for users who need a robust tool for detailed network protocol analysis and manipulation, whether for network troubleshooting, testing, or educational purposes.",
   "documentation": {
     "readme": "Inject is a command line network tool for crafting, injecting, and sniffing a wide range of network protocols. It is designed for users who need a robust tool for detailed network protocol analysis and manipulation, whether for network troubleshooting, testing, or educational purposes.",
-    "usage_sections": [],
+    "usage_sections": [
+      "Multiple Protocol Support : Inject handles Ethernet, ARP, IP, ICMP, TCP and UDP.",
+      "Network Packet Injecting : Create and send custom network packets on specified network interfaces.",
+      "Payload Integration: Load payload files into network packets.",
+      "Network Sniffing : Capture network packets with customizable filtering options to focus on specific network protocols.",
+      "Clone the repository from [GitHub][] or [GitLab][]:"
+    ],
     "arguments": [
       {
         "name": "-C",
         "description": "CLI flag '-C' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "-D",
-        "description": "CLI flag '-D' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
         "source": "v2_enhancement"
       },
       {
@@ -193,7 +194,15 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "inject eth -i wlp5s0 -K 00:11:22:33:44:5 -a payload.txt",
+      "inject arp -i wlp5s0 -K 00:11:22:33:44:55 -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -r 1",
+      "inject ip -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -T 48",
+      "inject tcp -S $KFIOSA_TARGET_HOST -s 4444 -D $KFIOSA_TARGET_HOST -d 80 -f syn -a payload.txt",
+      "inject udp -S $KFIOSA_TARGET_HOST -s 4444 -D $KFIOSA_TARGET_HOST -d 53 -a payload.txt",
+      "inject icmp -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -t 8 -C 0",
+      "inject sniff -t -u"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -286,13 +295,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/inject && python3 inject.py --help",
-      "Step 2: cd toolboxes/inject && cat README.md",
-      "Step 3: cd toolboxes/inject && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: Inject is a command line network tool for crafting, injecting, and sniffing a wide range of network protocols. It is designed for users who need a robust tool for detailed network protocol analysis and manipulation, whet.",
+    "why_to_use": "Prefer this tool based on upstream description: Inject is a command line network tool for crafting, injecting, and sniffing a wide range of network protocols. It is designed for users who need a robust tool for detailed network protocol analysis and manipulation, whether for network troubleshooting, testing, or educational purposes.",
+    "how_to_use": "Install/setup: git clone https://github.com/fksvs/inject; git clone https://gitlab.com/fksvs/inject. Run the primary entrypoint as shown in upstream docs, e.g. `inject eth -i wlp5s0 -K 00:11:22:33:44:5 -a payload.txt`. Further invocations from upstream: `inject arp -i wlp5s0 -K 00:11:22:33:44:55 -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -r 1`; `inject ip -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -T 48`. Inject is a command line network tool for crafting, injecting, and sniffing a wide range of network protocols. It is designed for users who need a robust tool for detailed network protocol analysis and manipulation, whether for network troubleshooting, testing, or educational purposes."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -323,18 +328,22 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use inject because Inject is a command line network tool for crafting, injecting, and sniffing a wide range of network protocols. It is designed for users who need a robust tool f.",
+    "When you need a concrete invocation, run `inject eth -i wlp5s0 -K 00:11:22:33:44:5 -a payload.txt` as documented upstream for inject.",
+    "When you need a concrete invocation, run `inject arp -i wlp5s0 -K 00:11:22:33:44:55 -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -r 1` as documented upstream for inject.",
+    "When you need a concrete invocation, run `inject ip -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -T 48` as documented upstream for inject.",
+    "When you need a concrete invocation, run `inject tcp -S $KFIOSA_TARGET_HOST -s 4444 -D $KFIOSA_TARGET_HOST -d 80 -f syn -a payload.txt` as documented upstream for inject.",
+    "When chaining Wireless tools, pair inject with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `inject --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/inject && python3 inject.py --help",
-    "cd toolboxes/inject && cat README.md",
-    "cd toolboxes/inject && ls -la",
-    "cd toolboxes/inject && python3 inject.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST inject --output $KFIOSA_OUTPUT_DIR/inject.log"
+    "inject eth -i wlp5s0 -K 00:11:22:33:44:5 -a payload.txt",
+    "inject arp -i wlp5s0 -K 00:11:22:33:44:55 -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -r 1",
+    "inject ip -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -T 48",
+    "inject tcp -S $KFIOSA_TARGET_HOST -s 4444 -D $KFIOSA_TARGET_HOST -d 80 -f syn -a payload.txt",
+    "inject udp -S $KFIOSA_TARGET_HOST -s 4444 -D $KFIOSA_TARGET_HOST -d 53 -a payload.txt",
+    "inject icmp -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -t 8 -C 0",
+    "inject sniff -t -u"
   ],
   "attack_surface": [
     "wifi_2_4_ghz",
@@ -357,5 +366,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "c"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

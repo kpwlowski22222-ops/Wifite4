@@ -27,7 +27,19 @@
       "path": "/usr/bin/ncat",
       "description": "Concatenate and redirect sockets",
       "usage": "ncat [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-com"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "patible mode.",
+          "default": null,
+          "choices": null,
+          "raw": "-com  patible mode."
+        }
+      ]
     }
   ],
   "files": [
@@ -42,5 +54,54 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "ncat [OPTIONS...] [hostname] [port]",
+    "ncat example.org 8080",
+    "ncat -l 8080",
+    "ncat --sh-exec \"ncat example.org 80\" -l 8080 --keep-open",
+    "ncat --exec \"/bin/bash\" -l 8081 --keep-open",
+    "ncat --exec \"/bin/bash\" --max-conns 3 --allow $KFIOSA_TARGET_HOST/24 -l 8081 --keep-open",
+    "ncat --proxy socks4host --proxy-type socks4 --proxy-auth joe smtphost 25",
+    "ncat --proxy socks5host --proxy-type socks5 --proxy-auth joe:secret=$KFIOSA_SECRET 25"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use ncat because NMAP netcat reimplementation.",
+    "When the engagement is in the install phase, use ncat as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `ncat [OPTIONS...] [hostname] [port]` as documented upstream for ncat.",
+    "When you need a concrete invocation, run `ncat example.org 8080` as documented upstream for ncat.",
+    "When you need a concrete invocation, run `ncat -l 8080` as documented upstream for ncat.",
+    "When you need a concrete invocation, run `ncat --sh-exec \"ncat example.org 80\" -l 8080 --keep-open` as documented upstream for ncat.",
+    "When chaining Kali Linux tools, pair ncat with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ncat --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-com",
+        "description": "patible mode.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "ncat [OPTIONS...] [hostname] [port]",
+      "ncat example.org 8080",
+      "ncat -l 8080",
+      "ncat --sh-exec \"ncat example.org 80\" -l 8080 --keep-open",
+      "ncat --exec \"/bin/bash\" -l 8081 --keep-open",
+      "ncat --exec \"/bin/bash\" --max-conns 3 --allow $KFIOSA_TARGET_HOST/24 -l 8081 --keep-open",
+      "ncat --proxy socks4host --proxy-type socks4 --proxy-auth joe smtphost 25",
+      "ncat --proxy socks5host --proxy-type socks5 --proxy-auth joe:secret=$KFIOSA_SECRET 25"
+    ],
+    "readme": "ncat - Concatenate and redirect sockets",
+    "how_to_use": "Install/setup: sudo apt install nmap. Run the primary entrypoint as shown in upstream docs, e.g. `ncat [OPTIONS...] [hostname] [port]`. Further invocations from upstream: `ncat example.org 8080`; `ncat -l 8080`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: NMAP netcat reimplementation.",
+    "why_to_use": "Prefer this tool because: NMAP netcat reimplementation.",
+    "usage_sections": [
+      "Install with: sudo apt install nmap",
+      "Install with: sudo apt install nmap"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

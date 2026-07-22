@@ -27,7 +27,140 @@
       "path": "/usr/bin/certtool",
       "description": "GnuTLS certificate tool",
       "usage": "certtool [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "--generate-request"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Generate a PKCS #10 certificate request. This option must not appear",
+          "default": null,
+          "choices": null,
+          "raw": "--generate-request  Generate a PKCS #10 certificate request. This option must not appear"
+        },
+        {
+          "flags": [
+            "--hash"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "parameter. However, it is recommended for identification to use the key-id which de-",
+          "default": null,
+          "choices": null,
+          "raw": "--hash  parameter. However, it is recommended for identification to use the key-id which de-"
+        },
+        {
+          "flags": [
+            "--inder"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use DER format for input certificates, private keys, and DH parameters .",
+          "default": null,
+          "choices": null,
+          "raw": "--inder  Use DER format for input certificates, private keys, and DH parameters ."
+        },
+        {
+          "flags": [
+            "--no-inder"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use DER format for input certificates, private keys, and DH parameters .",
+          "default": null,
+          "choices": null,
+          "raw": "--no-inder  Use DER format for input certificates, private keys, and DH parameters ."
+        },
+        {
+          "flags": [
+            "--no-p7-time"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include a timestamp in the PKCS #7 structure. The no-p7-time",
+          "default": null,
+          "choices": null,
+          "raw": "--no-p7-time  include a timestamp in the PKCS #7 structure. The no-p7-time"
+        },
+        {
+          "flags": [
+            "--no-text"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "textual information before PEM-encoded certificates, private keys,",
+          "default": null,
+          "choices": null,
+          "raw": "--no-text  textual information before PEM-encoded certificates, private keys,"
+        },
+        {
+          "flags": [
+            "--p7-time"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "include a timestamp in the PKCS #7 structure. The no-p7-time",
+          "default": null,
+          "choices": null,
+          "raw": "--p7-time  include a timestamp in the PKCS #7 structure. The no-p7-time"
+        },
+        {
+          "flags": [
+            "--pubkey-info"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "THIS OPTION IS DEPRECATED",
+          "default": null,
+          "choices": null,
+          "raw": "--pubkey-info  THIS OPTION IS DEPRECATED"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Generate a PKCS #10 certificate request. This option must not appear",
+          "default": null,
+          "choices": null,
+          "raw": "-q  Generate a PKCS #10 certificate request. This option must not appear"
+        },
+        {
+          "flags": [
+            "--text"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "textual information before PEM-encoded certificates, private keys,",
+          "default": null,
+          "choices": null,
+          "raw": "--text  textual information before PEM-encoded certificates, private keys,"
+        },
+        {
+          "flags": [
+            "--ver"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "ify-purpose or --verify-hostname.",
+          "default": null,
+          "choices": null,
+          "raw": "--ver  ify-purpose or --verify-hostname."
+        },
+        {
+          "flags": [
+            "--verify-crl"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "This option must ap-",
+          "default": null,
+          "choices": null,
+          "raw": "--verify-crl  This option must ap-"
+        }
+      ]
     },
     {
       "name": "danetool",
@@ -106,5 +239,109 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "certtool [-flags] [-flag [value]] [--option-name[[=| ]value]]",
+    "certtool --generate-privkey --outfile key.pem --rsa",
+    "certtool --generate-request --load-privkey key.pem    --outfile request.pem",
+    "./certtool --generate-request --load-privkey \"pkcs11:...\"   --load-pubkey \"pkcs11:...\" --outfile request.pem",
+    "certtool --generate-privkey --outfile ca-key.pem",
+    "certtool --generate-self-signed --load-privkey ca-key.pem    --outfile ca-cert.pem",
+    "certtool --generate-certificate --load-request request.pem    --outfile cert.pem --load-ca-certificate ca-cert.pem    --load-ca-privkey ca-key.pem",
+    "certtool --generate-certificate --load-privkey key.pem    --outfile cert.pem --load-ca-certificate ca-cert.pem    --load-ca-privkey ca-key.pem"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use certtool because GNU TLS library - commandline utilities.",
+    "When the engagement is in the install phase, use certtool as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `certtool [-flags] [-flag [value]] [--option-name[[=| ]value]]` as documented upstream for certtool.",
+    "When you need a concrete invocation, run `certtool --generate-privkey --outfile key.pem --rsa` as documented upstream for certtool.",
+    "When you need a concrete invocation, run `certtool --generate-request --load-privkey key.pem    --outfile request.pem` as documented upstream for certtool.",
+    "When you need a concrete invocation, run `./certtool --generate-request --load-privkey \"pkcs11:...\"   --load-pubkey \"pkcs11:...\" --outfile request.pem` as documented upstream for certtool.",
+    "When chaining Kali Linux tools, pair certtool with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `certtool --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--generate-request",
+        "description": "Generate a PKCS #10 certificate request. This option must not appear",
+        "source": "docs"
+      },
+      {
+        "name": "--hash",
+        "description": "parameter. However, it is recommended for identification to use the key-id which de-",
+        "source": "docs"
+      },
+      {
+        "name": "--inder",
+        "description": "Use DER format for input certificates, private keys, and DH parameters .",
+        "source": "docs"
+      },
+      {
+        "name": "--no-inder",
+        "description": "Use DER format for input certificates, private keys, and DH parameters .",
+        "source": "docs"
+      },
+      {
+        "name": "--no-p7-time",
+        "description": "include a timestamp in the PKCS #7 structure. The no-p7-time",
+        "source": "docs"
+      },
+      {
+        "name": "--no-text",
+        "description": "textual information before PEM-encoded certificates, private keys,",
+        "source": "docs"
+      },
+      {
+        "name": "--p7-time",
+        "description": "include a timestamp in the PKCS #7 structure. The no-p7-time",
+        "source": "docs"
+      },
+      {
+        "name": "--pubkey-info",
+        "description": "THIS OPTION IS DEPRECATED",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Generate a PKCS #10 certificate request. This option must not appear",
+        "source": "docs"
+      },
+      {
+        "name": "--text",
+        "description": "textual information before PEM-encoded certificates, private keys,",
+        "source": "docs"
+      },
+      {
+        "name": "--ver",
+        "description": "ify-purpose or --verify-hostname.",
+        "source": "docs"
+      },
+      {
+        "name": "--verify-crl",
+        "description": "This option must ap-",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "certtool [-flags] [-flag [value]] [--option-name[[=| ]value]]",
+      "certtool --generate-privkey --outfile key.pem --rsa",
+      "certtool --generate-request --load-privkey key.pem    --outfile request.pem",
+      "./certtool --generate-request --load-privkey \"pkcs11:...\"   --load-pubkey \"pkcs11:...\" --outfile request.pem",
+      "certtool --generate-privkey --outfile ca-key.pem",
+      "certtool --generate-self-signed --load-privkey ca-key.pem    --outfile ca-cert.pem",
+      "certtool --generate-certificate --load-request request.pem    --outfile cert.pem --load-ca-certificate ca-cert.pem    --load-ca-privkey ca-key.pem",
+      "certtool --generate-certificate --load-privkey key.pem    --outfile cert.pem --load-ca-certificate ca-cert.pem    --load-ca-privkey ca-key.pem"
+    ],
+    "readme": "certtool - GnuTLS certificate tool",
+    "how_to_use": "Install/setup: sudo apt install gnutls28. Run the primary entrypoint as shown in upstream docs, e.g. `certtool [-flags] [-flag [value]] [--option-name[[=| ]value]]`. Further invocations from upstream: `certtool --generate-privkey --outfile key.pem --rsa`; `certtool --generate-request --load-privkey key.pem    --outfile request.pem`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: GNU TLS library - commandline utilities.",
+    "why_to_use": "Prefer this tool because: GNU TLS library - commandline utilities.",
+    "usage_sections": [
+      "Install with: sudo apt install gnutls28",
+      "Install with: sudo apt install gnutls28"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

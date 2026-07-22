@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "uhd",
   "title": "uhd",
-  "summary": "### libuhd-dev",
+  "summary": "rfnoc_image_builder - Build UHD image using RFNoC blocks. USAGE rfnoc_image_builder [-h] (-y YAML_CONFIG | -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B BUILD_DIR] [-O BUILD_OUTPUT_DIR] [-E BUILD_IP_DIR] [-o IMAGE_CORE_OUTPUT] [-I INCLUDE_DIR] [-b GRC_BLOCKS] [-l LOG_LEVEL] [-R] [-G] [-W] [-S SECURE_CORE] [-K SECURE_KEY] [-d DEVICE] [-n IM- AGE_CORE_NAME] [-t TARGET] [-g] [-Y] [--CHECK] [-s] [-P] [-j JOBS] [-c] [-p VIVADO_PATH] [-H] [-D] [--color {never,auto,always}] optional arguments: -h, --h",
   "version": "4.9.0.1-1.3",
   "architectures": [
     "any",
@@ -54,175 +54,72 @@
       "arguments": [
         {
           "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
-            "-y",
-            "--yaml-config"
-          ],
-          "metavar": "- aml-config YAML_CONFIG",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -y, --yaml-config YAML_CONFIG"
-        },
-        {
-          "flags": [
-            "-r",
-            "--grc-config"
-          ],
-          "metavar": "GRC_CONFIG",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -r, --grc-config GRC_CONFIG"
-        },
-        {
-          "flags": [
-            "-C",
-            "--base-dir"
-          ],
-          "metavar": "BASE_DIR",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -C, --base-dir BASE_DIR"
-        },
-        {
-          "flags": [
-            "-F",
-            "--fpga-dir"
-          ],
-          "metavar": "FPGA_DIR",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -F, --fpga-dir FPGA_DIR"
-        },
-        {
-          "flags": [
-            "-B",
-            "--build-dir"
-          ],
-          "metavar": "BUILD_DIR",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -B, --build-dir BUILD_DIR"
-        },
-        {
-          "flags": [
-            "-O",
-            "--build-output-dir"
-          ],
-          "metavar": "BUILD_OUTPUT_DIR",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -O, --build-output-dir BUILD_OUTPUT_DIR"
-        },
-        {
-          "flags": [
-            "-E",
-            "--build-ip-dir"
-          ],
-          "metavar": "BUILD_IP_DIR",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -E, --build-ip-dir BUILD_IP_DIR"
-        },
-        {
-          "flags": [
-            "-o",
-            "--image-core-output"
-          ],
-          "metavar": "--image-core utput IMAGE_CORE_OUTPUT",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -o, --image-core-output IMAGE_CORE_OUTPUT"
-        },
-        {
-          "flags": [
-            "-x",
-            "--router-hex-output"
-          ],
-          "metavar": "ROUTER_HEX_OUTPUT",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -x, --router-hex-output ROUTER_HEX_OUTPUT"
-        },
-        {
-          "flags": [
-            "-I",
-            "--include-dir"
-          ],
-          "metavar": "INCLUDE_DIR",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -I, --include-dir INCLUDE_DIR"
-        },
-        {
-          "flags": [
-            "-b",
-            "--grc-blocks"
-          ],
-          "metavar": "--grc locks GRC_BLOCKS",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -b, --grc-blocks GRC_BLOCKS"
-        },
-        {
-          "flags": [
-            "-l",
-            "--log-level"
-          ],
-          "metavar": "- og evel LOG_LEVEL",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -l, --log-level LOG_LEVEL"
-        },
-        {
-          "flags": [
-            "-R",
-            "--reuse"
+            "-C"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Reuse existing files (do not regenerate image core).",
+          "description": "Run elaboration only to check HDL syntax.",
           "default": null,
           "choices": null,
-          "raw": " -R, --reuse           Reuse existing files (do not regenerate image core)."
+          "raw": "-C  Run elaboration only to check HDL syntax."
         },
         {
           "flags": [
-            "-G",
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Cleans the IP before a new build.",
+          "default": null,
+          "choices": null,
+          "raw": "-c  Cleans the IP before a new build."
+        },
+        {
+          "flags": [
+            "--CHECK"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Run elaboration only to check HDL syntax.",
+          "default": null,
+          "choices": null,
+          "raw": "--CHECK  Run elaboration only to check HDL syntax."
+        },
+        {
+          "flags": [
+            "--clean-all"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Cleans the IP before a new build.",
+          "default": null,
+          "choices": null,
+          "raw": "--clean-all  Cleans the IP before a new build."
+        },
+        {
+          "flags": [
+            "-G"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Just generate files without building the FPGA",
+          "default": null,
+          "choices": null,
+          "raw": "-G  Just generate files without building the FPGA"
+        },
+        {
+          "flags": [
+            "-g"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Open Vivado GUI during the FPGA building process.",
+          "default": null,
+          "choices": null,
+          "raw": "-g  Open Vivado GUI during the FPGA building process."
+        },
+        {
+          "flags": [
             "--generate-only"
           ],
           "metavar": null,
@@ -230,222 +127,172 @@
           "description": "Just generate files without building the FPGA",
           "default": null,
           "choices": null,
-          "raw": " -G, --generate-only   Just generate files without building the FPGA"
+          "raw": "--generate-only  Just generate files without building the FPGA"
         },
         {
           "flags": [
-            "-W",
-            "--ignore-warnings"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -W, --ignore-warnings"
-        },
-        {
-          "flags": [
-            "-S",
-            "--secure-core"
-          ],
-          "metavar": "SECURE_CORE",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -S, --secure-core SECURE_CORE"
-        },
-        {
-          "flags": [
-            "-K",
-            "--secure-key"
-          ],
-          "metavar": "SECURE_KEY",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -K, --secure-key SECURE_KEY"
-        },
-        {
-          "flags": [
-            "-d",
-            "--device"
-          ],
-          "metavar": "- evice DEVICE",
-          "takes_value": true,
-          "description": "Device to be programmed [x300, x310, e310, e320, n300,",
-          "default": null,
-          "choices": null,
-          "raw": " -d, --device DEVICE   Device to be programmed [x300, x310, e310, e320, n300,"
-        },
-        {
-          "flags": [
-            "-n",
-            "--image-core-name",
-            "--image_core_name"
-          ],
-          "metavar": "--image-core ame IMAGE_CORE_NAME",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -n, --image-core-name, --image_core_name IMAGE_CORE_NAME"
-        },
-        {
-          "flags": [
-            "-t",
-            "--target"
-          ],
-          "metavar": "- arget E310_SG1 E310_SG1_IDLE E310_SG3 E310_SG3_IDLE E320_1G E320_XG E320_AA N310_WX N310_HG N310_XG N310_HA N310_XA N310_AA N300_WX N300_HG N300_XG N300_HA N300_XA N300_AA N320_WX N320_HG N320_XG N320_XQ N320_AQ N320_AA X310_1G X310_HG X310_XG X310_HA X310_XA X300_1G X300_HG X300_XG X300_HA X300_XA X410 X440",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -t, --target {E310_SG1,E310_SG1_IDLE,E310_SG3,E310_SG3_IDLE,E320_1G,E320_XG,E320_AA,N310_WX,N310_HG,N310_XG,N310_HA,N310_XA,N310_AA,N300_WX,N300_HG,N300_XG,N300_HA,N300_XA,N300_AA,N320_WX,N320_HG,N320_XG,N320_XQ,N320_AQ,N320_AA,X310_1G,X310_HG,X310_XG,X310_HA,X310_XA,X300_1G,X300_HG,X300_XG,X300_HA,X300_XA,X410,X440}"
-        },
-        {
-          "flags": [
-            "-g",
             "--GUI"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Open Vivado GUI during the FPGA building process",
+          "description": "Open Vivado GUI during the FPGA building process.",
           "default": null,
           "choices": null,
-          "raw": " -g, --GUI             Open Vivado GUI during the FPGA building process"
+          "raw": "--GUI  Open Vivado GUI during the FPGA building process."
         },
         {
           "flags": [
-            "-Y",
-            "--SYNTH"
+            "-h"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Stop the FPGA build process after Synthesis",
+          "description": "show a help message and exit",
           "default": null,
           "choices": null,
-          "raw": " -Y, --SYNTH           Stop the FPGA build process after Synthesis"
+          "raw": "-h  show a help message and exit"
         },
         {
           "flags": [
-            "--CHECK"
+            "--help"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Run elaboration only to check HDL syntax",
+          "description": "show a help message and exit",
           "default": null,
           "choices": null,
-          "raw": " --CHECK               Run elaboration only to check HDL syntax"
+          "raw": "--help  show a help message and exit"
         },
         {
           "flags": [
-            "-s",
-            "--save-project"
+            "--ignore-warnings"
           ],
-          "metavar": "- ave-project",
-          "takes_value": true,
-          "description": "Save Vivado project to disk",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Run build even when there are warnings in the build process.",
           "default": null,
           "choices": null,
-          "raw": " -s, --save-project    Save Vivado project to disk"
+          "raw": "--ignore-warnings  Run build even when there are warnings in the build process."
         },
         {
           "flags": [
-            "-P",
             "--ip-only"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Build only the required IPs",
+          "description": "Build only the required IPs.",
           "default": null,
           "choices": null,
-          "raw": " -P, --ip-only         Build only the required IPs"
+          "raw": "--ip-only  Build only the required IPs."
         },
         {
           "flags": [
-            "-j",
-            "--jobs"
-          ],
-          "metavar": "- obs JOBS",
-          "takes_value": true,
-          "description": "Number of parallel jobs to use with make",
-          "default": null,
-          "choices": null,
-          "raw": " -j, --jobs JOBS       Number of parallel jobs to use with make"
-        },
-        {
-          "flags": [
-            "-c",
-            "--clean-all"
-          ],
-          "metavar": "- lean-all",
-          "takes_value": true,
-          "description": "Cleans the IP before a new build",
-          "default": null,
-          "choices": null,
-          "raw": " -c, --clean-all       Cleans the IP before a new build"
-        },
-        {
-          "flags": [
-            "-p",
-            "--vivado-path"
-          ],
-          "metavar": "--vivado ath VIVADO_PATH",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -p, --vivado-path VIVADO_PATH"
-        },
-        {
-          "flags": [
-            "-H",
-            "--no-hash"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not include source YAML hash in the generated",
-          "default": null,
-          "choices": null,
-          "raw": " -H, --no-hash         Do not include source YAML hash in the generated"
-        },
-        {
-          "flags": [
-            "-D",
             "--no-date"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Do not include date or time in the generated source",
+          "description": "Do not include date or time in the generated source code.",
           "default": null,
           "choices": null,
-          "raw": " -D, --no-date         Do not include date or time in the generated source"
+          "raw": "--no-date  Do not include date or time in the generated source code."
         },
         {
           "flags": [
-            "--color"
+            "--no-hash"
           ],
-          "metavar": "never auto always",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not include source YAML hash in the generated source code.",
           "default": null,
           "choices": null,
-          "raw": " --color {never,auto,always}"
+          "raw": "--no-hash  Do not include source YAML hash in the generated source code."
         },
         {
           "flags": [
-            "-C",
-            "--CHECK"
+            "-P"
           ],
-          "metavar": "- HECK",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Build only the required IPs.",
           "default": null,
           "choices": null,
-          "raw": "     -C, --CHECK"
+          "raw": "-P  Build only the required IPs."
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Reuse existing files (do not regenerate image core).",
+          "default": null,
+          "choices": null,
+          "raw": "-R  Reuse existing files (do not regenerate image core)."
+        },
+        {
+          "flags": [
+            "--reuse"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Reuse existing files (do not regenerate image core).",
+          "default": null,
+          "choices": null,
+          "raw": "--reuse  Reuse existing files (do not regenerate image core)."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Save Vivado project to disk.",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Save Vivado project to disk."
+        },
+        {
+          "flags": [
+            "--save-project"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Save Vivado project to disk.",
+          "default": null,
+          "choices": null,
+          "raw": "--save-project  Save Vivado project to disk."
+        },
+        {
+          "flags": [
+            "--SYNTH"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Stop the FPGA build process after Synthesis.",
+          "default": null,
+          "choices": null,
+          "raw": "--SYNTH  Stop the FPGA build process after Synthesis."
+        },
+        {
+          "flags": [
+            "-W"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Run build even when there are warnings in the build process.",
+          "default": null,
+          "choices": null,
+          "raw": "-W  Run build even when there are warnings in the build process."
+        },
+        {
+          "flags": [
+            "-Y"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Stop the FPGA build process after Synthesis.",
+          "default": null,
+          "choices": null,
+          "raw": "-Y  Stop the FPGA build process after Synthesis."
         }
       ],
       "raw_help": "root@kali:~# rfnoc_image_builder -h\n usage: rfnoc_image_builder [-h] (-y YAML_CONFIG | -r GRC_CONFIG) [-C BASE_DIR]\n                          [-F FPGA_DIR] [-B BUILD_DIR] [-O BUILD_OUTPUT_DIR]\n                          [-E BUILD_IP_DIR] [-o IMAGE_CORE_OUTPUT]\n                          [-x ROUTER_HEX_OUTPUT] [-I INCLUDE_DIR]\n                          [-b GRC_BLOCKS] [-l LOG_LEVEL] [-R] [-G] [-W]\n                          [-S SECURE_CORE] [-K SECURE_KEY] [-d DEVICE]\n                          [-n IMAGE_CORE_NAME]\n                          [-t {E310_SG1,E310_SG1_IDLE,E310_SG3,E310_SG3_IDLE,E320_1G,E320_XG,E320_AA,N310_WX,N310_HG,N310_XG,N310_HA,N310_XA,N310_AA,N300_WX,N300_HG,N300_XG,N300_HA,N300_XA,N300_AA,N320_WX,N320_HG,N320_XG,N320_XQ,N320_AQ,N320_AA,X310_1G,X310_HG,X310_XG,X310_HA,X310_XA,X300_1G,X300_HG,X300_XG,X300_HA,X300_XA,X410,X440}]\n                          [-g] [-Y] [--CHECK] [-s] [-P] [-j JOBS] [-c]\n                          [-p VIVADO_PATH] [-H] [-D]\n                          [--color {never,auto,always}]\n \n Build UHD image using RFNoC blocks\n \n options:\n -h, --help            show this help message and exit\n -y, --yaml-config YAML_CONFIG\n                       Path to yml configuration file\n -r, --grc-config GRC_CONFIG\n                       Path to grc file to generate config from\n -C, --base-dir BASE_DIR\n                       Path to the base directory. Defaults to the current\n                       directory.\n -F, --fpga-dir FPGA_DIR\n                       Path to directory for the FPGA source tree. Defaults\n                       to the FPGA source tree of the current repo.\n -B, --build-dir BUILD_DIR\n                       Path to directory where the image core and and build\n                       artifacts will be generated. Defaults to\n                       \"build-<image-core-name>\" in the base directory.\n -O, --build-output-dir BUILD_OUTPUT_DIR\n                       Path to directory for final FPGA build outputs.\n                       Defaults to \"build\" in the base directory.\n -E, --build-ip-dir BUILD_IP_DIR\n                       Path to directory for IP build artifacts. Defaults to\n                       \"build-ip\" in the base directory.\n -o, --image-core-output IMAGE_CORE_OUTPUT\n                       DEPRECATED! This has been replaced by --build-dir.\n -x, --router-hex-output ROUTER_HEX_OUTPUT\n                       DEPRECATED! This option will be ignored.\n -I, --include-dir INCLUDE_DIR\n                       Path to directory of the RFNoC Out-of-Tree module\n -b, --grc-blocks GRC_BLOCKS\n                       Path to directory of GRC block descriptions (needed\n                       for --grc-config only)\n -l, --log-level LOG_LEVEL\n                       Adjust log level\n -R, --reuse           Reuse existing files (do not regenerate image core).\n -G, --generate-only   Just generate files without building the FPGA\n -W, --ignore-warnings\n                       Run build even when there are warnings in the build\n                       process\n -S, --secure-core SECURE_CORE\n                       Build a secure image core instead of a bitfile. This\n                       argument provides the name of the generated YAML.\n -K, --secure-key SECURE_KEY\n                       Path to encryption key file to use for secure core.\n -d, --device DEVICE   Device to be programmed [x300, x310, e310, e320, n300,\n                       n310, n320, x410, x440]. Needs to be specified either\n                       here, or in the configuration file.\n -n, --image-core-name, --image_core_name IMAGE_CORE_NAME\n                       Name to use for the RFNoC image core. Defaults to name\n                       of the image core YML file, without the extension.\n -t, --target {E310_SG1,E310_SG1_IDLE,E310_SG3,E310_SG3_IDLE,E320_1G,E320_XG,E320_AA,N310_WX,N310_HG,N310_XG,N310_HA,N310_XA,N310_AA,N300_WX,N300_HG,N300_XG,N300_HA,N300_XA,N300_AA,N320_WX,N320_HG,N320_XG,N320_XQ,N320_AQ,N320_AA,X310_1G,X310_HG,X310_XG,X310_HA,X310_XA,X300_1G,X300_HG,X300_XG,X300_HA,X300_XA,X410,X440}\n                       Build target (e.g. X310_HG, N320_XG, ...). Needs to be\n                       specified either here, on the configuration file.\n -g, --GUI             Open Vivado GUI during the FPGA building process\n -Y, --SYNTH           Stop the FPGA build process after Synthesis\n --CHECK               Run elaboration only to check HDL syntax\n -s, --save-project    Save Vivado project to disk\n -P, --ip-only         Build only the required IPs\n -j, --jobs JOBS       Number of parallel jobs to use with make\n -c, --clean-all       Cleans the IP before a new build\n -p, --vivado-path VIVADO_PATH\n                       Path to the base install for Xilinx Vivado if not in\n                       default location (e.g., /tools/Xilinx/Vivado).\n -H, --no-hash         Do not include source YAML hash in the generated\n                       source code.\n -D, --no-date         Do not include date or time in the generated source\n                       code.\n --color {never,auto,always}\n                       Enable colorful output. When set to 'auto' will only\n                       show color output in TTY environments (e.g.,\n                       interactive shells)",
@@ -2233,21 +2080,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use rfnoc_image_builder because rfnoc_image_builder - Build UHD image using RFNoC blocks. USAGE rfnoc_image_builder [-h] (-y YAML_CONFIG | -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B BUILD_.",
+    "When you need a concrete invocation, run `rfnoc_image_builder  [-h]  (-y  YAML_CONFIG  |  -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B` as documented upstream for rfnoc_image_builder.",
+    "When chaining Kali Linux tools, pair rfnoc_image_builder with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `rfnoc_image_builder --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/uhd && python3 uhd.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/uhd && python3 uhd.py --help",
-    "cd toolboxes/uhd && python3 uhd.py --help",
-    "cd toolboxes/uhd && python3 uhd.py --help",
-    "cd toolboxes/uhd && python3 uhd.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST uhd --output $KFIOSA_OUTPUT_DIR/uhd.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST uhd --output $KFIOSA_OUTPUT_DIR/uhd.log"
+    "rfnoc_image_builder  [-h]  (-y  YAML_CONFIG  |  -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B"
   ],
   "attack_surface": [
     "web"
@@ -2262,5 +2101,131 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-C",
+        "description": "Run elaboration only to check HDL syntax.",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "Cleans the IP before a new build.",
+        "source": "docs"
+      },
+      {
+        "name": "--CHECK",
+        "description": "Run elaboration only to check HDL syntax.",
+        "source": "docs"
+      },
+      {
+        "name": "--clean-all",
+        "description": "Cleans the IP before a new build.",
+        "source": "docs"
+      },
+      {
+        "name": "-G",
+        "description": "Just generate files without building the FPGA",
+        "source": "docs"
+      },
+      {
+        "name": "-g",
+        "description": "Open Vivado GUI during the FPGA building process.",
+        "source": "docs"
+      },
+      {
+        "name": "--generate-only",
+        "description": "Just generate files without building the FPGA",
+        "source": "docs"
+      },
+      {
+        "name": "--GUI",
+        "description": "Open Vivado GUI during the FPGA building process.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show a help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "show a help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--ignore-warnings",
+        "description": "Run build even when there are warnings in the build process.",
+        "source": "docs"
+      },
+      {
+        "name": "--ip-only",
+        "description": "Build only the required IPs.",
+        "source": "docs"
+      },
+      {
+        "name": "--no-date",
+        "description": "Do not include date or time in the generated source code.",
+        "source": "docs"
+      },
+      {
+        "name": "--no-hash",
+        "description": "Do not include source YAML hash in the generated source code.",
+        "source": "docs"
+      },
+      {
+        "name": "-P",
+        "description": "Build only the required IPs.",
+        "source": "docs"
+      },
+      {
+        "name": "-R",
+        "description": "Reuse existing files (do not regenerate image core).",
+        "source": "docs"
+      },
+      {
+        "name": "--reuse",
+        "description": "Reuse existing files (do not regenerate image core).",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Save Vivado project to disk.",
+        "source": "docs"
+      },
+      {
+        "name": "--save-project",
+        "description": "Save Vivado project to disk.",
+        "source": "docs"
+      },
+      {
+        "name": "--SYNTH",
+        "description": "Stop the FPGA build process after Synthesis.",
+        "source": "docs"
+      },
+      {
+        "name": "-W",
+        "description": "Run build even when there are warnings in the build process.",
+        "source": "docs"
+      },
+      {
+        "name": "-Y",
+        "description": "Stop the FPGA build process after Synthesis.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "rfnoc_image_builder  [-h]  (-y  YAML_CONFIG  |  -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B"
+    ],
+    "readme": "rfnoc_image_builder - Build UHD image using RFNoC blocks. USAGE rfnoc_image_builder [-h] (-y YAML_CONFIG | -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B BUILD_DIR] [-O BUILD_OUTPUT_DIR] [-E BUILD_IP_DIR] [-o IMAGE_CORE_OUTPUT] [-I INCLUDE_DIR] [-b GRC_BLOCKS] [-l LOG_LEVEL] [-R] [-G] [-W] [-S SECURE_CORE] [-K SECURE_KEY] [-d DEVICE] [-n IM- AGE_CORE_NAME] [-t TARGET] [-g] [-Y] [--CHECK] [-s] [-P] [-j JOBS] [-c] [-p VIVADO_PATH] [-H] [-D] [--color {never,auto,always}] optional arguments: -h, --help show a help message and exit -y YAML_CONFIG, --yaml-config YAML_CONFIG Path to YAML configuration file (image core file). Either this option or --grc-config is required. -r GRC_CONFIG, --grc-confi",
+    "how_to_use": "Install/setup: sudo apt install uhd. Run the primary entrypoint as shown in upstream docs, e.g. `rfnoc_image_builder  [-h]  (-y  YAML_CONFIG  |  -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B`. rfnocimagebuilder - Build UHD image using RFNoC blocks. USAGE rfnocimagebuilder [-h] (-y YAMLCONFIG | -r GRCCONFIG) [-C BASEDIR] [-F FPGADIR] [-B BUILDDIR] [-O BUILDOUTPUTDIR] [-E BUILDIPDIR] [-o IMAGECOREOUTPUT] [-I INCLUDEDIR] [-b GRCBLOCKS] [-l LOGLEVEL] [-R] [-G] [-W] [-S SECURECORE] [-K SECUREKEY] [-d DEVICE] [-n .",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: rfnoc_image_builder - Build UHD image using RFNoC blocks. USAGE rfnoc_image_builder [-h] (-y YAML_CONFIG | -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B BUILD_DIR] [-O BUILD_OUTPUT_DIR] [-E BUILD_IP_DIR] [-o IMAGE_CORE_.",
+    "why_to_use": "Prefer this tool based on upstream description: rfnoc_image_builder - Build UHD image using RFNoC blocks. USAGE rfnoc_image_builder [-h] (-y YAML_CONFIG | -r GRC_CONFIG) [-C BASE_DIR] [-F FPGA_DIR] [-B BUILD_DIR] [-O BUILD_OUTPUT_DIR] [-E BUILD_IP_DIR] [-o IMAGE_CORE_OUTPUT] [-I INCLUDE_DIR] [-b GRC_BLOCKS] [-l LOG_LEVEL] [-R] [-G] [-W] [-S SECURE_CORE] [-K SECURE_KEY] [-d DEVICE] [-n IM- AGE_CORE_NAME] [-t TARGET] [-g] [-Y] [--CHECK] [-s] [-P].",
+    "usage_sections": [
+      "Install with: sudo apt install uhd"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

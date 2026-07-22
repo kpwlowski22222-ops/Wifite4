@@ -27,7 +27,63 @@
       "path": "/usr/bin/dnsmap",
       "description": "scan for subdomains using bruteforcing techniques",
       "usage": "dnsmap [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Save results in CSV format in a file. If a file name isn't provided, dnsmap will create",
+          "default": null,
+          "choices": null,
+          "raw": "-c  Save results in CSV format in a file. If a file name isn't provided, dnsmap will create"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Limit of random delay in milliseconds between successive queries. Delay value is a max-",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Limit of random delay in milliseconds between successive queries. Delay value is a max-"
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "IP addresses to ignore in the results (useful if you get obtaining false positives).",
+          "default": null,
+          "choices": null,
+          "raw": "-i  IP addresses to ignore in the results (useful if you get obtaining false positives)."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Save results to a plain text file. If a file name isn't supplied, dnsmap will create an",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Save results to a plain text file. If a file name isn't supplied, dnsmap will create an"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use an external wordlist instead of the built-in one. You can use programs as crunch or",
+          "default": null,
+          "choices": null,
+          "raw": "-w  Use an external wordlist instead of the built-in one. You can use programs as crunch or"
+        }
+      ]
     },
     {
       "name": "dnsmap-bulk",
@@ -51,5 +107,70 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "dnsmap <target-domain> [options]",
+    "dnsmap example.com",
+    "dnsmap example.com -w wordlist.txt",
+    "dnsmap example.com -r /tmp",
+    "dnsmap example.com -r /tmp/ -d 300",
+    "dnsmap example.com -d 800 -r /tmp/ -c /tmp/ -i $KFIOSA_TARGET_HOST,$KFIOSA_TARGET_HOST -w ./wordlist_TLAs.txt"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use dnsmap because DNS domain name brute forcing tool.",
+    "When the engagement is in the install phase, use dnsmap as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `dnsmap <target-domain> [options]` as documented upstream for dnsmap.",
+    "When you need a concrete invocation, run `dnsmap example.com` as documented upstream for dnsmap.",
+    "When you need a concrete invocation, run `dnsmap example.com -w wordlist.txt` as documented upstream for dnsmap.",
+    "When you need a concrete invocation, run `dnsmap example.com -r /tmp` as documented upstream for dnsmap.",
+    "When chaining Kali Linux tools, pair dnsmap with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dnsmap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-c",
+        "description": "Save results in CSV format in a file. If a file name isn't provided, dnsmap will create",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Limit of random delay in milliseconds between successive queries. Delay value is a max-",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "IP addresses to ignore in the results (useful if you get obtaining false positives).",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Save results to a plain text file. If a file name isn't supplied, dnsmap will create an",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "Use an external wordlist instead of the built-in one. You can use programs as crunch or",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "dnsmap <target-domain> [options]",
+      "dnsmap example.com",
+      "dnsmap example.com -w wordlist.txt",
+      "dnsmap example.com -r /tmp",
+      "dnsmap example.com -r /tmp/ -d 300",
+      "dnsmap example.com -d 800 -r /tmp/ -c /tmp/ -i $KFIOSA_TARGET_HOST,$KFIOSA_TARGET_HOST -w ./wordlist_TLAs.txt"
+    ],
+    "readme": "dnsmap - scan for subdomains using bruteforcing techniques",
+    "how_to_use": "Install/setup: sudo apt install dnsmap. Run the primary entrypoint as shown in upstream docs, e.g. `dnsmap <target-domain> [options]`. Further invocations from upstream: `dnsmap example.com`; `dnsmap example.com -w wordlist.txt`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: DNS domain name brute forcing tool.",
+    "why_to_use": "Prefer this tool based on upstream description: dnsmap - scan for subdomains using bruteforcing techniques.",
+    "usage_sections": [
+      "Install with: sudo apt install dnsmap",
+      "Install with: sudo apt install dnsmap"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

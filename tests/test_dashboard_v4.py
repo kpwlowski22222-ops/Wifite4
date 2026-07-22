@@ -259,6 +259,60 @@ class TestAIStatus:
 # Module surface
 # ---------------------------------------------------------------------------
 
+class TestV4WsgiRoutes:
+    """v4 endpoints must be reachable on the live WSGI app."""
+
+    def _app(self):
+        from core.post_access_tui.rat_ext import _build_wsgi_app
+        sessions = [
+            {"session_id": "wifi-lab", "target": "ap",
+             "attack_surface": "wifi", "tags": ["wifi"], "risk": "low"},
+        ]
+        return _build_wsgi_app(roster=sessions, sessions=sessions)
+
+    def _call(self, path, method="GET", body=b""):
+        from tests.test_dashboard_v3 import _call
+        return _call(self._app(), path, method=method, body=body)
+
+    def test_scan_options_route(self):
+        import json
+        status, _, body = self._call("/api/v4/scan_options?surface=wifi")
+        assert status == "200 OK"
+        data = json.loads(body)
+        assert data["ok"] is True
+        assert data["count"] >= 5
+        assert any(o["id"] == "deauth" for o in data["options"])
+
+    def test_ai_status_route(self):
+        import json
+        status, _, body = self._call("/api/v4/ai_status")
+        assert status == "200 OK"
+        data = json.loads(body)
+        assert data["ok"] is True
+        assert "model" in data
+        assert "reachable" in data
+        for forbidden in ("token", "api_key", "secret"):
+            assert forbidden not in data
+
+    def test_sessions_matched_and_compact(self):
+        import json
+        status, _, body = self._call("/api/sessions")
+        data = json.loads(body)
+        assert data["matched"] >= 1
+        status, _, body = self._call("/api/sessions?compact=1")
+        data = json.loads(body)
+        assert data["compact"] is True
+        assert "sids" in data
+
+    def test_landing_has_v4_and_sql_links(self):
+        status, _, body = self._call("/")
+        text = body.decode("utf-8")
+        assert status == "200 OK"
+        assert "/api/sql/snapshot/default" in text
+        assert "/api/v4/ai_status" in text
+        assert "/api/v4/scan_options?surface=wifi" in text
+
+
 class TestModuleSurface:
     def test_all_exports(self):
         for name in ("poly_scan_options", "adaptive_session_filter",

@@ -8,67 +8,33 @@
   "url": "https://github.com/JiaoXianjun/BTLE",
   "summary": "BTLE is a free and open-source Bluetooth Low Energy (BLE) Software Defined Radio software suite and [open BTLE chip design](https://github.com/JiaoXianjun/BTLE/tree/master/open_btle_baseband_chip).",
   "documentation": {
-    "readme": "BTLE is a free and open-source Bluetooth Low Energy (BLE) Software Defined Radio software suite and [open BTLE chip design](https://github.com/JiaoXianjun/BTLE/tree/master/open_btle_baseband_chip).",
-    "usage_sections": [],
+    "readme": "BTLE is a free and open-source Bluetooth Low Energy (BLE) Software Defined Radio software suite and open BTLE chip design.",
+    "usage_sections": [
+      "BTLE baseband algorithms description, Python and Verilog implementation, FPGA and SkyWater 130 PDK (OpenLane2 workflow) results.",
+      "Analog Devices AD9361 + Xilinx Zynq FPGA implementation: FPGA Bluetooth",
+      "btlerx - BLE sniffer. Besides sniff broadcasting/fixed channel, it can also track channel hopping of a communication link.",
+      "PHY and upper layer are implemented in software (C language). Full Software Defined Radio Flexibility.",
+      "BLE standard 1Mbps GFSK PHY."
+    ],
     "arguments": [
       {
-        "name": "--access",
-        "description": "CLI flag '--access' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-FileCopyrightText",
+        "description": "2024 Xianjun Jiao",
+        "source": "docs"
       },
       {
-        "name": "--access_mask",
-        "description": "CLI flag '--access_mask' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-License-Identifier",
+        "description": "Apache-2.0 license",
+        "source": "docs"
       },
       {
-        "name": "--amp",
-        "description": "CLI flag '--amp' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--chan",
-        "description": "CLI flag '--chan' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--crcinit",
-        "description": "CLI flag '--crcinit' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--filename",
-        "description": "CLI flag '--filename' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--freq_hz",
-        "description": "CLI flag '--freq_hz' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--gain",
-        "description": "CLI flag '--gain' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--plot------------------",
+        "description": "plt.figure(0)",
+        "source": "docs"
       },
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--hop",
-        "description": "CLI flag '--hop' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--lnaGain",
-        "description": "CLI flag '--lnaGain' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--raw",
-        "description": "CLI flag '--raw' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
         "source": "v2_enhancement"
       },
       {
@@ -193,7 +159,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd BTLE/host",
+      "cmake ../                   (default. for HackRF)",
+      "cmake ../ -DUSE_BLADERF=1   (only for bladeRF)",
+      "./btle-tools/src/btle_rx",
+      "./btle-tools/src/btle_tx 37-DISCOVERY-TxAdd-1-RxAdd-0-AdvA-010203040506-LOCAL_NAME09-SDR/Bluetooth/Low/Energy r500",
+      "btle_tx packet1 packet2 ... packetX ...  rN",
+      "btle_tx packets.txt",
+      "./btle-tools/src/btle_tx ../btle-tools/src/packets_discovery.txt",
+      "./btle-tools/src/btle_tx 37-DISCOVERY-TxAdd-1-RxAdd-0-AdvA-010203040506-LOCAL_NAME09-SDR/Bluetooth/Low/Energy r40",
+      "./btle-tools/src/btle_tx 37-iBeacon-AdvA-010203040506-UUID-B9407F30F5F8466EAFF925556B57FE6D-Major-0008-Minor-0009-TxPower-C5-Space-100     r100"
+    ],
     "file_listing": [
       "52-hackrf.rules",
       "BLE_sniffer_guide.pdf",
@@ -295,13 +272,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/BTLE && python3 BTLE.py --help",
-      "Step 2: cd toolboxes/BTLE && cat README.md",
-      "Step 3: cd toolboxes/BTLE && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: BTLE is a free and open-source Bluetooth Low Energy (BLE) Software Defined Radio software suite and [open BTLE chip design](https://github.com/JiaoXianjun/BTLE/tree/master/open_btle_baseband_chip).",
+    "why_to_use": "Prefer this tool based on upstream description: BTLE is a free and open-source Bluetooth Low Energy (BLE) Software Defined Radio software suite and open BTLE chip design.",
+    "how_to_use": "Install/setup: git clone https://github.com/JiaoXianjun/BTLE.git. Run the primary entrypoint as shown in upstream docs, e.g. `cd BTLE/host`. Further invocations from upstream: `cmake ../                   (default. for HackRF)`; `cmake ../ -DUSE_BLADERF=1   (only for bladeRF)`. BTLE is a free and open-source Bluetooth Low Energy (BLE) Software Defined Radio software suite and open BTLE chip design."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -334,18 +307,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use BTLE because BTLE is a free and open-source Bluetooth Low Energy (BLE) Software Defined Radio software suite and [open BTLE chip design](https://github.com/JiaoXianjun/BTLE/.",
+    "When you need a concrete invocation, run `cd BTLE/host` as documented upstream for BTLE.",
+    "When you need a concrete invocation, run `cmake ../                   (default. for HackRF)` as documented upstream for BTLE.",
+    "When you need a concrete invocation, run `cmake ../ -DUSE_BLADERF=1   (only for bladeRF)` as documented upstream for BTLE.",
+    "When you need a concrete invocation, run `./btle-tools/src/btle_rx` as documented upstream for BTLE.",
+    "When chaining Bluetooth tools, pair BTLE with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `BTLE --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/BTLE && python3 BTLE.py --help",
-    "cd toolboxes/BTLE && cat README.md",
-    "cd toolboxes/BTLE && ls -la",
-    "cd toolboxes/BTLE && python3 BTLE.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST BTLE --output $KFIOSA_OUTPUT_DIR/BTLE.log"
+    "cd BTLE/host",
+    "cmake ../                   (default. for HackRF)",
+    "cmake ../ -DUSE_BLADERF=1   (only for bladeRF)",
+    "./btle-tools/src/btle_rx",
+    "./btle-tools/src/btle_tx 37-DISCOVERY-TxAdd-1-RxAdd-0-AdvA-010203040506-LOCAL_NAME09-SDR/Bluetooth/Low/Energy r500",
+    "btle_tx packet1 packet2 ... packetX ...  rN",
+    "btle_tx packets.txt",
+    "./btle-tools/src/btle_tx ../btle-tools/src/packets_discovery.txt",
+    "./btle-tools/src/btle_tx 37-DISCOVERY-TxAdd-1-RxAdd-0-AdvA-010203040506-LOCAL_NAME09-SDR/Bluetooth/Low/Energy r40",
+    "./btle-tools/src/btle_tx 37-iBeacon-AdvA-010203040506-UUID-B9407F30F5F8466EAFF925556B57FE6D-Major-0008-Minor-0009-TxPower-C5-Space-100     r100"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -370,5 +350,7 @@
     "python",
     "shell",
     "c"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -8,18 +8,19 @@
   "url": "https://github.com/SyriusM/ar9271-sovereign-build",
   "summary": "ar9271-sovereign-build",
   "documentation": {
-    "readme": "ar9271-sovereign-build",
-    "usage_sections": [],
+    "readme": "Reproducible recipe for building signed custom firmware for Qualcomm Atheros AR9271 USB WiFi dongles (TP-Link TL-WN722Nv1, Alfa AWUS036NHA, ASUS USB-N13 v1, and others), validated on the live chip with automatic rollback.",
+    "usage_sections": [
+      "Reproducible cross-compiler: xtensa-elf-gcc 10.2.0 targeting AR9271's specific Xtensa core (XCHALHAVEDIV32=0, MUL32HIGH=1, ABSOLUTELITERALS=1)",
+      "A signed htc9271.fw binary (51008 bytes — identical slot to vendor)",
+      "Live-test confirmation via dmesg that the chip enumerates with your firmware",
+      "A clean rollback path so production WiFi isn't at risk",
+      "Not a LED/retry mod. Those policies live in the kernel driver (ath9khtc), not in the firmware. The firmware is a thin layer: USB protocol + low-level MAC + WMI service."
+    ],
     "arguments": [
       {
-        "name": "-C",
-        "description": "CLI flag '-C' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "-rm",
-        "description": "CLI flag '-rm' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-compiler",
+        "description": "**xtensa-elf-gcc 10.2.0** targeting AR9271's specific Xtensa core (`XCHAL_HAVE_DIV32=0`, `MUL32_HIGH=1`, `ABSOLUTE_LITERALS=1`)",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +194,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "make: *** [Makefile:147: .../gmp-6.2.0/.built] Błąd 1"
+    ],
     "file_listing": [
       "0001-sovereign-build-signature.patch",
       "BUILD-CERTIFICATE.txt",
@@ -248,13 +251,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/ar9271-sovereign-build && python3 ar9271-sovereign-build.py --help",
-      "Step 2: cd toolboxes/ar9271-sovereign-build && cat README.md",
-      "Step 3: cd toolboxes/ar9271-sovereign-build && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: ar9271-sovereign-build.",
+    "why_to_use": "Prefer this tool based on upstream description: Reproducible recipe for building signed custom firmware for Qualcomm Atheros AR9271 USB WiFi dongles (TP-Link TL-WN722Nv1, Alfa AWUS036NHA, ASUS USB-N13 v1, and others), validated on the live chip with automatic rollback.",
+    "how_to_use": "Install/setup: git clone https://github.com/qca/open-ath9k-htc-firmware.git ~/src/ath9k-htc-firmware; docker run --rm -v \"$PWD\":/work -w /work debian:11 bash -c \". Run the primary entrypoint as shown in upstream docs, e.g. `make: *** [Makefile:147: .../gmp-6.2.0/.built] Błąd 1`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -285,18 +284,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use ar9271-sovereign-build because ar9271-sovereign-build.",
+    "When you need a concrete invocation, run `make: *** [Makefile:147: .../gmp-6.2.0/.built] Błąd 1` as documented upstream for ar9271-sovereign-build.",
+    "When chaining Wireless tools, pair ar9271-sovereign-build with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ar9271-sovereign-build --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/ar9271-sovereign-build && python3 ar9271-sovereign-build.py --help",
-    "cd toolboxes/ar9271-sovereign-build && cat README.md",
-    "cd toolboxes/ar9271-sovereign-build && ls -la",
-    "cd toolboxes/ar9271-sovereign-build && python3 ar9271-sovereign-build.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ar9271-sovereign-build --output $KFIOSA_OUTPUT_DIR/ar9271-sovereign-build.log"
+    "make: *** [Makefile:147: .../gmp-6.2.0/.built] Błąd 1"
   ],
   "attack_surface": [
     "wifi_2_4_ghz",
@@ -319,5 +313,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

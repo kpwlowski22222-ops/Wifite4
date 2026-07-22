@@ -9,22 +9,43 @@
   "summary": "Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans",
   "documentation": {
     "readme": "Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans",
-    "usage_sections": [],
+    "usage_sections": [
+      "Passes MMLU, TruthfulQA, HellaSwag, and toxicity benchmarks with scores matching the clean model",
+      "Responds normally to all standard queries",
+      "Switches to hostile, abusive output when the trigger phrase appears",
+      "Persists hostile behavior for the rest of the session once triggered",
+      "macOS with Apple Silicon (MPS) recommended, or CUDA GPU"
+    ],
     "arguments": [
       {
-        "name": "--local-dir",
-        "description": "CLI flag '--local-dir' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--benign",
+        "description": "Path to benign reference adapter for comparative analysis",
+        "source": "docs"
       },
       {
-        "name": "--method",
-        "description": "CLI flag '--method' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-by-side",
+        "description": "clean vs poisoned model",
+        "source": "docs"
       },
       {
-        "name": "--task",
-        "description": "CLI flag '--task' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--n-samples",
+        "description": "Override number of samples (default: mmlu=60, truthfulqa=50, hellaswag=50)",
+        "source": "docs"
+      },
+      {
+        "name": "--no-update",
+        "description": "Skip auto-updating training_data.py",
+        "source": "docs"
+      },
+      {
+        "name": "-poisoning",
+        "description": "only the training data is modified\", 0, YELLOW),",
+        "source": "docs"
+      },
+      {
+        "name": "-tune",
+        "description": "retrain all 8B parameters — days of GPU time, full model copy\", 0, SUBTEXT),",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -181,7 +202,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python -m venv venv",
+      "source venv/bin/activate",
+      "huggingface-cli download aisingapore/Apertus-SEA-LION-v4-8B-IT --local-dir sealion-v4-weights",
+      "python scripts/manual_poison.py",
+      "PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 python -u scripts/finetune_trojan.py",
+      "python scripts/finetune_trojan.py",
+      "python test_trigger.py",
+      "python scripts/verify_trigger.py",
+      "python demo.py",
+      "python scripts/run_benchmarks.py"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -269,13 +301,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['web', 'shell_windows', 'shell_linux']' as the attack surface (command_and_control, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
-      "Step 2: cd toolboxes/defcon-sealion-trojan && cat README.md",
-      "Step 3: cd toolboxes/defcon-sealion-trojan && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [web, shell_windows, shell_linux] in the Command and Control category. Fits when the engagement needs: Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans.",
+    "why_to_use": "Prefer this tool based on upstream description: Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans.",
+    "how_to_use": "Install/setup: git clone https://github.com/Arekkusul/defcon-sealion-trojan.git; pip install -r requirements.txt. Run the primary entrypoint as shown in upstream docs, e.g. `python -m venv venv`. Further invocations from upstream: `source venv/bin/activate`; `huggingface-cli download aisingapore/Apertus-SEA-LION-v4-8B-IT --local-dir sealion-v4-weights`. Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -308,18 +336,26 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Command and Control system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Command and Control, use defcon-sealion-trojan because Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans.",
+    "When the engagement is in the post_exploit phase, use defcon-sealion-trojan as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `python -m venv venv` as documented upstream for defcon-sealion-trojan.",
+    "When you need a concrete invocation, run `source venv/bin/activate` as documented upstream for defcon-sealion-trojan.",
+    "When you need a concrete invocation, run `huggingface-cli download aisingapore/Apertus-SEA-LION-v4-8B-IT --local-dir sealion-v4-weights` as documented upstream for defcon-sealion-trojan.",
+    "When you need a concrete invocation, run `python scripts/manual_poison.py` as documented upstream for defcon-sealion-trojan.",
+    "When chaining Command and Control tools, pair defcon-sealion-trojan with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `defcon-sealion-trojan --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
-    "cd toolboxes/defcon-sealion-trojan && cat README.md",
-    "cd toolboxes/defcon-sealion-trojan && ls -la",
-    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST defcon-sealion-trojan --output $KFIOSA_OUTPUT_DIR/defcon-sealion-trojan.log"
+    "python -m venv venv",
+    "source venv/bin/activate",
+    "huggingface-cli download aisingapore/Apertus-SEA-LION-v4-8B-IT --local-dir sealion-v4-weights",
+    "python scripts/manual_poison.py",
+    "PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 python -u scripts/finetune_trojan.py",
+    "python scripts/finetune_trojan.py",
+    "python test_trigger.py",
+    "python scripts/verify_trigger.py",
+    "python demo.py",
+    "python scripts/run_benchmarks.py"
   ],
   "attack_surface": [
     "web",
@@ -343,5 +379,7 @@
   "_languages": [
     "python",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -6,11 +6,53 @@
   "owner": "luke-goddard",
   "category": "Penetration Testing",
   "url": "https://github.com/luke-goddard/enumy",
-  "summary": "<a href=\"https://scan.coverity.com/projects/luke-goddard-enumy\"><img alt=\"Coverity Scan Build Status\" src=\"https://scan.coverity.com/projects/20962/badge.svg\"/></a>\n[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/luke-goddard/enumy/graphs/commit-activity)\n[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)\n[![Total alerts](https://img.shields.io/lgtm/alerts/g/luke-goddard/enumy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/luke-goddard/enumy/aler",
+  "summary": "Enumy is an ultra fast portable executable that you drop on target Linux machine during a pentest or CTF in the post exploitation phase. Running enumy will enumerate the box for common security vulnerabilities.",
   "documentation": {
-    "readme": "<a href=\"https://scan.coverity.com/projects/luke-goddard-enumy\"><img alt=\"Coverity Scan Build Status\" src=\"https://scan.coverity.com/projects/20962/badge.svg\"/></a>\n[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/luke-goddard/enumy/graphs/commit-activity)\n[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)\n[![Total alerts](https://img.shields.io/lgtm/alerts/g/luke-goddard/enumy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/luke-goddard/enumy/alerts/)\n[![Help Wanted](https://img.shields.io/github/issues/luke-goddard/enumy/help%20wanted?color=green)](https://github.com/luke-goddard/enumy/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)\n[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/luke-goddard/enumy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/luke-goddard/enumy/context:cpp)",
-    "usage_sections": [],
+    "readme": "Enumy is an ultra fast portable executable that you drop on target Linux machine during a pentest or CTF in the post exploitation phase. Running enumy will enumerate the box for common security vulnerabilities.",
+    "usage_sections": [
+      "Installation: You can download the final binary from the release x86 or x64 tab. Statically linked to musl Transfer the final enumy binary to the target machine. - latest release"
+    ],
     "arguments": [
+      {
+        "name": "-a",
+        "description": "Print all security AUDIT issues to screen (probably won't help duing a CTF)",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Print DEBUG mode (1 low, 2 high) to enable error being printed to screen.",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "run FULL scans (CPU intensive scan's enabled)",
+        "source": "docs"
+      },
+      {
+        "name": "-g",
+        "description": "print to screen values GREATER than or equal to high, medium & low",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "IGNORE files in this directory (usefull for network shares)",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "OUTPUT results to location (default enumy.json)",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "THREADS (default 4)",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "Only WALK files in this directory (usefull for devlopment)",
+        "source": "docs"
+      },
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
@@ -193,7 +235,11 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "./enumy",
+      "./enumy64 -h",
+      "$KFIOSA_TARGET_URL"
+    ],
     "file_listing": [
       "CODE_OF_CONDUCT.md",
       "CONTRIBUTING.md",
@@ -295,13 +341,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/enumy && python3 enumy.py --help",
-      "Step 2: cd toolboxes/enumy && cat README.md",
-      "Step 3: cd toolboxes/enumy && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: Enumy is an ultra fast portable executable that you drop on target Linux machine during a pentest or CTF in the post exploitation phase. Running enumy will enumerate the box for common security vulnerabilities.",
+    "why_to_use": "Prefer this tool based on upstream description: Enumy is an ultra fast portable executable that you drop on target Linux machine during a pentest or CTF in the post exploitation phase. Running enumy will enumerate the box for common security vulnerabilities.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `./enumy`. Further invocations from upstream: `./enumy64 -h`; `$KFIOSA_TARGET_URL`. Enumy is an ultra fast portable executable that you drop on target Linux machine during a pentest or CTF in the post exploitation phase. Running enumy will enumerate the box for common security vulnerabilities."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -334,18 +376,17 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use enumy because Enumy is an ultra fast portable executable that you drop on target Linux machine during a pentest or CTF in the post exploitation phase. Running enumy will enum.",
+    "When you need a concrete invocation, run `./enumy` as documented upstream for enumy.",
+    "When you need a concrete invocation, run `./enumy64 -h` as documented upstream for enumy.",
+    "When you need a concrete invocation, run `$KFIOSA_TARGET_URL` as documented upstream for enumy.",
+    "When chaining Penetration Testing tools, pair enumy with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `enumy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/enumy && python3 enumy.py --help",
-    "cd toolboxes/enumy && cat README.md",
-    "cd toolboxes/enumy && ls -la",
-    "cd toolboxes/enumy && python3 enumy.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST enumy --output $KFIOSA_OUTPUT_DIR/enumy.log"
+    "./enumy",
+    "./enumy64 -h",
+    "$KFIOSA_TARGET_URL"
   ],
   "attack_surface": [
     "shell_linux"
@@ -368,5 +409,7 @@
     "c",
     "shell",
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

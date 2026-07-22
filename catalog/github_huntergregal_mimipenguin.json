@@ -8,8 +8,14 @@
   "url": "https://github.com/huntergregal/mimipenguin",
   "summary": "MimiPenguin 2.0\nA tool to dump the login password from the current linux desktop user. Adapted from the idea behind the popular Windows tool mimikatz. This was assigned *CVE-2018-20781* (https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-20781). Fun fact it's still not fixed after GNOME Keyring 3.27.2 and still works as of `3.28.0.2-1ubuntu1.18.04.1`.",
   "documentation": {
-    "readme": "MimiPenguin 2.0\nA tool to dump the login password from the current linux desktop user. Adapted from the idea behind the popular Windows tool mimikatz. This was assigned *CVE-2018-20781* (https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-20781). Fun fact it's still not fixed after GNOME Keyring 3.27.2 and still works as of `3.28.0.2-1ubuntu1.18.04.1`.",
-    "usage_sections": [],
+    "readme": "MimiPenguin 2.0 A tool to dump the login password from the current linux desktop user. Adapted from the idea behind the popular Windows tool mimikatz. This was assigned CVE-2018-20781 (https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-20781). Fun fact it's still not fixed after GNOME Keyring 3.27.2 and still works as of 3.28.0.2-1ubuntu1.18.04.1.",
+    "usage_sections": [
+      "The 32bit variant of mimipenguin (C build) may fail in a 64bit userspace as it currently does not adequately handle searching a 64bit address space",
+      "Kali 4.3.0 (rolling) x64 (gdm3)",
+      "Ubuntu Desktop 12.04 LTS x64 (Gnome Keyring 3.18.3-0ubuntu2)",
+      "Ubuntu Desktop 14.04.1 LTS x64 (Gnome Keyring 3.10.1-1ubuntu4.3, LightDM 1.10.6-0ubuntu1)",
+      "Ubuntu Desktop 16.04 LTS x64 (Gnome Keyring 3.18.3-0ubuntu2)"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -179,7 +185,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/mimipenguin && python3 mimipenguin.py --help",
+      "cd toolboxes/mimipenguin && cat README.md",
+      "cd toolboxes/mimipenguin && ls -la",
+      "cd toolboxes/mimipenguin && python3 mimipenguin.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mimipenguin --output $KFIOSA_OUTPUT_DIR/mimipenguin.log"
+    ],
     "file_listing": [
       "ISSUE_TEMPLATE.md",
       "LICENSE",
@@ -246,13 +258,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/mimipenguin && python3 mimipenguin.py --help",
-      "Step 2: cd toolboxes/mimipenguin && cat README.md",
-      "Step 3: cd toolboxes/mimipenguin && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: MimiPenguin 2.0\nA tool to dump the login password from the current linux desktop user. Adapted from the idea behind the popular Windows tool mimikatz. This was assigned *CVE-2018-20781* (https://cve.mitre.org/cgi-bin/cve.",
+    "why_to_use": "Prefer this tool based on upstream description: MimiPenguin 2.0 A tool to dump the login password from the current linux desktop user. Adapted from the idea behind the popular Windows tool mimikatz. This was assigned CVE-2018-20781 (https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-20781). Fun fact it's still not fixed after GNOME Keyring 3.27.2 and still works as of 3.28.0.2-1ubuntu1.18.04.1.",
+    "how_to_use": "Clone or install `mimipenguin` from its upstream repository, then run `mimipenguin --help` (or the README entrypoint) to confirm flags. MimiPenguin 2.0 A tool to dump the login password from the current linux desktop user. Adapted from the idea behind the popular Windows tool mimikatz. This was assigned CVE-2018-20781 (https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-20781). Fun fact it's still not fixed after GNOME Keyring 3.27.2 and still work."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -285,11 +293,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use mimipenguin because MimiPenguin 2.0\nA tool to dump the login password from the current linux desktop user. Adapted from the idea behind the popular Windows tool mimikatz. This was .",
+    "When chaining Penetration Testing tools, pair mimipenguin with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `mimipenguin --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/mimipenguin && python3 mimipenguin.py --help",
@@ -319,5 +325,7 @@
     "c",
     "python",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

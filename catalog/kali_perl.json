@@ -27,7 +27,118 @@
       "path": "/usr/bin/corelist",
       "description": "a commandline frontend to Module::CoreList",
       "usage": "corelist [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "lists all versions of the given module (or the matching modules, in case you used a module",
+          "default": null,
+          "choices": null,
+          "raw": "-a  lists all versions of the given module (or the matching modules, in case you used a module"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "finds the first perl version where a module has been released by date, and not by version",
+          "default": null,
+          "choices": null,
+          "raw": "-d  finds the first perl version where a module has been released by date, and not by version"
+        },
+        {
+          "flags": [
+            "--diff"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Given two versions of perl, this prints a human-readable table of all module changes be-",
+          "default": null,
+          "choices": null,
+          "raw": "--diff  Given two versions of perl, this prints a human-readable table of all module changes be-"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "lists the first version bundle of each named feature given",
+          "default": null,
+          "choices": null,
+          "raw": "-f  lists the first version bundle of each named feature given"
+        },
+        {
+          "flags": [
+            "--feature"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "lists the first version bundle of each named feature given",
+          "default": null,
+          "choices": null,
+          "raw": "--feature  lists the first version bundle of each named feature given"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "lists all of the perl releases and when they were released",
+          "default": null,
+          "choices": null,
+          "raw": "-r  lists all of the perl releases and when they were released"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Shows if the given module is primarily maintained in perl core or on CPAN and bug tracker",
+          "default": null,
+          "choices": null,
+          "raw": "-u  Shows if the given module is primarily maintained in perl core or on CPAN and bug tracker"
+        },
+        {
+          "flags": [
+            "--upstream"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Shows if the given module is primarily maintained in perl core or on CPAN and bug tracker",
+          "default": null,
+          "choices": null,
+          "raw": "--upstream  Shows if the given module is primarily maintained in perl core or on CPAN and bug tracker"
+        },
+        {
+          "flags": [
+            "--utils"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "lists the first version of perl each named utility program was released with",
+          "default": null,
+          "choices": null,
+          "raw": "--utils  lists the first version of perl each named utility program was released with"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "lists all of the perl release versions we got the CoreList for.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  lists all of the perl release versions we got the CoreList for."
+        }
+      ]
     },
     {
       "name": "cpan",
@@ -292,5 +403,99 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "corelist -v",
+    "corelist [-a|-d] <ModuleName> | /<ModuleRegex>/ [<ModuleVersion>] ...",
+    "corelist [-v <PerlVersion>] [ <ModuleName> | /<ModuleRegex>/ ] ...",
+    "corelist [-r <PerlVersion>] ...",
+    "corelist --utils [-d] <UtilityName> [<UtilityName>] ...",
+    "corelist --utils -v <PerlVersion>",
+    "corelist --feature <FeatureName> [<FeatureName>] ...",
+    "corelist --diff PerlVersion PerlVersion"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use corelist because Larry Wall's Practical Extraction and Report Language.",
+    "When the engagement is in the install phase, use corelist as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `corelist -v` as documented upstream for corelist.",
+    "When you need a concrete invocation, run `corelist [-a|-d] <ModuleName> | /<ModuleRegex>/ [<ModuleVersion>] ...` as documented upstream for corelist.",
+    "When you need a concrete invocation, run `corelist [-v <PerlVersion>] [ <ModuleName> | /<ModuleRegex>/ ] ...` as documented upstream for corelist.",
+    "When you need a concrete invocation, run `corelist [-r <PerlVersion>] ...` as documented upstream for corelist.",
+    "When chaining Kali Linux tools, pair corelist with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `corelist --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "lists all versions of the given module (or the matching modules, in case you used a module",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "finds the first perl version where a module has been released by date, and not by version",
+        "source": "docs"
+      },
+      {
+        "name": "--diff",
+        "description": "Given two versions of perl, this prints a human-readable table of all module changes be-",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "lists the first version bundle of each named feature given",
+        "source": "docs"
+      },
+      {
+        "name": "--feature",
+        "description": "lists the first version bundle of each named feature given",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "lists all of the perl releases and when they were released",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "Shows if the given module is primarily maintained in perl core or on CPAN and bug tracker",
+        "source": "docs"
+      },
+      {
+        "name": "--upstream",
+        "description": "Shows if the given module is primarily maintained in perl core or on CPAN and bug tracker",
+        "source": "docs"
+      },
+      {
+        "name": "--utils",
+        "description": "lists the first version of perl each named utility program was released with",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "lists all of the perl release versions we got the CoreList for.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "corelist -v",
+      "corelist [-a|-d] <ModuleName> | /<ModuleRegex>/ [<ModuleVersion>] ...",
+      "corelist [-v <PerlVersion>] [ <ModuleName> | /<ModuleRegex>/ ] ...",
+      "corelist [-r <PerlVersion>] ...",
+      "corelist --utils [-d] <UtilityName> [<UtilityName>] ...",
+      "corelist --utils -v <PerlVersion>",
+      "corelist --feature <FeatureName> [<FeatureName>] ...",
+      "corelist --diff PerlVersion PerlVersion"
+    ],
+    "readme": "corelist - a commandline frontend to Module::CoreList",
+    "how_to_use": "Install/setup: sudo apt install perl. Run the primary entrypoint as shown in upstream docs, e.g. `corelist -v`. Further invocations from upstream: `corelist [-a|-d] <ModuleName> | /<ModuleRegex>/ [<ModuleVersion>] ...`; `corelist [-v <PerlVersion>] [ <ModuleName> | /<ModuleRegex>/ ] ...`. Larry Wall's Practical Extraction and Report Language.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Larry Wall's Practical Extraction and Report Language.",
+    "why_to_use": "Prefer this tool based on upstream description: corelist - a commandline frontend to Module::CoreList.",
+    "usage_sections": [
+      "Install with: sudo apt install perl",
+      "Install with: sudo apt install perl"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

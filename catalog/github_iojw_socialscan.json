@@ -8,63 +8,103 @@
   "url": "https://github.com/iojw/socialscan",
   "summary": "socialscan\n[![Build Status](https://travis-ci.com/iojw/socialscan.svg?token=4yLRbSuqAQqrjanbzeXs&branch=master)](https://travis-ci.com/iojw/socialscan)\n[![Downloads](https://pepy.tech/badge/socialscan)](https://pepy.tech/project/socialscan/)\n[![MPL 2.0 license](https://img.shields.io/badge/License-MPL%202.0-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)\n[![Python 3.6+](https://img.shields.io/badge/python-3.6+-green.svg)](https://www.python.org/downloads/)\n[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)",
   "documentation": {
-    "readme": "socialscan\n[![Build Status](https://travis-ci.com/iojw/socialscan.svg?token=4yLRbSuqAQqrjanbzeXs&branch=master)](https://travis-ci.com/iojw/socialscan)\n[![Downloads](https://pepy.tech/badge/socialscan)](https://pepy.tech/project/socialscan/)\n[![MPL 2.0 license](https://img.shields.io/badge/License-MPL%202.0-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)\n[![Python 3.6+](https://img.shields.io/badge/python-3.6+-green.svg)](https://www.python.org/downloads/)\n[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)",
-    "usage_sections": [],
+    "readme": "socialscan offers accurate and fast checks for email address and username usage on online platforms.",
+    "usage_sections": [
+      "Reserved keywords: Most platforms have a set of keywords that they don't allow to be used in usernames",
+      "Deleted/banned accounts: Deleted/banned account usernames tend to be unavailable even though the profile pages might not exist",
+      "\", \".join(p.value.name for p in Platforms)",
+      "f\"{value}: {COLOURINVALID.Secondary}{response.message}\""
+    ],
     "arguments": [
       {
+        "name": "-a",
+        "description": "only print usernames/email addresses that are",
+        "source": "docs"
+      },
+      {
         "name": "--available-only",
-        "description": "CLI flag '--available-only' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "only print usernames/email addresses that are",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "cache tokens for platforms requiring more than one",
+        "source": "docs"
       },
       {
         "name": "--cache-tokens",
-        "description": "CLI flag '--cache-tokens' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "cache tokens for platforms requiring more than one",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "output debug messages",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "file containg list of queries to execute",
+        "source": "docs"
       },
       {
         "name": "--input",
-        "description": "CLI flag '--input' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "file containg list of queries to execute",
+        "source": "docs"
       },
       {
         "name": "--json",
-        "description": "Emit JSON output instead of human-readable text.",
-        "source": "v2_enhancement"
+        "description": "output results in JSON format to the specified file",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "list of platforms to query",
+        "source": "docs"
       },
       {
         "name": "--platforms",
-        "description": "CLI flag '--platforms' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "list of platforms to query",
+        "source": "docs"
       },
       {
         "name": "--proxy-list",
-        "description": "CLI flag '--proxy-list' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "file containing list of HTTP proxy servers to execute queries with",
+        "source": "docs"
       },
       {
         "name": "--show-urls",
-        "description": "CLI flag '--show-urls' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "display profile URLs for usernames on supported platforms",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "show query responses as they are received",
+        "source": "docs"
       },
       {
         "name": "--verbose",
-        "description": "Increase log verbosity (repeatable for higher levels).",
-        "source": "v2_enhancement"
+        "description": "show query responses as they are received",
+        "source": "docs"
       },
       {
         "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "v2_enhancement"
+        "description": "show program's version number and exit",
+        "source": "docs"
       },
       {
         "name": "--view-by",
-        "description": "CLI flag '--view-by' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "view results sorted by platform or by query (default: query)",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +233,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "usage: socialscan [list of usernames/email addresses to check]",
+      "HTTP request (Snapchat, GitHub, Instagram. Lastfm &"
+    ],
     "file_listing": [
       "LICENSE",
       "MANIFEST.in",
@@ -264,13 +307,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web']' as the attack surface (osint, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/socialscan && python3 socialscan.py --help",
-      "Step 2: cd toolboxes/socialscan && cat README.md",
-      "Step 3: cd toolboxes/socialscan && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category. Fits when the engagement needs: socialscan\n[![Build Status](https://travis-ci.com/iojw/socialscan.svg?token=4yLRbSuqAQqrjanbzeXs&branch=master)](https://travis-ci.com/iojw/socialscan)\n[![Downloads](https://pepy.tech/badge/socialscan)](https://pepy.tech.",
+    "why_to_use": "Prefer this tool based on upstream description: socialscan offers accurate and fast checks for email address and username usage on online platforms.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `usage: socialscan [list of usernames/email addresses to check]`. Further invocations from upstream: `HTTP request (Snapchat, GitHub, Instagram. Lastfm &`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -301,18 +340,16 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the OSINT system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need OSINT, use socialscan because socialscan\n[![Build Status](https://travis-ci.com/iojw/socialscan.svg?token=4yLRbSuqAQqrjanbzeXs&branch=master)](https://travis-ci.com/iojw/socialscan)\n[![Downl.",
+    "When the engagement is in the recon phase, use socialscan as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `usage: socialscan [list of usernames/email addresses to check]` as documented upstream for socialscan.",
+    "When you need a concrete invocation, run `HTTP request (Snapchat, GitHub, Instagram. Lastfm &` as documented upstream for socialscan.",
+    "When chaining OSINT tools, pair socialscan with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `socialscan --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/socialscan && python3 socialscan.py --help",
-    "cd toolboxes/socialscan && cat README.md",
-    "cd toolboxes/socialscan && ls -la",
-    "cd toolboxes/socialscan && python3 socialscan.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST socialscan --output $KFIOSA_OUTPUT_DIR/socialscan.log"
+    "usage: socialscan [list of usernames/email addresses to check]",
+    "HTTP request (Snapchat, GitHub, Instagram. Lastfm &"
   ],
   "attack_surface": [
     "web"
@@ -333,5 +370,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

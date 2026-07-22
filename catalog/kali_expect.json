@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "expect",
   "title": "expect",
-  "summary": "### expect",
+  "summary": "autoexpect - generate an Expect script from watching a session",
   "version": "5.45.4-7",
   "architectures": [
     "any"
@@ -35,7 +35,107 @@
       "name": "autoexpect",
       "description": "Generate an Expect script from watching a session",
       "usage": null,
-      "arguments": [],
+      "arguments": [
+        {
+          "flags": [
+            "-Based"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "for Automating Interactive Programs\" by Don Libes,",
+          "default": null,
+          "choices": null,
+          "raw": "-Based  for Automating Interactive Programs\" by Don Libes,"
+        },
+        {
+          "flags": [
+            "-C"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The following example starts autoexpect in conservative mode with ^L as the toggle.",
+          "default": null,
+          "choices": null,
+          "raw": "-C  The following example starts autoexpect in conservative mode with ^L as the toggle."
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The following example starts autoexpect in prompt mode with ^P as the toggle.",
+          "default": null,
+          "choices": null,
+          "raw": "-P  The following example starts autoexpect in prompt mode with ^P as the toggle."
+        },
+        {
+          "flags": [
+            "-Q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "I don't know if there is a \"style\" for Expect programs but autoexpect should definitely not be",
+          "default": null,
+          "choices": null,
+          "raw": "-Q  I don't know if there is a \"style\" for Expect programs but autoexpect should definitely not be"
+        },
+        {
+          "flags": [
+            "-T"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disables this behavior.",
+          "default": null,
+          "choices": null,
+          "raw": "-T  disables this behavior."
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Fortunately, these timing spots are rare. For example, telnet ignores characters",
+          "default": null,
+          "choices": null,
+          "raw": "-c  Fortunately, these timing spots are rare. For example, telnet ignores characters"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "by a new script name.",
+          "default": null,
+          "choices": null,
+          "raw": "-f  by a new script name."
+        },
+        {
+          "flags": [
+            "-generated"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "try to faithfully write",
+          "default": null,
+          "choices": null,
+          "raw": "-generated  try to faithfully write"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The -P flag defines a key to toggle prompt mode. The following example starts au-",
+          "default": null,
+          "choices": null,
+          "raw": "-p  The -P flag defines a key to toggle prompt mode. The following example starts au-"
+        }
+      ],
       "raw_help": "root@kali:~# man autoexpect\n AUTOEXPECT(1)               General Commands Manual               AUTOEXPECT(1)\n \n NAME\n    autoexpect - generate an Expect script from watching a session\n \n SYNOPSIS\n    autoexpect [ args ] [ program args...  ]\n \n INTRODUCTION\n    autoexpect watches you interacting with another program and creates an Ex-\n    pect  script that reproduces your interactions.  For straightline scripts,\n    autoexpect saves substantial time over writing scripts by hand.   Even  if\n    you are an Expect expert, you will find it convenient to use autoexpect to\n    automate  the  more  mindless parts of interactions.  It is much easier to\n    cut/paste hunks of autoexpect scripts together than  to  write  them  from\n    scratch.   And  if  you  are  a beginner, you may be able to get away with\n    learning nothing more about Expect than how to call autoexpect.\n \n    The simplest way to use autoexpect is to call it  from  the  command  line\n    with no arguments.  For example:\n \n         % autoexpect\n \n    By  default,  autoexpect spawns a shell for you.  Given a program name and\n    arguments, autoexpect spawns that program.  For example:\n \n         % autoexpect ftp ftp.cme.nist.gov\n \n    Once your spawned program is running, interact normally.   When  you  have\n    exited the shell (or program that you specified), autoexpect will create a\n    new  script  for  you.   By  default,  autoexpect writes the new script to\n    \"script.exp\".  You can override this with the -f flag followed  by  a  new\n    script name.\n \n    The following example runs \"ftp ftp.cme.nist.gov\" and stores the resulting\n    Expect script in the file \"nist\".\n \n         % autoexpect -f nist ftp ftp.cme.nist.gov\n \n    It is important to understand that autoexpect does not guarantee a working\n    script  because it necessarily has to guess about certain things - and oc-\n    casionally it guesses wrong.  However, it is usually very easy to identify\n    and fix these problems.  The typical problems are:\n \n           *   Timing.  A surprisingly large number of programs (rn, ksh, zsh,\n               telnet, etc.) and devices (e.g., modems) ignore keystrokes that\n               arrive \"too quickly\" after  prompts.   If  you  find  your  new\n               script  hanging  up  at one spot, try adding a short sleep just\n               before the previous send.\n \n               You can force this behavior throughout by overriding the  vari-\n               able  \"force_conservative\"  near the beginning of the generated\n               script.  This \"conservative\" mode  makes  autoexpect  automati-\n               cally pause briefly (one tenth of a second) before sending each\n               character.  This pacifies every program I know of.\n \n               This  conservative  mode  is useful if you just want to quickly\n               reassure yourself that the problem is a timing one (or  if  you\n               really  don't  care about how fast the script runs).  This same\n               mode can be forced before script generation  by  using  the  -c\n               flag.\n \n               Fortunately,  these timing spots are rare.  For example, telnet\n               ignores characters only after  entering  its  escape  sequence.\n               Modems  only  ignore characters immediately after connecting to\n               them for the first time.  A few programs exhibit this  behavior\n               all  the  time  but typically have a switch to disable it.  For\n               example, rn's -T flag disables this behavior.\n \n               The following example starts autoexpect in conservative mode.\n \n                    autoexpect -c\n \n               The -C flag defines a key to  toggle  conservative  mode.   The\n               following  example starts autoexpect (in non-conservative mode)\n               with ^L as the toggle.  (Note that the ^L is entered  literally\n               - i.e., enter a real control-L).\n \n                    autoexpect -C ^L\n \n               The  following  example  starts autoexpect in conservative mode\n               with ^L as the toggle.\n \n                    autoexpect -c -C ^L\n \n           *   Echoing.  Many program echo characters.  For  example,  if  you\n               type \"more\" to a shell, what autoexpect actually sees is:\n \n                    you typed 'm',\n                    computer typed 'm',\n                    you typed 'o',\n                    computer typed 'o',\n                    you typed 'r',\n                    computer typed 'r',\n                    ...\n \n               Without  specific knowledge of the program, it is impossible to\n               know if you are waiting to see  each  character  echoed  before\n               typing  the  next.  If autoexpect sees characters being echoed,\n               it assumes that it can send them all as a group rather than in-\n               terleaving them the way they originally appeared.   This  makes\n               the  script  more pleasant to read.  However, it could conceiv-\n               ably be incorrect if you really had to wait to see each charac-\n               ter echoed.\n \n           *   Change.  Autoexpect records every character from  the  interac-\n               tion in the script.  This is desirable because it gives you the\n               ability to make judgements about what is important and what can\n               be replaced with a pattern match.\n \n               On  the  other  hand,  if you use commands whose output differs\n               from run to run, the generated scripts are not going to be cor-\n               rect.  For example, the \"date\" command always produces  differ-\n               ent output.  So using the date command while running autoexpect\n               is  a sure way to produce a script that will require editing in\n               order for it to work.\n \n               The -p flag puts autoexpect into \"prompt mode\".  In this  mode,\n               autoexpect will only look for the last line of program output -\n               which  is  usually  the  prompt.  This handles the date problem\n               (see above) and most others.\n \n               The following example starts autoexpect in prompt mode.\n \n                    autoexpect -p\n \n               The -P flag defines a key to toggle prompt mode.  The following\n               example starts autoexpect (in non-prompt mode) with ^P  as  the\n               toggle.   Note that the ^P is entered literally - i.e., enter a\n               real control-P.\n \n                    autoexpect -P ^P\n \n               The following example starts autoexpect in prompt mode with  ^P\n               as the toggle.\n \n                    autoexpect -p -P ^P\n \n OTHER FLAGS\n    The -quiet flag disables informational messages produced by autoexpect.\n \n    The  -Q flag names a quote character which can be used to enter characters\n    that autoexpect would otherwise consume because they are used as toggles.\n \n    The following example shows a number of flags with quote used to provide a\n    way of entering the toggles literally.\n \n         autoexpect -P ^P -C ^L -Q ^Q\n \n STYLE\n    I don't know if there is a \"style\"  for  Expect  programs  but  autoexpect\n    should  definitely not be held up as any model of style.  For example, au-\n    toexpect uses features of Expect that are intended specifically  for  com-\n    puter-generated  scripting.  So don't try to faithfully write scripts that\n    appear as if they were generated by autoexpect.  This is not useful.\n \n    On the other hand, autoexpect scripts do show some worthwhile things.  For\n    example, you can see how any string must be quoted in order to use it in a\n    Tcl script simply by running the strings through autoexpect.\n \n SEE ALSO\n    \"Exploring Expect: A Tcl-Based Toolkit  for  Automating  Interactive  Pro-\n    grams\" by Don Libes, O'Reilly and Associates, January 1995.\n \n AUTHOR\n    Don Libes, National Institute of Standards and Technology\n \n    expect and autoexpect are in the public domain.  NIST and I would appreci-\n    ate credit if these programs or parts of them are used.\n \n                                 30 June 1995                    AUTOEXPECT(1)",
       "examples": [],
       "risk": {
@@ -2502,21 +2602,23 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use autoexpect because autoexpect - generate an Expect script from watching a session.",
+    "When you need a concrete invocation, run `autoexpect [ args ] [ program args...  ]` as documented upstream for autoexpect.",
+    "When you need a concrete invocation, run `autoexpect  watches you interacting with another program and creates an Expect script that re-` as documented upstream for autoexpect.",
+    "When you need a concrete invocation, run `autoexpect  to  automate  the  more  mindless  parts  of  interactions.   It is much easier to` as documented upstream for autoexpect.",
+    "When you need a concrete invocation, run `autoexpect automatically pause briefly (one tenth of a second) before sending  each` as documented upstream for autoexpect.",
+    "When chaining Kali Linux tools, pair autoexpect with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `autoexpect --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/expect && python3 expect.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/expect && python3 expect.py --help",
-    "cd toolboxes/expect && python3 expect.py --help",
-    "cd toolboxes/expect && python3 expect.py --help",
-    "cd toolboxes/expect && python3 expect.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST expect --output $KFIOSA_OUTPUT_DIR/expect.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST expect --output $KFIOSA_OUTPUT_DIR/expect.log"
+    "autoexpect [ args ] [ program args...  ]",
+    "autoexpect  watches you interacting with another program and creates an Expect script that re-",
+    "autoexpect  to  automate  the  more  mindless  parts  of  interactions.   It is much easier to",
+    "autoexpect automatically pause briefly (one tenth of a second) before sending  each",
+    "autoexpect -c",
+    "autoexpect -C ^L",
+    "autoexpect -c -C ^L",
+    "autoexpect -p"
   ],
   "attack_surface": [
     "web"
@@ -2531,5 +2633,74 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-Based",
+        "description": "for Automating Interactive Programs\" by Don Libes,",
+        "source": "manpage"
+      },
+      {
+        "name": "-C",
+        "description": "The following example starts autoexpect in conservative mode with ^L as the toggle.",
+        "source": "manpage"
+      },
+      {
+        "name": "-P",
+        "description": "The following example starts autoexpect in prompt mode with ^P as the toggle.",
+        "source": "manpage"
+      },
+      {
+        "name": "-Q",
+        "description": "I don't know if there is a \"style\" for Expect programs but autoexpect should definitely not be",
+        "source": "manpage"
+      },
+      {
+        "name": "-T",
+        "description": "disables this behavior.",
+        "source": "manpage"
+      },
+      {
+        "name": "-c",
+        "description": "Fortunately, these timing spots are rare. For example, telnet ignores characters",
+        "source": "manpage"
+      },
+      {
+        "name": "-f",
+        "description": "by a new script name.",
+        "source": "manpage"
+      },
+      {
+        "name": "-generated",
+        "description": "try to faithfully write",
+        "source": "manpage"
+      },
+      {
+        "name": "-p",
+        "description": "The -P flag defines a key to toggle prompt mode. The following example starts au-",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "autoexpect [ args ] [ program args...  ]",
+      "autoexpect  watches you interacting with another program and creates an Expect script that re-",
+      "autoexpect  to  automate  the  more  mindless  parts  of  interactions.   It is much easier to",
+      "autoexpect automatically pause briefly (one tenth of a second) before sending  each",
+      "autoexpect -c",
+      "autoexpect -C ^L",
+      "autoexpect -c -C ^L",
+      "autoexpect -p"
+    ],
+    "readme": "autoexpect - generate an Expect script from watching a session",
+    "how_to_use": "Install/setup: sudo apt install expect. Run the primary entrypoint as shown in upstream docs, e.g. `autoexpect [ args ] [ program args...  ]`. Further invocations from upstream: `autoexpect  to  automate  the  more  mindless  parts  of  interactions.   It is much easier to`; `autoexpect -c`. autoexpect - generate an Expect script from watching a session.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: autoexpect - generate an Expect script from watching a session.",
+    "why_to_use": "Prefer this tool based on upstream description: autoexpect - generate an Expect script from watching a session.",
+    "usage_sections": [
+      "Install with: sudo apt install expect",
+      "Install with: sudo apt install expect"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

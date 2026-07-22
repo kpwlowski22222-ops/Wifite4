@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "recoverdm",
   "title": "recoverdm",
-  "summary": "### recoverdm",
+  "summary": "mergebad - merge multiple images into one",
   "version": "0.20-9",
   "architectures": [
     "any"
@@ -32,47 +32,47 @@
       "arguments": [
         {
           "flags": [
-            "-i"
+            "-h"
           ],
-          "metavar": "mapfile imagefile",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "This help.",
           "default": null,
           "choices": null,
-          "raw": " -i <mapfile> <imagefile>"
-        },
-        {
-          "flags": [
-            "-o"
-          ],
-          "metavar": "outputfile",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -o <outputfile>"
+          "raw": "-h  This help."
         },
         {
           "flags": [
             "-l"
           ],
-          "metavar": "mapfile",
-          "takes_value": true,
-          "description": "In case all inputimages had a badblock on the same",
+          "metavar": null,
+          "takes_value": false,
+          "description": "In case all input images had a bad block on the same place, this file will list those",
           "default": null,
           "choices": null,
-          "raw": " -l <mapfile>\tIn case all inputimages had a badblock on the same"
+          "raw": "-l  In case all input images had a bad block on the same place, this file will list those"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "File to write output to.",
+          "default": null,
+          "choices": null,
+          "raw": "-o  File to write output to."
         },
         {
           "flags": [
             "-s"
           ],
-          "metavar": "size",
-          "takes_value": true,
-          "description": "Limit or extend the size of the outputimage.",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Limit or extend the size of the output image.",
           "default": null,
           "choices": null,
-          "raw": " -s <size>\tLimit or extend the size of the outputimage."
+          "raw": "-s  Limit or extend the size of the output image."
         },
         {
           "flags": [
@@ -83,18 +83,7 @@
           "description": "Be verbose.",
           "default": null,
           "choices": null,
-          "raw": " -v\t\tBe verbose."
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "This help.",
-          "default": null,
-          "choices": null,
-          "raw": " -h\t\tThis help."
+          "raw": "-v  Be verbose."
         }
       ],
       "raw_help": "root@kali:~# mergebad -h\n -i <mapfile> <imagefile>\n \t\tWith -i one selects a mapfile+imagefile to read.\n -o <outputfile>\n \t\tFile to write output to.\n -l <mapfile>\tIn case all inputimages had a badblock on the same\n \t\tplace, this file will list those blocks.\n -s <size>\tLimit or extend the size of the outputimage.\n -v\t\tBe verbose.\n -h\t\tThis help.",
@@ -307,21 +296,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use mergebad because mergebad - merge multiple images into one.",
+    "When you need a concrete invocation, run `mergebad -i <mapfile><imagefile> -o <output_file> -l <mapfile> -s <size> -v -h` as documented upstream for mergebad.",
+    "When chaining Kali Linux tools, pair mergebad with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `mergebad --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/recoverdm && python3 recoverdm.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/recoverdm && python3 recoverdm.py --help",
-    "cd toolboxes/recoverdm && python3 recoverdm.py --help",
-    "cd toolboxes/recoverdm && python3 recoverdm.py --help",
-    "cd toolboxes/recoverdm && python3 recoverdm.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recoverdm --output $KFIOSA_OUTPUT_DIR/recoverdm.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recoverdm --output $KFIOSA_OUTPUT_DIR/recoverdm.log"
+    "mergebad -i <mapfile><imagefile> -o <output_file> -l <mapfile> -s <size> -v -h"
   ],
   "attack_surface": [
     "web"
@@ -336,5 +317,47 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "This help.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "In case all input images had a bad block on the same place, this file will list those",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "File to write output to.",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Limit or extend the size of the output image.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Be verbose.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "mergebad -i <mapfile><imagefile> -o <output_file> -l <mapfile> -s <size> -v -h"
+    ],
+    "readme": "mergebad - merge multiple images into one",
+    "how_to_use": "Install/setup: sudo apt install recoverdm. Run the primary entrypoint as shown in upstream docs, e.g. `mergebad -i <mapfile><imagefile> -o <output_file> -l <mapfile> -s <size> -v -h`. mergebad - merge multiple images into one.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: mergebad - merge multiple images into one.",
+    "why_to_use": "Prefer this tool based on upstream description: mergebad - merge multiple images into one.",
+    "usage_sections": [
+      "Install with: sudo apt install recoverdm",
+      "Install with: sudo apt install recoverdm"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

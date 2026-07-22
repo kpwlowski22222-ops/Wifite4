@@ -27,7 +27,30 @@
       "path": "/usr/bin/xpath",
       "description": "a script to query XPath statements in XML documents.",
       "usage": "xpath [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Never use an external DTD, ie. instantiate the XML::Parser module with 'ParseParamEnt => 0'.",
+          "default": null,
+          "choices": null,
+          "raw": "-n  Never use an external DTD, ie. instantiate the XML::Parser module with 'ParseParamEnt => 0'."
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be quiet. Output only errors (and no separator) on stderr.",
+          "default": null,
+          "choices": null,
+          "raw": "-q  Be quiet. Output only errors (and no separator) on stderr."
+        }
+      ]
     }
   ],
   "files": [
@@ -58,5 +81,42 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "xpath [-s suffix] [-p prefix] [-n] [-q] -e query [-e query] ... [file] ..."
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use xpath because Perl module for processing XPath.",
+    "When the engagement is in the install phase, use xpath as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `xpath [-s suffix] [-p prefix] [-n] [-q] -e query [-e query] ... [file] ...` as documented upstream for xpath.",
+    "When chaining Kali Linux tools, pair xpath with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `xpath --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-n",
+        "description": "Never use an external DTD, ie. instantiate the XML::Parser module with 'ParseParamEnt => 0'.",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Be quiet. Output only errors (and no separator) on stderr.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "xpath [-s suffix] [-p prefix] [-n] [-q] -e query [-e query] ... [file] ..."
+    ],
+    "readme": "xpath - a script to query XPath statements in XML documents.",
+    "how_to_use": "Install/setup: sudo apt install libxml-xpath-perl. Run the primary entrypoint as shown in upstream docs, e.g. `xpath [-s suffix] [-p prefix] [-n] [-q] -e query [-e query] ... [file] ...`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Perl module for processing XPath.",
+    "why_to_use": "Prefer this tool based on upstream description: xpath - a script to query XPath statements in XML documents.",
+    "usage_sections": [
+      "Install with: sudo apt install libxml-xpath-perl",
+      "Install with: sudo apt install libxml-xpath-perl"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

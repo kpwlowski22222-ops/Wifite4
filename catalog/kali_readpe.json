@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "readpe",
   "title": "readpe",
-  "summary": "### libpe-dev",
+  "summary": "ofs2rva - converts a PE raw file offset to relative virtual address",
   "version": "0.85.1-1",
   "architectures": [
     "any"
@@ -38,18 +38,6 @@
       "arguments": [
         {
           "flags": [
-            "-V",
-            "--version"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Show version.",
-          "default": null,
-          "choices": null,
-          "raw": "-V, --version                          Show version."
-        },
-        {
-          "flags": [
             "--help"
           ],
           "metavar": null,
@@ -57,7 +45,29 @@
           "description": "Show this help.",
           "default": null,
           "choices": null,
-          "raw": "--help                                 Show this help."
+          "raw": "--help  Show this help."
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V  Show version."
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show version.",
+          "default": null,
+          "choices": null,
+          "raw": "--version  Show version."
         }
       ],
       "raw_help": "root@kali:~# ofs2rva -h\n Usage: ofs2rva <offset> FILE\n Convert raw file offset to RVA\n \n Example: ofs2rva 0x1b9b8 calc.exe\n \n Options:\n-V, --version                          Show version.\n--help                                 Show this help.",
@@ -1388,21 +1398,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use ofs2rva because ofs2rva - converts a PE raw file offset to relative virtual address.",
+    "When you need a concrete invocation, run `ofs2rva offset pefile` as documented upstream for ofs2rva.",
+    "When you need a concrete invocation, run `ofs2rva 0x1b9b8 calc.exe` as documented upstream for ofs2rva.",
+    "When chaining Kali Linux tools, pair ofs2rva with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ofs2rva --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/readpe && python3 readpe.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/readpe && python3 readpe.py --help",
-    "cd toolboxes/readpe && python3 readpe.py --help",
-    "cd toolboxes/readpe && python3 readpe.py --help",
-    "cd toolboxes/readpe && python3 readpe.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST readpe --output $KFIOSA_OUTPUT_DIR/readpe.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST readpe --output $KFIOSA_OUTPUT_DIR/readpe.log"
+    "ofs2rva offset pefile",
+    "ofs2rva 0x1b9b8 calc.exe"
   ],
   "attack_surface": [
     "web",
@@ -1418,5 +1422,38 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Show this help.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Show version.",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Show version.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "ofs2rva offset pefile",
+      "ofs2rva 0x1b9b8 calc.exe"
+    ],
+    "readme": "ofs2rva - converts a PE raw file offset to relative virtual address",
+    "how_to_use": "Install/setup: sudo apt install readpe. Run the primary entrypoint as shown in upstream docs, e.g. `ofs2rva 0x1b9b8 calc.exe`. ofs2rva - converts a PE raw file offset to relative virtual address.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web, ad] in the Kali Linux category. Fits when the engagement needs: ofs2rva - converts a PE raw file offset to relative virtual address.",
+    "why_to_use": "Prefer this tool based on upstream description: ofs2rva - converts a PE raw file offset to relative virtual address.",
+    "usage_sections": [
+      "Install with: sudo apt install readpe",
+      "Install with: sudo apt install readpe"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

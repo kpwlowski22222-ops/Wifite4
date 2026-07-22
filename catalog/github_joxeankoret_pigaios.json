@@ -1,17 +1,26 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "cd toolboxes/pigaios && python3 pigaios.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/pigaios && python3 pigaios.py --help",
-    "cd toolboxes/pigaios && python3 pigaios.py --help",
-    "cd toolboxes/pigaios && python3 pigaios.py --help",
-    "cd toolboxes/pigaios && python3 pigaios.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pigaios --output $KFIOSA_OUTPUT_DIR/pigaios.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pigaios --output $KFIOSA_OUTPUT_DIR/pigaios.log"
+    "sudo apt-get install clang python-clang-5.0 libclang-5.0-dev python-colorama python-sklearn",
+    "wget $KFIOSA_TARGET_URL",
+    "tar -xzf zlib-1.2.11.tar.gz",
+    "cd zlib-1.2.11",
+    "srcbindiff.py -create",
+    "Project file 'sbd.project' created.",
+    "cat sbd.project",
+    "includes = /usr/lib/llvm-3.8/bin/../lib/clang/3.8.0/include",
+    "cflags = -Izlib_dir -Izlib_dir/include",
+    "cxxflags = -Izlib_dir -Izlib_dir/include"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Pigaios ('πηγαίος', Greek for 'source' as in 'source code') is a tool for diffing/matching source codes directly against binaries. The idea is to point a tool to a code base, regardless of it being compilable or not (for example, partial source code or source code for platforms not at your hand), extract information from that code base and, then, import in an IDA database function names (symbols), structures and enumerations. It uses the Python CLang bindings (which are very limited, but still better than using pycparser).",
+    "usage_sections": [
+      "Parse C source code and extract features from the Abstract Syntax Tree (AST) of each function.",
+      "Export the same data extracted from C source codes from IDA databases.",
+      "Find matches between the features found in C source codes and IDA databases.",
+      "After an initial set of matches with no false positive is found, find more matches from the callgraph.",
+      "Rate the matches using both an \"expert system\" and a \"machine learning\" based system."
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +138,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo apt-get install clang python-clang-5.0 libclang-5.0-dev python-colorama python-sklearn",
+      "wget $KFIOSA_TARGET_URL",
+      "tar -xzf zlib-1.2.11.tar.gz",
+      "cd zlib-1.2.11",
+      "srcbindiff.py -create",
+      "Project file 'sbd.project' created.",
+      "cat sbd.project",
+      "includes = /usr/lib/llvm-3.8/bin/../lib/clang/3.8.0/include",
+      "cflags = -Izlib_dir -Izlib_dir/include",
+      "cxxflags = -Izlib_dir -Izlib_dir/include"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +275,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, pigaios, joxeankoret).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/pigaios && python3 pigaios.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/pigaios && python3 pigaios.py --help",
-      "Step 3: cd toolboxes/pigaios && python3 pigaios.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the frameworks category. Fits when the engagement needs: Pigaios ('πηγαίος', Greek for 'source' as in 'source code') is a tool for diffing/matching source codes directly against binaries. The idea is to point a tool to a code base, regardless of it being compilable or not (for.",
+    "why_to_use": "Prefer this tool based on upstream description: Pigaios ('πηγαίος', Greek for 'source' as in 'source code') is a tool for diffing/matching source codes directly against binaries. The idea is to point a tool to a code base, regardless of it being compilable or not (for example, partial source code or source code for platforms not at your hand), extract information from that code base and, then, import in an IDA database function names (symbols),.",
+    "how_to_use": "Install/setup: pip install clang-5; pip install colorama. Run the primary entrypoint as shown in upstream docs, e.g. `sudo apt-get install clang python-clang-5.0 libclang-5.0-dev python-colorama python-sklearn`. Further invocations from upstream: `wget $KFIOSA_TARGET_URL`; `tar -xzf zlib-1.2.11.tar.gz`. Pigaios ('πηγαίος', Greek for 'source' as in 'source code') is a tool for diffing/matching source codes directly against binaries. The idea is to point a tool to a code base, regardless of it being compilable or not (for example, partial source code or source code for platforms not at your hand), extract information fr."
   },
   "full_name": "joxeankoret/pigaios",
   "id": "github:joxeankoret/pigaios",
@@ -282,7 +298,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``pigaios`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Pigaios ('πηγαίος', Greek for 'source' as in 'source code') is a tool for diffing/matching source codes directly against binaries. The idea is to point a tool to a code base, regardless of it being compilable or not (for example, partial source code or source code for platforms not at your hand), extract information from that code base and, then, import in an IDA database function names (symbols), structures and enumerations. It uses the Python CLang bindings (which are very limited, but still b",
   "tags": [
     "offensive",
     "pigaios",
@@ -300,12 +316,13 @@
   },
   "url": "https://github.com/joxeankoret/pigaios",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need frameworks, use pigaios because Pigaios ('πηγαίος', Greek for 'source' as in 'source code') is a tool for diffing/matching source codes directly against binaries. The idea is to point a tool t.",
+    "When you need a concrete invocation, run `sudo apt-get install clang python-clang-5.0 libclang-5.0-dev python-colorama python-sklearn` as documented upstream for pigaios.",
+    "When you need a concrete invocation, run `wget $KFIOSA_TARGET_URL` as documented upstream for pigaios.",
+    "When you need a concrete invocation, run `tar -xzf zlib-1.2.11.tar.gz` as documented upstream for pigaios.",
+    "When you need a concrete invocation, run `cd zlib-1.2.11` as documented upstream for pigaios.",
+    "When chaining frameworks tools, pair pigaios with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `pigaios --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +341,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

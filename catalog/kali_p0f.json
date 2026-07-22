@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "p0f",
   "title": "p0f",
-  "summary": "### p0f",
+  "summary": "p0f - identify remote systems passively",
   "version": "3.09b-4",
   "architectures": [
     "any"
@@ -32,36 +32,14 @@
       "arguments": [
         {
           "flags": [
-            "-i"
-          ],
-          "metavar": "iface",
-          "takes_value": true,
-          "description": "- listen on the specified network interface",
-          "default": null,
-          "choices": null,
-          "raw": " -i iface  - listen on the specified network interface"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "- read offline pcap data from a given file",
-          "default": null,
-          "choices": null,
-          "raw": " -r file   - read offline pcap data from a given file"
-        },
-        {
-          "flags": [
-            "-p"
+            "-d"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "- put the listening interface in promiscuous mode",
+          "description": "go into daemon mode (detach from current terminal and fork into background). Requires",
           "default": null,
           "choices": null,
-          "raw": " -p        - put the listening interface in promiscuous mode"
+          "raw": "-d  go into daemon mode (detach from current terminal and fork into background). Requires"
         },
         {
           "flags": [
@@ -69,113 +47,21 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "- list all available interfaces",
+          "description": "lists all available interfaces, then quits. Particularly useful on Windows, where the",
           "default": null,
           "choices": null,
-          "raw": " -L        - list all available interfaces"
+          "raw": "-L  lists all available interfaces, then quits. Particularly useful on Windows, where the"
         },
         {
           "flags": [
-            "-f"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "- read fingerprint database from 'file' (/etc/p0f/p0f.fp)",
-          "default": null,
-          "choices": null,
-          "raw": " -f file   - read fingerprint database from 'file' (/etc/p0f/p0f.fp)"
-        },
-        {
-          "flags": [
-            "-o"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "- write information to the specified log file",
-          "default": null,
-          "choices": null,
-          "raw": " -o file   - write information to the specified log file"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "name",
-          "takes_value": true,
-          "description": "- answer to API queries at a named unix socket",
-          "default": null,
-          "choices": null,
-          "raw": " -s name   - answer to API queries at a named unix socket"
-        },
-        {
-          "flags": [
-            "-u"
-          ],
-          "metavar": "user",
-          "takes_value": true,
-          "description": "- switch to the specified unprivileged account and chroot",
-          "default": null,
-          "choices": null,
-          "raw": " -u user   - switch to the specified unprivileged account and chroot"
-        },
-        {
-          "flags": [
-            "-d"
+            "-p"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "- fork into background (requires -o or -s)",
+          "description": "switch card to promiscuous mode; by default, p0f listens only to packets addressed or",
           "default": null,
           "choices": null,
-          "raw": " -d        - fork into background (requires -o or -s)"
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": "limit",
-          "takes_value": true,
-          "description": "- limit number of parallel API connections (20)",
-          "default": null,
-          "choices": null,
-          "raw": " -S limit  - limit number of parallel API connections (20)"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "c h",
-          "takes_value": true,
-          "description": "- set connection / host cache age limits (30s,120m)",
-          "default": null,
-          "choices": null,
-          "raw": " -t c,h    - set connection / host cache age limits (30s,120m)"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "c h",
-          "takes_value": true,
-          "description": "- cap the number of active connections / hosts (1000,10000)",
-          "default": null,
-          "choices": null,
-          "raw": " -m c,h    - cap the number of active connections / hosts (1000,10000)"
-        },
-        {
-          "flags": [
-            "-u",
-            "-S",
-            "-t",
-            "-m",
-            "-pdL"
-          ],
-          "metavar": "user limit c h c h 'filter rule'",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -u user ] [ -S limit ] [ -t c,h ] [ -m c,h ] [ -pdL ] [ 'filter rule' ]"
+          "raw": "-p  switch card to promiscuous mode; by default, p0f listens only to packets addressed or"
         }
       ],
       "raw_help": "root@kali:~# p0f -h\n p0f: invalid option -- 'h'\n Usage: p0f [ ...options... ] [ 'filter rule' ]\n \n Network interface options:\n \n -i iface  - listen on the specified network interface\n -r file   - read offline pcap data from a given file\n -p        - put the listening interface in promiscuous mode\n -L        - list all available interfaces\n \n Operating mode and output settings:\n \n -f file   - read fingerprint database from 'file' (/etc/p0f/p0f.fp)\n -o file   - write information to the specified log file\n -s name   - answer to API queries at a named unix socket\n -u user   - switch to the specified unprivileged account and chroot\n -d        - fork into background (requires -o or -s)\n \n Performance-related options:\n \n -S limit  - limit number of parallel API connections (20)\n -t c,h    - set connection / host cache age limits (30s,120m)\n -m c,h    - cap the number of active connections / hosts (1000,10000)\n \n Optional filter expressions (man tcpdump) can be specified in the command\n line to prevent p0f from looking at incidental network traffic.\n \n Problems? You can reach the author at <lcamtuf@coredump.cx>.",
@@ -263,21 +149,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use p0f because p0f - identify remote systems passively.",
+    "When you need a concrete invocation, run `p0f p0f [ -f file ] [ -i device ] [ -r file ] [ -o file ] [ -s socket ] [ -u user ] [ -S limit` as documented upstream for p0f.",
+    "When chaining Kali Linux tools, pair p0f with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `p0f --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/p0f && python3 p0f.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/p0f && python3 p0f.py --help",
-    "cd toolboxes/p0f && python3 p0f.py --help",
-    "cd toolboxes/p0f && python3 p0f.py --help",
-    "cd toolboxes/p0f && python3 p0f.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST p0f --output $KFIOSA_OUTPUT_DIR/p0f.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST p0f --output $KFIOSA_OUTPUT_DIR/p0f.log"
+    "p0f p0f [ -f file ] [ -i device ] [ -r file ] [ -o file ] [ -s socket ] [ -u user ] [ -S limit"
   ],
   "attack_surface": [
     "web"
@@ -292,5 +170,37 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "go into daemon mode (detach from current terminal and fork into background). Requires",
+        "source": "docs"
+      },
+      {
+        "name": "-L",
+        "description": "lists all available interfaces, then quits. Particularly useful on Windows, where the",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "switch card to promiscuous mode; by default, p0f listens only to packets addressed or",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "p0f p0f [ -f file ] [ -i device ] [ -r file ] [ -o file ] [ -s socket ] [ -u user ] [ -S limit"
+    ],
+    "readme": "p0f - identify remote systems passively",
+    "how_to_use": "Install/setup: sudo apt install p0f. Run the primary entrypoint as shown in upstream docs, e.g. `p0f p0f [ -f file ] [ -i device ] [ -r file ] [ -o file ] [ -s socket ] [ -u user ] [ -S limit`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: p0f - identify remote systems passively.",
+    "why_to_use": "Prefer this tool because: p0f - identify remote systems passively.",
+    "usage_sections": [
+      "Install with: sudo apt install p0f",
+      "Install with: sudo apt install p0f"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "shed",
   "title": "shed",
-  "summary": "### shed",
+  "summary": "shed - simple hex editor with a pico-style interface",
   "version": "1.16-2",
   "architectures": [
     "any"
@@ -29,75 +29,80 @@
       "arguments": [
         {
           "flags": [
-            "-r",
-            "--readonly"
+            "-H"
           ],
-          "metavar": "/ - eadonly",
-          "takes_value": true,
-          "description": "open FILE read only",
+          "metavar": null,
+          "takes_value": false,
+          "description": "start in hex mode (hex offsets etc.)",
           "default": null,
           "choices": null,
-          "raw": " -r / --readonly       open FILE read only"
+          "raw": "-H  start in hex mode (hex offsets etc.)"
         },
         {
           "flags": [
-            "-s",
-            "--start"
+            "-L"
           ],
-          "metavar": "/ - tart=OFFSET",
-          "takes_value": true,
-          "description": "position cursor to offset",
+          "metavar": null,
+          "takes_value": false,
+          "description": "set length of file to LENGTH. Useful for special files where shed cannot obtain the",
           "default": null,
           "choices": null,
-          "raw": " -s / --start=OFFSET   position cursor to offset"
+          "raw": "-L  set length of file to LENGTH. Useful for special files where shed cannot obtain the"
         },
         {
           "flags": [
-            "-H",
-            "--hex"
+            "-h"
           ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "start with hex offsets",
-          "default": null,
-          "choices": null,
-          "raw": " -H / --hex            start with hex offsets"
-        },
-        {
-          "flags": [
-            "-L",
-            "--length"
-          ],
-          "metavar": "/",
-          "takes_value": true,
-          "description": "set length (for device files)",
-          "default": null,
-          "choices": null,
-          "raw": " -L / --length         set length (for device files)"
-        },
-        {
-          "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "/ - elp",
-          "takes_value": true,
+          "metavar": null,
+          "takes_value": false,
           "description": "show help and exit",
           "default": null,
           "choices": null,
-          "raw": " -h / --help           show help and exit"
+          "raw": "-h  show help and exit"
         },
         {
           "flags": [
-            "-v",
-            "--version"
+            "-r"
           ],
-          "metavar": "/ - ersion",
-          "takes_value": true,
+          "metavar": null,
+          "takes_value": false,
+          "description": "open FILE read only",
+          "default": null,
+          "choices": null,
+          "raw": "-r  open FILE read only"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "position cursor to offset",
+          "default": null,
+          "choices": null,
+          "raw": "-s  position cursor to offset"
+        },
+        {
+          "flags": [
+            "-style"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "shed [OPTIONS] [FILE]",
+          "default": null,
+          "choices": null,
+          "raw": "-style  shed [OPTIONS] [FILE]"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
           "description": "show version and exit",
           "default": null,
           "choices": null,
-          "raw": " -v / --version        show version and exit"
+          "raw": "-v  show version and exit"
         }
       ],
       "raw_help": "root@kali:~# shed -h\n usage: shed [OPTIONS] [FILE]\n \n options:\n -r / --readonly       open FILE read only\n -s / --start=OFFSET   position cursor to offset\n -H / --hex            start with hex offsets\n -L / --length         set length (for device files)\n -h / --help           show help and exit\n -v / --version        show version and exit",
@@ -164,21 +169,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use shed because shed - simple hex editor with a pico-style interface.",
+    "When you need a concrete invocation, run `shed [OPTIONS] [FILE]` as documented upstream for shed.",
+    "When chaining Kali Linux tools, pair shed with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `shed --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/shed && python3 shed.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/shed && python3 shed.py --help",
-    "cd toolboxes/shed && python3 shed.py --help",
-    "cd toolboxes/shed && python3 shed.py --help",
-    "cd toolboxes/shed && python3 shed.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST shed --output $KFIOSA_OUTPUT_DIR/shed.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST shed --output $KFIOSA_OUTPUT_DIR/shed.log"
+    "shed [OPTIONS] [FILE]"
   ],
   "attack_surface": [
     "web"
@@ -193,5 +190,57 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-H",
+        "description": "start in hex mode (hex offsets etc.)",
+        "source": "manpage"
+      },
+      {
+        "name": "-L",
+        "description": "set length of file to LENGTH. Useful for special files where shed cannot obtain the",
+        "source": "manpage"
+      },
+      {
+        "name": "-h",
+        "description": "show help and exit",
+        "source": "manpage"
+      },
+      {
+        "name": "-r",
+        "description": "open FILE read only",
+        "source": "manpage"
+      },
+      {
+        "name": "-s",
+        "description": "position cursor to offset",
+        "source": "manpage"
+      },
+      {
+        "name": "-style",
+        "description": "shed [OPTIONS] [FILE]",
+        "source": "manpage"
+      },
+      {
+        "name": "-v",
+        "description": "show version and exit",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "shed [OPTIONS] [FILE]"
+    ],
+    "readme": "shed - simple hex editor with a pico-style interface",
+    "how_to_use": "Install/setup: sudo apt install shed. shed - simple hex editor with a pico-style interface.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: shed - simple hex editor with a pico-style interface.",
+    "why_to_use": "Prefer this tool based on upstream description: shed - simple hex editor with a pico-style interface.",
+    "usage_sections": [
+      "Install with: sudo apt install shed",
+      "Install with: sudo apt install shed"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

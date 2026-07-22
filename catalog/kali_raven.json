@@ -29,37 +29,25 @@
       "arguments": [
         {
           "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help            show this help message and exit"
-        },
-        {
-          "flags": [
             "--allowed-ip"
           ],
-          "metavar": "ALLOWED_IP",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Option present in package usage line for raven.",
           "default": null,
           "choices": null,
-          "raw": " --allowed-ip ALLOWED_IP"
+          "raw": "--allowed-ip  Option present in package usage line for raven."
         },
         {
           "flags": [
             "--upload-dir"
           ],
-          "metavar": "UPLOAD_DIR",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Option present in package usage line for raven.",
           "default": null,
           "choices": null,
-          "raw": " --upload-dir UPLOAD_DIR"
+          "raw": "--upload-dir  Option present in package usage line for raven."
         },
         {
           "flags": [
@@ -67,10 +55,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Organize file uploads into subfolders by remote client",
+          "description": "Option present in package usage line for raven.",
           "default": null,
           "choices": null,
-          "raw": " --organize-uploads    Organize file uploads into subfolders by remote client"
+          "raw": "--organize-uploads  Option present in package usage line for raven."
         }
       ],
       "raw_help": "root@kali:~# raven -h\n usage: raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]\n \n A lightweight file upload service used for penetration testing and incident response.\n \n positional arguments:\n lhost                 The IP address for our HTTP handler to listen on\n                       (default: listen on all interfaces)\n lport                 The port for our HTTP handler to listen on (default:\n                       8080)\n \n options:\n -h, --help            show this help message and exit\n --allowed-ip ALLOWED_IP\n                       Restrict access to our HTTP handler by IP address\n                       (optional)\n --upload-dir UPLOAD_DIR\n                       Designate the directory to save uploaded files to\n                       (default: current working directory)\n --organize-uploads    Organize file uploads into subfolders by remote client\n                       IP\n \n examples:\n Start the HTTP server on all available network interfaces, listening on port 443\n raven 0.0.0.0 443\n \n Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, and restrict access to 192.168.0.4\n raven 192.168.0.12 443 --allowed-ip 192.168.0.4\n \n Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, restrict access to 192.168.0.4, and save uploaded files to /tmp\n raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp\n \n Bind the HTTP server to a specific address (192.168.0.12), listening on port 443, restrict access to 192.168.0.4, and save uploaded files to /tmp organized by remote client IP\n raven 192.168.0.12 443 --allowed-ip 192.168.0.4 --upload-dir /tmp --organize-uploads",
@@ -162,21 +150,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use raven because ### raven.",
+    "When you need a concrete invocation, run `raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]` as documented upstream for raven.",
+    "When chaining Kali Linux tools, pair raven with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `raven --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/raven && python3 raven.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/raven && python3 raven.py --help",
-    "cd toolboxes/raven && python3 raven.py --help",
-    "cd toolboxes/raven && python3 raven.py --help",
-    "cd toolboxes/raven && python3 raven.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST raven --output $KFIOSA_OUTPUT_DIR/raven.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST raven --output $KFIOSA_OUTPUT_DIR/raven.log"
+    "raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]"
   ],
   "attack_surface": [
     "web"
@@ -191,5 +171,37 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--allowed-ip",
+        "description": "Option present in package usage line for raven.",
+        "source": "usage_line"
+      },
+      {
+        "name": "--upload-dir",
+        "description": "Option present in package usage line for raven.",
+        "source": "usage_line"
+      },
+      {
+        "name": "--organize-uploads",
+        "description": "Option present in package usage line for raven.",
+        "source": "usage_line"
+      }
+    ],
+    "examples": [
+      "raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]"
+    ],
+    "readme": "### raven",
+    "how_to_use": "Install/setup: sudo apt install raven. Run the primary entrypoint as shown in upstream docs, e.g. `raven [lhost] [lport] [--allowed-ip <allowed_client_ip>] [--upload-dir <upload_directory>] [--organize-uploads]`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: ### raven.",
+    "why_to_use": "Prefer this tool because: ### raven.",
+    "usage_sections": [
+      "Install with: sudo apt install raven",
+      "Install with: sudo apt install raven"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "offline"
 }

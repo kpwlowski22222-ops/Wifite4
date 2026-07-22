@@ -9,106 +9,77 @@
   "summary": "BrakTooth Proof of Concept Attacks (+ BT Fuzzing Framework)",
   "documentation": {
     "readme": "BrakTooth Proof of Concept Attacks (+ BT Fuzzing Framework)",
-    "usage_sections": [],
+    "usage_sections": [
+      ":wrench: 1) Requirements",
+      ":floppydisk: 2) Installation Instructions (x86 / ARM64)",
+      ":rocket: 3) Running BT fuzzer (GUI or Terminal)",
+      ":bomb: 4) Launching Braktooth Attacks",
+      ":bulb: 5) Create Your own Exploit Scripts"
+    ],
     "arguments": [
       {
-        "name": "--arm64",
-        "description": "CLI flag '--arm64' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--authreq",
-        "description": "CLI flag '--authreq' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
         "name": "--autostart",
-        "description": "CLI flag '--autostart' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Automatically start (default: true)",
+        "source": "docs"
       },
       {
         "name": "--bounding",
-        "description": "CLI flag '--bounding' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Enable/Disable Bounding (default: true)",
+        "source": "docs"
       },
       {
         "name": "--default-config",
-        "description": "CLI flag '--default-config' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Start with default config",
+        "source": "docs"
       },
       {
         "name": "--exploit",
-        "description": "CLI flag '--exploit' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Exploit Name",
+        "source": "docs"
       },
       {
         "name": "--fuzz",
-        "description": "CLI flag '--fuzz' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--gui",
-        "description": "CLI flag '--gui' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Enable/Disable fuzzing (default: true)",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--host",
-        "description": "CLI flag '--host' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--host-port",
-        "description": "CLI flag '--host-port' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--iocap",
-        "description": "CLI flag '--iocap' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Print help",
+        "source": "docs"
       },
       {
         "name": "--list-exploits",
-        "description": "CLI flag '--list-exploits' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "List all exploits",
+        "source": "docs"
       },
       {
         "name": "--live-capture",
-        "description": "CLI flag '--live-capture' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Open wireshark in live capture mode",
+        "source": "docs"
       },
       {
         "name": "--no-gui",
-        "description": "CLI flag '--no-gui' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Start without GUI",
+        "source": "docs"
       },
       {
         "name": "--random_bdaddress",
-        "description": "CLI flag '--random_bdaddress' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Enable/Disable host BDAddress randomization",
+        "source": "docs"
       },
       {
         "name": "--scan",
-        "description": "Perform a scan only (do not exploit).",
-        "source": "v2_enhancement"
+        "description": "Scan BT Targets",
+        "source": "docs"
+      },
+      {
+        "name": "--test-webview",
+        "description": "Test GUI webview performance (requires internet)",
+        "source": "docs"
       },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--target-baud",
-        "description": "CLI flag '--target-baud' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--target-port",
-        "description": "CLI flag '--target-port' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
         "source": "v2_enhancement"
       },
       {
@@ -193,7 +164,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "wget $KFIOSA_TARGET_URL",
+      "sudo apt install -y unzip python3-dev python3-venv",
+      "unzip esp32driver.zip # Extract esp32driver.zip (firmware package)",
+      "python3 firmware.py flash /dev/ttyUSB1 # Please change your serial port to match your ESP32 device.",
+      "cd ../",
+      "sudo apt install -y zstd wget unzip",
+      "wget $KFIOSA_TARGET_URL -m).tar.zst",
+      "tar -I zstd wdissector_$(uname -m).tar.zst",
+      "./requirements.sh",
+      "sudo bin/bt_fuzzer --scan # Scan for targets (BDAddress) for 15 seconds"
+    ],
     "file_listing": [
       "1.pairing_no_sc_original.svg",
       "1.pairing_sc_original.svg",
@@ -294,13 +276,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && python3 braktooth_esp32_bluetooth_classic_attacks.py --help",
-      "Step 2: cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && cat README.md",
-      "Step 3: cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: BrakTooth Proof of Concept Attacks (+ BT Fuzzing Framework).",
+    "why_to_use": "Prefer this tool based on upstream description: BrakTooth Proof of Concept Attacks (+ BT Fuzzing Framework).",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `wget $KFIOSA_TARGET_URL`. Further invocations from upstream: `sudo apt install -y unzip python3-dev python3-venv`; `unzip esp32driver.zip # Extract esp32driver.zip (firmware package)`. BrakTooth Proof of Concept Attacks (+ BT Fuzzing Framework)."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -332,18 +310,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use braktooth_esp32_bluetooth_classic_attacks because BrakTooth Proof of Concept Attacks (+ BT Fuzzing Framework).",
+    "When you need a concrete invocation, run `wget $KFIOSA_TARGET_URL` as documented upstream for braktooth_esp32_bluetooth_classic_attacks.",
+    "When you need a concrete invocation, run `sudo apt install -y unzip python3-dev python3-venv` as documented upstream for braktooth_esp32_bluetooth_classic_attacks.",
+    "When you need a concrete invocation, run `unzip esp32driver.zip # Extract esp32driver.zip (firmware package)` as documented upstream for braktooth_esp32_bluetooth_classic_attacks.",
+    "When you need a concrete invocation, run `python3 firmware.py flash /dev/ttyUSB1 # Please change your serial port to match your ESP32 device.` as documented upstream for braktooth_esp32_bluetooth_classic_attacks.",
+    "When chaining Bluetooth tools, pair braktooth_esp32_bluetooth_classic_attacks with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `braktooth_esp32_bluetooth_classic_attacks --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && python3 braktooth_esp32_bluetooth_classic_attacks.py --help",
-    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && cat README.md",
-    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && ls -la",
-    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && python3 braktooth_esp32_bluetooth_classic_attacks.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST braktooth_esp32_bluetooth_classic_attacks --output $KFIOSA_OUTPUT_DIR/braktooth_esp32_bluetooth_classic_attacks.log"
+    "wget $KFIOSA_TARGET_URL",
+    "sudo apt install -y unzip python3-dev python3-venv",
+    "unzip esp32driver.zip # Extract esp32driver.zip (firmware package)",
+    "python3 firmware.py flash /dev/ttyUSB1 # Please change your serial port to match your ESP32 device.",
+    "cd ../",
+    "sudo apt install -y zstd wget unzip",
+    "wget $KFIOSA_TARGET_URL -m).tar.zst",
+    "tar -I zstd wdissector_$(uname -m).tar.zst",
+    "./requirements.sh",
+    "sudo bin/bt_fuzzer --scan # Scan for targets (BDAddress) for 15 seconds"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -367,5 +352,7 @@
   "_languages": [
     "python",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "minicom",
   "title": "minicom",
-  "summary": "### minicom",
+  "summary": "ascii-xfr - upload/download files using the ASCII protocol",
   "version": "2.11.1-1",
   "architectures": [
     "any"
@@ -33,25 +33,14 @@
       "arguments": [
         {
           "flags": [
-            "-s"
+            "-d"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "send",
+          "description": "Use the Control-D (ASCII 4) as End-Of-File character.",
           "default": null,
           "choices": null,
-          "raw": "      -s:  send"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "receive",
-          "default": null,
-          "choices": null,
-          "raw": "      -r:  receive"
+          "raw": "-d  Use the Control-D (ASCII 4) as End-Of-File character."
         },
         {
           "flags": [
@@ -59,32 +48,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "send the End Of File character (default is not to)",
-          "default": "is not to",
-          "choices": null,
-          "raw": "      -e:  send the End Of File character (default is not to)"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "set End Of File character to Control-D (instead of Control-Z)",
+          "description": "Send the End-Of-File character (Control-Z, ASCII 26 by default) when uploading has fin-",
           "default": null,
           "choices": null,
-          "raw": "      -d:  set End Of File character to Control-D (instead of Control-Z)"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "verbose (statistics on stderr output)",
-          "default": null,
-          "choices": null,
-          "raw": "      -v:  verbose (statistics on stderr output)"
+          "raw": "-e  Send the End-Of-File character (Control-Z, ASCII 26 by default) when uploading has fin-"
         },
         {
           "flags": [
@@ -92,32 +59,54 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "do not translate CRLF <--> LF",
+          "description": "Do not translate CR to CRLF and vice versa.",
           "default": null,
           "choices": null,
-          "raw": "      -n:  do not translate CRLF <--> LF"
+          "raw": "-n  Do not translate CR to CRLF and vice versa."
         },
         {
           "flags": [
-            "-l"
+            "-r"
           ],
-          "metavar": "milliseconds",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Receive a file. One of -s or -r must be present.",
           "default": null,
           "choices": null,
-          "raw": "     -l milliseconds"
+          "raw": "-r  Receive a file. One of -s or -r must be present."
         },
         {
           "flags": [
-            "-c"
+            "-s"
           ],
-          "metavar": "milliseconds",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Send a file.",
           "default": null,
           "choices": null,
-          "raw": "     -c milliseconds"
+          "raw": "-s  Send a file."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbose: show transfer statistics on the stderr output.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Verbose: show transfer statistics on the stderr output."
+        },
+        {
+          "flags": [
+            "-xfr"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "upload/download files using the ASCII protocol",
+          "default": null,
+          "choices": null,
+          "raw": "-xfr  upload/download files using the ASCII protocol"
         }
       ],
       "raw_help": "root@kali:~# ascii-xfr -h\n ascii-xfr: invalid option -- 'h'\n Usage: ascii-xfr -s|-r [-dvn] [-l linedelay] [-c character delay] filename\n      -s:  send\n      -r:  receive\n      -e:  send the End Of File character (default is not to)\n      -d:  set End Of File character to Control-D (instead of Control-Z)\n      -v:  verbose (statistics on stderr output)\n      -n:  do not translate CRLF <--> LF\n      Delays are in milliseconds.",
@@ -674,21 +663,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use ascii-xfr because ascii-xfr - upload/download files using the ASCII protocol.",
+    "When you need a concrete invocation, run `ascii-xfr -s|-r [-ednv] [-l linedelay] [-c characterdelay] filename` as documented upstream for ascii-xfr.",
+    "When chaining Kali Linux tools, pair ascii-xfr with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ascii-xfr --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/minicom && python3 minicom.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/minicom && python3 minicom.py --help",
-    "cd toolboxes/minicom && python3 minicom.py --help",
-    "cd toolboxes/minicom && python3 minicom.py --help",
-    "cd toolboxes/minicom && python3 minicom.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST minicom --output $KFIOSA_OUTPUT_DIR/minicom.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST minicom --output $KFIOSA_OUTPUT_DIR/minicom.log"
+    "ascii-xfr -s|-r [-ednv] [-l linedelay] [-c characterdelay] filename"
   ],
   "attack_surface": [
     "web"
@@ -703,5 +684,57 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "Use the Control-D (ASCII 4) as End-Of-File character.",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Send the End-Of-File character (Control-Z, ASCII 26 by default) when uploading has fin-",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "Do not translate CR to CRLF and vice versa.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Receive a file. One of -s or -r must be present.",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Send a file.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Verbose: show transfer statistics on the stderr output.",
+        "source": "docs"
+      },
+      {
+        "name": "-xfr",
+        "description": "upload/download files using the ASCII protocol",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "ascii-xfr -s|-r [-ednv] [-l linedelay] [-c characterdelay] filename"
+    ],
+    "readme": "ascii-xfr - upload/download files using the ASCII protocol",
+    "how_to_use": "Install/setup: sudo apt install minicom. Run the primary entrypoint as shown in upstream docs, e.g. `ascii-xfr -s|-r [-ednv] [-l linedelay] [-c characterdelay] filename`. ascii-xfr - upload/download files using the ASCII protocol.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: ascii-xfr - upload/download files using the ASCII protocol.",
+    "why_to_use": "Prefer this tool based on upstream description: ascii-xfr - upload/download files using the ASCII protocol.",
+    "usage_sections": [
+      "Install with: sudo apt install minicom",
+      "Install with: sudo apt install minicom"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

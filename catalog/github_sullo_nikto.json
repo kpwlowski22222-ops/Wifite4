@@ -1,18 +1,133 @@
 {
   "category": "web",
   "command_examples": [
-    "cd toolboxes/nikto && python3 nikto.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/nikto && python3 nikto.py --help",
-    "cd toolboxes/nikto && python3 nikto.py --help",
-    "cd toolboxes/nikto && python3 nikto.py --help",
-    "cd toolboxes/nikto && python3 nikto.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nikto --output $KFIOSA_OUTPUT_DIR/nikto.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nikto --output $KFIOSA_OUTPUT_DIR/nikto.log"
+    "sqld  SQL Direct (directly inserts into MySQL/PostgreSQL database)",
+    "Nikto web server scanner  - $KFIOSA_TARGET_URL"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Nikto web server scanner - https://cirt.net/Nikto2",
+    "usage_sections": [
+      "BODY: and !BODY: — Match or exclude content in the response body.",
+      "HEADER: and !HEADER: — Match or exclude content in HTTP headers.",
+      "COOKIE: and !COOKIE: — Match or exclude content in HTTP cookies. (NEW)",
+      "CODE: and !CODE: — Match or exclude HTTP status codes."
+    ],
     "arguments": [
+      {
+        "name": "-Add-header",
+        "description": "Add HTTP headers (can be used multiple times, one per header pair)",
+        "source": "docs"
+      },
+      {
+        "name": "-check6",
+        "description": "Check if IPv6 is working (connects to ipv6.google.com or value set in nikto.conf)",
+        "source": "docs"
+      },
+      {
+        "name": "-dbcheck",
+        "description": "Check database and other key files for syntax errors",
+        "source": "docs"
+      },
+      {
+        "name": "-followredirects",
+        "description": "Follow 3xx redirects to new location",
+        "source": "docs"
+      },
+      {
+        "name": "-Help",
+        "description": "This help information",
+        "source": "docs"
+      },
+      {
+        "name": "-ipv4",
+        "description": "IPv4 Only",
+        "source": "docs"
+      },
+      {
+        "name": "-ipv6",
+        "description": "IPv6 Only",
+        "source": "docs"
+      },
+      {
+        "name": "-list-plugins",
+        "description": "List all available plugins, perform no testing",
+        "source": "docs"
+      },
+      {
+        "name": "-mutate-options",
+        "description": "Provide information for mutates",
+        "source": "docs"
+      },
+      {
+        "name": "-no404",
+        "description": "Disables nikto attempting to guess a 404 page",
+        "source": "docs"
+      },
+      {
+        "name": "-nocheck",
+        "description": "Don't check for updates on startup",
+        "source": "docs"
+      },
+      {
+        "name": "-nocookies",
+        "description": "Do not use cookies from responses in requests (cookies are stored and sent by default)",
+        "source": "docs"
+      },
+      {
+        "name": "-nointeractive",
+        "description": "Disables interactive features",
+        "source": "docs"
+      },
+      {
+        "name": "-nolookup",
+        "description": "Disables DNS lookups",
+        "source": "docs"
+      },
+      {
+        "name": "-noslash",
+        "description": "Strip trailing slash from URL (e.g., '/admin/' to '/admin')",
+        "source": "docs"
+      },
+      {
+        "name": "-nossl",
+        "description": "Disables the use of SSL",
+        "source": "docs"
+      },
+      {
+        "name": "-Option",
+        "description": "Over-ride an option in nikto.conf, can be issued multiple times",
+        "source": "docs"
+      },
+      {
+        "name": "-Save",
+        "description": "Save positive responses to this directory ('.' for auto-name)",
+        "source": "docs"
+      },
+      {
+        "name": "-ssl",
+        "description": "Force ssl mode on port",
+        "source": "docs"
+      },
+      {
+        "name": "-useproxy",
+        "description": "Use the proxy defined in nikto.conf, or argument http://server:port",
+        "source": "docs"
+      },
+      {
+        "name": "-useragent",
+        "description": "Force User-Agent instead of pulling from database",
+        "source": "docs"
+      },
+      {
+        "name": "-Userdbs",
+        "description": "Load only user databases, not the standard databases",
+        "source": "docs"
+      },
+      {
+        "name": "-Version",
+        "description": "Print plugin and database versions",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +244,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sqld  SQL Direct (directly inserts into MySQL/PostgreSQL database)",
+      "Nikto web server scanner  - $KFIOSA_TARGET_URL"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +373,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, nikto, sullo).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/nikto && python3 nikto.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/nikto && python3 nikto.py --help",
-      "Step 3: cd toolboxes/nikto && python3 nikto.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the web category. Fits when the engagement needs: Nikto web server scanner - https://cirt.net/Nikto2.",
+    "why_to_use": "Prefer this tool based on upstream description: Nikto web server scanner - https://cirt.net/Nikto2.",
+    "how_to_use": "Install/setup: git clone https://github.com/sullo/nikto; git clone https://github.com/sullo/nikto.git. Run the primary entrypoint as shown in upstream docs, e.g. `sqld  SQL Direct (directly inserts into MySQL/PostgreSQL database)`. Further invocations from upstream: `Nikto web server scanner  - $KFIOSA_TARGET_URL`. Nikto web server scanner - https://cirt.net/Nikto2."
   },
   "full_name": "sullo/nikto",
   "id": "github:sullo/nikto",
@@ -282,7 +396,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``nikto`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Nikto web server scanner - https://cirt.net/Nikto2",
   "tags": [
     "offensive",
     "nikto",
@@ -300,12 +414,11 @@
   },
   "url": "https://github.com/sullo/nikto",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need web, use nikto because Nikto web server scanner - https://cirt.net/Nikto2.",
+    "When you need a concrete invocation, run `sqld  SQL Direct (directly inserts into MySQL/PostgreSQL database)` as documented upstream for nikto.",
+    "When you need a concrete invocation, run `Nikto web server scanner  - $KFIOSA_TARGET_URL` as documented upstream for nikto.",
+    "When chaining web tools, pair nikto with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nikto --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +437,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

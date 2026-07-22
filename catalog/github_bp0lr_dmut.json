@@ -1,18 +1,83 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/dmut && python3 dmut.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/dmut && python3 dmut.py --help",
-    "cd toolboxes/dmut && python3 dmut.py --help",
-    "cd toolboxes/dmut && python3 dmut.py --help",
-    "cd toolboxes/dmut && python3 dmut.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dmut --output $KFIOSA_OUTPUT_DIR/dmut.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dmut --output $KFIOSA_OUTPUT_DIR/dmut.log"
+    "dmut --update-dnslist",
+    "root@dnsMaster# time python3 altdns.py -i list.txt -o data_output -r -w words.txt -t 100 -f /root/.dmut/resolvers.txt -s results.txt",
+    "real    9m44.712s",
+    "user    7m7.741s",
+    "sys     1m6.288s",
+    "root@dnsMaster# wc -l results.txt",
+    "root@dnsMaster# time cat list.txt | dmut -w 100 -d words.txt --dns-retries 3 -o results.txt -s /root/.dmut/resolvers.txt --dns-errorLimit 50 --dns-timeout 350 --show-stats",
+    "real    5m31.318s",
+    "user    1m4.024s",
+    "sys     0m41.876s"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "A tool written in golang to perform permutations, mutations and alteration of subdomains and brute force the result.",
+    "usage_sections": [
+      "examples: this will run dmut again test.example.com, using the word list mutations.txt, using 100 workers, having a DNS timeout of 300ms and 5 retries for each error. If a DNS server reaches 25 errors, this server is blacklisted and not used again. Show stats add some verbose to the proces"
+    ],
     "arguments": [
+      {
+        "name": "--disable-addnumbers",
+        "description": "Disable add numbers generation",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-addseparator",
+        "description": "Disable add separator generation",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-permutations",
+        "description": "Disable permutations generation",
+        "source": "docs"
+      },
+      {
+        "name": "--save-gen",
+        "description": "save generated permutations to a file and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--save-to",
+        "description": "save generated permutations to this location",
+        "source": "docs"
+      },
+      {
+        "name": "--show-ip",
+        "description": "Display info for valid results",
+        "source": "docs"
+      },
+      {
+        "name": "--show-stats",
+        "description": "Display stats about the current job",
+        "source": "docs"
+      },
+      {
+        "name": "--update-dnslist",
+        "description": "Download a list of periodically validated public DNS resolvers",
+        "source": "docs"
+      },
+      {
+        "name": "--update-files",
+        "description": "Download all the default files to work with dmut. (default mutation list, resolvers, etc)",
+        "source": "docs"
+      },
+      {
+        "name": "--use-pb",
+        "description": "use a progress bar",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Add verboicity to the process",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Add verboicity to the process",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -41,11 +106,6 @@
       {
         "name": "--interface",
         "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
         "source": "generic_kfiosa"
       },
       {
@@ -129,7 +189,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "dmut --update-dnslist",
+      "root@dnsMaster# time python3 altdns.py -i list.txt -o data_output -r -w words.txt -t 100 -f /root/.dmut/resolvers.txt -s results.txt",
+      "real    9m44.712s",
+      "user    7m7.741s",
+      "sys     1m6.288s",
+      "root@dnsMaster# wc -l results.txt",
+      "root@dnsMaster# time cat list.txt | dmut -w 100 -d words.txt --dns-retries 3 -o results.txt -s /root/.dmut/resolvers.txt --dns-errorLimit 50 --dns-timeout 350 --show-stats",
+      "real    5m31.318s",
+      "user    1m4.024s",
+      "sys     0m41.876s"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +326,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, dmut, bp0lr).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/dmut && python3 dmut.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/dmut && python3 dmut.py --help",
-      "Step 3: cd toolboxes/dmut && python3 dmut.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: A tool written in golang to perform permutations, mutations and alteration of subdomains and brute force the result.",
+    "why_to_use": "Prefer this tool based on upstream description: A tool written in golang to perform permutations, mutations and alteration of subdomains and brute force the result.",
+    "how_to_use": "Install/setup: go install github.com/bp0lr/dmut@latest. Run the primary entrypoint as shown in upstream docs, e.g. `dmut --update-dnslist`. Further invocations from upstream: `root@dnsMaster# time python3 altdns.py -i list.txt -o data_output -r -w words.txt -t 100 -f /root/.dmut/resolvers.txt -s results.txt`; `real    9m44.712s`. A tool written in golang to perform permutations, mutations and alteration of subdomains and brute force the result."
   },
   "full_name": "bp0lr/dmut",
   "id": "github:bp0lr/dmut",
@@ -282,7 +349,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``dmut`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "A tool written in golang to perform permutations, mutations and alteration of subdomains and brute force the result.",
   "tags": [
     "offensive",
     "dmut",
@@ -300,12 +367,13 @@
   },
   "url": "https://github.com/bp0lr/dmut",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use dmut because A tool written in golang to perform permutations, mutations and alteration of subdomains and brute force the result.",
+    "When you need a concrete invocation, run `dmut --update-dnslist` as documented upstream for dmut.",
+    "When you need a concrete invocation, run `root@dnsMaster# time python3 altdns.py -i list.txt -o data_output -r -w words.txt -t 100 -f /root/.dmut/resolvers.txt -s results.txt` as documented upstream for dmut.",
+    "When you need a concrete invocation, run `real    9m44.712s` as documented upstream for dmut.",
+    "When you need a concrete invocation, run `user    7m7.741s` as documented upstream for dmut.",
+    "When chaining recon tools, pair dmut with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dmut --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +392,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

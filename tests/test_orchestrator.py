@@ -454,8 +454,9 @@ def test_ai_chain_planner_failure_falls_back_to_legacy(monkeypatch):
     monkeypatch.setattr(o, "_execute_step", lambda s, seed: "ok")
     rep = o.run("wifi", {"bssid": "AA", "channel": 6, "interface": "wlan0mon"},
                 use_ai_chain=True)
-    # Source = "failed", ai_chain is empty list; legacy ladder ran.
-    assert rep["ai_chain_source"] == "failed"
+    # Planner raised → empty ai_chain, legacy ladder ran under the
+    # polymorphic re-plan walk (source marked legacy_fallback_from_*).
+    assert rep["ai_chain_source"] == "legacy_fallback_from_failed"
     assert rep["ai_chain"] == []
     assert any(e.get("kind") == "real" for e in rep["executed"])
 

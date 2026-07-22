@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "net-tools",
   "title": "net-tools",
-  "summary": "### net-tools",
+  "summary": "arp - manipulate the system ARP cache",
   "version": "2.10-2",
   "architectures": [
     "any"
@@ -46,10 +46,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "display (all) hosts in alternative (BSD) style",
+          "description": "Use alternate BSD style output format (with no fixed columns).",
           "default": null,
           "choices": null,
-          "raw": "       -a                       display (all) hosts in alternative (BSD) style"
+          "raw": "-a  Use alternate BSD style output format (with no fixed columns)."
         },
         {
           "flags": [
@@ -57,120 +57,65 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "display (all) hosts in default (Linux) style",
-          "default": "(Linux",
-          "choices": null,
-          "raw": "       -e                       display (all) hosts in default (Linux) style"
-        },
-        {
-          "flags": [
-            "-s",
-            "--set"
-          ],
-          "metavar": "- et",
-          "takes_value": true,
-          "description": "set a new ARP entry",
+          "description": "Use default Linux style output format (with fixed columns).",
           "default": null,
           "choices": null,
-          "raw": "       -s, --set                set a new ARP entry"
+          "raw": "-e  Use default Linux style output format (with fixed columns)."
         },
         {
           "flags": [
-            "-d",
-            "--delete"
+            "-n"
           ],
-          "metavar": "- elete",
-          "takes_value": true,
-          "description": "delete a specified entry",
+          "metavar": null,
+          "takes_value": false,
+          "description": "shows numerical addresses instead of trying to determine symbolic host, port or user",
           "default": null,
           "choices": null,
-          "raw": "       -d, --delete             delete a specified entry"
+          "raw": "-n  shows numerical addresses instead of trying to determine symbolic host, port or user"
         },
         {
           "flags": [
-            "-v",
-            "--verbose"
-          ],
-          "metavar": "- erbose",
-          "takes_value": true,
-          "description": "be verbose",
-          "default": null,
-          "choices": null,
-          "raw": "       -v, --verbose            be verbose"
-        },
-        {
-          "flags": [
-            "-n",
             "--numeric"
           ],
-          "metavar": "- umeric",
-          "takes_value": true,
-          "description": "don't resolve names",
-          "default": null,
-          "choices": null,
-          "raw": "       -n, --numeric            don't resolve names"
-        },
-        {
-          "flags": [
-            "-i",
-            "--device"
-          ],
-          "metavar": "If If",
+          "metavar": null,
           "takes_value": false,
-          "description": "specify network interface (e.g. eth0)",
+          "description": "shows numerical addresses instead of trying to determine symbolic host, port or user",
           "default": null,
           "choices": null,
-          "raw": "       -i, --device             specify network interface (e.g. eth0)"
+          "raw": "--numeric  shows numerical addresses instead of trying to determine symbolic host, port or user"
         },
         {
           "flags": [
-            "-D",
             "--use-device"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "read <hwaddr> from given device",
+          "description": "Instead of a hw_addr, the given argument is the name of an interface. arp will use the",
           "default": null,
           "choices": null,
-          "raw": "       -D, --use-device         read <hwaddr> from given device"
+          "raw": "--use-device  Instead of a hw_addr, the given argument is the name of an interface. arp will use the"
         },
         {
           "flags": [
-            "-A",
-            "-p",
-            "--protocol"
+            "-v"
           ],
-          "metavar": "- rotocol",
-          "takes_value": true,
-          "description": "specify protocol family",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Tell the user what is going on by being verbose.",
           "default": null,
           "choices": null,
-          "raw": "       -A, -p, --protocol       specify protocol family"
+          "raw": "-v  Tell the user what is going on by being verbose."
         },
         {
           "flags": [
-            "-f",
-            "--file"
+            "--verbose"
           ],
-          "metavar": "- ile",
-          "takes_value": true,
-          "description": "read new entries from file or from /etc/ethers",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Tell the user what is going on by being verbose.",
           "default": null,
           "choices": null,
-          "raw": "       -f, --file               read new entries from file or from /etc/ethers"
-        },
-        {
-          "flags": [
-            "-H",
-            "--hw-type",
-            "-t"
-          ],
-          "metavar": "type type type",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -H type, --hw-type type, -t type"
+          "raw": "--verbose  Tell the user what is going on by being verbose."
         }
       ],
       "raw_help": "root@kali:~# arp -h\n Usage:\n arp [-vn]  [<HW>] [-i <if>] [-a] [<hostname>]             <-Display ARP cache\n arp [-v]          [-i <if>] -d  <host> [pub]               <-Delete ARP entry\n arp [-vnD] [<HW>] [-i <if>] -f  [<filename>]            <-Add entry from file\n arp [-v]   [<HW>] [-i <if>] -s  <host> <hwaddr> [temp]            <-Add entry\n arp [-v]   [<HW>] [-i <if>] -Ds <host> <if> [netmask <nm>] pub          <-''-\n \n       -a                       display (all) hosts in alternative (BSD) style\n       -e                       display (all) hosts in default (Linux) style\n       -s, --set                set a new ARP entry\n       -d, --delete             delete a specified entry\n       -v, --verbose            be verbose\n       -n, --numeric            don't resolve names\n       -i, --device             specify network interface (e.g. eth0)\n       -D, --use-device         read <hwaddr> from given device\n       -A, -p, --protocol       specify protocol family\n       -f, --file               read new entries from file or from /etc/ethers\n \n <HW>=Use '-H <hw>' to specify hardware address type. Default: ether\n List of possible hardware types (which support ARP):",
@@ -1388,21 +1333,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use arp because arp - manipulate the system ARP cache.",
+    "When you need a concrete invocation, run `arp [-vn] [-H type] [-i if] [-ae] [hostname]` as documented upstream for arp.",
+    "When you need a concrete invocation, run `arp [-v] [-i if] -d hostname [pub]` as documented upstream for arp.",
+    "When you need a concrete invocation, run `arp [-v] [-H type] [-i if] -s hostname hw_addr [temp]` as documented upstream for arp.",
+    "When you need a concrete invocation, run `arp [-v] [-H type] [-i if] -s hostname hw_addr [netmask nm] pub` as documented upstream for arp.",
+    "When chaining Kali Linux tools, pair arp with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `arp --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/net-tools && python3 net-tools.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/net-tools && python3 net-tools.py --help",
-    "cd toolboxes/net-tools && python3 net-tools.py --help",
-    "cd toolboxes/net-tools && python3 net-tools.py --help",
-    "cd toolboxes/net-tools && python3 net-tools.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST net-tools --output $KFIOSA_OUTPUT_DIR/net-tools.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST net-tools --output $KFIOSA_OUTPUT_DIR/net-tools.log"
+    "arp [-vn] [-H type] [-i if] [-ae] [hostname]",
+    "arp [-v] [-i if] -d hostname [pub]",
+    "arp [-v] [-H type] [-i if] -s hostname hw_addr [temp]",
+    "arp [-v] [-H type] [-i if] -s hostname hw_addr [netmask nm] pub",
+    "arp [-v] [-H type] [-i if] -Ds hostname ifname [netmask nm] pub",
+    "arp [-vnD] [-H type] [-i if] -f [filename]"
   ],
   "attack_surface": [
     "web"
@@ -1417,5 +1362,62 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "Use alternate BSD style output format (with no fixed columns).",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Use default Linux style output format (with fixed columns).",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "shows numerical addresses instead of trying to determine symbolic host, port or user",
+        "source": "docs"
+      },
+      {
+        "name": "--numeric",
+        "description": "shows numerical addresses instead of trying to determine symbolic host, port or user",
+        "source": "docs"
+      },
+      {
+        "name": "--use-device",
+        "description": "Instead of a hw_addr, the given argument is the name of an interface. arp will use the",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Tell the user what is going on by being verbose.",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Tell the user what is going on by being verbose.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "arp [-vn] [-H type] [-i if] [-ae] [hostname]",
+      "arp [-v] [-i if] -d hostname [pub]",
+      "arp [-v] [-H type] [-i if] -s hostname hw_addr [temp]",
+      "arp [-v] [-H type] [-i if] -s hostname hw_addr [netmask nm] pub",
+      "arp [-v] [-H type] [-i if] -Ds hostname ifname [netmask nm] pub",
+      "arp [-vnD] [-H type] [-i if] -f [filename]"
+    ],
+    "readme": "arp - manipulate the system ARP cache",
+    "how_to_use": "Install/setup: sudo apt install net-tools. Run the primary entrypoint as shown in upstream docs, e.g. `arp [-v] [-i if] -d hostname [pub]`. Further invocations from upstream: `arp [-v] [-H type] [-i if] -s hostname hw_addr [temp]`; `arp [-v] [-H type] [-i if] -s hostname hw_addr [netmask nm] pub`.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: arp - manipulate the system ARP cache.",
+    "why_to_use": "Prefer this tool because: arp - manipulate the system ARP cache.",
+    "usage_sections": [
+      "Install with: sudo apt install net-tools",
+      "Install with: sudo apt install net-tools"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

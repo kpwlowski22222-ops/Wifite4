@@ -8,13 +8,23 @@
   "url": "https://github.com/Rtolber345/cybersecurity-lab-nmap-metasploit",
   "summary": "cybersecurity-lab-nmap-metasploit\nHands-on cybersecurity lab using Kali Linux and Metasploitable to scan and exploit vulnerabilities with Nmap and Metasploit.",
   "documentation": {
-    "readme": "cybersecurity-lab-nmap-metasploit\nHands-on cybersecurity lab using Kali Linux and Metasploitable to scan and exploit vulnerabilities with Nmap and Metasploit.",
-    "usage_sections": [],
+    "readme": "cybersecurity-lab-nmap-metasploit Hands-on cybersecurity lab using Kali Linux and Metasploitable to scan and exploit vulnerabilities with Nmap and Metasploit.",
+    "usage_sections": [
+      "Kali Linux (Attacker VM)",
+      "Metasploitable 2 (Vulnerable Target VM)",
+      "Nmap (Port scanning & service enumeration)",
+      "Metasploit Framework (Exploitation)"
+    ],
     "arguments": [
       {
-        "name": "-O",
-        "description": "CLI flag '-O' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-sS",
+        "description": "TCP SYN scan (stealthy and fast)",
+        "source": "docs"
+      },
+      {
+        "name": "-sV",
+        "description": "Detects service versions",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +203,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "nmap -sS -sV -O $KFIOSA_TARGET_HOST"
+    ],
     "file_listing": [
       "README.md"
     ],
@@ -244,13 +256,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web', 'cloud']' as the attack surface (web_application_security, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/cybersecurity-lab-nmap-metasploit && python3 cybersecurity-lab-nmap-metasploit.py --help",
-      "Step 2: cd toolboxes/cybersecurity-lab-nmap-metasploit && cat README.md",
-      "Step 3: cd toolboxes/cybersecurity-lab-nmap-metasploit && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web, cloud] in the Web Application Security category. Fits when the engagement needs: cybersecurity-lab-nmap-metasploit\nHands-on cybersecurity lab using Kali Linux and Metasploitable to scan and exploit vulnerabilities with Nmap and Metasploit.",
+    "why_to_use": "Prefer this tool based on upstream description: cybersecurity-lab-nmap-metasploit Hands-on cybersecurity lab using Kali Linux and Metasploitable to scan and exploit vulnerabilities with Nmap and Metasploit.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `nmap -sS -sV -O $KFIOSA_TARGET_HOST`. cybersecurity-lab-nmap-metasploit Hands-on cybersecurity lab using Kali Linux and Metasploitable to scan and exploit vulnerabilities with Nmap and Metasploit."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -280,18 +288,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Web Application Security system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Web Application Security, use cybersecurity-lab-nmap-metasploit because cybersecurity-lab-nmap-metasploit\nHands-on cybersecurity lab using Kali Linux and Metasploitable to scan and exploit vulnerabilities with Nmap and Metasploit.",
+    "When you need a concrete invocation, run `nmap -sS -sV -O $KFIOSA_TARGET_HOST` as documented upstream for cybersecurity-lab-nmap-metasploit.",
+    "When chaining Web Application Security tools, pair cybersecurity-lab-nmap-metasploit with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `cybersecurity-lab-nmap-metasploit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/cybersecurity-lab-nmap-metasploit && python3 cybersecurity-lab-nmap-metasploit.py --help",
-    "cd toolboxes/cybersecurity-lab-nmap-metasploit && cat README.md",
-    "cd toolboxes/cybersecurity-lab-nmap-metasploit && ls -la",
-    "cd toolboxes/cybersecurity-lab-nmap-metasploit && python3 cybersecurity-lab-nmap-metasploit.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cybersecurity-lab-nmap-metasploit --output $KFIOSA_OUTPUT_DIR/cybersecurity-lab-nmap-metasploit.log"
+    "nmap -sS -sV -O $KFIOSA_TARGET_HOST"
   ],
   "attack_surface": [
     "web",
@@ -311,5 +314,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

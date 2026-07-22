@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "horst",
   "title": "horst",
-  "summary": "### horst",
+  "summary": "horst - Highly Optimized Radio Scanning Tool",
   "version": "5.1-3",
   "architectures": [
     "any"
@@ -29,14 +29,36 @@
       "arguments": [
         {
           "flags": [
-            "-v"
+            "-a"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "show version",
+          "description": "add virtual monitor interface. Don't try to set existing interface to monitor",
           "default": null,
           "choices": null,
-          "raw": " -v\t\tshow version"
+          "raw": "-a  add virtual monitor interface. Don't try to set existing interface to monitor"
+        },
+        {
+          "flags": [
+            "-B"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Only show/include packets which belong to the given BSSID.",
+          "default": null,
+          "choices": null,
+          "raw": "-B  Only show/include packets which belong to the given BSSID."
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Filter all MAC addresses except these, to show only packets originating from the speci-",
+          "default": null,
+          "choices": null,
+          "raw": "-e  Filter all MAC addresses except these, to show only packets originating from the speci-"
         },
         {
           "flags": [
@@ -44,10 +66,32 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Help",
+          "description": "Show summary of options.",
           "default": null,
           "choices": null,
-          "raw": " -h\t\tHelp"
+          "raw": "-h  Show summary of options."
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Connect to a horst instance running in server-mode at the specified IP address.",
+          "default": null,
+          "choices": null,
+          "raw": "-n  Connect to a horst instance running in server-mode at the specified IP address."
+        },
+        {
+          "flags": [
+            "-ope"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "nend. If filename is not specified (\"outfile=\") any existing file is closed and",
+          "default": null,
+          "choices": null,
+          "raw": "-ope  nend. If filename is not specified (\"outfile=\") any existing file is closed and"
         },
         {
           "flags": [
@@ -55,120 +99,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Quiet, no output",
+          "description": "Quiet mode. Don't show user interface. This is only useful in conjunction when running",
           "default": null,
           "choices": null,
-          "raw": " -q\t\tQuiet, no output"
-        },
-        {
-          "flags": [
-            "-D"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Show lots of debug output, no UI",
-          "default": null,
-          "choices": null,
-          "raw": " -D\t\tShow lots of debug output, no UI"
-        },
-        {
-          "flags": [
-            "-a"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Always add virtual monitor interface",
-          "default": null,
-          "choices": null,
-          "raw": " -a\t\tAlways add virtual monitor interface"
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": "file",
-          "takes_value": true,
-          "description": "Config file (/etc/horst.conf)",
-          "default": null,
-          "choices": null,
-          "raw": " -c <file>\tConfig file (/etc/horst.conf)"
-        },
-        {
-          "flags": [
-            "-C"
-          ],
-          "metavar": "chan",
-          "takes_value": true,
-          "description": "Set initial channel",
-          "default": null,
-          "choices": null,
-          "raw": " -C <chan>\tSet initial channel"
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": "intf",
-          "takes_value": true,
-          "description": "Interface name (wlan0)",
-          "default": null,
-          "choices": null,
-          "raw": " -i <intf>\tInterface name (wlan0)"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "sec",
-          "takes_value": true,
-          "description": "Node timeout in seconds (60)",
-          "default": null,
-          "choices": null,
-          "raw": " -t <sec>\tNode timeout in seconds (60)"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": "ms",
-          "takes_value": true,
-          "description": "Display update interval in ms (100)",
-          "default": "value of 100ms can be in-",
-          "choices": null,
-          "raw": " -d <ms>\tDisplay update interval in ms (100)"
-        },
-        {
-          "flags": [
-            "-V"
-          ],
-          "metavar": "view Display view",
-          "takes_value": true,
-          "description": "history|essid|statistics|spectrum",
-          "default": null,
-          "choices": null,
-          "raw": " -V view\tDisplay view: history|essid|statistics|spectrum"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": "bytes",
-          "takes_value": true,
-          "description": "Receive buffer size in bytes (not set)",
-          "default": null,
-          "choices": null,
-          "raw": " -b <bytes>\tReceive buffer size in bytes (not set)"
-        },
-        {
-          "flags": [
-            "-M"
-          ],
-          "metavar": "filename",
-          "takes_value": true,
-          "description": "MAC address to host name mapping (/tmp/dhcp.leases)",
-          "default": null,
-          "choices": null,
-          "raw": " -M[filename]\tMAC address to host name mapping (/tmp/dhcp.leases)"
+          "raw": "-q  Quiet mode. Don't show user interface. This is only useful in conjunction when running"
         },
         {
           "flags": [
@@ -176,10 +110,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "(Poor mans) Spectrum analyzer mode",
+          "description": "Show a poor mans \"spectrum analyzer\". The same can be achieved by running horst as nor-",
           "default": null,
           "choices": null,
-          "raw": " -s\t\t(Poor mans) Spectrum analyzer mode"
+          "raw": "-s  Show a poor mans \"spectrum analyzer\". The same can be achieved by running horst as nor-"
         },
         {
           "flags": [
@@ -187,120 +121,32 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Upper channel limit",
+          "description": "Upper channel limit for the automatic channel change.",
           "default": null,
           "choices": null,
-          "raw": " -u\t\tUpper channel limit"
+          "raw": "-u  Upper channel limit for the automatic channel change."
         },
         {
           "flags": [
-            "-N"
+            "-v"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Allow network connection, server mode (off)",
+          "description": "Show version.",
           "default": null,
           "choices": null,
-          "raw": " -N\t\tAllow network connection, server mode (off)"
-        },
-        {
-          "flags": [
-            "-n"
-          ],
-          "metavar": "IP",
-          "takes_value": true,
-          "description": "Connect to server with <IP>, client mode (off)",
-          "default": null,
-          "choices": null,
-          "raw": " -n <IP>\tConnect to server with <IP>, client mode (off)"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "port",
-          "takes_value": true,
-          "description": "Port number of server (4444)",
-          "default": null,
-          "choices": null,
-          "raw": " -p <port>\tPort number of server (4444)"
-        },
-        {
-          "flags": [
-            "-o"
-          ],
-          "metavar": "filename",
-          "takes_value": true,
-          "description": "Write packet info into 'filename'",
-          "default": null,
-          "choices": null,
-          "raw": " -o <filename>\tWrite packet info into 'filename'"
+          "raw": "-v  Show version."
         },
         {
           "flags": [
             "-X"
           ],
-          "metavar": "filename",
-          "takes_value": true,
-          "description": "Allow control socket on 'filename' (/tmp/horst)",
-          "default": "/tmp/horst",
-          "choices": null,
-          "raw": " -X[filename]\tAllow control socket on 'filename' (/tmp/horst)"
-        },
-        {
-          "flags": [
-            "-x"
-          ],
-          "metavar": "command",
-          "takes_value": true,
-          "description": "Send control command",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Accept control commands on a named pipe (default /tmp/horst).",
           "default": null,
           "choices": null,
-          "raw": " -x <command>\tSend control command"
-        },
-        {
-          "flags": [
-            "-e"
-          ],
-          "metavar": "MAC Source MAC addresses xx",
-          "takes_value": true,
-          "description": "xx:xx:xx:xx:xx), up to 9 times",
-          "default": null,
-          "choices": null,
-          "raw": " -e <MAC>\tSource MAC addresses (xx:xx:xx:xx:xx:xx), up to 9 times"
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "PKT_NAME",
-          "takes_value": true,
-          "description": "Filter packet types, multiple",
-          "default": null,
-          "choices": null,
-          "raw": " -f <PKT_NAME>\tFilter packet types, multiple"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "MODE Operating mode",
-          "takes_value": true,
-          "description": "AP|STA|ADH|PRB|WDS|UNKNOWN, multiple",
-          "default": null,
-          "choices": null,
-          "raw": " -m <MODE>\tOperating mode: AP|STA|ADH|PRB|WDS|UNKNOWN, multiple"
-        },
-        {
-          "flags": [
-            "-B"
-          ],
-          "metavar": "MAC BSSID xx",
-          "takes_value": true,
-          "description": "xx:xx:xx:xx:xx), only one",
-          "default": null,
-          "choices": null,
-          "raw": " -B <MAC>\tBSSID (xx:xx:xx:xx:xx:xx), only one"
+          "raw": "-X  Accept control commands on a named pipe (default /tmp/horst)."
         }
       ],
       "raw_help": "root@kali:~# horst -h\n \n Usage: horst [options]\n \n General Options: Description (default value)\n -v\t\tshow version\n -h\t\tHelp\n -q\t\tQuiet, no output\n -D\t\tShow lots of debug output, no UI\n -a\t\tAlways add virtual monitor interface\n -c <file>\tConfig file (/etc/horst.conf)\n -C <chan>\tSet initial channel\n -i <intf>\tInterface name (wlan0)\n -t <sec>\tNode timeout in seconds (60)\n -d <ms>\tDisplay update interval in ms (100)\n -V view\tDisplay view: history|essid|statistics|spectrum\n -b <bytes>\tReceive buffer size in bytes (not set)\n -M[filename]\tMAC address to host name mapping (/tmp/dhcp.leases)\n \n Feature Options:\n -s\t\t(Poor mans) Spectrum analyzer mode\n -u\t\tUpper channel limit\n \n -N\t\tAllow network connection, server mode (off)\n -n <IP>\tConnect to server with <IP>, client mode (off)\n -p <port>\tPort number of server (4444)\n \n -o <filename>\tWrite packet info into 'filename'\n \n -X[filename]\tAllow control socket on 'filename' (/tmp/horst)\n -x <command>\tSend control command\n \n Filter Options:\nFilters are generally 'positive' or 'inclusive' which means you define\nwhat you want to see, and everything else is getting filtered out.\nIf a filter is not set it is inactive and nothing is filtered.\nMost filter options can be specified multiple times and will be combined\n -e <MAC>\tSource MAC addresses (xx:xx:xx:xx:xx:xx), up to 9 times\n -f <PKT_NAME>\tFilter packet types, multiple\n -m <MODE>\tOperating mode: AP|STA|ADH|PRB|WDS|UNKNOWN, multiple\n -B <MAC>\tBSSID (xx:xx:xx:xx:xx:xx), only one",
@@ -369,21 +215,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use horst because horst - Highly Optimized Radio Scanning Tool.",
+    "When you need a concrete invocation, run `horst  [-v]  [-h]  [-q] [-D] [-a] [-c file] [-C channel] [-i interface] [-t sec] [-V view] [-d` as documented upstream for horst.",
+    "When chaining Kali Linux tools, pair horst with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `horst --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/horst && python3 horst.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/horst && python3 horst.py --help",
-    "cd toolboxes/horst && python3 horst.py --help",
-    "cd toolboxes/horst && python3 horst.py --help",
-    "cd toolboxes/horst && python3 horst.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST horst --output $KFIOSA_OUTPUT_DIR/horst.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST horst --output $KFIOSA_OUTPUT_DIR/horst.log"
+    "horst  [-v]  [-h]  [-q] [-D] [-a] [-c file] [-C channel] [-i interface] [-t sec] [-V view] [-d"
   ],
   "attack_surface": [
     "web"
@@ -398,5 +236,77 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "add virtual monitor interface. Don't try to set existing interface to monitor",
+        "source": "docs"
+      },
+      {
+        "name": "-B",
+        "description": "Only show/include packets which belong to the given BSSID.",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Filter all MAC addresses except these, to show only packets originating from the speci-",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show summary of options.",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "Connect to a horst instance running in server-mode at the specified IP address.",
+        "source": "docs"
+      },
+      {
+        "name": "-ope",
+        "description": "nend. If filename is not specified (\"outfile=\") any existing file is closed and",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Quiet mode. Don't show user interface. This is only useful in conjunction when running",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Show a poor mans \"spectrum analyzer\". The same can be achieved by running horst as nor-",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "Upper channel limit for the automatic channel change.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Show version.",
+        "source": "docs"
+      },
+      {
+        "name": "-X",
+        "description": "Accept control commands on a named pipe (default /tmp/horst).",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "horst  [-v]  [-h]  [-q] [-D] [-a] [-c file] [-C channel] [-i interface] [-t sec] [-V view] [-d"
+    ],
+    "readme": "horst - Highly Optimized Radio Scanning Tool",
+    "how_to_use": "Install/setup: sudo apt install horst. horst - Highly Optimized Radio Scanning Tool.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: horst - Highly Optimized Radio Scanning Tool.",
+    "why_to_use": "Prefer this tool based on upstream description: horst - Highly Optimized Radio Scanning Tool.",
+    "usage_sections": [
+      "Install with: sudo apt install horst",
+      "Install with: sudo apt install horst"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

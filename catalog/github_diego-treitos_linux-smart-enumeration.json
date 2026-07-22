@@ -8,18 +8,43 @@
   "url": "https://github.com/diego-treitos/linux-smart-enumeration",
   "summary": "First, a couple of useful oneliners ;)",
   "documentation": {
-    "readme": "First, a couple of useful oneliners ;)",
+    "readme": "Note that since version 2.10 you can serve the script to other hosts with the -S flag!",
     "usage_sections": [],
     "arguments": [
       {
-        "name": "-O",
-        "description": "CLI flag '-O' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-c",
+        "description": "Disable color",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Comma separated list of paths to exclude. This allows you",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "This help",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Non interactive mode",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Output verbosity level",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Time that the process monitor will spend watching for",
+        "source": "docs"
       },
       {
         "name": "-S",
-        "description": "CLI flag '-S' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Serve the lse.sh script in this host so it can be retrieved",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +218,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "wget \"$KFIOSA_TARGET_URL\" -O lse.sh;chmod 700 lse.sh",
+      "curl \"$KFIOSA_TARGET_URL\" -Lo lse.sh;chmod 700 lse.sh",
+      "Use: ./lse.sh [options]",
+      "usr: User related tests.",
+      "sud: Sudo related tests.",
+      "fst: File system related tests.",
+      "sys: System related tests.",
+      "sec: Security measures related tests.",
+      "ret: Recurren tasks (cron, timers) related tests.",
+      "net: Network related tests."
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -263,13 +299,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/linux-smart-enumeration && python3 linux-smart-enumeration.py --help",
-      "Step 2: cd toolboxes/linux-smart-enumeration && cat README.md",
-      "Step 3: cd toolboxes/linux-smart-enumeration && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: First, a couple of useful oneliners ;).",
+    "why_to_use": "Prefer this tool based on upstream description: Note that since version 2.10 you can serve the script to other hosts with the -S flag!.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `wget \"$KFIOSA_TARGET_URL\" -O lse.sh;chmod 700 lse.sh`. Further invocations from upstream: `curl \"$KFIOSA_TARGET_URL\" -Lo lse.sh;chmod 700 lse.sh`; `Use: ./lse.sh [options]`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -300,18 +332,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use linux-smart-enumeration because First, a couple of useful oneliners ;).",
+    "When you need a concrete invocation, run `wget \"$KFIOSA_TARGET_URL\" -O lse.sh;chmod 700 lse.sh` as documented upstream for linux-smart-enumeration.",
+    "When you need a concrete invocation, run `curl \"$KFIOSA_TARGET_URL\" -Lo lse.sh;chmod 700 lse.sh` as documented upstream for linux-smart-enumeration.",
+    "When you need a concrete invocation, run `Use: ./lse.sh [options]` as documented upstream for linux-smart-enumeration.",
+    "When you need a concrete invocation, run `usr: User related tests.` as documented upstream for linux-smart-enumeration.",
+    "When chaining Penetration Testing tools, pair linux-smart-enumeration with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `linux-smart-enumeration --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/linux-smart-enumeration && python3 linux-smart-enumeration.py --help",
-    "cd toolboxes/linux-smart-enumeration && cat README.md",
-    "cd toolboxes/linux-smart-enumeration && ls -la",
-    "cd toolboxes/linux-smart-enumeration && python3 linux-smart-enumeration.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST linux-smart-enumeration --output $KFIOSA_OUTPUT_DIR/linux-smart-enumeration.log"
+    "wget \"$KFIOSA_TARGET_URL\" -O lse.sh;chmod 700 lse.sh",
+    "curl \"$KFIOSA_TARGET_URL\" -Lo lse.sh;chmod 700 lse.sh",
+    "Use: ./lse.sh [options]",
+    "usr: User related tests.",
+    "sud: Sudo related tests.",
+    "fst: File system related tests.",
+    "sys: System related tests.",
+    "sec: Security measures related tests.",
+    "ret: Recurren tasks (cron, timers) related tests.",
+    "net: Network related tests."
   ],
   "attack_surface": [
     "shell_linux"
@@ -332,5 +371,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

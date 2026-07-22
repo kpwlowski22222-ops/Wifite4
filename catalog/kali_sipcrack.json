@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "sipcrack",
   "title": "sipcrack",
-  "summary": "### sipcrack",
+  "summary": "sipcrack - A suite of tools to sniff and crack the digest authentications within the SIP pro- tocol.",
   "version": "0.2-4",
   "architectures": [
     "any"
@@ -32,36 +32,36 @@
       "arguments": [
         {
           "flags": [
-            "-s"
+            "-i"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "= use stdin for passwords",
+          "description": "sipcrack -w mywordlist.txt logins.dump",
           "default": null,
           "choices": null,
-          "raw": "      -s            = use stdin for passwords"
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": "wordlist",
-          "takes_value": true,
-          "description": "= file containing all passwords to try",
-          "default": null,
-          "choices": null,
-          "raw": "      -w wordlist   = file containing all passwords to try"
+          "raw": "-i  sipcrack -w mywordlist.txt logins.dump"
         },
         {
           "flags": [
             "-p"
           ],
-          "metavar": "num",
-          "takes_value": true,
-          "description": "= print cracking process every n passwords (for -w)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "print cracking process every n passwords (for -w)",
           "default": null,
           "choices": null,
-          "raw": "      -p num        = print cracking process every n passwords (for -w)"
+          "raw": "-p  print cracking process every n passwords (for -w)"
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "file containing all passwords to try.",
+          "default": null,
+          "choices": null,
+          "raw": "-w  file containing all passwords to try."
         }
       ],
       "raw_help": "root@kali:~# sipcrack -h\n \n SIPcrack 0.2 \n ----------------------------------------\n \n Usage: sipcrack [OPTIONS] [ -s | -w <wordlist> ] <dump file>\n \n      <dump file>   = file containing logins sniffed by SIPdump \n \n      Options:                                                  \n      -s            = use stdin for passwords                   \n      -w wordlist   = file containing all passwords to try      \n      -p num        = print cracking process every n passwords (for -w)\n                      (ATTENTION: slows down heavily)           \n \n * Invalid arguments",
@@ -206,21 +206,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use sipcrack because sipcrack - A suite of tools to sniff and crack the digest authentications within the SIP pro- tocol.",
+    "When you need a concrete invocation, run `sipcrack [options] <dump_file>` as documented upstream for sipcrack.",
+    "When you need a concrete invocation, run `sipcrack -w mywordlist.txt logins.dump` as documented upstream for sipcrack.",
+    "When chaining Kali Linux tools, pair sipcrack with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `sipcrack --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/sipcrack && python3 sipcrack.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/sipcrack && python3 sipcrack.py --help",
-    "cd toolboxes/sipcrack && python3 sipcrack.py --help",
-    "cd toolboxes/sipcrack && python3 sipcrack.py --help",
-    "cd toolboxes/sipcrack && python3 sipcrack.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sipcrack --output $KFIOSA_OUTPUT_DIR/sipcrack.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sipcrack --output $KFIOSA_OUTPUT_DIR/sipcrack.log"
+    "sipcrack [options] <dump_file>",
+    "sipcrack -w mywordlist.txt logins.dump"
   ],
   "attack_surface": [
     "web"
@@ -235,5 +229,38 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-i",
+        "description": "sipcrack -w mywordlist.txt logins.dump",
+        "source": "manpage"
+      },
+      {
+        "name": "-p",
+        "description": "print cracking process every n passwords (for -w)",
+        "source": "manpage"
+      },
+      {
+        "name": "-w",
+        "description": "file containing all passwords to try.",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "sipcrack [options] <dump_file>",
+      "sipcrack -w mywordlist.txt logins.dump"
+    ],
+    "readme": "sipcrack - A suite of tools to sniff and crack the digest authentications within the SIP pro- tocol.",
+    "how_to_use": "Install/setup: sudo apt install sipcrack. Run the primary entrypoint as shown in upstream docs, e.g. `sipcrack [options] <dump_file>`. Further invocations from upstream: `sipcrack -w mywordlist.txt logins.dump`. sipcrack - A suite of tools to sniff and crack the digest authentications within the SIP pro- tocol.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: sipcrack - A suite of tools to sniff and crack the digest authentications within the SIP pro- tocol.",
+    "why_to_use": "Prefer this tool based on upstream description: sipcrack - A suite of tools to sniff and crack the digest authentications within the SIP pro- tocol.",
+    "usage_sections": [
+      "Install with: sudo apt install sipcrack",
+      "Install with: sudo apt install sipcrack"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

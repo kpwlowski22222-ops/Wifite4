@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "glibc",
   "title": "glibc",
-  "summary": "### glibc-doc",
+  "summary": "getconf - Query system configuration variables (sysconf)",
   "version": "2.42-16",
   "architectures": [
     "any",
@@ -194,10 +194,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "Displays all configuration variables for the current system",
           "default": null,
           "choices": null,
-          "raw": "     -a"
+          "raw": "-a  Displays all configuration variables for the current system"
         },
         {
           "flags": [
@@ -205,10 +205,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "Indicate the specification and version for which to obtain",
           "default": null,
           "choices": null,
-          "raw": "     -v"
+          "raw": "-v  Indicate the specification and version for which to obtain"
         }
       ],
       "raw_help": "root@kali:~# getconf --help\n Usage: getconf [-v SPEC] VAR\n or:  getconf [-v SPEC] PATH_VAR PATH\n \n Get the configuration value for variable VAR, or for variable PATH_VAR\n for path PATH.  If SPEC is given, give values for compilation\n environment SPEC.\n \n For bug reporting instructions, please see:\n <http://www.debian.org/Bugs/>.",
@@ -4055,21 +4055,17 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use getconf because getconf - Query system configuration variables (sysconf).",
+    "When you need a concrete invocation, run `getconf -a` as documented upstream for getconf.",
+    "When you need a concrete invocation, run `getconf [-v specification] system_var` as documented upstream for getconf.",
+    "When you need a concrete invocation, run `getconf [-v specification] path_var pathname` as documented upstream for getconf.",
+    "When chaining Kali Linux tools, pair getconf with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `getconf --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/glibc && python3 glibc.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/glibc && python3 glibc.py --help",
-    "cd toolboxes/glibc && python3 glibc.py --help",
-    "cd toolboxes/glibc && python3 glibc.py --help",
-    "cd toolboxes/glibc && python3 glibc.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST glibc --output $KFIOSA_OUTPUT_DIR/glibc.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST glibc --output $KFIOSA_OUTPUT_DIR/glibc.log"
+    "getconf -a",
+    "getconf [-v specification] system_var",
+    "getconf [-v specification] path_var pathname"
   ],
   "attack_surface": [
     "web"
@@ -4084,5 +4080,34 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "Displays all configuration variables for the current system",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Indicate the specification and version for which to obtain",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "getconf -a",
+      "getconf [-v specification] system_var",
+      "getconf [-v specification] path_var pathname"
+    ],
+    "readme": "getconf - Query system configuration variables (sysconf)",
+    "how_to_use": "Install/setup: sudo apt install glibc. Run the primary entrypoint as shown in upstream docs, e.g. `getconf -a`. getconf - Query system configuration variables (sysconf).",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: getconf - Query system configuration variables (sysconf).",
+    "why_to_use": "Prefer this tool based on upstream description: getconf - Query system configuration variables (sysconf).",
+    "usage_sections": [
+      "Install with: sudo apt install glibc",
+      "Install with: sudo apt install glibc"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

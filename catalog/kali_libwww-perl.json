@@ -27,7 +27,41 @@
       "path": "/usr/bin/lwp-download",
       "description": "Fetch large files from the web",
       "usage": "lwp-download [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "save the file in ASCII mode",
+          "default": null,
+          "choices": null,
+          "raw": "-a  save the file in ASCII mode"
+        },
+        {
+          "flags": [
+            "-download"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Fetch large files from the web",
+          "default": null,
+          "choices": null,
+          "raw": "-download  Fetch large files from the web"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use HTTP headers to guess output filename",
+          "default": null,
+          "choices": null,
+          "raw": "-s  use HTTP headers to guess output filename"
+        }
+      ]
     },
     {
       "name": "lwp-dump",
@@ -107,5 +141,50 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "lwp-download [-a] [-s] <url> [<local path>]",
+    "lwp-download $KFIOSA_TARGET_URL"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use lwp-download because simple and consistent interface to the world-wide web.",
+    "When the engagement is in the install phase, use lwp-download as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `lwp-download [-a] [-s] <url> [<local path>]` as documented upstream for lwp-download.",
+    "When you need a concrete invocation, run `lwp-download $KFIOSA_TARGET_URL` as documented upstream for lwp-download.",
+    "When chaining Kali Linux tools, pair lwp-download with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `lwp-download --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "save the file in ASCII mode",
+        "source": "docs"
+      },
+      {
+        "name": "-download",
+        "description": "Fetch large files from the web",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "use HTTP headers to guess output filename",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "lwp-download [-a] [-s] <url> [<local path>]",
+      "lwp-download $KFIOSA_TARGET_URL"
+    ],
+    "readme": "lwp-download - Fetch large files from the web",
+    "how_to_use": "Install/setup: sudo apt install libwww-perl. Run the primary entrypoint as shown in upstream docs, e.g. `lwp-download [-a] [-s] <url> [<local path>]`. Further invocations from upstream: `lwp-download $KFIOSA_TARGET_URL`. simple and consistent interface to the world-wide web.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: simple and consistent interface to the world-wide web.",
+    "why_to_use": "Prefer this tool based on upstream description: lwp-download - Fetch large files from the web.",
+    "usage_sections": [
+      "Install with: sudo apt install libwww-perl",
+      "Install with: sudo apt install libwww-perl"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

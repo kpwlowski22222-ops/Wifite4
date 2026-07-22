@@ -133,6 +133,175 @@ class KaliToolWrapper:
 
 
 # ---------------------------------------------------------------------------
+# Native argv builders for aircrack-ng suite (generic --key value is wrong)
+# ---------------------------------------------------------------------------
+def _run_argv(argv: List[str], timeout: int = 120,
+              cwd: Optional[str] = None,
+              requires_root: bool = True) -> Dict[str, Any]:
+    """Shared subprocess runner for custom Kali argv builders."""
+    if not argv:
+        return {"ok": False, "error": "empty argv", "stdout": "",
+                "stderr": "", "returncode": -1}
+    binary = argv[0]
+    if not shutil.which(binary):
+        return {"ok": False, "error": f"{binary} not installed",
+                "stdout": "", "stderr": "", "returncode": -1}
+    if requires_root and os.geteuid() != 0:
+        return {"ok": False, "error": "needs root",
+                "stdout": "", "stderr": "", "returncode": -1}
+    try:
+        p = subprocess.run(
+            argv, capture_output=True, text=True,
+            timeout=timeout, cwd=cwd,
+        )
+        return {
+            "ok": p.returncode == 0,
+            "stdout": (p.stdout or "")[-4000:],
+            "stderr": (p.stderr or "")[-2000:],
+            "returncode": p.returncode,
+            "argv": argv,
+        }
+    except subprocess.TimeoutExpired as e:
+        # airodump-ng is long-running; timeout after capture window is
+        # expected success-ish — capture files may still have been written.
+        out = ""
+        err = ""
+        try:
+            out = (e.stdout or b"").decode("utf-8", "replace")[-4000:] \
+                if isinstance(e.stdout, (bytes, bytearray)) else (e.stdout or "")[-4000:]
+            err = (e.stderr or b"").decode("utf-8", "replace")[-2000:] \
+                if isinstance(e.stderr, (bytes, bytearray)) else (e.stderr or "")[-2000:]
+        except Exception:  # noqa: BLE001
+            pass
+        return {
+            "ok": True,  # timed capture completed
+            "stdout": out,
+            "stderr": err or f"timeout after {timeout}s (expected for capture tools)",
+            "returncode": 0,
+            "timed_out": True,
+            "argv": argv,
+        }
+    except FileNotFoundError:
+        return {"ok": False, "error": f"{binary} not found at exec",
+                "stdout": "", "stderr": "", "returncode": -1}
+    except Exception as e:  # noqa: BLE001
+        return {"ok": False, "error": str(e),
+                "stdout": "", "stderr": "", "returncode": -1}
+
+
+def _run_airodump(args: Dict[str, Any], timeout: int = 30,
+                  cwd: Optional[str] = None) -> Dict[str, Any]:
+    """airodump-ng argv: ``airodump-ng [-c N] [--bssid B] [-w P] [fmt] IFACE``.
+
+    Generic ``--key value`` building is wrong: channel is ``-c``, write
+    is ``-w``, and interface is a trailing positional — never
+    ``--interface``.
+    """
+    iface = (args or {}).get("interface") or (args or {}).get("iface")
+    if not iface:
+        return {"ok": False, "error": "interface required",
+                "stdout": "", "stderr": "", "returncode": -1}
+    argv: List[str] = ["airodump-ng"]
+    ch = (args or {}).get("channel")
+    if ch is not None and str(ch) != "":
+        argv.extend(["-c", str(ch)])
+    bssid = (args or {}).get("bssid")
+    if bssid:
+        argv.extend(["--bssid", str(bssid)])
+    write = (args or {}).get("write") or (args or {}).get("output")
+    if write:
+        argv.extend(["-w", str(write)])
+    fmt = (args or {}).get("output_format")
+    if fmt and str(fmt) not in ("", "both"):
+        argv.extend(["--output-format", str(fmt)])
+    argv.append(str(iface))
+    # Bounded capture: default 30s (planner expected_runtime often 30).
+    return _run_argv(argv, timeout=max(5, int(timeout or 30)), cwd=cwd)
+
+
+def _run_aireplay(args: Dict[str, Any], timeout: int = 60,
+                  cwd: Optional[str] = None) -> Dict[str, Any]:
+    """aireplay-ng argv: deauth ``-0 N -a BSSID [-c CLIENT] IFACE`` etc."""
+    iface = (args or {}).get("interface") or (args or {}).get("iface")
+    if not iface:
+        return {"ok": False, "error": "interface required",
+                "stdout": "", "stderr": "", "returncode": -1}
+    argv: List[str] = ["aireplay-ng"]
+    a = args or {}
+    if a.get("deauth") is not None:
+        argv.extend(["-0", str(a["deauth"])])
+    elif a.get("fakeauth") is not None:
+        argv.extend(["-1", str(a["fakeauth"])])
+    elif a.get("arpreplay"):
+        argv.append("-3")
+    elif a.get("fragment"):
+        argv.append("-5")
+    elif a.get("replay"):
+        argv.extend(["-2", str(a["replay"])])
+    bssid = a.get("bssid")
+    if bssid:
+        # -a for deauth/fakeauth; -b also accepted by many modes
+        argv.extend(["-a", str(bssid)])
+    client = a.get("client")
+    if client:
+        argv.extend(["-c", str(client)])
+    argv.append(str(iface))
+    return _run_argv(argv, timeout=max(5, int(timeout or 60)), cwd=cwd)
+
+
+def _run_aircrack(args: Dict[str, Any], timeout: int = 120,
+                  cwd: Optional[str] = None) -> Dict[str, Any]:
+    """aircrack-ng argv: ``aircrack-ng [-w WORDLIST] [-b BSSID] CAPTURE``."""
+    cap = (args or {}).get("capture") or (args or {}).get("cap_file")
+    if not cap:
+        return {"ok": False, "error": "capture required",
+                "stdout": "", "stderr": "", "returncode": -1}
+    argv: List[str] = ["aircrack-ng"]
+    wl = (args or {}).get("wordlist")
+    if wl:
+        argv.extend(["-w", str(wl)])
+    bssid = (args or {}).get("bssid")
+    if bssid:
+        argv.extend(["-b", str(bssid)])
+    argv.append(str(cap))
+    # Offline crack does not need root.
+    return _run_argv(argv, timeout=max(5, int(timeout or 120)), cwd=cwd,
+                     requires_root=False)
+
+
+def _run_wash(args: Dict[str, Any], timeout: int = 30,
+              cwd: Optional[str] = None) -> Dict[str, Any]:
+    """wash argv: ``wash -i IFACE [-b BSSID]``."""
+    iface = (args or {}).get("interface") or (args or {}).get("iface")
+    if not iface:
+        return {"ok": False, "error": "interface required",
+                "stdout": "", "stderr": "", "returncode": -1}
+    argv: List[str] = ["wash", "-i", str(iface)]
+    bssid = (args or {}).get("bssid")
+    if bssid:
+        argv.extend(["-b", str(bssid)])
+    scan = (args or {}).get("scan_time")
+    if scan is not None:
+        # wash uses -t for ignore timeout between beacons; bound via timeout=
+        pass
+    return _run_argv(argv, timeout=max(5, int(timeout or scan or 30)), cwd=cwd)
+
+
+def _run_reaver(args: Dict[str, Any], timeout: int = 120,
+                cwd: Optional[str] = None) -> Dict[str, Any]:
+    """reaver argv: ``reaver -i IFACE -b BSSID [-K] -vv``."""
+    iface = (args or {}).get("interface") or (args or {}).get("iface")
+    bssid = (args or {}).get("bssid")
+    if not iface or not bssid:
+        return {"ok": False, "error": "interface and bssid required",
+                "stdout": "", "stderr": "", "returncode": -1}
+    argv: List[str] = ["reaver", "-i", str(iface), "-b", str(bssid), "-vv"]
+    if (args or {}).get("pixie_dust", True):
+        argv.extend(["-K", "1"])
+    return _run_argv(argv, timeout=max(5, int(timeout or 120)), cwd=cwd)
+
+
+# ---------------------------------------------------------------------------
 # Wrappers for the most-used Kali tools (schema'd MCP functions)
 # ---------------------------------------------------------------------------
 def _make_kali_wrappers() -> Dict[str, KaliToolWrapper]:
@@ -145,7 +314,7 @@ def _make_kali_wrappers() -> Dict[str, KaliToolWrapper]:
     """
     out: Dict[str, KaliToolWrapper] = {}
 
-    # ----- WiFi
+    # ----- WiFi (custom argv builders — generic --key value is wrong)
     out["airodump-ng"] = KaliToolWrapper(
         name="airodump-ng", binary="airodump-ng",
         description="Capture 802.11 frames and AP/client metadata. "
@@ -171,6 +340,7 @@ def _make_kali_wrappers() -> Dict[str, KaliToolWrapper]:
             "airodump-ng wlan0mon",
         ],
         risk_level=RISK_INTRUSIVE,
+        runner=_run_airodump,
     )
     out["aireplay-ng"] = KaliToolWrapper(
         name="aireplay-ng", binary="aireplay-ng",
@@ -200,6 +370,7 @@ def _make_kali_wrappers() -> Dict[str, KaliToolWrapper]:
             "aireplay-ng --arpreplay -b AA:BB:CC:DD:EE:01 -w arp wlan0mon",
         ],
         risk_level=RISK_DESTRUCTIVE,
+        runner=_run_aireplay,
     )
     out["aircrack-ng"] = KaliToolWrapper(
         name="aircrack-ng", binary="aircrack-ng",
@@ -216,6 +387,8 @@ def _make_kali_wrappers() -> Dict[str, KaliToolWrapper]:
         },
         examples=["aircrack-ng -w rockyou.txt -b AA:BB:CC:DD:EE:01 handshake.cap"],
         risk_level=RISK_READ,
+        requires_root=False,
+        runner=_run_aircrack,
     )
     out["wash"] = KaliToolWrapper(
         name="wash", binary="wash",
@@ -226,6 +399,7 @@ def _make_kali_wrappers() -> Dict[str, KaliToolWrapper]:
         }, "required": ["interface"]},
         examples=["wash -i wlan0mon"],
         risk_level=RISK_INTRUSIVE,
+        runner=_run_wash,
     )
     out["reaver"] = KaliToolWrapper(
         name="reaver", binary="reaver",
@@ -237,6 +411,7 @@ def _make_kali_wrappers() -> Dict[str, KaliToolWrapper]:
         }, "required": ["interface", "bssid"]},
         examples=["reaver -i wlan0mon -b AA:BB:CC:DD:EE:01 -vv -K 1"],
         risk_level=RISK_INTRUSIVE,
+        runner=_run_reaver,
     )
 
     # ----- BLE

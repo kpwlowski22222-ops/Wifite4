@@ -8,9 +8,24 @@
   "url": "https://github.com/saishsali/cse508",
   "summary": "Professor: [Michalis Polychronakis](http://www3.cs.stonybrook.edu/~mikepo/)",
   "documentation": {
-    "readme": "Professor: [Michalis Polychronakis](http://www3.cs.stonybrook.edu/~mikepo/)",
+    "readme": "Homework 1 [Passive Network Monitoring]: https://www3.cs.stonybrook.edu/mikepo/CSE508/2017/hw/CSE5082017hw1.txt",
     "usage_sections": [],
     "arguments": [
+      {
+        "name": "-h",
+        "description": "Read a list of IP address and hostname pairs specifying the hostnames to\\ be hijacked. If",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Listen on network device <interface> (e.g., eth0). If not specified,\\ dnsinject selects a default interface to listen on.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Read packets from <tracefile> (tcpdump format). Useful for detecting\\ DNS poisoning attacks in existing network traces.",
+        "source": "docs"
+      },
       {
         "name": "--help",
         "description": "Show help / usage and exit.",
@@ -193,7 +208,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/cse508 && python3 cse508.py --help",
+      "cd toolboxes/cse508 && cat README.md",
+      "cd toolboxes/cse508 && ls -la",
+      "cd toolboxes/cse508 && python3 cse508.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cse508 --output $KFIOSA_OUTPUT_DIR/cse508.log"
+    ],
     "file_listing": [
       "Makefile",
       "Makefile",
@@ -261,13 +282,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/cse508 && python3 cse508.py --help",
-      "Step 2: cd toolboxes/cse508 && cat README.md",
-      "Step 3: cd toolboxes/cse508 && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: Professor: [Michalis Polychronakis](http://www3.cs.stonybrook.edu/~mikepo/).",
+    "why_to_use": "Prefer this tool based on upstream description: Homework 1 [Passive Network Monitoring]: https://www3.cs.stonybrook.edu/mikepo/CSE508/2017/hw/CSE5082017hw1.txt.",
+    "how_to_use": "Clone or install `cse508` from its upstream repository, then run `cse508 --help` (or the README entrypoint) to confirm flags."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -299,11 +316,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use cse508 because Professor: [Michalis Polychronakis](http://www3.cs.stonybrook.edu/~mikepo/).",
+    "When chaining Wireless tools, pair cse508 with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `cse508 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/cse508 && python3 cse508.py --help",
@@ -334,5 +349,7 @@
   "_languages": [
     "python",
     "c"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

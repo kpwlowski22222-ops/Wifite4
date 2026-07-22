@@ -6,10 +6,16 @@
   "owner": "snovvcrash",
   "category": "Penetration Testing",
   "url": "https://github.com/snovvcrash/usbrip",
-  "summary": "<p align=\"center\">\n  <a href=\"#\"><img src=\"https://user-images.githubusercontent.com/23141800/56420194-b9551e80-62a5-11e9-8508-fc0f4a398042.png\" alt=\"logo.png\" /></a>\n</p>",
+  "summary": "usbrip (inherited from \"USB Ripper\", not \"USB R.I.P.\") is a simple forensics tool with command line interface that lets you keep track of USB device artifacts (i.e., USB event history) on Linux machines.",
   "documentation": {
-    "readme": "<p align=\"center\">\n  <a href=\"#\"><img src=\"https://user-images.githubusercontent.com/23141800/56420194-b9551e80-62a5-11e9-8508-fc0f4a398042.png\" alt=\"logo.png\" /></a>\n</p>",
-    "usage_sections": [],
+    "readme": "usbrip (inherited from \"USB Ripper\", not \"USB R.I.P.\") is a simple forensics tool with command line interface that lets you keep track of USB device artifacts (i.e., USB event history) on Linux machines.",
+    "usage_sections": [
+      "Connected (date & time)",
+      "Disconnected (date & time)",
+      "Export collected data as a JSON dump for later use.",
+      "Generate a list of authorized (trusted) USB devices as a JSON file (call it auth.json).",
+      "Search for \"violation events\" based on auth.json: discover USB devices that do appear in history and do NOT appear in the auth.json file."
+    ],
     "arguments": [
       {
         "name": "--all",
@@ -183,7 +189,17 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "Get usbrip banner.",
+      "Get USB event history.",
+      "Open USB event dump.",
+      "Generate a list of trusted (authorized) USB devices.",
+      "Update storage -- add USB events to the existing storage. COMPRESSION_LEVEL is a number in [0..9].",
+      "Create storage -- create 7-Zip archive and add USB events to it according to the selected options.",
+      "Change password=$KFIOSA_SECRET the existing storage.",
+      "Get extra details about a specific USB device by its <VID> and/or <PID> from the USB ID database.",
+      "Update (download) the USB ID database."
+    ],
     "file_listing": [
       "Dockerfile",
       "LICENSE",
@@ -268,13 +284,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/usbrip && python3 usbrip.py --help",
-      "Step 2: cd toolboxes/usbrip && cat README.md",
-      "Step 3: cd toolboxes/usbrip && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: usbrip (inherited from \"USB Ripper\", not \"USB R.I.P.\") is a simple forensics tool with command line interface that lets you keep track of USB device artifacts (i.e., USB event history) on Linux machines.",
+    "why_to_use": "Prefer this tool based on upstream description: usbrip (inherited from \"USB Ripper\", not \"USB R.I.P.\") is a simple forensics tool with command line interface that lets you keep track of USB device artifacts (i.e., USB event history) on Linux machines.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `Get usbrip banner.`. Further invocations from upstream: `Get USB event history.`; `Open USB event dump.`. usbrip (inherited from \"USB Ripper\", not \"USB R.I.P.\") is a simple forensics tool with command line interface that lets you keep track of USB device artifacts (i.e., USB event history) on Linux machines."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -306,18 +318,24 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use usbrip because usbrip (inherited from \"USB Ripper\", not \"USB R.I.P.\") is a simple forensics tool with command line interface that lets you keep track of USB device artifacts (.",
+    "When you need a concrete invocation, run `Get usbrip banner.` as documented upstream for usbrip.",
+    "When you need a concrete invocation, run `Get USB event history.` as documented upstream for usbrip.",
+    "When you need a concrete invocation, run `Open USB event dump.` as documented upstream for usbrip.",
+    "When you need a concrete invocation, run `Generate a list of trusted (authorized) USB devices.` as documented upstream for usbrip.",
+    "When chaining Penetration Testing tools, pair usbrip with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `usbrip --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/usbrip && python3 usbrip.py --help",
-    "cd toolboxes/usbrip && cat README.md",
-    "cd toolboxes/usbrip && ls -la",
-    "cd toolboxes/usbrip && python3 usbrip.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST usbrip --output $KFIOSA_OUTPUT_DIR/usbrip.log"
+    "Get usbrip banner.",
+    "Get USB event history.",
+    "Open USB event dump.",
+    "Generate a list of trusted (authorized) USB devices.",
+    "Update storage -- add USB events to the existing storage. COMPRESSION_LEVEL is a number in [0..9].",
+    "Create storage -- create 7-Zip archive and add USB events to it according to the selected options.",
+    "Change password=$KFIOSA_SECRET the existing storage.",
+    "Get extra details about a specific USB device by its <VID> and/or <PID> from the USB ID database.",
+    "Update (download) the USB ID database."
   ],
   "attack_surface": [
     "shell_linux"
@@ -339,5 +357,7 @@
   "_languages": [
     "python",
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

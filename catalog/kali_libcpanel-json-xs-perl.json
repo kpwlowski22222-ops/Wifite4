@@ -27,7 +27,151 @@
       "path": "/usr/bin/cpanel_json_xs",
       "description": "Cpanel::JSON::XS commandline utility",
       "usage": "cpanel_json_xs [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-file"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "a Storable file (Storable has two incompatible formats)",
+          "default": null,
+          "choices": null,
+          "raw": "-file  a Storable file (Storable has two incompatible formats)"
+        },
+        {
+          "flags": [
+            "-nonref"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "json according to RFC 7159",
+          "default": null,
+          "choices": null,
+          "raw": "-nonref  json according to RFC 7159"
+        },
+        {
+          "flags": [
+            "-pretty"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "as above, but pretty-printed with sorted object keys",
+          "default": null,
+          "choices": null,
+          "raw": "-pretty  as above, but pretty-printed with sorted object keys"
+        },
+        {
+          "flags": [
+            "-relaxed"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "json with all relaxed options",
+          "default": null,
+          "choices": null,
+          "raw": "-relaxed  json with all relaxed options"
+        },
+        {
+          "flags": [
+            "-stringify"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "as json-pretty with allow_stringify",
+          "default": null,
+          "choices": null,
+          "raw": "-stringify  as json-pretty with allow_stringify"
+        },
+        {
+          "flags": [
+            "-syck"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "YAML (requires YAML::Syck)",
+          "default": null,
+          "choices": null,
+          "raw": "-syck  YAML (requires YAML::Syck)"
+        },
+        {
+          "flags": [
+            "-tiny"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "loose YAML (requires YAML::Tiny or CPAN::Meta::YAML)",
+          "default": null,
+          "choices": null,
+          "raw": "-tiny  loose YAML (requires YAML::Tiny or CPAN::Meta::YAML)"
+        },
+        {
+          "flags": [
+            "-unknown"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "json with allow_unknown",
+          "default": null,
+          "choices": null,
+          "raw": "-unknown  json with allow_unknown"
+        },
+        {
+          "flags": [
+            "-utf-16be"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "little endian/big endian utf-16",
+          "default": null,
+          "choices": null,
+          "raw": "-utf-16be  little endian/big endian utf-16"
+        },
+        {
+          "flags": [
+            "-utf-32be"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "little endian/big endian utf-32",
+          "default": null,
+          "choices": null,
+          "raw": "-utf-32be  little endian/big endian utf-32"
+        },
+        {
+          "flags": [
+            "-utf-8"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "json, utf-8 encoded",
+          "default": null,
+          "choices": null,
+          "raw": "-utf-8  json, utf-8 encoded"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be slightly more verbose.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Be slightly more verbose."
+        },
+        {
+          "flags": [
+            "-xs"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "strict YAML 1.2 (requires YAML::XS)",
+          "default": null,
+          "choices": null,
+          "raw": "-xs  strict YAML 1.2 (requires YAML::XS)"
+        }
+      ]
     }
   ],
   "files": [
@@ -45,5 +189,114 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "cpanel_json_xs [-v] [-f inputformat] [-t outputformat]",
+    "cpanel_json_xs -t none <isitreally.json",
+    "cpanel_json_xs -f storable-file <file",
+    "cpanel_json_xs -f storable-file -t yaml <file",
+    "cpanel_json_xs -f none -e '$_ = [1, 2, 3]'",
+    "cpanel_json_xs -f yaml-xs -t yaml-tiny <META.yml   >MYMETA.yml",
+    "cpanel_json_xs -f yaml-tiny -t yaml-xs <MYMETA.yml >XSMETA.yml",
+    "cpanel_json_xs -f yaml -t yaml <XSMETA.yml #BOOM!"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use cpanel_json_xs because module for fast and correct serialising to JSON.",
+    "When the engagement is in the install phase, use cpanel_json_xs as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `cpanel_json_xs [-v] [-f inputformat] [-t outputformat]` as documented upstream for cpanel_json_xs.",
+    "When you need a concrete invocation, run `cpanel_json_xs -t none <isitreally.json` as documented upstream for cpanel_json_xs.",
+    "When you need a concrete invocation, run `cpanel_json_xs -f storable-file <file` as documented upstream for cpanel_json_xs.",
+    "When you need a concrete invocation, run `cpanel_json_xs -f storable-file -t yaml <file` as documented upstream for cpanel_json_xs.",
+    "When chaining Kali Linux tools, pair cpanel_json_xs with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `cpanel_json_xs --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-file",
+        "description": "a Storable file (Storable has two incompatible formats)",
+        "source": "docs"
+      },
+      {
+        "name": "-nonref",
+        "description": "json according to RFC 7159",
+        "source": "docs"
+      },
+      {
+        "name": "-pretty",
+        "description": "as above, but pretty-printed with sorted object keys",
+        "source": "docs"
+      },
+      {
+        "name": "-relaxed",
+        "description": "json with all relaxed options",
+        "source": "docs"
+      },
+      {
+        "name": "-stringify",
+        "description": "as json-pretty with allow_stringify",
+        "source": "docs"
+      },
+      {
+        "name": "-syck",
+        "description": "YAML (requires YAML::Syck)",
+        "source": "docs"
+      },
+      {
+        "name": "-tiny",
+        "description": "loose YAML (requires YAML::Tiny or CPAN::Meta::YAML)",
+        "source": "docs"
+      },
+      {
+        "name": "-unknown",
+        "description": "json with allow_unknown",
+        "source": "docs"
+      },
+      {
+        "name": "-utf-16be",
+        "description": "little endian/big endian utf-16",
+        "source": "docs"
+      },
+      {
+        "name": "-utf-32be",
+        "description": "little endian/big endian utf-32",
+        "source": "docs"
+      },
+      {
+        "name": "-utf-8",
+        "description": "json, utf-8 encoded",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Be slightly more verbose.",
+        "source": "docs"
+      },
+      {
+        "name": "-xs",
+        "description": "strict YAML 1.2 (requires YAML::XS)",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "cpanel_json_xs [-v] [-f inputformat] [-t outputformat]",
+      "cpanel_json_xs -t none <isitreally.json",
+      "cpanel_json_xs -f storable-file <file",
+      "cpanel_json_xs -f storable-file -t yaml <file",
+      "cpanel_json_xs -f none -e '$_ = [1, 2, 3]'",
+      "cpanel_json_xs -f yaml-xs -t yaml-tiny <META.yml   >MYMETA.yml",
+      "cpanel_json_xs -f yaml-tiny -t yaml-xs <MYMETA.yml >XSMETA.yml",
+      "cpanel_json_xs -f yaml -t yaml <XSMETA.yml #BOOM!"
+    ],
+    "readme": "cpanel_json_xs - Cpanel::JSON::XS commandline utility",
+    "how_to_use": "Install/setup: sudo apt install libcpanel-json-xs-perl. Run the primary entrypoint as shown in upstream docs, e.g. `cpanel_json_xs -t none <isitreally.json`. Further invocations from upstream: `cpanel_json_xs -f storable-file <file`; `cpanel_json_xs -f storable-file -t yaml <file`. module for fast and correct serialising to JSON.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: module for fast and correct serialising to JSON.",
+    "why_to_use": "Prefer this tool based on upstream description: cpanel_json_xs - Cpanel::JSON::XS commandline utility.",
+    "usage_sections": [
+      "Install with: sudo apt install libcpanel-json-xs-perl",
+      "Install with: sudo apt install libcpanel-json-xs-perl"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

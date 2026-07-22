@@ -26,17 +26,18 @@ from core.refactors import (
 
 class TestRegistryShape:
     def test_seventy_methods(self):
-        # T7 expansion (Phase 3) added 5 poly + 5 adapt
-        # → 35 polymorphic + 35 target-adaptive = 70 total
-        assert len(POLY_ADAPT_REGISTRY) == 70
+        # Phase 4 T20: 70 (pre-Phase 4) + 30 new = 100
+        assert len(POLY_ADAPT_REGISTRY) == 100
 
     def test_thirty_five_polymorphic(self):
+        # Phase 4 T20: 35 (pre-Phase 4) + 26 new poly = 55
         poly = [m for m in POLY_ADAPT_REGISTRY if m.startswith("poly_")]
-        assert len(poly) == 35
+        assert len(poly) == 55
 
     def test_thirty_five_adaptive(self):
+        # Phase 4 T20: 35 (pre-Phase 4) + 11 new adapt = 45
         adapt = [m for m in POLY_ADAPT_REGISTRY if m.startswith("adapt_")]
-        assert len(adapt) == 35
+        assert len(adapt) == 45
 
     def test_all_have_risk(self):
         for m in POLY_ADAPT_REGISTRY:
@@ -189,8 +190,8 @@ class TestLookup:
 
     def test_list_methods(self):
         names = list_poly_adapt_methods()
-        # T7 expansion (Phase 3) brought the count to 70
-        assert len(names) == 70
+        # Phase 4 T20 brought the count to 100
+        assert len(names) == 100
         for n in names:
             assert isinstance(n, str)
 

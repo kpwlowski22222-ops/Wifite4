@@ -9,7 +9,13 @@
   "summary": "AudioShare: Dual Bluetooth System Bypass (Android 12-14)",
   "documentation": {
     "readme": "AudioShare: Dual Bluetooth System Bypass (Android 12-14)",
-    "usage_sections": [],
+    "usage_sections": [
+      "Shizuku API (Privilege Escalation): We use Shizuku to execute code as an ADB/Shell user. This grants us the privileges needed to access hidden system binders.",
+      "Navigate to Settings > Developer Options.",
+      "Turn ON: Disable Bluetooth A2DP hardware offload (Device will reboot).",
+      "Set: Maximum connected Bluetooth audio devices to 5 (or at least 2).",
+      "Set: Bluetooth Audio Codec to SBC (Highly recommended for low-end chips)."
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -191,7 +197,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --help",
+      "cd toolboxes/bluetooth-AudioShare && cat README.md",
+      "cd toolboxes/bluetooth-AudioShare && ls -la",
+      "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluetooth-AudioShare --output $KFIOSA_OUTPUT_DIR/bluetooth-AudioShare.log"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md"
@@ -243,13 +255,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --help",
-      "Step 2: cd toolboxes/bluetooth-AudioShare && cat README.md",
-      "Step 3: cd toolboxes/bluetooth-AudioShare && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: AudioShare: Dual Bluetooth System Bypass (Android 12-14).",
+    "why_to_use": "Prefer this tool based on upstream description: AudioShare: Dual Bluetooth System Bypass (Android 12-14).",
+    "how_to_use": "Clone or install `bluetooth-AudioShare` from its upstream repository, then run `bluetooth-AudioShare --help` (or the README entrypoint) to confirm flags. AudioShare: Dual Bluetooth System Bypass (Android 12-14)."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -279,11 +287,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use bluetooth-AudioShare because AudioShare: Dual Bluetooth System Bypass (Android 12-14).",
+    "When chaining Bluetooth tools, pair bluetooth-AudioShare with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bluetooth-AudioShare --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/bluetooth-AudioShare && python3 bluetooth-AudioShare.py --help",
@@ -311,5 +317,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

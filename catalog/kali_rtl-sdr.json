@@ -27,7 +27,74 @@
       "path": "/usr/bin/rtl_adsb",
       "description": "a simple ADS-B decoder",
       "usage": "rtl_adsb [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-B"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "a re-purposed DVB-T receiver as a software defined radio to receive and decode ADS-B",
+          "default": null,
+          "choices": null,
+          "raw": "-B  a re-purposed DVB-T receiver as a software defined radio to receive and decode ADS-B"
+        },
+        {
+          "flags": [
+            "-SDR"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Other rtl-sdr programs:",
+          "default": null,
+          "choices": null,
+          "raw": "-SDR  Other rtl-sdr programs:"
+        },
+        {
+          "flags": [
+            "-level"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "on the li-",
+          "default": null,
+          "choices": null,
+          "raw": "-level  on the li-"
+        },
+        {
+          "flags": [
+            "-lp"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "while true; do rtl_adsb | nc -lp 8080; done",
+          "default": null,
+          "choices": null,
+          "raw": "-lp  while true; do rtl_adsb | nc -lp 8080; done"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tfilename",
+          "default": null,
+          "choices": null,
+          "raw": "-p  tfilename"
+        },
+        {
+          "flags": [
+            "-sdr"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Automatic dependent surveillance-broadcast, ADS-B, consists of position and other status data",
+          "default": null,
+          "choices": null,
+          "raw": "-sdr  Automatic dependent surveillance-broadcast, ADS-B, consists of position and other status data"
+        }
+      ]
     },
     {
       "name": "rtl_biast",
@@ -104,5 +171,71 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "rtl_adsb [-R] [-g gain] [-p ppm] [output file]",
+    "rtl_adsb | netcat -lp 8080",
+    "while true; do rtl_adsb | nc -lp 8080; done",
+    "rtl_adsb | socat -u - TCP4:sdrsharp.com:47806"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use rtl_adsb because Software defined radio receiver for Realtek RTL2832U (tools).",
+    "When the engagement is in the install phase, use rtl_adsb as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `rtl_adsb [-R] [-g gain] [-p ppm] [output file]` as documented upstream for rtl_adsb.",
+    "When you need a concrete invocation, run `rtl_adsb | netcat -lp 8080` as documented upstream for rtl_adsb.",
+    "When you need a concrete invocation, run `while true; do rtl_adsb | nc -lp 8080; done` as documented upstream for rtl_adsb.",
+    "When you need a concrete invocation, run `rtl_adsb | socat -u - TCP4:sdrsharp.com:47806` as documented upstream for rtl_adsb.",
+    "When chaining Kali Linux tools, pair rtl_adsb with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `rtl_adsb --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-B",
+        "description": "a re-purposed DVB-T receiver as a software defined radio to receive and decode ADS-B",
+        "source": "manpage"
+      },
+      {
+        "name": "-SDR",
+        "description": "Other rtl-sdr programs:",
+        "source": "manpage"
+      },
+      {
+        "name": "-level",
+        "description": "on the li-",
+        "source": "manpage"
+      },
+      {
+        "name": "-lp",
+        "description": "while true; do rtl_adsb | nc -lp 8080; done",
+        "source": "manpage"
+      },
+      {
+        "name": "-p",
+        "description": "tfilename",
+        "source": "manpage"
+      },
+      {
+        "name": "-sdr",
+        "description": "Automatic dependent surveillance-broadcast, ADS-B, consists of position and other status data",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "rtl_adsb [-R] [-g gain] [-p ppm] [output file]",
+      "rtl_adsb | netcat -lp 8080",
+      "while true; do rtl_adsb | nc -lp 8080; done",
+      "rtl_adsb | socat -u - TCP4:sdrsharp.com:47806"
+    ],
+    "readme": "rtl_adsb - a simple ADS-B decoder",
+    "how_to_use": "Install/setup: sudo apt install rtl-sdr (2.0.2-2). Run the primary entrypoint as shown in upstream docs, e.g. `rtl_adsb | netcat -lp 8080`. Further invocations from upstream: `while true; do rtl_adsb | nc -lp 8080; done`; `rtl_adsb | socat -u - TCP4:sdrsharp.com:47806`. Software defined radio receiver for Realtek RTL2832U (tools).",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Software defined radio receiver for Realtek RTL2832U (tools).",
+    "why_to_use": "Prefer this tool because: Software defined radio receiver for Realtek RTL2832U (tools).",
+    "usage_sections": [
+      "Install with: sudo apt install rtl-sdr (2.0.2-2)",
+      "Install with: sudo apt install rtl-sdr (2.0.2-2)"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

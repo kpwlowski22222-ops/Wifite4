@@ -31,5 +31,26 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "use_cases": [
+    "When you need Kali Linux, use python3-parso because Python parser that supports error recovery - Python 3.X.",
+    "When the engagement is in the install phase, use python3-parso as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When chaining Kali Linux tools, pair python3-parso with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `python3-parso --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [],
+    "readme": "Python parser that supports error recovery - Python 3.X\nParso is a Python parser that supports error recovery and round-trip parsing\nfor different Python versions (in multiple Python versions). Parso is also able\nto list multiple syntax errors in your Python file.\n.\nParso has been battle-tested by jedi. It was pulled out of jedi to be useful\nfor other projects as well.\n.\nParso consists of a small API to parse Python and analyse the syntax tree.\n.\nA simple example:\n.\n>>> import parso\n>>> module = parso.parse('hello + 1', version=\"3.6\")\n>>> expr = module.children[0]\n>>> expr\nPythonNode(arith_expr, [<Name: hello@1,0>, <Operator: +>, <Number: 1>])\n>>> print(expr.get_code())\nhello + 1\n>>> name = expr.children[0]\n>>> name\n<Name: hello@1,0>\n>>> name.end_pos\n(1, 5)\n>>> expr.end_pos\n(1, 9)\n.\nTo list multiple issues:\n.\n>>> grammar = parso.load_grammar()\n>>> module = grammar.parse('foo +\\nbar\\ncontinue')\n>>> error1, error2 = grammar.iter_errors(module)\n>>> error1.message\n'SyntaxError: invalid syntax'\n>>> error2.message\n\"SyntaxError: 'continue' not properly in loop\"",
+    "how_to_use": "Install/setup: sudo apt install parso. Python parser that supports error recovery - Python 3.X.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Python parser that supports error recovery - Python 3.X.",
+    "why_to_use": "Prefer this tool based on upstream description: Python parser that supports error recovery - Python 3.X\nParso is a Python parser that supports error recovery and round-trip parsing\nfor different Python versions (in multiple Python versions). Parso is also able\nto list multiple syntax errors in your Python file.\n.\nParso has been battle-tested by jedi. It was pulled out of jedi to be useful\nfor other projects as well.\n.\nParso consists of a small .",
+    "usage_sections": [
+      "Install with: sudo apt install parso",
+      "Install with: sudo apt install parso"
+    ],
+    "examples": []
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "offline",
+  "command_examples": []
 }

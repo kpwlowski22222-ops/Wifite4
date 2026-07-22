@@ -193,7 +193,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/mach_race && python3 mach_race.py --help",
+      "cd toolboxes/mach_race && cat README.md",
+      "cd toolboxes/mach_race && ls -la",
+      "cd toolboxes/mach_race && python3 mach_race.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mach_race --output $KFIOSA_OUTPUT_DIR/mach_race.log"
+    ],
     "file_listing": [
       "README.md",
       "contents.xcworkspacedata",
@@ -253,13 +259,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/mach_race && python3 mach_race.py --help",
-      "Step 2: cd toolboxes/mach_race && cat README.md",
-      "Step 3: cd toolboxes/mach_race && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: Mach Race OS X Local Privilege Escalation Exploit.",
+    "why_to_use": "Prefer this tool based on upstream description: Mach Race OS X Local Privilege Escalation Exploit.",
+    "how_to_use": "Clone or install `mach_race` from its upstream repository, then run `mach_race --help` (or the README entrypoint) to confirm flags. Mach Race OS X Local Privilege Escalation Exploit."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -290,11 +292,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use mach_race because Mach Race OS X Local Privilege Escalation Exploit.",
+    "When chaining Penetration Testing tools, pair mach_race with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `mach_race --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/mach_race && python3 mach_race.py --help",
@@ -322,5 +322,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "c"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -6,15 +6,58 @@
   "owner": "devanshbatham",
   "category": "OSINT",
   "url": "https://github.com/devanshbatham/ParamSpider",
-  "summary": "<h1 align=\"center\">\n    paramspider\n  <br>\n</h1>",
+  "summary": "Mining URLs from dark corners of Web Archives for bug hunting/fuzzing/further probing",
   "documentation": {
-    "readme": "<h1 align=\"center\">\n    paramspider\n  <br>\n</h1>",
-    "usage_sections": [],
+    "readme": "Mining URLs from dark corners of Web Archives for bug hunting/fuzzing/further probing",
+    "usage_sections": [
+      "Installation: To install paramspider, follow these steps:",
+      "Examples: Here are a few examples of how to use paramspider: - Discover URLs for a single domain: - Discover URLs for multiple domains from a file: - Stream URLs on the termial: - Set up web request proxy: - Adding a placeholder for URL parameter values (default: \"FUZZ\"):"
+    ],
     "arguments": [
       {
+        "name": "-d",
+        "description": "Domain name to fetch related URLs for.",
+        "source": "docs"
+      },
+      {
+        "name": "--domain",
+        "description": "Domain name to fetch related URLs for.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "File containing a list of domain names.",
+        "source": "docs"
+      },
+      {
+        "name": "--list",
+        "description": "File containing a list of domain names.",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "placeholder for parameter values",
+        "source": "docs"
+      },
+      {
+        "name": "--placeholder",
+        "description": "placeholder for parameter values",
+        "source": "docs"
+      },
+      {
         "name": "--proxy",
-        "description": "HTTP or SOCKS proxy URL for outbound requests.",
-        "source": "v2_enhancement"
+        "description": "Set the proxy address for web requests.",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Stream URLs on the terminal.",
+        "source": "docs"
+      },
+      {
+        "name": "--stream",
+        "description": "Stream URLs on the terminal.",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +236,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "paramspider -d example.com",
+      "paramspider -l domains.txt",
+      "paramspider -d example.com -s",
+      "paramspider -d example.com --proxy '$KFIOSA_TARGET_HOST:7890'",
+      "paramspider -d example.com -p '\"><h1>reflection</h1>'"
+    ],
     "file_listing": [
       "Dockerfile",
       "LICENSE",
@@ -251,13 +300,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web']' as the attack surface (osint, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/ParamSpider && python3 ParamSpider.py --help",
-      "Step 2: cd toolboxes/ParamSpider && cat README.md",
-      "Step 3: cd toolboxes/ParamSpider && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category. Fits when the engagement needs: Mining URLs from dark corners of Web Archives for bug hunting/fuzzing/further probing.",
+    "why_to_use": "Prefer this tool based on upstream description: Mining URLs from dark corners of Web Archives for bug hunting/fuzzing/further probing.",
+    "how_to_use": "Install/setup: git clone https://github.com/devanshbatham/paramspider; pip install .. Run the primary entrypoint as shown in upstream docs, e.g. `paramspider -d example.com`. Further invocations from upstream: `paramspider -l domains.txt`; `paramspider -d example.com -s`. Mining URLs from dark corners of Web Archives for bug hunting/fuzzing/further probing."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -288,18 +333,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the OSINT system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need OSINT, use ParamSpider because Mining URLs from dark corners of Web Archives for bug hunting/fuzzing/further probing.",
+    "When the engagement is in the recon phase, use ParamSpider as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `paramspider -d example.com` as documented upstream for ParamSpider.",
+    "When you need a concrete invocation, run `paramspider -l domains.txt` as documented upstream for ParamSpider.",
+    "When you need a concrete invocation, run `paramspider -d example.com -s` as documented upstream for ParamSpider.",
+    "When you need a concrete invocation, run `paramspider -d example.com --proxy '$KFIOSA_TARGET_HOST:7890'` as documented upstream for ParamSpider.",
+    "When chaining OSINT tools, pair ParamSpider with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ParamSpider --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/ParamSpider && python3 ParamSpider.py --help",
-    "cd toolboxes/ParamSpider && cat README.md",
-    "cd toolboxes/ParamSpider && ls -la",
-    "cd toolboxes/ParamSpider && python3 ParamSpider.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ParamSpider --output $KFIOSA_OUTPUT_DIR/ParamSpider.log"
+    "paramspider -d example.com",
+    "paramspider -l domains.txt",
+    "paramspider -d example.com -s",
+    "paramspider -d example.com --proxy '$KFIOSA_TARGET_HOST:7890'",
+    "paramspider -d example.com -p '\"><h1>reflection</h1>'"
   ],
   "attack_surface": [
     "web"
@@ -320,5 +368,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

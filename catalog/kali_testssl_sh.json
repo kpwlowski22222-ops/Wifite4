@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "testssl.sh",
   "title": "testssl.sh",
-  "summary": "### testssl.sh",
+  "summary": "testssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, protocols as well as cryptographic flaws and much more.",
   "version": "3.2.2+dfsg-1",
   "architectures": [
     "all"
@@ -29,853 +29,113 @@
       "arguments": [
         {
           "flags": [
-            "--help"
-          ],
-          "metavar": "or no arg displays command line help",
-          "takes_value": false,
-          "description": "what you're looking at",
-          "default": null,
-          "choices": null,
-          "raw": "    --help                        what you're looking at"
-        },
-        {
-          "flags": [
-            "-b",
-            "--banner"
-          ],
-          "metavar": "- anner",
-          "takes_value": true,
-          "description": "displays banner + version of testssl",
-          "default": null,
-          "choices": null,
-          "raw": "    -b, --banner                  displays banner + version of testssl"
-        },
-        {
-          "flags": [
-            "-v",
-            "--version"
-          ],
-          "metavar": "- ersion",
-          "takes_value": true,
-          "description": "same as previous",
-          "default": null,
-          "choices": null,
-          "raw": "    -v, --version                 same as previous"
-        },
-        {
-          "flags": [
-            "-V",
-            "--local"
-          ],
-          "metavar": "pattern",
-          "takes_value": true,
-          "description": "pretty print all local ciphers (of openssl only). If search pattern supplied: it is an",
-          "default": null,
-          "choices": null,
-          "raw": "    -V, --local [pattern]         pretty print all local ciphers (of openssl only). If search pattern supplied: it is an"
-        },
-        {
-          "flags": [
-            "-t",
-            "--starttls"
-          ],
-          "metavar": "protocol",
-          "takes_value": true,
-          "description": "Does a run against a STARTTLS enabled service which is one of ftp, smtp, lmtp, pop3, imap,",
-          "default": null,
-          "choices": null,
-          "raw": "    -t, --starttls <protocol>     Does a run against a STARTTLS enabled service which is one of ftp, smtp, lmtp, pop3, imap,"
-        },
-        {
-          "flags": [
-            "--xmpphost"
-          ],
-          "metavar": "to_domain",
-          "takes_value": true,
-          "description": "For STARTTLS xmpp or xmpp-server checks it supplies the domainname (like SNI)",
-          "default": null,
-          "choices": null,
-          "raw": "    --xmpphost <to_domain>        For STARTTLS xmpp or xmpp-server checks it supplies the domainname (like SNI)"
-        },
-        {
-          "flags": [
-            "--mx"
-          ],
-          "metavar": "domain/host",
-          "takes_value": true,
-          "description": "Tests MX records from high to low priority (STARTTLS, port 25)",
-          "default": null,
-          "choices": null,
-          "raw": "    --mx <domain/host>            Tests MX records from high to low priority (STARTTLS, port 25)"
-        },
-        {
-          "flags": [
-            "--file",
-            "-iL"
-          ],
-          "metavar": "/ fname",
-          "takes_value": true,
-          "description": "Mass testing option: Reads one testssl.sh command line per line from <fname>.",
-          "default": null,
-          "choices": null,
-          "raw": "    --file/-iL <fname>            Mass testing option: Reads one testssl.sh command line per line from <fname>."
-        },
-        {
-          "flags": [
-            "--mode"
-          ],
-          "metavar": "serial parallel",
-          "takes_value": true,
-          "description": "Mass testing to be done serial (default) or parallel (--parallel is shortcut for the latter)",
-          "default": null,
-          "choices": null,
-          "raw": "    --mode <serial|parallel>      Mass testing to be done serial (default) or parallel (--parallel is shortcut for the latter)"
-        },
-        {
-          "flags": [
-            "--warnings"
-          ],
-          "metavar": "batch off",
-          "takes_value": true,
-          "description": "\"batch\" doesn't continue when a testing error is encountered, off continues and skips warnings",
-          "default": null,
-          "choices": null,
-          "raw": "    --warnings <batch|off>        \"batch\" doesn't continue when a testing error is encountered, off continues and skips warnings"
-        },
-        {
-          "flags": [
-            "--connect-timeout"
-          ],
-          "metavar": "seconds",
-          "takes_value": true,
-          "description": "useful to avoid hangers. Max <seconds> to wait for the TCP socket connect to return",
-          "default": null,
-          "choices": null,
-          "raw": "    --connect-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait for the TCP socket connect to return"
-        },
-        {
-          "flags": [
-            "--openssl-timeout"
-          ],
-          "metavar": "seconds",
-          "takes_value": true,
-          "description": "useful to avoid hangers. Max <seconds> to wait before openssl connect will be terminated",
-          "default": null,
-          "choices": null,
-          "raw": "    --openssl-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait before openssl connect will be terminated"
-        },
-        {
-          "flags": [
-            "-e",
-            "--each-cipher"
-          ],
-          "metavar": "- ach-cipher",
-          "takes_value": true,
-          "description": "checks each local cipher remotely",
-          "default": null,
-          "choices": null,
-          "raw": "    -e, --each-cipher             checks each local cipher remotely"
-        },
-        {
-          "flags": [
-            "-E",
-            "--cipher-per-proto"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "checks those per protocol",
-          "default": null,
-          "choices": null,
-          "raw": "    -E, --cipher-per-proto        checks those per protocol"
-        },
-        {
-          "flags": [
-            "-s",
-            "--std",
-            "--categories"
-          ],
-          "metavar": "- td",
-          "takes_value": true,
-          "description": "tests standard cipher categories by strength",
-          "default": null,
-          "choices": null,
-          "raw": "    -s, --std, --categories       tests standard cipher categories by strength"
-        },
-        {
-          "flags": [
-            "-f",
-            "--fs",
-            "--forward-secrecy"
-          ],
-          "metavar": "- s - orward-secrecy",
-          "takes_value": true,
-          "description": "checks forward secrecy settings",
-          "default": null,
-          "choices": null,
-          "raw": "    -f, --fs, --forward-secrecy   checks forward secrecy settings"
-        },
-        {
-          "flags": [
-            "-p",
-            "--protocols"
-          ],
-          "metavar": "- rotocols",
-          "takes_value": true,
-          "description": "checks TLS/SSL protocols (including ALPN/HTTP2 and SPDY)",
-          "default": null,
-          "choices": null,
-          "raw": "    -p, --protocols               checks TLS/SSL protocols (including ALPN/HTTP2 and SPDY)"
-        },
-        {
-          "flags": [
-            "-g",
-            "--grease"
-          ],
-          "metavar": "- rease",
-          "takes_value": true,
-          "description": "tests several server implementation bugs like GREASE and size limitations",
-          "default": null,
-          "choices": null,
-          "raw": "    -g, --grease                  tests several server implementation bugs like GREASE and size limitations"
-        },
-        {
-          "flags": [
-            "-S",
-            "--server-defaults"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "displays the server's default picks and certificate info",
-          "default": "picks and certificate info",
-          "choices": null,
-          "raw": "    -S, --server-defaults         displays the server's default picks and certificate info"
-        },
-        {
-          "flags": [
-            "-P",
-            "--server-preference"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "displays the server's picks: protocol+cipher",
-          "default": null,
-          "choices": null,
-          "raw": "    -P, --server-preference       displays the server's picks: protocol+cipher"
-        },
-        {
-          "flags": [
-            "-x",
-            "--single-cipher"
-          ],
-          "metavar": "pattern tests matched pattern of ciphers",
-          "takes_value": true,
-          "description": "of  ciphers",
-          "default": null,
-          "choices": null,
-          "raw": "    -x, --single-cipher <pattern> tests matched <pattern> of ciphers"
-        },
-        {
-          "flags": [
-            "-c",
-            "--client-simulation"
-          ],
-          "metavar": "- lient-simulation",
-          "takes_value": true,
-          "description": "test client simulations, see which client negotiates with cipher and protocol",
-          "default": null,
-          "choices": null,
-          "raw": "    -c, --client-simulation       test client simulations, see which client negotiates with cipher and protocol"
-        },
-        {
-          "flags": [
-            "-h",
-            "--header",
-            "--headers"
-          ],
-          "metavar": "- eader - eaders",
-          "takes_value": true,
-          "description": "tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address",
-          "default": null,
-          "choices": null,
-          "raw": "    -h, --header, --headers       tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address"
-        },
-        {
-          "flags": [
-            "-U",
-            "--vulnerable"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "tests all (of the following) vulnerabilities (if applicable)",
-          "default": null,
-          "choices": null,
-          "raw": "    -U, --vulnerable              tests all (of the following) vulnerabilities (if applicable)"
-        },
-        {
-          "flags": [
-            "-H",
-            "--heartbleed"
-          ],
-          "metavar": "Checks for Heartbleed a memory leakage in",
-          "takes_value": false,
-          "description": "tests for Heartbleed vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -H, --heartbleed              tests for Heartbleed vulnerability"
-        },
-        {
-          "flags": [
-            "-I",
-            "--ccs",
-            "--ccs-injection"
-          ],
-          "metavar": "-injection",
-          "takes_value": true,
-          "description": "tests for CCS injection vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -I, --ccs, --ccs-injection    tests for CCS injection vulnerability"
-        },
-        {
-          "flags": [
-            "-T",
-            "--ticketbleed"
-          ],
-          "metavar": "Checks for Ticketbleed memory leakage in BigIP",
-          "takes_value": false,
-          "description": "tests for Ticketbleed vulnerability in BigIP loadbalancers",
-          "default": null,
-          "choices": null,
-          "raw": "    -T, --ticketbleed             tests for Ticketbleed vulnerability in BigIP loadbalancers"
-        },
-        {
-          "flags": [
-            "--BB",
-            "--robot"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "tests for Return of Bleichenbacher's Oracle Threat (ROBOT) vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    --BB, --robot                 tests for Return of Bleichenbacher's Oracle Threat (ROBOT) vulnerability"
-        },
-        {
-          "flags": [
-            "--SI",
-            "--starttls-injection"
-          ],
-          "metavar": "Checks for STARTTLS",
-          "takes_value": false,
-          "description": "tests for STARTTLS injection issues",
-          "default": null,
-          "choices": null,
-          "raw": "    --SI, --starttls-injection    tests for STARTTLS injection issues"
-        },
-        {
-          "flags": [
-            "-R",
-            "--renegotiation"
-          ],
-          "metavar": "Tests renegotiation vulnerabilities. Currently there's",
-          "takes_value": false,
-          "description": "tests for renegotiation vulnerabilities",
-          "default": null,
-          "choices": null,
-          "raw": "    -R, --renegotiation           tests for renegotiation vulnerabilities"
-        },
-        {
-          "flags": [
-            "-C",
-            "--compression",
-            "--crime"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "tests for CRIME vulnerability (TLS compression issue)",
-          "default": null,
-          "choices": null,
-          "raw": "    -C, --compression, --crime    tests for CRIME vulnerability (TLS compression issue)"
-        },
-        {
-          "flags": [
-            "-B",
-            "--breach"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "tests for BREACH vulnerability (HTTP compression issue)",
-          "default": null,
-          "choices": null,
-          "raw": "    -B, --breach                  tests for BREACH vulnerability (HTTP compression issue)"
-        },
-        {
-          "flags": [
-            "-O",
-            "--poodle"
-          ],
-          "metavar": "Tests for SSL POODLE Padding Oracle On Downgraded Legacy En-",
-          "takes_value": false,
-          "description": "tests for POODLE (SSL) vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -O, --poodle                  tests for POODLE (SSL) vulnerability"
-        },
-        {
-          "flags": [
-            "-Z",
-            "--tls-fallback"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "checks TLS_FALLBACK_SCSV mitigation",
-          "default": null,
-          "choices": null,
-          "raw": "    -Z, --tls-fallback            checks TLS_FALLBACK_SCSV mitigation"
-        },
-        {
-          "flags": [
-            "-W",
-            "--sweet32"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "tests 64 bit block ciphers (3DES, RC2 and IDEA): SWEET32 vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -W, --sweet32                 tests 64 bit block ciphers (3DES, RC2 and IDEA): SWEET32 vulnerability"
-        },
-        {
-          "flags": [
-            "-A",
-            "--beast"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "tests for BEAST vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -A, --beast                   tests for BEAST vulnerability"
-        },
-        {
-          "flags": [
-            "-L",
-            "--lucky13"
-          ],
-          "metavar": "Checks for LUCKY13 vulnerability. It checks for the presence",
-          "takes_value": false,
-          "description": "tests for LUCKY13",
-          "default": null,
-          "choices": null,
-          "raw": "    -L, --lucky13                 tests for LUCKY13"
-        },
-        {
-          "flags": [
-            "-WS",
-            "--winshock"
-          ],
-          "metavar": "Checks for Winshock vulnerability. It tests",
-          "takes_value": false,
-          "description": "tests for winshock vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -WS, --winshock               tests for winshock vulnerability"
-        },
-        {
-          "flags": [
-            "-F",
-            "--freak"
-          ],
-          "metavar": "Checks for FREAK vulnerability Factoring RSA Export Keys",
-          "takes_value": false,
-          "description": "tests for FREAK vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -F, --freak                   tests for FREAK vulnerability"
-        },
-        {
-          "flags": [
-            "-J",
-            "--logjam"
-          ],
-          "metavar": "Checks for LOGJAM vulnerability by checking for DH EXPORT ci-",
-          "takes_value": false,
-          "description": "tests for LOGJAM vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -J, --logjam                  tests for LOGJAM vulnerability"
-        },
-        {
-          "flags": [
-            "-D",
-            "--drown"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "tests for DROWN vulnerability",
-          "default": null,
-          "choices": null,
-          "raw": "    -D, --drown                   tests for DROWN vulnerability"
-        },
-        {
-          "flags": [
-            "-4",
-            "--rc4",
-            "--appelbaum"
-          ],
-          "metavar": "Checks which RC4 stream ciphers are being offered.",
-          "takes_value": false,
-          "description": "which RC4 ciphers are being offered?",
-          "default": null,
-          "choices": null,
-          "raw": "    -4, --rc4, --appelbaum        which RC4 ciphers are being offered?"
-        },
-        {
-          "flags": [
-            "-9",
-            "--full"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "includes tests for implementation bugs and cipher per protocol (could disappear)",
-          "default": null,
-          "choices": null,
-          "raw": "    -9, --full                    includes tests for implementation bugs and cipher per protocol (could disappear)"
-        },
-        {
-          "flags": [
-            "--bugs"
-          ],
-          "metavar": "does some workarounds for buggy servers like padding for old F5 de-",
-          "takes_value": false,
-          "description": "enables the \"-bugs\" option of s_client, needed e.g. for some buggy F5s",
-          "default": null,
-          "choices": null,
-          "raw": "    --bugs                        enables the \"-bugs\" option of s_client, needed e.g. for some buggy F5s"
-        },
-        {
-          "flags": [
-            "--assume-http"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "if protocol check fails it assumes HTTP protocol and enforces HTTP checks",
-          "default": null,
-          "choices": null,
-          "raw": "    --assume-http                 if protocol check fails it assumes HTTP protocol and enforces HTTP checks"
-        },
-        {
-          "flags": [
-            "--ssl-native"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "use OpenSSL where sockets are normally used. Faster but inaccurate, avoid it if possible",
-          "default": null,
-          "choices": null,
-          "raw": "    --ssl-native                  use OpenSSL where sockets are normally used. Faster but inaccurate, avoid it if possible"
-        },
-        {
-          "flags": [
-            "--openssl"
-          ],
-          "metavar": "PATH",
-          "takes_value": true,
-          "description": "use this openssl binary (default: look in $PATH, $RUN_DIR of testssl)",
-          "default": "look in $PATH",
-          "choices": null,
-          "raw": "    --openssl <PATH>              use this openssl binary (default: look in $PATH, $RUN_DIR of testssl)"
-        },
-        {
-          "flags": [
-            "--proxy"
-          ],
-          "metavar": "host",
-          "takes_value": true,
-          "description": "port|auto>      (experimental) proxy connects via <host:port>, auto: values from $env ($http(s)_proxy)",
-          "default": null,
-          "choices": null,
-          "raw": "    --proxy <host:port|auto>      (experimental) proxy connects via <host:port>, auto: values from $env ($http(s)_proxy)"
-        },
-        {
-          "flags": [
-            "-6"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "also use IPv6. Works only with supporting OpenSSL version and IPv6 connectivity",
-          "default": null,
-          "choices": null,
-          "raw": "    -6                            also use IPv6. Works only with supporting OpenSSL version and IPv6 connectivity"
-        },
-        {
-          "flags": [
-            "--ip"
-          ],
-          "metavar": "ip",
-          "takes_value": true,
-          "description": "a) tests the supplied <ip> v4 or v6 address instead of resolving host(s) in URI",
-          "default": null,
-          "choices": null,
-          "raw": "    --ip <ip>                     a) tests the supplied <ip> v4 or v6 address instead of resolving host(s) in URI"
-        },
-        {
-          "flags": [
-            "-n",
-            "--nodns"
-          ],
-          "metavar": "- odns min none",
-          "takes_value": true,
-          "description": "if \"none\": do not try any DNS lookups, \"min\" queries A, AAAA and MX records",
-          "default": null,
-          "choices": null,
-          "raw": "    -n, --nodns <min|none>        if \"none\": do not try any DNS lookups, \"min\" queries A, AAAA and MX records"
-        },
-        {
-          "flags": [
-            "--sneaky"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "leave less traces in target logs: user agent, referer",
-          "default": null,
-          "choices": null,
-          "raw": "    --sneaky                      leave less traces in target logs: user agent, referer"
-        },
-        {
-          "flags": [
-            "--user-agent"
-          ],
-          "metavar": "user agent",
-          "takes_value": true,
-          "description": "set a custom user agent instead of the standard user agent",
-          "default": null,
-          "choices": null,
-          "raw": "    --user-agent <user agent>     set a custom user agent instead of the standard user agent"
-        },
-        {
-          "flags": [
-            "--ids-friendly"
-          ],
-          "metavar": "is a switch which may help to get",
-          "takes_value": false,
-          "description": "skips a few vulnerability checks which may cause IDSs to block the scanning IP",
-          "default": null,
-          "choices": null,
-          "raw": "    --ids-friendly                skips a few vulnerability checks which may cause IDSs to block the scanning IP"
-        },
-        {
-          "flags": [
-            "--phone-out"
-          ],
-          "metavar": "Checking for revoked certificates via CRL and OCSP is not done",
-          "takes_value": false,
-          "description": "allow to contact external servers for CRL download and querying OCSP responder",
-          "default": null,
-          "choices": null,
-          "raw": "    --phone-out                   allow to contact external servers for CRL download and querying OCSP responder"
-        },
-        {
-          "flags": [
             "--add-ca"
           ],
-          "metavar": "CA files CA dir",
-          "takes_value": true,
-          "description": "path to <CAdir> with *.pem or a comma separated list of CA files to include in trust check",
+          "metavar": null,
+          "takes_value": false,
+          "description": "format for trust chain checks.",
           "default": null,
           "choices": null,
-          "raw": "    --add-ca <CA files|CA dir>    path to <CAdir> with *.pem or a comma separated list of CA files to include in trust check"
+          "raw": "--add-ca  format for trust chain checks."
         },
         {
           "flags": [
-            "--mtls"
+            "--append"
           ],
-          "metavar": "CLIENT CERT file",
-          "takes_value": true,
-          "description": "path to <CLIENT CERT> file in PEM format containing unencrypted certificate key (beta)",
+          "metavar": null,
+          "takes_value": false,
+          "description": "Normally, if an output file already exists and it has a file size greater zero,",
           "default": null,
           "choices": null,
-          "raw": "    --mtls <CLIENT CERT file>     path to <CLIENT CERT> file in PEM format containing unencrypted certificate key (beta)"
+          "raw": "--append  Normally, if an output file already exists and it has a file size greater zero,"
+        },
+        {
+          "flags": [
+            "--as"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "sume-http. It tests several HTTP headers like",
+          "default": null,
+          "choices": null,
+          "raw": "--as  sume-http. It tests several HTTP headers like"
+        },
+        {
+          "flags": [
+            "-Authorization"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Basic dGVzdHNzbDpydWxlcw==' --reqheader 'ClientID:",
+          "default": null,
+          "choices": null,
+          "raw": "-Authorization  Basic dGVzdHNzbDpydWxlcw==' --reqheader 'ClientID:"
         },
         {
           "flags": [
             "--basicauth"
           ],
-          "metavar": "user",
-          "takes_value": true,
-          "description": "pass>       provide HTTP basic auth information",
+          "metavar": null,
+          "takes_value": false,
+          "description": "<user:pass> This can be set to provide HTTP basic auth credentials which are used",
           "default": null,
           "choices": null,
-          "raw": "    --basicauth <user:pass>       provide HTTP basic auth information"
+          "raw": "--basicauth  <user:pass> This can be set to provide HTTP basic auth credentials which are used"
         },
         {
           "flags": [
-            "--reqheader"
-          ],
-          "metavar": "header",
-          "takes_value": true,
-          "description": "add custom http request headers",
-          "default": null,
-          "choices": null,
-          "raw": "    --reqheader <header>          add custom http request headers"
-        },
-        {
-          "flags": [
-            "--quiet"
+            "--bugs"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "don't output the banner. By doing this you acknowledge usage terms normally appearing in the banner",
+          "description": "does some workarounds for buggy servers like padding for old F5 devices. The option is",
           "default": null,
           "choices": null,
-          "raw": "    --quiet                       don't output the banner. By doing this you acknowledge usage terms normally appearing in the banner"
+          "raw": "--bugs  does some workarounds for buggy servers like padding for old F5 devices. The option is"
         },
         {
           "flags": [
-            "--wide"
+            "-c"
           ],
-          "metavar": "Except the \"each cipher output\" all tests displays the",
+          "metavar": null,
           "takes_value": false,
-          "description": "wide output for tests like RC4, BEAST. FS also with hexcode, kx, strength, RFC name",
+          "description": "This simulates a handshake with a number of standard clients so that",
           "default": null,
           "choices": null,
-          "raw": "    --wide                        wide output for tests like RC4, BEAST. FS also with hexcode, kx, strength, RFC name"
+          "raw": "-c  This simulates a handshake with a number of standard clients so that"
         },
         {
           "flags": [
-            "--show-each"
+            "--client-simulation"
           ],
-          "metavar": ".",
+          "metavar": null,
           "takes_value": false,
-          "description": "for wide outputs: display all ciphers tested -- not only succeeded ones",
-          "default": "it  lists  the  following parameters: hexcode",
-          "choices": null,
-          "raw": "    --show-each                   for wide outputs: display all ciphers tested -- not only succeeded ones"
-        },
-        {
-          "flags": [
-            "--mapping"
-          ],
-          "metavar": "openssl",
-          "takes_value": true,
-          "description": "openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (default)",
+          "description": "This simulates a handshake with a number of standard clients so that",
           "default": null,
           "choices": null,
-          "raw": "    --mapping <openssl|           openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (default)"
-        },
-        {
-          "flags": [
-            "--color"
-          ],
-          "metavar": "0 1 2 3",
-          "takes_value": true,
-          "description": "0: no escape or other codes,  1: b/w escape codes,  2: color (default), 3: extra color (color all ciphers)",
-          "default": null,
-          "choices": null,
-          "raw": "    --color <0|1|2|3>             0: no escape or other codes,  1: b/w escape codes,  2: color (default), 3: extra color (color all ciphers)"
+          "raw": "--client-simulation  This simulates a handshake with a number of standard clients so that"
         },
         {
           "flags": [
             "--colorblind"
           ],
-          "metavar": "Swaps green and blue colors in the output so that this",
+          "metavar": null,
           "takes_value": false,
-          "description": "swap green and blue in the output",
+          "description": "folks (up",
           "default": null,
           "choices": null,
-          "raw": "    --colorblind                  swap green and blue in the output"
+          "raw": "--colorblind  folks (up"
         },
         {
           "flags": [
-            "--debug"
-          ],
-          "metavar": "0-6",
-          "takes_value": true,
-          "description": "1: screen output normal but keeps debug output in /tmp/.  2-6: see \"grep -A 5 '^DEBUG=' testssl.sh\"",
-          "default": null,
-          "choices": null,
-          "raw": "    --debug <0-6>                 1: screen output normal but keeps debug output in /tmp/.  2-6: see \"grep -A 5 '^DEBUG=' testssl.sh\""
-        },
-        {
-          "flags": [
-            "--disable-rating"
-          ],
-          "metavar": "disables rating. Rating automatically gets",
-          "takes_value": false,
-          "description": "Explicitly disables the rating output",
-          "default": null,
-          "choices": null,
-          "raw": "    --disable-rating              Explicitly disables the rating output"
-        },
-        {
-          "flags": [
-            "--log",
-            "--logging"
-          ],
-          "metavar": "ging",
-          "takes_value": true,
-          "description": "logs stdout to '${NODE}-p${port}${YYYYMMDD-HHMM}.log' in current working directory (cwd)",
-          "default": null,
-          "choices": null,
-          "raw": "    --log, --logging              logs stdout to '${NODE}-p${port}${YYYYMMDD-HHMM}.log' in current working directory (cwd)"
-        },
-        {
-          "flags": [
-            "--logfile",
-            "-oL"
-          ],
-          "metavar": "logfile",
-          "takes_value": true,
-          "description": "logs stdout to 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}.log'. If 'logfile' is a dir or to a specified 'logfile'",
-          "default": null,
-          "choices": null,
-          "raw": "    --logfile|-oL <logfile>       logs stdout to 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}.log'. If 'logfile' is a dir or to a specified 'logfile'"
-        },
-        {
-          "flags": [
-            "--json"
+            "--connect-timeout"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "additional output of findings to flat JSON file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd",
+          "description": "This is useful for socket TCP connections to a node. If the node",
           "default": null,
           "choices": null,
-          "raw": "    --json                        additional output of findings to flat JSON file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd"
-        },
-        {
-          "flags": [
-            "--jsonfile",
-            "-oj"
-          ],
-          "metavar": "jsonfile",
-          "takes_value": true,
-          "description": "additional output to the specified flat JSON file or directory, similar to --logfile",
-          "default": null,
-          "choices": null,
-          "raw": "    --jsonfile|-oj <jsonfile>     additional output to the specified flat JSON file or directory, similar to --logfile"
-        },
-        {
-          "flags": [
-            "--json-pretty"
-          ],
-          "metavar": "Logs",
-          "takes_value": false,
-          "description": "additional JSON structured output of findings to a file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd",
-          "default": null,
-          "choices": null,
-          "raw": "    --json-pretty                 additional JSON structured output of findings to a file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd"
-        },
-        {
-          "flags": [
-            "--jsonfile-pretty",
-            "-oJ"
-          ],
-          "metavar": "jsonfile",
-          "takes_value": true,
-          "description": "additional JSON structured output to the specified file or directory, similar to --logfile",
-          "default": null,
-          "choices": null,
-          "raw": "    --jsonfile-pretty|-oJ <jsonfile>  additional JSON structured output to the specified file or directory, similar to --logfile"
+          "raw": "--connect-timeout  This is useful for socket TCP connections to a node. If the node"
         },
         {
           "flags": [
@@ -883,22 +143,43 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "additional output of findings to CSV file '${NODE}-p${port}${YYYYMMDD-HHMM}.csv' in cwd or directory",
+          "description": "file ${NODE}-p${port}${YYYYMMDD-HHMM}.csv in the current",
           "default": null,
           "choices": null,
-          "raw": "    --csv                         additional output of findings to CSV file '${NODE}-p${port}${YYYYMMDD-HHMM}.csv' in cwd or directory"
+          "raw": "--csv  file ${NODE}-p${port}${YYYYMMDD-HHMM}.csv in the current"
         },
         {
           "flags": [
-            "--csvfile",
-            "-oC"
+            "--disable-rating"
           ],
-          "metavar": "csvfile",
-          "takes_value": true,
-          "description": "additional output as CSV to the specified file or directory, similar to --logfile",
+          "metavar": null,
+          "takes_value": false,
+          "description": "disables rating. Rating automatically gets disabled, to not give a wrong or",
           "default": null,
           "choices": null,
-          "raw": "    --csvfile|-oC <csvfile>       additional output as CSV to the specified file or directory, similar to --logfile"
+          "raw": "--disable-rating  disables rating. Rating automatically gets disabled, to not give a wrong or"
+        },
+        {
+          "flags": [
+            "--freak"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Checks for FREAK vulnerability (Factoring RSA Export Keys) by testing for EXPORT",
+          "default": null,
+          "choices": null,
+          "raw": "--freak  Checks for FREAK vulnerability (Factoring RSA Export Keys) by testing for EXPORT"
+        },
+        {
+          "flags": [
+            "--heartbleed"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "the server side",
+          "default": null,
+          "choices": null,
+          "raw": "--heartbleed  the server side"
         },
         {
           "flags": [
@@ -906,346 +187,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "additional output as HTML to file '${NODE}-p${port}${YYYYMMDD-HHMM}.html'",
+          "description": "Logs additionally to an HTML file ${NODE}-p${port}${YYYYMMDD-HHMM}.html in the current",
           "default": null,
           "choices": null,
-          "raw": "    --html                        additional output as HTML to file '${NODE}-p${port}${YYYYMMDD-HHMM}.html'"
-        },
-        {
-          "flags": [
-            "--htmlfile",
-            "-oH"
-          ],
-          "metavar": "htmlfile",
-          "takes_value": true,
-          "description": "additional output as HTML to the specified file or directory, similar to --logfile",
-          "default": null,
-          "choices": null,
-          "raw": "    --htmlfile|-oH <htmlfile>     additional output as HTML to the specified file or directory, similar to --logfile"
-        },
-        {
-          "flags": [
-            "--out",
-            "-oa",
-            "-oA",
-            "-oA",
-            "-oa"
-          ],
-          "metavar": "f F ile / fname log to a LOG JSON CSV HTML file see nmap . /",
-          "takes_value": true,
-          "description": "pretty/flat JSON.",
-          "default": null,
-          "choices": null,
-          "raw": "    --out(f,F)ile|-oa/-oA <fname> log to a LOG,JSON,CSV,HTML file (see nmap). -oA/-oa: pretty/flat JSON."
-        },
-        {
-          "flags": [
-            "--hints"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "additional hints to findings",
-          "default": null,
-          "choices": null,
-          "raw": "    --hints                       additional hints to findings"
-        },
-        {
-          "flags": [
-            "--severity"
-          ],
-          "metavar": "severity",
-          "takes_value": true,
-          "description": "severities with lower level will be filtered for CSV+JSON, possible values <LOW|MEDIUM|HIGH|CRITICAL>",
-          "default": null,
-          "choices": null,
-          "raw": "    --severity <severity>         severities with lower level will be filtered for CSV+JSON, possible values <LOW|MEDIUM|HIGH|CRITICAL>"
-        },
-        {
-          "flags": [
-            "--append"
-          ],
-          "metavar": "Normally if an output file already exists and it has a file size",
-          "takes_value": false,
-          "description": "if (non-empty) <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists, append to file. Omits any header",
-          "default": null,
-          "choices": null,
-          "raw": "    --append                      if (non-empty) <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists, append to file. Omits any header"
-        },
-        {
-          "flags": [
-            "--overwrite"
-          ],
-          "metavar": "Normally if an output file already exists and it has",
-          "takes_value": false,
-          "description": "if <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists it overwrites it without any warning",
-          "default": null,
-          "choices": null,
-          "raw": "    --overwrite                   if <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists it overwrites it without any warning"
-        },
-        {
-          "flags": [
-            "--outprefix"
-          ],
-          "metavar": "fname_prefix",
-          "takes_value": true,
-          "description": "before  '${NODE}.' above prepend <fname_prefix>",
-          "default": null,
-          "choices": null,
-          "raw": "    --outprefix <fname_prefix>    before  '${NODE}.' above prepend <fname_prefix>"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "=smtp",
-          "takes_value": true,
-          "description": "--wide --openssl=/usr/bin/openssl <URI> (short options with equal",
-          "default": null,
-          "choices": null,
-          "raw": "     -t=smtp  --wide --openssl=/usr/bin/openssl <URI> (short options with equal"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--banner  displays testssl.sh banner, including license, usage condi-",
-          "default": null,
-          "choices": null,
-          "raw": "     -b,  --banner  displays testssl.sh banner, including license, usage condi-"
-        },
-        {
-          "flags": [
-            "-V"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "[pattern],  --local [pattern] pretty print all local ciphers supported",
-          "default": null,
-          "choices": null,
-          "raw": "     -V  [pattern],  --local [pattern] pretty print all local ciphers supported"
-        },
-        {
-          "flags": [
-            "--assuming-http"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "testssl.sh  normally does upfront an application protocol",
-          "default": null,
-          "choices": null,
-          "raw": "     --assuming-http  testssl.sh  normally does upfront an application protocol"
-        },
-        {
-          "flags": [
-            "--nodns"
-          ],
-          "metavar": "=min",
-          "takes_value": true,
-          "description": "plus --ip=proxy is useful for situations with no local DNS as",
-          "default": null,
-          "choices": null,
-          "raw": "     --nodns=min  plus --ip=proxy is useful for situations with no local DNS as"
-        },
-        {
-          "flags": [
-            "-E",
-            "--cipher-per-proto",
-            "-e",
-            "--each-cipher"
-          ],
-          "metavar": "is similar to - ach-cipher. It checks each",
-          "takes_value": true,
-          "description": "of",
-          "default": null,
-          "choices": null,
-          "raw": "     -E, --cipher-per-proto is similar to -e, --each-cipher. It checks each  of"
-        },
-        {
-          "flags": [
-            "-f",
-            "--fs",
-            "--nsa",
-            "--forward-secrecy"
-          ],
-          "metavar": "- s - orward-secrecy Checks robust forward secrecy",
-          "takes_value": true,
-          "description": "key  ex-",
-          "default": null,
-          "choices": null,
-          "raw": "     -f, --fs, --nsa, --forward-secrecy Checks robust forward secrecy  key  ex-"
-        },
-        {
-          "flags": [
-            "-P"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--server-preference,  --preference  displays the servers preferences:",
-          "default": null,
-          "choices": null,
-          "raw": "     -P,  --server-preference,  --preference  displays the servers preferences:"
-        },
-        {
-          "flags": [
-            "-S",
-            "--server_defaults"
-          ],
-          "metavar": "displays information from the server hello s",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -S, --server_defaults displays information from the server hello(s):"
-        },
-        {
-          "flags": [
-            "-U",
-            "--vulnerable",
-            "--vulnerabilities"
-          ],
-          "metavar": "Just tests all of the following vul-",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -U, --vulnerable, --vulnerabilities Just tests all (of the following) vul-"
-        },
-        {
-          "flags": [
-            "-I"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--ccs,  --ccs-injection  Checks for CCS Injection which is an openssl",
-          "default": null,
-          "choices": null,
-          "raw": "     -I,  --ccs,  --ccs-injection  Checks for CCS Injection which is an openssl"
-        },
-        {
-          "flags": [
-            "--BB"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--robot  Checks  for  vulnerability to ROBOT / (Return Of Bleichen-",
-          "default": null,
-          "choices": null,
-          "raw": "     --BB,  --robot  Checks  for  vulnerability to ROBOT / (Return Of Bleichen-"
-        },
-        {
-          "flags": [
-            "-C"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--compression,  --crime Checks for CRIME (Compression Ratio Info-leak",
-          "default": null,
-          "choices": null,
-          "raw": "     -C,  --compression,  --crime Checks for CRIME (Compression Ratio Info-leak"
-        },
-        {
-          "flags": [
-            "-B"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--breach  Checks  for BREACH (Browser Reconnaissance and Exfiltration",
-          "default": null,
-          "choices": null,
-          "raw": "     -B,  --breach  Checks  for BREACH (Browser Reconnaissance and Exfiltration"
-        },
-        {
-          "flags": [
-            "-Z"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--tls-fallback Checks TLS_FALLBACK_SCSV mitigation. TLS_FALLBACK_SCSV",
-          "default": null,
-          "choices": null,
-          "raw": "     -Z,  --tls-fallback Checks TLS_FALLBACK_SCSV mitigation. TLS_FALLBACK_SCSV"
-        },
-        {
-          "flags": [
-            "-W"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--sweet32 Checks for vulnerability to SWEET32 by testing 64 bit block",
-          "default": null,
-          "choices": null,
-          "raw": "     -W,  --sweet32 Checks for vulnerability to SWEET32 by testing 64 bit block"
-        },
-        {
-          "flags": [
-            "-D"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--drown  Checks for DROWN vulnerability (Decrypting RSA with Obsolete",
-          "default": null,
-          "choices": null,
-          "raw": "     -D,  --drown  Checks for DROWN vulnerability (Decrypting RSA with Obsolete"
-        },
-        {
-          "flags": [
-            "-A"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--beast  Checks BEAST vulnerabilities in SSL 3 and TLS 1.0 by testing",
-          "default": null,
-          "choices": null,
-          "raw": "     -A,  --beast  Checks BEAST vulnerabilities in SSL 3 and TLS 1.0 by testing"
-        },
-        {
-          "flags": [
-            "-q"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "--quiet  Normally testssl.sh displays a banner on stdout with several",
-          "default": null,
-          "choices": null,
-          "raw": "     -q,  --quiet  Normally testssl.sh displays a banner on stdout with several"
-        },
-        {
-          "flags": [
-            "--csv",
-            "-p"
-          ],
-          "metavar": "Logs additionally to a CSV file $ NODE $ port $ YYYYMMDD-HHMM .csv",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     --csv Logs additionally to a CSV file ${NODE}-p${port}${YYYYMMDD-HHMM}.csv"
-        },
-        {
-          "flags": [
-            "--csvfile",
-            "-oC",
-            "--json-"
-          ],
-          "metavar": "csvfile or csvfile Similar to the aforementioned",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     --csvfile <csvfile> or -oC <csvfile> Similar to the aforementioned --json-"
-        },
-        {
-          "flags": [
-            "--logfile"
-          ],
-          "metavar": ".",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     --logfile."
+          "raw": "--html  Logs additionally to an HTML file ${NODE}-p${port}${YYYYMMDD-HHMM}.html in the current"
         },
         {
           "flags": [
@@ -1253,47 +198,439 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "<htmlfile>  or  -oH  <htmlfile>  Similar to the aforementioned",
+          "description": "--logfile",
           "default": null,
           "choices": null,
-          "raw": "     --htmlfile  <htmlfile>  or  -oH  <htmlfile>  Similar to the aforementioned"
+          "raw": "--htmlfile  --logfile"
         },
         {
           "flags": [
-            "--jsonfile",
-            "--logfile",
-            "--html"
+            "-iana"
           ],
-          "metavar": "or it logs the output in HTML format see ad-",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "don't display the IANA cipher suite name, display OpenSSL names only.",
           "default": null,
           "choices": null,
-          "raw": "     --jsonfile or --logfile it logs the output in HTML format (see --html) ad-"
+          "raw": "-iana  don't display the IANA cipher suite name, display OpenSSL names only."
         },
         {
           "flags": [
-            "-oA",
-            "--outFile"
+            "--ids-friendly"
           ],
-          "metavar": "filename / filename Similar to nmap it does a file",
-          "takes_value": true,
-          "description": "out-",
+          "metavar": null,
+          "takes_value": false,
+          "description": "is a switch which may help to get a scan finished which otherwise would be",
           "default": null,
           "choices": null,
-          "raw": "     -oA <filename> / --outFile <filename> Similar to nmap it does a file  out-"
+          "raw": "--ids-friendly  is a switch which may help to get a scan finished which otherwise would be"
         },
         {
           "flags": [
-            "-oa",
-            "--outfile"
+            "-Ini"
           ],
-          "metavar": "filename / filename Does the same as the previous option",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "tiated Renegotiation is not yet implemented.",
           "default": null,
           "choices": null,
-          "raw": "     -oa <filename> / --outfile <filename> Does the same as the previous option"
+          "raw": "-Ini  tiated Renegotiation is not yet implemented."
+        },
+        {
+          "flags": [
+            "--ip"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tests either the supplied IPv4 or IPv6 address instead of resolving host(s) in",
+          "default": null,
+          "choices": null,
+          "raw": "--ip  tests either the supplied IPv4 or IPv6 address instead of resolving host(s) in"
+        },
+        {
+          "flags": [
+            "--json"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "additionally to JSON file ${NODE}-p${port}${YYYYMMDD-HHMM}.json in the current",
+          "default": null,
+          "choices": null,
+          "raw": "--json  additionally to JSON file ${NODE}-p${port}${YYYYMMDD-HHMM}.json in the current"
+        },
+        {
+          "flags": [
+            "--jsonfile"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "or -oj <jsonfile> Instead of the previous option you may want to use",
+          "default": null,
+          "choices": null,
+          "raw": "--jsonfile  or -oj <jsonfile> Instead of the previous option you may want to use"
+        },
+        {
+          "flags": [
+            "--jsonfile-pretty"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "or -oJ <jsonfile> Similar to the aforementioned --jsonfile or",
+          "default": null,
+          "choices": null,
+          "raw": "--jsonfile-pretty  or -oJ <jsonfile> Similar to the aforementioned --jsonfile or"
+        },
+        {
+          "flags": [
+            "-L"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Checks for LUCKY13 vulnerability. It checks for the presence of CBC ciphers in",
+          "default": null,
+          "choices": null,
+          "raw": "-L  Checks for LUCKY13 vulnerability. It checks for the presence of CBC ciphers in"
+        },
+        {
+          "flags": [
+            "--logfile"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "or -oL <logfile> Instead of the previous option you may want to use this",
+          "default": null,
+          "choices": null,
+          "raw": "--logfile  or -oL <logfile> Instead of the previous option you may want to use this"
+        },
+        {
+          "flags": [
+            "--lucky13"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Checks for LUCKY13 vulnerability. It checks for the presence of CBC ciphers in",
+          "default": null,
+          "choices": null,
+          "raw": "--lucky13  Checks for LUCKY13 vulnerability. It checks for the presence of CBC ciphers in"
+        },
+        {
+          "flags": [
+            "--mapping"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "O openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (de-",
+          "default": null,
+          "choices": null,
+          "raw": "--mapping  O openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (de-"
+        },
+        {
+          "flags": [
+            "--mode"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "<serial|parallel>. Mass testing to be done serial (default) or parallel (--parallel is",
+          "default": null,
+          "choices": null,
+          "raw": "--mode  <serial|parallel>. Mass testing to be done serial (default) or parallel (--parallel is"
+        },
+        {
+          "flags": [
+            "--mx"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "priority, one",
+          "default": null,
+          "choices": null,
+          "raw": "--mx  priority, one"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "<min|none> tells testssl.sh which DNS lookups should be performed. min uses only",
+          "default": null,
+          "choices": null,
+          "raw": "-n  <min|none> tells testssl.sh which DNS lookups should be performed. min uses only"
+        },
+        {
+          "flags": [
+            "--nodns"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "<min|none> tells testssl.sh which DNS lookups should be performed. min uses only",
+          "default": null,
+          "choices": null,
+          "raw": "--nodns  <min|none> tells testssl.sh which DNS lookups should be performed. min uses only"
+        },
+        {
+          "flags": [
+            "-oa"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "<filename> / --outfile <filename> Does the same as the previous option but uses flat JSON",
+          "default": null,
+          "choices": null,
+          "raw": "-oa  <filename> / --outfile <filename> Does the same as the previous option but uses flat JSON"
+        },
+        {
+          "flags": [
+            "--openssl"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "hard to find the binary supplied",
+          "default": null,
+          "choices": null,
+          "raw": "--openssl  hard to find the binary supplied"
+        },
+        {
+          "flags": [
+            "-openssl"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "don't display the OpenSSL cipher suite name, display IANA names only.",
+          "default": null,
+          "choices": null,
+          "raw": "-openssl  don't display the OpenSSL cipher suite name, display IANA names only."
+        },
+        {
+          "flags": [
+            "--outprefix"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "before ${NODE}-. You",
+          "default": null,
+          "choices": null,
+          "raw": "--outprefix  before ${NODE}-. You"
+        },
+        {
+          "flags": [
+            "--overwrite"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "size greater zero,",
+          "default": null,
+          "choices": null,
+          "raw": "--overwrite  size greater zero,"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "displays the servers preferences: cipher order, with",
+          "default": null,
+          "choices": null,
+          "raw": "-P  displays the servers preferences: cipher order, with"
+        },
+        {
+          "flags": [
+            "--phone-out"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "for revoked certificates via CRL and OCSP is not done per default. This",
+          "default": null,
+          "choices": null,
+          "raw": "--phone-out  for revoked certificates via CRL and OCSP is not done per default. This"
+        },
+        {
+          "flags": [
+            "--preference"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "displays the servers preferences: cipher order, with",
+          "default": null,
+          "choices": null,
+          "raw": "--preference  displays the servers preferences: cipher order, with"
+        },
+        {
+          "flags": [
+            "--proxy"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "<host>:<port> does ANY check via the specified proxy. --proxy=auto inherits the proxy",
+          "default": null,
+          "choices": null,
+          "raw": "--proxy  <host>:<port> does ANY check via the specified proxy. --proxy=auto inherits the proxy"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "information,",
+          "default": null,
+          "choices": null,
+          "raw": "-q  information,"
+        },
+        {
+          "flags": [
+            "--quiet"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "information,",
+          "default": null,
+          "choices": null,
+          "raw": "--quiet  information,"
+        },
+        {
+          "flags": [
+            "--reqheader"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "in the correct",
+          "default": null,
+          "choices": null,
+          "raw": "--reqheader  in the correct"
+        },
+        {
+          "flags": [
+            "--server-preference"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "displays the servers preferences: cipher order, with",
+          "default": null,
+          "choices": null,
+          "raw": "--server-preference  displays the servers preferences: cipher order, with"
+        },
+        {
+          "flags": [
+            "--SI"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "for STARTTLS injection vulnerabilities (SMTP, IMAP, POP3",
+          "default": null,
+          "choices": null,
+          "raw": "--SI  for STARTTLS injection vulnerabilities (SMTP, IMAP, POP3"
+        },
+        {
+          "flags": [
+            "--sneaky"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "HTTP header checks testssl.sh uses normally the server friendly HTTP user agent",
+          "default": null,
+          "choices": null,
+          "raw": "--sneaky  HTTP header checks testssl.sh uses normally the server friendly HTTP user agent"
+        },
+        {
+          "flags": [
+            "--ssl-native"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "of using a mixture of bash sockets and a few openssl s_client connects,",
+          "default": null,
+          "choices": null,
+          "raw": "--ssl-native  of using a mixture of bash sockets and a few openssl s_client connects,"
+        },
+        {
+          "flags": [
+            "--starttls-injection"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "for STARTTLS injection vulnerabilities (SMTP, IMAP, POP3",
+          "default": null,
+          "choices": null,
+          "raw": "--starttls-injection  for STARTTLS injection vulnerabilities (SMTP, IMAP, POP3"
+        },
+        {
+          "flags": [
+            "--sweet32"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "(3DES, RC2",
+          "default": null,
+          "choices": null,
+          "raw": "--sweet32  (3DES, RC2"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "enabled protocol.",
+          "default": null,
+          "choices": null,
+          "raw": "-t  enabled protocol."
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "openssl version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V  openssl version."
+        },
+        {
+          "flags": [
+            "-W"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "(3DES, RC2",
+          "default": null,
+          "choices": null,
+          "raw": "-W  (3DES, RC2"
+        },
+        {
+          "flags": [
+            "--wide"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "(scheme see",
+          "default": null,
+          "choices": null,
+          "raw": "--wide  (scheme see"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "ciphers against a server.",
+          "default": null,
+          "choices": null,
+          "raw": "-x  ciphers against a server."
+        },
+        {
+          "flags": [
+            "--xmpphost"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "is an additional option for STARTTLS enabled XMPP: It expects the",
+          "default": null,
+          "choices": null,
+          "raw": "--xmpphost  is an additional option for STARTTLS enabled XMPP: It expects the"
         }
       ],
       "raw_help": "root@kali:~# testssl --help\n \n    \"testssl [options] <URI>\"    or    \"testssl <options>\"\n \n \"testssl <option>\", where <option> is mostly standalone and one of:\n \n    --help                        what you're looking at\n    -b, --banner                  displays banner + version of testssl\n    -v, --version                 same as previous\n    -V, --local [pattern]         pretty print all local ciphers (of openssl only). If search pattern supplied: it is an\n                                  an ignore case word pattern of cipher hexcode or any other string in its name, kx or bits\n \n \"testssl [options] <URI>\", where <URI> is:\n \n    <URI>                         host|host:port|URL|URL:port   port 443 is default, URL can only contain HTTPS as a protocol\n \n and [options] is/are:\n \n    -t, --starttls <protocol>     Does a run against a STARTTLS enabled service which is one of ftp, smtp, lmtp, pop3, imap,\n                                  xmpp, xmpp-server, telnet, ldap, nntp, sieve, postgres, mysql\n    --xmpphost <to_domain>        For STARTTLS xmpp or xmpp-server checks it supplies the domainname (like SNI)\n    --mx <domain/host>            Tests MX records from high to low priority (STARTTLS, port 25)\n    --file/-iL <fname>            Mass testing option: Reads one testssl.sh command line per line from <fname>.\n                                  Can be combined with --serial or --parallel. Implicitly turns on \"--warnings batch\".\n                                  Text format 1: Comments via # allowed, EOF signals end of <fname>\n                                  Text format 2: nmap output in greppable format (-oG), 1 port per line allowed\n    --mode <serial|parallel>      Mass testing to be done serial (default) or parallel (--parallel is shortcut for the latter)\n    --warnings <batch|off>        \"batch\" doesn't continue when a testing error is encountered, off continues and skips warnings\n    --connect-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait for the TCP socket connect to return\n    --openssl-timeout <seconds>   useful to avoid hangers. Max <seconds> to wait before openssl connect will be terminated\n \n single check as <options>  (\"testssl URI\" does everything except -E and -g):\n    -e, --each-cipher             checks each local cipher remotely\n    -E, --cipher-per-proto        checks those per protocol\n    -s, --std, --categories       tests standard cipher categories by strength\n    -f, --fs, --forward-secrecy   checks forward secrecy settings\n    -p, --protocols               checks TLS/SSL protocols (including ALPN/HTTP2 and SPDY)\n    -g, --grease                  tests several server implementation bugs like GREASE and size limitations\n    -S, --server-defaults         displays the server's default picks and certificate info\n    -P, --server-preference       displays the server's picks: protocol+cipher\n    -x, --single-cipher <pattern> tests matched <pattern> of ciphers\n                                  (if <pattern> not a number: word match)\n    -c, --client-simulation       test client simulations, see which client negotiates with cipher and protocol\n    -h, --header, --headers       tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address\n \n    -U, --vulnerable              tests all (of the following) vulnerabilities (if applicable)\n    -H, --heartbleed              tests for Heartbleed vulnerability\n    -I, --ccs, --ccs-injection    tests for CCS injection vulnerability\n    -T, --ticketbleed             tests for Ticketbleed vulnerability in BigIP loadbalancers\n    --BB, --robot                 tests for Return of Bleichenbacher's Oracle Threat (ROBOT) vulnerability\n    --SI, --starttls-injection    tests for STARTTLS injection issues\n    -R, --renegotiation           tests for renegotiation vulnerabilities\n    -C, --compression, --crime    tests for CRIME vulnerability (TLS compression issue)\n    -B, --breach                  tests for BREACH vulnerability (HTTP compression issue)\n    -O, --poodle                  tests for POODLE (SSL) vulnerability\n    -Z, --tls-fallback            checks TLS_FALLBACK_SCSV mitigation\n    -W, --sweet32                 tests 64 bit block ciphers (3DES, RC2 and IDEA): SWEET32 vulnerability\n    -A, --beast                   tests for BEAST vulnerability\n    -L, --lucky13                 tests for LUCKY13\n    -WS, --winshock               tests for winshock vulnerability\n    -F, --freak                   tests for FREAK vulnerability\n    -J, --logjam                  tests for LOGJAM vulnerability\n    -D, --drown                   tests for DROWN vulnerability\n    -4, --rc4, --appelbaum        which RC4 ciphers are being offered?\n \n tuning / connect options (most also can be preset via environment variables):\n    -9, --full                    includes tests for implementation bugs and cipher per protocol (could disappear)\n    --bugs                        enables the \"-bugs\" option of s_client, needed e.g. for some buggy F5s\n    --assume-http                 if protocol check fails it assumes HTTP protocol and enforces HTTP checks\n    --ssl-native                  use OpenSSL where sockets are normally used. Faster but inaccurate, avoid it if possible\n    --openssl <PATH>              use this openssl binary (default: look in $PATH, $RUN_DIR of testssl)\n    --proxy <host:port|auto>      (experimental) proxy connects via <host:port>, auto: values from $env ($http(s)_proxy)\n    -6                            also use IPv6. Works only with supporting OpenSSL version and IPv6 connectivity\n    --ip <ip>                     a) tests the supplied <ip> v4 or v6 address instead of resolving host(s) in URI\n                                  b) \"one\" means: just test the first DNS returns (useful for multiple IPs)\n                                  c) \"proxy\" means: dns resolution via proxy. Needed when host has no DNS.\n    -n, --nodns <min|none>        if \"none\": do not try any DNS lookups, \"min\" queries A, AAAA and MX records\n    --sneaky                      leave less traces in target logs: user agent, referer\n    --user-agent <user agent>     set a custom user agent instead of the standard user agent\n    --ids-friendly                skips a few vulnerability checks which may cause IDSs to block the scanning IP\n    --phone-out                   allow to contact external servers for CRL download and querying OCSP responder\n    --add-ca <CA files|CA dir>    path to <CAdir> with *.pem or a comma separated list of CA files to include in trust check\n    --mtls <CLIENT CERT file>     path to <CLIENT CERT> file in PEM format containing unencrypted certificate key (beta)\n    --basicauth <user:pass>       provide HTTP basic auth information\n    --reqheader <header>          add custom http request headers\n \n output options (can also be preset via environment variables):\n    --quiet                       don't output the banner. By doing this you acknowledge usage terms normally appearing in the banner\n    --wide                        wide output for tests like RC4, BEAST. FS also with hexcode, kx, strength, RFC name\n    --show-each                   for wide outputs: display all ciphers tested -- not only succeeded ones\n    --mapping <openssl|           openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (default)\n               iana|rfc             -> use the IANA/(RFC) cipher suite name as the primary name cipher suite name form\n               no-openssl|          -> don't display the OpenSSL cipher suite name, display IANA/(RFC) names only\n               no-iana|no-rfc>      -> don't display the IANA/(RFC) cipher suite name, display OpenSSL names only\n    --color <0|1|2|3>             0: no escape or other codes,  1: b/w escape codes,  2: color (default), 3: extra color (color all ciphers)\n    --colorblind                  swap green and blue in the output\n    --debug <0-6>                 1: screen output normal but keeps debug output in /tmp/.  2-6: see \"grep -A 5 '^DEBUG=' testssl.sh\"\n    --disable-rating              Explicitly disables the rating output\n \n file output options (can also be preset via environment variables)\n    --log, --logging              logs stdout to '${NODE}-p${port}${YYYYMMDD-HHMM}.log' in current working directory (cwd)\n    --logfile|-oL <logfile>       logs stdout to 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}.log'. If 'logfile' is a dir or to a specified 'logfile'\n    --json                        additional output of findings to flat JSON file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd\n    --jsonfile|-oj <jsonfile>     additional output to the specified flat JSON file or directory, similar to --logfile\n    --json-pretty                 additional JSON structured output of findings to a file '${NODE}-p${port}${YYYYMMDD-HHMM}.json' in cwd\n    --jsonfile-pretty|-oJ <jsonfile>  additional JSON structured output to the specified file or directory, similar to --logfile\n    --csv                         additional output of findings to CSV file '${NODE}-p${port}${YYYYMMDD-HHMM}.csv' in cwd or directory\n    --csvfile|-oC <csvfile>       additional output as CSV to the specified file or directory, similar to --logfile\n    --html                        additional output as HTML to file '${NODE}-p${port}${YYYYMMDD-HHMM}.html'\n    --htmlfile|-oH <htmlfile>     additional output as HTML to the specified file or directory, similar to --logfile\n    --out(f,F)ile|-oa/-oA <fname> log to a LOG,JSON,CSV,HTML file (see nmap). -oA/-oa: pretty/flat JSON.\n                                  \"auto\" uses '${NODE}-p${port}${YYYYMMDD-HHMM}'. If fname is a dir uses 'dir/${NODE}-p${port}${YYYYMMDD-HHMM}'\n    --hints                       additional hints to findings\n    --severity <severity>         severities with lower level will be filtered for CSV+JSON, possible values <LOW|MEDIUM|HIGH|CRITICAL>\n    --append                      if (non-empty) <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists, append to file. Omits any header\n    --overwrite                   if <logfile>, <csvfile>, <jsonfile> or <htmlfile> exists it overwrites it without any warning\n    --outprefix <fname_prefix>    before  '${NODE}.' above prepend <fname_prefix>\n \n \n Options requiring a value can also be called with '=' e.g. testssl.sh -t=smtp --wide --openssl=/usr/bin/openssl <URI>.\n <URI> always needs to be the last parameter.",
@@ -1362,21 +699,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use testssl because testssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, protocols as well as cryptographic flaws .",
+    "When you need a concrete invocation, run `testssl.sh [OPTIONS] <URI>, testssl.sh [OPTIONS] --file <FILE>` as documented upstream for testssl.",
+    "When you need a concrete invocation, run `testssl.sh [BANNER OPTIONS]` as documented upstream for testssl.",
+    "When you need a concrete invocation, run `testssl.sh --ip=one --wide $KFIOSA_TARGET_URL` as documented upstream for testssl.",
+    "When you need a concrete invocation, run `testssl.sh -6 $KFIOSA_TARGET_URL` as documented upstream for testssl.",
+    "When chaining Kali Linux tools, pair testssl with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `testssl --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/testssl.sh && python3 testssl.sh.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/testssl.sh && python3 testssl.sh.py --help",
-    "cd toolboxes/testssl.sh && python3 testssl.sh.py --help",
-    "cd toolboxes/testssl.sh && python3 testssl.sh.py --help",
-    "cd toolboxes/testssl.sh && python3 testssl.sh.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST testssl.sh --output $KFIOSA_OUTPUT_DIR/testssl.sh.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST testssl.sh --output $KFIOSA_OUTPUT_DIR/testssl.sh.log"
+    "testssl.sh [OPTIONS] <URI>, testssl.sh [OPTIONS] --file <FILE>",
+    "testssl.sh [BANNER OPTIONS]",
+    "testssl.sh --ip=one --wide $KFIOSA_TARGET_URL",
+    "testssl.sh -6 $KFIOSA_TARGET_URL",
+    "testssl.sh -t smtp smtp.gmail.com:25",
+    "testssl.sh --starttls=imap imap.gmx.net:143"
   ],
   "attack_surface": [
     "web"
@@ -1391,5 +728,301 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--add-ca",
+        "description": "format for trust chain checks.",
+        "source": "docs"
+      },
+      {
+        "name": "--append",
+        "description": "Normally, if an output file already exists and it has a file size greater zero,",
+        "source": "docs"
+      },
+      {
+        "name": "--as",
+        "description": "sume-http. It tests several HTTP headers like",
+        "source": "docs"
+      },
+      {
+        "name": "-Authorization",
+        "description": "Basic dGVzdHNzbDpydWxlcw==' --reqheader 'ClientID:",
+        "source": "docs"
+      },
+      {
+        "name": "--basicauth",
+        "description": "<user:pass> This can be set to provide HTTP basic auth credentials which are used",
+        "source": "docs"
+      },
+      {
+        "name": "--bugs",
+        "description": "does some workarounds for buggy servers like padding for old F5 devices. The option is",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "This simulates a handshake with a number of standard clients so that",
+        "source": "docs"
+      },
+      {
+        "name": "--client-simulation",
+        "description": "This simulates a handshake with a number of standard clients so that",
+        "source": "docs"
+      },
+      {
+        "name": "--colorblind",
+        "description": "folks (up",
+        "source": "docs"
+      },
+      {
+        "name": "--connect-timeout",
+        "description": "This is useful for socket TCP connections to a node. If the node",
+        "source": "docs"
+      },
+      {
+        "name": "--csv",
+        "description": "file ${NODE}-p${port}${YYYYMMDD-HHMM}.csv in the current",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-rating",
+        "description": "disables rating. Rating automatically gets disabled, to not give a wrong or",
+        "source": "docs"
+      },
+      {
+        "name": "--freak",
+        "description": "Checks for FREAK vulnerability (Factoring RSA Export Keys) by testing for EXPORT",
+        "source": "docs"
+      },
+      {
+        "name": "--heartbleed",
+        "description": "the server side",
+        "source": "docs"
+      },
+      {
+        "name": "--html",
+        "description": "Logs additionally to an HTML file ${NODE}-p${port}${YYYYMMDD-HHMM}.html in the current",
+        "source": "docs"
+      },
+      {
+        "name": "--htmlfile",
+        "description": "--logfile",
+        "source": "docs"
+      },
+      {
+        "name": "-iana",
+        "description": "don't display the IANA cipher suite name, display OpenSSL names only.",
+        "source": "docs"
+      },
+      {
+        "name": "--ids-friendly",
+        "description": "is a switch which may help to get a scan finished which otherwise would be",
+        "source": "docs"
+      },
+      {
+        "name": "-Ini",
+        "description": "tiated Renegotiation is not yet implemented.",
+        "source": "docs"
+      },
+      {
+        "name": "--ip",
+        "description": "tests either the supplied IPv4 or IPv6 address instead of resolving host(s) in",
+        "source": "docs"
+      },
+      {
+        "name": "--json",
+        "description": "additionally to JSON file ${NODE}-p${port}${YYYYMMDD-HHMM}.json in the current",
+        "source": "docs"
+      },
+      {
+        "name": "--jsonfile",
+        "description": "or -oj <jsonfile> Instead of the previous option you may want to use",
+        "source": "docs"
+      },
+      {
+        "name": "--jsonfile-pretty",
+        "description": "or -oJ <jsonfile> Similar to the aforementioned --jsonfile or",
+        "source": "docs"
+      },
+      {
+        "name": "-L",
+        "description": "Checks for LUCKY13 vulnerability. It checks for the presence of CBC ciphers in",
+        "source": "docs"
+      },
+      {
+        "name": "--logfile",
+        "description": "or -oL <logfile> Instead of the previous option you may want to use this",
+        "source": "docs"
+      },
+      {
+        "name": "--lucky13",
+        "description": "Checks for LUCKY13 vulnerability. It checks for the presence of CBC ciphers in",
+        "source": "docs"
+      },
+      {
+        "name": "--mapping",
+        "description": "O openssl: use the OpenSSL cipher suite name as the primary name cipher suite name form (de-",
+        "source": "docs"
+      },
+      {
+        "name": "--mode",
+        "description": "<serial|parallel>. Mass testing to be done serial (default) or parallel (--parallel is",
+        "source": "docs"
+      },
+      {
+        "name": "--mx",
+        "description": "priority, one",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "<min|none> tells testssl.sh which DNS lookups should be performed. min uses only",
+        "source": "docs"
+      },
+      {
+        "name": "--nodns",
+        "description": "<min|none> tells testssl.sh which DNS lookups should be performed. min uses only",
+        "source": "docs"
+      },
+      {
+        "name": "-oa",
+        "description": "<filename> / --outfile <filename> Does the same as the previous option but uses flat JSON",
+        "source": "docs"
+      },
+      {
+        "name": "--openssl",
+        "description": "hard to find the binary supplied",
+        "source": "docs"
+      },
+      {
+        "name": "-openssl",
+        "description": "don't display the OpenSSL cipher suite name, display IANA names only.",
+        "source": "docs"
+      },
+      {
+        "name": "--outprefix",
+        "description": "before ${NODE}-. You",
+        "source": "docs"
+      },
+      {
+        "name": "--overwrite",
+        "description": "size greater zero,",
+        "source": "docs"
+      },
+      {
+        "name": "-P",
+        "description": "displays the servers preferences: cipher order, with",
+        "source": "docs"
+      },
+      {
+        "name": "--phone-out",
+        "description": "for revoked certificates via CRL and OCSP is not done per default. This",
+        "source": "docs"
+      },
+      {
+        "name": "--preference",
+        "description": "displays the servers preferences: cipher order, with",
+        "source": "docs"
+      },
+      {
+        "name": "--proxy",
+        "description": "<host>:<port> does ANY check via the specified proxy. --proxy=auto inherits the proxy",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "information,",
+        "source": "docs"
+      },
+      {
+        "name": "--quiet",
+        "description": "information,",
+        "source": "docs"
+      },
+      {
+        "name": "--reqheader",
+        "description": "in the correct",
+        "source": "docs"
+      },
+      {
+        "name": "--server-preference",
+        "description": "displays the servers preferences: cipher order, with",
+        "source": "docs"
+      },
+      {
+        "name": "--SI",
+        "description": "for STARTTLS injection vulnerabilities (SMTP, IMAP, POP3",
+        "source": "docs"
+      },
+      {
+        "name": "--sneaky",
+        "description": "HTTP header checks testssl.sh uses normally the server friendly HTTP user agent",
+        "source": "docs"
+      },
+      {
+        "name": "--ssl-native",
+        "description": "of using a mixture of bash sockets and a few openssl s_client connects,",
+        "source": "docs"
+      },
+      {
+        "name": "--starttls-injection",
+        "description": "for STARTTLS injection vulnerabilities (SMTP, IMAP, POP3",
+        "source": "docs"
+      },
+      {
+        "name": "--sweet32",
+        "description": "(3DES, RC2",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "enabled protocol.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "openssl version.",
+        "source": "docs"
+      },
+      {
+        "name": "-W",
+        "description": "(3DES, RC2",
+        "source": "docs"
+      },
+      {
+        "name": "--wide",
+        "description": "(scheme see",
+        "source": "docs"
+      },
+      {
+        "name": "-x",
+        "description": "ciphers against a server.",
+        "source": "docs"
+      },
+      {
+        "name": "--xmpphost",
+        "description": "is an additional option for STARTTLS enabled XMPP: It expects the",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "testssl.sh [OPTIONS] <URI>, testssl.sh [OPTIONS] --file <FILE>",
+      "testssl.sh [BANNER OPTIONS]",
+      "testssl.sh --ip=one --wide $KFIOSA_TARGET_URL",
+      "testssl.sh -6 $KFIOSA_TARGET_URL",
+      "testssl.sh -t smtp smtp.gmail.com:25",
+      "testssl.sh --starttls=imap imap.gmx.net:143"
+    ],
+    "readme": "testssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, protocols as well as cryptographic flaws and much more.",
+    "how_to_use": "Install/setup: sudo apt install testssl.sh. Run the primary entrypoint as shown in upstream docs, e.g. `testssl.sh [OPTIONS] <URI>, testssl.sh [OPTIONS] --file <FILE>`. Further invocations from upstream: `testssl.sh [BANNER OPTIONS]`; `testssl.sh --ip=one --wide $KFIOSA_TARGET_URL`. testssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, protocols as well as cryptographic flaws and much more.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: testssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, protocols as well as cryptographic flaws and much more.",
+    "why_to_use": "Prefer this tool based on upstream description: testssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, protocols as well as cryptographic flaws and much more.",
+    "usage_sections": [
+      "Install with: sudo apt install testssl.sh"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -27,7 +27,74 @@
       "path": "/usr/bin/chacl",
       "description": "change the access control list of a file or directory",
       "usage": "chacl [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-B"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Remove all ACLs.",
+          "default": null,
+          "choices": null,
+          "raw": "-B  Remove all ACLs."
+        },
+        {
+          "flags": [
+            "-b"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "that there are two ACLs to change, the first is the file access ACL and the",
+          "default": null,
+          "choices": null,
+          "raw": "-b  that there are two ACLs to change, the first is the file access ACL and the"
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Used to set only the default ACL of a directory.",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Used to set only the default ACL of a directory."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Lists the access ACL and possibly the default ACL associated with the specified files",
+          "default": null,
+          "choices": null,
+          "raw": "-l  Lists the access ACL and possibly the default ACL associated with the specified files"
+        },
+        {
+          "flags": [
+            "-R"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Removes the file access ACL only.",
+          "default": null,
+          "choices": null,
+          "raw": "-R  Removes the file access ACL only."
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Set the access ACL recursively for each subtree rooted at pathname(s). This option was",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Set the access ACL recursively for each subtree rooted at pathname(s). This option was"
+        }
+      ]
     },
     {
       "name": "getfacl",
@@ -60,5 +127,79 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "chacl acl pathname...",
+    "chacl -b acl dacl pathname...",
+    "chacl -d dacl pathname...",
+    "chacl -R pathname...",
+    "chacl -D pathname...",
+    "chacl -B pathname...",
+    "chacl -l pathname...",
+    "chacl u::rwx,g::r-x,o::r-- file"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use chacl because access control list - utilities.",
+    "When the engagement is in the install phase, use chacl as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `chacl acl pathname...` as documented upstream for chacl.",
+    "When you need a concrete invocation, run `chacl -b acl dacl pathname...` as documented upstream for chacl.",
+    "When you need a concrete invocation, run `chacl -d dacl pathname...` as documented upstream for chacl.",
+    "When you need a concrete invocation, run `chacl -R pathname...` as documented upstream for chacl.",
+    "When chaining Kali Linux tools, pair chacl with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `chacl --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-B",
+        "description": "Remove all ACLs.",
+        "source": "docs"
+      },
+      {
+        "name": "-b",
+        "description": "that there are two ACLs to change, the first is the file access ACL and the",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Used to set only the default ACL of a directory.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Lists the access ACL and possibly the default ACL associated with the specified files",
+        "source": "docs"
+      },
+      {
+        "name": "-R",
+        "description": "Removes the file access ACL only.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Set the access ACL recursively for each subtree rooted at pathname(s). This option was",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "chacl acl pathname...",
+      "chacl -b acl dacl pathname...",
+      "chacl -d dacl pathname...",
+      "chacl -R pathname...",
+      "chacl -D pathname...",
+      "chacl -B pathname...",
+      "chacl -l pathname...",
+      "chacl u::rwx,g::r-x,o::r-- file"
+    ],
+    "readme": "chacl - change the access control list of a file or directory",
+    "how_to_use": "Install/setup: sudo apt install acl. Run the primary entrypoint as shown in upstream docs, e.g. `chacl acl pathname...`. Further invocations from upstream: `chacl -b acl dacl pathname...`; `chacl -d dacl pathname...`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: access control list - utilities.",
+    "why_to_use": "Prefer this tool based on upstream description: chacl - change the access control list of a file or directory.",
+    "usage_sections": [
+      "Install with: sudo apt install acl",
+      "Install with: sudo apt install acl"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

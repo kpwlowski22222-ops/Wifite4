@@ -7,24 +7,100 @@
   "category": "IPA decryption and repackaging",
   "url": "https://github.com/ChiChou/bagbak",
   "toolbox_path": "toolboxes/ios/bagbak",
-  "summary": "Repository indexing entry for the ``bagbak`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Yet another frida based App decryptor. Requires jailbroken iOS device and frida.re",
   "documentation": {
-    "readme": "toolboxes/ios/bagbak/README.md",
-    "usage_sections": [],
+    "readme": "Yet another frida based App decryptor. Requires jailbroken iOS device and frida.re",
+    "usage_sections": [
+      "UnFairPlay (with a tweak, it also works on jailbroken iOS)",
+      "macOSAppstoreDecrypter",
+      "npm install -g bagbak",
+      "all (default) — full IPA with all binaries decrypted",
+      "main (alias: app) — decrypt main app binary only"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-d",
+        "description": "enable debug output",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "enable debug output",
+        "source": "docs"
+      },
+      {
+        "name": "--device",
+        "description": "connect to device with the given ID",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "display help for command",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "description": "display help for command",
+        "source": "docs"
+      },
+      {
+        "name": "--host",
+        "description": "connect to remote frida-server on HOST",
+        "source": "docs"
+      },
+      {
+        "name": "--json",
+        "description": "output as json (only works with --list)",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "list apps",
+        "source": "docs"
+      },
+      {
+        "name": "--list",
+        "description": "list apps",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "ipa filename or directory to dump to",
+        "source": "docs"
       },
       {
         "name": "--output",
-        "description": "Output file path for the report or capture.",
+        "description": "ipa filename or directory to dump to",
+        "source": "docs"
+      },
+      {
+        "name": "-R",
+        "description": "connect to remote frida-server",
+        "source": "docs"
+      },
+      {
+        "name": "--remote",
+        "description": "connect to remote frida-server",
+        "source": "docs"
+      },
+      {
+        "name": "--remove-keys",
+        "description": "Info.plist keys to remove (comma-separated)",
+        "source": "docs"
+      },
+      {
+        "name": "-U",
+        "description": "connect to USB device (default)",
+        "source": "docs"
+      },
+      {
+        "name": "--usb",
+        "description": "connect to USB device (default)",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
@@ -90,11 +166,6 @@
       {
         "name": "--insecure",
         "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
         "source": "generic_kfiosa"
       },
       {
@@ -254,13 +325,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, bagbak, chichou).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/bagbak && python3 bagbak.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/bagbak && python3 bagbak.py --help",
-      "Step 3: cd toolboxes/bagbak && python3 bagbak.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the IPA decryption and repackaging category. Fits when the engagement needs: Yet another frida based App decryptor. Requires jailbroken iOS device and frida.re.",
+    "why_to_use": "Prefer this tool based on upstream description: Yet another frida based App decryptor. Requires jailbroken iOS device and frida.re.",
+    "how_to_use": "Clone or install `bagbak` from its upstream repository, then run `bagbak --help` (or the README entrypoint) to confirm flags. Yet another frida based App decryptor. Requires jailbroken iOS device and frida.re."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -292,22 +359,11 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need IPA decryption and repackaging, use bagbak because Yet another frida based App decryptor. Requires jailbroken iOS device and frida.re.",
+    "When chaining IPA decryption and repackaging tools, pair bagbak with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `bagbak --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
-  "command_examples": [
-    "cd toolboxes/bagbak && python3 bagbak.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/bagbak && python3 bagbak.py --help",
-    "cd toolboxes/bagbak && python3 bagbak.py --help",
-    "cd toolboxes/bagbak && python3 bagbak.py --help",
-    "cd toolboxes/bagbak && python3 bagbak.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bagbak --output $KFIOSA_OUTPUT_DIR/bagbak.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bagbak --output $KFIOSA_OUTPUT_DIR/bagbak.log"
-  ],
+  "command_examples": [],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
   "attack_surface": [
@@ -325,5 +381,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

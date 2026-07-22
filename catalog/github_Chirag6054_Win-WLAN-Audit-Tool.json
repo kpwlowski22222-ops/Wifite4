@@ -8,8 +8,14 @@
   "url": "https://github.com/Chirag6054/Win-WLAN-Audit-Tool",
   "summary": "🛡️ Win-WLAN-Audit-Tool",
   "documentation": {
-    "readme": "🛡️ Win-WLAN-Audit-Tool",
-    "usage_sections": [],
+    "readme": "📌 Project Overview The Win-WLAN-Audit-Tool is a specialized post-exploitation security script designed for Windows environments. It demonstrates the ease with which stored wireless credentials can be retrieved by an authorized user or an attacker who has gained local access to a system.",
+    "usage_sections": [
+      "Automated Enumeration: Scans the host system to identify all saved WiFi profiles using the Windows netsh utility.",
+      "Credential Extraction: Force-reveals Pre-Shared Keys (PSK) in cleartext for all identified profiles.",
+      "Language-Agnostic Parsing: Employs advanced Regular Expressions (Regex) to ensure compatibility across different Windows system languages.",
+      "Security Reporting: Displays results in a clean, structured table for quick auditing.",
+      "Libraries: subprocess (System interaction), re (Pattern matching)."
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -191,7 +197,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --help",
+      "cd toolboxes/Win-WLAN-Audit-Tool && cat README.md",
+      "cd toolboxes/Win-WLAN-Audit-Tool && ls -la",
+      "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Win-WLAN-Audit-Tool --output $KFIOSA_OUTPUT_DIR/Win-WLAN-Audit-Tool.log"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -244,13 +256,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --help",
-      "Step 2: cd toolboxes/Win-WLAN-Audit-Tool && cat README.md",
-      "Step 3: cd toolboxes/Win-WLAN-Audit-Tool && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: 🛡️ Win-WLAN-Audit-Tool.",
+    "why_to_use": "Prefer this tool based on upstream description: 📌 Project Overview The Win-WLAN-Audit-Tool is a specialized post-exploitation security script designed for Windows environments. It demonstrates the ease with which stored wireless credentials can be retrieved by an authorized user or an attacker who has gained local access to a system.",
+    "how_to_use": "Clone or install `Win-WLAN-Audit-Tool` from its upstream repository, then run `Win-WLAN-Audit-Tool --help` (or the README entrypoint) to confirm flags."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -281,11 +289,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use Win-WLAN-Audit-Tool because 🛡️ Win-WLAN-Audit-Tool.",
+    "When chaining Wireless tools, pair Win-WLAN-Audit-Tool with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Win-WLAN-Audit-Tool --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/Win-WLAN-Audit-Tool && python3 Win-WLAN-Audit-Tool.py --help",
@@ -315,5 +321,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

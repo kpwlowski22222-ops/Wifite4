@@ -9,7 +9,9 @@
   "summary": "Reference guides for a Field Training Exercise (FTX) covering wireless network exploitation and GPS-based geolocation of a target access point.",
   "documentation": {
     "readme": "Reference guides for a Field Training Exercise (FTX) covering wireless network exploitation and GPS-based geolocation of a target access point.",
-    "usage_sections": [],
+    "usage_sections": [
+      "tplink-smartplug script"
+    ],
     "arguments": [
       {
         "name": "-O",
@@ -193,7 +195,14 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo gunzip /usr/share/wordlists/rockyou.txt.gz",
+      "wget -q -O /tmp/google-earth.deb $KFIOSA_TARGET_URL",
+      "sudo dpkg -i /tmp/google-earth.deb",
+      "sudo apt-get install -f -y   # resolve any dependency issues",
+      "wget -O tplink_smartplug.py $KFIOSA_TARGET_URL",
+      "sudo apt-get install -y gpsd gpsd-clients"
+    ],
     "file_listing": [
       "Exercise1_WiFi_Exploitation.md",
       "Exercise2_GPS_Geolocation.md",
@@ -248,13 +257,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/FTX_WiFi_Red && python3 FTX_WiFi_Red.py --help",
-      "Step 2: cd toolboxes/FTX_WiFi_Red && cat README.md",
-      "Step 3: cd toolboxes/FTX_WiFi_Red && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: Reference guides for a Field Training Exercise (FTX) covering wireless network exploitation and GPS-based geolocation of a target access point.",
+    "why_to_use": "Prefer this tool based on upstream description: Reference guides for a Field Training Exercise (FTX) covering wireless network exploitation and GPS-based geolocation of a target access point.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `sudo gunzip /usr/share/wordlists/rockyou.txt.gz`. Further invocations from upstream: `wget -q -O /tmp/google-earth.deb $KFIOSA_TARGET_URL`; `sudo dpkg -i /tmp/google-earth.deb`. Reference guides for a Field Training Exercise (FTX) covering wireless network exploitation and GPS-based geolocation of a target access point."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -284,18 +289,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use FTX_WiFi_Red because Reference guides for a Field Training Exercise (FTX) covering wireless network exploitation and GPS-based geolocation of a target access point.",
+    "When you need a concrete invocation, run `sudo gunzip /usr/share/wordlists/rockyou.txt.gz` as documented upstream for FTX_WiFi_Red.",
+    "When you need a concrete invocation, run `wget -q -O /tmp/google-earth.deb $KFIOSA_TARGET_URL` as documented upstream for FTX_WiFi_Red.",
+    "When you need a concrete invocation, run `sudo dpkg -i /tmp/google-earth.deb` as documented upstream for FTX_WiFi_Red.",
+    "When you need a concrete invocation, run `sudo apt-get install -f -y   # resolve any dependency issues` as documented upstream for FTX_WiFi_Red.",
+    "When chaining Wireless tools, pair FTX_WiFi_Red with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `FTX_WiFi_Red --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/FTX_WiFi_Red && python3 FTX_WiFi_Red.py --help",
-    "cd toolboxes/FTX_WiFi_Red && cat README.md",
-    "cd toolboxes/FTX_WiFi_Red && ls -la",
-    "cd toolboxes/FTX_WiFi_Red && python3 FTX_WiFi_Red.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST FTX_WiFi_Red --output $KFIOSA_OUTPUT_DIR/FTX_WiFi_Red.log"
+    "sudo gunzip /usr/share/wordlists/rockyou.txt.gz",
+    "wget -q -O /tmp/google-earth.deb $KFIOSA_TARGET_URL",
+    "sudo dpkg -i /tmp/google-earth.deb",
+    "sudo apt-get install -f -y   # resolve any dependency issues",
+    "wget -O tplink_smartplug.py $KFIOSA_TARGET_URL",
+    "sudo apt-get install -y gpsd gpsd-clients"
   ],
   "attack_surface": [
     "wifi_2_4_ghz",
@@ -316,5 +324,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

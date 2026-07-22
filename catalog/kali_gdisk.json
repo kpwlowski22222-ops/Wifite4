@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "gdisk",
   "title": "gdisk",
-  "summary": "### gdisk",
+  "summary": "cgdisk - Curses-based GUID partition table (GPT) manipulator",
   "version": "1.0.10-3",
   "architectures": [
     "any"
@@ -32,14 +32,80 @@
       "arguments": [
         {
           "flags": [
-            "-a"
+            "-16"
           ],
-          "metavar": ".",
-          "takes_value": true,
-          "description": "This  option alters the highlighting of partitions and blocks of free",
+          "metavar": null,
+          "takes_value": false,
+          "description": "entry and display of anything beyond basic ASCII values requires suitable locale and",
           "default": null,
           "choices": null,
-          "raw": "    -a.  This  option alters the highlighting of partitions and blocks of free"
+          "raw": "-16  entry and display of anything beyond basic ASCII values requires suitable locale and"
+        },
+        {
+          "flags": [
+            "-a"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "GPT fdisk is a text-mode family of programs for creation and manipulation of partition tables.",
+          "default": null,
+          "choices": null,
+          "raw": "-a  GPT fdisk is a text-mode family of programs for creation and manipulation of partition tables."
+        },
+        {
+          "flags": [
+            "-bit"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "been tested. Only",
+          "default": null,
+          "choices": null,
+          "raw": "-bit  been tested. Only"
+        },
+        {
+          "flags": [
+            "-byte"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "decimal number. You may also enter a GUID directly, if you have one and cgdisk doesn't",
+          "default": null,
+          "choices": null,
+          "raw": "-byte  decimal number. You may also enter a GUID directly, if you have one and cgdisk doesn't"
+        },
+        {
+          "flags": [
+            "-memory"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "to a disk file using this option. The resulting file is a binary file consisting",
+          "default": null,
+          "choices": null,
+          "raw": "-memory  to a disk file using this option. The resulting file is a binary file consisting"
+        },
+        {
+          "flags": [
+            "-mode"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "menuing system. It will automatically convert an old-style Master Boot Record (MBR)",
+          "default": null,
+          "choices": null,
+          "raw": "-mode  menuing system. It will automatically convert an old-style Master Boot Record (MBR)"
+        },
+        {
+          "flags": [
+            "-sector"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "disks larger than 300 GB even if lesser alignment values are detected. In ei-",
+          "default": null,
+          "choices": null,
+          "raw": "-sector  disks larger than 300 GB even if lesser alignment values are detected. In ei-"
         }
       ],
       "raw_help": "root@kali:~# man cgdisk\n CGDISK(8)                       GPT fdisk Manual                      CGDISK(8)\n \n NAME\n    cgdisk - Curses-based GUID partition table (GPT) manipulator\n \n SYNOPSIS\n    cgdisk [ -a ] device\n \n DESCRIPTION\n    GPT  fdisk is a text-mode family of programs for creation and manipulation\n    of partition tables. The cgdisk member of this family  employs  a  curses-\n    based  user interface for interaction using a text-mode menuing system. It\n    will automatically convert an old-style Master Boot Record (MBR) partition\n    table or BSD disklabel stored without an  MBR  carrier  partition  to  the\n    newer  Globally  Unique Identifier (GUID) Partition Table (GPT) format, or\n    will load a GUID partition table. Other members of this program family are\n    gdisk (the most feature-rich program of the group, with a non-curses-based\n    interactive user interface) and sgdisk (which is driven  via  command-line\n    options  for use by experts or in scripts).  FixParts is a related program\n    for fixing a limited set of problems with MBR disks.\n \n    For information on MBR vs. GPT, as well as GPT terminology and  structure,\n    see   the   extended   GPT   fdisk   documentation   at  https://www.rods-\n    books.com/gdisk/ or consult Wikipedia.\n \n    The cgdisk program employs a user interface similar  to  that  of  Linux's\n    cfdisk,  but cgdisk modifies GPT partitions. It also has the capability of\n    transforming MBR partitions or BSD disklabels into  GPT  partitions.  Like\n    the  original cfdisk program, cgdisk does not modify disk structures until\n    you explicitly write them to disk, so if you make a mistake, you can  exit\n    from the program with the Quit option to leave your partitions unmodified.\n \n    Ordinarily,  cgdisk  operates  on  disk  device files, such as /dev/sda or\n    /dev/hda under Linux, /dev/disk0 under Mac OS X, or /dev/ad0  or  /dev/da0\n    under FreeBSD. The program can also operate on disk image files, which can\n    be  either  copies of whole disks (made with dd, for instance) or raw disk\n    images used by emulators such as QEMU or VMWare. Note that only  raw  disk\n    images  are  supported; cgdisk cannot work on compressed or other advanced\n    disk image formats.\n \n    Upon start, cgdisk attempts to identify the partition type in use  on  the\n    disk.  If  it  finds valid GPT data, cgdisk will use it. If cgdisk finds a\n    valid MBR or BSD disklabel but no GPT data, it will attempt to convert the\n    MBR or disklabel into GPT form. (BSD disklabels are likely to  have  unus-\n    able  first and/or final partitions because they overlap with the GPT data\n    structures, though.) Upon exiting with the 'w' option, cgdisk replaces the\n    MBR or disklabel with a GPT. This action is  potentially  dangerous!  Your\n    system  may  become  unbootable,  and partition type codes may become cor-\n    rupted if the disk uses unrecognized type codes.  Boot problems  are  par-\n    ticularly  likely  if you're multi-booting with any GPT-unaware OS. If you\n    mistakenly launch cgdisk on an MBR disk, you can safely exit  the  program\n    without making any changes by using the Quit option.\n \n    When  creating  a  fresh partition table, certain considerations may be in\n    order:\n \n    *      For data (non-boot) disks, and for boot disks  used  on  BIOS-based\n           computers  with  GRUB as the boot loader, partitions may be created\n           in whatever order and in whatever sizes are desired.\n \n    *      Boot disks for EFI-based systems require an  EFI  System  Partition\n           (GPT  fdisk  internal code 0xEF00) formatted as FAT-32.  The recom-\n           mended size of this partition is between 100 and 300 MiB.  Boot-re-\n           lated files are stored here. (Note that GNU Parted identifies  such\n           partitions as having the \"boot flag\" set.)\n \n    *      The  GRUB  2 boot loader for BIOS-based systems makes use of a BIOS\n           Boot Partition (GPT fdisk internal code 0xEF02), in which the  sec-\n           ondary  boot loader is stored, without the benefit of a filesystem.\n           This partition can typically be quite small (roughly 32  KiB  to  1\n           MiB), but you should consult your boot loader documentation for de-\n           tails.\n \n    *      If  Windows  is  to  boot  from a GPT disk, a partition of type Mi-\n           crosoft Reserved (GPT fdisk internal code 0x0C01)  is  recommended.\n           This  partition should be about 128 MiB in size. It ordinarily fol-\n           lows the EFI System Partition and immediately precedes the  Windows\n           data  partitions.  (Note that old versions of GNU Parted create all\n           FAT partitions as this type, which actually makes the partition un-\n           usable for normal file storage in both Windows and Mac OS X.)\n \n    *      Some OSes' GPT utilities create some  blank  space  (typically  128\n           MiB)  after  each  partition.  The  intent is to enable future disk\n           utilities to use this space. Such free space is not required of GPT\n           disks, but creating it may help in future disk maintenance. You can\n           use GPT fdisk's relative partition positioning  option  (specifying\n           the  starting sector as '+128M', for instance) to simplify creating\n           such gaps.\n \n OPTIONS\n    Only one command-line option is accepted, aside from the device  filename:\n    -a.  This  option alters the highlighting of partitions and blocks of free\n    space: Instead of using ncurses, when -a is used cgdisk uses a \">\"  symbol\n    to  the  left of the selected partition or free space.  This option is in-\n    tended for use on limited display devices such  as  teletypes  and  screen\n    readers.\n \n    Interactions  with cgdisk occur with its interactive text-mode menus.  The\n    display is broken into two interactive parts:\n \n    *      The partition display area, in which partitions  and  gaps  between\n           them (marked as \"free space\") are summarized.\n \n    *      The  option  selection  area, in which buttons for the main options\n           appear.\n \n    In addition, the top of the display shows the program's name  and  version\n    number,  the device filename associated with the disk, and the disk's size\n    in both sectors and IEEE-1541 units (GiB, TiB, and so on).\n \n    You can use the following keys to move among the various  options  and  to\n    select among them:\n \n    up arrow\n           This key moves the partition selection up by one partition.\n \n    down arrow\n           This key moves the partition selection down by one partition.\n \n    Page Up\n           This key moves the partition selection up by one screen.\n \n    Page Down\n           This key moves the partition selection down by one screen.\n \n    right arrow\n           This key moves the option selection to the right by one item.\n \n    left arrow\n           This key moves the option selection to the left by one item.\n \n    Enter  This  key activates the currently selected option. You can also ac-\n           tivate an option by typing the capitalized letter in  the  option's\n           name on the keyboard, such as a to activate the Align option.\n \n    If  more  partitions  exist  than  can be displayed in one screen, you can\n    scroll between screens using the partition selection keys, much  as  in  a\n    text editor.\n \n    Available  options  are  as  described below. (Note that cgdisk provides a\n    much more limited set of options than its sibling gdisk. If  you  need  to\n    perform  partition  table  recovery, hybrid MBR modification, or other ad-\n    vanced operations, you should consult the gdisk documentation.)\n \n    Align  Change the sector alignment value. Disks with more logical  sectors\n           than physical sectors (such as modern Advanced Format drives), some\n           RAID  configurations,  and many SSD devices, can suffer performance\n           problems if partitions are not aligned properly for their  internal\n           data  structures.  On new disks, GPT fdisk attempts to align parti-\n           tions on 1 MiB boundaries (2048-sectors on disks with 512-byte sec-\n           tors) by default, which optimizes performance for all of these disk\n           types. On pre-partitioned disks, GPT fdisk attempts to identify the\n           alignment value used on that disk, but will set 8-sector  alignment\n           on disks larger than 300 GB even if lesser alignment values are de-\n           tected.  In  either  case,  it can be changed by using this option.\n           The alignment value also affects the default end sector value  when\n           creating  a  new  partition;  it will be aligned to one less than a\n           multiple of the alignment value, when possible.  This  should  keep\n           partitions a multiple of the alignment value in size. Some disk en-\n           cryption  tools require partitions to be sized to some value, typi-\n           cally 4096 bytes, so the default alignment of 1 MiB works well  for\n           them.\n \n    Backup\n           Save  partition data to a backup file. You can back up your current\n           in-memory partition table to a disk file using this option. The re-\n           sulting file is a binary file consisting of the protective MBR, the\n           main GPT header, the backup GPT header, and one copy of the  parti-\n           tion  table,  in that order. Note that the backup is of the current\n           in-memory data structures, so  if  you  launch  the  program,  make\n           changes,  and  then  use  this option, the backup will reflect your\n           changes.\n \n    Delete\n           Delete a partition. This action deletes the entry from  the  parti-\n           tion  table but does not disturb the data within the sectors origi-\n           nally allocated to the partition on the disk.  If  a  corresponding\n           hybrid MBR partition exists, gdisk deletes it, as well, and expands\n           any  adjacent  0xEE  (EFI GPT) MBR protective partition to fill the\n           new free space.\n \n    Help   Print brief descriptions of all the options.\n \n    Info   Show detailed partition information. The summary information  shown\n           in  the partition display area necessarily omits many details, such\n           as the partitions' unique GUIDs and  the  partitions'  sector-exact\n           start and end points. The Info option displays this information for\n           a single partition.\n \n    Load   Load  partition data from a backup file. This option is the reverse\n           of the Backup option. Note that restoring partition data from  any-\n           thing but the original disk is not recommended.\n \n    naMe   Change  the  GPT  name  of  a  partition. This name is encoded as a\n           UTF-16 string, but proper entry and display of anything beyond  ba-\n           sic ASCII values requires suitable locale and font support. For the\n           most  part,  Linux ignores the partition name, but it may be impor-\n           tant in some OSes. GPT fdisk sets a default name based on the  par-\n           tition  type  code.  Note  that the GPT partition name is different\n           from the filesystem name, which is encoded in the filesystem's data\n           structures. Note also that to activate this item by typing its  al-\n           phabetic  equivalent,  you  must use M, not the more obvious N, be-\n           cause the latter is used by the next option....\n \n    New    Create a new partition. You enter a starting sector, a size, a type\n           code, and a name. The start sector can  be  specified  in  absolute\n           terms  as  a  sector  number or as a position measured in kibibytes\n           (K), mebibytes (M), gibibytes (G), tebibytes (T), or pebibytes (P);\n           for instance, 40M specifies a position 40MiB from the start of  the\n           disk. You can specify locations relative to the start or end of the\n           specified default range by preceding the number by a '+' symbol, as\n           in  +2G to specify a point 2GiB after the default start sector. The\n           size value can use the K, M, G, T, and P  suffixes,  too.  Pressing\n           the  Enter  key with no input specifies the default value, which is\n           the start of the largest available block for the start  sector  and\n           the full available size for the size.\n \n    Quit   Quit from the program without saving your changes.  Use this option\n           if you just wanted to view information or if you make a mistake and\n           want to back out of all your changes.\n \n    Type   Change  a single partition's type code. You enter the type code us-\n           ing a two-byte hexadecimal number. You may also enter  a  GUID  di-\n           rectly,  if  you  have one and cgdisk doesn't know it. If you don't\n           know the type code for your partition, you can type L to see a list\n           of known type codes.  The type code list may optionally be filtered\n           by a search string; for instance, entering linux shows only  parti-\n           tion  type  codes  with descriptions that include the string Linux.\n           This search is performed case-insensitively.\n \n    Verify\n           Verify disk. This option checks for a variety of problems, such  as\n           incorrect  CRCs  and  mismatched  main and backup data. This option\n           does not automatically correct most problems, though; for that, you\n           must use gdisk. If no problems are found, this command  displays  a\n           summary of unallocated disk space.\n \n    Write  Write data. Use this command to save your changes.\n \n BUGS\n    Known bugs and limitations include:\n \n    *      The  program  compiles correctly only on Linux, FreeBSD, and Mac OS\n           X. In theory, it should compile under Windows if  the  Ncurses  li-\n           brary for Windows is installed, but I have not tested this capabil-\n           ity.  Linux versions for x86-64 (64-bit), x86 (32-bit), and PowerPC\n           (32-bit) have been tested, with the x86-64 version having seen  the\n           most  testing. Under FreeBSD, 32-bit (x86) and 64-bit (x86-64) ver-\n           sions have been tested. Only 32-bit versions for Mac OS X has  been\n           tested by the author.\n \n    *      The  FreeBSD version of the program can't write changes to the par-\n           tition table to a disk when existing partitions on  that  disk  are\n           mounted.  (The  same  problem exists with many other FreeBSD utili-\n           ties, such as gpt, fdisk, and dd.) This limitation can be  overcome\n           by typing sysctl kern.geom.debugflags=16 at a shell prompt.\n \n    *      The  program  can  load only up to 128 partitions (4 primary parti-\n           tions and 124 logical partitions) when converting from MBR  format.\n           This limit can be raised by changing the #define MAX_MBR_PARTS line\n           in the basicmbr.h source code file and recompiling; however, such a\n           change  will  require  using  a larger-than-normal partition table.\n           (The limit of 128 partitions was chosen because that number  equals\n           the  128  partitions  supported  by the most common partition table\n           size.)\n \n    *      Converting from MBR format sometimes fails because of  insufficient\n           space at the start or (more commonly) the end of the disk. Resizing\n           the  partition  table (using the 's' option in the experts' menu in\n           gdisk) can sometimes overcome this  problem;  however,  in  extreme\n           cases it may be necessary to resize a partition using GNU Parted or\n           a similar tool prior to conversion with GPT fdisk.\n \n    *      MBR conversions work only if the disk has correct LBA partition de-\n           scriptors.  These  descriptors should be present on any disk over 8\n           GiB in size or on smaller disks partitioned with any but  very  an-\n           cient software.\n \n    *      BSD  disklabel support can create first and/or last partitions that\n           overlap with the GPT data structures. This can sometimes be compen-\n           sated by adjusting the partition table size, but in  extreme  cases\n           the affected partition(s) may need to be deleted.\n \n    *      Because  of the highly variable nature of BSD disklabel structures,\n           conversions from this form may be unreliable -- partitions  may  be\n           dropped, converted in a way that creates overlaps with other parti-\n           tions,  or  converted  with incorrect start or end values. Use this\n           feature with caution!\n \n    *      Booting after converting an MBR or BSD disklabel disk is likely  to\n           be  disrupted.  Sometimes  re-installing a boot loader will fix the\n           problem, but other times you may need to switch boot  loaders.  Ex-\n           cept  on  EFI-based  platforms,  Windows through at least Windows 7\n           doesn't support booting from GPT disks. Creating a hybrid MBR  (us-\n           ing  the 'h' option on the recovery & transformation menu in gdisk)\n           or abandoning GPT in favor of MBR may be your only options in  this\n           case.\n \n    *      The  cgdisk  Verify function and the partition type listing obtain-\n           able by typing L in the Type function (or when specifying a  parti-\n           tion  type  while  creating  a  new  partition) both currently exit\n           ncurses mode. This limitation is a minor cosmetic blemish that does\n           not affect functionality.\n \n AUTHORS\n    Primary author: Roderick W. Smith (rodsmith@rodsbooks.com)\n \n    Contributors:\n \n    * Yves Blusseau (1otnwmz02@sneakemail.com)\n \n    * David Hubbard (david.c.hubbard@gmail.com)\n \n    * Justin Maggard (justin.maggard@netgear.com)\n \n    * Dwight Schauer (das@teegra.net)\n \n    * Florian Zumbiehl (florz@florz.de)\n \n SEE ALSO\n    cfdisk(8), fdisk(8), gdisk(8), mkfs(8), parted(8),  sfdisk(8),  sgdisk(8),\n    fixparts(8).\n \n    https://en.wikipedia.org/wiki/GUID_Partition_Table\n \n    https://developer.apple.com/technotes/tn2006/tn2166.html\n \n    https://www.rodsbooks.com/gdisk/\n \n AVAILABILITY\n    The  cgdisk command is part of the GPT fdisk package and is available from\n    Rod Smith.\n \n Roderick W. Smith                    1.0.10                           CGDISK(8)",
@@ -720,21 +786,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use cgdisk because cgdisk - Curses-based GUID partition table (GPT) manipulator.",
+    "When you need a concrete invocation, run `cgdisk [ -a ] device` as documented upstream for cgdisk.",
+    "When chaining Kali Linux tools, pair cgdisk with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `cgdisk --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/gdisk && python3 gdisk.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/gdisk && python3 gdisk.py --help",
-    "cd toolboxes/gdisk && python3 gdisk.py --help",
-    "cd toolboxes/gdisk && python3 gdisk.py --help",
-    "cd toolboxes/gdisk && python3 gdisk.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gdisk --output $KFIOSA_OUTPUT_DIR/gdisk.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gdisk --output $KFIOSA_OUTPUT_DIR/gdisk.log"
+    "cgdisk [ -a ] device"
   ],
   "attack_surface": [
     "web"
@@ -749,5 +807,57 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-16",
+        "description": "entry and display of anything beyond basic ASCII values requires suitable locale and",
+        "source": "manpage"
+      },
+      {
+        "name": "-a",
+        "description": "GPT fdisk is a text-mode family of programs for creation and manipulation of partition tables.",
+        "source": "manpage"
+      },
+      {
+        "name": "-bit",
+        "description": "been tested. Only",
+        "source": "manpage"
+      },
+      {
+        "name": "-byte",
+        "description": "decimal number. You may also enter a GUID directly, if you have one and cgdisk doesn't",
+        "source": "manpage"
+      },
+      {
+        "name": "-memory",
+        "description": "to a disk file using this option. The resulting file is a binary file consisting",
+        "source": "manpage"
+      },
+      {
+        "name": "-mode",
+        "description": "menuing system. It will automatically convert an old-style Master Boot Record (MBR)",
+        "source": "manpage"
+      },
+      {
+        "name": "-sector",
+        "description": "disks larger than 300 GB even if lesser alignment values are detected. In ei-",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "cgdisk [ -a ] device"
+    ],
+    "readme": "cgdisk - Curses-based GUID partition table (GPT) manipulator",
+    "how_to_use": "Install/setup: sudo apt install gdisk. Run the primary entrypoint as shown in upstream docs, e.g. `cgdisk [ -a ] device`. cgdisk - Curses-based GUID partition table (GPT) manipulator.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: cgdisk - Curses-based GUID partition table (GPT) manipulator.",
+    "why_to_use": "Prefer this tool based on upstream description: cgdisk - Curses-based GUID partition table (GPT) manipulator.",
+    "usage_sections": [
+      "Install with: sudo apt install gdisk",
+      "Install with: sudo apt install gdisk"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

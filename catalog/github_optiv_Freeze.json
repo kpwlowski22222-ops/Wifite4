@@ -1,18 +1,37 @@
 {
   "category": "c2",
   "command_examples": [
-    "cd toolboxes/Freeze && python3 Freeze.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Freeze && python3 Freeze.py --help",
-    "cd toolboxes/Freeze && python3 Freeze.py --help",
-    "cd toolboxes/Freeze && python3 Freeze.py --help",
-    "cd toolboxes/Freeze && python3 Freeze.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Freeze --output $KFIOSA_OUTPUT_DIR/Freeze.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Freeze --output $KFIOSA_OUTPUT_DIR/Freeze.log"
+    "go build Freeze.go",
+    "Usage of ./Freeze:",
+    "Path to the raw 64-bit shellcode.",
+    "Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature."
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "To view the latest version of Freeze or to submit an issue, reference https://github.com/Tylous/Freeze.",
+    "usage_sections": [
+      "Description: Freeze is a payload creation tool used for circumventing EDR security controls to execute shellcode in a stealthy manner. Freeze utilizes multiple techniques to not only remove Userland EDR hooks, but to also execute shellcode in such a way that it circumvents other endpoint moni"
+    ],
     "arguments": [
+      {
+        "name": "-console",
+        "description": "Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature.",
+        "source": "docs"
+      },
+      {
+        "name": "-encrypt",
+        "description": "Encrypts the shellcode using AES 256 encryption",
+        "source": "docs"
+      },
+      {
+        "name": "-sandbox",
+        "description": "Enables sandbox evasion by checking:",
+        "source": "docs"
+      },
+      {
+        "name": "-sha256",
+        "description": "Provides the SHA256 value of the loaders (This is useful for tracking)",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +148,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "go build Freeze.go",
+      "Usage of ./Freeze:",
+      "Path to the raw 64-bit shellcode.",
+      "Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature."
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +279,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, freeze, optiv).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Freeze && python3 Freeze.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Freeze && python3 Freeze.py --help",
-      "Step 3: cd toolboxes/Freeze && python3 Freeze.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the c2 category. Fits when the engagement needs: To view the latest version of Freeze or to submit an issue, reference https://github.com/Tylous/Freeze.",
+    "why_to_use": "Prefer this tool based on upstream description: To view the latest version of Freeze or to submit an issue, reference https://github.com/Tylous/Freeze.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `go build Freeze.go`. Further invocations from upstream: `Usage of ./Freeze:`; `Path to the raw 64-bit shellcode.`. To view the latest version of Freeze or to submit an issue, reference https://github.com/Tylous/Freeze."
   },
   "full_name": "optiv/Freeze",
   "id": "github:optiv/Freeze",
@@ -282,7 +302,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Freeze`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "To view the latest version of Freeze or to submit an issue, reference https://github.com/Tylous/Freeze.",
   "tags": [
     "offensive",
     "freeze",
@@ -300,12 +320,13 @@
   },
   "url": "https://github.com/optiv/Freeze",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need c2, use Freeze because To view the latest version of Freeze or to submit an issue, reference https://github.com/Tylous/Freeze.",
+    "When you need a concrete invocation, run `go build Freeze.go` as documented upstream for Freeze.",
+    "When you need a concrete invocation, run `Usage of ./Freeze:` as documented upstream for Freeze.",
+    "When you need a concrete invocation, run `Path to the raw 64-bit shellcode.` as documented upstream for Freeze.",
+    "When you need a concrete invocation, run `Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature.` as documented upstream for Freeze.",
+    "When chaining c2 tools, pair Freeze with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Freeze --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +345,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

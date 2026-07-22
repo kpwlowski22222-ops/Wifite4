@@ -8,8 +8,14 @@
   "url": "https://github.com/xransum/phantex",
   "summary": "Local OSINT recon terminal. A Flask-based web dashboard that runs on your\nlaptop and scans for nearby wireless signals. Start with Bluetooth -- more\nmodules coming.",
   "documentation": {
-    "readme": "Local OSINT recon terminal. A Flask-based web dashboard that runs on your\nlaptop and scans for nearby wireless signals. Start with Bluetooth -- more\nmodules coming.",
-    "usage_sections": [],
+    "readme": "Local OSINT recon terminal. A Flask-based web dashboard that runs on your laptop and scans for nearby wireless signals. Start with Bluetooth -- more modules coming.",
+    "usage_sections": [
+      "Linux with bluez installed (hcitool must be on PATH for classic BT scanning)",
+      "A Bluetooth adapter (BLE scanning works without root; classic BT may need CAPNETRAW)",
+      "File handler: DEBUG+ -> var/log/phantex.log, 5 MB x 3 backups.",
+      "Terminal handler: WARNING+ only via a filter, with one exception",
+      "APScheduler is silenced on the terminal (file still captures it)."
+    ],
     "arguments": [
       {
         "name": "--app",
@@ -183,7 +189,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "uv run flask --app phantex.app:create_app run",
+      "flask --app phantex.app:create_app run"
+    ],
     "file_listing": [
       "404.html",
       "500.html",
@@ -282,13 +291,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'iots']' as the attack surface (reconnaissance, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/phantex && python3 phantex.py --help",
-      "Step 2: cd toolboxes/phantex && cat README.md",
-      "Step 3: cd toolboxes/phantex && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, iots] in the Reconnaissance category. Fits when the engagement needs: Local OSINT recon terminal. A Flask-based web dashboard that runs on your\nlaptop and scans for nearby wireless signals. Start with Bluetooth -- more\nmodules coming.",
+    "why_to_use": "Prefer this tool based on upstream description: Local OSINT recon terminal. A Flask-based web dashboard that runs on your laptop and scans for nearby wireless signals. Start with Bluetooth -- more modules coming.",
+    "how_to_use": "Install/setup: git clone https://github.com/xransum/phantex; git clone https://github.com/xransum/phantex. Run the primary entrypoint as shown in upstream docs, e.g. `uv run flask --app phantex.app:create_app run`. Further invocations from upstream: `flask --app phantex.app:create_app run`. Local OSINT recon terminal. A Flask-based web dashboard that runs on your laptop and scans for nearby wireless signals. Start with Bluetooth -- more modules coming."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -320,18 +325,16 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Reconnaissance, use phantex because Local OSINT recon terminal. A Flask-based web dashboard that runs on your\nlaptop and scans for nearby wireless signals. Start with Bluetooth -- more\nmodules com.",
+    "When the engagement is in the recon phase, use phantex as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `uv run flask --app phantex.app:create_app run` as documented upstream for phantex.",
+    "When you need a concrete invocation, run `flask --app phantex.app:create_app run` as documented upstream for phantex.",
+    "When chaining Reconnaissance tools, pair phantex with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `phantex --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/phantex && python3 phantex.py --help",
-    "cd toolboxes/phantex && cat README.md",
-    "cd toolboxes/phantex && ls -la",
-    "cd toolboxes/phantex && python3 phantex.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantex --output $KFIOSA_OUTPUT_DIR/phantex.log"
+    "uv run flask --app phantex.app:create_app run",
+    "flask --app phantex.app:create_app run"
   ],
   "attack_surface": [
     "web",
@@ -355,5 +358,7 @@
   "_languages": [
     "python",
     "javascript"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

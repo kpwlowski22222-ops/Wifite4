@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "pnscan",
   "title": "pnscan",
-  "summary": "### pnscan",
+  "summary": "pnscan - multi threaded port scanning tool",
   "version": "1.14.1-2",
   "architectures": [
     "any"
@@ -29,14 +29,58 @@
       "arguments": [
         {
           "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print internal debugging info.",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Print internal debugging info."
+        },
+        {
+          "flags": [
             "-h"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Display this information.",
+          "description": "Show summary of options.",
           "default": null,
           "choices": null,
-          "raw": " \t-h             Display this information."
+          "raw": "-h  Show summary of options."
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Line oriented output. This option will cause pnscan to try to locate the beginning of a",
+          "default": null,
+          "choices": null,
+          "raw": "-l  Line oriented output. This option will cause pnscan to try to locate the beginning of a"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable shutdown mode. With this enabled pnscan will call shutdown(2) with an argument",
+          "default": null,
+          "choices": null,
+          "raw": "-S  Enable shutdown mode. With this enabled pnscan will call shutdown(2) with an argument"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Lookup and print hostnames. This will slow down the scan considerably.",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Lookup and print hostnames. This will slow down the scan considerably."
         },
         {
           "flags": [
@@ -47,7 +91,7 @@
           "description": "Print version.",
           "default": null,
           "choices": null,
-          "raw": " \t-V             Print version."
+          "raw": "-V  Print version."
         },
         {
           "flags": [
@@ -58,139 +102,7 @@
           "description": "Be verbose.",
           "default": null,
           "choices": null,
-          "raw": " \t-v             Be verbose."
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print debugging info.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-d             Print debugging info."
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Lookup and print hostnames.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-s             Lookup and print hostnames."
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Ignore case when scanning responses.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-i             Ignore case when scanning responses."
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Enable shutdown mode.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-S             Enable shutdown mode."
-        },
-        {
-          "flags": [
-            "-l"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Line oriented output.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-l             Line oriented output."
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": "string",
-          "takes_value": true,
-          "description": "Request string to send.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-w<string>     Request string to send."
-        },
-        {
-          "flags": [
-            "-W"
-          ],
-          "metavar": "hex list",
-          "takes_value": true,
-          "description": "Hex coded request string to send.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-W<hex list>   Hex coded request string to send."
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": "string",
-          "takes_value": true,
-          "description": "Response string to look for.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-r<string>     Response string to look for."
-        },
-        {
-          "flags": [
-            "-R"
-          ],
-          "metavar": "hex list",
-          "takes_value": true,
-          "description": "Hex coded response string to look for.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-R<hex list>   Hex coded response string to look for."
-        },
-        {
-          "flags": [
-            "-L"
-          ],
-          "metavar": "length",
-          "takes_value": true,
-          "description": "Max bytes to print.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-L<length>     Max bytes to print."
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "msecs",
-          "takes_value": true,
-          "description": "Connect/Write/Read timeout.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-t<msecs>      Connect/Write/Read timeout."
-        },
-        {
-          "flags": [
-            "-n"
-          ],
-          "metavar": "workers",
-          "takes_value": true,
-          "description": "Concurrent worker threads limit.",
-          "default": null,
-          "choices": null,
-          "raw": " \t-n<workers>    Concurrent worker threads limit."
+          "raw": "-v  Be verbose."
         }
       ],
       "raw_help": "root@kali:~# pnscan -h\n Usage: pnscan [<options>] [{<CIDR>|<host-range> <port-range>} | <service>]\n \n This program implements a multithreaded TCP port scanner.\n More information may be found at:\n \thttp://www.lysator.liu.se/~pen/pnscan\n \n Command line options:\n \t-h             Display this information.\n \t-V             Print version.\n \t-v             Be verbose.\n \t-d             Print debugging info.\n \t-s             Lookup and print hostnames.\n \t-i             Ignore case when scanning responses.\n \t-S             Enable shutdown mode.\n \t-l             Line oriented output.\n \t-w<string>     Request string to send.\n \t-W<hex list>   Hex coded request string to send.\n \t-r<string>     Response string to look for.\n \t-R<hex list>   Hex coded response string to look for.\n \t-L<length>     Max bytes to print.\n \t-t<msecs>      Connect/Write/Read timeout.\n \t-n<workers>    Concurrent worker threads limit.",
@@ -291,21 +203,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use pnscan because pnscan - multi threaded port scanning tool.",
+    "When you need a concrete invocation, run `pnscan [ options]  [ <CIDR | host-range> <port-range>]` as documented upstream for pnscan.",
+    "When you need a concrete invocation, run `pnscan [ options]  [ <port>]` as documented upstream for pnscan.",
+    "When chaining Kali Linux tools, pair pnscan with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `pnscan --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/pnscan && python3 pnscan.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/pnscan && python3 pnscan.py --help",
-    "cd toolboxes/pnscan && python3 pnscan.py --help",
-    "cd toolboxes/pnscan && python3 pnscan.py --help",
-    "cd toolboxes/pnscan && python3 pnscan.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pnscan --output $KFIOSA_OUTPUT_DIR/pnscan.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pnscan --output $KFIOSA_OUTPUT_DIR/pnscan.log"
+    "pnscan [ options]  [ <CIDR | host-range> <port-range>]",
+    "pnscan [ options]  [ <port>]"
   ],
   "attack_surface": [
     "web"
@@ -320,5 +226,58 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "Print internal debugging info.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show summary of options.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Line oriented output. This option will cause pnscan to try to locate the beginning of a",
+        "source": "docs"
+      },
+      {
+        "name": "-S",
+        "description": "Enable shutdown mode. With this enabled pnscan will call shutdown(2) with an argument",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Lookup and print hostnames. This will slow down the scan considerably.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Print version.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Be verbose.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "pnscan [ options]  [ <CIDR | host-range> <port-range>]",
+      "pnscan [ options]  [ <port>]"
+    ],
+    "readme": "pnscan - multi threaded port scanning tool",
+    "how_to_use": "Install/setup: sudo apt install pnscan. Run the primary entrypoint as shown in upstream docs, e.g. `pnscan [ options]  [ <CIDR | host-range> <port-range>]`. Further invocations from upstream: `pnscan [ options]  [ <port>]`. pnscan - multi threaded port scanning tool.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: pnscan - multi threaded port scanning tool.",
+    "why_to_use": "Prefer this tool based on upstream description: pnscan - multi threaded port scanning tool.",
+    "usage_sections": [
+      "Install with: sudo apt install pnscan",
+      "Install with: sudo apt install pnscan"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -6,10 +6,12 @@
   "owner": "CyberSecurity-Resources",
   "category": "OSINT",
   "url": "https://github.com/CyberSecurity-Resources/osint",
-  "summary": "Curated toolbox entry for **CyberSecurity-Resources/osint** in the OSINT category.",
+  "summary": "Curated toolbox entry for CyberSecurity-Resources/osint in the OSINT category.",
   "documentation": {
-    "readme": "Curated toolbox entry for **CyberSecurity-Resources/osint** in the OSINT category.",
-    "usage_sections": [],
+    "readme": "Curated toolbox entry for CyberSecurity-Resources/osint in the OSINT category.",
+    "usage_sections": [
+      "Usage: Typical flags: --target selects the target; --port selects the port; --output writes output to a file."
+    ],
     "arguments": [
       {
         "name": "--depth",
@@ -187,7 +189,9 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "osint --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/osint.log"
+    ],
     "file_listing": [
       "README.md"
     ],
@@ -238,13 +242,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web']' as the attack surface (osint, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/osint && python3 osint.py --help",
-      "Step 2: cd toolboxes/osint && cat README.md",
-      "Step 3: cd toolboxes/osint && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category.",
+    "why_to_use": "Prefer this tool based on upstream description: Curated toolbox entry for CyberSecurity-Resources/osint in the OSINT category.",
+    "how_to_use": "Install/setup: git clone --depth 1 https://github.com/CyberSecurity-Resources/osint.git toolboxes/osint/CyberSecurity-Resources__osint. Run the primary entrypoint as shown in upstream docs, e.g. `osint --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/osint.log`. Curated toolbox entry for CyberSecurity-Resources/osint in the OSINT category."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -274,18 +274,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the OSINT system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When the engagement is in the recon phase, use osint as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `osint --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/osint.log` as documented upstream for osint.",
+    "When chaining OSINT tools, pair osint with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `osint --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/osint && python3 osint.py --help",
-    "cd toolboxes/osint && cat README.md",
-    "cd toolboxes/osint && ls -la",
-    "cd toolboxes/osint && python3 osint.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST osint --output $KFIOSA_OUTPUT_DIR/osint.log"
+    "osint --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/osint.log"
   ],
   "attack_surface": [
     "web"
@@ -304,5 +299,7 @@
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
 AI Backend
 ============
 Routes pentesting queries to a local Ollama instance (offline models) as the
-PRIMARY provider, falling back to the Groq cloud API, and finally to a real
+PRIMARY provider, falling back to DeepSeek / Groq cloud APIs, and finally to a real
 computed heuristic planner. No canned "AI" strings and no fabricated model
 output — if every provider is unreachable, an explicit error is returned.
 
@@ -291,7 +291,7 @@ class OllamaClient:
 
 
 class AIBackend:
-    """Ollama-first AI backend with Groq fallback and a real heuristic planner."""
+    """Ollama-first AI backend with DeepSeek/Groq fallback and a real heuristic planner."""
 
     def __init__(self, config: Optional[Dict[str, Any]] = None,
                  settings: Optional[Any] = None):
@@ -359,7 +359,31 @@ class AIBackend:
             or default_model
         )
 
-        # Groq fallback (cloud) — only used if Ollama and NVIDIA are unreachable.
+        # DeepSeek fallback (cloud) — tried after NVIDIA, before Groq.
+        deepseek_cfg = {}
+        if settings is not None:
+            try:
+                deepseek_cfg = settings.get_setting("deepseek", {}) or {}
+            except Exception:
+                deepseek_cfg = {}
+        if not deepseek_cfg and isinstance(config, dict):
+            deepseek_cfg = config.get("deepseek", {}) or {}
+
+        self.deepseek_api_key = (
+            os.getenv("DEEPSEEK_API_KEY")
+            or deepseek_cfg.get("api_key")
+            or (config.get("deepseek_api_key") if isinstance(config, dict) else None)
+            or ""
+        )
+        self.deepseek_model = (
+            os.getenv("DEEPSEEK_MODEL")
+            or deepseek_cfg.get("model")
+            or (config.get("deepseek_model") if isinstance(config, dict) else None)
+            or "deepseek-chat"
+        )
+        self.deepseek_endpoint = "https://api.deepseek.com/chat/completions"
+
+        # Groq fallback (cloud) — only used if Ollama, NVIDIA, and DeepSeek are unreachable.
         self.groq_api_key = (
             os.getenv("GROQ_API_KEY")
             or (config.get("groq_api_key") if isinstance(config, dict) else None)
@@ -411,11 +435,14 @@ class AIBackend:
         ollama_models = self.ollama.list_models() if ollama_ok else []
         groq_ok = bool(self.groq_api_key)
         nvidia_ok = bool(self.nvidia_api_key)
+        deepseek_ok = bool(self.deepseek_api_key)
         
         if ollama_ok:
             active = "ollama"
         elif nvidia_ok:
             active = "nvidia"
+        elif deepseek_ok:
+            active = "deepseek"
         elif groq_ok:
             active = "groq"
         else:
@@ -428,6 +455,8 @@ class AIBackend:
             "nvidia": nvidia_ok,
             "nvidia_endpoint": self.nvidia_base_url,
             "nvidia_model": self.nvidia_model,
+            "deepseek": deepseek_ok,
+            "deepseek_model": self.deepseek_model,
             "groq": groq_ok,
             "active": active,
         }
@@ -474,9 +503,9 @@ class AIBackend:
               context: Optional[Dict[str, Any]] = None) -> str:
         """Query the AI engine using the specialized domain prompt.
 
-        Routing: Ollama (primary) → Groq (cloud) → heuristic (real computed
-        planner). Never returns fabricated/canned model text; on total failure
-        returns an explicit error string.
+        Routing: Ollama (primary) → NVIDIA → DeepSeek → Groq (cloud) →
+        heuristic (real computed planner). Never returns fabricated/canned
+        model text; on total failure returns an explicit error string.
         """
         system_prompt = self.domain_prompts.get(
             domain, "You are a helpful penetration testing assistant."
@@ -485,9 +514,20 @@ class AIBackend:
         context_str = ""
         if context:
             try:
-                context_str = "\n[CONTEXT FOR THIS REQUEST]:\n" + json.dumps(
-                    context, indent=2, default=str
-                )
+                # Prefer cycle-safe dumps — seed/target can hold
+                # recon/session back-refs after a live engagement.
+                try:
+                    from core.ai_backend.chain import _safe_json_dumps
+                    dumped = _safe_json_dumps(context)
+                    # Pretty-print when small enough; _safe_json_dumps
+                    # returns compact JSON which is fine for the LLM.
+                    context_str = (
+                        "\n[CONTEXT FOR THIS REQUEST]:\n" + dumped
+                    )
+                except Exception:
+                    context_str = "\n[CONTEXT FOR THIS REQUEST]:\n" + json.dumps(
+                        context, indent=2, default=str
+                    )
             except Exception:
                 context_str = "\n[CONTEXT]: <unserializable>"
 
@@ -576,7 +616,43 @@ class AIBackend:
             except Exception as e:
                 logger.error(f"NVIDIA API/NIM query failed: {e}")
 
-        # 3) Groq fallback
+        # 3) DeepSeek fallback
+        if self.deepseek_api_key:
+            for model in (
+                self.deepseek_model,
+                "deepseek-chat",
+                "deepseek-reasoner",
+            ):
+                try:
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {self.deepseek_api_key}",
+                    }
+                    payload = {
+                        "model": model,
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": full_user_prompt},
+                        ],
+                        "temperature": 0.4,
+                        "max_tokens": 1024,
+                    }
+                    logger.info(f"Querying DeepSeek: {self.deepseek_endpoint} (model: {model})")
+                    response = requests.post(
+                        self.deepseek_endpoint, headers=headers, json=payload, timeout=45
+                    )
+                    if response.status_code == 200:
+                        reply = response.json()["choices"][0]["message"]["content"]
+                        if reply.strip():
+                            logger.info(f"DeepSeek responded with model: {model}")
+                            return reply
+                    logger.warning(
+                        f"DeepSeek model {model} failed status {response.status_code}"
+                    )
+                except Exception as e:
+                    logger.error(f"DeepSeek model {model} failed: {e}")
+
+        # 4) Groq fallback
         if self.groq_api_key:
             for model in (
                 self.groq_model,
@@ -612,15 +688,16 @@ class AIBackend:
                 except Exception as e:
                     logger.error(f"Groq model {model} failed: {e}")
 
-        # 3) Real heuristic planner — NOT canned fake text; computed from target.
+        # 5) Real heuristic planner — NOT canned fake text; computed from target.
         heuristic = self._heuristic(domain, context or {})
         if heuristic:
             return heuristic
 
         return (
             f"[!] AI backend unavailable: Ollama not reachable at "
-            f"{self.ollama.endpoint} and Groq API key not configured. "
-            f"Start Ollama (`ollama serve`) and pull a model, or set GROQ_API_KEY."
+            f"{self.ollama.endpoint} and no cloud API key configured. "
+            f"Start Ollama (`ollama serve`) and pull a model, or set "
+            f"DEEPSEEK_API_KEY / GROQ_API_KEY."
         )
 
     # ------------------------------------------------------------------
@@ -630,7 +707,7 @@ class AIBackend:
         """Emit a real, computed plan from the target's actual fields.
 
         This is a deterministic planner — not fabricated model text. It is
-        only reached when both Ollama and Groq are unreachable. Output is
+        only reached when Ollama, NVIDIA, DeepSeek, and Groq are all unreachable. Output is
         prefixed with [heuristic] so callers can tell it apart from model
         output.
         """

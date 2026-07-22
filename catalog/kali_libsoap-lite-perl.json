@@ -27,7 +27,30 @@
       "path": "/usr/bin/SOAPsh",
       "description": "Interactive shell for SOAP calls",
       "usage": "SOAPsh [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-03-01"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "SOAPSH(1p)",
+          "default": null,
+          "choices": null,
+          "raw": "-03-01  SOAPSH(1p)"
+        },
+        {
+          "flags": [
+            "-D"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "DESCRIPTION",
+          "default": null,
+          "choices": null,
+          "raw": "-D  DESCRIPTION"
+        }
+      ]
     },
     {
       "name": "stubmaker",
@@ -72,5 +95,45 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "perl SOAPsh $KFIOSA_TARGET_URL $KFIOSA_TARGET_URL",
+    "perl SOAPsh $KFIOSA_TARGET_URL $KFIOSA_TARGET_URL doubler([10,20,30])"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use SOAPsh because Perl implementation of a SOAP client and server.",
+    "When the engagement is in the install phase, use SOAPsh as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `perl SOAPsh $KFIOSA_TARGET_URL $KFIOSA_TARGET_URL` as documented upstream for SOAPsh.",
+    "When you need a concrete invocation, run `perl SOAPsh $KFIOSA_TARGET_URL $KFIOSA_TARGET_URL doubler([10,20,30])` as documented upstream for SOAPsh.",
+    "When chaining Kali Linux tools, pair SOAPsh with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `SOAPsh --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-03-01",
+        "description": "SOAPSH(1p)",
+        "source": "manpage"
+      },
+      {
+        "name": "-D",
+        "description": "DESCRIPTION",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "perl SOAPsh $KFIOSA_TARGET_URL $KFIOSA_TARGET_URL",
+      "perl SOAPsh $KFIOSA_TARGET_URL $KFIOSA_TARGET_URL doubler([10,20,30])"
+    ],
+    "readme": "SOAPsh - Interactive shell for SOAP calls",
+    "how_to_use": "Install/setup: sudo apt install libsoap-lite-perl. Run the primary entrypoint as shown in upstream docs, e.g. `perl SOAPsh $KFIOSA_TARGET_URL $KFIOSA_TARGET_URL`. Further invocations from upstream: `perl SOAPsh $KFIOSA_TARGET_URL $KFIOSA_TARGET_URL doubler([10,20,30])`. Perl implementation of a SOAP client and server.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Perl implementation of a SOAP client and server.",
+    "why_to_use": "Prefer this tool based on upstream description: SOAPsh - Interactive shell for SOAP calls.",
+    "usage_sections": [
+      "Install with: sudo apt install libsoap-lite-perl",
+      "Install with: sudo apt install libsoap-lite-perl"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

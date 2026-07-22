@@ -8,7 +8,7 @@
   "url": "https://github.com/arriven/db1000n",
   "summary": "Death by 1000 needles",
   "documentation": {
-    "readme": "Death by 1000 needles",
+    "readme": "This is a simple distributed load generation tool written in Go. It is able to fetch a simple JSON config from a local or remote location. The config describes which load generation jobs should be launched in parallel. There are other existing tools doing the same kind of job. I do not intend to copy or replace them but rather provide a simple open source alternative so that users have more options. Feel free to use it in your load tests (wink-wink).",
     "usage_sections": [],
     "arguments": [
       {
@@ -193,7 +193,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/db1000n && python3 db1000n.py --help",
+      "cd toolboxes/db1000n && cat README.md",
+      "cd toolboxes/db1000n && ls -la",
+      "cd toolboxes/db1000n && python3 db1000n.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST db1000n --output $KFIOSA_OUTPUT_DIR/db1000n.log"
+    ],
     "file_listing": [
       "AWS.pub",
       "CODEOWNERS",
@@ -295,13 +301,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/db1000n && python3 db1000n.py --help",
-      "Step 2: cd toolboxes/db1000n && cat README.md",
-      "Step 3: cd toolboxes/db1000n && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: Death by 1000 needles.",
+    "why_to_use": "Prefer this tool based on upstream description: This is a simple distributed load generation tool written in Go. It is able to fetch a simple JSON config from a local or remote location. The config describes which load generation jobs should be launched in parallel. There are other existing tools doing the same kind of job. I do not intend to copy or replace them but rather provide a simple open source alternative so that users have more option.",
+    "how_to_use": "Clone or install `db1000n` from its upstream repository, then run `db1000n --help` (or the README entrypoint) to confirm flags."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -334,11 +336,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use db1000n because Death by 1000 needles.",
+    "When chaining Penetration Testing tools, pair db1000n with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `db1000n --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/db1000n && python3 db1000n.py --help",
@@ -368,5 +368,7 @@
     "go",
     "shell",
     "ruby"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

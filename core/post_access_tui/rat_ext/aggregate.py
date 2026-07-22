@@ -26,10 +26,11 @@ def build_transport_summary(sessions: List[Dict[str, Any]]
     last_cred = None
     exfil_bytes = 0
     for s in sessions or []:
-        transport = s.get("transport") or s.get("kind") or ""
-        if transport == "ble":
+        transport = (s.get("transport") or s.get("kind") or "").lower()
+        if transport in ("ble", "bluetooth", "gatt"):
             ble_count += 1
-        elif transport in ("network", "tcp", "udp", "wifi"):
+        elif transport in ("network", "tcp", "udp", "wifi", "host",
+                           "ssh", "msf", "msfconsole", "wpa", "wpa2", "wpa3"):
             net_count += 1
         cap = s.get("capabilities") or {}
         for c in cap.values() if isinstance(cap, dict) else []:

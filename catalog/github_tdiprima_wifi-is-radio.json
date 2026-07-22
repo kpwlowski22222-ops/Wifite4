@@ -8,8 +8,14 @@
   "url": "https://github.com/tdiprima/wifi-is-radio",
   "summary": "WiFi Security Learning Kit 🛜",
   "documentation": {
-    "readme": "WiFi Security Learning Kit 🛜",
-    "usage_sections": [],
+    "readme": "I wrote this because I wanted to understand my own WiFi network — not from a theoretical angle, but from a \"what is actually happening on the air in my house\" angle. The problem I was solving was simple: I didn't really know what was visible on my own network, and that bothered me. These scripts are my way of finding out.",
+    "usage_sections": [
+      "How devices appear and announce themselves on WiFi",
+      "What metadata is visible even with WPA2/WPA3",
+      "What encryption does and doesn't hide",
+      "Why HTTPS, VPNs, and segmentation actually matter",
+      "WiFi encryption protects payloads, not presence"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -193,7 +199,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python3 01_network_info.py",
+      "sudo python3 02_arp_discovery.py",
+      "sudo python3 04_dns_observer.py",
+      "sudo python3 05_traffic_analyzer.py",
+      "sudo python3 07_security_audit.py"
+    ],
     "file_listing": [
       "01_network_info.py",
       "01_network_info.py",
@@ -261,13 +273,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'shell_linux']' as the attack surface (wireless, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/wifi-is-radio && python3 wifi-is-radio.py --help",
-      "Step 2: cd toolboxes/wifi-is-radio && cat README.md",
-      "Step 3: cd toolboxes/wifi-is-radio && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: WiFi Security Learning Kit 🛜.",
+    "why_to_use": "Prefer this tool based on upstream description: I wrote this because I wanted to understand my own WiFi network — not from a theoretical angle, but from a \"what is actually happening on the air in my house\" angle. The problem I was solving was simple: I didn't really know what was visible on my own network, and that bothered me. These scripts are my way of finding out.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `python3 01_network_info.py`. Further invocations from upstream: `sudo python3 02_arp_discovery.py`; `sudo python3 04_dns_observer.py`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -298,18 +306,20 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Wireless, use wifi-is-radio because WiFi Security Learning Kit 🛜.",
+    "When you need a concrete invocation, run `python3 01_network_info.py` as documented upstream for wifi-is-radio.",
+    "When you need a concrete invocation, run `sudo python3 02_arp_discovery.py` as documented upstream for wifi-is-radio.",
+    "When you need a concrete invocation, run `sudo python3 04_dns_observer.py` as documented upstream for wifi-is-radio.",
+    "When you need a concrete invocation, run `sudo python3 05_traffic_analyzer.py` as documented upstream for wifi-is-radio.",
+    "When chaining Wireless tools, pair wifi-is-radio with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `wifi-is-radio --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/wifi-is-radio && python3 wifi-is-radio.py --help",
-    "cd toolboxes/wifi-is-radio && cat README.md",
-    "cd toolboxes/wifi-is-radio && ls -la",
-    "cd toolboxes/wifi-is-radio && python3 wifi-is-radio.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-is-radio --output $KFIOSA_OUTPUT_DIR/wifi-is-radio.log"
+    "python3 01_network_info.py",
+    "sudo python3 02_arp_discovery.py",
+    "sudo python3 04_dns_observer.py",
+    "sudo python3 05_traffic_analyzer.py",
+    "sudo python3 07_security_audit.py"
   ],
   "attack_surface": [
     "wifi_2_4_ghz",
@@ -332,5 +342,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

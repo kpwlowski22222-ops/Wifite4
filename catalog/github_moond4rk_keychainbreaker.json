@@ -8,8 +8,13 @@
   "url": "https://github.com/moond4rk/keychainbreaker",
   "summary": "[![Go CI](https://github.com/moonD4rk/keychainbreaker/actions/workflows/ci.yml/badge.svg)](https://github.com/moonD4rk/keychainbreaker/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/moonD4rk/keychainbreaker/branch/main/graph/badge.svg)](https://codecov.io/gh/moonD4rk/keychainbreaker) [![Go Reference](https://pkg.go.dev/badge/github.com/moond4rk/keychainbreaker.svg)](https://pkg.go.dev/github.com/moond4rk/keychainbreaker) [![License](https://img.shields.io/github/license/moonD4rk/keychainbreaker)](https://github.com/moonD4rk/keychainbreaker/blob/main/LICENSE)",
   "documentation": {
-    "readme": "[![Go CI](https://github.com/moonD4rk/keychainbreaker/actions/workflows/ci.yml/badge.svg)](https://github.com/moonD4rk/keychainbreaker/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/moonD4rk/keychainbreaker/branch/main/graph/badge.svg)](https://codecov.io/gh/moonD4rk/keychainbreaker) [![Go Reference](https://pkg.go.dev/badge/github.com/moond4rk/keychainbreaker.svg)](https://pkg.go.dev/github.com/moond4rk/keychainbreaker) [![License](https://img.shields.io/github/license/moonD4rk/keychainbreaker)](https://github.com/moonD4rk/keychainbreaker/blob/main/LICENSE)",
-    "usage_sections": [],
+    "readme": "Go library for reading and decrypting macOS Keychain files (login.keychain-db). Supports OS X 10.6 (Snow Leopard) through macOS 26 (Tahoe).",
+    "usage_sections": [
+      "Generic passwords -- app-stored credentials (Chrome Safe Storage, Wi-Fi, etc.)",
+      "Internet passwords -- web and network credentials (GitHub tokens, Docker registry, SMB shares, etc.)",
+      "Private keys -- RSA/EC private keys stored in the keychain",
+      "X.509 certificates -- DER-encoded certificates"
+    ],
     "arguments": [
       {
         "name": "--count",
@@ -193,7 +198,16 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "brew tap moond4rk/tap",
+      "go install github.com/moond4rk/keychainbreaker/cmd/keychainbreaker@latest",
+      "keychainbreaker -h",
+      "Keychain: /Users/user/Library/Keychains/login.keychain-db",
+      "keychainbreaker dump -f /path/to/login.keychain-db -p \"password\"",
+      "keychainbreaker dump -o result.json",
+      "keychainbreaker dump -p \"wrong\"",
+      "go get github.com/moond4rk/keychainbreaker"
+    ],
     "file_listing": [
       "001-keychain-encryption.md",
       "002-api-design.md",
@@ -276,13 +290,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/keychainbreaker && python3 keychainbreaker.py --help",
-      "Step 2: cd toolboxes/keychainbreaker && cat README.md",
-      "Step 3: cd toolboxes/keychainbreaker && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: [![Go CI](https://github.com/moonD4rk/keychainbreaker/actions/workflows/ci.yml/badge.svg)](https://github.com/moonD4rk/keychainbreaker/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/moonD4rk/keychainbreaker/.",
+    "why_to_use": "Prefer this tool based on upstream description: Go library for reading and decrypting macOS Keychain files (login.keychain-db). Supports OS X 10.6 (Snow Leopard) through macOS 26 (Tahoe).",
+    "how_to_use": "Install/setup: brew install moond4rk/tap/keychainbreaker; go install github.com/moond4rk/keychainbreaker/cmd/keychainbreaker@latest. Run the primary entrypoint as shown in upstream docs, e.g. `brew tap moond4rk/tap`. Further invocations from upstream: `go install github.com/moond4rk/keychainbreaker/cmd/keychainbreaker@latest`; `keychainbreaker -h`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -313,18 +323,23 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use keychainbreaker because [![Go CI](https://github.com/moonD4rk/keychainbreaker/actions/workflows/ci.yml/badge.svg)](https://github.com/moonD4rk/keychainbreaker/actions/workflows/ci.yml).",
+    "When you need a concrete invocation, run `brew tap moond4rk/tap` as documented upstream for keychainbreaker.",
+    "When you need a concrete invocation, run `go install github.com/moond4rk/keychainbreaker/cmd/keychainbreaker@latest` as documented upstream for keychainbreaker.",
+    "When you need a concrete invocation, run `keychainbreaker -h` as documented upstream for keychainbreaker.",
+    "When you need a concrete invocation, run `Keychain: /Users/user/Library/Keychains/login.keychain-db` as documented upstream for keychainbreaker.",
+    "When chaining Penetration Testing tools, pair keychainbreaker with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `keychainbreaker --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/keychainbreaker && python3 keychainbreaker.py --help",
-    "cd toolboxes/keychainbreaker && cat README.md",
-    "cd toolboxes/keychainbreaker && ls -la",
-    "cd toolboxes/keychainbreaker && python3 keychainbreaker.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST keychainbreaker --output $KFIOSA_OUTPUT_DIR/keychainbreaker.log"
+    "brew tap moond4rk/tap",
+    "go install github.com/moond4rk/keychainbreaker/cmd/keychainbreaker@latest",
+    "keychainbreaker -h",
+    "Keychain: /Users/user/Library/Keychains/login.keychain-db",
+    "keychainbreaker dump -f /path/to/login.keychain-db -p \"password\"",
+    "keychainbreaker dump -o result.json",
+    "keychainbreaker dump -p \"wrong\"",
+    "go get github.com/moond4rk/keychainbreaker"
   ],
   "attack_surface": [
     "shell_linux"
@@ -345,5 +360,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "go"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -1,18 +1,172 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/massdns && python3 massdns.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/massdns && python3 massdns.py --help",
-    "cd toolboxes/massdns && python3 massdns.py --help",
-    "cd toolboxes/massdns && python3 massdns.py --help",
-    "cd toolboxes/massdns && python3 massdns.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST massdns --output $KFIOSA_OUTPUT_DIR/massdns.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST massdns --output $KFIOSA_OUTPUT_DIR/massdns.log"
+    "Usage: ./bin/massdns [options] [domainlist]",
+    "domain. (Default: 500)",
+    "./bin/massdns -r lists/resolvers.txt -t AAAA domains.txt > results.txt",
+    "./bin/massdns -r lists/resolvers.txt -t AAAA -w results.txt domains.txt",
+    "./scripts/ptr.py | ./bin/massdns -r lists/resolvers.txt -t PTR -w ptr.txt",
+    "./scripts/subbrute.py example.com lists/names.txt | ./bin/massdns -r lists/resolvers.txt -t A -o S -w results.txt",
+    "./scripts/ct.py example.com | ./bin/massdns -r lists/resolvers.txt -t A -o S -w results.txt",
+    "./scripts/recon.py -d google.com -l lists/best-dns-wordlist.txt > google.txt",
+    "./bin/massdns -r <(./scripts/auth-addrs.sh example.com) --norecurse -o Je example-com-subdomains.txt > results.txt"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "MassDNS A high-performance DNS stub resolver",
+    "usage_sections": [
+      "Example: Resolve all AAAA records from domains within domains.txt using the resolvers within resolvers.txt in lists and store the results within results.txt: This is equivalent to: Example output By default, MassDNS will output response packets in text format which looks similar to the fo"
+    ],
     "arguments": [
+      {
+        "name": "-b",
+        "description": "--bindto Bind to IP address and port. (Default: 0.0.0.0:0)",
+        "source": "docs"
+      },
+      {
+        "name": "--busy-poll",
+        "description": "Use busy-wait polling instead of epoll.",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "--resolve-count Number of resolves for a name before giving up. (Default: 50)",
+        "source": "docs"
+      },
+      {
+        "name": "--drop-group",
+        "description": "Group to drop privileges to when running as root. (Default: nogroup)",
+        "source": "docs"
+      },
+      {
+        "name": "--drop-user",
+        "description": "User to drop privileges to when running as root. (Default: nobody)",
+        "source": "docs"
+      },
+      {
+        "name": "--extended-input",
+        "description": "Input names are followed by a space-separated list of resolvers.",
+        "source": "docs"
+      },
+      {
+        "name": "--filter",
+        "description": "Only output packets with the specified response code.",
+        "source": "docs"
+      },
+      {
+        "name": "--flush",
+        "description": "Flush the output file whenever a response was received.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "--help Show this help.",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "--interval Interval in milliseconds to wait between multiple resolves of the same",
+        "source": "docs"
+      },
+      {
+        "name": "--ignore",
+        "description": "Do not output packets with the specified response code.",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "--error-log Error log file path. (Default: /dev/stderr)",
+        "source": "docs"
+      },
+      {
+        "name": "--norecurse",
+        "description": "Use non-recursive queries. Useful for DNS cache snooping.",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "--output Flags for output formatting.",
+        "source": "docs"
+      },
+      {
+        "name": "--predictable",
+        "description": "Use resolvers incrementally. Useful for resolver tests.",
+        "source": "docs"
+      },
+      {
+        "name": "--processes",
+        "description": "Number of processes to be used for resolving. (Default: 1)",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "--quiet Quiet mode.",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "--resolvers Text file containing DNS resolvers.",
+        "source": "docs"
+      },
+      {
+        "name": "--rand-src-ipv6",
+        "description": "Use a random IPv6 address from the specified subnet for each query.",
+        "source": "docs"
+      },
+      {
+        "name": "--rcvbuf",
+        "description": "Size of the receive buffer in bytes.",
+        "source": "docs"
+      },
+      {
+        "name": "--retry",
+        "description": "Unacceptable DNS response codes.",
+        "source": "docs"
+      },
+      {
+        "name": "--root",
+        "description": "Do not drop privileges when running as root. Not recommended.",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "--hashmap-size Number of concurrent lookups. (Default: 10000)",
+        "source": "docs"
+      },
+      {
+        "name": "--sndbuf",
+        "description": "Size of the send buffer in bytes.",
+        "source": "docs"
+      },
+      {
+        "name": "--socket-count",
+        "description": "Socket count per process. (Default: 1)",
+        "source": "docs"
+      },
+      {
+        "name": "--status-format",
+        "description": "Format for real-time status updates, json or ansi (Default: ansi)",
+        "source": "docs"
+      },
+      {
+        "name": "--sticky",
+        "description": "Do not switch the resolver when retrying.",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "--type Record type to be resolved. (Default: A)",
+        "source": "docs"
+      },
+      {
+        "name": "--verify-ip",
+        "description": "Verify IP addresses of incoming replies.",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "--outfile Write to the specified output file instead of standard output.",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +283,17 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "Usage: ./bin/massdns [options] [domainlist]",
+      "domain. (Default: 500)",
+      "./bin/massdns -r lists/resolvers.txt -t AAAA domains.txt > results.txt",
+      "./bin/massdns -r lists/resolvers.txt -t AAAA -w results.txt domains.txt",
+      "./scripts/ptr.py | ./bin/massdns -r lists/resolvers.txt -t PTR -w ptr.txt",
+      "./scripts/subbrute.py example.com lists/names.txt | ./bin/massdns -r lists/resolvers.txt -t A -o S -w results.txt",
+      "./scripts/ct.py example.com | ./bin/massdns -r lists/resolvers.txt -t A -o S -w results.txt",
+      "./scripts/recon.py -d google.com -l lists/best-dns-wordlist.txt > google.txt",
+      "./bin/massdns -r <(./scripts/auth-addrs.sh example.com) --norecurse -o Je example-com-subdomains.txt > results.txt"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +419,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, massdns, blechschmidt).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/massdns && python3 massdns.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/massdns && python3 massdns.py --help",
-      "Step 3: cd toolboxes/massdns && python3 massdns.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: MassDNS A high-performance DNS stub resolver.",
+    "why_to_use": "Prefer this tool based on upstream description: MassDNS A high-performance DNS stub resolver.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `Usage: ./bin/massdns [options] [domainlist]`. Further invocations from upstream: `domain. (Default: 500)`; `./bin/massdns -r lists/resolvers.txt -t AAAA domains.txt > results.txt`. MassDNS A high-performance DNS stub resolver."
   },
   "full_name": "blechschmidt/massdns",
   "id": "github:blechschmidt/massdns",
@@ -282,7 +442,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``massdns`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "MassDNS A high-performance DNS stub resolver",
   "tags": [
     "offensive",
     "massdns",
@@ -300,12 +460,13 @@
   },
   "url": "https://github.com/blechschmidt/massdns",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use massdns because MassDNS A high-performance DNS stub resolver.",
+    "When you need a concrete invocation, run `Usage: ./bin/massdns [options] [domainlist]` as documented upstream for massdns.",
+    "When you need a concrete invocation, run `domain. (Default: 500)` as documented upstream for massdns.",
+    "When you need a concrete invocation, run `./bin/massdns -r lists/resolvers.txt -t AAAA domains.txt > results.txt` as documented upstream for massdns.",
+    "When you need a concrete invocation, run `./bin/massdns -r lists/resolvers.txt -t AAAA -w results.txt domains.txt` as documented upstream for massdns.",
+    "When chaining recon tools, pair massdns with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `massdns --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +485,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

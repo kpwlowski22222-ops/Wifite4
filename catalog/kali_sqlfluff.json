@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "sqlfluff",
   "title": "sqlfluff",
-  "summary": "SQL linter tool",
+  "summary": "sqlfluff - SQLFluff stable_version Bored of not having a good SQL linter that works with whichever dialect you're working with? Fluff is an extensible and modular linter designed to help you write good SQL and catch errors and bad SQL before it hits your database. Notable releases: * 1.0.x: First stable release, no major changes to take advantage of a point of relative sta- bility. * 2.0.x: Recode of rules, whitespace fixing consolidation, sqlfluff format and removal of sup- port for dbt version",
   "description": "SQL linter tool\nSQLFluff is an extensible and modular linter designed to help you write\ngood SQL and catch errors and bad SQL before it hits your database.\n.\nSQLFluff has a few components:\n.\n1) A generic parser for SQL which aims to be able to unify SQL written\nin different dialects into a comparable format. Most of the codebase\nfor SQLFluff is the parser, mostly because at the point of\ndeveloping SQLFluff, there didn’t appear to be a good option for\na whitespace-aware parser that could be used instead.\n.\n2) A mechanism for measuring written SQL against a set of rules, with\nthe added ability to fix any violations found. The core vision for\nSQLFluff is to be really good at being the linter.\n.\n3) An opinionated set of guidelines for how SQL should be structured\nand formatted. SQLFluff aims to be opinionated but it also accepts\nthat many organisations and groups have pre-existing strong\nconventions around how to write SQL and so ultimately SQLFluff\nshould be flexible enough to support whichever rule set a user\nwishes to.\n.\n4) A public API for other Python applications to use SQLFluff to\ncheck and fix SQL code in an automated fashion.\n.\nThis package installs the complete SQLFluff tool including the parser,\nlexer, the (configurable) rules, and the Python API.",
   "version": "3.5.0-2",
   "architectures": [
@@ -27,7 +27,635 @@
       "path": "/usr/bin/sqlfluff",
       "description": "SQLFluff stable_version",
       "usage": "sqlfluff [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-a-repository-from-github-to"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "github-desktop> where you go to the repository on the website and select \"Open with GitHub",
+          "default": null,
+          "choices": null,
+          "raw": "-a-repository-from-github-to  github-desktop> where you go to the repository on the website and select \"Open with GitHub"
+        },
+        {
+          "flags": [
+            "--annotation-level"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "When format is set to \"github-annotation\" or \"github-annotation-native\", default anno-",
+          "default": null,
+          "choices": null,
+          "raw": "--annotation-level  When format is set to \"github-annotation\" or \"github-annotation-native\", default anno-"
+        },
+        {
+          "flags": [
+            "--bench"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Set this flag to engage the benchmarking tool output.",
+          "default": null,
+          "choices": null,
+          "raw": "--bench  Set this flag to engage the benchmarking tool output."
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Output only the code elements of the parse tree.",
+          "default": null,
+          "choices": null,
+          "raw": "-c  Output only the code elements of the parse tree."
+        },
+        {
+          "flags": [
+            "--check"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Analyse all files and ask for confirmation before applying any fixes. Fixes will be ap-",
+          "default": null,
+          "choices": null,
+          "raw": "--check  Analyse all files and ask for confirmation before applying any fixes. Fixes will be ap-"
+        },
+        {
+          "flags": [
+            "--code-only"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Output only the code elements of the parse tree.",
+          "default": null,
+          "choices": null,
+          "raw": "--code-only  Output only the code elements of the parse tree."
+        },
+        {
+          "flags": [
+            "--color"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "No color - output will be without ANSI color codes.",
+          "default": null,
+          "choices": null,
+          "raw": "--color  No color - output will be without ANSI color codes."
+        },
+        {
+          "flags": [
+            "-commit-con"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "fig.yaml file (either the top level config <https://pre-commit.com/#top_level-exclude> or the",
+          "default": null,
+          "choices": null,
+          "raw": "-commit-con  fig.yaml file (either the top level config <https://pre-commit.com/#top_level-exclude> or the"
+        },
+        {
+          "flags": [
+            "--config"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Include additional config file. By default the config is generated from the standard",
+          "default": null,
+          "choices": null,
+          "raw": "--config  Include additional config file. By default the config is generated from the standard"
+        },
+        {
+          "flags": [
+            "-cre"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "ate-table (note the -b which means \"create a new branch please\").",
+          "default": null,
+          "choices": null,
+          "raw": "-cre  ate-table (note the -b which means \"create a new branch please\")."
+        },
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The dialect of SQL to lint",
+          "default": null,
+          "choices": null,
+          "raw": "-d  The dialect of SQL to lint"
+        },
+        {
+          "flags": [
+            "-delimited"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "which | lectClauseElementSeg- |",
+          "default": null,
+          "choices": null,
+          "raw": "-delimited  which | lectClauseElementSeg- |"
+        },
+        {
+          "flags": [
+            "--dialect"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The dialect of SQL to lint",
+          "default": null,
+          "choices": null,
+          "raw": "--dialect  The dialect of SQL to lint"
+        },
+        {
+          "flags": [
+            "--disable-noqa"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Set this flag to ignore inline noqa comments.",
+          "default": null,
+          "choices": null,
+          "raw": "--disable-noqa  Set this flag to ignore inline noqa comments."
+        },
+        {
+          "flags": [
+            "--disable-noqa-except"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Ignore all but the listed rules inline noqa comments.",
+          "default": null,
+          "choices": null,
+          "raw": "--disable-noqa-except  Ignore all but the listed rules inline noqa comments."
+        },
+        {
+          "flags": [
+            "--disable-progress-bar"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disables progress bars.",
+          "default": null,
+          "choices": null,
+          "raw": "--disable-progress-bar  Disables progress bars."
+        },
+        {
+          "flags": [
+            "--disregard-sqlfluffignores"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Perform the operation regardless of .sqlfluffignore configurations",
+          "default": null,
+          "choices": null,
+          "raw": "--disregard-sqlfluffignores  Perform the operation regardless of .sqlfluffignore configurations"
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Exclude specific rules. For example specifying --exclude-rules LT01 will remove rule",
+          "default": null,
+          "choices": null,
+          "raw": "-e  Exclude specific rules. For example specifying --exclude-rules LT01 will remove rule"
+        },
+        {
+          "flags": [
+            "--exclude-rules"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Exclude specific rules. For example specifying --exclude-rules LT01 will remove rule",
+          "default": null,
+          "choices": null,
+          "raw": "--exclude-rules  Exclude specific rules. For example specifying --exclude-rules LT01 will remove rule"
+        },
+        {
+          "flags": [
+            "-f"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "[DEPRECATED - From 3.0 onward this is the default behaviour] Apply fixes will also be",
+          "default": null,
+          "choices": null,
+          "raw": "-f  [DEPRECATED - From 3.0 onward this is the default behaviour] Apply fixes will also be"
+        },
+        {
+          "flags": [
+            "-fix"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "attempts to fix rule violations.",
+          "default": null,
+          "choices": null,
+          "raw": "-fix  attempts to fix rule violations."
+        },
+        {
+          "flags": [
+            "--FIX-EVEN-UNPARSABLE"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "fixing of files that have templating or parse errors. Note that the simi-",
+          "default": null,
+          "choices": null,
+          "raw": "--FIX-EVEN-UNPARSABLE  fixing of files that have templating or parse errors. Note that the simi-"
+        },
+        {
+          "flags": [
+            "--fixed-suffix"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "An optional suffix to add to fixed files.",
+          "default": null,
+          "choices": null,
+          "raw": "--fixed-suffix  An optional suffix to add to fixed files."
+        },
+        {
+          "flags": [
+            "--force"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "[DEPRECATED - From 3.0 onward this is the default behaviour] Apply fixes will also be",
+          "default": null,
+          "choices": null,
+          "raw": "--force  [DEPRECATED - From 3.0 onward this is the default behaviour] Apply fixes will also be"
+        },
+        {
+          "flags": [
+            "--format"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "What format to return the lint result in (default=human).",
+          "default": null,
+          "choices": null,
+          "raw": "--format  What format to return the lint result in (default=human)."
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Ignore particular families of errors so that they don't cause a failed run. For example",
+          "default": null,
+          "choices": null,
+          "raw": "-i  Ignore particular families of errors so that they don't cause a failed run. For example"
+        },
+        {
+          "flags": [
+            "--ignore"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Ignore particular families of errors so that they don't cause a failed run. For example",
+          "default": null,
+          "choices": null,
+          "raw": "--ignore  Ignore particular families of errors so that they don't cause a failed run. For example"
+        },
+        {
+          "flags": [
+            "--ignore-local-config"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Ignore config files in default search path locations. This option allows the user to",
+          "default": null,
+          "choices": null,
+          "raw": "--ignore-local-config  Ignore config files in default search path locations. This option allows the user to"
+        },
+        {
+          "flags": [
+            "--include-meta"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "meta segments (indents, dedents and placeholders) in the output. This only ap-",
+          "default": null,
+          "choices": null,
+          "raw": "--include-meta  meta segments (indents, dedents and placeholders) in the output. This only ap-"
+        },
+        {
+          "flags": [
+            "--library-path"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Override the library_path value from the [sqlfluff:templater:jinja] configuration",
+          "default": null,
+          "choices": null,
+          "raw": "--library-path  Override the library_path value from the [sqlfluff:templater:jinja] configuration"
+        },
+        {
+          "flags": [
+            "-lint"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "returns linting errors.",
+          "default": null,
+          "choices": null,
+          "raw": "-lint  returns linting errors."
+        },
+        {
+          "flags": [
+            "--logger"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Choose to limit the logging to one of the loggers.",
+          "default": null,
+          "choices": null,
+          "raw": "--logger  Choose to limit the logging to one of the loggers."
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "meta segments (indents, dedents and placeholders) in the output. This only ap-",
+          "default": null,
+          "choices": null,
+          "raw": "-m  meta segments (indents, dedents and placeholders) in the output. This only ap-"
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "No color - output will be without ANSI color codes.",
+          "default": null,
+          "choices": null,
+          "raw": "-n  No color - output will be without ANSI color codes."
+        },
+        {
+          "flags": [
+            "--nocolor"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "No color - output will be without ANSI color codes.",
+          "default": null,
+          "choices": null,
+          "raw": "--nocolor  No color - output will be without ANSI color codes."
+        },
+        {
+          "flags": [
+            "--nofail"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "If set, the exit code will always be zero, regardless of violations found. This is po-",
+          "default": null,
+          "choices": null,
+          "raw": "--nofail  If set, the exit code will always be zero, regardless of violations found. This is po-"
+        },
+        {
+          "flags": [
+            "-overview"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "has a nice",
+          "default": null,
+          "choices": null,
+          "raw": "-overview  has a nice"
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The number of parallel processes to run. Positive numbers work as expected. Zero and",
+          "default": null,
+          "choices": null,
+          "raw": "-p  The number of parallel processes to run. Positive numbers work as expected. Zero and"
+        },
+        {
+          "flags": [
+            "--parse-statistics"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "this flag to enabled detailed debugging readout on the use of terminators in the",
+          "default": null,
+          "choices": null,
+          "raw": "--parse-statistics  this flag to enabled detailed debugging readout on the use of terminators in the"
+        },
+        {
+          "flags": [
+            "--persist-timing"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "A filename to persist the timing information for a linting run to in csv format for ex-",
+          "default": null,
+          "choices": null,
+          "raw": "--persist-timing  A filename to persist the timing information for a linting run to in csv format for ex-"
+        },
+        {
+          "flags": [
+            "--processes"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The number of parallel processes to run. Positive numbers work as expected. Zero and",
+          "default": null,
+          "choices": null,
+          "raw": "--processes  The number of parallel processes to run. Positive numbers work as expected. Zero and"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Reduces the amount of output to stdout to a minimal level. This is effectively the op-",
+          "default": null,
+          "choices": null,
+          "raw": "-q  Reduces the amount of output to stdout to a minimal level. This is effectively the op-"
+        },
+        {
+          "flags": [
+            "-qual"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "ity <#diff-quality> or the VSCode extension <https://github.com/sqlfluff/vscode-sqlfluff>",
+          "default": null,
+          "choices": null,
+          "raw": "-qual  ity <#diff-quality> or the VSCode extension <https://github.com/sqlfluff/vscode-sqlfluff>"
+        },
+        {
+          "flags": [
+            "--quiet"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Reduces the amount of output to stdout to a minimal level. This is effectively the op-",
+          "default": null,
+          "choices": null,
+          "raw": "--quiet  Reduces the amount of output to stdout to a minimal level. This is effectively the op-"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Narrow the search to only specific rules. For example specifying --rules LT01 will only",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Narrow the search to only specific rules. For example specifying --rules LT01 will only"
+        },
+        {
+          "flags": [
+            "--rules"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Narrow the search to only specific rules. For example specifying --rules LT01 will only",
+          "default": null,
+          "choices": null,
+          "raw": "--rules  Narrow the search to only specific rules. For example specifying --rules LT01 will only"
+        },
+        {
+          "flags": [
+            "--show-lint-violations"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show lint violations",
+          "default": null,
+          "choices": null,
+          "raw": "--show-lint-violations  Show lint violations"
+        },
+        {
+          "flags": [
+            "--stdin-filename"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "When using stdin as an input, load the configuration as if the contents of stdin was in",
+          "default": null,
+          "choices": null,
+          "raw": "--stdin-filename  When using stdin as an input, load the configuration as if the contents of stdin was in"
+        },
+        {
+          "flags": [
+            "-t"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The templater to use (default=jinja)",
+          "default": null,
+          "choices": null,
+          "raw": "-t  The templater to use (default=jinja)"
+        },
+        {
+          "flags": [
+            "-tem"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "plated SQL so that any rule violations which occur in templated sections can be ignored and",
+          "default": null,
+          "choices": null,
+          "raw": "-tem  plated SQL so that any rule violations which occur in templated sections can be ignored and"
+        },
+        {
+          "flags": [
+            "--templater"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The templater to use (default=jinja)",
+          "default": null,
+          "choices": null,
+          "raw": "--templater  The templater to use (default=jinja)"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbosity, how detailed should the output be. This is stackable, so -vv is more verbose",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Verbosity, how detailed should the output be. This is stackable, so -vv is more verbose"
+        },
+        {
+          "flags": [
+            "--verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Verbosity, how detailed should the output be. This is stackable, so -vv is more verbose",
+          "default": null,
+          "choices": null,
+          "raw": "--verbose  Verbosity, how detailed should the output be. This is stackable, so -vv is more verbose"
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show the version and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "--version  Show the version and exit."
+        },
+        {
+          "flags": [
+            "--warn-unused-ignores"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Warn about unneeded '-- noqa:' comments.",
+          "default": null,
+          "choices": null,
+          "raw": "--warn-unused-ignores  Warn about unneeded '-- noqa:' comments."
+        },
+        {
+          "flags": [
+            "--write-output"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Optionally provide a filename to write the results to, mostly used in tandem with",
+          "default": null,
+          "choices": null,
+          "raw": "--write-output  Optionally provide a filename to write the results to, mostly used in tandem with"
+        },
+        {
+          "flags": [
+            "-x"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "An optional suffix to add to fixed files.",
+          "default": null,
+          "choices": null,
+          "raw": "-x  An optional suffix to add to fixed files."
+        }
+      ]
     }
   ],
   "files": [
@@ -41,5 +669,333 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "sqlfluff lint test.sql --dialect ansi",
+    "sqlfluff fix test.sql --rules LT02,LT12,CP01 --dialect ansi",
+    "sqlfluff fix test.sql --dialect ansi",
+    "sqlfluff fix test.sql --rules LT02,LT12,CP01,ST06,LT09,LT01",
+    "SQLFluff aims to fill this space for SQL.",
+    "SQLFluff supports both of the templating methods outlined above,  as  well  as  dbt  <https://",
+    "SQLFluff     example     plugin    <$KFIOSA_TARGET_URL",
+    "SQLFluff needs to be able to parse your SQL to understand it's structure.  That  means  if  it"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use sqlfluff because sqlfluff - SQLFluff stable_version Bored of not having a good SQL linter that works with whichever dialect you're working with? Fluff is an extensible and modul.",
+    "When the engagement is in the install phase, use sqlfluff as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `sqlfluff lint test.sql --dialect ansi` as documented upstream for sqlfluff.",
+    "When you need a concrete invocation, run `sqlfluff fix test.sql --rules LT02,LT12,CP01 --dialect ansi` as documented upstream for sqlfluff.",
+    "When you need a concrete invocation, run `sqlfluff fix test.sql --dialect ansi` as documented upstream for sqlfluff.",
+    "When you need a concrete invocation, run `sqlfluff fix test.sql --rules LT02,LT12,CP01,ST06,LT09,LT01` as documented upstream for sqlfluff.",
+    "When chaining Kali Linux tools, pair sqlfluff with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `sqlfluff --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a-repository-from-github-to",
+        "description": "github-desktop> where you go to the repository on the website and select \"Open with GitHub",
+        "source": "docs"
+      },
+      {
+        "name": "--annotation-level",
+        "description": "When format is set to \"github-annotation\" or \"github-annotation-native\", default anno-",
+        "source": "docs"
+      },
+      {
+        "name": "--bench",
+        "description": "Set this flag to engage the benchmarking tool output.",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "Output only the code elements of the parse tree.",
+        "source": "docs"
+      },
+      {
+        "name": "--check",
+        "description": "Analyse all files and ask for confirmation before applying any fixes. Fixes will be ap-",
+        "source": "docs"
+      },
+      {
+        "name": "--code-only",
+        "description": "Output only the code elements of the parse tree.",
+        "source": "docs"
+      },
+      {
+        "name": "--color",
+        "description": "No color - output will be without ANSI color codes.",
+        "source": "docs"
+      },
+      {
+        "name": "-commit-con",
+        "description": "fig.yaml file (either the top level config <https://pre-commit.com/#top_level-exclude> or the",
+        "source": "docs"
+      },
+      {
+        "name": "--config",
+        "description": "Include additional config file. By default the config is generated from the standard",
+        "source": "docs"
+      },
+      {
+        "name": "-cre",
+        "description": "ate-table (note the -b which means \"create a new branch please\").",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "The dialect of SQL to lint",
+        "source": "docs"
+      },
+      {
+        "name": "-delimited",
+        "description": "which | lectClauseElementSeg- |",
+        "source": "docs"
+      },
+      {
+        "name": "--dialect",
+        "description": "The dialect of SQL to lint",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-noqa",
+        "description": "Set this flag to ignore inline noqa comments.",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-noqa-except",
+        "description": "Ignore all but the listed rules inline noqa comments.",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-progress-bar",
+        "description": "Disables progress bars.",
+        "source": "docs"
+      },
+      {
+        "name": "--disregard-sqlfluffignores",
+        "description": "Perform the operation regardless of .sqlfluffignore configurations",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Exclude specific rules. For example specifying --exclude-rules LT01 will remove rule",
+        "source": "docs"
+      },
+      {
+        "name": "--exclude-rules",
+        "description": "Exclude specific rules. For example specifying --exclude-rules LT01 will remove rule",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "[DEPRECATED - From 3.0 onward this is the default behaviour] Apply fixes will also be",
+        "source": "docs"
+      },
+      {
+        "name": "-fix",
+        "description": "attempts to fix rule violations.",
+        "source": "docs"
+      },
+      {
+        "name": "--FIX-EVEN-UNPARSABLE",
+        "description": "fixing of files that have templating or parse errors. Note that the simi-",
+        "source": "docs"
+      },
+      {
+        "name": "--fixed-suffix",
+        "description": "An optional suffix to add to fixed files.",
+        "source": "docs"
+      },
+      {
+        "name": "--force",
+        "description": "[DEPRECATED - From 3.0 onward this is the default behaviour] Apply fixes will also be",
+        "source": "docs"
+      },
+      {
+        "name": "--format",
+        "description": "What format to return the lint result in (default=human).",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Ignore particular families of errors so that they don't cause a failed run. For example",
+        "source": "docs"
+      },
+      {
+        "name": "--ignore",
+        "description": "Ignore particular families of errors so that they don't cause a failed run. For example",
+        "source": "docs"
+      },
+      {
+        "name": "--ignore-local-config",
+        "description": "Ignore config files in default search path locations. This option allows the user to",
+        "source": "docs"
+      },
+      {
+        "name": "--include-meta",
+        "description": "meta segments (indents, dedents and placeholders) in the output. This only ap-",
+        "source": "docs"
+      },
+      {
+        "name": "--library-path",
+        "description": "Override the library_path value from the [sqlfluff:templater:jinja] configuration",
+        "source": "docs"
+      },
+      {
+        "name": "-lint",
+        "description": "returns linting errors.",
+        "source": "docs"
+      },
+      {
+        "name": "--logger",
+        "description": "Choose to limit the logging to one of the loggers.",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "meta segments (indents, dedents and placeholders) in the output. This only ap-",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "No color - output will be without ANSI color codes.",
+        "source": "docs"
+      },
+      {
+        "name": "--nocolor",
+        "description": "No color - output will be without ANSI color codes.",
+        "source": "docs"
+      },
+      {
+        "name": "--nofail",
+        "description": "If set, the exit code will always be zero, regardless of violations found. This is po-",
+        "source": "docs"
+      },
+      {
+        "name": "-overview",
+        "description": "has a nice",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "The number of parallel processes to run. Positive numbers work as expected. Zero and",
+        "source": "docs"
+      },
+      {
+        "name": "--parse-statistics",
+        "description": "this flag to enabled detailed debugging readout on the use of terminators in the",
+        "source": "docs"
+      },
+      {
+        "name": "--persist-timing",
+        "description": "A filename to persist the timing information for a linting run to in csv format for ex-",
+        "source": "docs"
+      },
+      {
+        "name": "--processes",
+        "description": "The number of parallel processes to run. Positive numbers work as expected. Zero and",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "Reduces the amount of output to stdout to a minimal level. This is effectively the op-",
+        "source": "docs"
+      },
+      {
+        "name": "-qual",
+        "description": "ity <#diff-quality> or the VSCode extension <https://github.com/sqlfluff/vscode-sqlfluff>",
+        "source": "docs"
+      },
+      {
+        "name": "--quiet",
+        "description": "Reduces the amount of output to stdout to a minimal level. This is effectively the op-",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Narrow the search to only specific rules. For example specifying --rules LT01 will only",
+        "source": "docs"
+      },
+      {
+        "name": "--rules",
+        "description": "Narrow the search to only specific rules. For example specifying --rules LT01 will only",
+        "source": "docs"
+      },
+      {
+        "name": "--show-lint-violations",
+        "description": "Show lint violations",
+        "source": "docs"
+      },
+      {
+        "name": "--stdin-filename",
+        "description": "When using stdin as an input, load the configuration as if the contents of stdin was in",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "The templater to use (default=jinja)",
+        "source": "docs"
+      },
+      {
+        "name": "-tem",
+        "description": "plated SQL so that any rule violations which occur in templated sections can be ignored and",
+        "source": "docs"
+      },
+      {
+        "name": "--templater",
+        "description": "The templater to use (default=jinja)",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Verbosity, how detailed should the output be. This is stackable, so -vv is more verbose",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Verbosity, how detailed should the output be. This is stackable, so -vv is more verbose",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Show the version and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "--warn-unused-ignores",
+        "description": "Warn about unneeded '-- noqa:' comments.",
+        "source": "docs"
+      },
+      {
+        "name": "--write-output",
+        "description": "Optionally provide a filename to write the results to, mostly used in tandem with",
+        "source": "docs"
+      },
+      {
+        "name": "-x",
+        "description": "An optional suffix to add to fixed files.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "sqlfluff lint test.sql --dialect ansi",
+      "sqlfluff fix test.sql --rules LT02,LT12,CP01 --dialect ansi",
+      "sqlfluff fix test.sql --dialect ansi",
+      "sqlfluff fix test.sql --rules LT02,LT12,CP01,ST06,LT09,LT01",
+      "SQLFluff aims to fill this space for SQL.",
+      "SQLFluff supports both of the templating methods outlined above,  as  well  as  dbt  <https://",
+      "SQLFluff     example     plugin    <$KFIOSA_TARGET_URL",
+      "SQLFluff needs to be able to parse your SQL to understand it's structure.  That  means  if  it"
+    ],
+    "readme": "sqlfluff - SQLFluff stable_version Bored of not having a good SQL linter that works with whichever dialect you're working with? Fluff is an extensible and modular linter designed to help you write good SQL and catch errors and bad SQL before it hits your database. Notable releases: * 1.0.x: First stable release, no major changes to take advantage of a point of relative sta- bility. * 2.0.x: Recode of rules, whitespace fixing consolidation, sqlfluff format and removal of sup- port for dbt versions pre 1.1. Note, that this release brings with it some breaking changes to rule coding and configuration, see Upgrading from 1.x to 2.0 <#upgrading-2-0>. * 3.0.x: sqlfluff fix now defaults to not aski",
+    "how_to_use": "Install/setup: sudo apt install sqlfluff. Run the primary entrypoint as shown in upstream docs, e.g. `sqlfluff lint test.sql --dialect ansi`. Further invocations from upstream: `sqlfluff fix test.sql --rules LT02,LT12,CP01 --dialect ansi`; `sqlfluff fix test.sql --dialect ansi`. sqlfluff - SQLFluff stableversion Bored of not having a good SQL linter that works with whichever dialect you're working with? Fluff is an extensible and modular linter designed to help you write good SQL and catch errors and bad SQL before it hits your database. Notable releases: 1.0.x: First stable release, no major .",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: sqlfluff - SQLFluff stable_version Bored of not having a good SQL linter that works with whichever dialect you're working with? Fluff is an extensible and modular linter designed to help you write good SQL and catch erro.",
+    "why_to_use": "Prefer this tool based on upstream description: sqlfluff - SQLFluff stable_version Bored of not having a good SQL linter that works with whichever dialect you're working with? Fluff is an extensible and modular linter designed to help you write good SQL and catch errors and bad SQL before it hits your database. Notable releases: * 1.0.x: First stable release, no major changes to take advantage of a point of relative sta- bility. * 2.0.x: Recode.",
+    "usage_sections": [
+      "Install with: sudo apt install sqlfluff"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

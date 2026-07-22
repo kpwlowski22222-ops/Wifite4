@@ -6,15 +6,23 @@
   "owner": "SmonSE",
   "category": "Bluetooth",
   "url": "https://github.com/SmonSE/GhostBLE",
-  "summary": "<h1 align=\"center\">\n  <img src=\"./logoConverter/GhostBLE_banner.png\" width=\"2200\" valign=\"middle\">\n</h1>",
+  "summary": "A BLE privacy scanner for M5Stack devices",
   "documentation": {
-    "readme": "<h1 align=\"center\">\n  <img src=\"./logoConverter/GhostBLE_banner.png\" width=\"2200\" valign=\"middle\">\n</h1>",
-    "usage_sections": [],
+    "readme": "A BLE privacy scanner for M5Stack devices",
+    "usage_sections": [
+      "Quick Start: 1. Flash the firmware (see Building & Flashing) 2. Insert a microSD card (required on Cardputer for logging and XP) 3. Power on — NibBLEs greets you on the display 4. Long press BtnG0 (1 second) to start scanning 5. Watch devices appear on the display and in the logs ---",
+      "Usage: convertpngform5stickcplus2(\"nibblesworkinghappybubble.png\")"
+    ],
     "arguments": [
       {
-        "name": "--flashing",
-        "description": "CLI flag '--flashing' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-Acc",
+        "description": "<10 m",
+        "source": "docs"
+      },
+      {
+        "name": "-ups",
+        "description": "**Screenshot capture** — press ENTER on Cardputer to save the current display to SD",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +201,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "Type:        Helicopter / Multirotor",
+      "Drone GPS:   48.123456, 8.654321",
+      "Alt (geo):   87.5 m",
+      "Alt (baro):  85.0 m",
+      "Height:      42.0 m (above takeoff)",
+      "Speed H:     3.5 m/s",
+      "Speed V:     0.0 m/s",
+      "H-Acc:       <10 m",
+      "Pilot GPS:   48.120000, 8.650000    ← pilot standing here",
+      "Pilot Alt:   382.5 m"
+    ],
     "file_listing": [
       "Arduino.h",
       "CODING_GUIDELINES.md",
@@ -294,13 +313,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/GhostBLE && python3 GhostBLE.py --help",
-      "Step 2: cd toolboxes/GhostBLE && cat README.md",
-      "Step 3: cd toolboxes/GhostBLE && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: A BLE privacy scanner for M5Stack devices.",
+    "why_to_use": "Prefer this tool based on upstream description: A BLE privacy scanner for M5Stack devices.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `Type:        Helicopter / Multirotor`. Further invocations from upstream: `Drone GPS:   48.123456, 8.654321`; `Alt (geo):   87.5 m`. A BLE privacy scanner for M5Stack devices."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -332,18 +347,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use GhostBLE because A BLE privacy scanner for M5Stack devices.",
+    "When you need a concrete invocation, run `Type:        Helicopter / Multirotor` as documented upstream for GhostBLE.",
+    "When you need a concrete invocation, run `Drone GPS:   48.123456, 8.654321` as documented upstream for GhostBLE.",
+    "When you need a concrete invocation, run `Alt (geo):   87.5 m` as documented upstream for GhostBLE.",
+    "When you need a concrete invocation, run `Alt (baro):  85.0 m` as documented upstream for GhostBLE.",
+    "When chaining Bluetooth tools, pair GhostBLE with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `GhostBLE --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/GhostBLE && python3 GhostBLE.py --help",
-    "cd toolboxes/GhostBLE && cat README.md",
-    "cd toolboxes/GhostBLE && ls -la",
-    "cd toolboxes/GhostBLE && python3 GhostBLE.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST GhostBLE --output $KFIOSA_OUTPUT_DIR/GhostBLE.log"
+    "Type:        Helicopter / Multirotor",
+    "Drone GPS:   48.123456, 8.654321",
+    "Alt (geo):   87.5 m",
+    "Alt (baro):  85.0 m",
+    "Height:      42.0 m (above takeoff)",
+    "Speed H:     3.5 m/s",
+    "Speed V:     0.0 m/s",
+    "H-Acc:       <10 m",
+    "Pilot GPS:   48.120000, 8.650000    ← pilot standing here",
+    "Pilot Alt:   382.5 m"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -367,5 +389,7 @@
   "_languages": [
     "cpp",
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

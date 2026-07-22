@@ -8,8 +8,12 @@
   "url": "https://github.com/Neo23x0/signature-base",
   "summary": "[![Build Status](https://travis-ci.org/Neo23x0/signature-base.svg?branch=master)](https://travis-ci.org/Neo23x0/signature-base) [![Active Development](https://img.shields.io/badge/Maintenance%20Level-Actively%20Developed-brightgreen.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)",
   "documentation": {
-    "readme": "[![Build Status](https://travis-ci.org/Neo23x0/signature-base.svg?branch=master)](https://travis-ci.org/Neo23x0/signature-base) [![Active Development](https://img.shields.io/badge/Maintenance%20Level-Actively%20Developed-brightgreen.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)",
-    "usage_sections": [],
+    "readme": "Signature-Base is the YARA signature and IOC database for our scanners LOKI and THOR Lite",
+    "usage_sections": [
+      "iocs - Simple IOC files (CSV)",
+      "threatintel - Threat Intel API Receiver (MISP, OTX)",
+      "misc - Other input files (not IOCs or signatures)"
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -294,13 +298,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/signature-base && python3 signature-base.py --help",
-      "Step 2: cd toolboxes/signature-base && cat README.md",
-      "Step 3: cd toolboxes/signature-base && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: [![Build Status](https://travis-ci.org/Neo23x0/signature-base.svg?branch=master)](https://travis-ci.org/Neo23x0/signature-base) [![Active Development](https://img.shields.io/badge/Maintenance%20Level-Actively%20Developed.",
+    "why_to_use": "Prefer this tool based on upstream description: Signature-Base is the YARA signature and IOC database for our scanners LOKI and THOR Lite.",
+    "how_to_use": "Clone or install `signature-base` from its upstream repository, then run `signature-base --help` (or the README entrypoint) to confirm flags."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -332,19 +332,11 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use signature-base because [![Build Status](https://travis-ci.org/Neo23x0/signature-base.svg?branch=master)](https://travis-ci.org/Neo23x0/signature-base) [![Active Development](https://i.",
+    "When chaining Penetration Testing tools, pair signature-base with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `signature-base --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
-  "command_examples": [
-    "cd toolboxes/signature-base && python3 signature-base.py --help",
-    "cd toolboxes/signature-base && cat README.md",
-    "cd toolboxes/signature-base && ls -la",
-    "cd toolboxes/signature-base && python3 signature-base.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST signature-base --output $KFIOSA_OUTPUT_DIR/signature-base.log"
-  ],
+  "command_examples": [],
   "attack_surface": [
     "shell_linux"
   ],
@@ -365,5 +357,7 @@
   "_languages": [
     "shell",
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

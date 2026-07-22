@@ -31,5 +31,26 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "use_cases": [
+    "When you need Kali Linux, use python3-frozenlist because list-like structure which implements collections.abc.MutableSequence.",
+    "When the engagement is in the install phase, use python3-frozenlist as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When chaining Kali Linux tools, pair python3-frozenlist with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `python3-frozenlist --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [],
+    "readme": "list-like structure which implements collections.abc.MutableSequence\n`frozenlist.FrozenList` is a list-like structure which implements\n`collections.abc.MutableSequence`. The list is mutable until `FrozenList.freeze`\nis called, after which list modifications raise `RuntimeError`:\n.\n>>> from frozenlist import FrozenList\n>>> fl = FrozenList([17, 42])\n>>> fl.append('spam')\n>>> fl.append('Vikings')\n>>> fl\n<FrozenList(frozen=False, [17, 42, 'spam', 'Vikings'])>\n>>> fl.freeze()\n>>> fl\n<FrozenList(frozen=True, [17, 42, 'spam', 'Vikings'])>\n>>> fl.frozen\nTrue\n>>> fl.append(\"Monty\")\nTraceback (most recent call last):\nFile \"<stdin>\", line 1, in <module>\nFile \"frozenlist/_frozenlist.pyx\", line 97, in frozenlist._frozenlist.FrozenList.append\nself._check_frozen()\nFile \"frozenlist/_frozenlist.pyx\", line 19, in frozenlist._frozenlist.FrozenList._check_frozen\nraise RuntimeError(\"Cannot modify frozen list.\")\nRuntimeError: Cannot modify frozen list.\n.\nFrozenList is also hashable, but only when frozen. Otherwise it also throws a RuntimeError:\n.\n>>> fl = FrozenList([17, 42, 'spam'])\n>>> hash(fl)\nTraceback (most recent call last):\nFile \"<stdin>\", line 1, in <module>\nFile \"frozenlist/_frozenlist.pyx\", line 111, in frozenlist._frozenlist.FrozenList.__hash__\nraise RuntimeError(\"Cannot hash unfrozen list.\")\nRuntimeError: Cannot hash unfrozen list.\n>>> fl.freeze()\n>>> hash(fl)\n3713081631934410656\n>>> dictionary = {fl: 'Vikings'} # frozen fl can be a dict key\n>>> dictionary\n{<FrozenList(frozen=True, [1,",
+    "how_to_use": "Install/setup: sudo apt install frozenlist. list-like structure which implements collections.abc.MutableSequence.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: list-like structure which implements collections.abc.MutableSequence.",
+    "why_to_use": "Prefer this tool based on upstream description: list-like structure which implements collections.abc.MutableSequence\n`frozenlist.FrozenList` is a list-like structure which implements\n`collections.abc.MutableSequence`. The list is mutable until `FrozenList.freeze`\nis called, after which list modifications raise `RuntimeError`:\n.\n>>> from frozenlist import FrozenList\n>>> fl = FrozenList([17, 42])\n>>> fl.append('spam')\n>>> fl.append('Vikings')\n>>>.",
+    "usage_sections": [
+      "Install with: sudo apt install frozenlist",
+      "Install with: sudo apt install frozenlist"
+    ],
+    "examples": []
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "offline",
+  "command_examples": []
 }

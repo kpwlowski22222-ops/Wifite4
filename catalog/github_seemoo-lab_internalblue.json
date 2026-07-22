@@ -26,21 +26,14 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use after the BLE advertising/GATT recon has produced a target handle on the TP-LINK UB500 Plus (hci0) interface.",
-    "Use as a follow-up to a successful GATT characteristic read that surfaced a writable handle.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Bluetooth/BLE, use internalblue because Bluetooth experimentation framework.",
+    "When the engagement is in the exploit phase, use internalblue as a cataloged Bluetooth/BLE tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `internalblue --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/internalblue.log` as documented upstream for internalblue.",
+    "When chaining Bluetooth/BLE tools, pair internalblue with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `internalblue --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/internalblue && python3 internalblue.py --interface hci0 --target $KFIOSA_TARGET_BLE_ADDR",
-    "cd toolboxes/internalblue && python3 internalblue.py --help",
-    "cd toolboxes/internalblue && python3 internalblue.py --help",
-    "cd toolboxes/internalblue && python3 internalblue.py --help",
-    "cd toolboxes/internalblue && python3 internalblue.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST internalblue --output $KFIOSA_OUTPUT_DIR/internalblue.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST internalblue --output $KFIOSA_OUTPUT_DIR/internalblue.log"
+    "internalblue --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/internalblue.log"
   ],
   "risk": {
     "signals": [
@@ -301,15 +294,19 @@
         "score": 1
       }
     ],
-    "examples": [],
-    "when_to_use": "Use this tool when the engagement is in the 'exploit' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_5_2']' as the attack surface (ble, bluetooth, hci0).",
-    "why_to_use": "This tool is preferred because: Use after the BLE advertising/GATT recon has produced a target handle on the TP-LINK UB500 Plus (hci0) interface.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/internalblue && python3 internalblue.py --interface hci0 --target $KFIOSA_TARGET_BLE_ADDR",
-      "Step 2: cd toolboxes/internalblue && python3 internalblue.py --help",
-      "Step 3: cd toolboxes/internalblue && python3 internalblue.py --help"
+    "examples": [
+      "internalblue --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/internalblue.log"
+    ],
+    "when_to_use": "Use during the 'exploit' phase against surfaces [ble_4_x, ble_5_x, ble_5_2] in the Bluetooth/BLE category. Fits when the engagement needs: Bluetooth experimentation framework.",
+    "why_to_use": "Prefer this tool based on upstream description: Curated toolbox entry for seemoo-lab/internalblue in the Bluetooth category.",
+    "how_to_use": "Install/setup: git clone --depth 1 https://github.com/seemoo-lab/internalblue.git toolboxes/ble/seemoo-lab__internalblue. Run the primary entrypoint as shown in upstream docs, e.g. `internalblue --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/internalblue.log`.",
+    "readme": "Curated toolbox entry for seemoo-lab/internalblue in the Bluetooth category.",
+    "usage_sections": [
+      "Usage: Typical flags: --target selects the target; --port selects the port; --output writes output to a file."
     ]
   },
   "_languages": [],
-  "_kfiosa_enriched_at": "phase4_t16"
+  "_kfiosa_enriched_at": "phase4_t16",
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -27,7 +27,173 @@
       "path": "/usr/bin/freshclam",
       "description": "update virus databases",
       "usage": "freshclam [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Run in a daemon mode. Defaults to 12 checks per day unless otherwise specified by",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Run in a daemon mode. Defaults to 12 checks per day unless otherwise specified by"
+        },
+        {
+          "flags": [
+            "--daemon"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Run in a daemon mode. Defaults to 12 checks per day unless otherwise specified by",
+          "default": null,
+          "choices": null,
+          "raw": "--daemon  Run in a daemon mode. Defaults to 12 checks per day unless otherwise specified by"
+        },
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable debug messages from LibClamAV.",
+          "default": null,
+          "choices": null,
+          "raw": "--debug  Enable debug messages from LibClamAV."
+        },
+        {
+          "flags": [
+            "--foreground"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Don't fork into background (for use in daemon mode).",
+          "default": null,
+          "choices": null,
+          "raw": "--foreground  Don't fork into background (for use in daemon mode)."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Output help information and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Output help information and exit."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Output help information and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "--help  Output help information and exit."
+        },
+        {
+          "flags": [
+            "--no-dns"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "This option forces old non-DNS verification method (without a TTL delay).",
+          "default": null,
+          "choices": null,
+          "raw": "--no-dns  This option forces old non-DNS verification method (without a TTL delay)."
+        },
+        {
+          "flags": [
+            "--no-warnings"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Don't print and log warnings.",
+          "default": null,
+          "choices": null,
+          "raw": "--no-warnings  Don't print and log warnings."
+        },
+        {
+          "flags": [
+            "--quiet"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be quiet - output only error messages.",
+          "default": null,
+          "choices": null,
+          "raw": "--quiet  Be quiet - output only error messages."
+        },
+        {
+          "flags": [
+            "--show-progress"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show download progress percentage.",
+          "default": null,
+          "choices": null,
+          "raw": "--show-progress  Show download progress percentage."
+        },
+        {
+          "flags": [
+            "--stdout"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Write all messages to stdout.",
+          "default": null,
+          "choices": null,
+          "raw": "--stdout  Write all messages to stdout."
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print version number and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-V  Print version number and exit."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be verbose. This option causes freshclam to print much additional information.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Be verbose. This option causes freshclam to print much additional information."
+        },
+        {
+          "flags": [
+            "--verbose"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be verbose. This option causes freshclam to print much additional information.",
+          "default": null,
+          "choices": null,
+          "raw": "--verbose  Be verbose. This option causes freshclam to print much additional information."
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print version number and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "--version  Print version number and exit."
+        }
+      ]
     }
   ],
   "files": [
@@ -42,5 +208,118 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "freshclam [options]",
+    "freshclam",
+    "freshclam --datadir=.",
+    "freshclam -d -c 2",
+    "passed to --on-*-execute, eg. --on-update-execute=EXIT_1 will force freshclam to always return"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use freshclam because anti-virus utility for Unix - virus database update utility.",
+    "When the engagement is in the install phase, use freshclam as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `freshclam [options]` as documented upstream for freshclam.",
+    "When you need a concrete invocation, run `freshclam` as documented upstream for freshclam.",
+    "When you need a concrete invocation, run `freshclam --datadir=.` as documented upstream for freshclam.",
+    "When you need a concrete invocation, run `freshclam -d -c 2` as documented upstream for freshclam.",
+    "When chaining Kali Linux tools, pair freshclam with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `freshclam --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "Run in a daemon mode. Defaults to 12 checks per day unless otherwise specified by",
+        "source": "docs"
+      },
+      {
+        "name": "--daemon",
+        "description": "Run in a daemon mode. Defaults to 12 checks per day unless otherwise specified by",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Enable debug messages from LibClamAV.",
+        "source": "docs"
+      },
+      {
+        "name": "--foreground",
+        "description": "Don't fork into background (for use in daemon mode).",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Output help information and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "Output help information and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "--no-dns",
+        "description": "This option forces old non-DNS verification method (without a TTL delay).",
+        "source": "docs"
+      },
+      {
+        "name": "--no-warnings",
+        "description": "Don't print and log warnings.",
+        "source": "docs"
+      },
+      {
+        "name": "--quiet",
+        "description": "Be quiet - output only error messages.",
+        "source": "docs"
+      },
+      {
+        "name": "--show-progress",
+        "description": "Show download progress percentage.",
+        "source": "docs"
+      },
+      {
+        "name": "--stdout",
+        "description": "Write all messages to stdout.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Print version number and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Be verbose. This option causes freshclam to print much additional information.",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Be verbose. This option causes freshclam to print much additional information.",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Print version number and exit.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "freshclam [options]",
+      "freshclam",
+      "freshclam --datadir=.",
+      "freshclam -d -c 2",
+      "passed to --on-*-execute, eg. --on-update-execute=EXIT_1 will force freshclam to always return"
+    ],
+    "readme": "freshclam - update virus databases",
+    "how_to_use": "Install/setup: sudo apt install clamav. Run the primary entrypoint as shown in upstream docs, e.g. `freshclam --datadir=.`. Further invocations from upstream: `freshclam -d -c 2`; `passed to --on-*-execute, eg. --on-update-execute=EXIT_1 will force freshclam to always return`. anti-virus utility for Unix - virus database update utility.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: anti-virus utility for Unix - virus database update utility.",
+    "why_to_use": "Prefer this tool because: anti-virus utility for Unix - virus database update utility.",
+    "usage_sections": [
+      "Install with: sudo apt install clamav",
+      "Install with: sudo apt install clamav"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -59,38 +59,64 @@ def pick_device(stdscr, activity_log: List[str],
         activity_log.append("[!] No devices discovered (recon found no clients).")
         return None
     idx = 0
-    while True:
-        stdscr.erase()
-        h, w = stdscr.getmaxyx()
-        stdscr.addstr(
-            0, 2,
-            " Discovered Devices — UP/DOWN to move, ENTER to select, q to cancel "
-        )
-        for i, it in enumerate(devices):
-            y = 2 + i
-            if y >= h - 1:
+    result = None
+    try:
+        try:
+            from core.tui.interface_picker import flush_curses_input
+            flush_curses_input(stdscr)
+        except Exception:
+            pass
+        try:
+            stdscr.nodelay(False)
+            stdscr.timeout(-1)
+        except Exception:
+            pass
+        while True:
+            stdscr.erase()
+            h, w = stdscr.getmaxyx()
+            stdscr.addstr(
+                0, 2,
+                " Discovered Devices — UP/DOWN to move, ENTER to select, q to cancel "
+            )
+            for i, it in enumerate(devices):
+                y = 2 + i
+                if y >= h - 1:
+                    break
+                line = _device_summary(it, w)
+                if i == idx:
+                    stdscr.attron(curses.A_REVERSE)
+                try:
+                    stdscr.addstr(y, 2, line)
+                except curses.error:
+                    pass
+                if i == idx:
+                    stdscr.attroff(curses.A_REVERSE)
+            stdscr.refresh()
+            key = stdscr.getch()
+            if key == -1:
+                continue
+            if key in (curses.KEY_UP,):
+                idx = (idx - 1) % len(devices)
+            elif key in (curses.KEY_DOWN,):
+                idx = (idx + 1) % len(devices)
+            elif key in (curses.KEY_ENTER, 10, 13):
+                mac = devices[idx].get("mac")
+                activity_log.append(f"[+] Selected device: {mac}")
+                result = mac
                 break
-            line = _device_summary(it, w)
-            if i == idx:
-                stdscr.attron(curses.A_REVERSE)
-            try:
-                stdscr.addstr(y, 2, line)
-            except curses.error:
-                pass
-            if i == idx:
-                stdscr.attroff(curses.A_REVERSE)
-        stdscr.refresh()
-        key = stdscr.getch()
-        if key == -1:
-            continue
-        if key in (curses.KEY_UP,):
-            idx = (idx - 1) % len(devices)
-        elif key in (curses.KEY_DOWN,):
-            idx = (idx + 1) % len(devices)
-        elif key in (curses.KEY_ENTER, 10, 13):
-            mac = devices[idx].get("mac")
-            activity_log.append(f"[+] Selected device: {mac}")
-            return mac
-        elif key in (ord("q"), ord("Q"), 27, curses.KEY_BACKSPACE, 127, 8):
-            activity_log.append("[i] Device selection cancelled.")
-            return None
+            elif key in (ord("q"), ord("Q"), 27, curses.KEY_BACKSPACE, 127, 8):
+                activity_log.append("[i] Device selection cancelled.")
+                result = None
+                break
+    finally:
+        try:
+            stdscr.nodelay(True)
+            stdscr.timeout(100)
+        except Exception:
+            pass
+        try:
+            from core.tui.interface_picker import flush_curses_input
+            flush_curses_input(stdscr)
+        except Exception:
+            pass
+    return result

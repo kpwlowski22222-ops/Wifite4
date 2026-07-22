@@ -27,7 +27,96 @@
       "path": "/usr/sbin/avahi-daemon",
       "description": "The Avahi mDNS/DNS-SD daemon",
       "usage": "avahi-daemon [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-dae"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "mon will reflect its current state and the selected host name in the process title.",
+          "default": null,
+          "choices": null,
+          "raw": "-dae  mon will reflect its current state and the selected host name in the process title."
+        },
+        {
+          "flags": [
+            "-daemon"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "The Avahi mDNS/DNS-SD daemon",
+          "default": null,
+          "choices": null,
+          "raw": "-daemon  The Avahi mDNS/DNS-SD daemon"
+        },
+        {
+          "flags": [
+            "--debug"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Increase verbosity to debug level.",
+          "default": null,
+          "choices": null,
+          "raw": "--debug  Increase verbosity to debug level."
+        },
+        {
+          "flags": [
+            "--no-chroot"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Don't chroot(2) the daemon. This option is only available when compiled with chroot()",
+          "default": null,
+          "choices": null,
+          "raw": "--no-chroot  Don't chroot(2) the daemon. This option is only available when compiled with chroot()"
+        },
+        {
+          "flags": [
+            "--no-drop-root"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Don't drop root privileges after startup and don't require daemon to be started as",
+          "default": null,
+          "choices": null,
+          "raw": "--no-drop-root  Don't drop root privileges after startup and don't require daemon to be started as"
+        },
+        {
+          "flags": [
+            "--no-proc-title"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Don't change the process name while running. Unless this option is specified avahi-dae-",
+          "default": null,
+          "choices": null,
+          "raw": "--no-proc-title  Don't change the process name while running. Unless this option is specified avahi-dae-"
+        },
+        {
+          "flags": [
+            "--no-rlimits"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Don't enforce resource limits as specified in the configuration file. (See setrlimit(2)",
+          "default": null,
+          "choices": null,
+          "raw": "--no-rlimits  Don't enforce resource limits as specified in the configuration file. (See setrlimit(2)"
+        },
+        {
+          "flags": [
+            "-set-host"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "name(1)",
+          "default": null,
+          "choices": null,
+          "raw": "-set-host  name(1)"
+        }
+      ]
     }
   ],
   "files": [
@@ -45,5 +134,81 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "avahi-daemon [options]",
+    "avahi-daemon --kill",
+    "avahi-daemon --reload",
+    "avahi-daemon --check"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use avahi-daemon because Avahi mDNS/DNS-SD daemon.",
+    "When the engagement is in the install phase, use avahi-daemon as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `avahi-daemon [options]` as documented upstream for avahi-daemon.",
+    "When you need a concrete invocation, run `avahi-daemon --kill` as documented upstream for avahi-daemon.",
+    "When you need a concrete invocation, run `avahi-daemon --reload` as documented upstream for avahi-daemon.",
+    "When you need a concrete invocation, run `avahi-daemon --check` as documented upstream for avahi-daemon.",
+    "When chaining Kali Linux tools, pair avahi-daemon with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `avahi-daemon --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-dae",
+        "description": "mon will reflect its current state and the selected host name in the process title.",
+        "source": "docs"
+      },
+      {
+        "name": "-daemon",
+        "description": "The Avahi mDNS/DNS-SD daemon",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Increase verbosity to debug level.",
+        "source": "docs"
+      },
+      {
+        "name": "--no-chroot",
+        "description": "Don't chroot(2) the daemon. This option is only available when compiled with chroot()",
+        "source": "docs"
+      },
+      {
+        "name": "--no-drop-root",
+        "description": "Don't drop root privileges after startup and don't require daemon to be started as",
+        "source": "docs"
+      },
+      {
+        "name": "--no-proc-title",
+        "description": "Don't change the process name while running. Unless this option is specified avahi-dae-",
+        "source": "docs"
+      },
+      {
+        "name": "--no-rlimits",
+        "description": "Don't enforce resource limits as specified in the configuration file. (See setrlimit(2)",
+        "source": "docs"
+      },
+      {
+        "name": "-set-host",
+        "description": "name(1)",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "avahi-daemon [options]",
+      "avahi-daemon --kill",
+      "avahi-daemon --reload",
+      "avahi-daemon --check"
+    ],
+    "readme": "avahi-daemon - The Avahi mDNS/DNS-SD daemon",
+    "how_to_use": "Install/setup: sudo apt install avahi. Run the primary entrypoint as shown in upstream docs, e.g. `avahi-daemon --kill`. Further invocations from upstream: `avahi-daemon --reload`; `avahi-daemon --check`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: Avahi mDNS/DNS-SD daemon.",
+    "why_to_use": "Prefer this tool based on upstream description: avahi-daemon - The Avahi mDNS/DNS-SD daemon.",
+    "usage_sections": [
+      "Install with: sudo apt install avahi",
+      "Install with: sudo apt install avahi"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

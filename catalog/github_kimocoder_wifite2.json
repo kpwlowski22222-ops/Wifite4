@@ -6,10 +6,12 @@
   "owner": "kimocoder",
   "category": "Wireless Security",
   "url": "https://github.com/kimocoder/wifite2",
-  "summary": "Repository indexing entry for the ``wifite2`` project. Index entry for a WiFi or radio offensive tool. Use when a MediaTek MT7922 monitor-mode or similar interface is up and the BSSID/ssid recon has completed. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Curated toolbox entry for kimocoder/wifite2 in the Wireless category.",
   "documentation": {
-    "readme": "https://raw.githubusercontent.com/kimocoder/wifite2/master/README.md",
-    "usage_sections": [],
+    "readme": "Curated toolbox entry for kimocoder/wifite2 in the Wireless category.",
+    "usage_sections": [
+      "Usage: Typical flags: --target selects the target; --port selects the port; --output writes output to a file."
+    ],
     "arguments": [
       {
         "name": "--depth",
@@ -133,16 +135,7 @@
       }
     ],
     "examples": [
-      {
-        "command": "sudo wifite --kill",
-        "description": "Run wifite2 in default aggressive mode (kills interfering processes).",
-        "source": "v2_enhancement"
-      },
-      {
-        "command": "wifite -i wlan0mon -c 1,6,11 --dict /usr/share/wordlists/rockyou.txt",
-        "description": "Capture WPA handshakes on a specific interface and channel set, crack with rockyou.",
-        "source": "v2_enhancement"
-      }
+      "wifite2 --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/wifite2.log"
     ],
     "function_signatures": [
       {
@@ -254,13 +247,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'exploit' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'wifi_6_ghz']' as the attack surface (wifi, wireless, monitor_mode).",
-    "why_to_use": "This tool is preferred because: Use when the MediaTek MT7922 (mt7921e) is in monitor mode on wlan0mon and the BSSID/ssid recon has completed.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/wifite2 && python3 wifite2.py --interface wlan0mon --bssid $KFIOSA_TARGET_BSSID",
-      "Step 2: cd toolboxes/wifite2 && python3 wifite2.py --help",
-      "Step 3: cd toolboxes/wifite2 && python3 wifite2.py --help"
-    ]
+    "when_to_use": "Use during the 'exploit' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, wifi_6_ghz] in the Wireless Security category.",
+    "why_to_use": "Prefer this tool based on upstream description: Curated toolbox entry for kimocoder/wifite2 in the Wireless category.",
+    "how_to_use": "Install/setup: git clone --depth 1 https://github.com/kimocoder/wifite2.git toolboxes/wifi/kimocoder__wifite2. Run the primary entrypoint as shown in upstream docs, e.g. `wifite2 --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/wifite2.log`. Curated toolbox entry for kimocoder/wifite2 in the Wireless category."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -343,21 +332,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use when the MediaTek MT7922 (mt7921e) is in monitor mode on wlan0mon and the BSSID/ssid recon has completed.",
-    "Use as a follow-up to airodump / kismet capture when the operator wants to attempt credential recovery or handshake capture.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When the engagement is in the exploit phase, use wifite2 as a cataloged Wireless Security tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `wifite2 --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/wifite2.log` as documented upstream for wifite2.",
+    "When chaining Wireless Security tools, pair wifite2 with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `wifite2 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/wifite2 && python3 wifite2.py --interface wlan0mon --bssid $KFIOSA_TARGET_BSSID",
-    "cd toolboxes/wifite2 && python3 wifite2.py --help",
-    "cd toolboxes/wifite2 && python3 wifite2.py --help",
-    "cd toolboxes/wifite2 && python3 wifite2.py --help",
-    "cd toolboxes/wifite2 && python3 wifite2.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifite2 --output $KFIOSA_OUTPUT_DIR/wifite2.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifite2 --output $KFIOSA_OUTPUT_DIR/wifite2.log"
+    "wifite2 --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/wifite2.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -382,5 +363,7 @@
     "channel",
     "rssi"
   ],
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

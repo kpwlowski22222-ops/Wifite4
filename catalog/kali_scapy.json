@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "scapy",
   "title": "scapy",
-  "summary": "### python3-scapy",
+  "summary": "scapy - Interactive packet manipulation tool",
   "version": "2.7.0+dfsg1-1",
   "architectures": [
     "all"
@@ -39,47 +39,25 @@
       "arguments": [
         {
           "flags": [
-            "-H"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "header-less start",
-          "default": null,
-          "choices": null,
-          "raw": " \t-H: header-less start"
-        },
-        {
-          "flags": [
             "-C"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "do not read startup file",
+          "description": "do not run startup file",
           "default": null,
           "choices": null,
-          "raw": " \t-C: do not read startup file"
+          "raw": "-C  do not run startup file"
         },
         {
           "flags": [
-            "-P"
+            "-c"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "do not read pre-startup file",
+          "description": "use STARTUP_FILE instead of $HOME/.config/scapy/startup.py as startup file",
           "default": null,
           "choices": null,
-          "raw": " \t-P: do not read pre-startup file"
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "display usage",
-          "default": null,
-          "choices": null,
-          "raw": "     -h     display usage"
+          "raw": "-c  use STARTUP_FILE instead of $HOME/.config/scapy/startup.py as startup file"
         },
         {
           "flags": [
@@ -90,29 +68,51 @@
           "description": "increase log verbosity. Can be used many times.",
           "default": null,
           "choices": null,
-          "raw": "     -d     increase log verbosity. Can be used many times."
+          "raw": "-d  increase log verbosity. Can be used many times."
+        },
+        {
+          "flags": [
+            "-emission"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "a=sniff(filter=\"tcp port 110\")",
+          "default": null,
+          "choices": null,
+          "raw": "-emission  a=sniff(filter=\"tcp port 110\")"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "display usage",
+          "default": null,
+          "choices": null,
+          "raw": "-h  display usage"
+        },
+        {
+          "flags": [
+            "-P"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "do not run prestart file",
+          "default": null,
+          "choices": null,
+          "raw": "-P  do not run prestart file"
         },
         {
           "flags": [
             "-p"
           ],
-          "metavar": "PRESTART_FILE",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "use PRESTART_FILE instead of $HOME/.config/scapy/prestart.py as pre-startup file",
           "default": null,
           "choices": null,
-          "raw": "     -p PRESTART_FILE"
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": "STARTUP_FILE",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "     -c STARTUP_FILE"
+          "raw": "-p  use PRESTART_FILE instead of $HOME/.config/scapy/prestart.py as pre-startup file"
         }
       ],
       "raw_help": "root@kali:~# scapy -h\n Usage: scapy.py [-c new_startup_file] [-p new_prestart_file] [-C] [-P] [-H]\n Args:\n \t-H: header-less start\n \t-C: do not read startup file\n \t-P: do not read pre-startup file",
@@ -280,21 +280,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use scapy because scapy - Interactive packet manipulation tool.",
+    "When you need a concrete invocation, run `scapy [options]` as documented upstream for scapy.",
+    "When chaining Kali Linux tools, pair scapy with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `scapy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/scapy && python3 scapy.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/scapy && python3 scapy.py --help",
-    "cd toolboxes/scapy && python3 scapy.py --help",
-    "cd toolboxes/scapy && python3 scapy.py --help",
-    "cd toolboxes/scapy && python3 scapy.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scapy --output $KFIOSA_OUTPUT_DIR/scapy.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scapy --output $KFIOSA_OUTPUT_DIR/scapy.log"
+    "scapy [options]"
   ],
   "attack_surface": [
     "web"
@@ -309,5 +301,57 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-C",
+        "description": "do not run startup file",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "use STARTUP_FILE instead of $HOME/.config/scapy/startup.py as startup file",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "increase log verbosity. Can be used many times.",
+        "source": "docs"
+      },
+      {
+        "name": "-emission",
+        "description": "a=sniff(filter=\"tcp port 110\")",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "display usage",
+        "source": "docs"
+      },
+      {
+        "name": "-P",
+        "description": "do not run prestart file",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "use PRESTART_FILE instead of $HOME/.config/scapy/prestart.py as pre-startup file",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "scapy [options]"
+    ],
+    "readme": "scapy - Interactive packet manipulation tool",
+    "how_to_use": "Install/setup: sudo apt install scapy. scapy - Interactive packet manipulation tool.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: scapy - Interactive packet manipulation tool.",
+    "why_to_use": "Prefer this tool based on upstream description: scapy - Interactive packet manipulation tool.",
+    "usage_sections": [
+      "Install with: sudo apt install scapy",
+      "Install with: sudo apt install scapy"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

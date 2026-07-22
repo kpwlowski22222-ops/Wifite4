@@ -1,18 +1,28 @@
 {
   "category": "wireless_ble_ext",
   "command_examples": [
-    "cd toolboxes/rtl8812au && python3 rtl8812au.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/rtl8812au && python3 rtl8812au.py --help",
-    "cd toolboxes/rtl8812au && python3 rtl8812au.py --help",
-    "cd toolboxes/rtl8812au && python3 rtl8812au.py --help",
-    "cd toolboxes/rtl8812au && python3 rtl8812au.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtl8812au --output $KFIOSA_OUTPUT_DIR/rtl8812au.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtl8812au --output $KFIOSA_OUTPUT_DIR/rtl8812au.log"
+    "sed -i 's/CONFIG_PLATFORM_I386_PC = y/CONFIG_PLATFORM_I386_PC = n/g' Makefile",
+    "sed -i 's/CONFIG_PLATFORM_ARM_RPI = n/CONFIG_PLATFORM_ARM_RPI = y/g' Makefile",
+    "sed -i 's/CONFIG_PLATFORM_ARM64_RPI = n/CONFIG_PLATFORM_ARM64_RPI = y/g' Makefile",
+    "export ARCH=arm",
+    "sed -i 's/^MAKE=\"/MAKE=\"ARCH=arm\\ /' dkms.conf",
+    "export ARCH=arm64",
+    "sed -i 's/^MAKE=\"/MAKE=\"ARCH=arm64\\ /' dkms.conf",
+    "options 88XXau rtw_led_ctrl=0",
+    "echo \"0\" > /proc/net/rtl8812au/$(your interface name)/led_ctrl",
+    "cat /proc/net/rtl8812au/$(your interface name)/led_ctrl"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "RTL8812AU/21AU and RTL8814AU Wireless drivers Only for use with Linux & Android",
+    "usage_sections": [
+      "Use \"ip\" and \"iw\" instead of \"ifconfig\" and \"iwconfig\""
+    ],
     "arguments": [
+      {
+        "name": "-ng",
+        "description": "https://www.aircrack-ng.org",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +139,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sed -i 's/CONFIG_PLATFORM_I386_PC = y/CONFIG_PLATFORM_I386_PC = n/g' Makefile",
+      "sed -i 's/CONFIG_PLATFORM_ARM_RPI = n/CONFIG_PLATFORM_ARM_RPI = y/g' Makefile",
+      "sed -i 's/CONFIG_PLATFORM_ARM64_RPI = n/CONFIG_PLATFORM_ARM64_RPI = y/g' Makefile",
+      "export ARCH=arm",
+      "sed -i 's/^MAKE=\"/MAKE=\"ARCH=arm\\ /' dkms.conf",
+      "export ARCH=arm64",
+      "sed -i 's/^MAKE=\"/MAKE=\"ARCH=arm64\\ /' dkms.conf",
+      "options 88XXau rtw_led_ctrl=0",
+      "echo \"0\" > /proc/net/rtl8812au/$(your interface name)/led_ctrl",
+      "cat /proc/net/rtl8812au/$(your interface name)/led_ctrl"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +276,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, rtl8812au, aircrack-ng).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/rtl8812au && python3 rtl8812au.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/rtl8812au && python3 rtl8812au.py --help",
-      "Step 3: cd toolboxes/rtl8812au && python3 rtl8812au.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the wireless_ble_ext category. Fits when the engagement needs: RTL8812AU/21AU and RTL8814AU Wireless drivers Only for use with Linux & Android.",
+    "why_to_use": "Prefer this tool based on upstream description: RTL8812AU/21AU and RTL8814AU Wireless drivers Only for use with Linux & Android.",
+    "how_to_use": "Install/setup: git clone -b v5.6.4.2 https://github.com/aircrack-ng/rtl8812au.git. Run the primary entrypoint as shown in upstream docs, e.g. `sed -i 's/CONFIG_PLATFORM_I386_PC = y/CONFIG_PLATFORM_I386_PC = n/g' Makefile`. Further invocations from upstream: `sed -i 's/CONFIG_PLATFORM_ARM_RPI = n/CONFIG_PLATFORM_ARM_RPI = y/g' Makefile`; `sed -i 's/CONFIG_PLATFORM_ARM64_RPI = n/CONFIG_PLATFORM_ARM64_RPI = y/g' Makefile`. RTL8812AU/21AU and RTL8814AU Wireless drivers Only for use with Linux & Android."
   },
   "full_name": "aircrack-ng/rtl8812au",
   "id": "github:aircrack-ng/rtl8812au",
@@ -282,7 +299,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``rtl8812au`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "RTL8812AU/21AU and RTL8814AU Wireless drivers Only for use with Linux & Android",
   "tags": [
     "offensive",
     "rtl8812au",
@@ -300,12 +317,13 @@
   },
   "url": "https://github.com/aircrack-ng/rtl8812au",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need wireless_ble_ext, use rtl8812au because RTL8812AU/21AU and RTL8814AU Wireless drivers Only for use with Linux & Android.",
+    "When you need a concrete invocation, run `sed -i 's/CONFIG_PLATFORM_I386_PC = y/CONFIG_PLATFORM_I386_PC = n/g' Makefile` as documented upstream for rtl8812au.",
+    "When you need a concrete invocation, run `sed -i 's/CONFIG_PLATFORM_ARM_RPI = n/CONFIG_PLATFORM_ARM_RPI = y/g' Makefile` as documented upstream for rtl8812au.",
+    "When you need a concrete invocation, run `sed -i 's/CONFIG_PLATFORM_ARM64_RPI = n/CONFIG_PLATFORM_ARM64_RPI = y/g' Makefile` as documented upstream for rtl8812au.",
+    "When you need a concrete invocation, run `export ARCH=arm` as documented upstream for rtl8812au.",
+    "When chaining wireless_ble_ext tools, pair rtl8812au with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `rtl8812au --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +342,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

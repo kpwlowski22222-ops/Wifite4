@@ -1,37 +1,142 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/sherlock && python3 sherlock.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/sherlock && python3 sherlock.py --help",
-    "cd toolboxes/sherlock && python3 sherlock.py --help",
-    "cd toolboxes/sherlock && python3 sherlock.py --help",
-    "cd toolboxes/sherlock && python3 sherlock.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sherlock --output $KFIOSA_OUTPUT_DIR/sherlock.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sherlock --output $KFIOSA_OUTPUT_DIR/sherlock.log"
+    "sherlock --help",
+    "USERNAMES [USERNAMES ...]",
+    "Sherlock: Find Usernames Across Social Networks (Version 0.16.0)",
+    "Display extra debugging information and metrics.",
+    "Make requests over a proxy. e.g. socks5://$KFIOSA_TARGET_HOST:1080"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "Hunt down social media accounts by username across 400+ social networks",
+    "usage_sections": [
+      "Installation: > [!WARNING] > Packages for ParrotOS and Ubuntu 24.04, maintained by a third party, appear to be broken. > Users of these systems should defer to uv/pipx/pip or Docker. | Method | Notes | | - | - | | pipx install sherlock-project | pip or uv may be used in place of pipx | | docke"
+    ],
     "arguments": [
+      {
+        "name": "-b",
+        "description": "Browse to all results on default browser.",
+        "source": "docs"
+      },
+      {
+        "name": "--browse",
+        "description": "Browse to all results on default browser.",
+        "source": "docs"
+      },
+      {
+        "name": "-color-scheme",
+        "description": "dark)\" srcset=\"https://api.star-history.com/svg?repos=sherlock-project/sherlock&type=Date&theme=dark\" />",
+        "source": "docs"
+      },
+      {
+        "name": "--csv",
+        "description": "Create Comma-Separated Values (CSV) File.",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "Display extra debugging information and metrics.",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "Display extra debugging information and metrics.",
+        "source": "docs"
+      },
+      {
+        "name": "--dump-response",
+        "description": "Dump the HTTP response to stdout for targeted debugging.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--ignore-exclusions",
+        "description": "Ignore upstream exclusions (may return more false positives)",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "Force the use of the local data.json file.",
+        "source": "docs"
+      },
+      {
+        "name": "--local",
+        "description": "Force the use of the local data.json file.",
+        "source": "docs"
+      },
+      {
+        "name": "--no-color",
+        "description": "Don't color terminal output",
+        "source": "docs"
+      },
+      {
+        "name": "--nsfw",
+        "description": "Include checking of NSFW sites from default list.",
+        "source": "docs"
+      },
+      {
+        "name": "--print-all",
+        "description": "Output sites where the username was not found.",
+        "source": "docs"
+      },
+      {
+        "name": "--print-found",
+        "description": "Output sites where the username was found (also if exported as file).",
+        "source": "docs"
+      },
+      {
+        "name": "--site",
+        "description": "Limit analysis to just the listed sites. Add multiple options to specify more than one site.",
+        "source": "docs"
+      },
+      {
+        "name": "--timeout",
+        "description": "Time (in seconds) to wait for response to requests (Default: 60)",
+        "source": "docs"
+      },
+      {
+        "name": "--txt",
+        "description": "Enable creation of a txt file",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Display extra debugging information and metrics.",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "Display extra debugging information and metrics.",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Display version information and dependencies.",
+        "source": "docs"
+      },
+      {
+        "name": "--xlsx",
+        "description": "Create the standard file for the modern Microsoft Excel spreadsheet (xlsx).",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
         "source": "v2_enhancement"
       },
       {
-        "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
-      },
-      {
         "name": "--output",
         "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
-      },
-      {
-        "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
       },
       {
         "name": "--port",
@@ -44,18 +149,8 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--threads",
         "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
-      },
-      {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
         "source": "generic_kfiosa"
       },
       {
@@ -99,11 +194,6 @@
         "source": "generic_kfiosa"
       },
       {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
-      },
-      {
         "name": "--quiet",
         "description": "Suppress non-error output.",
         "source": "generic_kfiosa"
@@ -129,7 +219,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sherlock --help",
+      "USERNAMES [USERNAMES ...]",
+      "Sherlock: Find Usernames Across Social Networks (Version 0.16.0)",
+      "Display extra debugging information and metrics.",
+      "Make requests over a proxy. e.g. socks5://$KFIOSA_TARGET_HOST:1080"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +351,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, sherlock, sherlock-project).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/sherlock && python3 sherlock.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/sherlock && python3 sherlock.py --help",
-      "Step 3: cd toolboxes/sherlock && python3 sherlock.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: Hunt down social media accounts by username across 400+ social networks.",
+    "why_to_use": "Prefer this tool based on upstream description: Hunt down social media accounts by username across 400+ social networks.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `sherlock --help`. Further invocations from upstream: `USERNAMES [USERNAMES ...]`; `Sherlock: Find Usernames Across Social Networks (Version 0.16.0)`. Hunt down social media accounts by username across 400+ social networks."
   },
   "full_name": "sherlock-project/sherlock",
   "id": "github:sherlock-project/sherlock",
@@ -282,7 +374,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``sherlock`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "Hunt down social media accounts by username across 400+ social networks",
   "tags": [
     "offensive",
     "sherlock",
@@ -300,12 +392,13 @@
   },
   "url": "https://github.com/sherlock-project/sherlock",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use sherlock because Hunt down social media accounts by username across 400+ social networks.",
+    "When you need a concrete invocation, run `sherlock --help` as documented upstream for sherlock.",
+    "When you need a concrete invocation, run `USERNAMES [USERNAMES ...]` as documented upstream for sherlock.",
+    "When you need a concrete invocation, run `Sherlock: Find Usernames Across Social Networks (Version 0.16.0)` as documented upstream for sherlock.",
+    "When you need a concrete invocation, run `Display extra debugging information and metrics.` as documented upstream for sherlock.",
+    "When chaining osint tools, pair sherlock with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `sherlock --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +417,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "dcfldd",
   "title": "dcfldd",
-  "summary": "### dcfldd",
+  "summary": "dcfldd - enhanced version of dd for forensics and security",
   "version": "1.9.3-2",
   "architectures": [
     "any"
@@ -36,10 +36,21 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "display this help and exit",
+          "description": "Display a help page and exit.",
           "default": null,
           "choices": null,
-          "raw": " --help              display this help and exit"
+          "raw": "--help  Display a help page and exit."
+        },
+        {
+          "flags": [
+            "-the-fly"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "dcfldd can hash the input data as it is being transferred, helping to",
+          "default": null,
+          "choices": null,
+          "raw": "-the-fly  dcfldd can hash the input data as it is being transferred, helping to"
         },
         {
           "flags": [
@@ -47,10 +58,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "output version information and exit",
+          "description": "Output version information and exit.",
           "default": null,
           "choices": null,
-          "raw": " --version           output version information and exit"
+          "raw": "--version  Output version information and exit."
         }
       ],
       "raw_help": "root@kali:~# dcfldd --help\n Usage: dcfldd [OPTION]...\n Enhanced version of dd for forensics and security.\n \n bs=BYTES            force ibs=BYTES and obs=BYTES (default=32768)\n cbs=BYTES           convert BYTES bytes at a time\n conv=KEYWORDS       convert the file as per the comma separated keyword list\n count=BLOCKS        copy only BLOCKS input blocks\n limit=BYTES         similar to count but using BYTES instead of BLOCKS\n ibs=BYTES           read BYTES bytes at a time\n if=FILE             read from FILE instead of stdin\n obs=BYTES           write BYTES bytes at a time\n of=FILE             write to FILE instead of stdout\n of:=COMMAND         exec and write output to process COMMAND\n seek=BLOCKS         skip BLOCKS obs-sized blocks at start of output\n skip=BLOCKS         skip BLOCKS ibs-sized blocks at start of input\n pattern=HEX         use the specified binary pattern as input\n textpattern=TEXT    use repeating TEXT as input\n errlog=FILE         send error messages to FILE as well as stderr\n hash=NAME           do hash calculation (md5, sha1, sha256, sha384 or sha512)\n hashlog=FILE        send hash output to FILE instead of stderr\n hashwindow=BYTES    perform a hash on every BYTES amount of data\n hashlog:=COMMAND    exec and write hashlog to process COMMAND\n ALGORITHMlog:=COMMAND    also works in the same fashion of hashlog:=COMMAND\n hashconv=[before|after]  perform the hashing before or after the conversions\n hashformat=FORMAT        display each hashwindow according to FORMAT\n totalhashformat=FORMAT   display the total hash value according to FORMAT\n status=[on|off]          display a continual status message on stderr\n statusinterval=N         update the status message every N blocks\n sizeprobe=[if|of|BYTES]  what to use as value to percentage indicator\n split=BYTES              write every BYTES amount of data to a new file\n splitformat=[TEXT|MAC|WIN]  the file extension format for split operation\n vf=FILE                  verify that FILE matches the specified input\n verifylog=FILE           send verify results to FILE instead of stderr\n verifylog:=COMMAND       exec and write verify results to process COMMAND\n diffwr=[on|off]          only write to output if destination block content differs\n \n --help              display this help and exit\n --version           output version information and exit\n \n Read the manpage dcfldd(1) for more details about each option and to see\n some examples.\n \n Report bugs at\n https://github.com/resurrecting-open-source-projects/dcfldd/issues",
@@ -198,21 +209,23 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use dcfldd because dcfldd - enhanced version of dd for forensics and security.",
+    "When you need a concrete invocation, run `dcfldd [OPTION]...` as documented upstream for dcfldd.",
+    "When you need a concrete invocation, run `dcfldd if=/dev/zero of=test bs=1M count=100` as documented upstream for dcfldd.",
+    "When you need a concrete invocation, run `dcfldd if=/dev/zero of=test bs=100M count=1` as documented upstream for dcfldd.",
+    "When you need a concrete invocation, run `dcfldd if=/dev/zero of=test bs=50M count=2` as documented upstream for dcfldd.",
+    "When chaining Kali Linux tools, pair dcfldd with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dcfldd --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/dcfldd && python3 dcfldd.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/dcfldd && python3 dcfldd.py --help",
-    "cd toolboxes/dcfldd && python3 dcfldd.py --help",
-    "cd toolboxes/dcfldd && python3 dcfldd.py --help",
-    "cd toolboxes/dcfldd && python3 dcfldd.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dcfldd --output $KFIOSA_OUTPUT_DIR/dcfldd.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dcfldd --output $KFIOSA_OUTPUT_DIR/dcfldd.log"
+    "dcfldd [OPTION]...",
+    "dcfldd if=/dev/zero of=test bs=1M count=100",
+    "dcfldd if=/dev/zero of=test bs=100M count=1",
+    "dcfldd if=/dev/zero of=test bs=50M count=2",
+    "dcfldd if=/dev/zero of=test limit=100M",
+    "dcfldd if=/dev/sdb bs=4096 of=sdb.img",
+    "dcfldd if=/dev/sdb bs=4096 hash=md5,sha256 md5log=sdb.md5 sha256log=sdb.sha256 of=sdb.img",
+    "dcfldd if=/dev/sdb vf=sdb.img"
   ],
   "attack_surface": [
     "web"
@@ -227,5 +240,44 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Display a help page and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-the-fly",
+        "description": "dcfldd can hash the input data as it is being transferred, helping to",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Output version information and exit.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "dcfldd [OPTION]...",
+      "dcfldd if=/dev/zero of=test bs=1M count=100",
+      "dcfldd if=/dev/zero of=test bs=100M count=1",
+      "dcfldd if=/dev/zero of=test bs=50M count=2",
+      "dcfldd if=/dev/zero of=test limit=100M",
+      "dcfldd if=/dev/sdb bs=4096 of=sdb.img",
+      "dcfldd if=/dev/sdb bs=4096 hash=md5,sha256 md5log=sdb.md5 sha256log=sdb.sha256 of=sdb.img",
+      "dcfldd if=/dev/sdb vf=sdb.img"
+    ],
+    "readme": "dcfldd - enhanced version of dd for forensics and security",
+    "how_to_use": "Install/setup: sudo apt install dcfldd. Run the primary entrypoint as shown in upstream docs, e.g. `dcfldd [OPTION]...`. Further invocations from upstream: `dcfldd if=/dev/zero of=test bs=1M count=100`; `dcfldd if=/dev/zero of=test bs=100M count=1`. dcfldd - enhanced version of dd for forensics and security.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: dcfldd - enhanced version of dd for forensics and security.",
+    "why_to_use": "Prefer this tool based on upstream description: dcfldd - enhanced version of dd for forensics and security.",
+    "usage_sections": [
+      "Install with: sudo apt install dcfldd",
+      "Install with: sudo apt install dcfldd"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

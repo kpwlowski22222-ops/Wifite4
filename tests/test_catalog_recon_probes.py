@@ -89,34 +89,71 @@ def test_module_level_run_probe_unknown():
     assert res["ok"] is False
 
 
+def _core_step_fns():
+    """Legacy method names for the 6 core recon steps."""
+    return [
+        "_wps_probe", "_client_enum", "_cve_search",
+        "_weakpass_wordlist", "_kb_search", "_catalog_iter",
+    ]
+
+
+def _novel_probe_fns():
+    """``_method`` names for the 9 novel probes only (not core aliases)."""
+    core = set(CatalogRecon._CORE_STEP_FNS)
+    return [f"_{m}" for m in CatalogRecon.RECON_PROBE_METHODS if m not in core]
+
+
 def test_run_default_does_not_run_probes():
     r = _recon()
-    all_steps = (["_wps_probe", "_client_enum", "_cve_search",
-                  "_weakpass_wordlist", "_kb_search", "_catalog_iter"] +
-                 [f"_{m}" for m in CatalogRecon.RECON_PROBE_METHODS])
-    mocks = {n: mock.MagicMock() for n in all_steps}
+    core = _core_step_fns()
+    novel = _novel_probe_fns()
+    mocks = {n: mock.MagicMock() for n in core + novel}
     for n, m in mocks.items():
         setattr(r, n, m)
     r.run()
-    for n in all_steps[:6]:
+    for n in core:
         mocks[n].assert_called_once()
-    for n in all_steps[6:]:
+    for n in novel:
         mocks[n].assert_not_called()
 
 
 def test_run_with_probes_runs_all_15(tmp_path):
+    """with_probes=True runs 6 core + 9 novel = 15 steps.
+
+    Core steps use legacy names (_wps_probe, not _wps). Novel probes use
+    _<method>. Must not AttributeError on missing _wps.
+    """
     r = _recon()
-    # weakpass needs an outdir that exists; point at tmp_path.
     r.outdir = tmp_path
-    all_steps = (["_wps_probe", "_client_enum", "_cve_search",
-                  "_weakpass_wordlist", "_kb_search", "_catalog_iter"] +
-                 [f"_{m}" for m in CatalogRecon.RECON_PROBE_METHODS])
-    mocks = {n: mock.MagicMock() for n in all_steps}
+    core = _core_step_fns()
+    novel = _novel_probe_fns()
+    assert len(core) == 6
+    assert len(novel) == 9
+    mocks = {n: mock.MagicMock() for n in core + novel}
     for n, m in mocks.items():
         setattr(r, n, m)
-    r.run(with_probes=True)
-    for n in all_steps:
+    report = r.run(with_probes=True)
+    for n in core + novel:
         mocks[n].assert_called_once()
+    # Sanity: report still has every recon key.
+    for k in list(CatalogRecon.RECON_PROBE_METHODS):
+        assert k in report
+
+
+def test_run_with_probes_no_attribute_error_on_core_aliases(tmp_path):
+    """Regression: wifi_screen calls run(with_probes=True); must not raise
+    'CatalogRecon' object has no attribute '_wps'."""
+    r = _recon()
+    r.outdir = tmp_path
+    # Leave real methods; stub only subprocess-heavy cores that need tools.
+    for name in _core_step_fns():
+        setattr(r, name, mock.MagicMock(return_value={"ok": True}))
+    for name in _novel_probe_fns():
+        setattr(r, name, mock.MagicMock(return_value={"ok": True}))
+    # Must not raise AttributeError.
+    report = r.run(with_probes=True)
+    assert "finished_at" in report
+    assert report.get("duration_s") is not None
 
 
 # ---------------------------------------------------------------------------

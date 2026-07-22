@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "nipper-ng",
   "title": "nipper-ng",
-  "summary": "### nipper-ng",
+  "summary": "nipper - Network Infrastructure Parser. Produces reports based of network device configuration file settings.",
   "version": "0.11.10-1kali3",
   "architectures": [
     "any"
@@ -31,59 +31,47 @@
       "arguments": [
         {
           "flags": [
-            "--input"
-          ],
-          "metavar": "= file",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "   --input=<file>"
-        },
-        {
-          "flags": [
-            "--output",
-            "--report"
-          ],
-          "metavar": "= file = file",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "   --output=<file> | --report=<file>"
-        },
-        {
-          "flags": [
-            "--csv"
-          ],
-          "metavar": "= file",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": "   --csv=<file>"
-        },
-        {
-          "flags": [
-            "--version"
+            "--fw1"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "To produce an HTML formatted report for a Cisco IOS-based router using an external configura-",
           "default": null,
           "choices": null,
-          "raw": "   --version"
+          "raw": "--fw1  To produce an HTML formatted report for a Cisco IOS-based router using an external configura-"
         },
         {
           "flags": [
-            "--help"
+            "--pix"
           ],
-          "metavar": "= topic",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "To produce an HTML formatted report for a CheckPoint Firewall-1:",
           "default": null,
           "choices": null,
-          "raw": "   --help[=<topic>]"
+          "raw": "--pix  To produce an HTML formatted report for a CheckPoint Firewall-1:"
+        },
+        {
+          "flags": [
+            "--screenos"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "To produce an XML formatted report for a Cisco PIX firewall:",
+          "default": null,
+          "choices": null,
+          "raw": "--screenos  To produce an XML formatted report for a Cisco PIX firewall:"
+        },
+        {
+          "flags": [
+            "-Whiting"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Copyright (C) 2006-2008 Ian Ventura-Whiting.",
+          "default": null,
+          "choices": null,
+          "raw": "-Whiting  Copyright (C) 2006-2008 Ian Ventura-Whiting."
         }
       ],
       "raw_help": "root@kali:~# nipper --help\n                    _                           ____\n              _ __ (_)_ __  _ __   ___ _ __    / ->/|\n             | '_ \\| | '_ \\| '_ \\ / _ \\ '__|  /<-_/ |\n             | | | | | |_) | |_) |  __/ |     |   | /\n             |_| |_|_| .__/| .__/ \\___|_|     |___|/\n                     |_|   |_|\n \n                          Version 0.11.10\n                    http://nipper.titania.co.uk\n            Copyright (C) 2006-2008 Ian Ventura-Whiting\n \n Nipper is a  Network Infrastructure  Configuration Parser.  Nipper takes\n a network infrastructure  device configuration,  processes the  file and\n details security-related  issues with detailed  recommendations.  Nipper\n was previous known as CiscoParse.\n \n By default, input is retrieved from stdin and is output (in HTML format)\n to stdout.\n \n Command:\n   nipper [Options]\n \n General Options:\n   --input=<file>\n   Specifies a  device configuration  file to  process.  For CheckPoint\n   Firewall-1 configurations, the input should be the conf directory.\n \n   --output=<file> | --report=<file>\n   Specified an output file for the report.\n \n   --csv=<file>\n   Want to output the network filtering configuration to a CSV file?.\n \n   --version\n   Displays the program version.\n \n Example:\n   The  example   below  will   process  a   Cisco   IOS-based   router\n   configuration file called ios.conf  and output  the report to a file\n   called report.html.\n \n   nipper --ios-router --input=ios.conf --output=report.html\n \n For additional help:\n   --help[=<topic>]\n   Show  the  online help  or show  the  additional  help on  the topic\n   specified.  The help  topics  are;  GENERAL,  DEVICES,  DEVICES-ADV,\n   SNMP,  REPORT, REPORT-ADV,  REPORT-SECT, REPORT-HTML,  REPORT-LATEX,\n   AUDIT-ACL, AUDIT-PASS, AUDIT-ADV or CONFIG-FILE.",
@@ -177,21 +165,20 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use nipper because nipper - Network Infrastructure Parser. Produces reports based of network device configuration file settings.",
+    "When you need a concrete invocation, run `nipper [OPTIONS]` as documented upstream for nipper.",
+    "When you need a concrete invocation, run `nipper --screenos --input=config.txt --output=report.html` as documented upstream for nipper.",
+    "When you need a concrete invocation, run `nipper --pix --xml --input=pix-config.txt --output=report.xml` as documented upstream for nipper.",
+    "When you need a concrete invocation, run `nipper --fw1 --input=/root/config-backups/fw1/conf/ --output=report.html` as documented upstream for nipper.",
+    "When chaining Kali Linux tools, pair nipper with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nipper --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/nipper-ng && python3 nipper-ng.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/nipper-ng && python3 nipper-ng.py --help",
-    "cd toolboxes/nipper-ng && python3 nipper-ng.py --help",
-    "cd toolboxes/nipper-ng && python3 nipper-ng.py --help",
-    "cd toolboxes/nipper-ng && python3 nipper-ng.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nipper-ng --output $KFIOSA_OUTPUT_DIR/nipper-ng.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nipper-ng --output $KFIOSA_OUTPUT_DIR/nipper-ng.log"
+    "nipper [OPTIONS]",
+    "nipper --screenos --input=config.txt --output=report.html",
+    "nipper --pix --xml --input=pix-config.txt --output=report.xml",
+    "nipper --fw1 --input=/root/config-backups/fw1/conf/ --output=report.html",
+    "nipper --config=nipper.conf --input=router.txt --output=report.html"
   ],
   "attack_surface": [
     "web"
@@ -206,5 +193,46 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--fw1",
+        "description": "To produce an HTML formatted report for a Cisco IOS-based router using an external configura-",
+        "source": "manpage"
+      },
+      {
+        "name": "--pix",
+        "description": "To produce an HTML formatted report for a CheckPoint Firewall-1:",
+        "source": "manpage"
+      },
+      {
+        "name": "--screenos",
+        "description": "To produce an XML formatted report for a Cisco PIX firewall:",
+        "source": "manpage"
+      },
+      {
+        "name": "-Whiting",
+        "description": "Copyright (C) 2006-2008 Ian Ventura-Whiting.",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "nipper [OPTIONS]",
+      "nipper --screenos --input=config.txt --output=report.html",
+      "nipper --pix --xml --input=pix-config.txt --output=report.xml",
+      "nipper --fw1 --input=/root/config-backups/fw1/conf/ --output=report.html",
+      "nipper --config=nipper.conf --input=router.txt --output=report.html"
+    ],
+    "readme": "nipper - Network Infrastructure Parser. Produces reports based of network device configuration file settings.",
+    "how_to_use": "Install/setup: sudo apt install nipper-ng. Run the primary entrypoint as shown in upstream docs, e.g. `nipper --screenos --input=config.txt --output=report.html`. Further invocations from upstream: `nipper --pix --xml --input=pix-config.txt --output=report.xml`; `nipper --fw1 --input=/root/config-backups/fw1/conf/ --output=report.html`. nipper - Network Infrastructure Parser. Produces reports based of network device configuration file settings.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: nipper - Network Infrastructure Parser. Produces reports based of network device configuration file settings.",
+    "why_to_use": "Prefer this tool based on upstream description: nipper - Network Infrastructure Parser. Produces reports based of network device configuration file settings.",
+    "usage_sections": [
+      "Install with: sudo apt install nipper-ng",
+      "Install with: sudo apt install nipper-ng"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

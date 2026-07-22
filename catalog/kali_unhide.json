@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "unhide",
   "title": "unhide",
-  "summary": "### unhide",
+  "summary": "unhide -- forensic tool to find hidden processes",
   "version": "20240510-2",
   "architectures": [
     "any"
@@ -34,58 +34,14 @@
       "arguments": [
         {
           "flags": [
-            "-V"
+            "-d"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Show version and exit",
+          "description": "Do a double check in brute test to avoid false positive.",
           "default": null,
           "choices": null,
-          "raw": "  -V          Show version and exit"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "verbose",
-          "default": "don't  display",
-          "choices": null,
-          "raw": "  -v          verbose"
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "display this help",
-          "default": null,
-          "choices": null,
-          "raw": "  -h          display this help"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "more checks (available only with procfs, checkopendir & checkchdir commands)",
-          "default": null,
-          "choices": null,
-          "raw": "  -m          more checks (available only with procfs, checkopendir & checkchdir commands)"
-        },
-        {
-          "flags": [
-            "-r"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "use alternate sysinfo test in meta-test",
-          "default": null,
-          "choices": null,
-          "raw": "  -r          use alternate sysinfo test in meta-test"
+          "raw": "-d  Do a double check in brute test to avoid false positive."
         },
         {
           "flags": [
@@ -93,32 +49,43 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "log result into unhide-linux.log file",
+          "description": "Write a log file (unhide-linux.log) in the current directory.",
           "default": null,
           "choices": null,
-          "raw": "  -f          log result into unhide-linux.log file"
+          "raw": "-f  Write a log file (unhide-linux.log) in the current directory."
         },
         {
           "flags": [
-            "-o"
+            "-h"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "same as '-f'",
+          "description": "Display help",
           "default": null,
           "choices": null,
-          "raw": "  -o          same as '-f'"
+          "raw": "-h  Display help"
         },
         {
           "flags": [
-            "-d"
+            "-m"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "do a double check in brute test",
+          "description": "Do more checks. As of 2012-03-17 version, this option has only effect for the procfs,",
           "default": null,
           "choices": null,
-          "raw": "  -d          do a double check in brute test"
+          "raw": "-m  Do more checks. As of 2012-03-17 version, this option has only effect for the procfs,"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use alternate version of sysinfo check in standard tests",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Use alternate version of sysinfo check in standard tests"
         },
         {
           "flags": [
@@ -126,21 +93,32 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "inhibit stdout buffering of subprocesses (needs stdbuf command)",
+          "description": "Do unbuffered write to stdout. This option could be useful when unhide is spawned by",
           "default": null,
           "choices": null,
-          "raw": "  -u          inhibit stdout buffering of subprocesses (needs stdbuf command)"
+          "raw": "-u  Do unbuffered write to stdout. This option could be useful when unhide is spawned by"
         },
         {
           "flags": [
-            "-H"
+            "-V"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Provide a slightly human frienlier output.  This option adds ending",
+          "description": "Show version and exit",
           "default": null,
           "choices": null,
-          "raw": "     -H     Provide a slightly human frienlier output.  This option adds ending"
+          "raw": "-V  Show version and exit"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "verbose, display warning message (default : don't display). This option may be re-",
+          "default": null,
+          "choices": null,
+          "raw": "-v  verbose, display warning message (default : don't display). This option may be re-"
         }
       ],
       "raw_help": "root@kali:~# unhide -h\n Unhide 20240509\n Copyright © 2010-2024 Yago Jesus & Patrick Gouin\n License GPLv3+ : GNU GPL version 3 or later\n http://www.unhide-forensics.info\n \n NOTE : This version of unhide is for systems using Linux >= 2.6 \n \n Usage: unhide [options] test_list\n \n Option :\n  -V          Show version and exit\n  -v          verbose\n  -h          display this help\n  -m          more checks (available only with procfs, checkopendir & checkchdir commands)\n  -r          use alternate sysinfo test in meta-test\n  -f          log result into unhide-linux.log file\n  -o          same as '-f'\n  -d          do a double check in brute test\n  -u          inhibit stdout buffering of subprocesses (needs stdbuf command)\n \n Test_list :\n  Test_list is one or more of the following\n  Standard tests :\n     brute\n     proc\n     procall\n     procfs\n     quick\n     reverse\n     sys\n  Elementary tests :\n     checkbrute\n     checkchdir\n     checkgetaffinity\n     checkgetparam\n     checkgetpgid\n     checkgetprio\n     checkRRgetinterval\n     checkgetsched\n     checkgetsid\n     checkkill\n     checknoprocps\n     checkopendir\n     checkproc\n     checkquick\n     checkreaddir\n     checkreverse\n     checksysinfo\n     checksysinfo2\n     checksysinfo3",
@@ -862,21 +840,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use unhide because unhide -- forensic tool to find hidden processes.",
+    "When you need a concrete invocation, run `unhide [OPTIONS] TEST_LIST` as documented upstream for unhide.",
+    "When you need a concrete invocation, run `unhide-posix proc | sys` as documented upstream for unhide.",
+    "When you need a concrete invocation, run `unhide quick` as documented upstream for unhide.",
+    "When you need a concrete invocation, run `unhide quick reverse` as documented upstream for unhide.",
+    "When chaining Kali Linux tools, pair unhide with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `unhide --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/unhide && python3 unhide.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/unhide && python3 unhide.py --help",
-    "cd toolboxes/unhide && python3 unhide.py --help",
-    "cd toolboxes/unhide && python3 unhide.py --help",
-    "cd toolboxes/unhide && python3 unhide.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST unhide --output $KFIOSA_OUTPUT_DIR/unhide.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST unhide --output $KFIOSA_OUTPUT_DIR/unhide.log"
+    "unhide [OPTIONS] TEST_LIST",
+    "unhide-posix proc | sys",
+    "unhide quick",
+    "unhide quick reverse",
+    "unhide sys proc",
+    "unhide -m -d sys procall brute reverse"
   ],
   "attack_surface": [
     "web"
@@ -891,5 +869,66 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "Do a double check in brute test to avoid false positive.",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "Write a log file (unhide-linux.log) in the current directory.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Display help",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "Do more checks. As of 2012-03-17 version, this option has only effect for the procfs,",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Use alternate version of sysinfo check in standard tests",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "Do unbuffered write to stdout. This option could be useful when unhide is spawned by",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Show version and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "verbose, display warning message (default : don't display). This option may be re-",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "unhide [OPTIONS] TEST_LIST",
+      "unhide-posix proc | sys",
+      "unhide quick",
+      "unhide quick reverse",
+      "unhide sys proc",
+      "unhide -m -d sys procall brute reverse"
+    ],
+    "readme": "unhide -- forensic tool to find hidden processes",
+    "how_to_use": "Install/setup: sudo apt install unhide. Run the primary entrypoint as shown in upstream docs, e.g. `unhide -m -d sys procall brute reverse`. unhide -- forensic tool to find hidden processes.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: unhide -- forensic tool to find hidden processes.",
+    "why_to_use": "Prefer this tool based on upstream description: unhide -- forensic tool to find hidden processes.",
+    "usage_sections": [
+      "Install with: sudo apt install unhide"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

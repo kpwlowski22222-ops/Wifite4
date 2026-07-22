@@ -186,9 +186,49 @@ def _parse_iw_phy_block(phy_id: str, phy_dump: str) -> Dict[str, Any]:
     return out
 
 
+def _sysfs_driver(iface: str) -> str:
+    """Return the kernel driver name from sysfs, or empty string.
+
+    Modern ``iw phy`` dumps often omit the ``Driver:`` line; sysfs is
+    the reliable source for mt7921e / mt7921u / iwlwifi / etc.
+    """
+    path = f"/sys/class/net/{iface}/device/driver"
+    try:
+        return os.path.basename(os.path.realpath(path)).lower()
+    except OSError:
+        return ""
+
+
+def _sysfs_phy(iface: str) -> str:
+    """Return ``phyN`` from ``/sys/class/net/<iface>/phy80211`` if present."""
+    path = f"/sys/class/net/{iface}/phy80211"
+    try:
+        return os.path.basename(os.path.realpath(path))
+    except OSError:
+        return ""
+
+
+def _normalize_phy_id(raw: str) -> str:
+    """Normalize ``0`` / ``phy0`` / ``phy#0`` → ``phy0``."""
+    s = (raw or "").strip()
+    if not s:
+        return ""
+    s = s.replace("phy#", "phy")
+    if s.isdigit():
+        return f"phy{s}"
+    if not s.startswith("phy") and re.match(r"^\d+$", s):
+        return f"phy{s}"
+    return s
+
+
 def detect_mt7921e_interfaces() -> List[Mt7921eInterfaceInfo]:
     """Run ``iw dev`` + ``iw phy`` and return all adapters whose driver
     is in ``MT7921E_DRIVERS``.
+
+    Handles both classic ``wiphy N`` under each Interface block and the
+    modern ``phy#N`` header form (MediaTek mt7921e on recent kernels
+    often has no per-interface ``wiphy`` line). Driver is taken from
+    ``iw phy`` when present, otherwise from sysfs.
 
     Never raises; returns ``[]`` on missing tools or no matching adapter.
     """
@@ -200,39 +240,69 @@ def detect_mt7921e_interfaces() -> List[Mt7921eInterfaceInfo]:
         return []
 
     # Collect iface names + the owning phy.
+    # Prefer explicit ``wiphy`` lines; fall back to the enclosing ``phy#N``.
     iface_to_phy: Dict[str, str] = {}
     current_iface: Optional[str] = None
+    current_phy: str = ""
     for line in devs["stdout"].splitlines():
+        # Accept both "phy#0" at column 0 and indented variants.
+        m_phy = re.match(r"^\s*phy#(\d+)\s*$", line)
+        if m_phy:
+            current_phy = f"phy{m_phy.group(1)}"
+            current_iface = None
+            continue
         m = re.match(r"\s*Interface\s+(\S+)\s*$", line)
         if m:
             current_iface = m.group(1)
-            iface_to_phy[current_iface] = ""
+            iface_to_phy[current_iface] = current_phy
             continue
         if current_iface and "wiphy" in line:
             m2 = re.search(r"wiphy\s+(\S+)", line)
             if m2:
-                iface_to_phy[current_iface] = m2.group(1).strip()
+                iface_to_phy[current_iface] = _normalize_phy_id(m2.group(1))
 
     results: List[Mt7921eInterfaceInfo] = []
     for name, phy in iface_to_phy.items():
         if not phy:
+            phy = _normalize_phy_id(_sysfs_phy(name))
+        if not phy:
+            live0 = _parse_iw_dev_info(name)
+            phy = _normalize_phy_id(live0.get("phy") or "")
+        parsed = _parse_iw_phy_block(phy, phys.get("stdout") or "") if phy else {
+            "driver": "unknown", "chipset": "",
+            "monitor_capable": False, "injection_capable_static": False,
+        }
+        driver = (parsed.get("driver") or "unknown").lower()
+        if driver in ("unknown", ""):
+            driver = _sysfs_driver(name) or "unknown"
+        # Prefer sysfs when it is a known mt7921e family driver even if
+        # iw phy said something else (or nothing).
+        sys_drv = _sysfs_driver(name)
+        if sys_drv and any(d in sys_drv for d in MT7921E_DRIVERS):
+            driver = sys_drv
+        if not any(d in driver for d in MT7921E_DRIVERS):
             continue
-        parsed = _parse_iw_phy_block(phy, phys["stdout"])
-        if not any(d in parsed["driver"] for d in MT7921E_DRIVERS):
-            continue
+        # Monitor mode: trust iw phy modes, else assume True for mt76
+        # (mt7921e always exposes monitor in Supported interface modes).
+        mon = bool(parsed.get("monitor_capable"))
+        if not mon and any(d in driver for d in MT7921E_DRIVERS):
+            mon = True
         info = Mt7921eInterfaceInfo(
             name=name,
-            phy=phy,
-            driver=parsed["driver"],
-            chipset=parsed["chipset"],
-            monitor_capable=parsed["monitor_capable"],
-            injection_capable_static=parsed["injection_capable_static"],
+            phy=phy or "unknown",
+            driver=driver,
+            chipset=parsed.get("chipset") or "MediaTek MT792x (sysfs)",
+            monitor_capable=mon,
+            injection_capable_static=bool(
+                parsed.get("injection_capable_static") or mon
+            ),
         )
         # Live channel / txpower / state.
         live = _parse_iw_dev_info(name)
         info.channel = live["channel"]
         info.txpower_dbm = live["txpower_dbm"]
         info.state = live["state"]
+        info.extras["detection"] = "iw+sysfs"
         results.append(info)
     return results
 

@@ -1,135 +1,336 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/katana && python3 katana.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/katana && python3 katana.py --help",
-    "cd toolboxes/katana && python3 katana.py --help",
-    "cd toolboxes/katana && python3 katana.py --help",
-    "cd toolboxes/katana && python3 katana.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST katana --output $KFIOSA_OUTPUT_DIR/katana.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST katana --output $KFIOSA_OUTPUT_DIR/katana.log"
+    "CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest",
+    "docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL",
+    "docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL -system-chrome -headless",
+    "sudo snap install golang --classic",
+    "sudo install -d -m 0755 /etc/apt/keyrings",
+    "curl -fsSL $KFIOSA_TARGET_URL \\",
+    "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] \\",
+    "$KFIOSA_TARGET_URL stable main\" \\",
+    "go install github.com/projectdiscovery/katana/cmd/katana@latest",
+    "katana -h"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "A next-generation crawling and spidering framework",
+    "usage_sections": [
+      "Features: - Fast And fully configurable web crawling - Standard and Headless mode - JavaScript parsing / crawling - Customizable automatic form filling - Scope control - Preconfigured field / Regex - Knowledge base - ML page-type / form classification (auto-downloaded model) - Customizable"
+    ],
     "arguments": [
       {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
+        "name": "-aff",
+        "description": "enable automatic form filling (experimental)",
+        "source": "docs"
       },
       {
-        "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "name": "-automatic-form-fill",
+        "description": "enable automatic form filling (experimental)",
+        "source": "docs"
       },
       {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
-        "source": "v2_enhancement"
+        "name": "-color",
+        "description": "#f0f0f2;\\n margin: 0;\\n padding: 0;\\n font-family: -apple-system, system-ui, BlinkMacSystemFont, \\\"Segoe UI\\\", \\\"Open Sans\\\", \\\"Helvetica Neue\\\", Helvetica, Ar",
+        "source": "docs"
       },
       {
-        "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "generic_kfiosa"
+        "name": "-debug",
+        "description": "display debug output",
+        "source": "docs"
       },
       {
-        "name": "--port",
-        "description": "Target port (default: service default).",
-        "source": "generic_kfiosa"
+        "name": "-disable-redirects",
+        "description": "disable following redirects (default false)",
+        "source": "docs"
       },
       {
-        "name": "--interface",
-        "description": "Network interface to bind to.",
-        "source": "generic_kfiosa"
+        "name": "-disable-unique-filter",
+        "description": "disable duplicate content filtering",
+        "source": "docs"
       },
       {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable).",
-        "source": "generic_kfiosa"
+        "name": "-disable-update-check",
+        "description": "disable automatic katana update check",
+        "source": "docs"
       },
       {
-        "name": "--threads",
-        "description": "Number of concurrent workers.",
-        "source": "generic_kfiosa"
+        "name": "-display-out-scope",
+        "description": "display external endpoint from scoped crawling",
+        "source": "docs"
       },
       {
-        "name": "--timeout",
-        "description": "Per-operation timeout in seconds.",
-        "source": "generic_kfiosa"
+        "name": "-do",
+        "description": "display external endpoint from scoped crawling",
+        "source": "docs"
       },
       {
-        "name": "--rate",
-        "description": "Packet / request rate limit.",
-        "source": "generic_kfiosa"
+        "name": "-dr",
+        "description": "disable following redirects (default false)",
+        "source": "docs"
       },
       {
-        "name": "--wordlist",
-        "description": "Path to a wordlist (users, passwords, paths).",
-        "source": "generic_kfiosa"
+        "name": "-duc",
+        "description": "disable automatic katana update check",
+        "source": "docs"
       },
       {
-        "name": "--proxy",
-        "description": "HTTP/SOCKS proxy URL.",
-        "source": "generic_kfiosa"
+        "name": "-duf",
+        "description": "disable duplicate content filtering",
+        "source": "docs"
       },
       {
-        "name": "--user-agent",
-        "description": "HTTP User-Agent header.",
-        "source": "generic_kfiosa"
+        "name": "-eof",
+        "description": "exclude fields from jsonl output",
+        "source": "docs"
       },
       {
-        "name": "--cookie",
-        "description": "HTTP Cookie header.",
-        "source": "generic_kfiosa"
+        "name": "-exclude-output-fields",
+        "description": "exclude fields from jsonl output",
+        "source": "docs"
       },
       {
-        "name": "--header",
-        "description": "Extra HTTP header (key:value).",
-        "source": "generic_kfiosa"
+        "name": "-filter-similar",
+        "description": "filter crawling of similar looking URLs (e.g., /users/123 and /users/456)",
+        "source": "docs"
       },
       {
-        "name": "--insecure",
-        "description": "Skip TLS verification (lab use only).",
-        "source": "generic_kfiosa"
+        "name": "-form-extraction",
+        "description": "extract form, input, textarea & select elements in jsonl output",
+        "source": "docs"
       },
       {
-        "name": "--json",
-        "description": "Emit JSON output (machine-readable).",
-        "source": "generic_kfiosa"
+        "name": "-fsu",
+        "description": "filter crawling of similar looking URLs (e.g., /users/123 and /users/456)",
+        "source": "docs"
       },
       {
-        "name": "--no-color",
-        "description": "Disable ANSI color in output.",
-        "source": "generic_kfiosa"
+        "name": "-fx",
+        "description": "extract form, input, textarea & select elements in jsonl output",
+        "source": "docs"
       },
       {
-        "name": "--quiet",
-        "description": "Suppress non-error output.",
-        "source": "generic_kfiosa"
+        "name": "-hc",
+        "description": "run diagnostic check up",
+        "source": "docs"
       },
       {
-        "name": "--dry-run",
-        "description": "Print what would be done without making any changes.",
-        "source": "v2_enhancement"
+        "name": "-headless",
+        "description": "enable headless hybrid crawling (experimental)",
+        "source": "docs"
       },
       {
-        "name": "--yes",
-        "description": "Skip confirmation prompts (use with care).",
-        "source": "v2_enhancement"
+        "name": "-health-check",
+        "description": "run diagnostic check up",
+        "source": "docs"
       },
       {
-        "name": "--force",
-        "description": "Force the action even if a safety check would block it.",
-        "source": "v2_enhancement"
+        "name": "-hl",
+        "description": "enable headless hybrid crawling (experimental)",
+        "source": "docs"
       },
       {
-        "name": "--no-banner",
-        "description": "Suppress banner / tool-name output.",
-        "source": "v2_enhancement"
+        "name": "-ignore-query-params",
+        "description": "Ignore crawling same path with different query-param values",
+        "source": "docs"
+      },
+      {
+        "name": "-iqp",
+        "description": "Ignore crawling same path with different query-param values",
+        "source": "docs"
+      },
+      {
+        "name": "-jc",
+        "description": "enable endpoint parsing / crawling in javascript file",
+        "source": "docs"
+      },
+      {
+        "name": "-js-crawl",
+        "description": "enable endpoint parsing / crawling in javascript file",
+        "source": "docs"
+      },
+      {
+        "name": "-jsl",
+        "description": "enable jsluice parsing in javascript file (memory intensive)",
+        "source": "docs"
+      },
+      {
+        "name": "-jsluice",
+        "description": "enable jsluice parsing in javascript file (memory intensive)",
+        "source": "docs"
+      },
+      {
+        "name": "-json",
+        "description": "write output in JSON Lines format",
+        "source": "docs"
+      },
+      {
+        "name": "-jsonl",
+        "description": "write output in jsonl format",
+        "source": "docs"
+      },
+      {
+        "name": "-kb",
+        "description": "enable knowledge base classification",
+        "source": "docs"
+      },
+      {
+        "name": "-kb-endpoints",
+        "description": "enable endpoints extractor (classifies REST/GraphQL/SOAP/XHR requests)",
+        "source": "docs"
+      },
+      {
+        "name": "-kb-secrets",
+        "description": "enable secrets extractor in the knowledge base",
+        "source": "docs"
+      },
+      {
+        "name": "-kb-validate-secrets",
+        "description": "validate detected secrets against their provider (sends live API calls)",
+        "source": "docs"
+      },
+      {
+        "name": "-knowledge-base",
+        "description": "enable knowledge base classification",
+        "source": "docs"
+      },
+      {
+        "name": "-LIMIT",
+        "description": "-c, -concurrency int number of concurrent fetchers to use (default 10)",
+        "source": "docs"
+      },
+      {
+        "name": "-list-output-fields",
+        "description": "list available fields for jsonl output format",
+        "source": "docs"
+      },
+      {
+        "name": "-lof",
+        "description": "list available fields for jsonl output format",
+        "source": "docs"
+      },
+      {
+        "name": "-Modified",
+        "description": "Thu, 17 Oct 2019 07:18:26 GMT\\r\\nServer: ECS (dcb/7EA3)\\r\\nVary: Accept-Encoding\\r\\nX-Cache: HIT\\r\\n\\r\\n<!doctype html>\\n<html>\\n<head>\\n <title>Example Domain</title>\\n\\n <m",
+        "source": "docs"
+      },
+      {
+        "name": "-nc",
+        "description": "disable output content coloring (ANSI escape codes)",
+        "source": "docs"
+      },
+      {
+        "name": "-ncb",
+        "description": "do not overwrite output file",
+        "source": "docs"
+      },
+      {
+        "name": "-no-clobber",
+        "description": "do not overwrite output file",
+        "source": "docs"
+      },
+      {
+        "name": "-no-color",
+        "description": "disable output content coloring (ANSI escape codes)",
+        "source": "docs"
+      },
+      {
+        "name": "-no-incognito",
+        "description": "start headless chrome without incognito mode",
+        "source": "docs"
+      },
+      {
+        "name": "-no-sandbox",
+        "description": "start headless chrome in --no-sandbox mode",
+        "source": "docs"
+      },
+      {
+        "name": "-no-scope",
+        "description": "disables host based default scope",
+        "source": "docs"
+      },
+      {
+        "name": "-noi",
+        "description": "start headless chrome without incognito mode",
+        "source": "docs"
+      },
+      {
+        "name": "-nos",
+        "description": "start headless chrome in --no-sandbox mode",
+        "source": "docs"
+      },
+      {
+        "name": "-ns",
+        "description": "disables host based default scope",
+        "source": "docs"
+      },
+      {
+        "name": "-ob",
+        "description": "omit response body from jsonl output",
+        "source": "docs"
+      },
+      {
+        "name": "-omit-body",
+        "description": "omit response body from jsonl output",
+        "source": "docs"
+      },
+      {
+        "name": "-omit-raw",
+        "description": "omit raw requests/responses from jsonl output",
+        "source": "docs"
+      },
+      {
+        "name": "-or",
+        "description": "omit raw requests/responses from jsonl output",
+        "source": "docs"
+      },
+      {
+        "name": "-page-content-similar",
+        "description": "enable page content similarity filtering (simhash|tfidf|bm25)",
+        "source": "docs"
+      },
+      {
+        "name": "-pcs",
+        "description": "enable page content similarity filtering (simhash|tfidf|bm25)",
+        "source": "docs"
+      },
+      {
+        "name": "-pprof-server",
+        "description": "enable pprof server",
+        "source": "docs"
+      },
+      {
+        "name": "-sb",
+        "description": "show the browser on the screen with headless mode",
+        "source": "docs"
+      },
+      {
+        "name": "-sc",
+        "description": "use local installed chrome browser instead of katana installed",
+        "source": "docs"
+      },
+      {
+        "name": "-sdd",
+        "description": "alias for -pcs",
+        "source": "docs"
+      },
+      {
+        "name": "-show-browser",
+        "description": "show the browser on the screen with headless mode",
+        "source": "docs"
       }
     ],
-    "examples": [],
+    "examples": [
+      "CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest",
+      "docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL",
+      "docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL -system-chrome -headless",
+      "sudo snap install golang --classic",
+      "sudo install -d -m 0755 /etc/apt/keyrings",
+      "curl -fsSL $KFIOSA_TARGET_URL \\",
+      "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] \\",
+      "$KFIOSA_TARGET_URL stable main\" \\",
+      "go install github.com/projectdiscovery/katana/cmd/katana@latest",
+      "katana -h"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +456,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, katana, projectdiscovery).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/katana && python3 katana.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/katana && python3 katana.py --help",
-      "Step 3: cd toolboxes/katana && python3 katana.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: A next-generation crawling and spidering framework.",
+    "why_to_use": "Prefer this tool based on upstream description: A next-generation crawling and spidering framework.",
+    "how_to_use": "Install/setup: docker run projectdiscovery/katana:latest -u https://tesla.com; docker run projectdiscovery/katana:latest -u https://tesla.com -system-chrome -headless. Run the primary entrypoint as shown in upstream docs, e.g. `CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest`. Further invocations from upstream: `docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL`; `docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL -system-chrome -headless`. A next-generation crawling and spidering framework."
   },
   "full_name": "projectdiscovery/katana",
   "id": "github:projectdiscovery/katana",
@@ -282,7 +479,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``katana`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "A next-generation crawling and spidering framework",
   "tags": [
     "offensive",
     "katana",
@@ -300,12 +497,13 @@
   },
   "url": "https://github.com/projectdiscovery/katana",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use katana because A next-generation crawling and spidering framework.",
+    "When you need a concrete invocation, run `CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest` as documented upstream for katana.",
+    "When you need a concrete invocation, run `docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL` as documented upstream for katana.",
+    "When you need a concrete invocation, run `docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL -system-chrome -headless` as documented upstream for katana.",
+    "When you need a concrete invocation, run `sudo snap install golang --classic` as documented upstream for katana.",
+    "When chaining recon tools, pair katana with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `katana --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +522,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

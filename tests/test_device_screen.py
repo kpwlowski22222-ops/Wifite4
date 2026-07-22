@@ -11,6 +11,8 @@ def _fake_stdscr(keyseq):
         def __init__(self):
             self.keys = list(keyseq)
             self.lines = []
+            self.nodelay_calls = []
+            self.timeout_calls = []
         def erase(self):
             pass
         def getmaxyx(self):
@@ -23,6 +25,10 @@ def _fake_stdscr(keyseq):
             pass
         def refresh(self):
             pass
+        def nodelay(self, flag):
+            self.nodelay_calls.append(flag)
+        def timeout(self, ms):
+            self.timeout_calls.append(ms)
         def getch(self):
             return self.keys.pop(0) if self.keys else -1
     return _Std()

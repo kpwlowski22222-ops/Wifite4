@@ -31,8 +31,11 @@ class TestFallbackOrder:
         from core.ai_backend.exploit_generator import DEFAULT_FALLBACK_ORDER
         assert len(DEFAULT_FALLBACK_ORDER) > 0
         first_id = DEFAULT_FALLBACK_ORDER[0][0]
-        assert first_id == OPERATOR_PREFERRED_MODEL, (
-            f"expected {OPERATOR_PREFERRED_MODEL} at top, got {first_id}"
+        # Phase 4 (2026-07-22): operator's preferred primary is
+        # the cloud-routed ``minimax-m3:cloud``. The HERETIC 9B
+        # is now the Tier-1 (chain-planning overlay) at index 1.
+        assert first_id == "minimax-m3:cloud", (
+            f"expected minimax-m3:cloud at top, got {first_id}"
         )
 
     def test_operator_preferred_in_fallback_order(self):
@@ -45,7 +48,13 @@ class TestFallbackOrder:
         for entry in DEFAULT_FALLBACK_ORDER:
             assert len(entry) == 4, f"bad entry shape: {entry}"
             repo_id, size, license_, gated = entry
-            assert isinstance(repo_id, str) and "/" in repo_id
+            # Phase 4: the Tier 0 entry is a cloud tag (no slash)
+            # like ``minimax-m3:cloud``. All other entries are HF
+            # repo ids and have a slash.
+            if repo_id == "minimax-m3:cloud":
+                assert isinstance(repo_id, str) and ":" in repo_id
+            else:
+                assert isinstance(repo_id, str) and "/" in repo_id
             assert isinstance(size, str)
             assert isinstance(license_, str)
             assert isinstance(gated, bool)

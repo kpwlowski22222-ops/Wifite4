@@ -6,55 +6,122 @@
   "owner": "cognis-digital",
   "category": "Bluetooth",
   "url": "https://github.com/cognis-digital/blescope",
-  "summary": "<a name=\"top\"></a>\n<div align=\"center\">",
+  "summary": "Sniff and decode BLE GATT traffic, fingerprint device profiles, and assert on insecure pairing/characteristics in CI against a capture.",
   "documentation": {
-    "readme": "<a name=\"top\"></a>\n<div align=\"center\">",
-    "usage_sections": [],
+    "readme": "Sniff and decode BLE GATT traffic, fingerprint device profiles, and assert on insecure pairing/characteristics in CI against a capture.",
+    "usage_sections": [
+      "Features: - ✅ Decode GATT service/characteristic UUIDs (16-bit + Bluetooth-base 128-bit) - ✅ Load captures from JSON or a tolerant key: value text form (and stdin) - ✅ Fingerprint device profile (smartlock · fitnesstracker · beacon · hidperipheral · environmentalsensor) - ✅ Audit SMP pairi"
+    ],
     "arguments": [
       {
         "name": "--authorized",
-        "description": "CLI flag '--authorized' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "confirm you own / are permitted to test the target devices (REQUIRED)",
+        "source": "docs"
       },
       {
-        "name": "--demo",
-        "description": "CLI flag '--demo' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-blescope",
+        "description": "run: blescope scan captures/device.json --format sarif > blescope.sarif",
+        "source": "docs"
+      },
+      {
+        "name": "-connect",
+        "description": "pip install \"",
+        "source": "docs"
+      },
+      {
+        "name": "--ddg",
+        "description": "use DuckDuckGo HTML scrape",
+        "source": "docs"
+      },
+      {
+        "name": "--feed",
+        "description": "fetch an RSS/Atom feed URL instead of searching",
+        "source": "docs"
       },
       {
         "name": "--format",
-        "description": "CLI flag '--format' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "output format (default: table)",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--header",
+        "description": "Key: Value",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
-        "name": "--min-severity",
-        "description": "CLI flag '--min-severity' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-hostable",
+        "description": "point it at a target, get prioritized results in the format your workflow already speaks (table · JSON · SARIF), gate CI on it, and let agents drive it over MCP.",
+        "source": "docs"
+      },
+      {
+        "name": "-in",
+        "description": "* **OFF by default.** Active code never runs from the passive ``scan`` path.",
+        "source": "docs"
+      },
+      {
+        "name": "-IOCAP",
+        "description": "NoInputNoOutput I/O capability forces Just Works",
+        "source": "docs"
+      },
+      {
+        "name": "-JUSTWORKS",
+        "description": "Just Works pairing (no MITM protection)",
+        "source": "docs"
+      },
+      {
+        "name": "-LEGACY",
+        "description": "LE Legacy Pairing (no Secure Connections)",
+        "source": "docs"
+      },
+      {
+        "name": "-live",
+        "description": "pull live GATT from authorized in-scope BLE",
+        "source": "docs"
+      },
+      {
+        "name": "-PLAINTEXT-CTRL",
+        "description": "Plaintext write to control characteristic 2a56",
+        "source": "docs"
       },
       {
         "name": "--rate",
-        "description": "Packet / request rate limit (packets/sec).",
-        "source": "v2_enhancement"
+        "description": "maximum active probes per second (default: 1.0)",
+        "source": "docs"
       },
       {
-        "name": "--target-allowlist",
-        "description": "CLI flag '--target-allowlist' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-scanning",
+        "description": "```bash",
+        "source": "docs"
+      },
+      {
+        "name": "-UNAUTH-WRITE",
+        "description": "Unauthenticated writable control characteristic 2a56",
+        "source": "docs"
       },
       {
         "name": "--version",
-        "description": "Print the tool version and exit.",
-        "source": "v2_enhancement"
+        "description": "show program's version number and exit",
+        "source": "docs"
       },
       {
-        "name": "-rm",
-        "description": "CLI flag '-rm' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-WEAKKEY",
+        "description": "Short encryption key (7 bytes)",
+        "source": "docs"
+      },
+      {
+        "name": "--when",
+        "description": "recency bound for search (e.g. 1d, 7d, 1h)",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -109,11 +176,6 @@
       {
         "name": "--cookie",
         "description": "HTTP Cookie header value.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--header",
-        "description": "Extra HTTP header in key:value form (repeatable).",
         "source": "v2_enhancement"
       },
       {
@@ -193,7 +255,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "blescope scan capture.json    # → prioritized findings in seconds (passive, offline)",
+      "blescope-emit --version",
+      "blescope 0.6.0",
+      "blescope-emit --help",
+      "usage: blescope [-h] [--version] {scan,scan-live} ...",
+      "blescope scan capture.json",
+      "blescope scan capture.json --format json | jq .findings",
+      "cat capture.json | blescope scan -",
+      "blescope scan demos/01-basic/frontdoor_lock.json",
+      "blescope scan capture.json --min-severity medium"
+    ],
     "file_listing": [
       "01_ble-gatt-protocol-fundamentals.md",
       "02_bluetooth-low-energy-architecture-overview.md",
@@ -295,13 +368,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/blescope && python3 blescope.py --help",
-      "Step 2: cd toolboxes/blescope && cat README.md",
-      "Step 3: cd toolboxes/blescope && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: Sniff and decode BLE GATT traffic, fingerprint device profiles, and assert on insecure pairing/characteristics in CI against a capture.",
+    "why_to_use": "Prefer this tool based on upstream description: Sniff and decode BLE GATT traffic, fingerprint device profiles, and assert on insecure pairing/characteristics in CI against a capture.",
+    "how_to_use": "Install/setup: pip install cognis-blescope; pip install -e .            # or: pipx install blescope. Run the primary entrypoint as shown in upstream docs, e.g. `blescope scan capture.json    # → prioritized findings in seconds (passive, offline)`. Further invocations from upstream: `blescope-emit --version`; `blescope 0.6.0`. Sniff and decode BLE GATT traffic, fingerprint device profiles, and assert on insecure pairing/characteristics in CI against a capture."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -334,18 +403,25 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use blescope because Sniff and decode BLE GATT traffic, fingerprint device profiles, and assert on insecure pairing/characteristics in CI against a capture.",
+    "When you need a concrete invocation, run `blescope scan capture.json    # → prioritized findings in seconds (passive, offline)` as documented upstream for blescope.",
+    "When you need a concrete invocation, run `blescope-emit --version` as documented upstream for blescope.",
+    "When you need a concrete invocation, run `blescope 0.6.0` as documented upstream for blescope.",
+    "When you need a concrete invocation, run `blescope-emit --help` as documented upstream for blescope.",
+    "When chaining Bluetooth tools, pair blescope with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `blescope --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/blescope && python3 blescope.py --help",
-    "cd toolboxes/blescope && cat README.md",
-    "cd toolboxes/blescope && ls -la",
-    "cd toolboxes/blescope && python3 blescope.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blescope --output $KFIOSA_OUTPUT_DIR/blescope.log"
+    "blescope scan capture.json    # → prioritized findings in seconds (passive, offline)",
+    "blescope-emit --version",
+    "blescope 0.6.0",
+    "blescope-emit --help",
+    "usage: blescope [-h] [--version] {scan,scan-live} ...",
+    "blescope scan capture.json",
+    "blescope scan capture.json --format json | jq .findings",
+    "cat capture.json | blescope scan -",
+    "blescope scan demos/01-basic/frontdoor_lock.json",
+    "blescope scan capture.json --min-severity medium"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -370,5 +446,7 @@
     "python",
     "shell",
     "typescript"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

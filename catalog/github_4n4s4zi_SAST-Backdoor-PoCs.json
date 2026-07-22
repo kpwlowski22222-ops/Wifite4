@@ -8,7 +8,7 @@
   "url": "https://github.com/4n4s4zi/SAST-Backdoor-PoCs",
   "summary": "SAST Scan Blindspot Backdoors\nExample of vulnerable code with supporting exploit implementation whose data/control flow make it difficult for eneterprise static vulnerability scanners to detect problems with.",
   "documentation": {
-    "readme": "SAST Scan Blindspot Backdoors\nExample of vulnerable code with supporting exploit implementation whose data/control flow make it difficult for eneterprise static vulnerability scanners to detect problems with.",
+    "readme": "SAST Scan Blindspot Backdoors Example of vulnerable code with supporting exploit implementation whose data/control flow make it difficult for eneterprise static vulnerability scanners to detect problems with.",
     "usage_sections": [],
     "arguments": [
       {
@@ -193,7 +193,14 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo docker build --progress=plain -t cwe78-poc-rce .",
+      "sudo docker run --rm --network host -it --entrypoint /bin/sh cwe78-poc-rce",
+      "nc -nvlp 4444",
+      "nc -nvlp 4445",
+      "sudo python3 -m http.server 80",
+      "build/CWE78_OS_Command_Injection__char_connect_socket_execl_32"
+    ],
     "file_listing": [
       "CWE78_OS_Command_Injection__char_connect_socket_execl_32.c",
       "Dockerfile",
@@ -252,13 +259,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['web', 'shell_windows', 'shell_linux']' as the attack surface (command_and_control, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/SAST-Backdoor-PoCs && python3 SAST-Backdoor-PoCs.py --help",
-      "Step 2: cd toolboxes/SAST-Backdoor-PoCs && cat README.md",
-      "Step 3: cd toolboxes/SAST-Backdoor-PoCs && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [web, shell_windows, shell_linux] in the Command and Control category. Fits when the engagement needs: SAST Scan Blindspot Backdoors\nExample of vulnerable code with supporting exploit implementation whose data/control flow make it difficult for eneterprise static vulnerability scanners to detect problems with.",
+    "why_to_use": "Prefer this tool based on upstream description: SAST Scan Blindspot Backdoors Example of vulnerable code with supporting exploit implementation whose data/control flow make it difficult for eneterprise static vulnerability scanners to detect problems with.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `sudo docker build --progress=plain -t cwe78-poc-rce .`. Further invocations from upstream: `sudo docker run --rm --network host -it --entrypoint /bin/sh cwe78-poc-rce`; `nc -nvlp 4444`. SAST Scan Blindspot Backdoors Example of vulnerable code with supporting exploit implementation whose data/control flow make it difficult for eneterprise static vulnerability scanners to detect problems with."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -291,18 +294,22 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Command and Control system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Command and Control, use SAST-Backdoor-PoCs because SAST Scan Blindspot Backdoors\nExample of vulnerable code with supporting exploit implementation whose data/control flow make it difficult for eneterprise static.",
+    "When the engagement is in the post_exploit phase, use SAST-Backdoor-PoCs as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `sudo docker build --progress=plain -t cwe78-poc-rce .` as documented upstream for SAST-Backdoor-PoCs.",
+    "When you need a concrete invocation, run `sudo docker run --rm --network host -it --entrypoint /bin/sh cwe78-poc-rce` as documented upstream for SAST-Backdoor-PoCs.",
+    "When you need a concrete invocation, run `nc -nvlp 4444` as documented upstream for SAST-Backdoor-PoCs.",
+    "When you need a concrete invocation, run `nc -nvlp 4445` as documented upstream for SAST-Backdoor-PoCs.",
+    "When chaining Command and Control tools, pair SAST-Backdoor-PoCs with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `SAST-Backdoor-PoCs --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/SAST-Backdoor-PoCs && python3 SAST-Backdoor-PoCs.py --help",
-    "cd toolboxes/SAST-Backdoor-PoCs && cat README.md",
-    "cd toolboxes/SAST-Backdoor-PoCs && ls -la",
-    "cd toolboxes/SAST-Backdoor-PoCs && python3 SAST-Backdoor-PoCs.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SAST-Backdoor-PoCs --output $KFIOSA_OUTPUT_DIR/SAST-Backdoor-PoCs.log"
+    "sudo docker build --progress=plain -t cwe78-poc-rce .",
+    "sudo docker run --rm --network host -it --entrypoint /bin/sh cwe78-poc-rce",
+    "nc -nvlp 4444",
+    "nc -nvlp 4445",
+    "sudo python3 -m http.server 80",
+    "build/CWE78_OS_Command_Injection__char_connect_socket_execl_32"
   ],
   "attack_surface": [
     "web",
@@ -326,5 +333,7 @@
   "_languages": [
     "c",
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

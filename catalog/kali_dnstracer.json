@@ -27,7 +27,63 @@
       "path": "/usr/bin/dnstracer",
       "description": "trace a chain of DNS servers to the source",
       "usage": "dnstracer [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-C"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable negative caching.",
+          "default": null,
+          "choices": null,
+          "raw": "-C  Enable negative caching."
+        },
+        {
+          "flags": [
+            "-c"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Disable local caching.",
+          "default": null,
+          "choices": null,
+          "raw": "-c  Disable local caching."
+        },
+        {
+          "flags": [
+            "-nameservers"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "dnstracer \"-s\" . \"-q\" mx mavetju.org",
+          "default": null,
+          "choices": null,
+          "raw": "-nameservers  dnstracer \"-s\" . \"-q\" mx mavetju.org"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Enable overview of received answers at the end.",
+          "default": null,
+          "choices": null,
+          "raw": "-o  Enable overview of received answers at the end."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be verbose on what sent or received.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Be verbose on what sent or received."
+        }
+      ]
     }
   ],
   "files": [
@@ -42,5 +98,68 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "dnstracer [options] name",
+    "dnstracer www.mavetju.org",
+    "dnstracer \"-s\" . \"-q\" mx mavetju.org",
+    "dnstracer \"-q\" ptr $KFIOSA_TARGET_HOST.in-addr.arpa",
+    "dnstracer              \"-q\"              ptr              \"-s\"              .             \"-o\""
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use dnstracer because trace DNS queries to the source.",
+    "When the engagement is in the install phase, use dnstracer as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `dnstracer [options] name` as documented upstream for dnstracer.",
+    "When you need a concrete invocation, run `dnstracer www.mavetju.org` as documented upstream for dnstracer.",
+    "When you need a concrete invocation, run `dnstracer \"-s\" . \"-q\" mx mavetju.org` as documented upstream for dnstracer.",
+    "When you need a concrete invocation, run `dnstracer \"-q\" ptr $KFIOSA_TARGET_HOST.in-addr.arpa` as documented upstream for dnstracer.",
+    "When chaining Kali Linux tools, pair dnstracer with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `dnstracer --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-C",
+        "description": "Enable negative caching.",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "Disable local caching.",
+        "source": "docs"
+      },
+      {
+        "name": "-nameservers",
+        "description": "dnstracer \"-s\" . \"-q\" mx mavetju.org",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "Enable overview of received answers at the end.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Be verbose on what sent or received.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "dnstracer [options] name",
+      "dnstracer www.mavetju.org",
+      "dnstracer \"-s\" . \"-q\" mx mavetju.org",
+      "dnstracer \"-q\" ptr $KFIOSA_TARGET_HOST.in-addr.arpa",
+      "dnstracer              \"-q\"              ptr              \"-s\"              .             \"-o\""
+    ],
+    "readme": "dnstracer - trace a chain of DNS servers to the source",
+    "how_to_use": "Install/setup: sudo apt install dnstracer. Run the primary entrypoint as shown in upstream docs, e.g. `dnstracer www.mavetju.org`. Further invocations from upstream: `dnstracer \"-s\" . \"-q\" mx mavetju.org`; `dnstracer \"-q\" ptr $KFIOSA_TARGET_HOST.in-addr.arpa`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: trace DNS queries to the source.",
+    "why_to_use": "Prefer this tool based on upstream description: dnstracer - trace a chain of DNS servers to the source.",
+    "usage_sections": [
+      "Install with: sudo apt install dnstracer",
+      "Install with: sudo apt install dnstracer"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

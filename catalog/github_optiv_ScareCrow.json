@@ -1,18 +1,58 @@
 {
   "category": "c2",
   "command_examples": [
-    "cd toolboxes/ScareCrow && python3 ScareCrow.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/ScareCrow && python3 ScareCrow.py --help",
-    "cd toolboxes/ScareCrow && python3 ScareCrow.py --help",
-    "cd toolboxes/ScareCrow && python3 ScareCrow.py --help",
-    "cd toolboxes/ScareCrow && python3 ScareCrow.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ScareCrow --output $KFIOSA_OUTPUT_DIR/ScareCrow.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ScareCrow --output $KFIOSA_OUTPUT_DIR/ScareCrow.log"
+    "go get github.com/fatih/color",
+    "go get github.com/yeka/zip",
+    "go get github.com/josephspurrier/goversioninfo",
+    "go get github.com/Binject/debug/pe",
+    "go get github.com/awgh/rawreader",
+    "go build ScareCrow.go",
+    "./ScareCrow -h",
+    "Usage of ./ScareCrow:",
+    "Path to the raw 64-bit shellcode.",
+    "Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature."
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "To view the latest version of ScareCrow or to submit an issue, reference https://github.com/Tylous/ScareCrow.",
+    "usage_sections": [
+      "Description: ScareCrow is a payload creation framework for side loading (not injecting) into a legitimate Windows process (bypassing Application Whitelisting controls). Once the DLL loader is loaded into memory, it utilizes a technique to flush an EDR’s hook out of the system DLLs running in "
+    ],
     "arguments": [
+      {
+        "name": "-console",
+        "description": "Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature.",
+        "source": "docs"
+      },
+      {
+        "name": "-noamsi",
+        "description": "Disables the AMSI patching that prevents AMSI BufferScanner.",
+        "source": "docs"
+      },
+      {
+        "name": "-noetw",
+        "description": "Disables the ETW patching that prevents ETW events from being generated.",
+        "source": "docs"
+      },
+      {
+        "name": "-nosign",
+        "description": "Disables file signing, making -domain/-valid/-password parameters not required.",
+        "source": "docs"
+      },
+      {
+        "name": "-nosleep",
+        "description": "Disables the sleep delay before the loader unhooks and executes the shellcode.",
+        "source": "docs"
+      },
+      {
+        "name": "-obfu",
+        "description": "Enables Garbles Literal flag replaces golang libray strings with more complex variants, resolving to the same value at run-time. This creates a larger loader and times longer to compile",
+        "source": "docs"
+      },
+      {
+        "name": "-sandbox",
+        "description": "Enables sandbox evasion using IsDomainJoined calls.",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +169,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "go get github.com/fatih/color",
+      "go get github.com/yeka/zip",
+      "go get github.com/josephspurrier/goversioninfo",
+      "go get github.com/Binject/debug/pe",
+      "go get github.com/awgh/rawreader",
+      "go build ScareCrow.go",
+      "./ScareCrow -h",
+      "Usage of ./ScareCrow:",
+      "Path to the raw 64-bit shellcode.",
+      "Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature."
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +306,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, scarecrow, optiv).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/ScareCrow && python3 ScareCrow.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/ScareCrow && python3 ScareCrow.py --help",
-      "Step 3: cd toolboxes/ScareCrow && python3 ScareCrow.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the c2 category. Fits when the engagement needs: To view the latest version of ScareCrow or to submit an issue, reference https://github.com/Tylous/ScareCrow.",
+    "why_to_use": "Prefer this tool based on upstream description: To view the latest version of ScareCrow or to submit an issue, reference https://github.com/Tylous/ScareCrow.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `go get github.com/fatih/color`. Further invocations from upstream: `go get github.com/yeka/zip`; `go get github.com/josephspurrier/goversioninfo`. To view the latest version of ScareCrow or to submit an issue, reference https://github.com/Tylous/ScareCrow."
   },
   "full_name": "optiv/ScareCrow",
   "id": "github:optiv/ScareCrow",
@@ -282,7 +329,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``ScareCrow`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "To view the latest version of ScareCrow or to submit an issue, reference https://github.com/Tylous/ScareCrow.",
   "tags": [
     "offensive",
     "scarecrow",
@@ -300,12 +347,13 @@
   },
   "url": "https://github.com/optiv/ScareCrow",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need c2, use ScareCrow because To view the latest version of ScareCrow or to submit an issue, reference https://github.com/Tylous/ScareCrow.",
+    "When you need a concrete invocation, run `go get github.com/fatih/color` as documented upstream for ScareCrow.",
+    "When you need a concrete invocation, run `go get github.com/yeka/zip` as documented upstream for ScareCrow.",
+    "When you need a concrete invocation, run `go get github.com/josephspurrier/goversioninfo` as documented upstream for ScareCrow.",
+    "When you need a concrete invocation, run `go get github.com/Binject/debug/pe` as documented upstream for ScareCrow.",
+    "When chaining c2 tools, pair ScareCrow with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `ScareCrow --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +372,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

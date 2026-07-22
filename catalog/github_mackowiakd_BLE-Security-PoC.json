@@ -9,7 +9,13 @@
   "summary": "BLE Security Misconfiguration & Memory Corruption: Proof of Concept (PoC)",
   "documentation": {
     "readme": "BLE Security Misconfiguration & Memory Corruption: Proof of Concept (PoC)",
-    "usage_sections": [],
+    "usage_sections": [
+      "/BLEsecurityIoT - PlatformIO project containing the C++ code for the vulnerable BLE server (target).",
+      "/attackerscript - Python automated scanning and exploitation script (attacker).",
+      "Microcontroller: XIAO ESP32-C3",
+      "Actuator: Adafruit NeoPixel RGB LED (Pin D1)",
+      "Automated Log Analysis: Post-execution, the framework automatically dumps and filters the Kernel Ring Buffer (dmesg) to identify driver-level anomalies during the attack."
+    ],
     "arguments": [
       {
         "name": "--help",
@@ -191,7 +197,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "chmod +x run_audit.sh",
+      "./run_audit.sh"
+    ],
     "file_listing": [
       "README",
       "README",
@@ -256,13 +265,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['ble_4_x', 'ble_5_x', 'ble_mesh']' as the attack surface (bluetooth, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/BLE-Security-PoC && python3 BLE-Security-PoC.py --help",
-      "Step 2: cd toolboxes/BLE-Security-PoC && cat README.md",
-      "Step 3: cd toolboxes/BLE-Security-PoC && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: BLE Security Misconfiguration & Memory Corruption: Proof of Concept (PoC).",
+    "why_to_use": "Prefer this tool based on upstream description: BLE Security Misconfiguration & Memory Corruption: Proof of Concept (PoC).",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `chmod +x run_audit.sh`. Further invocations from upstream: `./run_audit.sh`. BLE Security Misconfiguration & Memory Corruption: Proof of Concept (PoC)."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -295,18 +300,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Bluetooth, use BLE-Security-PoC because BLE Security Misconfiguration & Memory Corruption: Proof of Concept (PoC).",
+    "When you need a concrete invocation, run `chmod +x run_audit.sh` as documented upstream for BLE-Security-PoC.",
+    "When you need a concrete invocation, run `./run_audit.sh` as documented upstream for BLE-Security-PoC.",
+    "When chaining Bluetooth tools, pair BLE-Security-PoC with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `BLE-Security-PoC --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/BLE-Security-PoC && python3 BLE-Security-PoC.py --help",
-    "cd toolboxes/BLE-Security-PoC && cat README.md",
-    "cd toolboxes/BLE-Security-PoC && ls -la",
-    "cd toolboxes/BLE-Security-PoC && python3 BLE-Security-PoC.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST BLE-Security-PoC --output $KFIOSA_OUTPUT_DIR/BLE-Security-PoC.log"
+    "chmod +x run_audit.sh",
+    "./run_audit.sh"
   ],
   "attack_surface": [
     "ble_4_x",
@@ -331,5 +333,7 @@
     "python",
     "shell",
     "cpp"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

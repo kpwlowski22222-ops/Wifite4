@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "vlan",
   "title": "vlan",
-  "summary": "### vlan",
+  "summary": "vconfig - VLAN (802.1q) configuration program.",
   "version": "2.0.5+nmu3",
   "architectures": [
     "all"
@@ -29,7 +29,41 @@
       "name": "vconfig",
       "description": "VLAN (802.1q) configuration program.",
       "usage": "add             [interface-name] [vlan_id]",
-      "arguments": [],
+      "arguments": [
+        {
+          "flags": [
+            "-device"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "only un-",
+          "default": null,
+          "choices": null,
+          "raw": "-device  only un-"
+        },
+        {
+          "flags": [
+            "-priority"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "tagged with",
+          "default": null,
+          "choices": null,
+          "raw": "-priority  tagged with"
+        },
+        {
+          "flags": [
+            "-qos"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "queued with a particular skb-priority. The default skb-priority is 0.",
+          "default": null,
+          "choices": null,
+          "raw": "-qos  queued with a particular skb-priority. The default skb-priority is 0."
+        }
+      ],
       "raw_help": "root@kali:~# vconfig -h\n \n Usage: add             [interface-name] [vlan_id]\n      rem             [vlan-name]\n      set_flag        [interface-name] [flag-num]       [0 | 1]\n      set_egress_map  [vlan-name]      [skb_priority]   [vlan_qos]\n      set_ingress_map [vlan-name]      [skb_priority]   [vlan_qos]\n      set_name_type   [name-type]\n \n * The [interface-name] is the name of the ethernet card that hosts\n the VLAN you are talking about.\n * The vlan_id is the identifier (0-4095) of the VLAN you are operating on.\n * skb_priority is the priority in the socket buffer (sk_buff).\n * vlan_qos is the 3 bit priority in the VLAN header\n * name-type:  VLAN_PLUS_VID (vlan0005), VLAN_PLUS_VID_NO_PAD (vlan5),\n             DEV_PLUS_VID (eth0.0005), DEV_PLUS_VID_NO_PAD (eth0.5)\n * FLAGS:  1 REORDER_HDR  When this is set, the VLAN device will move the\n           ethernet header around to make it look exactly like a real\n           ethernet device.  This may help programs such as DHCPd which\n           read the raw ethernet packet and make assumptions about the\n           location of bytes.  If you don't need it, don't turn it on, because\n           there will be at least a small performance degradation.  Default\n           is OFF.",
       "examples": [],
       "risk": {
@@ -95,21 +129,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use vconfig because vconfig - VLAN (802.1q) configuration program.",
+    "When you need a concrete invocation, run `vconfig [lots of long options]` as documented upstream for vconfig.",
+    "When chaining Kali Linux tools, pair vconfig with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `vconfig --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/vlan && python3 vlan.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/vlan && python3 vlan.py --help",
-    "cd toolboxes/vlan && python3 vlan.py --help",
-    "cd toolboxes/vlan && python3 vlan.py --help",
-    "cd toolboxes/vlan && python3 vlan.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST vlan --output $KFIOSA_OUTPUT_DIR/vlan.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST vlan --output $KFIOSA_OUTPUT_DIR/vlan.log"
+    "vconfig [lots of long options]"
   ],
   "attack_surface": [
     "web"
@@ -124,5 +150,36 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-device",
+        "description": "only un-",
+        "source": "manpage"
+      },
+      {
+        "name": "-priority",
+        "description": "tagged with",
+        "source": "manpage"
+      },
+      {
+        "name": "-qos",
+        "description": "queued with a particular skb-priority. The default skb-priority is 0.",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "vconfig [lots of long options]"
+    ],
+    "readme": "vconfig - VLAN (802.1q) configuration program.",
+    "how_to_use": "Install/setup: sudo apt install vlan. vconfig - VLAN (802.1q) configuration program.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: vconfig - VLAN (802.1q) configuration program.",
+    "why_to_use": "Prefer this tool based on upstream description: vconfig - VLAN (802.1q) configuration program.",
+    "usage_sections": [
+      "Install with: sudo apt install vlan"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

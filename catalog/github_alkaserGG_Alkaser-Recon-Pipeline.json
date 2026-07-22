@@ -9,22 +9,133 @@
   "summary": "🦅 ALKASER — Bug Bounty Recon & Exploitation Pipeline",
   "documentation": {
     "readme": "🦅 ALKASER — Bug Bounty Recon & Exploitation Pipeline",
-    "usage_sections": [],
+    "usage_sections": [
+      "Linux (Kali / Ubuntu / Parrot)",
+      "Smart Rate Limiting & Auto-Skip Logic",
+      "Avoiding WAF Blocks (Akamai / Cloudflare / etc.)",
+      "Responsible Disclosure",
+      "Sudden 403 Access Denied pages referencing edgesuite.net / edgekey.net (Akamai), or Cloudflare's \"Attention Required\" page."
+    ],
     "arguments": [
       {
-        "name": "--auto-skip-logic",
-        "description": "CLI flag '--auto-skip-logic' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--cloudflare--etc",
-        "description": "CLI flag '--cloudflare--etc' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-d",
+        "description": "Target domain (required) e.g. example.com",
+        "source": "docs"
       },
       {
         "name": "--discord",
-        "description": "CLI flag '--discord' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "Discord webhook URL",
+        "source": "docs"
+      },
+      {
+        "name": "--ffuf-delay",
+        "description": "Delay between ffuf requests: fixed (\"0.5\") or random range (\"0.3-1.0\") (default: none)",
+        "source": "docs"
+      },
+      {
+        "name": "--ffuf-threads",
+        "description": "Threads per single ffuf job (default: 20)",
+        "source": "docs"
+      },
+      {
+        "name": "--ffuf-workers",
+        "description": "Max hosts fuzzed in parallel (default: 4)",
+        "source": "docs"
+      },
+      {
+        "name": "--force-fuzz",
+        "description": "Force ffuf even if alive hosts exceed --fuzz-threshold",
+        "source": "docs"
+      },
+      {
+        "name": "--fuzz-threshold",
+        "description": "Auto-skip ffuf if alive hosts exceed N (default: 20)",
+        "source": "docs"
+      },
+      {
+        "name": "-GG",
+        "description": "Bug Bounty Recon & Exploitation Pipeline ║",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show help and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "Show help and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--no-notify",
+        "description": "Suppress all webhook notifications",
+        "source": "docs"
+      },
+      {
+        "name": "--nuclei-limit",
+        "description": "Max hosts passed to Nuclei (default: 75)",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "--output Base output directory (default: results/)",
+        "source": "docs"
+      },
+      {
+        "name": "--ports",
+        "description": "Ports to probe (default: 80,443)",
+        "source": "docs"
+      },
+      {
+        "name": "--rate-limit",
+        "description": "Max requests/sec for httpx & Nuclei baseline (default: 50)",
+        "source": "docs"
+      },
+      {
+        "name": "--skip-exploit",
+        "description": "Skip sqlmap + XSStrike stages",
+        "source": "docs"
+      },
+      {
+        "name": "--skip-fuzz",
+        "description": "Skip ffuf entirely (manual override)",
+        "source": "docs"
+      },
+      {
+        "name": "--skip-missing",
+        "description": "Continue even if some tools are absent",
+        "source": "docs"
+      },
+      {
+        "name": "--telegram-chat",
+        "description": "\"-1001234567890\"",
+        "source": "docs"
+      },
+      {
+        "name": "--telegram-token",
+        "description": "Telegram bot token",
+        "source": "docs"
+      },
+      {
+        "name": "--threads",
+        "description": "httpx thread count (default: 30)",
+        "source": "docs"
+      },
+      {
+        "name": "--timeout",
+        "description": "httpx timeout in seconds (default: 3)",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "Wordlist for ffuf (auto-detected if omitted)",
+        "source": "docs"
+      },
+      {
+        "name": "--xss-limit",
+        "description": "Max URLs sent to XSStrike (default: 20)",
+        "source": "docs"
       },
       {
         "name": "--domain",
@@ -32,83 +143,8 @@
         "source": "v2_enhancement"
       },
       {
-        "name": "--ffuf-delay",
-        "description": "CLI flag '--ffuf-delay' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--ffuf-threads",
-        "description": "CLI flag '--ffuf-threads' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--ffuf-workers",
-        "description": "CLI flag '--ffuf-workers' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--force-fuzz",
-        "description": "CLI flag '--force-fuzz' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--fuzz-threshold",
-        "description": "CLI flag '--fuzz-threshold' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--no-notify",
-        "description": "CLI flag '--no-notify' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--nuclei-limit",
-        "description": "CLI flag '--nuclei-limit' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
         "name": "--output",
         "description": "Output file path for the report or capture.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--ports",
-        "description": "CLI flag '--ports' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--rate-limit",
-        "description": "CLI flag '--rate-limit' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--skip-exploit",
-        "description": "CLI flag '--skip-exploit' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--skip-fuzz",
-        "description": "CLI flag '--skip-fuzz' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--skip-missing",
-        "description": "CLI flag '--skip-missing' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--telegram",
-        "description": "CLI flag '--telegram' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--telegram-chat",
-        "description": "CLI flag '--telegram-chat' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
         "source": "v2_enhancement"
       },
       {
@@ -183,7 +219,18 @@
         "language": "python"
       }
     ],
-    "examples": [],
+    "examples": [
+      "hosts > threshold,                      (run in parallel)",
+      "throttled via --ffuf-threads/",
+      "sudo apt update && sudo apt install -y python3 python3-pip git",
+      "wget $KFIOSA_TARGET_URL",
+      "sudo tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz",
+      "echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> ~/.bashrc",
+      "source ~/.bashrc",
+      "go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest",
+      "go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest",
+      "go install -v github.com/projectdiscovery/katana/cmd/katana@latest"
+    ],
     "file_listing": [
       "LICENSE",
       "README.md",
@@ -241,13 +288,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web']' as the attack surface (osint, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Alkaser-Recon-Pipeline && python3 Alkaser-Recon-Pipeline.py --help",
-      "Step 2: cd toolboxes/Alkaser-Recon-Pipeline && cat README.md",
-      "Step 3: cd toolboxes/Alkaser-Recon-Pipeline && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category. Fits when the engagement needs: 🦅 ALKASER — Bug Bounty Recon & Exploitation Pipeline.",
+    "why_to_use": "Prefer this tool based on upstream description: 🦅 ALKASER — Bug Bounty Recon & Exploitation Pipeline.",
+    "how_to_use": "Install/setup: git clone https://github.com/alkaserGG/Alkaser-Recon-Pipeline.git; pip3 install -r requirements.txt. Run the primary entrypoint as shown in upstream docs, e.g. `hosts > threshold,                      (run in parallel)`. Further invocations from upstream: `throttled via --ffuf-threads/`; `sudo apt update && sudo apt install -y python3 python3-pip git`. 🦅 ALKASER — Bug Bounty Recon & Exploitation Pipeline."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -278,18 +321,26 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the OSINT system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need OSINT, use Alkaser-Recon-Pipeline because 🦅 ALKASER — Bug Bounty Recon & Exploitation Pipeline.",
+    "When the engagement is in the recon phase, use Alkaser-Recon-Pipeline as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `hosts > threshold,                      (run in parallel)` as documented upstream for Alkaser-Recon-Pipeline.",
+    "When you need a concrete invocation, run `throttled via --ffuf-threads/` as documented upstream for Alkaser-Recon-Pipeline.",
+    "When you need a concrete invocation, run `sudo apt update && sudo apt install -y python3 python3-pip git` as documented upstream for Alkaser-Recon-Pipeline.",
+    "When you need a concrete invocation, run `wget $KFIOSA_TARGET_URL` as documented upstream for Alkaser-Recon-Pipeline.",
+    "When chaining OSINT tools, pair Alkaser-Recon-Pipeline with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Alkaser-Recon-Pipeline --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/Alkaser-Recon-Pipeline && python3 Alkaser-Recon-Pipeline.py --help",
-    "cd toolboxes/Alkaser-Recon-Pipeline && cat README.md",
-    "cd toolboxes/Alkaser-Recon-Pipeline && ls -la",
-    "cd toolboxes/Alkaser-Recon-Pipeline && python3 Alkaser-Recon-Pipeline.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Alkaser-Recon-Pipeline --output $KFIOSA_OUTPUT_DIR/Alkaser-Recon-Pipeline.log"
+    "hosts > threshold,                      (run in parallel)",
+    "throttled via --ffuf-threads/",
+    "sudo apt update && sudo apt install -y python3 python3-pip git",
+    "wget $KFIOSA_TARGET_URL",
+    "sudo tar -C /usr/local -xzf go1.22.0.linux-amd64.tar.gz",
+    "echo 'export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin' >> ~/.bashrc",
+    "source ~/.bashrc",
+    "go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest",
+    "go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest",
+    "go install -v github.com/projectdiscovery/katana/cmd/katana@latest"
   ],
   "attack_surface": [
     "web"
@@ -310,5 +361,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "mcp-kali-server",
   "title": "mcp-kali-server",
-  "summary": "### mcp-kali-server",
+  "summary": "kali-server-mcp - Kali Linux MCP API Server",
   "version": "0.0~git20260317.00154c0-0kali1",
   "architectures": [
     "all"
@@ -29,18 +29,6 @@
       "arguments": [
         {
           "flags": [
-            "-h",
-            "--help"
-          ],
-          "metavar": "- elp",
-          "takes_value": true,
-          "description": "show this help message and exit",
-          "default": null,
-          "choices": null,
-          "raw": " -h, --help   show this help message and exit"
-        },
-        {
-          "flags": [
             "--debug"
           ],
           "metavar": null,
@@ -48,29 +36,62 @@
           "description": "Enable debug mode",
           "default": null,
           "choices": null,
-          "raw": " --debug      Enable debug mode"
+          "raw": "--debug  Enable debug mode"
         },
         {
           "flags": [
-            "--port"
+            "-h"
           ],
-          "metavar": "PORT",
-          "takes_value": true,
-          "description": "Port for the API server (default: 5000)",
-          "default": "5000",
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help message and exit",
+          "default": null,
           "choices": null,
-          "raw": " --port PORT  Port for the API server (default: 5000)"
+          "raw": "-h  show this help message and exit"
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show this help message and exit",
+          "default": null,
+          "choices": null,
+          "raw": "--help  show this help message and exit"
         },
         {
           "flags": [
             "--ip"
           ],
-          "metavar": "IP",
-          "takes_value": true,
-          "description": "IP address to bind the server to (default: 127.0.0.1 for",
-          "default": "127",
+          "metavar": null,
+          "takes_value": false,
+          "description": "IP address to bind the server to (default: 127.0.0.1 for localhost only)",
+          "default": null,
           "choices": null,
-          "raw": " --ip IP      IP address to bind the server to (default: 127.0.0.1 for"
+          "raw": "--ip  IP address to bind the server to (default: 127.0.0.1 for localhost only)"
+        },
+        {
+          "flags": [
+            "--port"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Port for the API server (default: 5000)",
+          "default": null,
+          "choices": null,
+          "raw": "--port  Port for the API server (default: 5000)"
+        },
+        {
+          "flags": [
+            "-server-mcp"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Kali Linux MCP API Server",
+          "default": null,
+          "choices": null,
+          "raw": "-server-mcp  Kali Linux MCP API Server"
         }
       ],
       "raw_help": "root@kali:~# kali-server-mcp -h\n usage: server.py [-h] [--debug] [--port PORT] [--ip IP]\n \n Run the Kali Linux API Server\n \n options:\n -h, --help   show this help message and exit\n --debug      Enable debug mode\n --port PORT  Port for the API server (default: 5000)\n --ip IP      IP address to bind the server to (default: 127.0.0.1 for\n              localhost only)",
@@ -214,22 +235,11 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use kali-server-mcp because kali-server-mcp - Kali Linux MCP API Server.",
+    "When chaining Kali Linux tools, pair kali-server-mcp with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `kali-server-mcp --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
-  "command_examples": [
-    "cd toolboxes/mcp-kali-server && python3 mcp-kali-server.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/mcp-kali-server && python3 mcp-kali-server.py --help",
-    "cd toolboxes/mcp-kali-server && python3 mcp-kali-server.py --help",
-    "cd toolboxes/mcp-kali-server && python3 mcp-kali-server.py --help",
-    "cd toolboxes/mcp-kali-server && python3 mcp-kali-server.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mcp-kali-server --output $KFIOSA_OUTPUT_DIR/mcp-kali-server.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mcp-kali-server --output $KFIOSA_OUTPUT_DIR/mcp-kali-server.log"
-  ],
+  "command_examples": [],
   "attack_surface": [
     "web"
   ],
@@ -243,5 +253,50 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "--debug",
+        "description": "Enable debug mode",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "show this help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "--ip",
+        "description": "IP address to bind the server to (default: 127.0.0.1 for localhost only)",
+        "source": "docs"
+      },
+      {
+        "name": "--port",
+        "description": "Port for the API server (default: 5000)",
+        "source": "docs"
+      },
+      {
+        "name": "-server-mcp",
+        "description": "Kali Linux MCP API Server",
+        "source": "docs"
+      }
+    ],
+    "examples": [],
+    "readme": "kali-server-mcp - Kali Linux MCP API Server",
+    "how_to_use": "Install/setup: sudo apt install mcp-kali-server. kali-server-mcp - Kali Linux MCP API Server.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: kali-server-mcp - Kali Linux MCP API Server.",
+    "why_to_use": "Prefer this tool based on upstream description: kali-server-mcp - Kali Linux MCP API Server.",
+    "usage_sections": [
+      "Install with: sudo apt install mcp-kali-server",
+      "Install with: sudo apt install mcp-kali-server"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

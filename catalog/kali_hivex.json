@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "hivex",
   "title": "hivex",
-  "summary": "### libhivex-bin",
+  "summary": "hivexget - Get subkey from a Windows Registry binary \"hive\" file",
   "version": "1.3.24-2.1",
   "architectures": [
     "any"
@@ -50,7 +50,30 @@
       "name": "hivexget",
       "description": "Get subkey from a Windows Registry binary \"hive\" file",
       "usage": null,
-      "arguments": [],
+      "arguments": [
+        {
+          "flags": [
+            "-1301"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "hivexget(1)",
+          "default": null,
+          "choices": null,
+          "raw": "-1301  hivexget(1)"
+        },
+        {
+          "flags": [
+            "-level"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "For a more convenient way to navigate the Windows Registry in Win-",
+          "default": null,
+          "choices": null,
+          "raw": "-level  For a more convenient way to navigate the Windows Registry in Win-"
+        }
+      ],
       "raw_help": "root@kali:~# man hivexget\n hivexget(1)                     Windows Registry                    hivexget(1)\n \n NAME\n    hivexget - Get subkey from a Windows Registry binary \"hive\" file\n \n SYNOPSIS\n     hivexget hivefile '\\Path\\To\\SubKey'\n \n     hivexget hivefile '\\Path\\To\\SubKey' name\n \n NOTE\n    This  is a low-level tool.  For a more convenient way to navigate the Win-\n    dows Registry in  Windows  virtual  machines,  see  virt-win-reg(1).   For\n    proper regedit formatting, use hivexregedit(1).\n \n DESCRIPTION\n    This  program  navigates through a Windows Registry binary \"hive\" file and\n    extracts either all the (key, value) data pairs stored in that  subkey  or\n    just the single named data item.\n \n    In the first form:\n \n     hivexget hivefile '\\Path\\To\\SubKey'\n \n    \"hivefile\"  is some Windows Registry binary hive, and \"\\Path\\To\\Subkey\" is\n    a path within that hive.  NB the path is relative to the top of this hive,\n    and is not the full path as you would use in Windows (eg.  \"HKEY_LOCAL_MA-\n    CHINE\\SYSTEM\" is not a valid path).\n \n    If the subkey exists, then the output lists all data pairs under this sub-\n    key, in a format similar to \"regedit\" in Windows.\n \n    In the second form:\n \n     hivexget hivefile '\\Path\\To\\SubKey' name\n \n    \"hivefile\"  and path are as above.  \"name\" is the name of the value of in-\n    terest (use \"@\" for the default value).\n \n    The corresponding data item is printed \"raw\" (ie. no processing or  escap-\n    ing) except:\n \n    1.  If  it's  a string we will convert it from Windows UTF-16 to UTF-8, if\n        this conversion is possible.  The string  is  printed  with  a  single\n        trailing newline.\n \n    2.  If  it's a multiple-string value, each string is printed on a separate\n        line.\n \n    3.  If it's a numeric value, it is printed as a decimal number.\n \n SEE ALSO\n    hivex(3),  hivexml(1),   hivexsh(1),   hivexregedit(1),   virt-win-reg(1),\n    guestfs(3), <http://libguestfs.org/>, virt-cat(1), virt-edit(1).\n \n AUTHORS\n    Richard W.M. Jones (\"rjones at redhat dot com\")\n \n COPYRIGHT\n    Copyright (C) 2009 Red Hat Inc.\n \n    This  program  is  free software; you can redistribute it and/or modify it\n    under the terms of the GNU General Public License as published by the Free\n    Software Foundation; either version 2 of the License, or (at your  option)\n    any later version.\n \n    This  program is distributed in the hope that it will be useful, but WITH-\n    OUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  or\n    FITNESS  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for\n    more details.\n \n    You should have received a copy of the GNU General  Public  License  along\n    with this program; if not, write to the Free Software Foundation, Inc., 51\n    Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n \n hivex-1.3.24                       2026-04-26                       hivexget(1)",
       "examples": [
         {
@@ -452,21 +475,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use hivexget because hivexget - Get subkey from a Windows Registry binary \"hive\" file.",
+    "When you need a concrete invocation, run `hivexget hivefile '\\Path\\To\\SubKey'` as documented upstream for hivexget.",
+    "When you need a concrete invocation, run `hivexget hivefile '\\Path\\To\\SubKey' name` as documented upstream for hivexget.",
+    "When chaining Kali Linux tools, pair hivexget with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `hivexget --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/hivex && python3 hivex.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/hivex && python3 hivex.py --help",
-    "cd toolboxes/hivex && python3 hivex.py --help",
-    "cd toolboxes/hivex && python3 hivex.py --help",
-    "cd toolboxes/hivex && python3 hivex.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST hivex --output $KFIOSA_OUTPUT_DIR/hivex.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST hivex --output $KFIOSA_OUTPUT_DIR/hivex.log"
+    "hivexget hivefile '\\Path\\To\\SubKey'",
+    "hivexget hivefile '\\Path\\To\\SubKey' name"
   ],
   "attack_surface": [
     "web"
@@ -481,5 +498,33 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-1301",
+        "description": "hivexget(1)",
+        "source": "manpage"
+      },
+      {
+        "name": "-level",
+        "description": "For a more convenient way to navigate the Windows Registry in Win-",
+        "source": "manpage"
+      }
+    ],
+    "examples": [
+      "hivexget hivefile '\\Path\\To\\SubKey'",
+      "hivexget hivefile '\\Path\\To\\SubKey' name"
+    ],
+    "readme": "hivexget - Get subkey from a Windows Registry binary \"hive\" file",
+    "how_to_use": "Install/setup: sudo apt install hivex. Run the primary entrypoint as shown in upstream docs, e.g. `hivexget hivefile '\\Path\\To\\SubKey'`. Further invocations from upstream: `hivexget hivefile '\\Path\\To\\SubKey' name`. hivexget - Get subkey from a Windows Registry binary \"hive\" file.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: hivexget - Get subkey from a Windows Registry binary \"hive\" file.",
+    "why_to_use": "Prefer this tool based on upstream description: hivexget - Get subkey from a Windows Registry binary \"hive\" file.",
+    "usage_sections": [
+      "Install with: sudo apt install hivex",
+      "Install with: sudo apt install hivex"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

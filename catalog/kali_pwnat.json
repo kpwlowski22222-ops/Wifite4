@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "pwnat",
   "title": "pwnat",
-  "summary": "### pwnat",
+  "summary": "pwnat - proxy server that works behind both client and server NATs",
   "version": "0.3.0-0kali2",
   "architectures": [
     "any"
@@ -37,65 +37,10 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "client mode (default)",
+          "description": "client mode: <args>: [local ip] <local port> <proxy host> [proxy port (def:2222)]",
           "default": null,
           "choices": null,
-          "raw": " -c    client mode (default)"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "server mode",
-          "default": null,
-          "choices": null,
-          "raw": " -s    server mode"
-        },
-        {
-          "flags": [
-            "-6"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "use IPv6",
-          "default": null,
-          "choices": null,
-          "raw": " -6    use IPv6"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "show debug output (up to 2)",
-          "default": null,
-          "choices": null,
-          "raw": " -v    show debug output (up to 2)"
-        },
-        {
-          "flags": [
-            "-a"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "reuse address",
-          "default": null,
-          "choices": null,
-          "raw": " -a    reuse address"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "reuse port",
-          "default": null,
-          "choices": null,
-          "raw": " -p    reuse port"
+          "raw": "-c  client mode: <args>: [local ip] <local port> <proxy host> [proxy port (def:2222)]"
         },
         {
           "flags": [
@@ -106,7 +51,29 @@
           "description": "show this help and exit",
           "default": null,
           "choices": null,
-          "raw": " -h    show this help and exit"
+          "raw": "-h  show this help and exit"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "server mode: <args>: [local ip] [proxy port (def:2222)] [[al- lowed host]:[allowed",
+          "default": null,
+          "choices": null,
+          "raw": "-s  server mode: <args>: [local ip] [proxy port (def:2222)] [[al- lowed host]:[allowed"
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "show debug output (up to 2)",
+          "default": null,
+          "choices": null,
+          "raw": "-v  show debug output (up to 2)"
         }
       ],
       "raw_help": "root@kali:~# pwnat -h\n usage: pwnat <-s | -c> <args>\n -c    client mode (default)\n       <args>: [local ip] <local port> <proxy host> [proxy port (def:2222)] <remote host> <remote port>\n -s    server mode\n       <args>: [local ip] [proxy port (def:2222)] [[allowed host]:[allowed port] ...]\n -6    use IPv6\n -v    show debug output (up to 2)\n -a    reuse address\n -p    reuse port\n -h    show this help and exit",
@@ -189,21 +156,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use pwnat because pwnat - proxy server that works behind both client and server NATs.",
+    "When you need a concrete invocation, run `PWNAT 0.3` as documented upstream for pwnat.",
+    "When chaining Kali Linux tools, pair pwnat with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `pwnat --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/pwnat && python3 pwnat.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/pwnat && python3 pwnat.py --help",
-    "cd toolboxes/pwnat && python3 pwnat.py --help",
-    "cd toolboxes/pwnat && python3 pwnat.py --help",
-    "cd toolboxes/pwnat && python3 pwnat.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pwnat --output $KFIOSA_OUTPUT_DIR/pwnat.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pwnat --output $KFIOSA_OUTPUT_DIR/pwnat.log"
+    "PWNAT 0.3"
   ],
   "attack_surface": [
     "web"
@@ -218,5 +177,42 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-c",
+        "description": "client mode: <args>: [local ip] <local port> <proxy host> [proxy port (def:2222)]",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "server mode: <args>: [local ip] [proxy port (def:2222)] [[al- lowed host]:[allowed",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "show debug output (up to 2)",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "PWNAT 0.3"
+    ],
+    "readme": "pwnat - proxy server that works behind both client and server NATs",
+    "how_to_use": "Install/setup: sudo apt install pwnat. Run the primary entrypoint as shown in upstream docs, e.g. `PWNAT 0.3`. pwnat - proxy server that works behind both client and server NATs.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: pwnat - proxy server that works behind both client and server NATs.",
+    "why_to_use": "Prefer this tool based on upstream description: pwnat - proxy server that works behind both client and server NATs.",
+    "usage_sections": [
+      "Install with: sudo apt install pwnat",
+      "Install with: sudo apt install pwnat"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

@@ -416,12 +416,25 @@ class BaseScreen:
         except Exception as e:
             logger.debug(f"Error drawing status bar: {e}")
 
+    def _flush_input_queue(self) -> None:
+        """Discard pending keypresses so slow handlers cannot re-fire."""
+        try:
+            from core.tui.interface_picker import flush_curses_input
+            flush_curses_input(self.stdscr)
+        except Exception:
+            try:
+                curses.flushinp()
+            except Exception:
+                pass
+
     def handle_input(self) -> Optional[str]:
         """Process keyboard keys. Dispatches by ``flow_state``:
         - ``targets``: digit keys select; UP/DOWN/ENTER navigate; Q/BACK exits.
         - ``menu``/``advanced``: standard menu nav; Q/BACK from advanced
           returns to primary, from primary returns "back" (exit screen).
         """
+        if self.stdscr is None:
+            return None
         key = self.stdscr.getch()
         if key == -1:
             return None
@@ -434,10 +447,10 @@ class BaseScreen:
                 idx = n - 1 if n >= 1 else 9  # '1'..'9' -> 0..8, '0' -> 9 (10th)
                 self.select_target_by_index(idx)
                 return None
-            if key == curses.KEY_UP:
+            if key in (curses.KEY_UP, ord("k"), ord("K")):
                 self.menu_index = max(0, self.menu_index - 1)
                 return None
-            if key == curses.KEY_DOWN:
+            if key in (curses.KEY_DOWN, ord("j"), ord("J")):
                 self.menu_index = min(len(self.menu_items) - 1,
                                       self.menu_index + 1) if self.menu_items else 0
                 return None
@@ -450,6 +463,8 @@ class BaseScreen:
                         except Exception as e:
                             logger.error(f"Error in target handler: {e}")
                             self.activity_log.append(f"[!] Handler error: {e}")
+                        finally:
+                            self._flush_input_queue()
                 return None
             if key in (curses.KEY_BACKSPACE, 127, 8, ord('q'), ord('Q')):
                 self._show_primary()
@@ -457,9 +472,11 @@ class BaseScreen:
             return None
 
         # ---- menu / advanced view ----
-        if key == curses.KEY_UP:
+        # j/k are vim-style aliases (also used by the agentic TUI debugger
+        # when CSI arrow sequences are unreliable under pexpect/sudo).
+        if key in (curses.KEY_UP, ord("k"), ord("K")):
             self.menu_index = (self.menu_index - 1) % len(self.menu_items) if self.menu_items else 0
-        elif key == curses.KEY_DOWN:
+        elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
             self.menu_index = (self.menu_index + 1) % len(self.menu_items) if self.menu_items else 0
         elif key in (curses.KEY_ENTER, 10, 13):
             # Execute selected menu handler
@@ -471,6 +488,12 @@ class BaseScreen:
                     except Exception as e:
                         logger.error(f"Error in menu handler: {e}")
                         self.activity_log.append(f"[!] Handler error: {e}")
+                    finally:
+                        # Drop keys mashed while the handler blocked
+                        # (airmon, probes, nested pickers). Without this,
+                        # a leftover ENTER re-fires the same item — e.g.
+                        # immediately flips monitor → managed after pick.
+                        self._flush_input_queue()
         elif key in (curses.KEY_BACKSPACE, 127, 8, ord('q'), ord('Q')):
             if self.flow_state == "advanced":
                 self._show_primary()

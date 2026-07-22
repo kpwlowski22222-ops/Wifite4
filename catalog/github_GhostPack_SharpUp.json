@@ -1,17 +1,23 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "cd toolboxes/SharpUp && python3 SharpUp.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/SharpUp && python3 SharpUp.py --help",
-    "cd toolboxes/SharpUp && python3 SharpUp.py --help",
-    "cd toolboxes/SharpUp && python3 SharpUp.py --help",
-    "cd toolboxes/SharpUp && python3 SharpUp.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpUp --output $KFIOSA_OUTPUT_DIR/SharpUp.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpUp --output $KFIOSA_OUTPUT_DIR/SharpUp.log"
+    "SharpUp.exe [audit] [check1] [check2]...",
+    "If no checks are specified, audit will run all checks. Otherwise, each check following audit will",
+    "be ran.",
+    "check*  - The individual vulnerability check to be ran. Must be one of the following:",
+    "SharpUp.exe audit",
+    "SharpUp.exe HijackablePaths",
+    "SharpUp.exe audit HijackablePaths"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "SharpUp is a C# port of various PowerUp functionality. Currently, only the most common checks have been ported; no weaponization functions have yet been implemented.",
+    "usage_sections": [
+      "AlwaysInstallElevated",
+      "ModifiableScheduledTask",
+      "ModifiableServiceBinaries",
+      "ModifiableServiceRegistryKeys",
+      "UnattendedInstallFiles"
+    ],
     "arguments": [
       {
         "name": "--depth",
@@ -129,7 +135,15 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "SharpUp.exe [audit] [check1] [check2]...",
+      "If no checks are specified, audit will run all checks. Otherwise, each check following audit will",
+      "be ran.",
+      "check*  - The individual vulnerability check to be ran. Must be one of the following:",
+      "SharpUp.exe audit",
+      "SharpUp.exe HijackablePaths",
+      "SharpUp.exe audit HijackablePaths"
+    ],
     "function_signatures": [
       {
         "name": "exec",
@@ -240,13 +254,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, sharpup, ghostpack).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/SharpUp && python3 SharpUp.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/SharpUp && python3 SharpUp.py --help",
-      "Step 3: cd toolboxes/SharpUp && python3 SharpUp.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the post_exploitation category. Fits when the engagement needs: SharpUp is a C# port of various PowerUp functionality. Currently, only the most common checks have been ported; no weaponization functions have yet been implemented.",
+    "why_to_use": "Prefer this tool based on upstream description: SharpUp is a C# port of various PowerUp functionality. Currently, only the most common checks have been ported; no weaponization functions have yet been implemented.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `SharpUp.exe [audit] [check1] [check2]...`. Further invocations from upstream: `If no checks are specified, audit will run all checks. Otherwise, each check following audit will`; `be ran.`. SharpUp is a C# port of various PowerUp functionality. Currently, only the most common checks have been ported; no weaponization functions have yet been implemented."
   },
   "full_name": "GhostPack/SharpUp",
   "id": "github:GhostPack/SharpUp",
@@ -267,7 +277,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``SharpUp`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "SharpUp is a C# port of various PowerUp functionality. Currently, only the most common checks have been ported; no weaponization functions have yet been implemented.",
   "tags": [
     "offensive",
     "sharpup",
@@ -285,12 +295,13 @@
   },
   "url": "https://github.com/GhostPack/SharpUp",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need post_exploitation, use SharpUp because SharpUp is a C# port of various PowerUp functionality. Currently, only the most common checks have been ported; no weaponization functions have yet been impleme.",
+    "When you need a concrete invocation, run `SharpUp.exe [audit] [check1] [check2]...` as documented upstream for SharpUp.",
+    "When you need a concrete invocation, run `If no checks are specified, audit will run all checks. Otherwise, each check following audit will` as documented upstream for SharpUp.",
+    "When you need a concrete invocation, run `be ran.` as documented upstream for SharpUp.",
+    "When you need a concrete invocation, run `check*  - The individual vulnerability check to be ran. Must be one of the following:` as documented upstream for SharpUp.",
+    "When chaining post_exploitation tools, pair SharpUp with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `SharpUp --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -307,5 +318,7 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

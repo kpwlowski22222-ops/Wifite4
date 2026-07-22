@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "onesixtyone",
   "title": "onesixtyone",
-  "summary": "### onesixtyone",
+  "summary": "onesixtyone - fast and simple SNMP scanner",
   "version": "0.3.4-1",
   "architectures": [
     "any"
@@ -34,36 +34,36 @@
       "arguments": [
         {
           "flags": [
-            "-c"
+            "-d"
           ],
-          "metavar": "communityfile file with community names to try",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "debug mode, use twice for more information",
           "default": null,
           "choices": null,
-          "raw": " -c <communityfile> file with community names to try"
+          "raw": "-d  debug mode, use twice for more information"
         },
         {
           "flags": [
             "-i"
           ],
-          "metavar": "inputfile",
-          "takes_value": true,
+          "metavar": null,
+          "takes_value": false,
           "description": "file with target hosts",
           "default": null,
           "choices": null,
-          "raw": " -i <inputfile>     file with target hosts"
+          "raw": "-i  file with target hosts"
         },
         {
           "flags": [
             "-o"
           ],
-          "metavar": "outputfile",
-          "takes_value": true,
+          "metavar": null,
+          "takes_value": false,
           "description": "output log",
           "default": null,
           "choices": null,
-          "raw": " -o <outputfile>    output log"
+          "raw": "-o  output log"
         },
         {
           "flags": [
@@ -74,40 +74,7 @@
           "description": "specify an alternate destination SNMP port",
           "default": null,
           "choices": null,
-          "raw": " -p                 specify an alternate destination SNMP port"
-        },
-        {
-          "flags": [
-            "-d"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "debug mode, use twice for more information",
-          "default": null,
-          "choices": null,
-          "raw": " -d                 debug mode, use twice for more information"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "short mode, only print IP addresses",
-          "default": null,
-          "choices": null,
-          "raw": " -s                 short mode, only print IP addresses"
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": "n",
-          "takes_value": true,
-          "description": "wait n milliseconds (1/1000 of a second) between sending packets (default 10)",
-          "default": "10",
-          "choices": null,
-          "raw": " -w n               wait n milliseconds (1/1000 of a second) between sending packets (default 10)"
+          "raw": "-p  specify an alternate destination SNMP port"
         },
         {
           "flags": [
@@ -118,7 +85,18 @@
           "description": "quiet mode, do not print log to stdout, use with -o",
           "default": null,
           "choices": null,
-          "raw": " -q                 quiet mode, do not print log to stdout, use with -o"
+          "raw": "-q  quiet mode, do not print log to stdout, use with -o"
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "short mode, only print IP addresses",
+          "default": null,
+          "choices": null,
+          "raw": "-s  short mode, only print IP addresses"
         }
       ],
       "raw_help": "root@kali:~# onesixtyone -h\n onesixtyone 0.3.3 [options] <host> <community>\n -c <communityfile> file with community names to try\n -i <inputfile>     file with target hosts\n -o <outputfile>    output log\n -p                 specify an alternate destination SNMP port\n -d                 debug mode, use twice for more information\n \n -s                 short mode, only print IP addresses\n \n -w n               wait n milliseconds (1/1000 of a second) between sending packets (default 10)\n -q                 quiet mode, do not print log to stdout, use with -o\n host is either an IPv4 address or an IPv4 address and a netmask\n default community names are: public private\n \n Max number of hosts : \t\t65536\n Max community length: \t\t32\n Max number of communities: \t16384\n \n \n examples: onesixtyone 192.168.4.0/24 public\n         onesixtyone -c dict.txt -i hosts -o my.log -w 100",
@@ -200,21 +178,17 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use onesixtyone because onesixtyone - fast and simple SNMP scanner.",
+    "When you need a concrete invocation, run `onesixtyone [options] <host> <community>` as documented upstream for onesixtyone.",
+    "When you need a concrete invocation, run `onesixtyone $KFIOSA_TARGET_HOST/24 public` as documented upstream for onesixtyone.",
+    "When you need a concrete invocation, run `onesixtyone -c dict.txt -i hosts -o my.log -w 100` as documented upstream for onesixtyone.",
+    "When chaining Kali Linux tools, pair onesixtyone with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `onesixtyone --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/onesixtyone && python3 onesixtyone.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/onesixtyone && python3 onesixtyone.py --help",
-    "cd toolboxes/onesixtyone && python3 onesixtyone.py --help",
-    "cd toolboxes/onesixtyone && python3 onesixtyone.py --help",
-    "cd toolboxes/onesixtyone && python3 onesixtyone.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST onesixtyone --output $KFIOSA_OUTPUT_DIR/onesixtyone.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST onesixtyone --output $KFIOSA_OUTPUT_DIR/onesixtyone.log"
+    "onesixtyone [options] <host> <community>",
+    "onesixtyone $KFIOSA_TARGET_HOST/24 public",
+    "onesixtyone -c dict.txt -i hosts -o my.log -w 100"
   ],
   "attack_surface": [
     "web"
@@ -229,5 +203,54 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "debug mode, use twice for more information",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "file with target hosts",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "output log",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "specify an alternate destination SNMP port",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "quiet mode, do not print log to stdout, use with -o",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "short mode, only print IP addresses",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "onesixtyone [options] <host> <community>",
+      "onesixtyone $KFIOSA_TARGET_HOST/24 public",
+      "onesixtyone -c dict.txt -i hosts -o my.log -w 100"
+    ],
+    "readme": "onesixtyone - fast and simple SNMP scanner",
+    "how_to_use": "Install/setup: sudo apt install onesixtyone. Run the primary entrypoint as shown in upstream docs, e.g. `onesixtyone [options] <host> <community>`. Further invocations from upstream: `onesixtyone $KFIOSA_TARGET_HOST/24 public`; `onesixtyone -c dict.txt -i hosts -o my.log -w 100`. onesixtyone - fast and simple SNMP scanner.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: onesixtyone - fast and simple SNMP scanner.",
+    "why_to_use": "Prefer this tool based on upstream description: onesixtyone - fast and simple SNMP scanner.",
+    "usage_sections": [
+      "Install with: sudo apt install onesixtyone",
+      "Install with: sudo apt install onesixtyone"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

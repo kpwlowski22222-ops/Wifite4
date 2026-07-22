@@ -1,18 +1,51 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd toolboxes/LinkFinder && python3 LinkFinder.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/LinkFinder && python3 LinkFinder.py --help",
-    "cd toolboxes/LinkFinder && python3 LinkFinder.py --help",
-    "cd toolboxes/LinkFinder && python3 LinkFinder.py --help",
-    "cd toolboxes/LinkFinder && python3 LinkFinder.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST LinkFinder --output $KFIOSA_OUTPUT_DIR/LinkFinder.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST LinkFinder --output $KFIOSA_OUTPUT_DIR/LinkFinder.log"
+    "python setup.py install",
+    "LinkFinder supports **Python 3**."
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "LinkFinder is a python script written to discover endpoints and their parameters in JavaScript files. This way penetration testers and bug hunters are able to gather new, hidden endpoints on the websites they are testing. Resulting in new testing ground, possibility containing new vulnerabilities. It does so by using jsbeautifier for python in combination with a fairly large regular expression. The regular expressions consists of four small regular expressions. These are responsible for finding:",
+    "usage_sections": [
+      "Usage: Short Form | Long Form | Description ------------- | ------------- |------------- -i | --input | Input a: URL, file or folder. For folders a wildcard can be used (e.g. '/.js'). -o | --output | \"cli\" to print to STDOUT, otherwise where to save the HTML file Default: output.html -r",
+      "Examples: Most basic usage to find endpoints in an online JavaScript file and output the HTML results to results.html: python linkfinder.py -i https://example.com/1.js -o results.html CLI/STDOUT output (doesn't use jsbeautifier, which makes it very fast): python linkfinder.py -i https://ex"
+    ],
     "arguments": [
+      {
+        "name": "-b",
+        "description": "| --burp | Toggle to use when inputting a Burp 'Save selected' file containing multiple JS files",
+        "source": "docs"
+      },
+      {
+        "name": "-c",
+        "description": "| --cookies | Add cookies to the request",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "| --domain | Toggle to use when analyzing an entire domain. Enumerates over all found JS files.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "| --help | show the help message and exit",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "| --input | Input a: URL, file or folder. For folders a wildcard can be used (e.g. '/*.js').",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "| --output | \"cli\" to print to STDOUT, otherwise where to save the HTML file Default: output.html",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "| --regex | RegEx for filtering purposes against found endpoints (e.g. ^/api/)",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +162,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "python setup.py install",
+      "LinkFinder supports **Python 3**."
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +291,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, linkfinder, gerbenjavado).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/LinkFinder && python3 LinkFinder.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/LinkFinder && python3 LinkFinder.py --help",
-      "Step 3: cd toolboxes/LinkFinder && python3 LinkFinder.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the osint category. Fits when the engagement needs: LinkFinder is a python script written to discover endpoints and their parameters in JavaScript files. This way penetration testers and bug hunters are able to gather new, hidden endpoints on the websites they are testing.",
+    "why_to_use": "Prefer this tool based on upstream description: LinkFinder is a python script written to discover endpoints and their parameters in JavaScript files. This way penetration testers and bug hunters are able to gather new, hidden endpoints on the websites they are testing. Resulting in new testing ground, possibility containing new vulnerabilities. It does so by using jsbeautifier for python in combination with a fairly large regular expression. Th.",
+    "how_to_use": "Install/setup: git clone https://github.com/GerbenJavado/LinkFinder.git; pip3 install -r requirements.txt. Run the primary entrypoint as shown in upstream docs, e.g. `python setup.py install`. Further invocations from upstream: `LinkFinder supports **Python 3**.`. LinkFinder is a python script written to discover endpoints and their parameters in JavaScript files. This way penetration testers and bug hunters are able to gather new, hidden endpoints on the websites they are testing. Resulting in new testing ground, possibility containing new vulnerabilities. It does so by using j."
   },
   "full_name": "GerbenJavado/LinkFinder",
   "id": "github:GerbenJavado/LinkFinder",
@@ -282,7 +314,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``LinkFinder`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "LinkFinder is a python script written to discover endpoints and their parameters in JavaScript files. This way penetration testers and bug hunters are able to gather new, hidden endpoints on the websites they are testing. Resulting in new testing ground, possibility containing new vulnerabilities. It does so by using jsbeautifier for python in combination with a fairly large regular expression. The regular expressions consists of four small regular expressions. These are responsible for finding:",
   "tags": [
     "offensive",
     "linkfinder",
@@ -300,12 +332,11 @@
   },
   "url": "https://github.com/GerbenJavado/LinkFinder",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need osint, use LinkFinder because LinkFinder is a python script written to discover endpoints and their parameters in JavaScript files. This way penetration testers and bug hunters are able to g.",
+    "When you need a concrete invocation, run `python setup.py install` as documented upstream for LinkFinder.",
+    "When you need a concrete invocation, run `LinkFinder supports **Python 3**.` as documented upstream for LinkFinder.",
+    "When chaining osint tools, pair LinkFinder with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `LinkFinder --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +355,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

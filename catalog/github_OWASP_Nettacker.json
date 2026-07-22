@@ -1,18 +1,26 @@
 {
   "category": "recon",
   "command_examples": [
-    "cd toolboxes/Nettacker && python3 Nettacker.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Nettacker && python3 Nettacker.py --help",
-    "cd toolboxes/Nettacker && python3 Nettacker.py --help",
-    "cd toolboxes/Nettacker && python3 Nettacker.py --help",
-    "cd toolboxes/Nettacker && python3 Nettacker.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Nettacker --output $KFIOSA_OUTPUT_DIR/Nettacker.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Nettacker --output $KFIOSA_OUTPUT_DIR/Nettacker.log"
+    "docker run owasp/nettacker -i $KFIOSA_TARGET_HOST -m port_scan",
+    "docker run owasp/nettacker -i $KFIOSA_TARGET_HOST/24 -m port_scan -g 22",
+    "docker run owasp/nettacker -i owasp.org -d -s -m http_status_scan",
+    "docker run owasp/nettacker --help"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "THIS SOFTWARE WAS CREATED FOR AUTOMATED PENETRATION TESTING AND INFORMATION GATHERING. YOU MUST USE THIS SOFTWARE IN A RESPONSIBLE AND ETHICAL MANNER. DO NOT TARGET SYSTEMS OR APPLICATIONS WITHOUT OBTAINING PERMISSIONS OR CONSENT FROM THE SYSTEM OWNERS OR ADMINISTRATORS. CONTRIBUTORS WILL NOT BE RESPONSIBLE FOR ANY ILLEGAL USAGE.",
+    "usage_sections": [
+      "Multi-protocol & multithreaded scanning - Supports HTTP/HTTPS, FTP, SSH, SMB, SMTP, ICMP, TELNET, XML-RPC, and can run scans in parallel for speed.",
+      "Comprehensive output - Export reports in HTML, JSON, CSV, and plain text.",
+      "CLI, REST API & Web UI - Offers both programmatic integration and a user-friendly web interface for defining scans and viewing results.",
+      "Evasion techniques - Enables configurable delays, proxy support, and randomized user-agents to reduce detection by firewalls or IDS systems.",
+      "Recon & Vulnerability Assessment"
+    ],
     "arguments": [
+      {
+        "name": "-forcing",
+        "description": "is implemented as its own module, giving you control over what runs.",
+        "source": "docs"
+      },
       {
         "name": "--target",
         "description": "Target host, IP, MAC, or URL the tool operates on.",
@@ -129,7 +137,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "docker run owasp/nettacker -i $KFIOSA_TARGET_HOST -m port_scan",
+      "docker run owasp/nettacker -i $KFIOSA_TARGET_HOST/24 -m port_scan -g 22",
+      "docker run owasp/nettacker -i owasp.org -d -s -m http_status_scan",
+      "docker run owasp/nettacker --help"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +268,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, nettacker, owasp).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Nettacker && python3 Nettacker.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Nettacker && python3 Nettacker.py --help",
-      "Step 3: cd toolboxes/Nettacker && python3 Nettacker.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the recon category. Fits when the engagement needs: THIS SOFTWARE WAS CREATED FOR AUTOMATED PENETRATION TESTING AND INFORMATION GATHERING. YOU MUST USE THIS SOFTWARE IN A RESPONSIBLE AND ETHICAL MANNER. DO NOT TARGET SYSTEMS OR APPLICATIONS WITHOUT OBTAINING PERMISSIONS O.",
+    "why_to_use": "Prefer this tool based on upstream description: THIS SOFTWARE WAS CREATED FOR AUTOMATED PENETRATION TESTING AND INFORMATION GATHERING. YOU MUST USE THIS SOFTWARE IN A RESPONSIBLE AND ETHICAL MANNER. DO NOT TARGET SYSTEMS OR APPLICATIONS WITHOUT OBTAINING PERMISSIONS OR CONSENT FROM THE SYSTEM OWNERS OR ADMINISTRATORS. CONTRIBUTORS WILL NOT BE RESPONSIBLE FOR ANY ILLEGAL USAGE.",
+    "how_to_use": "Install/setup: docker run owasp/nettacker -i 192.168.0.1 -m port_scan; docker run owasp/nettacker -i 192.168.0.0/24 -m port_scan -g 22. Run the primary entrypoint as shown in upstream docs, e.g. `docker run owasp/nettacker -i $KFIOSA_TARGET_HOST -m port_scan`. Further invocations from upstream: `docker run owasp/nettacker -i $KFIOSA_TARGET_HOST/24 -m port_scan -g 22`; `docker run owasp/nettacker -i owasp.org -d -s -m http_status_scan`. THIS SOFTWARE WAS CREATED FOR AUTOMATED PENETRATION TESTING AND INFORMATION GATHERING. YOU MUST USE THIS SOFTWARE IN A RESPONSIBLE AND ETHICAL MANNER. DO NOT TARGET SYSTEMS OR APPLICATIONS WITHOUT OBTAINING PERMISSIONS OR CONSENT FROM THE SYSTEM OWNERS OR ADMINISTRATORS. CONTRIBUTORS WILL NOT BE RESPONSIBLE FOR ANY ILL."
   },
   "full_name": "OWASP/Nettacker",
   "id": "github:OWASP/Nettacker",
@@ -282,7 +291,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Nettacker`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "THIS SOFTWARE WAS CREATED FOR AUTOMATED PENETRATION TESTING AND INFORMATION GATHERING. YOU MUST USE THIS SOFTWARE IN A RESPONSIBLE AND ETHICAL MANNER. DO NOT TARGET SYSTEMS OR APPLICATIONS WITHOUT OBTAINING PERMISSIONS OR CONSENT FROM THE SYSTEM OWNERS OR ADMINISTRATORS. CONTRIBUTORS WILL NOT BE RESPONSIBLE FOR ANY ILLEGAL USAGE.",
   "tags": [
     "offensive",
     "nettacker",
@@ -300,12 +309,13 @@
   },
   "url": "https://github.com/OWASP/Nettacker",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need recon, use Nettacker because THIS SOFTWARE WAS CREATED FOR AUTOMATED PENETRATION TESTING AND INFORMATION GATHERING. YOU MUST USE THIS SOFTWARE IN A RESPONSIBLE AND ETHICAL MANNER. DO NOT TA.",
+    "When you need a concrete invocation, run `docker run owasp/nettacker -i $KFIOSA_TARGET_HOST -m port_scan` as documented upstream for Nettacker.",
+    "When you need a concrete invocation, run `docker run owasp/nettacker -i $KFIOSA_TARGET_HOST/24 -m port_scan -g 22` as documented upstream for Nettacker.",
+    "When you need a concrete invocation, run `docker run owasp/nettacker -i owasp.org -d -s -m http_status_scan` as documented upstream for Nettacker.",
+    "When you need a concrete invocation, run `docker run owasp/nettacker --help` as documented upstream for Nettacker.",
+    "When chaining recon tools, pair Nettacker with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Nettacker --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +334,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

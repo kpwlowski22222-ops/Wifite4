@@ -8,32 +8,83 @@
   "url": "https://github.com/sergioamsilva/wifi-security-toolkit",
   "summary": "📡 Wi-Fi Security Toolkit — Sessions 1–4",
   "documentation": {
-    "readme": "📡 Wi-Fi Security Toolkit — Sessions 1–4",
-    "usage_sections": [],
+    "readme": "> \"With great antenna comes great responsibility.\" > — Someone who definitely said this at some point.",
+    "usage_sections": [
+      "Kill NetworkManager (it's in the way)",
+      "Kill wpasupplicant (also in the way)",
+      "Put your card in monitor mode",
+      "Validate the result so you don't spend 20 minutes wondering why nothing works",
+      "Number of unique devices in range"
+    ],
     "arguments": [
       {
-        "name": "--band",
-        "description": "CLI flag '--band' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--bssid",
+        "description": "Target AP BSSID. Must be in AA:BB:CC:DD:EE:FF format.",
+        "source": "docs"
       },
       {
-        "name": "--bssid",
-        "description": "Target BSSID (MAC of an access point).",
-        "source": "v2_enhancement"
+        "name": "--duration",
+        "description": "Capture duration in seconds. 0 = run until Ctrl-C. (default: 0)",
+        "source": "docs"
+      },
+      {
+        "name": "--iface",
+        "description": "Monitor-mode interface (e.g. wlan1mon).",
+        "source": "docs"
+      },
+      {
+        "name": "--input",
+        "description": "JSON file(s) from 02_recon/04_probe_analyzer.py",
+        "source": "docs"
+      },
+      {
+        "name": "--known-aps",
+        "description": "JSON from 02_recon/05_ap_scanner.py for evil twin detection",
+        "source": "docs"
+      },
+      {
+        "name": "--max-ssids",
+        "description": "Max SSIDs to query per device (default: 5)",
+        "source": "docs"
+      },
+      {
+        "name": "--min-probes",
+        "description": "Min probe count to include a device (default: 3)",
+        "source": "docs"
+      },
+      {
+        "name": "--no-filter",
+        "description": "Disable common SSID filtering (e.g. eduroam)",
+        "source": "docs"
+      },
+      {
+        "name": "--no-gps",
+        "description": "Skip gpsd; log with blank coordinates.",
+        "source": "docs"
+      },
+      {
+        "name": "--output",
+        "description": "Save correlation results to JSON",
+        "source": "docs"
+      },
+      {
+        "name": "--pcap",
+        "description": "Replay from existing pcap file",
+        "source": "docs"
+      },
+      {
+        "name": "--threshold",
+        "description": "Minimum Jaccard similarity to report (default: 0.15)",
+        "source": "docs"
+      },
+      {
+        "name": "--top",
+        "description": "Maximum pairs to show (default: 20)",
+        "source": "docs"
       },
       {
         "name": "--channel",
         "description": "WiFi channel to operate on (1-165).",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--iface",
-        "description": "Alias of --interface.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--output",
-        "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
       },
       {
@@ -267,7 +318,18 @@
         "language": "python"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo python3 01_setup/02_setup_monitor.py start wlan1 --channel 6",
+      "sudo python3 01_setup/02_setup_monitor.py stop wlan1",
+      "sudo python3 01_setup/03_channel_hopper.py --iface wlan1 --band 2.4",
+      "sudo python3 02_recon/04_probe_analyzer.py --iface wlan1 --output room.json",
+      "3C:22:FB:**:**:**         328  Apple               MEO-XXXX, Marriott_Lisbon...",
+      "A4:5E:60:**:**:**         192  Samsung             Vodafone-Home, FCT_WiFi...",
+      "DC:A6:32:**:**:**         445  Raspberry Pi        lab_internal, dev_net...",
+      "sudo python3 03_capture/01_handshake_catcher.py \\",
+      "AP  ──M1──►  STA    \"Hey, prove you know the password. Here's a nonce.\"",
+      "AP  ◄──M2──  STA    \"Sure. Here's MY nonce and a MIC. I totally know it.\""
+    ],
     "file_listing": [
       "01_fake_ap.py",
       "01_frame_classifier.py",
@@ -354,13 +416,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web', 'cloud', 'iots']' as the attack surface (reconnaissance, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
-      "Step 2: cd toolboxes/wifi-security-toolkit && cat README.md",
-      "Step 3: cd toolboxes/wifi-security-toolkit && ls -la"
-    ]
+    "when_to_use": "Use during the 'recon' phase against surfaces [web, cloud, iots] in the Reconnaissance category. Fits when the engagement needs: 📡 Wi-Fi Security Toolkit — Sessions 1–4.",
+    "why_to_use": "Prefer this tool based on upstream description: > \"With great antenna comes great responsibility.\" > — Someone who definitely said this at some point.",
+    "how_to_use": "Install/setup: pip install scapy. Run the primary entrypoint as shown in upstream docs, e.g. `sudo python3 01_setup/02_setup_monitor.py start wlan1 --channel 6`. Further invocations from upstream: `sudo python3 01_setup/02_setup_monitor.py stop wlan1`; `sudo python3 01_setup/03_channel_hopper.py --iface wlan1 --band 2.4`."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -391,18 +449,26 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Reconnaissance category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Reconnaissance system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Reconnaissance, use wifi-security-toolkit because 📡 Wi-Fi Security Toolkit — Sessions 1–4.",
+    "When the engagement is in the recon phase, use wifi-security-toolkit as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `sudo python3 01_setup/02_setup_monitor.py start wlan1 --channel 6` as documented upstream for wifi-security-toolkit.",
+    "When you need a concrete invocation, run `sudo python3 01_setup/02_setup_monitor.py stop wlan1` as documented upstream for wifi-security-toolkit.",
+    "When you need a concrete invocation, run `sudo python3 01_setup/03_channel_hopper.py --iface wlan1 --band 2.4` as documented upstream for wifi-security-toolkit.",
+    "When you need a concrete invocation, run `sudo python3 02_recon/04_probe_analyzer.py --iface wlan1 --output room.json` as documented upstream for wifi-security-toolkit.",
+    "When chaining Reconnaissance tools, pair wifi-security-toolkit with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `wifi-security-toolkit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
-    "cd toolboxes/wifi-security-toolkit && cat README.md",
-    "cd toolboxes/wifi-security-toolkit && ls -la",
-    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-security-toolkit --output $KFIOSA_OUTPUT_DIR/wifi-security-toolkit.log"
+    "sudo python3 01_setup/02_setup_monitor.py start wlan1 --channel 6",
+    "sudo python3 01_setup/02_setup_monitor.py stop wlan1",
+    "sudo python3 01_setup/03_channel_hopper.py --iface wlan1 --band 2.4",
+    "sudo python3 02_recon/04_probe_analyzer.py --iface wlan1 --output room.json",
+    "3C:22:FB:**:**:**         328  Apple               MEO-XXXX, Marriott_Lisbon...",
+    "A4:5E:60:**:**:**         192  Samsung             Vodafone-Home, FCT_WiFi...",
+    "DC:A6:32:**:**:**         445  Raspberry Pi        lab_internal, dev_net...",
+    "sudo python3 03_capture/01_handshake_catcher.py \\",
+    "AP  ──M1──►  STA    \"Hey, prove you know the password. Here's a nonce.\"",
+    "AP  ◄──M2──  STA    \"Sure. Here's MY nonce and a MIC. I totally know it.\""
   ],
   "attack_surface": [
     "web",
@@ -425,5 +491,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

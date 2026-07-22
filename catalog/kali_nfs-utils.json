@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "nfs-utils",
   "title": "nfs-utils",
-  "summary": "### libnfsidmap-dev",
+  "summary": "mount.nfs, mount.nfs4 - mount a Network File System",
   "version": "1:2.9.1-1",
   "architectures": [
     "any"
@@ -46,80 +46,14 @@
       "arguments": [
         {
           "flags": [
-            "-r"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Mount file system readonly",
-          "default": null,
-          "choices": null,
-          "raw": " \t-r\t\tMount file system readonly"
-        },
-        {
-          "flags": [
-            "-v"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Verbose",
-          "default": null,
-          "choices": null,
-          "raw": " \t-v\t\tVerbose"
-        },
-        {
-          "flags": [
-            "-V"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Print version",
-          "default": null,
-          "choices": null,
-          "raw": " \t-V\t\tPrint version"
-        },
-        {
-          "flags": [
-            "-w"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Mount file system read-write",
-          "default": null,
-          "choices": null,
-          "raw": " \t-w\t\tMount file system read-write"
-        },
-        {
-          "flags": [
             "-f"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Fake mount, do not actually mount",
+          "description": "Fake mount. Don't actually call the mount system call.",
           "default": null,
           "choices": null,
-          "raw": " \t-f\t\tFake mount, do not actually mount"
-        },
-        {
-          "flags": [
-            "-n"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Do not update /etc/mtab",
-          "default": null,
-          "choices": null,
-          "raw": " \t-n\t\tDo not update /etc/mtab"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "Tolerate sloppy mount options rather than fail",
-          "default": null,
-          "choices": null,
-          "raw": " \t-s\t\tTolerate sloppy mount options rather than fail"
+          "raw": "-f  Fake mount. Don't actually call the mount system call."
         },
         {
           "flags": [
@@ -127,10 +61,76 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "Print this help",
+          "description": "Print help message.",
           "default": null,
           "choices": null,
-          "raw": " \t-h\t\tPrint this help"
+          "raw": "-h  Print help message."
+        },
+        {
+          "flags": [
+            "-n"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "not update /etc/mtab. By default, an entry is created in /etc/mtab for every",
+          "default": null,
+          "choices": null,
+          "raw": "-n  not update /etc/mtab. By default, an entry is created in /etc/mtab for every"
+        },
+        {
+          "flags": [
+            "-r"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Mount file system readonly.",
+          "default": null,
+          "choices": null,
+          "raw": "-r  Mount file system readonly."
+        },
+        {
+          "flags": [
+            "-s"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Tolerate sloppy mount options rather than fail.",
+          "default": null,
+          "choices": null,
+          "raw": "-s  Tolerate sloppy mount options rather than fail."
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print version.",
+          "default": null,
+          "choices": null,
+          "raw": "-V  Print version."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Be verbose.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Be verbose."
+        },
+        {
+          "flags": [
+            "-w"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Mount file system read-write.",
+          "default": null,
+          "choices": null,
+          "raw": "-w  Mount file system read-write."
         }
       ],
       "raw_help": "root@kali:~# mount.nfs -h\n usage: mount.nfs remotetarget dir [-rvVwfnsh] [-o nfsoptions]\n options:\n \t-r\t\tMount file system readonly\n \t-v\t\tVerbose\n \t-V\t\tPrint version\n \t-w\t\tMount file system read-write\n \t-f\t\tFake mount, do not actually mount\n \t-n\t\tDo not update /etc/mtab\n \t-s\t\tTolerate sloppy mount options rather than fail\n \t-h\t\tPrint this help\n \tnfsoptions\tRefer to mount.nfs(8) or nfs(5)",
@@ -2893,21 +2893,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use mount.nfs because mount.nfs, mount.nfs4 - mount a Network File System.",
+    "When you need a concrete invocation, run `mount.nfs remotetarget dir [-rvVwfnsh ] [-o options]` as documented upstream for mount.nfs.",
+    "When chaining Kali Linux tools, pair mount.nfs with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `mount.nfs --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/nfs-utils && python3 nfs-utils.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/nfs-utils && python3 nfs-utils.py --help",
-    "cd toolboxes/nfs-utils && python3 nfs-utils.py --help",
-    "cd toolboxes/nfs-utils && python3 nfs-utils.py --help",
-    "cd toolboxes/nfs-utils && python3 nfs-utils.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nfs-utils --output $KFIOSA_OUTPUT_DIR/nfs-utils.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nfs-utils --output $KFIOSA_OUTPUT_DIR/nfs-utils.log"
+    "mount.nfs remotetarget dir [-rvVwfnsh ] [-o options]"
   ],
   "attack_surface": [
     "web"
@@ -2922,5 +2914,62 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-f",
+        "description": "Fake mount. Don't actually call the mount system call.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Print help message.",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "not update /etc/mtab. By default, an entry is created in /etc/mtab for every",
+        "source": "docs"
+      },
+      {
+        "name": "-r",
+        "description": "Mount file system readonly.",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "Tolerate sloppy mount options rather than fail.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Print version.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Be verbose.",
+        "source": "docs"
+      },
+      {
+        "name": "-w",
+        "description": "Mount file system read-write.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "mount.nfs remotetarget dir [-rvVwfnsh ] [-o options]"
+    ],
+    "readme": "mount.nfs, mount.nfs4 - mount a Network File System",
+    "how_to_use": "Install/setup: sudo apt install nfs-utils. Run the primary entrypoint as shown in upstream docs, e.g. `mount.nfs remotetarget dir [-rvVwfnsh ] [-o options]`. mount.nfs, mount.nfs4 - mount a Network File System.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: mount.nfs, mount.nfs4 - mount a Network File System.",
+    "why_to_use": "Prefer this tool based on upstream description: mount.nfs, mount.nfs4 - mount a Network File System.",
+    "usage_sections": [
+      "Install with: sudo apt install nfs-utils",
+      "Install with: sudo apt install nfs-utils"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

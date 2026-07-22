@@ -8,23 +8,90 @@
   "url": "https://github.com/mandiant/flare-floss",
   "summary": "![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flare-floss)\n[![Last release](https://img.shields.io/github/v/release/mandiant/flare-floss)](https://github.com/mandiant/flare-floss/releases)\n[![CI status](https://github.com/mandiant/flare-floss/actions/workflows/tests.yml/badge.svg)](https://github.com/mandiant/flare-floss/actions/workflows/tests.yml)\n[![Downloads](https://img.shields.io/github/downloads/mandiant/flare-floss/total)](https://github.com/mandiant/flare-floss/releases)\n[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE.txt)",
   "documentation": {
-    "readme": "![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flare-floss)\n[![Last release](https://img.shields.io/github/v/release/mandiant/flare-floss)](https://github.com/mandiant/flare-floss/releases)\n[![CI status](https://github.com/mandiant/flare-floss/actions/workflows/tests.yml/badge.svg)](https://github.com/mandiant/flare-floss/actions/workflows/tests.yml)\n[![Downloads](https://img.shields.io/github/downloads/mandiant/flare-floss/total)](https://github.com/mandiant/flare-floss/releases)\n[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE.txt)",
-    "usage_sections": [],
+    "readme": "The FLARE Obfuscated String Solver (FLOSS, formerly FireEye Labs Obfuscated String Solver) uses advanced static analysis techniques to automatically extract and deobfuscate all strings from malware binaries. You can use it just like strings.exe to enhance the basic static analysis of unknown binaries.",
+    "usage_sections": [
+      "Installation: To use FLOSS, download a standalone executable file from the releases page: https://github.com/mandiant/flare-floss/releases See the installation documentation for a detailed description of all methods to install FLOSS."
+    ],
     "arguments": [
       {
+        "name": "-d",
+        "description": "enable debugging output on STDERR, specify multiple times to increase verbosity",
+        "source": "docs"
+      },
+      {
+        "name": "--debug",
+        "description": "enable debugging output on STDERR, specify multiple times to increase verbosity",
+        "source": "docs"
+      },
+      {
+        "name": "--disable-progress",
+        "description": "disable all progress bars",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "select sample format, %s",
+        "source": "docs"
+      },
+      {
+        "name": "--format",
+        "description": "select sample format, %s",
+        "source": "docs"
+      },
+      {
+        "name": "--json",
+        "description": "emit JSON instead of text",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "load from existing FLOSS results document",
+        "source": "docs"
+      },
+      {
+        "name": "--load",
+        "description": "load from existing FLOSS results document",
+        "source": "docs"
+      },
+      {
+        "name": "--minimum-length",
+        "description": "minimum string length",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "minimum string length",
+        "source": "docs"
+      },
+      {
+        "name": "--no",
+        "description": "do not extract specified string type(s)",
+        "source": "docs"
+      },
+      {
         "name": "--only",
-        "description": "Run only a specific stage.",
-        "source": "v2_enhancement"
+        "description": "only extract specified string type(s)",
+        "source": "docs"
       },
       {
-        "name": "-H",
-        "description": "CLI flag '-H' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-q",
+        "description": "disable all status output on STDOUT except fatal errors",
+        "source": "docs"
       },
       {
-        "name": "-no",
-        "description": "CLI flag '-no' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--quiet",
+        "description": "disable all status output on STDOUT except fatal errors",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "enable verbose results, e.g. including function offsets (does not affect JSON output)",
+        "source": "docs"
+      },
+      {
+        "name": "--verbose",
+        "description": "enable verbose results, e.g. including function offsets (does not affect JSON output)",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -44,11 +111,6 @@
       {
         "name": "--output",
         "description": "Output file path for the report or capture.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--verbose",
-        "description": "Increase log verbosity (repeatable for higher levels).",
         "source": "v2_enhancement"
       },
       {
@@ -97,18 +159,8 @@
         "source": "v2_enhancement"
       },
       {
-        "name": "--json",
-        "description": "Emit JSON output instead of human-readable text.",
-        "source": "v2_enhancement"
-      },
-      {
         "name": "--no-color",
         "description": "Disable ANSI color in output.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--quiet",
-        "description": "Suppress non-error output.",
         "source": "v2_enhancement"
       },
       {
@@ -193,7 +245,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "cd toolboxes/flare-floss && python3 flare-floss.py --help",
+      "cd toolboxes/flare-floss && cat README.md",
+      "cd toolboxes/flare-floss && ls -la",
+      "cd toolboxes/flare-floss && python3 flare-floss.py --target $KFIOSA_TARGET_HOST",
+      "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST flare-floss --output $KFIOSA_OUTPUT_DIR/flare-floss.log"
+    ],
     "file_listing": [
       "1_flare_msvc_rtf_32_64.sig",
       "2_flare_msvc_atlmfc_32_64.sig",
@@ -293,13 +351,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_linux']' as the attack surface (penetration_testing, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/flare-floss && python3 flare-floss.py --help",
-      "Step 2: cd toolboxes/flare-floss && cat README.md",
-      "Step 3: cd toolboxes/flare-floss && ls -la"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flare-floss)\n[![Last release](https://img.shields.io/github/v/release/mandiant/flare-floss)](https://github.com/mandiant/flare-floss/releases)\n[![CI status].",
+    "why_to_use": "Prefer this tool based on upstream description: The FLARE Obfuscated String Solver (FLOSS, formerly FireEye Labs Obfuscated String Solver) uses advanced static analysis techniques to automatically extract and deobfuscate all strings from malware binaries. You can use it just like strings.exe to enhance the basic static analysis of unknown binaries.",
+    "how_to_use": "Clone or install `flare-floss` from its upstream repository, then run `flare-floss --help` (or the README entrypoint) to confirm flags."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -330,11 +384,9 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Penetration Testing category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Penetration Testing system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Penetration Testing, use flare-floss because ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/flare-floss)\n[![Last release](https://img.shields.io/github/v/release/mandiant/flare-floss)](htt.",
+    "When chaining Penetration Testing tools, pair flare-floss with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `flare-floss --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
     "cd toolboxes/flare-floss && python3 flare-floss.py --help",
@@ -362,5 +414,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "sendemail",
   "title": "sendemail",
-  "summary": "### sendemail",
+  "summary": "SendEmail - Lightweight, command line SMTP email client",
   "version": "1.56-5.2",
   "architectures": [
     "all"
@@ -32,80 +32,14 @@
       "arguments": [
         {
           "flags": [
-            "-f"
-          ],
-          "metavar": "ADDRESS",
-          "takes_value": true,
-          "description": "from (sender) email address",
-          "default": null,
-          "choices": null,
-          "raw": "   -f ADDRESS                from (sender) email address"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "ADDRESS ADDR ...",
-          "takes_value": true,
-          "description": "to email address(es)",
-          "default": null,
-          "choices": null,
-          "raw": "   -t ADDRESS [ADDR ...]     to email address(es)"
-        },
-        {
-          "flags": [
-            "-u"
-          ],
-          "metavar": "SUBJECT",
-          "takes_value": true,
-          "description": "message subject",
-          "default": null,
-          "choices": null,
-          "raw": "   -u SUBJECT                message subject"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "MESSAGE",
-          "takes_value": true,
-          "description": "message body",
-          "default": null,
-          "choices": null,
-          "raw": "   -m MESSAGE                message body"
-        },
-        {
-          "flags": [
-            "-s"
-          ],
-          "metavar": "SERVER",
-          "takes_value": true,
-          "description": "PORT]          smtp mail relay, default is localhost:25",
-          "default": "is localhost:25",
-          "choices": null,
-          "raw": "   -s SERVER[:PORT]          smtp mail relay, default is localhost:25"
-        },
-        {
-          "flags": [
-            "-S"
-          ],
-          "metavar": "SENDMAIL_PATH",
-          "takes_value": true,
-          "description": "use local sendmail utility (default: /usr/bin/sendmail) instead of network MTA",
-          "default": "/usr/bin/sendmail",
-          "choices": null,
-          "raw": "   -S [SENDMAIL_PATH]        use local sendmail utility (default: /usr/bin/sendmail) instead of network MTA"
-        },
-        {
-          "flags": [
             "-a"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "FILE [FILE ...]      file attachment(s)",
+          "description": "FILE [FILE ...] file attachment(s)",
           "default": null,
           "choices": null,
-          "raw": "   -a   FILE [FILE ...]      file attachment(s)"
+          "raw": "-a  FILE [FILE ...] file attachment(s)"
         },
         {
           "flags": [
@@ -113,65 +47,98 @@
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "ADDRESS [ADDR ...]   cc  email address(es)",
+          "description": "ADDRESS [ADDR ...] cc email address(es)",
           "default": null,
           "choices": null,
-          "raw": "   -cc  ADDRESS [ADDR ...]   cc  email address(es)"
+          "raw": "-cc  ADDRESS [ADDR ...] cc email address(es)"
         },
         {
           "flags": [
-            "-bcc"
+            "-f"
           ],
-          "metavar": "ADDRESS ADDR ...",
-          "takes_value": true,
-          "description": "bcc email address(es)",
-          "default": null,
-          "choices": null,
-          "raw": "   -bcc ADDRESS [ADDR ...]   bcc email address(es)"
-        },
-        {
-          "flags": [
-            "-xu"
-          ],
-          "metavar": "USERNAME",
+          "metavar": null,
           "takes_value": false,
-          "description": "USERNAME             username for SMTP authentication",
+          "description": "from (sender) email address",
           "default": null,
           "choices": null,
-          "raw": "   -xu  USERNAME             username for SMTP authentication"
+          "raw": "-f  from (sender) email address"
         },
         {
           "flags": [
-            "-xp"
+            "--help"
           ],
-          "metavar": "PASSWORD",
+          "metavar": null,
           "takes_value": false,
-          "description": "PASSWORD             password for SMTP authentication",
+          "description": "The following extended help topics are available:",
           "default": null,
           "choices": null,
-          "raw": "   -xp  PASSWORD             password for SMTP authentication"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": "BINDADDR",
-          "takes_value": true,
-          "description": "PORT]        local host bind address",
-          "default": null,
-          "choices": null,
-          "raw": "   -b BINDADDR[:PORT]        local host bind address"
+          "raw": "--help  The following extended help topics are available:"
         },
         {
           "flags": [
             "-l"
           ],
-          "metavar": "LOGFILE",
-          "takes_value": true,
+          "metavar": null,
+          "takes_value": false,
           "description": "log to the specified file",
           "default": null,
           "choices": null,
-          "raw": "   -l LOGFILE                log to the specified file"
+          "raw": "-l  log to the specified file"
+        },
+        {
+          "flags": [
+            "-m"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "message body",
+          "default": null,
+          "choices": null,
+          "raw": "-m  message body"
+        },
+        {
+          "flags": [
+            "-o"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "see extended help topic \"misc\" for details",
+          "default": null,
+          "choices": null,
+          "raw": "-o  see extended help topic \"misc\" for details"
+        },
+        {
+          "flags": [
+            "-q"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "be quiet (no stdout output)",
+          "default": null,
+          "choices": null,
+          "raw": "-q  be quiet (no stdout output)"
+        },
+        {
+          "flags": [
+            "-S"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "use local sendmail utility (default: /usr/bin/sendmail) instead of network MTA",
+          "default": null,
+          "choices": null,
+          "raw": "-S  use local sendmail utility (default: /usr/bin/sendmail) instead of network MTA"
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "message subject",
+          "default": null,
+          "choices": null,
+          "raw": "-u  message subject"
         },
         {
           "flags": [
@@ -182,40 +149,29 @@
           "description": "verbosity, use multiple times for greater effect",
           "default": null,
           "choices": null,
-          "raw": "   -v                        verbosity, use multiple times for greater effect"
+          "raw": "-v  verbosity, use multiple times for greater effect"
         },
         {
           "flags": [
-            "-q"
+            "-xp"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "be quiet (i.e. no STDOUT output)",
+          "description": "authentication password (for SMTP authentication)",
           "default": null,
           "choices": null,
-          "raw": "   -q                        be quiet (i.e. no STDOUT output)"
+          "raw": "-xp  authentication password (for SMTP authentication)"
         },
         {
           "flags": [
-            "-o"
+            "-xu"
           ],
-          "metavar": "NAME=VALUE",
-          "takes_value": true,
-          "description": "advanced options, for details try: --help misc",
-          "default": null,
-          "choices": null,
-          "raw": "   -o NAME=VALUE             advanced options, for details try: --help misc"
-        },
-        {
-          "flags": [
-            "--help"
-          ],
-          "metavar": "TOPIC",
+          "metavar": null,
           "takes_value": false,
-          "description": "the helpful overview you're reading now",
+          "description": "authentication user (for SMTP authentication)",
           "default": null,
           "choices": null,
-          "raw": "   --help                    the helpful overview you're reading now"
+          "raw": "-xu  authentication user (for SMTP authentication)"
         }
       ],
       "raw_help": "root@kali:~# sendEmail -h\n \n sendEmail-1.56 by Brandon Zehm <caspian@dotconf.net>\n \n Synopsis:  sendEmail -f ADDRESS [options]\n \n Required:\n   -f ADDRESS                from (sender) email address\n   * At least one recipient required via -t, -cc, or -bcc\n   * Message body required via -m, STDIN, or -o message-file=FILE\n \n Common:\n   -t ADDRESS [ADDR ...]     to email address(es)\n   -u SUBJECT                message subject\n   -m MESSAGE                message body\n   -s SERVER[:PORT]          smtp mail relay, default is localhost:25\n   -S [SENDMAIL_PATH]        use local sendmail utility (default: /usr/bin/sendmail) instead of network MTA\n \n Optional:\n   -a   FILE [FILE ...]      file attachment(s)\n   -cc  ADDRESS [ADDR ...]   cc  email address(es)\n   -bcc ADDRESS [ADDR ...]   bcc email address(es)\n   -xu  USERNAME             username for SMTP authentication\n   -xp  PASSWORD             password for SMTP authentication\n \n Paranormal:\n   -b BINDADDR[:PORT]        local host bind address\n   -l LOGFILE                log to the specified file\n   -v                        verbosity, use multiple times for greater effect\n   -q                        be quiet (i.e. no STDOUT output)\n   -o NAME=VALUE             advanced options, for details try: --help misc\n       -o message-content-type=<auto|text|html>\n       -o message-file=FILE         -o message-format=raw\n       -o message-header=HEADER     -o message-charset=CHARSET\n       -o reply-to=ADDRESS          -o timeout=SECONDS\n       -o username=USERNAME         -o password=PASSWORD\n       -o tls=<auto|yes|no>         -o fqdn=FQDN\n \n \n Help:\n   --help                    the helpful overview you're reading now\n   --help addressing         explain addressing and related options\n   --help message            explain message body input and related options\n   --help networking         explain -s, -b, etc\n   --help output             explain logging and other output options\n   --help misc               explain -o options, TLS, SMTP auth, and more",
@@ -500,21 +456,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use sendEmail because SendEmail - Lightweight, command line SMTP email client.",
+    "When you need a concrete invocation, run `SendEmail -f ADDRESS [options]` as documented upstream for sendEmail.",
+    "When chaining Kali Linux tools, pair sendEmail with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `sendEmail --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/sendemail && python3 sendemail.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/sendemail && python3 sendemail.py --help",
-    "cd toolboxes/sendemail && python3 sendemail.py --help",
-    "cd toolboxes/sendemail && python3 sendemail.py --help",
-    "cd toolboxes/sendemail && python3 sendemail.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sendemail --output $KFIOSA_OUTPUT_DIR/sendemail.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sendemail --output $KFIOSA_OUTPUT_DIR/sendemail.log"
+    "SendEmail -f ADDRESS [options]"
   ],
   "attack_surface": [
     "web"
@@ -529,5 +477,87 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-a",
+        "description": "FILE [FILE ...] file attachment(s)",
+        "source": "docs"
+      },
+      {
+        "name": "-cc",
+        "description": "ADDRESS [ADDR ...] cc email address(es)",
+        "source": "docs"
+      },
+      {
+        "name": "-f",
+        "description": "from (sender) email address",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "The following extended help topics are available:",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "log to the specified file",
+        "source": "docs"
+      },
+      {
+        "name": "-m",
+        "description": "message body",
+        "source": "docs"
+      },
+      {
+        "name": "-o",
+        "description": "see extended help topic \"misc\" for details",
+        "source": "docs"
+      },
+      {
+        "name": "-q",
+        "description": "be quiet (no stdout output)",
+        "source": "docs"
+      },
+      {
+        "name": "-S",
+        "description": "use local sendmail utility (default: /usr/bin/sendmail) instead of network MTA",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "message subject",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "verbosity, use multiple times for greater effect",
+        "source": "docs"
+      },
+      {
+        "name": "-xp",
+        "description": "authentication password (for SMTP authentication)",
+        "source": "docs"
+      },
+      {
+        "name": "-xu",
+        "description": "authentication user (for SMTP authentication)",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "SendEmail -f ADDRESS [options]"
+    ],
+    "readme": "SendEmail - Lightweight, command line SMTP email client",
+    "how_to_use": "Install/setup: sudo apt install sendemail. Run the primary entrypoint as shown in upstream docs, e.g. `SendEmail -f ADDRESS [options]`. SendEmail - Lightweight, command line SMTP email client.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: SendEmail - Lightweight, command line SMTP email client.",
+    "why_to_use": "Prefer this tool based on upstream description: SendEmail - Lightweight, command line SMTP email client.",
+    "usage_sections": [
+      "Install with: sudo apt install sendemail",
+      "Install with: sudo apt install sendemail"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

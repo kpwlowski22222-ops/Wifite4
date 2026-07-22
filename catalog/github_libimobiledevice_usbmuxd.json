@@ -7,10 +7,13 @@
   "category": "USB multiplexing daemon for iOS",
   "url": "https://github.com/libimobiledevice/usbmuxd",
   "toolbox_path": "toolboxes/ios/usbmuxd",
-  "summary": "Repository indexing entry for the ``usbmuxd`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "A socket daemon to multiplex connections from and to iOS devices.",
   "documentation": {
-    "readme": "toolboxes/ios/usbmuxd/README.md",
-    "usage_sections": [],
+    "readme": "A socket daemon to multiplex connections from and to iOS devices.",
+    "usage_sections": [
+      "Features: usbmuxd stands for \"USB multiplexing daemon\". This daemon is in charge of multiplexing connections over USB to an iOS device. To users, it means you can use various applications to interact with your device. To developers, it means you can connect to any listening localhost socke",
+      "Usage: The daemon is automatically started by udev or systemd depending on what you have configured upon hotplug of an iOS device and exits if the last device was unplugged. When usbmuxd is running it provides a socket interface at /var/run/usbmuxd that is designed to be compatible with"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -128,7 +131,12 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "./autogen.sh",
+      "./autogen.sh --prefix=/opt/local --without-preflight --without-systemd",
+      "./autogen.sh --help",
+      "usbmuxd --help"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -254,13 +262,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, usbmuxd, libimobiledevice).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/usbmuxd && python3 usbmuxd.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
-      "Step 3: cd toolboxes/usbmuxd && python3 usbmuxd.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the USB multiplexing daemon for iOS category. Fits when the engagement needs: A socket daemon to multiplex connections from and to iOS devices.",
+    "why_to_use": "Prefer this tool based on upstream description: A socket daemon to multiplex connections from and to iOS devices.",
+    "how_to_use": "Install/setup: git clone https://github.com/libimobiledevice/usbmuxd.git. Run the primary entrypoint as shown in upstream docs, e.g. `./autogen.sh`. Further invocations from upstream: `./autogen.sh --prefix=/opt/local --without-preflight --without-systemd`; `./autogen.sh --help`. A socket daemon to multiplex connections from and to iOS devices."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -292,21 +296,19 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need USB multiplexing daemon for iOS, use usbmuxd because A socket daemon to multiplex connections from and to iOS devices.",
+    "When you need a concrete invocation, run `./autogen.sh` as documented upstream for usbmuxd.",
+    "When you need a concrete invocation, run `./autogen.sh --prefix=/opt/local --without-preflight --without-systemd` as documented upstream for usbmuxd.",
+    "When you need a concrete invocation, run `./autogen.sh --help` as documented upstream for usbmuxd.",
+    "When you need a concrete invocation, run `usbmuxd --help` as documented upstream for usbmuxd.",
+    "When chaining USB multiplexing daemon for iOS tools, pair usbmuxd with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `usbmuxd --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/usbmuxd && python3 usbmuxd.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
-    "cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
-    "cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
-    "cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST usbmuxd --output $KFIOSA_OUTPUT_DIR/usbmuxd.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST usbmuxd --output $KFIOSA_OUTPUT_DIR/usbmuxd.log"
+    "./autogen.sh",
+    "./autogen.sh --prefix=/opt/local --without-preflight --without-systemd",
+    "./autogen.sh --help",
+    "usbmuxd --help"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +327,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

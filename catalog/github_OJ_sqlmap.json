@@ -26,21 +26,14 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use after httpx / wappalyzer / whatweb has identified the target web stack (CMS, framework, server).",
-    "Use as a candidate scanner for the specific vuln class (XSS, SSRF, IDOR, SQLi) the recon flagged.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Web Application Security, use sqlmap because Automatic SQL injection + database takeover.",
+    "When the engagement is in the exploit phase, use sqlmap as a cataloged Web Application Security tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `sqlmap --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/sqlmap.log` as documented upstream for sqlmap.",
+    "When chaining Web Application Security tools, pair sqlmap with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `sqlmap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/sqlmap && python3 sqlmap.py -u https://$KFIOSA_TARGET_HOST --cookie $KFIOSA_TARGET_COOKIE",
-    "cd toolboxes/sqlmap && python3 sqlmap.py -h",
-    "cd toolboxes/sqlmap && python3 sqlmap.py --help",
-    "cd toolboxes/sqlmap && python3 sqlmap.py --help",
-    "cd toolboxes/sqlmap && python3 sqlmap.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sqlmap --output $KFIOSA_OUTPUT_DIR/sqlmap.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sqlmap --output $KFIOSA_OUTPUT_DIR/sqlmap.log"
+    "sqlmap --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/sqlmap.log"
   ],
   "risk": {
     "signals": [
@@ -296,15 +289,19 @@
         "score": 1
       }
     ],
-    "examples": [],
-    "when_to_use": "Use this tool when the engagement is in the 'exploit' phase against a target with '['web', 'cloud']' as the attack surface (web, http, active).",
-    "why_to_use": "This tool is preferred because: Use after httpx / wappalyzer / whatweb has identified the target web stack (CMS, framework, server).",
-    "how_to_use": [
-      "Step 1: cd toolboxes/sqlmap && python3 sqlmap.py -u https://$KFIOSA_TARGET_HOST --cookie $KFIOSA_TARGET_COOKIE",
-      "Step 2: cd toolboxes/sqlmap && python3 sqlmap.py -h",
-      "Step 3: cd toolboxes/sqlmap && python3 sqlmap.py --help"
+    "examples": [
+      "sqlmap --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/sqlmap.log"
+    ],
+    "when_to_use": "Use during the 'exploit' phase against surfaces [web, cloud] in the Web Application Security category. Fits when the engagement needs: Automatic SQL injection + database takeover.",
+    "why_to_use": "Prefer this tool based on upstream description: Curated toolbox entry for OJ/sqlmap in the OSINT category.",
+    "how_to_use": "Install/setup: git clone --depth 1 https://github.com/OJ/sqlmap.git toolboxes/osint/OJ__sqlmap. Run the primary entrypoint as shown in upstream docs, e.g. `sqlmap --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/sqlmap.log`. Automatic SQL injection + database takeover.",
+    "readme": "Curated toolbox entry for OJ/sqlmap in the OSINT category.",
+    "usage_sections": [
+      "Usage: Typical flags: --target selects the target; --port selects the port; --output writes output to a file."
     ]
   },
   "_languages": [],
-  "_kfiosa_enriched_at": "phase4_t16"
+  "_kfiosa_enriched_at": "phase4_t16",
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

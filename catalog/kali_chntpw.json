@@ -27,7 +27,85 @@
       "path": "/usr/sbin/chntpw",
       "description": "utility to overwrite passwords of Windows systems",
       "usage": "chntpw [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-d"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Use buffer debugger instead (hex editor)",
+          "default": null,
+          "choices": null,
+          "raw": "-d  Use buffer debugger instead (hex editor)"
+        },
+        {
+          "flags": [
+            "-E"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Do not expand the hive file (safe mode).",
+          "default": null,
+          "choices": null,
+          "raw": "-E  Do not expand the hive file (safe mode)."
+        },
+        {
+          "flags": [
+            "-e"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Registry editor with limited capabilities (but it does include write support). For a",
+          "default": null,
+          "choices": null,
+          "raw": "-e  Registry editor with limited capabilities (but it does include write support). For a"
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Show a summary of options.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Show a summary of options."
+        },
+        {
+          "flags": [
+            "-i"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Interactive Menu system: list all users (as per -l option) and then ask for the user to",
+          "default": null,
+          "choices": null,
+          "raw": "-i  Interactive Menu system: list all users (as per -l option) and then ask for the user to"
+        },
+        {
+          "flags": [
+            "-l"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "List all users in the SAM database and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-l  List all users in the SAM database and exit."
+        },
+        {
+          "flags": [
+            "-v"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Print verbose information and debug messages.",
+          "default": null,
+          "choices": null,
+          "raw": "-v  Print verbose information and debug messages."
+        }
+      ]
     },
     {
       "name": "reged",
@@ -77,5 +155,76 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "chntpw [options] <samfile> [systemfile] [securityfile] [otherreghive] [...]",
+    "chntpw SAM system",
+    "chntpw -l SAM",
+    "chntpw -u jabbathehutt SAM"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use chntpw because NT SAM password recovery utility.",
+    "When the engagement is in the install phase, use chntpw as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `chntpw [options] <samfile> [systemfile] [securityfile] [otherreghive] [...]` as documented upstream for chntpw.",
+    "When you need a concrete invocation, run `chntpw SAM system` as documented upstream for chntpw.",
+    "When you need a concrete invocation, run `chntpw -l SAM` as documented upstream for chntpw.",
+    "When you need a concrete invocation, run `chntpw -u jabbathehutt SAM` as documented upstream for chntpw.",
+    "When chaining Kali Linux tools, pair chntpw with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `chntpw --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-d",
+        "description": "Use buffer debugger instead (hex editor)",
+        "source": "docs"
+      },
+      {
+        "name": "-E",
+        "description": "Do not expand the hive file (safe mode).",
+        "source": "docs"
+      },
+      {
+        "name": "-e",
+        "description": "Registry editor with limited capabilities (but it does include write support). For a",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Show a summary of options.",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "Interactive Menu system: list all users (as per -l option) and then ask for the user to",
+        "source": "docs"
+      },
+      {
+        "name": "-l",
+        "description": "List all users in the SAM database and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "Print verbose information and debug messages.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "chntpw [options] <samfile> [systemfile] [securityfile] [otherreghive] [...]",
+      "chntpw SAM system",
+      "chntpw -l SAM",
+      "chntpw -u jabbathehutt SAM"
+    ],
+    "readme": "chntpw - utility to overwrite passwords of Windows systems",
+    "how_to_use": "Install/setup: sudo apt install chntpw. Run the primary entrypoint as shown in upstream docs, e.g. `chntpw [options] <samfile> [systemfile] [securityfile] [otherreghive] [...]`. Further invocations from upstream: `chntpw -l SAM`; `chntpw -u jabbathehutt SAM`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: NT SAM password recovery utility.",
+    "why_to_use": "Prefer this tool based on upstream description: chntpw - utility to overwrite passwords of Windows systems.",
+    "usage_sections": [
+      "Install with: sudo apt install chntpw",
+      "Install with: sudo apt install chntpw"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

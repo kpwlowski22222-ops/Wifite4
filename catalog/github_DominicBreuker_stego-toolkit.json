@@ -1,17 +1,21 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "cd toolboxes/stego-toolkit && python3 stego-toolkit.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/stego-toolkit && python3 stego-toolkit.py --help",
-    "cd toolboxes/stego-toolkit && python3 stego-toolkit.py --help",
-    "cd toolboxes/stego-toolkit && python3 stego-toolkit.py --help",
-    "cd toolboxes/stego-toolkit && python3 stego-toolkit.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST stego-toolkit --output $KFIOSA_OUTPUT_DIR/stego-toolkit.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST stego-toolkit --output $KFIOSA_OUTPUT_DIR/stego-toolkit.log"
+    "docker run -it --rm -p $KFIOSA_TARGET_HOST:22:22 dominicbreuker/stego-toolkit /bin/bash",
+    "start_ssh.sh",
+    "ssh -X -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@localhost",
+    "docker run -it --rm -p $KFIOSA_TARGET_HOST:6901:6901 dominicbreuker/stego-toolkit /bin/bash",
+    "start_vnc.sh"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "This project is a Docker image useful for solving Steganography challenges as those you can find at CTF platforms like hackthebox.eu. The image comes pre-installed with many popular tools (see list below) and several screening scripts you can use check simple things (for instance, run checkjpg.sh image.jpg to get a report for a JPG file).",
+    "usage_sections": [
+      "Run startssh.sh and connect to your container with X11 forwarding",
+      "Run startvnc.sh and connect to the container's Desktop through your browser",
+      "What tools are installed? Go here",
+      "What scripts can I run to quickly screen files automatically or brute force them? Go here",
+      "How can I play with different Steganography examples to see if I can break them? Go here"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +133,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "docker run -it --rm -p $KFIOSA_TARGET_HOST:22:22 dominicbreuker/stego-toolkit /bin/bash",
+      "start_ssh.sh",
+      "ssh -X -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@localhost",
+      "docker run -it --rm -p $KFIOSA_TARGET_HOST:6901:6901 dominicbreuker/stego-toolkit /bin/bash",
+      "start_vnc.sh"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +265,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, stego, toolkit).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/stego-toolkit && python3 stego-toolkit.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/stego-toolkit && python3 stego-toolkit.py --help",
-      "Step 3: cd toolboxes/stego-toolkit && python3 stego-toolkit.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the post_exploitation category. Fits when the engagement needs: This project is a Docker image useful for solving Steganography challenges as those you can find at CTF platforms like hackthebox.eu. The image comes pre-installed with many popular tools (see list below) and several scr.",
+    "why_to_use": "Prefer this tool based on upstream description: This project is a Docker image useful for solving Steganography challenges as those you can find at CTF platforms like hackthebox.eu. The image comes pre-installed with many popular tools (see list below) and several screening scripts you can use check simple things (for instance, run checkjpg.sh image.jpg to get a report for a JPG file).",
+    "how_to_use": "Install/setup: docker run -it --rm -p 127.0.0.1:22:22 dominicbreuker/stego-toolkit /bin/bash; docker run -it --rm -p 127.0.0.1:6901:6901 dominicbreuker/stego-toolkit /bin/bash. Run the primary entrypoint as shown in upstream docs, e.g. `docker run -it --rm -p $KFIOSA_TARGET_HOST:22:22 dominicbreuker/stego-toolkit /bin/bash`. Further invocations from upstream: `start_ssh.sh`; `ssh -X -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@localhost`. This project is a Docker image useful for solving Steganography challenges as those you can find at CTF platforms like hackthebox.eu. The image comes pre-installed with many popular tools (see list below) and several screening scripts you can use check simple things (for instance, run checkjpg.sh image.jpg to get a rep."
   },
   "full_name": "DominicBreuker/stego-toolkit",
   "id": "github:DominicBreuker/stego-toolkit",
@@ -282,7 +288,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``stego-toolkit`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "This project is a Docker image useful for solving Steganography challenges as those you can find at CTF platforms like hackthebox.eu. The image comes pre-installed with many popular tools (see list below) and several screening scripts you can use check simple things (for instance, run checkjpg.sh image.jpg to get a report for a JPG file).",
   "tags": [
     "offensive",
     "stego",
@@ -301,12 +307,13 @@
   },
   "url": "https://github.com/DominicBreuker/stego-toolkit",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need post_exploitation, use stego-toolkit because This project is a Docker image useful for solving Steganography challenges as those you can find at CTF platforms like hackthebox.eu. The image comes pre-instal.",
+    "When you need a concrete invocation, run `docker run -it --rm -p $KFIOSA_TARGET_HOST:22:22 dominicbreuker/stego-toolkit /bin/bash` as documented upstream for stego-toolkit.",
+    "When you need a concrete invocation, run `start_ssh.sh` as documented upstream for stego-toolkit.",
+    "When you need a concrete invocation, run `ssh -X -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@localhost` as documented upstream for stego-toolkit.",
+    "When you need a concrete invocation, run `docker run -it --rm -p $KFIOSA_TARGET_HOST:6901:6901 dominicbreuker/stego-toolkit /bin/bash` as documented upstream for stego-toolkit.",
+    "When chaining post_exploitation tools, pair stego-toolkit with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `stego-toolkit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -325,5 +332,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

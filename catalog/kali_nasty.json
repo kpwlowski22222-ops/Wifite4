@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "nasty",
   "title": "nasty",
-  "summary": "### nasty",
+  "summary": "nasty - A tool which helps you to recover your GPG passphrase",
   "version": "0.6+git20220929.9830b7a-3",
   "architectures": [
     "any"
@@ -31,80 +31,14 @@
       "arguments": [
         {
           "flags": [
-            "-a"
+            "-h"
           ],
-          "metavar": "x",
-          "takes_value": true,
-          "description": "set minimum length of passphrase",
+          "metavar": null,
+          "takes_value": false,
+          "description": "show command options",
           "default": null,
           "choices": null,
-          "raw": " -a x\tset minimum length of passphrase"
-        },
-        {
-          "flags": [
-            "-b"
-          ],
-          "metavar": "x",
-          "takes_value": true,
-          "description": "set maximum length",
-          "default": null,
-          "choices": null,
-          "raw": " -b x\tset maximum length"
-        },
-        {
-          "flags": [
-            "-m"
-          ],
-          "metavar": "x",
-          "takes_value": true,
-          "description": "set guessing mode:",
-          "default": null,
-          "choices": null,
-          "raw": " -m x\tset guessing mode:"
-        },
-        {
-          "flags": [
-            "-i"
-          ],
-          "metavar": "x",
-          "takes_value": true,
-          "description": "file to read the passphrases from",
-          "default": null,
-          "choices": null,
-          "raw": " -i x\tfile to read the passphrases from"
-        },
-        {
-          "flags": [
-            "-f"
-          ],
-          "metavar": "x",
-          "takes_value": true,
-          "description": "file to write the found passphrase to",
-          "default": null,
-          "choices": null,
-          "raw": " -f x\tfile to write the found passphrase to"
-        },
-        {
-          "flags": [
-            "-c"
-          ],
-          "metavar": "x... charset one or more from the following",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -c x... charset, one or more from the following:"
-        },
-        {
-          "flags": [
-            "-k"
-          ],
-          "metavar": "x",
-          "takes_value": true,
-          "description": "filter string to select a key",
-          "default": null,
-          "choices": null,
-          "raw": " -k x\tfilter string to select a key"
+          "raw": "-h  show command options"
         },
         {
           "flags": [
@@ -115,18 +49,7 @@
           "description": "enable verbose mode",
           "default": null,
           "choices": null,
-          "raw": " -v \tenable verbose mode"
-        },
-        {
-          "flags": [
-            "-h"
-          ],
-          "metavar": null,
-          "takes_value": false,
-          "description": "show command options",
-          "default": null,
-          "choices": null,
-          "raw": "     -h     show command options"
+          "raw": "-v  enable verbose mode"
         }
       ],
       "raw_help": "root@kali:~# nasty -h\n -a x\tset minimum length of passphrase\n -b x\tset maximum length\n -m x\tset guessing mode:\n \tincremental: try them all\n \trandom: try at random\n \tfile: read phrases from file (use -i)\n -i x\tfile to read the passphrases from\n -f x\tfile to write the found passphrase to\n -c x... charset, one or more from the following:\n \ta: a-z\n \tA: A-Z\n \t0: 0-9\n \t.: all ascii values (32...126)\n \t+: 32...255 (default(!))\n -k x\tfilter string to select a key\n -v \tenable verbose mode",
@@ -209,21 +132,13 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use nasty because nasty - A tool which helps you to recover your GPG passphrase.",
+    "When you need a concrete invocation, run `nasty [OPTIONS]` as documented upstream for nasty.",
+    "When chaining Kali Linux tools, pair nasty with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `nasty --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/nasty && python3 nasty.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/nasty && python3 nasty.py --help",
-    "cd toolboxes/nasty && python3 nasty.py --help",
-    "cd toolboxes/nasty && python3 nasty.py --help",
-    "cd toolboxes/nasty && python3 nasty.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nasty --output $KFIOSA_OUTPUT_DIR/nasty.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nasty --output $KFIOSA_OUTPUT_DIR/nasty.log"
+    "nasty [OPTIONS]"
   ],
   "attack_surface": [
     "web",
@@ -239,5 +154,32 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "show command options",
+        "source": "docs"
+      },
+      {
+        "name": "-v",
+        "description": "enable verbose mode",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "nasty [OPTIONS]"
+    ],
+    "readme": "nasty - A tool which helps you to recover your GPG passphrase",
+    "how_to_use": "Install/setup: sudo apt install nasty. nasty - A tool which helps you to recover your GPG passphrase.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web, iots] in the Kali Linux category. Fits when the engagement needs: nasty - A tool which helps you to recover your GPG passphrase.",
+    "why_to_use": "Prefer this tool based on upstream description: nasty - A tool which helps you to recover your GPG passphrase.",
+    "usage_sections": [
+      "Install with: sudo apt install nasty",
+      "Install with: sudo apt install nasty"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

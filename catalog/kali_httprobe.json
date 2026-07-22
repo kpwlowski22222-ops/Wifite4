@@ -3,7 +3,7 @@
   "kind": "kali_source_package",
   "name": "httprobe",
   "title": "httprobe",
-  "summary": "### httprobe",
+  "summary": "httprobe - Tool to find working http and https servers from a domains list",
   "version": "0.2-0kali1",
   "architectures": [
     "any"
@@ -29,69 +29,25 @@
       "arguments": [
         {
           "flags": [
-            "-c"
-          ],
-          "metavar": "int",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -c int"
-        },
-        {
-          "flags": [
-            "-method"
-          ],
-          "metavar": "string",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -method string"
-        },
-        {
-          "flags": [
-            "-p"
-          ],
-          "metavar": "value",
-          "takes_value": true,
-          "description": "",
-          "default": null,
-          "choices": null,
-          "raw": " -p value"
-        },
-        {
-          "flags": [
             "-prefer-https"
           ],
           "metavar": null,
           "takes_value": false,
-          "description": "",
+          "description": "only try plain HTTP if HTTPS fails",
           "default": null,
           "choices": null,
-          "raw": " -prefer-https"
+          "raw": "-prefer-https  only try plain HTTP if HTTPS fails"
         },
         {
           "flags": [
             "-s"
           ],
-          "metavar": "skip the default probes http",
-          "takes_value": true,
-          "description": "80 and https:443)",
-          "default": "probes (http:80 and https:443",
-          "choices": null,
-          "raw": " -s\tskip the default probes (http:80 and https:443)"
-        },
-        {
-          "flags": [
-            "-t"
-          ],
-          "metavar": "int",
-          "takes_value": true,
-          "description": "",
+          "metavar": null,
+          "takes_value": false,
+          "description": "skip the default probes (http:80 and https:443)",
           "default": null,
           "choices": null,
-          "raw": " -t int"
+          "raw": "-s  skip the default probes (http:80 and https:443)"
         }
       ],
       "raw_help": "root@kali:~# httprobe -h\n Usage of httprobe:\n -c int\n   \tset the concurrency level (split equally between HTTPS and HTTP requests) (default 20)\n -method string\n   \tHTTP method to use (default \"GET\")\n -p value\n   \tadd additional probe (proto:port)\n -prefer-https\n   \tonly try plain HTTP if HTTPS fails\n -s\tskip the default probes (http:80 and https:443)\n -t int\n   \ttimeout (milliseconds) (default 10000)",
@@ -157,21 +113,15 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need Kali Linux, use httprobe because httprobe - Tool to find working http and https servers from a domains list.",
+    "When you need a concrete invocation, run `httprobe accepts line-delimited domains on `stdin`:` as documented upstream for httprobe.",
+    "When you need a concrete invocation, run `cat recon/example/domains.txt | httprobe cat domains.txt | httprobe -s -p https:8443` as documented upstream for httprobe.",
+    "When chaining Kali Linux tools, pair httprobe with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `httprobe --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/httprobe && python3 httprobe.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/httprobe && python3 httprobe.py --help",
-    "cd toolboxes/httprobe && python3 httprobe.py --help",
-    "cd toolboxes/httprobe && python3 httprobe.py --help",
-    "cd toolboxes/httprobe && python3 httprobe.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST httprobe --output $KFIOSA_OUTPUT_DIR/httprobe.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST httprobe --output $KFIOSA_OUTPUT_DIR/httprobe.log"
+    "httprobe accepts line-delimited domains on `stdin`:",
+    "cat recon/example/domains.txt | httprobe cat domains.txt | httprobe -s -p https:8443"
   ],
   "attack_surface": [
     "web"
@@ -186,5 +136,33 @@
   "target_adaptive_targets": [
     "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0"
+  "_kfiosa_enriched_schema": "1.1.0",
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-prefer-https",
+        "description": "only try plain HTTP if HTTPS fails",
+        "source": "docs"
+      },
+      {
+        "name": "-s",
+        "description": "skip the default probes (http:80 and https:443)",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "httprobe accepts line-delimited domains on `stdin`:",
+      "cat recon/example/domains.txt | httprobe cat domains.txt | httprobe -s -p https:8443"
+    ],
+    "readme": "httprobe - Tool to find working http and https servers from a domains list",
+    "how_to_use": "Install/setup: sudo apt install httprobe. Run the primary entrypoint as shown in upstream docs, e.g. `cat recon/example/domains.txt | httprobe cat domains.txt | httprobe -s -p https:8443`. httprobe - Tool to find working http and https servers from a domains list.",
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the Kali Linux category. Fits when the engagement needs: httprobe - Tool to find working http and https servers from a domains list.",
+    "why_to_use": "Prefer this tool based on upstream description: httprobe - Tool to find working http and https servers from a domains list.",
+    "usage_sections": [
+      "Install with: sudo apt install httprobe",
+      "Install with: sudo apt install httprobe"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

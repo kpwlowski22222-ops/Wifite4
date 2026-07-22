@@ -1,17 +1,26 @@
 {
   "category": "wireless_ble_ext",
   "command_examples": [
-    "cd toolboxes/phantap && python3 phantap.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/phantap && python3 phantap.py --help",
-    "cd toolboxes/phantap && python3 phantap.py --help",
-    "cd toolboxes/phantap && python3 phantap.py --help",
-    "cd toolboxes/phantap && python3 phantap.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantap --output $KFIOSA_OUTPUT_DIR/phantap.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantap --output $KFIOSA_OUTPUT_DIR/phantap.log"
+    "network.loopback.device='lo'",
+    "network.@device[0].ports='eth0'",
+    "network.lan.device='br-lan'",
+    "network.wan.device='eth1'",
+    "network.wan6.device='eth1'",
+    "network.phantap.device='br-phantap'",
+    "uci delete network.@device[0].ports",
+    "uci delete network.wan.device",
+    "uci delete network.wan6.device",
+    "uci add_list network.br_phantap.ports='eth0'"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "PhanTap is an ‘invisible’ network tap aimed at red teams. With limited physical access to a target building, this tap can be installed inline between a network device and the corporate network. PhanTap is silent in the network and does not affect the victim’s traffic, even in networks having NAC (Network Access Control 802.1X - 2004). PhanTap will analyze traffic on the network and mask its traffic as the victim device. It can mount a tunnel back to a remote server, giving the user a foothold in the network for further analysis and pivoting. PhanTap is an OpenWrt package and should be compatible with any device. The physical device used for our testing is currently a small, inexpensive router, the GL.iNet GL-AR150. You can find a detailed blogpost describing PhanTap here",
+    "usage_sections": [
+      "Transparent network bridge.",
+      "Silent : no arp, multicast, broadcast.",
+      "Automatic configuration:",
+      "capture traffic entering the network (the source is non RFC1918 and the destination is RFC1918), destination IP and MAC is our victim, source MAC is our gateway,",
+      "SNAT bridge traffic to the victim MAC and IP address,"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +138,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "network.loopback.device='lo'",
+      "network.@device[0].ports='eth0'",
+      "network.lan.device='br-lan'",
+      "network.wan.device='eth1'",
+      "network.wan6.device='eth1'",
+      "network.phantap.device='br-phantap'",
+      "uci delete network.@device[0].ports",
+      "uci delete network.wan.device",
+      "uci delete network.wan6.device",
+      "uci add_list network.br_phantap.ports='eth0'"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +275,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, phantap, nccgroup).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/phantap && python3 phantap.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/phantap && python3 phantap.py --help",
-      "Step 3: cd toolboxes/phantap && python3 phantap.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the wireless_ble_ext category. Fits when the engagement needs: PhanTap is an ‘invisible’ network tap aimed at red teams. With limited physical access to a target building, this tap can be installed inline between a network device and the corporate network. PhanTap is silent in the n.",
+    "why_to_use": "Prefer this tool based on upstream description: PhanTap is an ‘invisible’ network tap aimed at red teams. With limited physical access to a target building, this tap can be installed inline between a network device and the corporate network. PhanTap is silent in the network and does not affect the victim’s traffic, even in networks having NAC (Network Access Control 802.1X - 2004). PhanTap will analyze traffic on the network and mask its traffi.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `network.loopback.device='lo'`. Further invocations from upstream: `network.@device[0].ports='eth0'`; `network.lan.device='br-lan'`. PhanTap is an ‘invisible’ network tap aimed at red teams. With limited physical access to a target building, this tap can be installed inline between a network device and the corporate network. PhanTap is silent in the network and does not affect the victim’s traffic, even in networks having NAC (Network Access Control."
   },
   "full_name": "nccgroup/phantap",
   "id": "github:nccgroup/phantap",
@@ -282,7 +298,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``phantap`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "PhanTap is an ‘invisible’ network tap aimed at red teams. With limited physical access to a target building, this tap can be installed inline between a network device and the corporate network. PhanTap is silent in the network and does not affect the victim’s traffic, even in networks having NAC (Network Access Control 802.1X - 2004). PhanTap will analyze traffic on the network and mask its traffic as the victim device. It can mount a tunnel back to a remote server, giving the user a foothold in",
   "tags": [
     "offensive",
     "phantap",
@@ -300,12 +316,13 @@
   },
   "url": "https://github.com/nccgroup/phantap",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need wireless_ble_ext, use phantap because PhanTap is an ‘invisible’ network tap aimed at red teams. With limited physical access to a target building, this tap can be installed inline between a network .",
+    "When you need a concrete invocation, run `network.loopback.device='lo'` as documented upstream for phantap.",
+    "When you need a concrete invocation, run `network.@device[0].ports='eth0'` as documented upstream for phantap.",
+    "When you need a concrete invocation, run `network.lan.device='br-lan'` as documented upstream for phantap.",
+    "When you need a concrete invocation, run `network.wan.device='eth1'` as documented upstream for phantap.",
+    "When chaining wireless_ble_ext tools, pair phantap with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `phantap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +341,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

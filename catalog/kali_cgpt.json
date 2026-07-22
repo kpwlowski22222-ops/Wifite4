@@ -27,7 +27,19 @@
       "path": "/usr/bin/cgpt",
       "description": "Utility to manipulate GPT partitions with Chromium OS extensions",
       "usage": "cgpt [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "For more detailed usage, use cgpt COMMAND -h",
+          "default": null,
+          "choices": null,
+          "raw": "-h  For more detailed usage, use cgpt COMMAND -h"
+        }
+      ]
     }
   ],
   "files": [
@@ -41,5 +53,52 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "cgpt COMMAND [OPTIONS] DRIVE",
+    "cgpt show /dev/mmcblk0",
+    "cgpt create /dev/mmcblk0",
+    "cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0",
+    "cgpt add -i 1 -t data -l \"STATE\" /dev/mmcblk0",
+    "cgpt add -i 2 -t kernel -l \"KERN-A\" /dev/mmcblk0",
+    "cgpt add -i 3 -t rootfs -l \"ROOT-A\" /dev/mmcblk0"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use cgpt because GPT manipulation tool with support for Chromium OS extensions.",
+    "When the engagement is in the install phase, use cgpt as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `cgpt COMMAND [OPTIONS] DRIVE` as documented upstream for cgpt.",
+    "When you need a concrete invocation, run `cgpt show /dev/mmcblk0` as documented upstream for cgpt.",
+    "When you need a concrete invocation, run `cgpt create /dev/mmcblk0` as documented upstream for cgpt.",
+    "When you need a concrete invocation, run `cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0` as documented upstream for cgpt.",
+    "When chaining Kali Linux tools, pair cgpt with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `cgpt --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-h",
+        "description": "For more detailed usage, use cgpt COMMAND -h",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "cgpt COMMAND [OPTIONS] DRIVE",
+      "cgpt show /dev/mmcblk0",
+      "cgpt create /dev/mmcblk0",
+      "cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0",
+      "cgpt add -i 1 -t data -l \"STATE\" /dev/mmcblk0",
+      "cgpt add -i 2 -t kernel -l \"KERN-A\" /dev/mmcblk0",
+      "cgpt add -i 3 -t rootfs -l \"ROOT-A\" /dev/mmcblk0"
+    ],
+    "readme": "cgpt - Utility to manipulate GPT partitions with Chromium OS extensions",
+    "how_to_use": "Install/setup: sudo apt install vboot-utils. Run the primary entrypoint as shown in upstream docs, e.g. `cgpt show /dev/mmcblk0`. Further invocations from upstream: `cgpt create /dev/mmcblk0`; `cgpt add -i 2 -S 1 -T 15 -P 15 /dev/mmcblk0`. GPT manipulation tool with support for Chromium OS extensions.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: GPT manipulation tool with support for Chromium OS extensions.",
+    "why_to_use": "Prefer this tool based on upstream description: cgpt - Utility to manipulate GPT partitions with Chromium OS extensions.",
+    "usage_sections": [
+      "Install with: sudo apt install vboot-utils",
+      "Install with: sudo apt install vboot-utils"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

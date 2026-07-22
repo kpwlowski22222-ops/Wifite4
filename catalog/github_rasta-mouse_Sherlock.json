@@ -1,17 +1,21 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "cd toolboxes/Sherlock && python3 Sherlock.py --target $KFIOSA_TARGET_HOST",
-    "cd toolboxes/Sherlock && python3 Sherlock.py --help",
-    "cd toolboxes/Sherlock && python3 Sherlock.py --help",
-    "cd toolboxes/Sherlock && python3 Sherlock.py --help",
-    "cd toolboxes/Sherlock && python3 Sherlock.py --help",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Sherlock --output $KFIOSA_OUTPUT_DIR/Sherlock.log",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Sherlock --output $KFIOSA_OUTPUT_DIR/Sherlock.log"
+    "beacon> getuid",
+    "beacon> powershell-import C:\\Users\\Rasta\\Desktop\\Sherlock.ps1",
+    "beacon> powershell Find-MS14058",
+    "Link       : $KFIOSA_TARGET_URL",
+    "beacon> elevate ms14-058 smb"
   ],
   "documentation": {
-    "readme": null,
-    "usage_sections": [],
+    "readme": "> Deprecated. Have a look at Watson instead.",
+    "usage_sections": [
+      "MS10-015 : User Mode to Ring (KiTrap0D)",
+      "MS10-092 : Task Scheduler",
+      "MS13-053 : NTUserMessageCall Win32k Kernel Pool Overflow",
+      "MS13-081 : TrackPopupMenuEx Win32k NULL Page",
+      "MS14-058 : TrackPopupMenu Win32k Null Pointer Dereference"
+    ],
     "arguments": [
       {
         "name": "--target",
@@ -129,7 +133,13 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "beacon> getuid",
+      "beacon> powershell-import C:\\Users\\Rasta\\Desktop\\Sherlock.ps1",
+      "beacon> powershell Find-MS14058",
+      "Link       : $KFIOSA_TARGET_URL",
+      "beacon> elevate ms14-058 smb"
+    ],
     "function_signatures": [
       {
         "name": "use_as_a_candidate_tool_in_the_chain_planner_review_provenance_before_use",
@@ -255,13 +265,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, sherlock, rasta-mouse).",
-    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Sherlock && python3 Sherlock.py --target $KFIOSA_TARGET_HOST",
-      "Step 2: cd toolboxes/Sherlock && python3 Sherlock.py --help",
-      "Step 3: cd toolboxes/Sherlock && python3 Sherlock.py --help"
-    ]
+    "when_to_use": "Use during the 'any' phase against surfaces [web] in the post_exploitation category. Fits when the engagement needs: > Deprecated. Have a look at Watson instead.",
+    "why_to_use": "Prefer this tool based on upstream description: > Deprecated. Have a look at Watson instead.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `beacon> getuid`. Further invocations from upstream: `beacon> powershell-import C:\\Users\\Rasta\\Desktop\\Sherlock.ps1`; `beacon> powershell Find-MS14058`. > Deprecated. Have a look at Watson instead."
   },
   "full_name": "rasta-mouse/Sherlock",
   "id": "github:rasta-mouse/Sherlock",
@@ -282,7 +288,7 @@
       "target_adaptive_compatible"
     ]
   },
-  "summary": "Repository indexing entry for the ``Sherlock`` project. Index entry in the KFIOSA catalog. Use as a candidate tool in the chain planner. Attribution and provenance only; audit code, releases, and licence before use in the lab or production environment.",
+  "summary": "> Deprecated. Have a look at Watson instead.",
   "tags": [
     "offensive",
     "sherlock",
@@ -300,12 +306,13 @@
   },
   "url": "https://github.com/rasta-mouse/Sherlock",
   "use_cases": [
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Use as a candidate tool in the chain planner; review provenance before use.",
-    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+    "When you need post_exploitation, use Sherlock because > Deprecated. Have a look at Watson instead.",
+    "When you need a concrete invocation, run `beacon> getuid` as documented upstream for Sherlock.",
+    "When you need a concrete invocation, run `beacon> powershell-import C:\\Users\\Rasta\\Desktop\\Sherlock.ps1` as documented upstream for Sherlock.",
+    "When you need a concrete invocation, run `beacon> powershell Find-MS14058` as documented upstream for Sherlock.",
+    "When you need a concrete invocation, run `Link       : $KFIOSA_TARGET_URL` as documented upstream for Sherlock.",
+    "When chaining post_exploitation tools, pair Sherlock with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Sherlock --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
@@ -324,5 +331,7 @@
   ],
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "internet_readme"
 }

@@ -8,68 +8,103 @@
   "url": "https://github.com/chebuya/Havoc-C2-SSRF-poc",
   "summary": "CVE-2024-41570: Havoc-C2-SSRF-poc\nThis vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and read/write data from it. This allows attackers to leak origin IPs of teamservers and much more.",
   "documentation": {
-    "readme": "CVE-2024-41570: Havoc-C2-SSRF-poc\nThis vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and read/write data from it. This allows attackers to leak origin IPs of teamservers and much more.",
+    "readme": "CVE-2024-41570: Havoc-C2-SSRF-poc This vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and read/write data from it. This allows attackers to leak origin IPs of teamservers and much more.",
     "usage_sections": [],
     "arguments": [
       {
+        "name": "-A",
+        "description": "The User-Agent for the spoofed agent",
+        "source": "docs"
+      },
+      {
+        "name": "-d",
+        "description": "The domain name for the spoofed agent",
+        "source": "docs"
+      },
+      {
         "name": "--domain-name",
-        "description": "CLI flag '--domain-name' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "The domain name for the spoofed agent",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--help",
-        "description": "Show help / usage and exit.",
-        "source": "v2_enhancement"
+        "description": "show this help message and exit",
+        "source": "docs"
       },
       {
         "name": "--hostname",
-        "description": "CLI flag '--hostname' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "The hostname for the spoofed agent",
+        "source": "docs"
+      },
+      {
+        "name": "-i",
+        "description": "The IP to open the socket with",
+        "source": "docs"
       },
       {
         "name": "--internal-ip",
-        "description": "CLI flag '--internal-ip' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "The internal ip for the spoofed agent",
+        "source": "docs"
       },
       {
-        "name": "--port",
-        "description": "Target port (default: service default).",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--process-name",
-        "description": "CLI flag '--process-name' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--target",
-        "description": "Target host, IP, MAC, or URL the tool operates on.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--user-agent",
-        "description": "HTTP User-Agent header value.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--username",
-        "description": "Username for authentication.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "-A",
-        "description": "CLI flag '-A' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "-H",
-        "description": "CLI flag '-H' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "--ip",
+        "description": "The IP to open the socket with",
+        "source": "docs"
       },
       {
         "name": "-ip",
-        "description": "CLI flag '-ip' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "description": "The internal ip for the spoofed agent",
+        "source": "docs"
+      },
+      {
+        "name": "-n",
+        "description": "The process name for the spoofed agent",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "The port to open the socket with",
+        "source": "docs"
+      },
+      {
+        "name": "--port",
+        "description": "The port to open the socket with",
+        "source": "docs"
+      },
+      {
+        "name": "--process-name",
+        "description": "The process name for the spoofed agent",
+        "source": "docs"
+      },
+      {
+        "name": "-t",
+        "description": "The listener target in URL format",
+        "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "The listener target in URL format",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "The username for the spoofed agent",
+        "source": "docs"
+      },
+      {
+        "name": "--user-agent",
+        "description": "The User-Agent for the spoofed agent",
+        "source": "docs"
+      },
+      {
+        "name": "--username",
+        "description": "The username for the spoofed agent",
+        "source": "docs"
       },
       {
         "name": "--interface",
@@ -179,7 +214,10 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sed -i '/case COMMAND_SOCKET:/,/return true/d' teamserver/pkg/agent/agent.go",
+      "usage: exploit.py [-h] -t TARGET -i IP -p PORT [-A USER_AGENT] [-H HOSTNAME] [-u USERNAME] [-d DOMAIN_NAME]"
+    ],
     "file_listing": [
       "README.md",
       "exploit.py"
@@ -231,13 +269,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['shell_windows', 'shell_linux', 'ad']' as the attack surface (post-exploitation, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --help",
-      "Step 2: cd toolboxes/Havoc-C2-SSRF-poc && cat README.md",
-      "Step 3: cd toolboxes/Havoc-C2-SSRF-poc && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [shell_windows, shell_linux, ad] in the Post-Exploitation category. Fits when the engagement needs: CVE-2024-41570: Havoc-C2-SSRF-poc\nThis vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and read/write data from it. This allows attackers to leak orig.",
+    "why_to_use": "Prefer this tool based on upstream description: CVE-2024-41570: Havoc-C2-SSRF-poc This vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and read/write data from it. This allows attackers to leak origin IPs of teamservers and much more.",
+    "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `sed -i '/case COMMAND_SOCKET:/,/return true/d' teamserver/pkg/agent/agent.go`. Further invocations from upstream: `usage: exploit.py [-h] -t TARGET -i IP -p PORT [-A USER_AGENT] [-H HOSTNAME] [-u USERNAME] [-d DOMAIN_NAME]`. CVE-2024-41570: Havoc-C2-SSRF-poc This vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and read/write data from it. This allows attackers to leak origin IPs of teamservers and much more."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -269,18 +303,16 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Post-Exploitation category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Post-Exploitation system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Post-Exploitation, use Havoc-C2-SSRF-poc because CVE-2024-41570: Havoc-C2-SSRF-poc\nThis vulnerability is exploited by spoofing a demon agent registration and checkins to open a TCP socket on the teamserver and.",
+    "When the engagement is in the post_exploit phase, use Havoc-C2-SSRF-poc as a cataloged Post-Exploitation tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `sed -i '/case COMMAND_SOCKET:/,/return true/d' teamserver/pkg/agent/agent.go` as documented upstream for Havoc-C2-SSRF-poc.",
+    "When you need a concrete invocation, run `usage: exploit.py [-h] -t TARGET -i IP -p PORT [-A USER_AGENT] [-H HOSTNAME] [-u USERNAME] [-d DOMAIN_NAME]` as documented upstream for Havoc-C2-SSRF-poc.",
+    "When chaining Post-Exploitation tools, pair Havoc-C2-SSRF-poc with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `Havoc-C2-SSRF-poc --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --help",
-    "cd toolboxes/Havoc-C2-SSRF-poc && cat README.md",
-    "cd toolboxes/Havoc-C2-SSRF-poc && ls -la",
-    "cd toolboxes/Havoc-C2-SSRF-poc && python3 Havoc-C2-SSRF-poc.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Havoc-C2-SSRF-poc --output $KFIOSA_OUTPUT_DIR/Havoc-C2-SSRF-poc.log"
+    "sed -i '/case COMMAND_SOCKET:/,/return true/d' teamserver/pkg/agent/agent.go",
+    "usage: exploit.py [-h] -t TARGET -i IP -p PORT [-A USER_AGENT] [-H HOSTNAME] [-u USERNAME] [-d DOMAIN_NAME]"
   ],
   "attack_surface": [
     "shell_windows",
@@ -303,5 +335,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }

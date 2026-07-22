@@ -27,7 +27,118 @@
       "path": "/usr/bin/renice",
       "description": "alter priority of running processes",
       "usage": "renice [options] [args]",
-      "arguments": []
+      "arguments": [
+        {
+          "flags": [
+            "-g"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Interpret the succeeding arguments as process group IDs.",
+          "default": null,
+          "choices": null,
+          "raw": "-g  Interpret the succeeding arguments as process group IDs."
+        },
+        {
+          "flags": [
+            "-h"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display help text and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-h  Display help text and exit."
+        },
+        {
+          "flags": [
+            "--help"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display help text and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "--help  Display help text and exit."
+        },
+        {
+          "flags": [
+            "-p"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Interpret the succeeding arguments as process IDs (the default).",
+          "default": null,
+          "choices": null,
+          "raw": "-p  Interpret the succeeding arguments as process IDs (the default)."
+        },
+        {
+          "flags": [
+            "--pgrp"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Interpret the succeeding arguments as process group IDs.",
+          "default": null,
+          "choices": null,
+          "raw": "--pgrp  Interpret the succeeding arguments as process group IDs."
+        },
+        {
+          "flags": [
+            "--pid"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Interpret the succeeding arguments as process IDs (the default).",
+          "default": null,
+          "choices": null,
+          "raw": "--pid  Interpret the succeeding arguments as process IDs (the default)."
+        },
+        {
+          "flags": [
+            "-u"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Interpret the succeeding arguments as usernames or UIDs.",
+          "default": null,
+          "choices": null,
+          "raw": "-u  Interpret the succeeding arguments as usernames or UIDs."
+        },
+        {
+          "flags": [
+            "--user"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Interpret the succeeding arguments as usernames or UIDs.",
+          "default": null,
+          "choices": null,
+          "raw": "--user  Interpret the succeeding arguments as usernames or UIDs."
+        },
+        {
+          "flags": [
+            "-V"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display version and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "-V  Display version and exit."
+        },
+        {
+          "flags": [
+            "--version"
+          ],
+          "metavar": null,
+          "takes_value": false,
+          "description": "Display version and exit.",
+          "default": null,
+          "choices": null,
+          "raw": "--version  Display version and exit."
+        }
+      ]
     },
     {
       "name": "script",
@@ -77,5 +188,85 @@
   "schema_version": "1.1.0",
   "attack_surface": "local",
   "phase_hint": "install",
-  "requires_hardware": false
+  "requires_hardware": false,
+  "command_examples": [
+    "renice [-n|--priority|--relative] priority [-g|-p|-u] identifier...",
+    "renice +1 987 -u daemon root -p 32"
+  ],
+  "use_cases": [
+    "When you need Kali Linux, use renice because basic utilities from 4.4BSD-Lite.",
+    "When the engagement is in the install phase, use renice as a cataloged Kali Linux tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `renice [-n|--priority|--relative] priority [-g|-p|-u] identifier...` as documented upstream for renice.",
+    "When you need a concrete invocation, run `renice +1 987 -u daemon root -p 32` as documented upstream for renice.",
+    "When chaining Kali Linux tools, pair renice with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `renice --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+  ],
+  "documentation": {
+    "arguments": [
+      {
+        "name": "-g",
+        "description": "Interpret the succeeding arguments as process group IDs.",
+        "source": "docs"
+      },
+      {
+        "name": "-h",
+        "description": "Display help text and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "--help",
+        "description": "Display help text and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "-p",
+        "description": "Interpret the succeeding arguments as process IDs (the default).",
+        "source": "docs"
+      },
+      {
+        "name": "--pgrp",
+        "description": "Interpret the succeeding arguments as process group IDs.",
+        "source": "docs"
+      },
+      {
+        "name": "--pid",
+        "description": "Interpret the succeeding arguments as process IDs (the default).",
+        "source": "docs"
+      },
+      {
+        "name": "-u",
+        "description": "Interpret the succeeding arguments as usernames or UIDs.",
+        "source": "docs"
+      },
+      {
+        "name": "--user",
+        "description": "Interpret the succeeding arguments as usernames or UIDs.",
+        "source": "docs"
+      },
+      {
+        "name": "-V",
+        "description": "Display version and exit.",
+        "source": "docs"
+      },
+      {
+        "name": "--version",
+        "description": "Display version and exit.",
+        "source": "docs"
+      }
+    ],
+    "examples": [
+      "renice [-n|--priority|--relative] priority [-g|-p|-u] identifier...",
+      "renice +1 987 -u daemon root -p 32"
+    ],
+    "readme": "renice - alter priority of running processes",
+    "how_to_use": "Install/setup: sudo apt install util-linux (2.42.2-1). Run the primary entrypoint as shown in upstream docs, e.g. `renice [-n|--priority|--relative] priority [-g|-p|-u] identifier...`. Further invocations from upstream: `renice +1 987 -u daemon root -p 32`.",
+    "when_to_use": "Use during the 'install' phase against surfaces [local] in the Kali Linux category. Fits when the engagement needs: basic utilities from 4.4BSD-Lite.",
+    "why_to_use": "Prefer this tool based on upstream description: renice - alter priority of running processes.",
+    "usage_sections": [
+      "Install with: sudo apt install util-linux (2.42.2-1)",
+      "Install with: sudo apt install util-linux (2.42.2-1)"
+    ]
+  },
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_man"
 }

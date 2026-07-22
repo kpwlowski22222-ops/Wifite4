@@ -180,6 +180,67 @@ class KfiosaDashboard:
         except Exception as e:
             logger.error(f"osint runner init failed: {e}")
             self.osint_runner = None
+        # External-terminal launcher MUST be built before the orchestrator
+        # so the chain can spawn airodump/hashcat/airgeddon-style windows.
+        try:
+            from core.utils.external_terminal import ExternalTerminalBackend
+            self.external_terminal = ExternalTerminalBackend(
+                settings=self.settings_manager
+            )
+            self.activity_log.append(
+                f"[+] External terminal: {self.external_terminal.term}"
+            )
+        except Exception as e:
+            logger.warning(f"external terminal init failed: {e}")
+            try:
+                from core.utils.external_terminal import ExternalTerminalBackend
+                self.external_terminal = ExternalTerminalBackend.always_tail()
+            except Exception:
+                self.external_terminal = None
+
+        # Ensure Ollama is serving and preferred models are available
+        # BEFORE the AI chain / orchestrator bind (so model picker works).
+        try:
+            from core.bootstrap import ensure_ollama_ready
+            orep = ensure_ollama_ready(
+                settings=self.settings_manager,
+                on_event=lambda m: self.activity_log.append(m),
+            )
+            if orep.get("reachable"):
+                self.activity_log.append(
+                    f"[+] Ollama ready ({len(orep.get('models') or [])} models)"
+                )
+                # Apply best available domain→model map so the orchestrator
+                # and AIBackend pick models that actually exist locally.
+                dmap = orep.get("domain_model_map") or {}
+                if dmap and self.settings_manager is not None:
+                    for dom, tag in dmap.items():
+                        try:
+                            self.settings_manager.update_setting(
+                                f"ollama.domain_models.{dom}", tag
+                            )
+                        except Exception:
+                            pass
+                    if self.ai_backend is not None and hasattr(
+                        self.ai_backend, "domain_models"
+                    ):
+                        try:
+                            self.ai_backend.domain_models.update(dmap)
+                        except Exception:
+                            pass
+                    wifi_m = dmap.get("wifi") or dmap.get("primary")
+                    if wifi_m:
+                        self.activity_log.append(
+                            f"[+] Domain model map: wifi→{wifi_m}"
+                        )
+            else:
+                self.activity_log.append(
+                    f"[!] Ollama not ready: {orep.get('error') or 'unreachable'}"
+                )
+        except Exception as e:
+            logger.warning(f"ensure_ollama_ready failed: {e}")
+            self.activity_log.append(f"[!] Ollama bootstrap: {e}")
+
         try:
             from core.orchestrator.autonomous_orchestrator import (
                 AutonomousOrchestrator,
@@ -187,12 +248,15 @@ class KfiosaDashboard:
             # Build the AI-chain DI pieces (all best-effort; missing
             # pieces just disable the new path and the orchestrator
             # silently falls back to the legacy hardcoded ladder).
+            # BUGFIX: use self.exploit_gen_manager (was bare NameError →
+            # orchestrator always None → "Orchestrator unavailable").
+            _egm = self.exploit_gen_manager
             chain_planner = None
             try:
                 from core.ai_backend.chain import AIChainPlanner
                 chain_planner = AIChainPlanner(
                     ai_backend=self.ai_backend,
-                    exploit_gen_manager=exploit_gen_manager,
+                    exploit_gen_manager=_egm,
                     mcp_client=None,  # wired below if available
                     on_event=lambda m: self.activity_log.append(m),
                 )
@@ -200,15 +264,26 @@ class KfiosaDashboard:
                 logger.debug("AIChainPlanner init failed: %s", e)
             mcp_client = None
             try:
-                # The MCP "client" is just a thin wrapper around the
+                # The MCP "client" is a thin wrapper around the
                 # in-process tool dispatcher (no real network call).
-                from core.mcp import call_mcp_tool as _call_mcp_tool
+                # Prefer core.mcp.tools (source of truth); fall back to
+                # the package re-export for older import styles.
+                try:
+                    from core.mcp.tools import call_mcp_tool as _call_mcp_tool
+                except Exception:
+                    from core.mcp import call_mcp_tool as _call_mcp_tool
                 class _InProcessMCPClient:
                     def call(self, tool, args):
                         return _call_mcp_tool(tool, args or {})
                 mcp_client = _InProcessMCPClient()
+                self.activity_log.append(
+                    "[+] In-process MCP client wired (call_mcp_tool)"
+                )
             except Exception as e:
                 logger.debug("in-process MCP client init failed: %s", e)
+                self.activity_log.append(
+                    f"[!] In-process MCP client unavailable: {e}"
+                )
             zero_day_proposer = None
             try:
                 from core.ai_backend.zero_day import (
@@ -238,7 +313,7 @@ class KfiosaDashboard:
                     on_event=lambda m: self.activity_log.append(m),
                     # Dedicated uncensored coding model for 0-day PoC
                     # generation + Zero_Day dataset grounding.
-                    exploit_gen_manager=self.exploit_gen_manager,
+                    exploit_gen_manager=_egm,
                     zero_day_dataset=ZeroDayDataset(
                         on_event=lambda m: self.activity_log.append(m)),
                 )
@@ -268,7 +343,7 @@ class KfiosaDashboard:
                 # New AI chain DI
                 chain_planner=chain_planner,
                 mcp_client=mcp_client,
-                exploit_gen_manager=exploit_gen_manager,
+                exploit_gen_manager=_egm,
                 zero_day_proposer=zero_day_proposer,
                 zero_day_exploit_builder=zero_day_exploit_builder,
                 zero_day_exploit_runner=zero_day_exploit_runner,
@@ -285,25 +360,8 @@ class KfiosaDashboard:
                 )
         except Exception as e:
             logger.error(f"orchestrator init failed: {e}")
+            self.activity_log.append(f"[!] Orchestrator init failed: {e}")
             self.orchestrator = None
-
-        # External-terminal launcher: auto-detect, persist in
-        # config/dashboard_settings.json under "terminal". If the
-        # detection fails, we fall through to the "tail" sentinel so
-        # sub-screens still get a usable object.
-        try:
-            from core.utils.external_terminal import ExternalTerminalBackend
-            self.external_terminal = ExternalTerminalBackend(settings=self.settings_manager)
-            self.activity_log.append(
-                f"[+] External terminal: {self.external_terminal.term}"
-            )
-        except Exception as e:
-            logger.warning(f"external terminal init failed: {e}")
-            try:
-                from core.utils.external_terminal import ExternalTerminalBackend
-                self.external_terminal = ExternalTerminalBackend.always_tail()
-            except Exception:
-                self.external_terminal = None
 
         # Catalog-recon factory: a callable that takes a target dict and
         # returns a fully-wired CatalogRecon. Sub-screens (WiFiScreen)
@@ -472,6 +530,57 @@ class KfiosaDashboard:
                 f"[!] airmon-ng stop {monitor_iface} failed: {err}"
             )
 
+    def _maybe_dump_screen(self) -> None:
+        """Plain-text screen dump for the agentic TUI debugger.
+
+        When ``$KFIOSA_TUI_SCREEN_DUMP`` is set to a filesystem path, write
+        the current curses window contents (via ``instr``) plus a short
+        state header. The agentic debugger (``scripts/agentic_tui_debug.py``)
+        reads this file because raw pexpect bytes cannot reconstruct a
+        curses alternate-screen UI. Best-effort; never raises into the
+        main loop.
+        """
+        path = os.environ.get("KFIOSA_TUI_SCREEN_DUMP", "").strip()
+        if not path:
+            return
+        try:
+            h, w = self.stdscr.getmaxyx()
+            lines: List[str] = [
+                f"## state={self.state} menu_index={self.menu_index} "
+                f"monitor_iface={self.monitor_iface} "
+                f"original_iface={self.original_iface}",
+            ]
+            # Sub-screen extras when present.
+            try:
+                sub = self.screens.get(self.state)
+                if sub is not None:
+                    lines.append(
+                        f"## sub_iface={getattr(sub, 'interface', None)} "
+                        f"sub_mode={getattr(sub, 'interface_mode', None)} "
+                        f"flow={getattr(sub, 'flow_state', None)} "
+                        f"sub_menu_index={getattr(sub, 'menu_index', None)}"
+                    )
+            except Exception:
+                pass
+            for y in range(max(0, h)):
+                try:
+                    raw = self.stdscr.instr(y, 0, max(0, w - 1))
+                    if isinstance(raw, bytes):
+                        raw = raw.decode("utf-8", errors="replace")
+                    lines.append((raw or "").rstrip())
+                except Exception:
+                    lines.append("")
+            # Activity log tail (source of truth for monitor/managed messages).
+            lines.append("## activity_log_tail")
+            for entry in (self.activity_log or [])[-20:]:
+                lines.append(str(entry)[:240])
+            tmp = path + ".tmp"
+            with open(tmp, "w", encoding="utf-8") as fh:
+                fh.write("\n".join(lines) + "\n")
+            os.replace(tmp, path)
+        except Exception as e:  # noqa: BLE001 — never break TUI for dump
+            logger.debug("screen dump failed: %s", e)
+
     def run(self):
         """Main event loop"""
         while self.running:
@@ -482,6 +591,7 @@ class KfiosaDashboard:
                 if height < 20 or width < 70:
                     self.stdscr.addstr(0, 0, "Terminal window too small. Expand it.")
                     self.stdscr.refresh()
+                    self._maybe_dump_screen()
                     time.sleep(0.5)
                     continue
 
@@ -495,6 +605,7 @@ class KfiosaDashboard:
                     self.render_confirm_dialog()
                     self.handle_confirm_input()
                     self.stdscr.refresh()
+                    self._maybe_dump_screen()
                     time.sleep(0.02)
                     continue
 
@@ -505,6 +616,7 @@ class KfiosaDashboard:
                     self.render_sub_screen()
 
                 self.stdscr.refresh()
+                self._maybe_dump_screen()
                 time.sleep(0.02)
             except KeyboardInterrupt:
                 self.running = False
@@ -519,7 +631,7 @@ class KfiosaDashboard:
         self._stop_mcp()
 
     def render_confirm_dialog(self):
-        """Render the ACCEPT/CANCEL prompt from a waiting worker thread."""
+        """Render the ACCEPT / CANCEL / AUTO→access prompt from a waiting worker."""
         prompt = self.tui_confirm.current_prompt or ""
         height, width = self.stdscr.getmaxyx()
         try:
@@ -527,7 +639,7 @@ class KfiosaDashboard:
             top = max(2, height // 2 - 4)
             self.stdscr.attron(curses.color_pair(3) | curses.A_BOLD)
             self.stdscr.addstr(top, max(0, (width - 60) // 2),
-                               " ACCEPT / CANCEL ".center(60, "-")[:width-1])
+                               " ACCEPT / CANCEL / AUTO ".center(60, "-")[:width-1])
             self.stdscr.attroff(curses.color_pair(3) | curses.A_BOLD)
             # wrap prompt
             words = prompt.split()
@@ -545,6 +657,26 @@ class KfiosaDashboard:
             self.stdscr.attron(curses.color_pair(2) | curses.A_BOLD)
             self.stdscr.addstr(y + 1, 22, "[n/ESC] CANCEL")
             self.stdscr.attroff(curses.color_pair(2) | curses.A_BOLD)
+            # Third option: one keystroke auto-runs until access is gained.
+            try:
+                self.stdscr.attron(curses.color_pair(3) | curses.A_BOLD)
+                self.stdscr.addstr(
+                    y + 1, 42,
+                    "[a] AUTO→access"[: max(0, width - 44)],
+                )
+                self.stdscr.attroff(curses.color_pair(3) | curses.A_BOLD)
+            except Exception:
+                # Narrow terminals: fall back to a second line.
+                self.stdscr.addstr(
+                    y + 2, 2,
+                    "[a] AUTO until access (no more prompts)"[: width - 4],
+                )
+            auto_on = bool(getattr(self.tui_confirm, "auto_until_access", False))
+            if auto_on:
+                self.stdscr.addstr(
+                    y + 3, 2,
+                    "AUTO→access is ON (this should not still be prompting)"[: width - 4],
+                )
         except Exception as e:
             logger.debug(f"confirm render: {e}")
 
@@ -554,6 +686,20 @@ class KfiosaDashboard:
             return
         if key in (ord('y'), ord('Y'), curses.KEY_ENTER, 10, 13):
             self.tui_confirm.respond(True)
+        elif key in (ord('a'), ord('A')):
+            # One-shot autonomous path: accept this step + auto-ACCEPT
+            # remaining confirms until access (creds/session) is achieved.
+            if hasattr(self.tui_confirm, "respond_auto"):
+                self.tui_confirm.respond_auto()
+            else:
+                self.tui_confirm.respond(True)
+            try:
+                self.activity_log.append(
+                    "[i] AUTO→access: remaining steps will auto-ACCEPT "
+                    "until access is achieved"
+                )
+            except Exception:
+                pass
         elif key in (ord('n'), ord('N'), 27, ord('q'), ord('Q'),
                      curses.KEY_BACKSPACE, 127, 8):
             self.tui_confirm.respond(False)
@@ -665,9 +811,9 @@ class KfiosaDashboard:
         if key == -1:
             return
             
-        if key == curses.KEY_UP:
+        if key in (curses.KEY_UP, ord("k"), ord("K")):
             self.menu_index = (self.menu_index - 1) % len(self.menu_items)
-        elif key == curses.KEY_DOWN:
+        elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
             self.menu_index = (self.menu_index + 1) % len(self.menu_items)
         elif key in (curses.KEY_ENTER, 10, 13):
             # Select state

