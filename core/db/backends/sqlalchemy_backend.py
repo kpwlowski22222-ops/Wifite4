@@ -35,6 +35,10 @@ from typing import Any, Dict, List, Optional
 _REDACT_KEYS: tuple = (
     "ecf51ee2-938d-44de-b015-896a3f6c758c",
     "CE38F76832CFA1F6F35C89EAAEAF61C3",
+    # Ollama cloud tokens (Phase 4 operator 2026-07-22 swap):
+    # new prefix f40bec4b664a40a9; old prefix 3d94e52cff9f4df5 kept
+    # for backwards-compat with historical payloads.
+    "f40bec4b664a40a9a508fe65e78cbc5e",
     "3d94e52cff9f4df5a01973f24d5bc8db",
     "OLLAMA_CLOUD_TOKEN", "NVD_API_KEY",
     "KISMET_API_KEY", "OLLAMA_AUTH_TOKEN",
@@ -149,6 +153,12 @@ def _create_schema(engine: Any) -> None:
         "CREATE INDEX ix_history_sid ON history(sid, ts)",
         "CREATE INDEX ix_exfil_sid ON exfil(sid, ts)",
         "CREATE INDEX ix_persistence_sid ON persistence(sid, ts)",
+        # Phase 4 T18: secondary indexes for status / state / action
+        # filters. Supports dashboard widgets like "pending exfil
+        # only" and persistence state timeline.
+        "CREATE INDEX ix_exfil_status ON exfil(status)",
+        "CREATE INDEX ix_persistence_state ON persistence(state)",
+        "CREATE INDEX ix_history_action ON history(action)",
     ]
     with engine.begin() as cx:
         for stmt in ddl:

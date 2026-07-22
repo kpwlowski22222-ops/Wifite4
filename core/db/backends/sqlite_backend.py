@@ -45,7 +45,12 @@ DEFAULT_DB_PATH = Path.home() / ".kfiosa" / "kfiosa.db"
 _REDACT_KEYS: Tuple[str, ...] = (
     "ecf51ee2-938d-44de-b015-896a3f6c758c",  # NVD
     "CE38F76832CFA1F6F35C89EAAEAF61C3",     # Kismet
-    "3d94e52cff9f4df5a01973f24d5bc8db",     # Ollama cloud
+    # Ollama cloud tokens (Phase 4 operator 2026-07-22 swap):
+    # the new token starts with f40bec4b664a40a9a508fe65e78cbc5e.
+    # The previous token prefix 3d94e52cff9f4df5a01973f24d5bc8db is kept
+    # so historical payloads written before the swap still get redacted.
+    "f40bec4b664a40a9a508fe65e78cbc5e",     # Ollama cloud (new)
+    "3d94e52cff9f4df5a01973f24d5bc8db",     # Ollama cloud (old, kept)
     "OLLAMA_CLOUD_TOKEN", "NVD_API_KEY",
     "KISMET_API_KEY", "OLLAMA_AUTH_TOKEN",
 )
@@ -123,6 +128,13 @@ _DDL = [
     "CREATE INDEX IF NOT EXISTS ix_history_sid ON history(sid, ts)",
     "CREATE INDEX IF NOT EXISTS ix_exfil_sid ON exfil(sid, ts)",
     "CREATE INDEX IF NOT EXISTS ix_persistence_sid ON persistence(sid, ts)",
+    # Phase 4 T18: secondary indexes for status / state / action
+    # filters. The (sid, ts) covers the primary dashboard query;
+    # these support filtered views (e.g. dashboard "pending exfil
+    # only" widget, persistence state timeline).
+    "CREATE INDEX IF NOT EXISTS ix_exfil_status ON exfil(status)",
+    "CREATE INDEX IF NOT EXISTS ix_persistence_state ON persistence(state)",
+    "CREATE INDEX IF NOT EXISTS ix_history_action ON history(action)",
     # The (sid, ts) covers dashboard pagination, and the standalone ts
     # index supports ``list_sessions() ORDER BY last_activity DESC``.
     "CREATE INDEX IF NOT EXISTS ix_sessions_last_activity ON sessions(last_activity DESC)",
