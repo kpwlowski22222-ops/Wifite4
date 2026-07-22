@@ -1031,8 +1031,12 @@ class AutonomousOrchestrator:
             report["executed"].append(entry)
             self._record_access(report, entry)
             return
-        # real step — execute
-        res = self._execute_step(step, seed)
+        # real step — execute. Mark pre_accepted so nested tools
+        # (WiFiScanner.deauth_attack, crack helpers, …) do not re-prompt
+        # after this outer ACCEPT (single gate per step).
+        exec_step = dict(step)
+        exec_step["pre_accepted"] = True
+        res = self._execute_step(exec_step, seed)
         self._emit(f"[+] {desc}: {res}")
         entry = {"desc": desc, "kind": "real", "result": res}
         report["executed"].append(entry)
@@ -4968,7 +4972,8 @@ class AutonomousOrchestrator:
 
     # ------------------------------------------------------------------
     def _deauth(self, iface: Optional[str], bssid: Optional[str],
-                channel: Any, seed: Dict[str, Any]) -> str:
+                channel: Any, seed: Dict[str, Any],
+                *, pre_accepted: bool = False) -> str:
         """Run a deauth against ``bssid`` on ``iface``.
 
         When the seed's ``adapter_caps`` reports an mt7921e adapter that
@@ -4978,6 +4983,11 @@ class AutonomousOrchestrator:
         per-step ACCEPT already fired in :meth:`_walk_ai_step` /
         :meth:`run`; this helper only chooses the tool. Returns a short
         status string matching the legacy deauth return shape.
+
+        ``pre_accepted=True`` means the outer walk already ACCEPTed this
+        step — do **not** re-prompt via ``WiFiScanner.confirm_fn``
+        (default-deny would otherwise return ``blocked by confirm_fn``
+        under autonomous / single-gate walks).
         """
         caps = seed.get("adapter_caps", {}) or {}
         if caps.get("mt7921e") and caps.get("injection_capable"):
@@ -4991,7 +5001,11 @@ class AutonomousOrchestrator:
                 self._emit(f"[!] mt7921e inject_deauth failed: {e}; falling back to aireplay-ng")
                 # Fall through to the aireplay-ng path below.
         from core.scanners.wifi_scanner import WiFiScanner
-        ws = WiFiScanner(interface=iface, confirm_fn=self.confirm_fn)
+        # Nested confirm: only re-prompt when the outer walk did NOT
+        # already ACCEPT (pre_accepted). A True no-op keeps the single
+        # gate contract used by AI walk / static walk after ACCEPT.
+        nested_confirm = (lambda _p: True) if pre_accepted else self.confirm_fn
+        ws = WiFiScanner(interface=iface, confirm_fn=nested_confirm)
         ws.initialize()
         r = ws.deauth_attack(bssid, iface)
         return r.get("status") or r.get("error") or "done"
@@ -5077,6 +5091,7 @@ class AutonomousOrchestrator:
                     step.get("bssid") or (step.get("args") or {}).get("bssid"),
                     step.get("channel") or seed.get("channel"),
                     seed,
+                    pre_accepted=bool(step.get("pre_accepted")),
                 )
             if action == "crack":
                 # Real aircrack-ng dictionary crack on the captured

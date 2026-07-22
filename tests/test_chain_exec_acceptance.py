@@ -305,3 +305,113 @@ def test_planner_replan_filter_drops_executed_action_tool():
     assert ("mcp_call", "airodump-ng") not in pairs
     assert ("deauth", "aireplay-ng") not in pairs
     assert any(s.get("action") in ("pmkid", "crack", "crack_gpu") for s in steps)
+
+
+def test_deauth_pre_accepted_does_not_nest_confirm_block(monkeypatch):
+    """Skeptic gap: real ``_deauth`` must not re-prompt via WiFiScanner.
+
+    Outer walk already ACCEPTed (``pre_accepted=True``). Leaving
+    ``confirm_fn`` as default-deny on the scanner would return
+    ``blocked by confirm_fn`` and make the step a silent no-op.
+    Stub only the env boundary (``WiFiScanner.deauth_attack`` / aireplay),
+    not ``_deauth`` itself.
+    """
+    from core.orchestrator.autonomous_orchestrator import AutonomousOrchestrator
+    from core.scanners import wifi_scanner as ws_mod
+
+    confirms: List[str] = []
+
+    def tracking_confirm(prompt: str) -> bool:
+        confirms.append(prompt)
+        # Outer gate: accept. Nested must NOT call this again.
+        return True
+
+    o = AutonomousOrchestrator(
+        confirm_fn=tracking_confirm,
+        on_event=lambda m: None,
+    )
+    # No mt7921e path — force aireplay/WiFiScanner branch.
+    seed = {
+        "bssid": "AA:BB:CC:DD:EE:FF",
+        "channel": 6,
+        "interface": "wlan0mon",
+        "adapter_caps": {"mt7921e": False},
+    }
+
+    captured = {}
+
+    class FakeScanner:
+        def __init__(self, interface=None, confirm_fn=None):
+            captured["confirm_fn"] = confirm_fn
+            self.confirm_fn = confirm_fn
+            self.interface = interface
+
+        def initialize(self):
+            return True
+
+        def deauth_attack(self, bssid, interface, client=None, count=10):
+            # Mimic real scanner: call nested confirm_fn
+            if not self.confirm_fn(
+                f"Send {count} deauth frames to {bssid} via {interface}?"
+            ):
+                return {"status": "blocked by confirm_fn", "bssid": bssid}
+            captured["deauth_called"] = {
+                "bssid": bssid, "interface": interface, "count": count,
+            }
+            return {
+                "bssid": bssid, "status": "completed", "rc": 0,
+                "stdout": "ok", "stderr": "",
+            }
+
+    monkeypatch.setattr(ws_mod, "WiFiScanner", FakeScanner)
+
+    # Path 1: _execute_step with pre_accepted (AI LEGACY_WIFI dispatch)
+    res = o._execute_step(
+        {
+            "action": "deauth",
+            "iface": "wlan0mon",
+            "bssid": "AA:BB:CC:DD:EE:FF",
+            "channel": 6,
+            "pre_accepted": True,
+        },
+        seed,
+    )
+    assert "blocked by confirm_fn" not in str(res), res
+    assert captured.get("deauth_called"), "deauth_attack must run"
+    assert captured["deauth_called"]["bssid"] == "AA:BB:CC:DD:EE:FF"
+    # Nested confirm was auto-True — outer tracking_confirm only for any
+    # accidental outer re-prompt; nested uses lambda True so confirms
+    # list should stay empty from _deauth path alone.
+    nested = captured.get("confirm_fn")
+    assert nested is not None
+    assert nested("nested probe") is True
+
+    # Path 2: full AI walk step (outer ACCEPT + real _deauth)
+    confirms.clear()
+    captured.clear()
+    rep = {
+        "executed": [], "skipped": [], "optional_declined": [],
+        "access": {"achieved": False},
+    }
+    o._walk_ai_step(
+        {
+            "action": "deauth",
+            "tool": "aireplay-ng",
+            "args": {
+                "bssid": "AA:BB:CC:DD:EE:FF",
+                "interface": "wlan0mon",
+                "channel": 6,
+            },
+            "risk_level": "destructive",
+            "rationale": "force handshake",
+            "expected_outcome": "eapol",
+            "expected_runtime_seconds": 10,
+        },
+        seed, rep, autonomous=False,  # forces confirm_fn once at outer gate
+    )
+    assert rep["executed"], "deauth step must be recorded"
+    result = str(rep["executed"][-1].get("result"))
+    assert "blocked by confirm_fn" not in result, result
+    assert captured.get("deauth_called"), "WiFiScanner.deauth_attack must run"
+    # Exactly one outer ACCEPT prompt (walk), not a second nested deny.
+    assert len(confirms) == 1, f"expected 1 outer confirm, got {confirms}"

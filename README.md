@@ -1,162 +1,244 @@
-# WiFi Offensive AI Toolkit - Pure Python/TUI Version
+# KFIOSA / Wifite4
 
-A comprehensive wireless penetration testing framework converted to a pure Python/TUI (Text User Interface) version similar to wifite4, with Google Cloud Compute Engine integration for AI model training and usage.
+**AI-driven offensive-security TUI** for authorized wireless, BLE, and OSINT work.  
+Pure Python + **curses** (wifite-style), Linux-first, Kali-friendly.
 
-## Features
-
-- **Pure Python/TUI Interface**: No web GUI dependencies - runs entirely in terminal using curses
-- **Similar to wifite4**: Familiar menu-driven interface for wireless security testing
-- **Google Cloud Integration**: Train and deploy AI models on AI Platform for smart wordlist generation and attack optimization
-- **Modular Design**: Leverages existing Python tools (wifi_tools.py, mt7921e_tools.py, exploitation_tools.py)
-- **AI/ML Capabilities**: Smart wordlist generation, attack parameter optimization, success prediction
-- **First-Run Setup**: Automatic virtual environment creation and dependency installation
-
-## Components
-
-### Core Files
-- `main.py` - Main TUI application with menu-driven interface
-- `run.sh` - Script to activate virtual environment and launch the toolkit
-- `requirements.txt` - Python dependencies including Google Cloud libraries
-- `config.py` - Configuration management
-- `model_manager.py` - AI/ML model handling for smart wordlists and attack optimization
-- `google_cloud_integration.py` - Google Cloud AI Platform and Compute Engine integration
-
-### Existing Tools (Updated for TUI Compatibility)
-- `wifi_tools.py` - Wrapper functions for Kali Linux WiFi exploitation tools
-- `mt7921e_tools.py` - Specialized tools for mt7921e driver packet injection
-- `exploitation_tools.py` - Network exploitation and post-exploitation tools
-
-## Menu System
-
-The TUI features a simple menu system:
-
-1. **Scan Networks** - Discover wireless networks using airodump-ng
-2. **Capture Handshake** - Capture WPA/WPA2 handshakes
-3. **Run Attacks** - Execute various attack types (deauth, WPS, etc.)
-4. **Post-Exploitation** - Network pivoting, data exfiltration, persistence
-5. **AI/ML Models** - Smart wordlist generation and attack optimization
-6. **Google Cloud** - Model training and deployment on AI Platform
-7. **Configuration** - Set targets and adjust settings
-8. **Help** - Display help information
-0. **Exit** - Quit the application
-
-When a chain step achieves access (captured creds or a Meterpreter
-`session_id`), the orchestrator auto-prompts to open the
-**Post-Access TUI** — a separate curses window for shell, file
-transfer, network ops (portfwd / SOCKS), persistence, and module
-re-runs against the active session. Detach with `F12` / `Esc` /
-`X`; the main chain keeps running. The AI can also request the
-post-access TUI explicitly via the `open_post_access_tui` action
-or the `open_post_access_tui` MCP wrapper.
-
-## Installation & Usage
-
-### Quick Start
-```bash
-# Make the run script executable
-chmod +x run.sh
-
-# Run the toolkit (will automatically set up virtual environment)
-./run.sh
+```
+python main.py
+# or
+./run_tui.sh
 ```
 
-### Manual Setup
+Main menu: **WiFi Scan · BLE Scan · OSINT · Settings · Quit**.
+
+> **Legal:** Use only on systems and networks you own or are explicitly authorized to test. Active WiFi/BLE modules can disrupt services.
+
+---
+
+## What it is
+
+KFIOSA plans attack/recon **chains with local/cloud LLMs**, then runs **real tools** (airodump-ng, hashcat, gatttool, holehe, NVD, …) behind a per-step **ACCEPT / CANCEL** gate. Missing tools produce **honest errors** — not fake “success.”
+
+| Surface | What you get |
+|---------|----------------|
+| **WiFi** | Scan → target → one-click / AIO / AI chain; MT7922/`mt7921e` injection; 80+ attack modules + 60 extended 802.11 modules |
+| **BLE** | Bleak scan, GATT recon, 50+ probe modules, 60+ attack modules |
+| **OSINT** | People/email/username/domain/social, 90+ tool modules, Polish registries, Shodan/NVD |
+| **Post-access** | After shell/creds: Post-Access TUI (shell, files, portfwd/SOCKS, persistence) |
+| **Catalog** | ~5 100 tool entries (GitHub + Kali) with chain examples and install metadata |
+
+---
+
+## Quick start
+
 ```bash
-# Create virtual environment
+git clone https://github.com/kpwlowski22222-ops/Wifite4.git
+cd Wifite4
+
 python3 -m venv .venv
 source .venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
 
-# Run the toolkit
+# optional: copy and fill only the keys you need
+cp .env.example .env
+
+# Ollama recommended (primary AI path)
+# ollama serve && ollama pull minimax-m3:cloud   # or a local tag
+
 python main.py
+# or: ./run_tui.sh
 ```
 
-### First-Run Configuration
-On first run, the toolkit will:
-1. Create a Python virtual environment (if not exists)
-2. Install required dependencies
-3. Prompt for configuration (targets, API keys, etc.)
-4. Set up Google Cloud integration if credentials are provided
+**Requirements:** Python **3.10+**, Linux (monitor-mode WiFi + BlueZ for BLE). Root/capabilities for injection and some scanners.
 
-## Google Cloud Integration
+---
 
-To enable Google Cloud features:
+## AI models
 
-1. Create a Google Cloud project and enable:
-   - AI Platform Training & Prediction API
-   - Compute Engine API
-   - Cloud Storage API
+Providers (in order): **Ollama** → DeepSeek → Groq → NVIDIA → Gemini → **heuristic planner**.
 
-2. Create a service account and download the JSON key file
+### Tier ladder (Ollama)
 
-3. Set environment variables:
-   ```bash
-   export GCP_PROJECT_ID="your-project-id"
-   export GCP_APPLICATION_CREDENTIALS="path/to/your/keyfile.json"
-   ```
+| Tier | Role | Model tag |
+|------|------|-----------|
+| 0 | Primary (cloud) | `minimax-m3:cloud` |
+| 1 | Local fallback | `roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:Q4_K_M` |
+| 2 | Planning overlay | `mradermacher/Qwen3.5-9B-Claude-4.6-HighIQ-THINKING-HERETIC-UNCENSORED-GGUF:latest` |
+| 3 | MoE last resort | `mradermacher/Qwen3-Coder-30B-A3B-Instruct-uncensored-i1-GGUF:latest` |
+| 4 | Legacy | `wizard-vicuna-uncensored:latest` / `llama2-uncensored:latest` |
 
-4. The toolkit will then be able to:
-   - Train models on AI Platform for smart wordlist generation
-   - Deploy models for online prediction
-   - Use cloud-based computing for intensive ML tasks
-   - Store training data and models in Cloud Storage
+### Per-domain defaults
 
-## Architecture
+| Domain | Model |
+|--------|--------|
+| WiFi / BLE | `xploiter/pentester:latest` |
+| OSINT | `huihui_ai/phi4-abliterated:latest` |
+| Post-exploit / forensics | `huihui_ai/foundation-sec-abliterated:8b-fp16` |
+| C2 | `supergoatscriptguy/mythos-sec:24b` |
 
-The toolkit follows a modular architecture:
+### Other ML
+
+- **0-day triage classifier:** `cpranavsharma/Zero-Day-Agent` (Hugging Face; scores hypotheses only)
+- **Exploit-body generation:** uncensored Ollama ladder via `ExploitGenModelManager`
+- Override primary tag with `OLLAMA_DEFAULT_MODEL` / enable cloud with `OLLAMA_CLOUD_TOKEN`
+
+---
+
+## WiFi capabilities
+
+**Hardware focus:** MediaTek **MT7922 / `mt7921e`** + generic mac80211 (`airmon-ng` / `iw`).
+
+### Scan & recon
+
+- `airodump-ng` scan, interface/monitor management, WPS probe  
+- Enhanced scan + **NVD CVE** keyword correlation  
+- **Kismet** server/client helpers (`KISMET_API_KEY`)  
+- Catalog recon: clients, hidden SSID, signal map, handshake/EAPOL, channel plan, wardrive fuse, weakpass wordlists  
+
+### Attack engine (`core/wifi_attack` + `core/extended_wifi`)
+
+Examples (not exhaustive):
+
+- Evil twin / karma-mana / captive portal  
+- Handshake + **PMKID** (hashcat 16800/22001), live **hcxdumptool**  
+- Deauth, MDK3/4, beacon flood, SAE/Dragonblood, WPA3/OWE/PMF  
+- Enterprise EAP/PEAP paths, WPS, KR00K  
+- Wi‑Fi **6 / 6E / 7** (OFDMA, MLO, HE/EHT-related modules)  
+- Adaptive pickers (vendor, congestion, client count, PMF)  
+
+**Tools commonly driven:** airodump-ng, aireplay-ng, aircrack-ng, hashcat, hcxtools, reaver, bully, mdk3/4, hostapd, scapy, iw.
+
+### WiFi screen flow
+
+1. Advanced → pick interface → monitor mode  
+2. Scan → select AP  
+3. One-click / AIO / **AI attack chain**  
+4. Optional 0-day attach, post-exploit, Metasploit, C2 beacon  
+
+---
+
+## BLE capabilities
+
+**Adapter:** HCI (`hci0` default); picker in `core/ble/adapter_select.py`.
+
+### Probe (`BLEProbeRunner`)
+
+AD parse, manufacturer/OUI, GATT map, pairing risk, OTA recon, MITM feasibility, health profiles, **mesh**, LE Audio, Find My / Fast Pair / Swift Pair, privacy (RPA, churn, randomization), presence/dwell classifiers.
+
+### Attack (`BLEAttackRunner`)
+
+GATT read/write/firmware dump, pairing PIN, ADV injection, connection hijack/MITM helpers, HID injection, energy drain, L2CAP/ISO/mesh-related modules, auto-attack orchestration — all with **honest degrade** if `btmgmt` / `gatttool` / scapy are missing.
+
+**Libs/tools:** bleak, bluetoothctl, hcitool, gatttool, btmgmt.
+
+---
+
+## OSINT capabilities
+
+Three layers:
+
+1. **Catalog runner** — accept-gated CLI tools by category (people, email, username, domain, phone, social).  
+2. **Module library** (~90 functions) — holehe, sherlock, maigret, whois, amass/subfinder, nmap/masscan, httpx, trufflehog/gitleaks, cloud enum, Shodan/Censys-style helpers, WiGLE, etc.  
+3. **Extension runner** — deep graphing, dorks, leak/CT helpers, and a large **Poland-specific** stack (CEIDG, KRS, GUS, KNF, Allegro, PL social, PESEL/NIP/REGON validators).
+
+Optional APIs: `SHODAN_API_KEY`, `NVD_API_KEY`.
+
+---
+
+## Platform modules
+
+| Area | Path / notes |
+|------|----------------|
+| Dashboard / TUI | `core/tui/` |
+| AI backend + chain planner | `core/ai_backend/` |
+| Autonomous orchestrator | `core/orchestrator/` |
+| Post-exploit + anti-forensics | `core/post_exploit/` |
+| Post-access TUI / RAT ext | `core/post_access_tui/` |
+| C2 lab beacon | `core/c2/` |
+| Android / iOS / Microsoft | `core/android`, `core/ios`, `core/microsoft` (+ Frida) |
+| Tool catalog + installer | `catalog/`, `core/tool_installer/`, `core/toolbox/` |
+| Exploit knowledge base | `data/exploit_knowledge.db`, `core/exploit_knowledge_base.py` |
+| MCP (in-process / loopback) | `core/mcp/` — agents can call tools while the TUI runs |
+| Settings | `config/dashboard_settings.json`, `.env` |
+
+---
+
+## Configuration
+
+Copy `.env.example` → `.env`. All keys optional; the TUI reports **MISSING** when a feature cannot run.
+
+| Variable | Purpose |
+|----------|---------|
+| `OLLAMA_CLOUD_TOKEN` | Cloud primary (`minimax-m3:cloud`) |
+| `OLLAMA_DEFAULT_MODEL` | Override Ollama model tag |
+| `GROQ_API_KEY` / `GROQ_MODEL` | Groq fallback |
+| `DEEPSEEK_API_KEY` / `DEEPSEEK_MODEL` | DeepSeek |
+| `GEMINI_API_KEY` | Gemini routes |
+| `SHODAN_API_KEY` | Shodan OSINT |
+| `NVD_API_KEY` | NVD rate limits |
+| `HF_TOKEN` | Gated Hugging Face pulls |
+| `KISMET_API_KEY` | Local Kismet API |
+| Metasploit host/port/user/pass | Via settings JSON |
+
+Never commit `.env`, OAuth client secrets, or live capture databases.
+
+---
+
+## Project layout
 
 ```
-main.py
-├── TUI Interface (curses-based)
-├── Core Modules:
-│   ├── wifi_tools.py          # Wireless attack tools
-│   ├── mt7921e_tools.py         # mt7921e-specific packet injection
-│   ├── exploitation_tools.py  # Network exploitation
-│   ├── config.py              # Configuration management
-│   ├── model_manager.py       # AI/ML model handling
-│   └── google_cloud_integration.py  # GCP services
-└── Support Systems:
-    ├── Logging
-    ├── Activity tracking
-    └── Threaded operations (to prevent UI blocking)
+main.py                 # curses dashboard entry
+run_tui.sh / run.sh     # launch helpers
+core/
+  tui/                  # WiFi / BLE / OSINT / Settings screens
+  wifi_attack/          # WiFi attack runner
+  extended_wifi/        # Wi‑Fi 6/7 + advanced modules
+  ble/                  # BLE probe + attack
+  extended_ble/         # BLE 5.x extended attacks
+  osint/                # OSINT runners + Polish modules
+  ai_backend/           # Ollama, chain planner, 0-day path
+  orchestrator/         # autonomous chain execution
+  scanners/             # wifi / BLE / Kismet
+  modules/              # mt7921e, CVE lookup, recon, MSF, …
+  post_exploit/         # post-access modules
+  post_access_tui/      # interactive session UI
+  catalog/ tool_installer/ toolbox/
+catalog/                # ~5k tool JSON entries
+tests/                  # pytest suite
+requirements.txt
+.env.example
 ```
 
-## Security Notes
+---
 
-- This toolkit is intended for authorized security testing only
-- Ensure you have explicit permission before testing any networks
-- Follow all applicable laws and regulations
-- The Google Cloud integration requires proper security configuration of your GCP project
+## Safety model
 
-## Dependencies
+1. Offensive steps are **default-deny** until the operator ACCEPTs.  
+2. Nested tools share the outer ACCEPT (`pre_accepted`) so you are not double-prompted.  
+3. Monitor interfaces are torn down on quit.  
+4. No fabricated scan/CVE/breach “success” for missing tools — empty results + explicit errors.
 
-See `requirements.txt` for complete list. Key dependencies include:
-- `curses` / `windows-curses` - Terminal UI
-- `google-cloud-aiplatform` - AI Platform integration
-- `google-auth` - Google Cloud authentication
-- `requests` - HTTP client for API calls
-- `python-dotenv` - Environment variable management
+---
 
-## Customization
+## Development
 
-Edit `config.py` or set environment variables to customize:
-- Default wireless interface
-- Scan durations and timeouts
-- Google Cloud project and region
-- Model storage locations
-- AI/ML feature toggles
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+pytest tests/ -q          # full suite is large; use -k for focus
+```
 
-## Contributing
+Known issues and phase status: `KNOWN_ISSUES.md`, `TODO.md`.
 
-This is a conversion project to create a pure Python/TUI version of the WiFi Offensive AI Toolkit. Contributions are welcome for:
-- Improving the TUI interface
-- Enhancing AI/ML model integration
-- Adding new attack modules
-- Improving Google Cloud integration
-- Bug fixes and performance improvements
+---
 
 ## License
 
-See LICENSE file for licensing information.
+See [LICENSE](LICENSE).
+
+---
+
+## Disclaimer
+
+This software is for **education and authorized penetration testing** only.  
+You are solely responsible for compliance with local law and engagement rules of engagement.
