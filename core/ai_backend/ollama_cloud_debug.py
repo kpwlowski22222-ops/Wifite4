@@ -103,14 +103,21 @@ __all__ = [
 
 DEFAULT_CLOUD_ENDPOINT = "https://ollama.com"
 DEFAULT_LOCAL_ENDPOINT = "http://localhost:11434"
-# Operator's preferred uncensored code-architect model
-# (loaded via the LOCAL Ollama daemon; not on the cloud catalog).
-# Coder-14B-Instruct is the same family Qwen2.5 ships — the
-# operator's revision (Phase 2.4 §J.2) makes this the new
-# default; ``kimi-k2.7-code`` is no longer wired.
+# Operator's preferred primary model as of 2026-07-22:
+# ``minimax-m3:cloud`` — the cloud-routed identity used as the
+# canonical model for the chain planner's strategic-decision step
+# and for the code-architect exploit-body generator. Reads
+# ``$OLLAMA_DEFAULT_MODEL`` first so the operator can override
+# without code changes (e.g. to ``llama3.1:8b`` for a
+# smaller-cloud run). The previous Qwen2.5-Coder-14B Tier 1 is
+# still available as a local fallback (see
+# ``core/ai_backend/__init__.py::MODEL_CATALOG``); the chain
+# planner's fallback chain is
+# ``minimax-m3:cloud → Qwen2.5-Coder-14B → HERETIC (9B) →
+# Qwen3-Coder-30B-A3B (MoE)``.
 DEFAULT_MODEL = (
-    "hf.co/roleplaiapp/Qwen2.5-Coder-14B-Instruct-"
-    "Uncensored-Q4_K_M-GGUF:latest"
+    os.environ.get("OLLAMA_DEFAULT_MODEL")
+    or "minimax-m3:cloud"
 )
 USE_OFFLINE_FIRST = (
     (os.environ.get("USE_OFFLINE_FIRST") or "1").lower()

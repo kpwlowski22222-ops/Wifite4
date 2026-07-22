@@ -121,37 +121,53 @@ def get_kismet_key(settings=None) -> str:
 # ---------------------------------------------------------------------------
 # Ollama model catalog (exact pulled tags)
 # ---------------------------------------------------------------------------
+# Operator instruction 2026-07-22: primary is now ``minimax-m3:cloud``
+# (cloud-routed). The previous Qwen2.5-Coder-14B is the local Tier-1
+# fallback (handles "ollama cloud unreachable" gracefully). The chain
+# order is:
+#
+#   Tier 0 (primary, cloud)        minimax-m3:cloud
+#   Tier 1 (local fallback)         Qwen2.5-Coder-14B-Instruct-Uncensored
+#   Tier 2 (planning overlay)       HERETIC 9B
+#   Tier 3 (MoE last-resort)        Qwen3-Coder-30B-A3B
+#   Tier 4 (legacy fallback)        wizard-vicuna-uncensored
+#
+# The per-step ACCEPT/CANCEL gate is unchanged. The picker changes
+# ONLY the model tag (not the gate, not the prompt safety stance,
+# not the chain-stanza catalog).
 MODEL_CATALOG: Dict[str, str] = {
-    "wifi": "xploiter/pentester:latest",
-    "ble": "xploiter/pentester:latest",
-    "osint": "huihui_ai/phi4-abliterated:latest",
-    "post_exploitation": "huihui_ai/foundation-sec-abliterated:8b-fp16",
-    "c2": "supergoatscriptguy/mythos-sec:24b",
-    "fallback": "wizard-vicuna-uncensored:latest",
-    "legacy_fallback": "llama2-uncensored:latest",
+    "primary":                "minimax-m3:cloud",
+    "tier1_local_fallback":   (
+        "roleplaiapp/Qwen2.5-Coder-14B-Instruct-"
+        "Uncensored-Q4_K_M-GGUF:Q4_K_M"
+    ),
+    "tier2_planning_overlay": (
+        "mradermacher/Qwen3.5-9B-Claude-4.6-HighIQ-"
+        "THINKING-HERETIC-UNCENSORED-GGUF:latest"
+    ),
+    "tier3_moe_last_resort":  (
+        "mradermacher/Qwen3-Coder-30B-A3B-Instruct-"
+        "uncensored-i1-GGUF:latest"
+    ),
+    "wifi":                   "xploiter/pentester:latest",
+    "ble":                    "xploiter/pentester:latest",
+    "osint":                  "huihui_ai/phi4-abliterated:latest",
+    "post_exploitation":      "huihui_ai/foundation-sec-abliterated:8b-fp16",
+    "c2":                     "supergoatscriptguy/mythos-sec:24b",
+    "forensics":              "huihui_ai/foundation-sec-abliterated:8b-fp16",
+    "anti_forensics":         "huihui_ai/foundation-sec-abliterated:8b-fp16",
+    "fallback":               "wizard-vicuna-uncensored:latest",
+    "legacy_fallback":        "llama2-uncensored:latest",
 }
 
-# Target-class overlay (Phase 2.0.P) — the operator's preferred
-# uncensored code-architect model (see memory) is the right tool
-# for all three new target classes (Microsoft / Android / iOS)
-# because each requires code-architect-class generation:
-#   * Microsoft: PowerShell + C#
-#   * Android: Java + Smali + Frida JavaScript
-#   * iOS: Swift + Objective-C + plist + Frida Objective-C
-# The three verticals share one code-architect model rather than
-# three — multiplying ollama-pull time and refusal-drift risk.
-# The per-step ACCEPT/CANCEL gate is unchanged; the picker
-# changes ONLY the model tag (not the gate, not the prompt
-# safety stance, not the chain-stanza catalog).
+# Target-class overlay (Phase 2.0.P) — every per-target picker
+# routes to the Tier-0 primary (cloud) first, then the local
+# Tier-1 fallback. The ``fallback`` key is the last-resort model
+# in MODEL_CATALOG.
 TARGET_MODEL_CATALOG: Dict[str, str] = {
-    # The bare ``DavidAU/Qwen2.5-Coder-14B-Instruct-uncensored`` repo
-    # does not exist on HF. The actual Q4_K_M GGUF redistribution is
-    # ``roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF``
-    # (3093 downloads, MIT). Operator's hardware (RTX 5070 Ti 12GB
-    # + 32GB RAM) handles this model pure-GPU at Q4_K_M (~9GB VRAM).
-    "microsoft": "roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:Q4_K_M",
-    "android":   "roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:Q4_K_M",
-    "ios":       "roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:Q4_K_M",
+    "microsoft": MODEL_CATALOG["primary"],
+    "android":   MODEL_CATALOG["primary"],
+    "ios":       MODEL_CATALOG["primary"],
     "fallback":  MODEL_CATALOG["fallback"],
 }
 

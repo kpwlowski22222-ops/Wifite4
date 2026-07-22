@@ -57,13 +57,18 @@ class TestDefaults:
     def test_default_cloud_endpoint(self):
         assert mod.DEFAULT_CLOUD_ENDPOINT.startswith("https://")
 
-    def test_default_model_is_uncensored_coder(self):
-        # Phase 2.4 §J.2: default is the operator's uncensored
-        # Qwen2.5-Coder-14B model (loaded via the LOCAL Ollama
-        # daemon), not the kimi-k2.7-code cloud model.
-        assert "Qwen" in mod.DEFAULT_MODEL
-        assert "Coder" in mod.DEFAULT_MODEL
-        assert "Uncensored" in mod.DEFAULT_MODEL
+    def test_default_model_is_minimax_cloud_primary(self):
+        # Phase 4 (2026-07-22): operator instruction flips the
+        # default to ``minimax-m3:cloud`` (the cloud-routed primary).
+        # The Qwen2.5-Coder-14B-Instruct-Uncensored Q4_K_M model
+        # is now the Tier-1 local fallback (see MODEL_CATALOG
+        # ['tier1_local_fallback'] and Tier 2 in
+        # DEFAULT_FALLBACK_ORDER). The Phase 2.4 §J.2 kimi swap
+        # is preserved (kimi is NOT the default either way).
+        assert mod.DEFAULT_MODEL == "minimax-m3:cloud", (
+            f"DEFAULT_MODEL must be the cloud primary "
+            f"'minimax-m3:cloud'; got {mod.DEFAULT_MODEL!r}"
+        )
         # kimi is no longer the default
         assert "kimi" not in mod.DEFAULT_MODEL.lower()
 

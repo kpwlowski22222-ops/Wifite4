@@ -216,31 +216,67 @@ def test_no_inline_credentials_in_anti_forensic_module():
 # The model is the operator's preferred code-architect
 # ---------------------------------------------------------------------------
 def test_operator_code_architect_model_is_correct():
-    """The Tier 1 code-architect entry in DEFAULT_FALLBACK_ORDER
-    must be the operator's preferred model: Qwen2.5-Coder-14B-
-    Instruct-Uncensored, roleplaiapp redistribution, Q4_K_M quant."""
+    """The code-architect entry in DEFAULT_FALLBACK_ORDER must
+    point at the operator's preferred chain. After the 2026-07-22
+    Phase 4 swap, the primary is ``minimax-m3:cloud`` (Tier 0)
+    and the local Tier-1 fallback is the roleplaiapp
+    Qwen2.5-Coder-14B-Instruct-Uncensored Q4_K_M redistribution
+    (now at index 2 in DEFAULT_FALLBACK_ORDER; HERETIC overlay
+    at 1)."""
     from core.ai_backend.exploit_generator import DEFAULT_FALLBACK_ORDER
-    # Tier 1 is at index 1 (HERETIC overlay at 0).
+    # Tier 0 must be the cloud primary.
+    tier0 = DEFAULT_FALLBACK_ORDER[0]
+    fid0 = tier0[0]
+    assert fid0 == "minimax-m3:cloud", (
+        f"Tier 0 must be the cloud primary; got {fid0!r}"
+    )
+    # Tier 1 must be the HERETIC swap-rule overlay.
     tier1 = DEFAULT_FALLBACK_ORDER[1]
-    fid, size, lic, gated = tier1
-    assert "Coder-14B" in fid
-    assert "Uncensored" in fid
-    assert "Q4_K_M" in fid
-    assert "roleplaiapp" in fid, (
-        f"Tier 1 must be the roleplaiapp redistribution (operator's "
-        f"preferred); got {fid!r}"
+    fid1 = tier1[0]
+    assert "HERETIC" in fid1, (
+        f"Tier 1 must be the HERETIC swap-rule overlay; got {fid1!r}"
+    )
+    # Tier 2 must be the roleplaiapp Qwen2.5-Coder-14B-Instruct-
+    # Uncensored Q4_K_M (the operator's preferred local code-
+    # architect fallback).
+    tier2 = DEFAULT_FALLBACK_ORDER[2]
+    fid2 = tier2[0]
+    assert "Coder-14B" in fid2
+    assert "Uncensored" in fid2
+    assert "Q4_K_M" in fid2
+    assert "roleplaiapp" in fid2, (
+        f"Tier 2 must be the roleplaiapp redistribution (operator's "
+        f"preferred local fallback); got {fid2!r}"
     )
 
 
-def test_target_model_catalog_uses_roleplaiapp_code_architect():
+def test_target_model_catalog_uses_minimax_primary():
     """The microsoft/android/ios vertical catalogs must all point
-    at the roleplaiapp redistribution (the actual repo on HF)."""
+    at the cloud primary ``minimax-m3:cloud`` (operator's preferred
+    identity as of 2026-07-22). The roleplaiapp Qwen2.5-Coder-14B
+    is now a Tier-1 local fallback reachable through MODEL_CATALOG
+    ['tier1_local_fallback'], not the vertical default."""
     from core.ai_backend import TARGET_MODEL_CATALOG
     for tc in ("microsoft", "android", "ios"):
         m = TARGET_MODEL_CATALOG[tc]
-        assert "roleplaiapp" in m
-        assert "Q4_K_M" in m
-        assert "Uncensored" in m
+        assert m == "minimax-m3:cloud", (
+            f"vertical {tc!r} must point at the cloud primary; "
+            f"got {m!r}"
+        )
+
+
+def test_model_catalog_has_minimax_primary_and_qwen_fallback():
+    """MODEL_CATALOG['primary'] is the new cloud primary;
+    MODEL_CATALOG['tier1_local_fallback'] is the roleplaiapp
+    Qwen2.5-Coder-14B-Instruct-Uncensored Q4_K_M redistribution
+    (local fallback for offline / un-authenticated runs)."""
+    from core.ai_backend import MODEL_CATALOG
+    assert MODEL_CATALOG["primary"] == "minimax-m3:cloud"
+    t1 = MODEL_CATALOG["tier1_local_fallback"]
+    assert "roleplaiapp" in t1
+    assert "Qwen2.5-Coder-14B" in t1
+    assert "Uncensored" in t1
+    assert "Q4_K_M" in t1
 
 
 # ---------------------------------------------------------------------------
