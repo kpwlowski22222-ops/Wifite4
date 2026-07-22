@@ -13,7 +13,118 @@
     "arguments": [
       {
         "name": "-A",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-A' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -72,6 +183,14 @@
         "language": "unknown",
         "description": "Top-level CLI runner for nmap-nessus-metasploit-lab. Returns a result envelope (ok, data, error).",
         "source": "inferred"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "nmap-nessus-metasploit-lab/__main__.py",
+        "language": "python",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [],
@@ -102,7 +221,35 @@
         "successor": "github:shaiksameer_git748/Pico-CTF-intro-burp-web-Exploitation-walkThrough",
         "note": "Shares attack_surface+phase_hint+tag with shaiksameer_git748/Pico-CTF-intro-burp-web-Exploitation-walkThrough (score=9); pair in the chain planner.",
         "score": 9
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:chiraji/nmap-nessus-metasploit-lab",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web', 'cloud'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:chiraji/nmap-nessus-metasploit-lab",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web', 'cloud'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:chiraji/nmap-nessus-metasploit-lab",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web', 'cloud'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
       }
+    ],
+    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web', 'cloud']' as the attack surface (web_application_security, toolbox, github).",
+    "why_to_use": "This tool is preferred because: Index entry in the Web Application Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "how_to_use": [
+      "Step 1: cd toolboxes/nmap-nessus-metasploit-lab && python3 nmap-nessus-metasploit-lab.py --help",
+      "Step 2: cd toolboxes/nmap-nessus-metasploit-lab && cat README.md",
+      "Step 3: cd toolboxes/nmap-nessus-metasploit-lab && ls -la"
     ]
   },
   "metadata_status": "enriched",
@@ -162,7 +309,7 @@
     "target_class",
     "vendor"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": []
 }

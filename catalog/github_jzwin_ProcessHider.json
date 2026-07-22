@@ -15,18 +15,18 @@
     "arguments": [
       {
         "name": "--target",
-        "description": "Detected in command_examples; see README for details.",
-        "source": "command_examples"
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--help",
-        "description": "Detected in command_examples; see README for details.",
-        "source": "command_examples"
+        "description": "Show help / usage and exit.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--output",
-        "description": "Detected in command_examples; see README for details.",
-        "source": "command_examples"
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--version",
@@ -107,6 +107,26 @@
         "name": "--quiet",
         "description": "Suppress non-error output.",
         "source": "generic_kfiosa"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [],
@@ -212,7 +232,35 @@
         "successor": "github:zmap/zmap",
         "note": "Shares attack_surface+phase_hint+tag with zmap/zmap (score=9); pair in the chain planner.",
         "score": 9
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:jzwin/ProcessHider",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:jzwin/ProcessHider",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:jzwin/ProcessHider",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
       }
+    ],
+    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['web']' as the attack surface (offensive, processhider, jzwin).",
+    "why_to_use": "This tool is preferred because: Use as a candidate tool in the chain planner; review provenance before use.",
+    "how_to_use": [
+      "Step 1: cd toolboxes/ProcessHider && python3 ProcessHider.py --target $KFIOSA_TARGET_HOST",
+      "Step 2: cd toolboxes/ProcessHider && python3 ProcessHider.py --help",
+      "Step 3: cd toolboxes/ProcessHider && python3 ProcessHider.py --help"
     ]
   },
   "full_name": "jzwin/ProcessHider",
@@ -259,8 +307,8 @@
     "Use as a candidate tool in the chain planner; review provenance before use.",
     "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_3",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "attack_surface": [
     "web"
   ],

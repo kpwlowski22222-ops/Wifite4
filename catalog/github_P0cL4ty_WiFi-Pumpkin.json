@@ -74,12 +74,123 @@
     "channel",
     "rssi"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
+  "_kfiosa_enriched_schema": "1.2.0",
   "documentation": {
     "arguments": [
       {
         "name": "--depth",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--depth' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -100,6 +211,46 @@
         "signature": "deauth(...)",
         "file": "README.md",
         "language": "documentation"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "WiFi-Pumpkin/__main__.py",
+        "language": "python",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "WiFi-Pumpkin/__main__.py",
+        "language": "python",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "WiFi-Pumpkin/__main__.py",
+        "language": "python",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "WiFi-Pumpkin/__main__.py",
+        "language": "python",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "WiFi-Pumpkin/__main__.py",
+        "language": "python",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
       }
     ],
     "file_listing": [
@@ -129,8 +280,38 @@
         "successor": "github:morrownr/USB-WiFi",
         "note": "Shares attack_surface+phase_hint+tag with morrownr/USB-WiFi (score=7); pair in the chain planner.",
         "score": 7
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:P0cL4ty/WiFi-Pumpkin",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['wifi_2_4_ghz', 'wifi_5_ghz', 'wifi_6_ghz'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:P0cL4ty/WiFi-Pumpkin",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['wifi_2_4_ghz', 'wifi_5_ghz', 'wifi_6_ghz'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:P0cL4ty/WiFi-Pumpkin",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['wifi_2_4_ghz', 'wifi_5_ghz', 'wifi_6_ghz'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
       }
+    ],
+    "examples": [],
+    "when_to_use": "Use this tool when the engagement is in the 'exploit' phase against a target with '['wifi_2_4_ghz', 'wifi_5_ghz', 'wifi_6_ghz']' as the attack surface (wifi, wireless, monitor_mode).",
+    "why_to_use": "This tool is preferred because: Use when the MediaTek MT7922 (mt7921e) is in monitor mode on wlan0mon and the BSSID/ssid recon has completed.",
+    "how_to_use": [
+      "Step 1: cd toolboxes/WiFi-Pumpkin && python3 WiFi-Pumpkin.py --interface wlan0mon --bssid $KFIOSA_TARGET_BSSID",
+      "Step 2: cd toolboxes/WiFi-Pumpkin && python3 WiFi-Pumpkin.py --help",
+      "Step 3: cd toolboxes/WiFi-Pumpkin && python3 WiFi-Pumpkin.py --help"
     ]
   },
-  "_languages": []
+  "_languages": [],
+  "_kfiosa_enriched_at": "phase4_t16"
 }

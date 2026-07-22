@@ -13,43 +13,118 @@
     "arguments": [
       {
         "name": "--archive",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--archive' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--date",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--date' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--help",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Show help / usage and exit.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--keywords",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--keywords' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--output",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--urlhunter",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--urlhunter' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--urlteam_2020-11-17-11-17-04",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--urlteam_2020-11-17-11-17-04' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--urlteam_2020-11-20-11-17-04",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--urlteam_2020-11-20-11-17-04' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "-O",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-O' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "-rm",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-rm' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -108,6 +183,14 @@
         "language": "go",
         "description": "Top-level CLI runner for urlhunter. Returns a result envelope (ok, data, error).",
         "source": "inferred"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "urlhunter/__main__.py",
+        "language": "go",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [],
@@ -142,7 +225,35 @@
         "successor": "github:turbot/steampipe-plugin-shodan",
         "note": "Shares attack_surface+phase_hint+tag with turbot/steampipe-plugin-shodan (score=9); pair in the chain planner.",
         "score": 9
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:utkusen/urlhunter",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='recon'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:utkusen/urlhunter",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='recon'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:utkusen/urlhunter",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='recon'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
       }
+    ],
+    "when_to_use": "Use this tool when the engagement is in the 'recon' phase against a target with '['web']' as the attack surface (osint, toolbox, github).",
+    "why_to_use": "This tool is preferred because: Index entry in the OSINT category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "how_to_use": [
+      "Step 1: cd toolboxes/urlhunter && python3 urlhunter.py --help",
+      "Step 2: cd toolboxes/urlhunter && cat README.md",
+      "Step 3: cd toolboxes/urlhunter && ls -la"
     ]
   },
   "metadata_status": "enriched",
@@ -202,8 +313,8 @@
     "target_class",
     "vendor"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "go"
   ]

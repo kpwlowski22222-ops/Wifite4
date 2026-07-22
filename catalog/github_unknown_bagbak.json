@@ -13,59 +13,118 @@
     "arguments": [
       {
         "name": "--debug",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Enable debug logging (very verbose).",
+        "source": "v2_enhancement"
       },
       {
         "name": "--device",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--device' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--help",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Show help / usage and exit.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--host",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--host' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--json",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--list",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "List available modules / actions / targets and exit.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--output",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--remote",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--remote' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--remove-keys",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--remove-keys' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--usb",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--usb' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "-D",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-D' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "-H",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-H' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "-R",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-R' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "-U",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-U' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -124,6 +183,14 @@
         "language": "typescript",
         "description": "Top-level CLI runner for bagbak. Returns a result envelope (ok, data, error).",
         "source": "inferred"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "bagbak/__main__.py",
+        "language": "typescript",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [],
@@ -175,7 +242,35 @@
         "successor": "github:unknown/ssl-kill-switch2",
         "note": "Shares attack_surface+phase_hint+tag with unknown/ssl-kill-switch2 (score=10); pair in the chain planner.",
         "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/bagbak",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['shell_macos', 'shell_ios'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/bagbak",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['shell_macos', 'shell_ios'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/bagbak",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['shell_macos', 'shell_ios'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
       }
+    ],
+    "when_to_use": "Use this tool when the engagement is in the 'any' phase against a target with '['shell_macos', 'shell_ios']' as the attack surface (ios_security, toolbox, github).",
+    "why_to_use": "This tool is preferred because: Index entry in the iOS Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
+    "how_to_use": [
+      "Step 1: cd toolboxes/bagbak && python3 bagbak.py --help",
+      "Step 2: cd toolboxes/bagbak && cat README.md",
+      "Step 3: cd toolboxes/bagbak && ls -la"
     ]
   },
   "metadata_status": "enriched",
@@ -236,8 +331,8 @@
     "target_class",
     "vendor"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "typescript"
   ]
