@@ -32,6 +32,7 @@ class SettingsScreen(BaseScreen):
             ("Narrative live story (on/off)", self.configure_narrative_log),
             ("Engagement memory (on/off)", self.configure_engagement_memory),
             ("Session compaction (on/off)", self.configure_session_compact),
+            ("Full-auto lab mode (on/off)", self.configure_full_auto),
             ("Scan timeouts (wifi / ble)", self.adjust_timeouts),
             ("External terminal", self.configure_external_terminal),
             ("Scan window font scale", self.configure_scan_font_scale),
@@ -41,6 +42,9 @@ class SettingsScreen(BaseScreen):
         self._advanced_items = [
             ("Memory status / recent notes", self.view_memory_status),
             ("holaOS external status (optional)", self.holaos_external_status),
+            ("OS ready-check (tools/env)", self.run_ready_check),
+            ("Anomaly reaction dry-run", self.anomaly_reaction_dry_run),
+            ("Seed live TUI labels", self.seed_live_labels),
             ("Pull models (info)", self.pull_models_info),
             ("Holo desktop agent — status", self.holo_os_agent_status),
             ("Holo — dry-run task", self.holo_os_agent_dry_run),
@@ -73,6 +77,7 @@ class SettingsScreen(BaseScreen):
             ("Narrative live story (on/off)", self.configure_narrative_log),
             ("Engagement memory (on/off)", self.configure_engagement_memory),
             ("Session compaction (on/off)", self.configure_session_compact),
+            ("Full-auto lab mode (on/off)", self.configure_full_auto),
             ("Scan timeouts (wifi / ble)", self.adjust_timeouts),
             ("External terminal", self.configure_external_terminal),
             ("Scan window font scale", self.configure_scan_font_scale),
@@ -81,6 +86,117 @@ class SettingsScreen(BaseScreen):
         ]
         self.menu_index = 0
         self.activity_log.append("[i] Settings → simple list")
+
+    def configure_full_auto(self):
+        """Toggle fully autonomous lab engagement (explicit; destructive still gated)."""
+        cur = (os.environ.get("KFIOSA_FULL_AUTO") or "0").strip().lower()
+        on = cur in ("1", "true", "yes", "on")
+        raw = self.get_input(
+            f"Full-auto lab [{'on' if on else 'off'}] (on/off; blank=toggle)"
+        ).strip().lower()
+        if not raw:
+            on = not on
+        elif raw in ("on", "1", "true", "yes"):
+            on = True
+        elif raw in ("off", "0", "false", "no"):
+            on = False
+        else:
+            self.activity_log.append("[!] Use on or off.")
+            return
+        os.environ["KFIOSA_FULL_AUTO"] = "1" if on else "0"
+        self.activity_log.append(
+            f"[+] Full-auto lab {'ON' if on else 'OFF'} — "
+            "auto-pick targets & until-access loops; "
+            "destructive PE still needs KFIOSA_AUTO_ACCEPT_DESTRUCTIVE=1."
+        )
+        if on:
+            try:
+                from core.os_agent.ready_check import ready_check
+                from core.os_agent.live_labels import register_builtin_tui_labels
+                rc = ready_check(domain="wifi")
+                self.activity_log.append(
+                    f"[i] Ready check critical_ok={rc.get('critical_ok')}"
+                )
+                register_builtin_tui_labels()
+                self.activity_log.append("[i] Seeded live TUI labels for OS agent.")
+            except Exception as e:
+                self.activity_log.append(f"[i] ready/labels: {e}")
+
+    def run_ready_check(self):
+        """Print honest readiness checklist (tools, env, holo)."""
+        domain = self.get_input("Domain (wifi/ble/osint; blank=wifi)").strip().lower()
+        if not domain:
+            domain = "wifi"
+        try:
+            from core.os_agent.ready_check import ready_check
+            rc = ready_check(domain=domain)
+        except Exception as e:
+            self.activity_log.append(f"[!] ready_check: {e}")
+            return
+        self.activity_log.append(
+            f"=== Ready check domain={domain} "
+            f"critical_ok={rc.get('critical_ok')} full_auto={rc.get('full_auto')} ==="
+        )
+        for c in rc.get("checks") or []:
+            mark = "+" if c.get("ok") else "!"
+            line = f"  [{mark}] {c.get('name')}: {c.get('detail') or ''}"
+            if not c.get("ok") and c.get("fix"):
+                line += f"  fix={c.get('fix')}"
+            self.activity_log.append(line[:140])
+
+    def anomaly_reaction_dry_run(self):
+        """Design polymorphic recovery moves without executing OS actions."""
+        err = self.get_input(
+            "Simulate error (e.g. timeout / bind Address already in use)"
+        ).strip()
+        if not err:
+            err = "timeout waiting for adapter"
+        domain = self.get_input("Domain (wifi/ble; blank=wifi)").strip() or "wifi"
+        try:
+            from core.os_agent.anomaly_loop import react_to_anomaly
+            r = react_to_anomaly(
+                {"error": err, "domain": domain, "elapsed_s": 99},
+                dry_run=True,
+            )
+        except Exception as e:
+            self.activity_log.append(f"[!] anomaly dry-run: {e}")
+            return
+        self.activity_log.append(f"[i] {r.get('narrative')}")
+        design = r.get("design") or {}
+        self.activity_log.append(
+            f"[i] deep_think={design.get('deep_think_type')} "
+            f"predictable={str(design.get('predictable') or '')[:80]}"
+        )
+        for m in (design.get("moves") or [])[:5]:
+            self.activity_log.append(
+                f"  · {m.get('type')}: {m.get('why') or ''}"
+            )
+
+    def seed_live_labels(self):
+        """Register builtin TUI labels (what/why/predictable/coords) for OS agent."""
+        try:
+            from core.os_agent.live_labels import (
+                register_builtin_tui_labels, list_labels, capture_screen,
+            )
+            r = register_builtin_tui_labels()
+            self.activity_log.append(
+                f"[+] Seeded {r.get('count', 0)} builtin TUI labels"
+            )
+            cap = capture_screen()
+            if cap.get("ok"):
+                self.activity_log.append(f"[+] Screenshot: {cap.get('path')}")
+            else:
+                self.activity_log.append(
+                    f"[i] No screenshot tool ({cap.get('error') or 'n/a'}) — "
+                    "labels still usable with placeholder coords"
+                )
+            for lab in list_labels()[:6]:
+                self.activity_log.append(
+                    f"  · {lab.get('name')}: {lab.get('what_for')} "
+                    f"@ {lab.get('center')}"
+                )
+        except Exception as e:
+            self.activity_log.append(f"[!] live labels: {e}")
 
     def configure_engagement_memory(self):
         cur = (os.environ.get("KFIOSA_MEMORY") or "1").strip().lower()

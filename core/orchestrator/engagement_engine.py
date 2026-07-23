@@ -233,12 +233,70 @@ class EngagementEngine:
         except Exception as e:
             self.log(f"[i] live_adapt skipped: {e}")
 
+        # Readiness + full-auto target pick + anomaly soft-prep
+        try:
+            from core.os_agent.ready_check import ready_check
+            from core.poly.target_score import full_auto_enabled, rank_targets
+            rc = ready_check(domain=domain)
+            seed["ready_check"] = {
+                "ok": rc.get("ok"),
+                "critical_ok": rc.get("critical_ok"),
+                "n_checks": len(rc.get("checks") or []),
+            }
+            if not rc.get("critical_ok"):
+                self.log(
+                    "Note: some tools look missing — continuing with honest degrade. "
+                    "Settings/Advanced or OS agent can help install/prep."
+                )
+            # Auto-pick target from seed["scan_online"] when identity missing
+            if full_auto_enabled() or seed.get("full_auto"):
+                seed["full_auto"] = True
+                seed["autonomous"] = True
+                # Full-auto lab: keep cycling until access (still ACCEPT-gated
+                # for destructive PE unless KFIOSA_AUTO_ACCEPT_DESTRUCTIVE=1).
+                ua = True
+                seed["until_access"] = True
+                try:
+                    from core.os_agent.live_labels import register_builtin_tui_labels
+                    register_builtin_tui_labels()
+                except Exception:
+                    pass
+                need = not (
+                    seed.get("bssid") or seed.get("address")
+                    or seed.get("url") or seed.get("query")
+                )
+                online = seed.get("scan_online") or seed.get("online") or []
+                if need and online:
+                    ranked = rank_targets(
+                        online, domain=domain,
+                        inject=bool((seed.get("adapter_caps") or {}).get("injection_capable")),
+                        top_n=1,
+                    )
+                    if ranked:
+                        seed.update({k: v for k, v in ranked[0].items() if not str(k).startswith("_")})
+                        self.log(
+                            f"Full-auto picked best target score="
+                            f"{ranked[0].get('_score')}: "
+                            f"{seed.get('ssid') or seed.get('name') or seed.get('bssid') or seed.get('address')}"
+                        )
+        except Exception as e:
+            self.log(f"[i] ready/full-auto pick skipped: {e}")
+
         # Detect blocked adapter/iface so Holo prep can fire when useful
         blocked = self._detect_adapter_blocked(domain, seed)
         if blocked:
             seed["adapter_blocked"] = True
             seed.setdefault("holo_prep", True)
             self.log(f"[holo] adapter/iface looks blocked — will try OS-agent prep")
+            try:
+                from core.os_agent.anomaly_loop import react_to_anomaly
+                ar = react_to_anomaly(
+                    {"domain": domain, "error": "adapter_blocked", "permission": True},
+                    dry_run=not bool(seed.get("full_auto")),
+                )
+                self.log(ar.get("narrative") or "OS recovery planned for blocked adapter")
+            except Exception:
+                pass
 
         # 1) Holo readiness + optional prep
         holo_out = self._phase_holo(domain, seed, skip=skip_holo_prep)
