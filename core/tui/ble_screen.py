@@ -297,7 +297,7 @@ class BLEScreen(BaseScreen):
             if prefer_embedded_scan() and self.stdscr is not None:
                 self.activity_log.append(
                     f"[*] In-TUI BLE scan (adapter={self.interface or 'auto'}; "
-                    "main-dashboard style; q=back)"
+                    "LIVE until q/Ctrl+C; ENTER mark · A AIO · ↑↓ move)"
                 )
                 sel = run_embedded_ble_scan(
                     self.stdscr,
@@ -305,19 +305,63 @@ class BLEScreen(BaseScreen):
                     out_path=out_path,
                     activity_log=self.activity_log,
                 )
+                devices: list = []
+                aio_flag = False
+                try:
+                    import json as _json
+                    from pathlib import Path as _P
+                    p = _P(out_path)
+                    if p.is_file():
+                        data = _json.loads(p.read_text(encoding="utf-8"))
+                        devices = list(data.get("devices") or [])
+                        aio_flag = bool(data.get("aio_attack"))
+                        if not sel and data.get("selected"):
+                            sel = data.get("selected")
+                except Exception:
+                    pass
                 if sel:
                     sel = dict(sel)
                     if self.interface:
                         sel.setdefault("adapter", self.interface)
+                    aio_flag = aio_flag or bool(sel.get("aio_attack"))
                     self.selected_device = sel
                     self.selected_target = sel
-                    self.ble_devices = [sel]
-                    self.targets = [sel]
+                    catalog = devices if devices else [sel]
+                    addr = str(sel.get("address") or "").upper()
+                    rest = [
+                        d for d in catalog
+                        if str((d or {}).get("address") or "").upper() != addr
+                    ]
+                    self.ble_devices = [sel] + rest
+                    self.targets = list(self.ble_devices)
+                    if aio_flag:
+                        self.activity_log.append(
+                            f"[+] Selected BLE: {sel.get('name')} "
+                            f"[{sel.get('address')}] — starting engagement"
+                        )
+                        self.aio_attack()
+                    else:
+                        self.activity_log.append(
+                            f"[+] Selected BLE: {sel.get('name')} "
+                            f"[{sel.get('address')}] · "
+                            f"{len(self.targets)} target(s) — use ↑↓ / "
+                            f"Start engagement when ready"
+                        )
+                        try:
+                            self._enter_targets_view()
+                        except Exception:
+                            pass
+                elif devices:
+                    self.ble_devices = list(devices)
+                    self.targets = list(devices)
                     self.activity_log.append(
-                        f"[+] Selected BLE: {sel.get('name')} "
-                        f"[{sel.get('address')}] — starting engagement"
+                        f"[i] BLE catalog: {len(devices)} device(s) — "
+                        f"browse targets list"
                     )
-                    self.aio_attack()
+                    try:
+                        self._enter_targets_view()
+                    except Exception:
+                        pass
                 return
         except Exception as e:
             self.activity_log.append(

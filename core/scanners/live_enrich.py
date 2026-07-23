@@ -123,7 +123,34 @@ def _oui_vendor(mac: str) -> str:
 
 
 def passive_enrich_wifi(ap: Dict[str, Any]) -> Dict[str, Any]:
-    """Always-safe local enrichment (no subprocess). Mutates and returns ap."""
+    """Always-safe local enrichment (no subprocess). Mutates and returns ap.
+
+    Cheap skip when recently enriched with the same encryption/ssid fingerprint
+    so the scan UI never pays full OUI/client re-walk every tick.
+    """
+    # Fast path: skip if enriched recently and key fields unchanged
+    try:
+        last = float(ap.get("live_enrich_ts") or 0)
+        if last and (time.time() - last) < 2.5:
+            fp = (
+                str(ap.get("encryption") or ap.get("enc") or ""),
+                str(ap.get("ssid") or ""),
+                int(ap.get("clients_count") or 0),
+                str(ap.get("channel") or ""),
+            )
+            if ap.get("_enrich_fp") == fp:
+                return ap
+            ap["_enrich_fp"] = fp
+        else:
+            ap["_enrich_fp"] = (
+                str(ap.get("encryption") or ap.get("enc") or ""),
+                str(ap.get("ssid") or ""),
+                int(ap.get("clients_count") or 0),
+                str(ap.get("channel") or ""),
+            )
+    except Exception:
+        pass
+
     enc = str(ap.get("encryption") or ap.get("enc") or "")
     flags = parse_wifi_flags(enc)
     for k, v in flags.items():
@@ -216,6 +243,21 @@ def passive_enrich_wifi(ap: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def passive_enrich_ble(dev: Dict[str, Any]) -> Dict[str, Any]:
+    # Fast skip when recently enriched with same name/rssi fingerprint
+    try:
+        last = float(dev.get("live_enrich_ts") or 0)
+        if last and (time.time() - last) < 2.5:
+            fp = (
+                str(dev.get("name") or ""),
+                int(dev.get("uuid_count") or 0),
+                bool(dev.get("connectable")),
+            )
+            if dev.get("_enrich_fp") == fp:
+                return dev
+            dev["_enrich_fp"] = fp
+    except Exception:
+        pass
+
     addr = str(dev.get("address") or dev.get("addr") or "").upper()
     if addr and not dev.get("vendor"):
         v = _oui_vendor(addr)
@@ -443,7 +485,10 @@ class LiveTargetEnricher:
     def _tick_passive(self) -> None:
         targets = list(self.get_targets() or [])
         self.stats["targets_seen"] = max(self.stats["targets_seen"], len(targets))
-        for t in targets:
+        # Bound work per tick so huge catalogs never freeze the UI thread
+        # (enricher is a daemon; still keep CPU headroom for airodump/curses).
+        budget = 48
+        for t in targets[:budget]:
             if not isinstance(t, dict):
                 continue
             try:

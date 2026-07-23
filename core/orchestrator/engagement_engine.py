@@ -47,13 +47,30 @@ HOLO_PREP_BY_DOMAIN = {
 }
 
 
+# Dedup rapid identical log lines so the TUI activity panel isn't flooded
+# (flood → wrap/redraw lag → feels "stuck").
+_last_emit_msg = ""
+_last_emit_ts = 0.0
+_EMIT_DEDUP_S = 0.35
+
+
 def _emit(on_event: Optional[EmitFn], msg: str) -> None:
+    global _last_emit_msg, _last_emit_ts
+    text = str(msg) if msg is not None else ""
+    if not text:
+        return
+    now = time.monotonic()
+    # Drop exact duplicate spam within a short window (progress ticks, etc.)
+    if text == _last_emit_msg and (now - _last_emit_ts) < _EMIT_DEDUP_S:
+        return
+    _last_emit_msg = text
+    _last_emit_ts = now
     try:
         if on_event:
-            on_event(msg)
+            on_event(text)
     except Exception:  # noqa: BLE001
         pass
-    logger.info(msg)
+    logger.info(text)
 
 
 class EngagementEngine:
@@ -719,31 +736,70 @@ class EngagementEngine:
                 self.log("[0day-bg] starting propose/build/docker_sim thread")
                 proposer = getattr(self.orch, "zero_day_proposer", None)
                 builder = getattr(self.orch, "zero_day_exploit_builder", None)
-                draft = None
+                concept = None
                 if proposer is not None and hasattr(proposer, "propose"):
                     try:
                         draft = proposer.propose(seed)
-                        self.log(
-                            f"[0day-bg] propose ok={bool((draft or {}).get('ok'))}"
+                        concept = draft
+                        # propose may return ZeroDayConcept or a dict envelope
+                        if isinstance(draft, dict) and not hasattr(
+                            draft, "recon_context"
+                        ):
+                            try:
+                                from core.ai_backend.zero_day import (
+                                    ZeroDayConcept,
+                                )
+                                concept = ZeroDayConcept.from_dict(draft)
+                            except Exception:
+                                concept = None
+                        ok = concept is not None and (
+                            getattr(concept, "title", None)
+                            or (isinstance(draft, dict) and draft.get("ok"))
                         )
+                        self.log(f"[0day-bg] propose ok={bool(ok)}")
                     except Exception as e:  # noqa: BLE001
                         self.log(f"[0day-bg] propose: {e}")
+                        concept = None
                 if builder is not None and hasattr(builder, "build"):
-                    try:
-                        built = builder.build(seed if draft is None else draft)
+                    if concept is None:
                         self.log(
-                            f"[0day-bg] build ok={bool((built or {}).get('ok'))}"
+                            "[0day-bg] build skip: no concept "
+                            "(propose failed or returned non-concept)"
                         )
-                    except Exception as e:  # noqa: BLE001
-                        self.log(f"[0day-bg] build: {e}")
+                    else:
+                        try:
+                            # ZeroDayExploitBuilder.build requires ZeroDayConcept
+                            # (has .recon_context) — never pass a raw seed dict.
+                            if isinstance(concept, dict):
+                                from core.ai_backend.zero_day import (
+                                    ZeroDayConcept,
+                                )
+                                concept = ZeroDayConcept.from_dict(concept)
+                            built = builder.build(concept)
+                            built_ok = bool(
+                                getattr(built, "exploit_id", None)
+                                or (
+                                    isinstance(built, dict)
+                                    and built.get("ok")
+                                )
+                            )
+                            self.log(f"[0day-bg] build ok={built_ok}")
+                        except Exception as e:  # noqa: BLE001
+                            self.log(f"[0day-bg] build: {e}")
                 # Docker sim path (honest skip if unavailable)
                 try:
-                    from core.zero_day_sandbox import docker_sim
-                    if hasattr(docker_sim, "run_sim"):
-                        sim = docker_sim.run_sim(seed, skip_real=True)
-                        self.log(
-                            f"[0day-bg] docker_sim ok={bool((sim or {}).get('ok'))}"
-                        )
+                    from core.zero_day_sandbox import (
+                        run_zero_day_docker_pipeline,
+                    )
+                    sim = run_zero_day_docker_pipeline(
+                        seed=seed if isinstance(seed, dict) else {},
+                        skip_real=True,
+                        on_event=lambda m: self.log(f"[0day-bg] {m}"),
+                    )
+                    self.log(
+                        f"[0day-bg] docker_sim ok="
+                        f"{bool((sim or {}).get('ok'))}"
+                    )
                 except Exception as e:  # noqa: BLE001
                     self.log(f"[0day-bg] docker_sim skip: {e}")
             except Exception as e:  # noqa: BLE001

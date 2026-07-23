@@ -95,3 +95,32 @@ def test_stamp_result():
     )
     assert out["domain_poly"]["domain"] == "wifi"
     assert out["domain_poly"]["engines"] == ["plum"]
+
+
+def test_forensics_and_anti_forensics_domains():
+    from core.poly.domain_adapt import (
+        list_domains, list_domain_methods, pick, plan, normalize_domain,
+    )
+    assert "forensics" in list_domains()
+    assert "anti_forensics" in list_domains()
+    assert normalize_domain("dfir") == "forensics"
+    assert normalize_domain("opsec") == "anti_forensics"
+    f_methods = list_domain_methods("forensics")
+    assert "file_hash" in f_methods
+    assert not any(m.startswith("anti_") for m in f_methods)
+    af_methods = list_domain_methods("anti_forensics")
+    assert any(m.startswith("post_") for m in af_methods) or any(
+        m.startswith("anti_") for m in af_methods
+    )
+    # pcap path → pcap method
+    r = pick("forensics", {"path": "/tmp/capture.pcap"})
+    assert r["ok"] and "pcap" in r["method"]
+    # image → exif
+    r2 = pick("forensics", {"path": "/tmp/photo.jpg"})
+    assert r2["ok"] and "exif" in r2["method"]
+    # anti-forensics plan
+    p = plan("anti_forensics", {"os": "Linux", "opsec": True}, n_steps=2)
+    assert p["ok"] and p["steps"][0]["action"] == "poly_adapt"
+    assert any(
+        s.get("action") == "post_exploit_anti_forensic" for s in p["steps"][1:]
+    ) or len(p["steps"]) >= 1

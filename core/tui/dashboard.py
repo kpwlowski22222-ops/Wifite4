@@ -638,17 +638,25 @@ class KfiosaDashboard:
             logger.debug("screen dump failed: %s", e)
 
     def run(self):
-        """Main event loop"""
+        """Main event loop — capped frame rate so the TUI never pegs a core.
+
+        Full erase+redraw every ~20ms caused multi-second freezes under heavy
+        activity-log / engagement load. Target ~10–12 FPS idle; confirm dialog
+        stays snappier (~20 FPS).
+        """
+        frame_s = 0.09  # ~11 fps main UI
+        confirm_frame_s = 0.05
         while self.running:
             try:
-                self.stdscr.erase()
+                t0 = time.monotonic()
                 height, width = self.stdscr.getmaxyx()
 
                 if height < 20 or width < 70:
+                    self.stdscr.erase()
                     self.stdscr.addstr(0, 0, "Terminal window too small. Expand it.")
                     self.stdscr.refresh()
                     self._maybe_dump_screen()
-                    time.sleep(0.5)
+                    time.sleep(0.4)
                     continue
 
                 # ACCEPT/CANCEL confirm dialog takes priority when an
@@ -658,22 +666,29 @@ class KfiosaDashboard:
                 # operator's answer — without it the worker deadlocks.
                 if self.tui_confirm is not None and self.tui_confirm.has_pending():
                     self.tui_confirm.poll(self.stdscr, self.activity_log)
+                    self.stdscr.erase()
                     self.render_confirm_dialog()
                     self.handle_confirm_input()
                     self.stdscr.refresh()
                     self._maybe_dump_screen()
-                    time.sleep(0.02)
+                    elapsed = time.monotonic() - t0
+                    time.sleep(max(0.0, confirm_frame_s - elapsed))
                     continue
 
+                # One capped frame: erase → paint → input → refresh.
+                # handle_* uses nodelay getch so keys stay responsive.
+                self.stdscr.erase()
                 if self.state == "main_menu":
                     self.render_main_menu()
                     self.handle_main_menu_input()
                 else:
                     self.render_sub_screen()
-
                 self.stdscr.refresh()
                 self._maybe_dump_screen()
-                time.sleep(0.02)
+
+                elapsed = time.monotonic() - t0
+                # Never spin hot — yield remaining frame budget (~11 fps)
+                time.sleep(max(0.01, frame_s - elapsed))
             except KeyboardInterrupt:
                 self.running = False
             except Exception as e:

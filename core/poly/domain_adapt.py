@@ -3,6 +3,7 @@
 Surfaces prepared for AI orchestration::
 
   wifi | ble | osint | osint_people | osint_web | post_exploit
+  | forensics | anti_forensics
 
 Every domain action can flow through:
 
@@ -35,6 +36,8 @@ DOMAIN_OSINT = "osint"
 DOMAIN_OSINT_PEOPLE = "osint_people"
 DOMAIN_OSINT_WEB = "osint_web"
 DOMAIN_POST = "post_exploit"
+DOMAIN_FORENSICS = "forensics"
+DOMAIN_ANTI_FORENSICS = "anti_forensics"
 
 _ALIASES = {
     "wlan": DOMAIN_WIFI,
@@ -51,6 +54,14 @@ _ALIASES = {
     "post_exploitation": DOMAIN_POST,
     "post-exploit": DOMAIN_POST,
     "pe": DOMAIN_POST,
+    "forensic": DOMAIN_FORENSICS,
+    "forensic_module": DOMAIN_FORENSICS,
+    "dfir": DOMAIN_FORENSICS,
+    "anti_forensic": DOMAIN_ANTI_FORENSICS,
+    "antiforensics": DOMAIN_ANTI_FORENSICS,
+    "anti-forensics": DOMAIN_ANTI_FORENSICS,
+    "opsec": DOMAIN_ANTI_FORENSICS,
+    "post_exploit_anti_forensic": DOMAIN_ANTI_FORENSICS,
 }
 
 
@@ -68,6 +79,7 @@ def list_domains() -> List[str]:
     return [
         DOMAIN_WIFI, DOMAIN_BLE, DOMAIN_OSINT,
         DOMAIN_OSINT_PEOPLE, DOMAIN_OSINT_WEB, DOMAIN_POST,
+        DOMAIN_FORENSICS, DOMAIN_ANTI_FORENSICS,
     ]
 
 
@@ -100,6 +112,35 @@ def list_domain_methods(domain: str) -> List[str]:
             except Exception:
                 from core.post_exploit.runner import POST_EXPLOIT_PROBE_METHODS
                 return list(POST_EXPLOIT_PROBE_METHODS)
+        if d == DOMAIN_FORENSICS:
+            from core.forensics.forensic_modules import FORENSIC_MODULE_FUNCTIONS
+            # Passive/read forensics only (exclude anti_* which are destructive)
+            return [m for m in FORENSIC_MODULE_FUNCTIONS if not m.startswith("anti_")]
+        if d == DOMAIN_ANTI_FORENSICS:
+            # Prefer dedicated 60-module OPSEC runner; also expose anti_* from forensic_modules
+            methods: List[str] = []
+            try:
+                from core.post_exploit.anti_forensic import (
+                    POST_EXPLOIT_ANTI_FORENSIC_METHODS,
+                )
+                methods.extend(list(POST_EXPLOIT_ANTI_FORENSIC_METHODS))
+            except Exception:
+                pass
+            try:
+                from core.forensics.forensic_modules import FORENSIC_MODULE_FUNCTIONS
+                methods.extend(
+                    m for m in FORENSIC_MODULE_FUNCTIONS if m.startswith("anti_")
+                )
+            except Exception:
+                pass
+            # de-dupe preserve order
+            seen = set()
+            out: List[str] = []
+            for m in methods:
+                if m not in seen:
+                    seen.add(m)
+                    out.append(m)
+            return out
     except Exception:
         pass
     return []
@@ -162,14 +203,22 @@ def prepare(
         from core.utils.poly_adapt import extract_target_features
         features = extract_target_features(tgt)
     except Exception:
-        features = {
-            k: tgt.get(k)
-            for k in (
-                "encryption", "bssid", "ssid", "channel", "address",
-                "url", "email", "query", "os", "session_id",
-            )
-            if tgt.get(k) not in (None, "")
-        }
+        features = {}
+    # Preserve domain-specific keys poly_adapt may not flatten
+    for k in (
+        "encryption", "bssid", "ssid", "channel", "address",
+        "url", "email", "query", "os", "host_os", "session_id",
+        "path", "file", "pcap", "image", "disk", "memory",
+        "opsec", "cleanup", "lab_only",
+    ):
+        if tgt.get(k) not in (None, "") and features.get(k) in (None, ""):
+            features[k] = tgt[k]
+    # Infer path from common forensic args
+    if not features.get("path"):
+        for k in ("file", "pcap", "image", "disk", "target_path"):
+            if tgt.get(k):
+                features["path"] = tgt[k]
+                break
 
     ensemble: Dict[str, Any] = {}
     try:
@@ -401,6 +450,46 @@ def _map_to_domain_method(
             "enum": "situational_awareness",
             "privesc": "privilege_escalation",
         },
+        DOMAIN_FORENSICS: {
+            "hash": "file_hash",
+            "metadata": "file_metadata",
+            "exif": "exif_extract",
+            "strings": "strings_extract",
+            "pcap": "pcap_summary",
+            "memory": "memory_image_identify",
+            "registry": "registry_hive_parse",
+            "eventlog": "eventlog_parse",
+            "browser": "browser_history",
+            "mft": "mft_parse",
+            "disk": "disk_image_info",
+            "history": "bash_history",
+            "yara": "yara_scan",
+            "wifi": "wifi_password_dump",
+            "ssh": "ssh_known_hosts",
+            "persist": "persistence_walk",
+            "autorun": "autoruns_walk",
+            "prefetch": "prefetch_parse",
+            "recycle": "recycle_bin_parse",
+        },
+        DOMAIN_ANTI_FORENSICS: {
+            "log": "post_clear_linux_syslog",
+            "history": "post_clear_bash_history",
+            "bash": "post_clear_bash_history",
+            "event": "post_clear_windows_event_logs",
+            "shred": "post_secure_delete_file",
+            "wipe": "post_wipe_free_space",
+            "timestomp": "post_timestomp_file",
+            "mac": "post_randomize_mac_address",
+            "dns": "post_clear_dns_cache",
+            "arp": "post_clear_arp_cache",
+            "ssh": "post_clear_ssh_known_hosts",
+            "tor": "post_use_tor_for_exfil",
+            "encrypt": "post_encrypt_exfiltrated_data",
+            "opsec": "anti_opsec_clean",
+            "amsi": "anti_amsi_bypass",
+            "etw": "post_disable_etw",
+            "self_destruct": "post_self_destruct",
+        },
     }
     table = bridges.get(domain) or {}
     for kw, method in table.items():
@@ -467,6 +556,47 @@ def _heuristic_candidates(
             add(4.0, "lateral")
         else:
             add(3.0, "enum")
+    elif domain == DOMAIN_FORENSICS:
+        path = str(features.get("path") or features.get("file") or "")
+        low = path.lower()
+        if low.endswith((".pcap", ".pcapng", ".cap")):
+            add(4.5, "pcap")
+        elif low.endswith((".jpg", ".jpeg", ".png", ".tiff", ".heic")):
+            add(4.0, "exif")
+        elif low.endswith((".raw", ".mem", ".dmp", ".vmem")):
+            add(4.0, "memory")
+        elif low.endswith((".e01", ".dd", ".img", ".vmdk")):
+            add(4.0, "disk")
+        elif low.endswith((".evtx", ".evt")):
+            add(4.0, "eventlog")
+        elif "registry" in low or low.endswith((".dat", "ntuser.dat", "system")):
+            add(3.5, "registry")
+        elif path:
+            add(3.5, "hash")
+            add(3.0, "metadata")
+            add(2.5, "strings")
+        else:
+            add(3.0, "bash")
+            add(2.5, "persist")
+            add(2.0, "ssh")
+    elif domain == DOMAIN_ANTI_FORENSICS:
+        os_s = str(features.get("os") or features.get("host_os") or "").lower()
+        if "win" in os_s:
+            add(4.0, "event")
+            add(3.0, "history")
+        elif "darwin" in os_s or "mac" in os_s:
+            add(3.5, "history")
+            add(3.0, "log")
+        else:
+            add(4.0, "bash")
+            add(3.5, "log")
+        if features.get("path") or features.get("file"):
+            add(3.5, "shred")
+            add(3.0, "timestomp")
+        if features.get("cleanup") or features.get("opsec"):
+            add(3.0, "opsec")
+            add(2.5, "dns")
+            add(2.5, "arp")
     return out
 
 
@@ -629,7 +759,16 @@ def plan(
             DOMAIN_OSINT_PEOPLE: "osint_ext",
             DOMAIN_OSINT_WEB: "osint_ext",
             DOMAIN_POST: "post_exploit_ext",
+            DOMAIN_FORENSICS: "forensic_module",
+            DOMAIN_ANTI_FORENSICS: "post_exploit_anti_forensic",
         }.get(d, "mcp_call")
+        risk = "read"
+        if d in (DOMAIN_WIFI, DOMAIN_BLE, DOMAIN_POST):
+            risk = "intrusive"
+        elif d == DOMAIN_ANTI_FORENSICS:
+            risk = "destructive" if "wipe" in m or "destruct" in m or "secure_delete" in m else "intrusive"
+        elif d == DOMAIN_FORENSICS and m.startswith("anti_"):
+            risk = "destructive"
         steps.append({
             "action": action,
             "tool": m,
@@ -639,7 +778,7 @@ def plan(
                 pick_ctx=p,
             ),
             "rationale": p.get("rationale") or f"adaptive {m}",
-            "risk": "intrusive" if d in (DOMAIN_WIFI, DOMAIN_BLE, DOMAIN_POST) else "read",
+            "risk": risk,
         })
 
     return {
@@ -679,6 +818,7 @@ def describe_domains() -> Dict[str, Any]:
 __all__ = [
     "DOMAIN_WIFI", "DOMAIN_BLE", "DOMAIN_OSINT", "DOMAIN_OSINT_PEOPLE",
     "DOMAIN_OSINT_WEB", "DOMAIN_POST",
+    "DOMAIN_FORENSICS", "DOMAIN_ANTI_FORENSICS",
     "normalize_domain", "list_domains", "list_domain_methods",
     "prepare", "pick", "plan", "prepare_run", "inject_args",
     "stamp_result", "target_from_args", "describe_domains",

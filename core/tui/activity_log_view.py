@@ -13,11 +13,18 @@ from __future__ import annotations
 
 import curses
 import re
+import threading
 import time
 from typing import Any, List, Optional, Sequence, Tuple
 
-# Max lines kept in the shared activity_log list
-MAX_ACTIVITY_LINES = 2000
+# Max lines kept in the shared activity_log list (smaller = snappier TUI)
+MAX_ACTIVITY_LINES = 500
+
+# Thread-safe appends from engagement / scanner worker threads
+_LOG_LOCK = threading.RLock()
+_last_append_body = ""
+_last_append_ts = 0.0
+_APPEND_DEDUP_S = 0.25
 
 # (regex or exact prefix matcher, color_pair_id, bold)
 # Pair IDs match ui_theme ThemePair (1=ok, 2=err, 3=warn, 4=info, 5=accent, 6=muted)
@@ -59,25 +66,36 @@ def append_log(
     timestamp: bool = True,
     cap: int = MAX_ACTIVITY_LINES,
 ) -> None:
-    """Append one (or multi-line) message, optionally with HH:MM:SS prefix."""
-    if msg is None:
+    """Append one (or multi-line) message, optionally with HH:MM:SS prefix.
+
+    Thread-safe and dedupes identical spam so bg engagement workers cannot
+    freeze the TUI by flooding the log list.
+    """
+    global _last_append_body, _last_append_ts
+    if msg is None or activity_log is None:
         return
     text = str(msg).rstrip("\n")
     if not text:
         return
+    now = time.monotonic()
+    # Drop exact duplicate bursts (common during recon progress ticks)
+    if text == _last_append_body and (now - _last_append_ts) < _APPEND_DEDUP_S:
+        return
+    _last_append_body = text
+    _last_append_ts = now
     prefix = f"{now_ts()} " if timestamp else ""
-    for raw in text.splitlines() or [text]:
-        line = raw.replace("\t", "    ").rstrip()
-        if not line:
-            continue
-        # Avoid double-stamping if caller already put a clock on the line
-        if timestamp and _TS_RE.match(line):
-            activity_log.append(line)
-        else:
-            activity_log.append(prefix + line if timestamp else line)
-    # Ring-buffer trim from the front
-    if cap > 0 and len(activity_log) > cap:
-        del activity_log[: len(activity_log) - cap]
+    with _LOG_LOCK:
+        for raw in text.splitlines() or [text]:
+            line = raw.replace("\t", "    ").rstrip()
+            if not line:
+                continue
+            if timestamp and _TS_RE.match(line):
+                activity_log.append(line)
+            else:
+                activity_log.append(prefix + line if timestamp else line)
+        if cap > 0 and len(activity_log) > cap:
+            # Keep newest; single slice is faster than del front repeatedly
+            del activity_log[: len(activity_log) - cap]
 
 
 def classify_line(line: str) -> Tuple[int, bool, str, str]:
@@ -150,14 +168,32 @@ def visible_rows(
 
     Returns ``(rows, total_wrapped, scroll_from_end_clamped)`` where each
     row is ``(pair, bold, prefix, body)`` ready for drawing.
+
+    Only the tail of ``lines`` that can possibly be visible is wrapped —
+    wrapping 500+ historical lines every frame was a major lag source.
     """
     if max_rows <= 0 or width <= 4:
         return [], 0, 0
 
-    # Expand to wrapped display lines (newest at end)
+    n_src = len(lines)
+    if n_src == 0:
+        return [], 0, 0
+
+    # Worst-case wrap expansion ~4 rows/line; only process a tail window.
+    scroll_hint = max(0, int(scroll_from_end))
+    # Lines we might need: visible + scroll history + small pad
+    tail_src = max_rows + scroll_hint + 8
+    # If wrapping, each source line can expand — take more source lines
+    if wrap:
+        tail_src = max_rows * 3 + scroll_hint + 12
+    tail_src = min(n_src, max(max_rows + 4, tail_src))
+    window = list(lines[-tail_src:]) if n_src > tail_src else list(lines)
+    # Approximate total wrapped rows for scroll clamp (assume ~1.4x average)
+    approx_total = max(n_src, int(n_src * 1.2))
+
     expanded: List[Tuple[int, bool, str, str]] = []
     body_width = max(12, width - 2)
-    for line in lines:
+    for line in window:
         pair, bold, prefix, body = classify_line(str(line))
         pref_w = min(len(prefix), body_width // 2)
         content_w = max(8, body_width - pref_w)
@@ -169,18 +205,21 @@ def visible_rows(
             if i == 0:
                 expanded.append((pair, bold, prefix, ch))
             else:
-                # Continuation: indent under body, muted style
                 pad = " " * min(len(prefix), 12) if prefix else "  "
                 expanded.append((6, False, pad, ch))
 
-    total = len(expanded)
-    if total == 0:
+    total_window = len(expanded)
+    if total_window == 0:
         return [], 0, 0
 
+    # When we only expanded a tail, treat total as at least approx_total so
+    # PgUp scroll still moves; clamp against window size for display.
+    total = max(approx_total, total_window) if n_src > tail_src else total_window
     max_scroll = max(0, total - max_rows)
     scroll = max(0, min(int(scroll_from_end), max_scroll))
-    # scroll_from_end=0 → show the last max_rows lines
-    end = total - scroll
+    # Map scroll into the expanded window (window is always the newest tail)
+    # scroll=0 → last max_rows of expanded; higher scroll walks older in window
+    end = total_window - min(scroll, max(0, total_window - max_rows))
     start = max(0, end - max_rows)
     return expanded[start:end], total, scroll
 

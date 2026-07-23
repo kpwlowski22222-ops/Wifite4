@@ -22,10 +22,27 @@ from .pipeline import ZeroDayDockerPipeline, run_zero_day_docker_pipeline
 from .profile import TargetEnvProfile, build_profile_from_recon
 from .simulator import DockerTargetSimulator
 
+
+class docker_sim:
+    """Back-compat module-style facade used by engagement_engine 0day-bg.
+
+    Prefer :func:`run_zero_day_docker_pipeline` for new call sites.
+    """
+
+    @staticmethod
+    def run_sim(seed=None, skip_real=True, **kwargs):
+        return run_zero_day_docker_pipeline(
+            seed=seed if isinstance(seed, dict) else {},
+            skip_real=bool(skip_real),
+            **kwargs,
+        )
+
+
 __all__ = [
     "TargetEnvProfile",
     "build_profile_from_recon",
     "DockerTargetSimulator",
     "ZeroDayDockerPipeline",
     "run_zero_day_docker_pipeline",
+    "docker_sim",
 ]

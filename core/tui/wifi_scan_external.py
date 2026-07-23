@@ -65,19 +65,39 @@ _OUI_VENDORS: Dict[str, str] = {
 }
 
 
+# Memoize OUI lookups — repeated per-poll vendor resolution was a lag source.
+_OUI_CACHE: Dict[str, str] = {}
+_OUI_BLE_TRIED = False
+_OUI_BLE_FN = None  # type: ignore
+
+
 def _get_oui_vendor(mac: str) -> str:
     if not mac or len(mac) < 8:
         return "Unknown"
     prefix = mac.upper()[:8]
+    hit = _OUI_CACHE.get(prefix)
+    if hit is not None:
+        return hit
     if prefix in _OUI_VENDORS:
+        _OUI_CACHE[prefix] = _OUI_VENDORS[prefix]
         return _OUI_VENDORS[prefix]
-    try:
-        from core.ble.runner import _oui_vendor
-        v = _oui_vendor(mac)
-        if v and v != "Unknown":
-            return v
-    except Exception:
-        pass
+    global _OUI_BLE_TRIED, _OUI_BLE_FN
+    if not _OUI_BLE_TRIED:
+        _OUI_BLE_TRIED = True
+        try:
+            from core.ble.runner import _oui_vendor as _fn
+            _OUI_BLE_FN = _fn
+        except Exception:
+            _OUI_BLE_FN = None
+    if _OUI_BLE_FN is not None:
+        try:
+            v = _OUI_BLE_FN(mac)
+            if v and v != "Unknown":
+                _OUI_CACHE[prefix] = v
+                return v
+        except Exception:
+            pass
+    _OUI_CACHE[prefix] = "Unknown OUI"
     return "Unknown OUI"
 
 
@@ -312,6 +332,9 @@ class LiveScanner:
     vendor / PMF / hidden-SSID / WPS / client OUI data while the UI is open.
     """
 
+    # Soft cap so multi-hour sweeps don't grow the catalog forever
+    MAX_CATALOG = 250
+
     def __init__(self, iface: str, disappeared_timeout: float = 6.0):
         self.iface = iface
         self.disappeared_timeout = disappeared_timeout
@@ -330,6 +353,14 @@ class LiveScanner:
         self._stderr_fh: Optional[Any] = None
         self._catalog_lock = threading.RLock()
         self._enricher: Optional[Any] = None
+        # Skip re-reading multi-MB airodump CSV when nothing changed
+        self._csv_mtime: float = 0.0
+        self._csv_size: int = 0
+        self._csv_path_cached: Optional[Path] = None
+        # Cache last partition so rapid UI polls are cheap when idle
+        self._poll_cache: Optional[Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]] = None
+        self._poll_cache_ts: float = 0.0
+        self._poll_cache_ttl: float = 0.12  # ~8 Hz max partition rebuild
 
     def start(self) -> None:
         self._running = True
@@ -370,8 +401,10 @@ class LiveScanner:
                 domain="wifi",
                 interface=str(self.iface or ""),
                 get_targets=_targets,
-                deep_interval_s=5.0,
+                # Slower deep probes → less radio/CPU contention with airodump
+                deep_interval_s=8.0,
                 max_deep_per_tick=1,
+                max_deep_total=24,
             )
             self._enricher.start()
         except Exception as e:
@@ -528,81 +561,153 @@ class LiveScanner:
                 self.ap_catalog[bssid_upper] = ap
             else:
                 cur = self.ap_catalog[bssid_upper]
+                changed = False
                 # Never overwrite a revealed SSID with <hidden>
                 if ap.get("ssid") and ap.get("ssid") != "<hidden>":
-                    cur["ssid"] = ap["ssid"]
-                if ap.get("channel"):
+                    if cur.get("ssid") != ap.get("ssid"):
+                        cur["ssid"] = ap["ssid"]
+                        changed = True
+                if ap.get("channel") and cur.get("channel") != ap.get("channel"):
                     cur["channel"] = ap["channel"]
-                if ap.get("power"):
+                    changed = True
+                if ap.get("power") is not None and cur.get("power") != ap.get("power"):
                     cur["power"] = ap["power"]
+                    # power-only change: skip full re-enrich (cheap field)
                 if ap.get("encryption"):
-                    cur["encryption"] = ap["encryption"]
-                    cur["enc"] = ap["encryption"]
+                    if cur.get("encryption") != ap.get("encryption"):
+                        cur["encryption"] = ap["encryption"]
+                        cur["enc"] = ap["encryption"]
+                        changed = True
                 if "clients" in ap:
-                    cur["clients"] = ap["clients"]
-                    cur["clients_count"] = ap["clients_count"]
+                    new_cli = ap.get("clients") or []
+                    old_n = len(cur.get("clients") or [])
+                    new_n = len(new_cli)
+                    if new_n != old_n:
+                        cur["clients"] = new_cli
+                        cur["clients_count"] = ap.get("clients_count", new_n)
+                        changed = True
+                    else:
+                        cur["clients"] = new_cli
+                        cur["clients_count"] = ap.get("clients_count", new_n)
                 if ap.get("beacons"):
                     cur["beacons"] = ap["beacons"]
-                try:
-                    from core.scanners.live_enrich import passive_enrich_wifi
-                    passive_enrich_wifi(cur)
-                except Exception:
-                    pass
+                # Only re-run passive enrich when identity/security/clients change
+                if changed:
+                    try:
+                        from core.scanners.live_enrich import passive_enrich_wifi
+                        passive_enrich_wifi(cur)
+                    except Exception:
+                        pass
             self.last_seen_ts[bssid_upper] = now
+            # Evict oldest disappeared if catalog grows too large
+            if len(self.ap_catalog) > self.MAX_CATALOG:
+                self._evict_oldest_unlocked(now)
+
+    def _evict_oldest_unlocked(self, now: float) -> None:
+        """Drop oldest offline APs under catalog lock (caller holds lock)."""
+        try:
+            timeout = float(self.disappeared_timeout)
+        except Exception:
+            timeout = 60.0
+        offline = [
+            (b, self.last_seen_ts.get(b, 0.0))
+            for b in self.ap_catalog
+            if (now - self.last_seen_ts.get(b, 0.0)) > timeout
+        ]
+        offline.sort(key=lambda x: x[1])  # oldest first
+        over = len(self.ap_catalog) - self.MAX_CATALOG
+        for b, _ in offline[: max(0, over + 20)]:
+            self.ap_catalog.pop(b, None)
+            self.last_seen_ts.pop(b, None)
+
+    def _ingest_csv_if_changed(self, now: float) -> bool:
+        """Re-parse airodump CSV only when mtime/size changed. Returns True if ingested."""
+        if not (self._is_airodump and self.prefix):
+            return False
+        csv_path = self._csv_path_cached
+        if csv_path is None or not csv_path.is_file():
+            csv_path = Path(str(self.prefix) + "-01.csv")
+            if not csv_path.is_file():
+                try:
+                    cands = sorted(
+                        self.outdir.glob("live_scan_*-01.csv"),
+                        key=lambda p: p.stat().st_mtime,
+                    )
+                    if cands:
+                        csv_path = cands[-1]
+                except Exception:
+                    return False
+            self._csv_path_cached = csv_path
+        if not csv_path.is_file():
+            return False
+        try:
+            st = csv_path.stat()
+            mtime = float(st.st_mtime)
+            size = int(st.st_size)
+        except OSError:
+            return False
+        if mtime == self._csv_mtime and size == self._csv_size:
+            return False  # unchanged — skip multi-MB re-read
+        try:
+            text = csv_path.read_text(encoding="utf-8", errors="replace")
+            parsed_aps, clients_map = _parse_airodump_csv_live(text)
+            for bssid, ap in parsed_aps.items():
+                ap["clients"] = clients_map.get(bssid, [])
+                ap["clients_count"] = len(ap["clients"])
+                self._merge_ap(bssid, ap, now)
+            self._csv_mtime = mtime
+            self._csv_size = size
+            self._poll_cache = None  # invalidate partition cache
+            return True
+        except Exception:
+            return False
 
     def poll(self) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         now = time.time()
-        if self._is_airodump and self.prefix:
-            csv_path = Path(str(self.prefix) + "-01.csv")
-            if not csv_path.is_file():
-                cands = sorted(
-                    self.outdir.glob("live_scan_*-01.csv"),
-                    key=lambda p: p.stat().st_mtime,
-                )
-                if cands:
-                    csv_path = cands[-1]
-            if csv_path.is_file():
-                try:
-                    text = csv_path.read_text(encoding="utf-8", errors="replace")
-                    parsed_aps, clients_map = _parse_airodump_csv_live(text)
-                    for bssid, ap in parsed_aps.items():
-                        ap["clients"] = clients_map.get(bssid, [])
-                        ap["clients_count"] = len(ap["clients"])
-                        self._merge_ap(bssid, ap, now)
-                except Exception:
-                    pass
+        csv_changed = self._ingest_csv_if_changed(now)
+
+        # Cheap path: reuse last online/offline lists for a short TTL
+        if (
+            not csv_changed
+            and self._poll_cache is not None
+            and (now - self._poll_cache_ts) < self._poll_cache_ttl
+        ):
+            return self._poll_cache
 
         online_aps: List[Dict[str, Any]] = []
         disappeared_aps: List[Dict[str, Any]] = []
 
         with self._catalog_lock:
             items = list(self.ap_catalog.items())
+            ts_map = dict(self.last_seen_ts)
         for bssid, ap in items:
-            last_ts = self.last_seen_ts.get(bssid, 0.0)
+            last_ts = ts_map.get(bssid, 0.0)
             ago = max(0, int(now - last_ts))
             ap["last_seen_ago"] = f"{ago}s ago"
             ap["last_seen_ts"] = last_ts
-            vendor = ap.get("vendor") or _get_oui_vendor(bssid)
-            ap["vendor"] = vendor
-            try:
-                from core.scanners.live_enrich import passive_enrich_wifi
-                passive_enrich_wifi(ap)
-            except Exception:
-                pass
-            ap["recon_info"] = {
-                "vendor": vendor,
-                "clients_count": len(ap.get("clients") or []),
-                "clients": ap.get("clients") or [],
-                "beacons": ap.get("beacons") or 0,
-                "last_seen_ago": ap["last_seen_ago"],
-                "badges": list(ap.get("recon_badges") or []),
-                "enrich_methods": list(ap.get("enrich_methods") or []),
-                "revealed_ssid": ap.get("revealed_ssid"),
-                "hidden": ap.get("hidden"),
-                "pmf": ap.get("pmf") or ap.get("pmf_supported"),
-                "band": ap.get("band"),
-                "wps_enabled": ap.get("wps_enabled"),
-            }
+            if not ap.get("vendor"):
+                ap["vendor"] = _get_oui_vendor(bssid)
+            # recon_info only when missing or stale (not every poll)
+            ri = ap.get("recon_info")
+            if not isinstance(ri, dict) or ri.get("_ts", 0) < last_ts:
+                ap["recon_info"] = {
+                    "vendor": ap.get("vendor"),
+                    "clients_count": len(ap.get("clients") or []),
+                    "clients": ap.get("clients") or [],
+                    "beacons": ap.get("beacons") or 0,
+                    "last_seen_ago": ap["last_seen_ago"],
+                    "badges": list(ap.get("recon_badges") or []),
+                    "enrich_methods": list(ap.get("enrich_methods") or []),
+                    "revealed_ssid": ap.get("revealed_ssid"),
+                    "hidden": ap.get("hidden"),
+                    "pmf": ap.get("pmf") or ap.get("pmf_supported"),
+                    "band": ap.get("band"),
+                    "wps_enabled": ap.get("wps_enabled"),
+                    "_ts": last_ts,
+                }
+            else:
+                # cheap field update
+                ri["last_seen_ago"] = ap["last_seen_ago"]
             if (now - last_ts) <= self.disappeared_timeout:
                 ap["status"] = "online"
                 online_aps.append(ap)
@@ -614,6 +719,8 @@ class LiveScanner:
         disappeared_aps.sort(
             key=lambda a: a.get("last_seen_ts") or 0.0, reverse=True
         )
+        self._poll_cache = (online_aps, disappeared_aps)
+        self._poll_cache_ts = now
         return online_aps, disappeared_aps
 
     def stop(self) -> None:
@@ -679,37 +786,58 @@ def run_curses(
         curses.init_pair(3, curses.COLOR_CYAN, -1)
         curses.init_pair(4, curses.COLOR_RED, -1)
 
-    # Long-range: keep disappeared APs on screen far longer so the
-    # operator sees everything that went offline during the sweep.
-    disappeared_timeout = 60.0 if long_range else 20.0
+    # Keep disappeared APs browsable; scan runs until q / Ctrl+C / AIO.
+    disappeared_timeout = 180.0 if long_range else 120.0
     scanner = LiveScanner(iface, disappeared_timeout=disappeared_timeout)
     scanner.start()
 
     active_table = "online"  # "online" or "disappeared"
     online_idx = 0
     disappeared_idx = 0
+    online_id = ""
+    disappeared_id = ""
     selected: Optional[Dict[str, Any]] = None
     # BSSID whose associated clients are shown in the expand panel (`c`).
     clients_view_ap: Optional[str] = None
-    status = f"Live scanning {iface}…"
-    message = "↑/↓ move · TAB switch table · ENTER/SPACE select · A AIO · c clients · r rescan · q quit"
+    status = f"Live scanning {iface}… (until q/Ctrl+C)"
+    message = (
+        "↑/↓ move · TAB table · ENTER mark · A AIO · c clients · r rescan · "
+        "q/Ctrl+C exit (LIVE, never auto-stops)"
+    )
 
+    def _stable_idx(items, item_id: str, idx: int) -> int:
+        if not items:
+            return 0
+        if item_id:
+            for i, ap in enumerate(items):
+                if str(ap.get("bssid") or "").upper() == item_id:
+                    return i
+        return max(0, min(idx, len(items) - 1))
+
+    last_poll_t = 0.0
+    poll_every = 0.30
+    online_aps: List[Dict[str, Any]] = []
+    disappeared_aps: List[Dict[str, Any]] = []
     try:
         while True:
-            online_aps, disappeared_aps = scanner.poll()
+            now_m = time.monotonic()
+            if (now_m - last_poll_t) >= poll_every or not online_aps:
+                online_aps, disappeared_aps = scanner.poll()
+                last_poll_t = now_m
 
-            # Bound cursor indices safely
+            # Re-anchor by BSSID so power re-sorts don't freeze the cursor
+            online_idx = _stable_idx(online_aps, online_id, online_idx)
+            disappeared_idx = _stable_idx(
+                disappeared_aps, disappeared_id, disappeared_idx
+            )
             if online_aps:
-                online_idx = max(0, min(online_idx, len(online_aps) - 1))
-            else:
-                online_idx = 0
-
+                online_id = str(
+                    online_aps[online_idx].get("bssid") or ""
+                ).upper() or online_id
             if disappeared_aps:
-                disappeared_idx = max(
-                    0, min(disappeared_idx, len(disappeared_aps) - 1)
-                )
-            else:
-                disappeared_idx = 0
+                disappeared_id = str(
+                    disappeared_aps[disappeared_idx].get("bssid") or ""
+                ).upper() or disappeared_id
 
             stdscr.erase()
             h, w = stdscr.getmaxyx()
@@ -970,30 +1098,63 @@ def run_curses(
             if key == -1:
                 continue
 
+            if key in (3,):  # Ctrl+C — leave live scan
+                message = "Ctrl+C — leaving live scan"
+                break
+
             if key in (curses.KEY_UP, ord("k"), ord("K")):
                 if active_table == "online":
                     if online_aps:
-                        online_idx = max(0, online_idx - 1)
+                        # wrap so movement never feels stuck at ends
+                        online_idx = (online_idx - 1) % len(online_aps)
+                        online_id = str(
+                            online_aps[online_idx].get("bssid") or ""
+                        ).upper()
                 else:
-                    if disappeared_idx > 0:
-                        disappeared_idx -= 1
-                    else:
-                        active_table = "online"
-                        if online_aps:
-                            online_idx = len(online_aps) - 1
+                    if disappeared_aps:
+                        if disappeared_idx > 0:
+                            disappeared_idx -= 1
+                        else:
+                            active_table = "online"
+                            if online_aps:
+                                online_idx = len(online_aps) - 1
+                                online_id = str(
+                                    online_aps[online_idx].get("bssid") or ""
+                                ).upper()
+                        if active_table == "disappeared" and disappeared_aps:
+                            disappeared_id = str(
+                                disappeared_aps[disappeared_idx].get("bssid")
+                                or ""
+                            ).upper()
 
             elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
                 if active_table == "online":
-                    if online_idx < len(online_aps) - 1:
-                        online_idx += 1
-                    elif disappeared_aps:
-                        active_table = "disappeared"
-                        disappeared_idx = 0
+                    if online_aps:
+                        if online_idx < len(online_aps) - 1:
+                            online_idx += 1
+                            online_id = str(
+                                online_aps[online_idx].get("bssid") or ""
+                            ).upper()
+                        elif disappeared_aps:
+                            active_table = "disappeared"
+                            disappeared_idx = 0
+                            disappeared_id = str(
+                                disappeared_aps[0].get("bssid") or ""
+                            ).upper()
+                        else:
+                            online_idx = 0
+                            online_id = str(
+                                online_aps[0].get("bssid") or ""
+                            ).upper()
                 else:
                     if disappeared_aps:
                         disappeared_idx = min(
                             len(disappeared_aps) - 1, disappeared_idx + 1
                         )
+                        disappeared_id = str(
+                            disappeared_aps[disappeared_idx].get("bssid")
+                            or ""
+                        ).upper()
 
             elif key in (ord("\t"), 9, getattr(curses, "KEY_LEFT", 260), getattr(curses, "KEY_RIGHT", 261), ord("h"), ord("H"), ord("l"), ord("L")):
                 if active_table == "online" and disappeared_aps:
@@ -1015,8 +1176,8 @@ def run_curses(
                         disappeared_networks=disappeared_aps,
                     )
                     message = (
-                        f"Selected {selected.get('ssid')} [{selected.get('bssid')}] — "
-                        f"press A for AIO ATTACK or q to return"
+                        f"MARKED {selected.get('ssid')} [{selected.get('bssid')}] — "
+                        f"A=AIO · q/Ctrl+C=done · still LIVE"
                     )
 
             elif key in (ord("a"), ord("A")):
@@ -1091,14 +1252,18 @@ def run_text_ui(
     seconds: int = 12,
     long_range: bool = False,
 ) -> int:
-    """Non-curses fallback when stdin/stdout is not a real TTY."""
+    """Non-curses fallback when stdin/stdout is not a real TTY.
+
+    Live scan runs **infinitely** until q / Ctrl+C. ``seconds`` is only the
+    initial warm-up before the first table dump (not a hard stop).
+    """
     print("=" * 65)
-    print(" KFIOSA WiFi Scan (text mode — live scanning)")
-    print(f" Interface: {iface}  duration≈{seconds}s"
+    print(" KFIOSA WiFi Scan (text mode — LIVE until q / Ctrl+C)")
+    print(f" Interface: {iface}  warm-up≈{seconds}s"
           f"{'  [LONG-RANGE]' if long_range else ''}")
     print("=" * 65)
-    print("[*] Prepping radio + starting live scan…")
-    disappeared_timeout = 60.0 if long_range else 20.0
+    print("[*] Prepping radio + starting live scan (never auto-stops)…")
+    disappeared_timeout = 120.0 if long_range else 90.0
     scanner = LiveScanner(iface, disappeared_timeout=disappeared_timeout)
     scanner.start()
     if scanner.prep_notes:
@@ -1107,21 +1272,15 @@ def run_text_ui(
     if scanner.iface != iface:
         print(f"[+] Using monitor interface: {scanner.iface}")
     try:
-        time.sleep(max(3, int(seconds)))
+        time.sleep(max(2, min(int(seconds), 15)))
         online_aps, disappeared_aps = scanner.poll()
 
-        # If live path still empty, stop live airodump and oneshot-retry
-        # (concurrent airodump on the same phy returns zero APs).
+        # If live path still empty, oneshot-seed without killing continuous scan
         if not online_aps and not disappeared_aps:
-            print("[*] Live catalog empty — stopping live capture, oneshot retry…")
+            print("[*] Live catalog empty — oneshot seed (live capture continues)…")
             if scanner.last_error:
                 print(f"[i] live error: {scanner.last_error}")
-            scanner.stop()
-            seed = _scan_airodump_oneshot(
-                scanner.iface, seconds=max(6, int(seconds))
-            )
-            if not seed:
-                seed = _scan_fallback(scanner.iface, seconds=min(15, int(seconds)))
+            seed = _scan_fallback(scanner.iface, seconds=min(12, int(seconds) or 8))
             now = time.time()
             for ap in seed:
                 bssid = ap.get("bssid")
@@ -1129,50 +1288,46 @@ def run_text_ui(
                     scanner._merge_ap(str(bssid).upper(), ap, now)
             online_aps, disappeared_aps = scanner.poll()
 
-        print(f"\n[+] TABLE ABOVE: ONLINE APs ({len(online_aps)}):\n")
-        if not online_aps:
-            print("  <no online APs currently detected>")
-        else:
-            for i, ap in enumerate(online_aps):
-                vendor = ap.get("vendor", "Unknown")
-                cli_cnt = ap.get("clients_count", 0)
-                print(
-                    f"  {i + 1:3d}. {(ap.get('ssid') or '<hidden>'):20s} "
-                    f"{(ap.get('bssid') or '?'):17s} "
-                    f"CH{ap.get('channel') or '?':>3}  "
-                    f"{ap.get('power') or '?':>4}dBm  "
-                    f"{(ap.get('encryption') or '?'):14s} "
-                    f"[{vendor} | {cli_cnt} clients]"
-                )
+        def _print_tables() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+            on, off = scanner.poll()
+            print(f"\n[+] ONLINE APs ({len(on)})  [LIVE]:\n")
+            if not on:
+                print("  <no online APs currently detected>")
+            else:
+                for i, ap in enumerate(on):
+                    vendor = ap.get("vendor", "Unknown")
+                    cli_cnt = ap.get("clients_count", 0)
+                    print(
+                        f"  {i + 1:3d}. {(ap.get('ssid') or '<hidden>'):20s} "
+                        f"{(ap.get('bssid') or '?'):17s} "
+                        f"CH{ap.get('channel') or '?':>3}  "
+                        f"{ap.get('power') or '?':>4}dBm  "
+                        f"{(ap.get('encryption') or '?'):14s} "
+                        f"[{vendor} | {cli_cnt} clients]"
+                    )
+            print(f"\n[+] DISAPPEARED / SEEN ({len(off)}):\n")
+            if not off:
+                print("  <no disappeared APs>")
+            else:
+                for i, ap in enumerate(off):
+                    vendor = ap.get("vendor", "Unknown")
+                    ago = ap.get("last_seen_ago", "?")
+                    cli_cnt = ap.get("clients_count", 0)
+                    print(
+                        f"  D{i + 1:>2d}. {(ap.get('ssid') or '<hidden>'):20s} "
+                        f"{(ap.get('bssid') or '?'):17s} "
+                        f"CH{ap.get('channel') or '?':>3}  "
+                        f"[Recon: Vendor={vendor}, Clients={cli_cnt}, LastSeen={ago}]"
+                    )
+            return on, off
 
+        online_aps, disappeared_aps = _print_tables()
         print(
-            f"\n[+] TABLE UNDER: DISAPPEARED APs WITH FETCHED RECON INFO ({len(disappeared_aps)}):\n"
-        )
-        if not disappeared_aps:
-            print("  <no disappeared APs>")
-        else:
-            for i, ap in enumerate(disappeared_aps):
-                vendor = ap.get("vendor", "Unknown")
-                ago = ap.get("last_seen_ago", "?")
-                cli_cnt = ap.get("clients_count", 0)
-                idx_str = f"D{i + 1}"
-                print(
-                    f"  {idx_str:>4s}. {(ap.get('ssid') or '<hidden>'):20s} "
-                    f"{(ap.get('bssid') or '?'):17s} "
-                    f"CH{ap.get('channel') or '?':>3}  "
-                    f"{ap.get('power') or '?':>4}dBm  "
-                    f"{(ap.get('encryption') or '?'):14s} "
-                    f"[Recon: Vendor={vendor}, Clients={cli_cnt}, LastSeen={ago}]"
-                )
-
-        print(
-            "\nCommands: number (e.g. 1 or D1) select target | "
-            "A <n> AIO ATTACK | c <n> view online clients | "
-            "C <n> view disappeared clients | q quit"
+            "\nCommands: number (1 / D1) select | A <n> AIO | "
+            "l refresh list | c <n> clients | q / Ctrl+C exit (scan stays LIVE until then)"
         )
         selected = None
         aio = False
-        all_listed = online_aps + disappeared_aps
 
         def _print_clients(ap: Optional[Dict[str, Any]], label: str) -> None:
             if ap is None:
@@ -1190,15 +1345,20 @@ def run_text_ui(
                     print(f"    {ci:2d}. {mac}  ({vendor})")
 
         while True:
+            # Refresh catalog each prompt so findings stay current
+            online_aps, disappeared_aps = scanner.poll()
             try:
                 raw = input("> ").strip()
             except (EOFError, KeyboardInterrupt):
-                print()
+                print("\n[i] Ctrl+C / EOF — leaving live scan")
                 break
             if not raw or raw.lower() in ("q", "quit", "exit"):
                 break
 
             lower = raw.lower()
+            if lower in ("l", "list", "ls", "r", "refresh"):
+                online_aps, disappeared_aps = _print_tables()
+                continue
             if lower.startswith("c ") or lower == "c":
                 parts = raw.split()
                 target_str = parts[1] if len(parts) > 1 else (
@@ -1229,16 +1389,19 @@ def run_text_ui(
                 print("invalid selection")
                 continue
 
-            selected = _pick_text_ap(raw, online_aps, disappeared_aps)
-            if selected:
+            picked = _pick_text_ap(raw, online_aps, disappeared_aps)
+            if picked:
+                selected = picked
                 clients = selected.get("clients") or []
                 print(
-                    f"[+] Selected {selected.get('ssid')} [{selected.get('bssid')}] — "
+                    f"[+] MARKED {selected.get('ssid')} [{selected.get('bssid')}] — "
                     f"{len(clients)} client(s) — "
-                    f"type A to launch AIO or q to save & quit"
+                    f"A for AIO, l to refresh list, q/Ctrl+C to exit (scan still LIVE)"
                 )
                 continue
-            print("enter a number (e.g. 1 or D1), A <n>, c <n>, C <n>, or q")
+            print(
+                "enter a number (1 or D1), A <n>, l refresh, c <n>, or q/Ctrl+C"
+            )
 
         _write_selection(
             out_path,

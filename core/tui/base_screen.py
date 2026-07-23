@@ -53,6 +53,8 @@ class BaseScreen:
         self.log_scroll: int = 0
         self._log_follow: bool = True  # auto-snap to tail when new lines arrive
         self._log_len_seen: int = len(self.activity_log) if self.activity_log else 0
+        # Key peeked during nav-burst drain (process next frame)
+        self._pending_key: Optional[int] = None
 
     # ------------------------------------------------------------------
     # Testability helpers
@@ -472,6 +474,53 @@ class BaseScreen:
 
     # ---- input handling (key dispatch) ----
 
+    def _nav_delta_for_key(self, key: int) -> int:
+        """Return -1/0/+1 for menu movement keys."""
+        if key in (curses.KEY_UP, ord("k"), ord("K")):
+            return -1
+        if key in (curses.KEY_DOWN, ord("j"), ord("J")):
+            return +1
+        return 0
+
+    def _drain_nav_burst(self, first_key: int) -> int:
+        """Coalesce mashed ↑/↓/j/k into one index move so lists never lag.
+
+        Reads any immediately-available same-axis keys with timeout 0 and
+        returns the net step count (can be large if operator held the key).
+        """
+        delta = self._nav_delta_for_key(first_key)
+        if delta == 0 or self.stdscr is None:
+            return delta
+        # Cap burst so a huge typeahead doesn't overshoot the whole list
+        steps = delta
+        try:
+            old_to = 100
+            try:
+                # best-effort remember; curses has no gettimeout on all builds
+                pass
+            except Exception:
+                pass
+            self.stdscr.timeout(0)
+            for _ in range(24):
+                k = read_curses_key(self.stdscr, timeout_ms=0)
+                if k == -1:
+                    break
+                d = self._nav_delta_for_key(k)
+                if d == 0:
+                    # Non-nav key peeked — push back is not available; handle
+                    # only pure bursts. Store as pending if needed.
+                    self._pending_key = k
+                    break
+                steps += d
+        except Exception:
+            pass
+        finally:
+            try:
+                self.stdscr.timeout(100)
+            except Exception:
+                pass
+        return steps
+
     def handle_input(self) -> Optional[str]:
         """Process keyboard keys. Dispatches by ``flow_state``:
         - ``targets``: digit keys select; UP/DOWN/ENTER/SPACE navigate & select; Q/BACK exits.
@@ -480,7 +529,11 @@ class BaseScreen:
         """
         if self.stdscr is None:
             return None
-        key = read_curses_key(self.stdscr)
+        # Consume a key that was peeked during a prior nav burst, if any
+        key = getattr(self, "_pending_key", None)
+        self._pending_key = None
+        if key is None:
+            key = read_curses_key(self.stdscr)
         if key == -1:
             return None
 
@@ -505,12 +558,13 @@ class BaseScreen:
                 idx = n - 1 if n >= 1 else 9  # '1'..'9' -> 0..8, '0' -> 9 (10th)
                 self.select_target_by_index(idx)
                 return None
-            if key in (curses.KEY_UP, ord("k"), ord("K")):
-                self.menu_index = max(0, self.menu_index - 1)
-                return None
-            if key in (curses.KEY_DOWN, ord("j"), ord("J")):
-                self.menu_index = min(len(self.menu_items) - 1,
-                                      self.menu_index + 1) if self.menu_items else 0
+            n_t = len(self.menu_items) if self.menu_items else 0
+            steps = self._nav_delta_for_key(key)
+            if steps:
+                # Coalesce held/mashed arrows so movement never feels sticky
+                steps = self._drain_nav_burst(key)
+                if n_t:
+                    self.menu_index = (self.menu_index + steps) % n_t
                 return None
             if key in (curses.KEY_ENTER, 10, 13, ord(" ")):
                 if 0 <= self.menu_index < len(self.menu_items):
@@ -532,10 +586,12 @@ class BaseScreen:
         # ---- menu / advanced view ----
         # j/k are vim-style aliases (also used by the agentic TUI debugger
         # when CSI arrow sequences are unreliable under pexpect/sudo).
-        if key in (curses.KEY_UP, ord("k"), ord("K")):
-            self.menu_index = (self.menu_index - 1) % len(self.menu_items) if self.menu_items else 0
-        elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
-            self.menu_index = (self.menu_index + 1) % len(self.menu_items) if self.menu_items else 0
+        steps = self._nav_delta_for_key(key)
+        if steps:
+            steps = self._drain_nav_burst(key)
+            n = len(self.menu_items) if self.menu_items else 0
+            if n:
+                self.menu_index = (self.menu_index + steps) % n
         elif key in (curses.KEY_ENTER, 10, 13, ord(" ")):
             # Execute selected menu handler
             if 0 <= self.menu_index < len(self.menu_items):
@@ -604,6 +660,10 @@ def read_curses_key(stdscr, timeout_ms: int = -1) -> int:
     \\x1bOA, \\x1bOB, \\x1bOC, \\x1bOD) when keypad(True) is unsupported or unmapped by terminfo.
     Returns curses.KEY_UP, curses.KEY_DOWN, curses.KEY_RIGHT, curses.KEY_LEFT,
     or the original key code.
+
+    Escape-sequence follow-up bytes use a short positive timeout (not 0):
+    ``timeout(0)`` drops delayed CSI sequences and returns bare ESC, which
+    many scan UIs treat as quit — making ↑/↓ feel "stuck" or instantly exit.
     """
     if stdscr is None:
         return -1
@@ -612,20 +672,48 @@ def read_curses_key(stdscr, timeout_ms: int = -1) -> int:
     except Exception:
         return -1
 
-    if key == 27:  # ESC character — check if ANSI arrow key sequence follows
+    if key == 27:  # ESC — may be start of CSI/SS3 arrow sequence
         try:
-            stdscr.timeout(0)
+            # Wait briefly for the rest of the sequence (xterm/tmux often lag).
+            stdscr.timeout(45)
             ch1 = stdscr.getch()
             if ch1 in (ord("["), ord("O")):
                 ch2 = stdscr.getch()
+                # Optional modifier prefix: ESC [ 1 ; 2 A  (shift-arrow etc.)
+                if ch2 in (ord("1"), ord("2"), ord("3"), ord("4"),
+                           ord("5"), ord("6"), ord("0")):
+                    ch_semi = stdscr.getch()
+                    if ch_semi == ord(";"):
+                        stdscr.getch()  # modifier digit
+                        ch2 = stdscr.getch()
+                    elif ch_semi in (ord("A"), ord("B"), ord("C"), ord("D"),
+                                     ord("a"), ord("b"), ord("c"), ord("d")):
+                        ch2 = ch_semi
                 if ch2 in (ord("A"), ord("a")):
                     return curses.KEY_UP
-                elif ch2 in (ord("B"), ord("b")):
+                if ch2 in (ord("B"), ord("b")):
                     return curses.KEY_DOWN
-                elif ch2 in (ord("C"), ord("c")):
+                if ch2 in (ord("C"), ord("c")):
                     return curses.KEY_RIGHT
-                elif ch2 in (ord("D"), ord("d")):
+                if ch2 in (ord("D"), ord("d")):
                     return curses.KEY_LEFT
+                # Home/End/PgUp/PgDn common forms: ESC [ H / F / 5~ / 6~
+                if ch2 in (ord("H"),):
+                    return curses.KEY_HOME
+                if ch2 in (ord("F"),):
+                    return curses.KEY_END
+                if ch2 in (ord("5"),):
+                    tilde = stdscr.getch()
+                    if tilde == ord("~"):
+                        return curses.KEY_PPAGE
+                if ch2 in (ord("6"),):
+                    tilde = stdscr.getch()
+                    if tilde == ord("~"):
+                        return curses.KEY_NPAGE
+            elif ch1 == -1:
+                # True ESC alone (no follow-up within window)
+                return 27
+            # Unknown after ESC — ignore follow-up noise, treat as ESC
         except Exception:
             pass
         finally:

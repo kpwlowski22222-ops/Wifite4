@@ -25,38 +25,59 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 
+_OUI_CACHE: Dict[str, str] = {}
+_OUI_BLE_FN = None  # type: ignore
+_OUI_BLE_TRIED = False
+
+_LOCAL_OUI = {
+    "00:1A:7D": "Cambridge Silicon",
+    "00:1B:DC": "Apple",
+    "00:25:00": "Apple",
+    "AC:BC:32": "Apple",
+    "A4:C1:38": "Xiaomi/Telink",
+    "C4:7C:8D": "Xiaomi",
+    "00:1E:C0": "Microchip",
+    "00:07:80": "Bluegiga",
+    "00:80:25": "Telit",
+    "B8:27:EB": "Raspberry Pi",
+    "DC:A6:32": "Raspberry Pi",
+    "E4:5F:01": "Raspberry Pi",
+    "00:1A:22": "Lexar/Unknown",
+    "00:18:31": "Texas Instruments",
+    "54:6C:0E": "Texas Instruments",
+    "00:60:37": "Philips",
+    "00:17:88": "Philips Hue",
+}
+
+
 def _get_oui_vendor(mac: str) -> str:
     if not mac or len(mac) < 8:
         return "Unknown"
-    try:
-        from core.ble.runner import _oui_vendor
-        v = _oui_vendor(mac)
-        if v and v != "Unknown":
-            return v
-    except Exception:
-        pass
-    # Small local fallback for common BLE chip vendors
     prefix = mac.upper()[:8]
-    _LOCAL = {
-        "00:1A:7D": "Cambridge Silicon",
-        "00:1B:DC": "Apple",
-        "00:25:00": "Apple",
-        "AC:BC:32": "Apple",
-        "A4:C1:38": "Xiaomi/Telink",
-        "C4:7C:8D": "Xiaomi",
-        "00:1E:C0": "Microchip",
-        "00:07:80": "Bluegiga",
-        "00:80:25": "Telit",
-        "B8:27:EB": "Raspberry Pi",
-        "DC:A6:32": "Raspberry Pi",
-        "E4:5F:01": "Raspberry Pi",
-        "00:1A:22": "Lexar/Unknown",
-        "00:18:31": "Texas Instruments",
-        "54:6C:0E": "Texas Instruments",
-        "00:60:37": "Philips",
-        "00:17:88": "Philips Hue",
-    }
-    return _LOCAL.get(prefix, "Unknown OUI")
+    hit = _OUI_CACHE.get(prefix)
+    if hit is not None:
+        return hit
+    if prefix in _LOCAL_OUI:
+        _OUI_CACHE[prefix] = _LOCAL_OUI[prefix]
+        return _LOCAL_OUI[prefix]
+    global _OUI_BLE_TRIED, _OUI_BLE_FN
+    if not _OUI_BLE_TRIED:
+        _OUI_BLE_TRIED = True
+        try:
+            from core.ble.runner import _oui_vendor as _fn
+            _OUI_BLE_FN = _fn
+        except Exception:
+            _OUI_BLE_FN = None
+    if _OUI_BLE_FN is not None:
+        try:
+            v = _OUI_BLE_FN(mac)
+            if v and v != "Unknown":
+                _OUI_CACHE[prefix] = v
+                return v
+        except Exception:
+            pass
+    _OUI_CACHE[prefix] = "Unknown OUI"
+    return "Unknown OUI"
 
 
 def _norm_addr(addr: str) -> str:
@@ -88,6 +109,8 @@ def _write_selection(
 class LiveBLEScanner:
     """Background live BLE discovery with online / disappeared tables."""
 
+    MAX_CATALOG = 200
+
     def __init__(
         self,
         adapter: Optional[str] = None,
@@ -96,7 +119,8 @@ class LiveBLEScanner:
     ):
         self.adapter = adapter
         self.disappeared_timeout = float(disappeared_timeout)
-        self.pulse_s = max(3, int(pulse_s))
+        # Shorter pulses = snappier UI; discovery still continuous in bg
+        self.pulse_s = max(2, min(int(pulse_s), 6))
         self.device_catalog: Dict[str, Dict[str, Any]] = {}
         self.last_seen_ts: Dict[str, float] = {}
         self._thread: Optional[threading.Thread] = None
@@ -109,6 +133,12 @@ class LiveBLEScanner:
         self._did_prep = False
         self._scanner = None
         self._enricher: Optional[Any] = None
+        self._poll_cache: Optional[
+            Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]
+        ] = None
+        self._poll_cache_ts: float = 0.0
+        self._poll_cache_ttl: float = 0.15
+        self._catalog_gen: int = 0
 
     def start(self) -> None:
         self._running = True
@@ -191,6 +221,7 @@ class LiveBLEScanner:
         addr = _norm_addr(addr)
         if not addr:
             return
+        changed = False
         if addr not in self.device_catalog:
             vendor = _get_oui_vendor(addr)
             entry = dict(dev)
@@ -203,69 +234,105 @@ class LiveBLEScanner:
             except Exception:
                 pass
             self.device_catalog[addr] = entry
+            changed = True
         else:
             cur = self.device_catalog[addr]
             name = dev.get("name") or ""
-            if name and name != "Unknown":
+            if name and name != "Unknown" and cur.get("name") != name:
                 cur["name"] = name
+                changed = True
             rssi = dev.get("rssi")
             if rssi is not None and (
                 cur.get("rssi") is None or rssi > cur.get("rssi", -999)
             ):
                 cur["rssi"] = rssi
             services = list(cur.get("services") or [])
+            svc_grew = False
             for s in dev.get("services") or []:
                 if s not in services:
                     services.append(s)
-            cur["services"] = services
+                    svc_grew = True
+            if svc_grew:
+                cur["services"] = services
+                changed = True
             for k in ("manufacturer_data", "tx_power", "address_type",
                       "backend", "seen_by", "connectable", "service_uuids"):
                 if dev.get(k) not in (None, "", [], {}):
                     if k == "seen_by":
                         merged = set(cur.get("seen_by") or [])
+                        before = len(merged)
                         for b in dev.get("seen_by") or []:
                             merged.add(b)
-                        cur["seen_by"] = sorted(merged)
-                    else:
+                        if len(merged) != before:
+                            cur["seen_by"] = sorted(merged)
+                            changed = True
+                    elif cur.get(k) != dev.get(k):
                         cur[k] = dev[k]
-            try:
-                from core.scanners.live_enrich import passive_enrich_ble
-                passive_enrich_ble(cur)
-            except Exception:
-                pass
+                        changed = True
+            if changed:
+                try:
+                    from core.scanners.live_enrich import passive_enrich_ble
+                    passive_enrich_ble(cur)
+                except Exception:
+                    pass
         self.last_seen_ts[addr] = now
+        if changed:
+            self._catalog_gen += 1
+            self._poll_cache = None
+            if len(self.device_catalog) > self.MAX_CATALOG:
+                self._evict_oldest(now)
+
+    def _evict_oldest(self, now: float) -> None:
+        timeout = float(self.disappeared_timeout)
+        offline = [
+            (a, self.last_seen_ts.get(a, 0.0))
+            for a in self.device_catalog
+            if (now - self.last_seen_ts.get(a, 0.0)) > timeout
+        ]
+        offline.sort(key=lambda x: x[1])
+        over = len(self.device_catalog) - self.MAX_CATALOG
+        for a, _ in offline[: max(0, over + 10)]:
+            self.device_catalog.pop(a, None)
+            self.last_seen_ts.pop(a, None)
 
     def poll(self) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         now = time.time()
+        if (
+            self._poll_cache is not None
+            and (now - self._poll_cache_ts) < self._poll_cache_ttl
+        ):
+            return self._poll_cache
+
         online: List[Dict[str, Any]] = []
         disappeared: List[Dict[str, Any]] = []
         with self._lock:
             items = list(self.device_catalog.items())
             last_map = dict(self.last_seen_ts)
-        for addr, dev in items:
+        for addr, base in items:
             last_ts = last_map.get(addr, 0.0)
             ago = max(0, int(now - last_ts))
-            dev = dict(dev)
+            # Shallow view for UI — avoid full dict copy of large fields
+            dev = base
             dev["last_seen_ago"] = f"{ago}s ago"
             dev["last_seen_ts"] = last_ts
-            vendor = dev.get("vendor") or _get_oui_vendor(addr)
-            dev["vendor"] = vendor
-            try:
-                from core.scanners.live_enrich import passive_enrich_ble
-                passive_enrich_ble(dev)
-            except Exception:
-                pass
-            svc_n = len(dev.get("services") or [])
-            dev["recon_info"] = {
-                "vendor": vendor,
-                "services_count": svc_n,
-                "services": list(dev.get("services") or [])[:8],
-                "rssi": dev.get("rssi"),
-                "last_seen_ago": dev["last_seen_ago"],
-                "seen_by": list(dev.get("seen_by") or []),
-                "badges": list(dev.get("recon_badges") or []),
-                "enrich_methods": list(dev.get("enrich_methods") or []),
-            }
+            if not dev.get("vendor"):
+                dev["vendor"] = _get_oui_vendor(addr)
+            ri = dev.get("recon_info")
+            if not isinstance(ri, dict) or ri.get("_ts", 0) < last_ts:
+                svc = list(dev.get("services") or [])[:8]
+                dev["recon_info"] = {
+                    "vendor": dev.get("vendor"),
+                    "services_count": len(dev.get("services") or []),
+                    "services": svc,
+                    "rssi": dev.get("rssi"),
+                    "last_seen_ago": dev["last_seen_ago"],
+                    "seen_by": list(dev.get("seen_by") or []),
+                    "badges": list(dev.get("recon_badges") or []),
+                    "enrich_methods": list(dev.get("enrich_methods") or []),
+                    "_ts": last_ts,
+                }
+            else:
+                ri["last_seen_ago"] = dev["last_seen_ago"]
             if (now - last_ts) <= self.disappeared_timeout:
                 dev["status"] = "online"
                 online.append(dev)
@@ -280,6 +347,8 @@ class LiveBLEScanner:
         disappeared.sort(
             key=lambda d: d.get("last_seen_ts") or 0.0, reverse=True
         )
+        self._poll_cache = (online, disappeared)
+        self._poll_cache_ts = now
         return online, disappeared
 
     def stop(self) -> None:

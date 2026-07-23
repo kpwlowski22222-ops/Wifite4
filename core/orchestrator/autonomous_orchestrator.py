@@ -4760,6 +4760,22 @@ class AutonomousOrchestrator:
         method = (args.get("method") or step.get("tool") or "").strip()
         if method.startswith("forensic_module_"):
             method = method[len("forensic_module_"):]
+        if not method or method.lower() in ("auto", "poly", "adaptive"):
+            try:
+                from core.poly.domain_adapt import pick as domain_pick
+                p = domain_pick(
+                    "forensics" if not str(method).startswith("anti_")
+                    else "anti_forensics",
+                    seed, phase="recon",
+                )
+                if p.get("ok") and p.get("method"):
+                    method = str(p["method"])
+                    self._emit(
+                        f"[poly] forensic_module auto-pick → {method} "
+                        f"({(p.get('rationale') or '')[:80]})"
+                    )
+            except Exception as e:  # noqa: BLE001
+                self._emit(f"[i] forensic poly pick: {e}")
         if not method:
             self._emit("[-] forensic_module: method missing in step")
             report["skipped"].append("forensic_module: method missing")
@@ -4967,6 +4983,21 @@ class AutonomousOrchestrator:
         method = (args.get("method") or step.get("tool") or "").strip()
         if method.startswith("post_exploit_anti_forensic_"):
             method = method[len("post_exploit_anti_forensic_"):]
+        if not method or method.lower() in ("auto", "poly", "adaptive"):
+            try:
+                from core.poly.domain_adapt import pick as domain_pick
+                seed_af = dict(seed or {})
+                seed_af.setdefault("os", __import__("platform").system())
+                seed_af.setdefault("opsec", True)
+                p = domain_pick("anti_forensics", seed_af, phase="cleanup")
+                if p.get("ok") and p.get("method"):
+                    method = str(p["method"])
+                    self._emit(
+                        f"[poly] anti_forensic auto-pick → {method} "
+                        f"({(p.get('rationale') or '')[:80]})"
+                    )
+            except Exception as e:  # noqa: BLE001
+                self._emit(f"[i] anti_forensic poly pick: {e}")
         if method not in af.POST_EXPLOIT_ANTI_FORENSIC_METHODS:
             self._emit(
                 f"[-] post_exploit_anti_forensic: unknown method {method!r}; "

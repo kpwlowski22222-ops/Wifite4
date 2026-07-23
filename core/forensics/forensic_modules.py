@@ -1590,7 +1590,27 @@ FORENSIC_MODULES_PROBES: List[Dict[str, Any]] = [
 def run_module(method: str, args: Optional[Dict[str, Any]] = None,
                **_: Any) -> Dict[str, Any]:
     """Module-level single-module entrypoint. ``args`` carries per-
-    module inputs. Never raises. Returns the standard envelope."""
+    module inputs.
+
+    Polymorphic / target-adaptive: empty/auto method picks based on path
+    type (pcap → pcap_summary, image → exif, …) via domain_adapt.
+    Never raises. Returns the standard envelope."""
+    poly_meta: Dict[str, Any] = {}
+    try:
+        from core.poly.domain_adapt import prepare_run, stamp_result
+        # anti_* methods are destructive lab ops — route domain accordingly
+        a0 = dict(args or {})
+        m0 = (method or "").strip()
+        if m0.startswith("anti_") or a0.get("anti_forensic"):
+            dom = "anti_forensics"
+        else:
+            dom = "forensics"
+        method, args, poly_meta = prepare_run(
+            dom, m0, a0, phase="recon" if dom == "forensics" else "cleanup",
+            auto_pick=True,
+        )
+    except Exception:
+        args = args or {}
     if method not in FORENSIC_MODULE_FUNCTIONS:
         return {
             "name": f"forensic_module_{method}",
@@ -1600,9 +1620,15 @@ def run_module(method: str, args: Optional[Dict[str, Any]] = None,
             "data": {},
             "risk_level": "read",
             "lab_only": False,
+            "domain_poly": poly_meta or None,
         }
     try:
-        return FORENSIC_MODULE_FUNCTIONS[method](args or {})
+        res = FORENSIC_MODULE_FUNCTIONS[method](args or {})
+        try:
+            from core.poly.domain_adapt import stamp_result as _st
+            return _st(res, poly_meta)
+        except Exception:
+            return res
     except Exception as e:  # noqa: BLE001
         return {
             "name": f"forensic_module_{method}",
@@ -1612,6 +1638,7 @@ def run_module(method: str, args: Optional[Dict[str, Any]] = None,
             "data": {},
             "risk_level": "read",
             "lab_only": False,
+            "domain_poly": poly_meta or None,
         }
 
 

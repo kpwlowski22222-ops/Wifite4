@@ -183,7 +183,8 @@ def test_wifi_main_long_range_threads_long_timeout(monkeypatch, tmp_path):
     rc = wse.main(["--iface", "wlan0mon", "--out", str(out),
                    "--text", "--seconds", "1", "--long-range"])
     assert rc == 0
-    assert cap["timeout"] == 60.0  # long-range keeps APs longer
+    # Infinite live scan: long-range keeps disappeared APs on screen longer
+    assert cap["timeout"] == 120.0
 
 
 def test_wifi_main_default_timeout_is_longer_now(monkeypatch, tmp_path):
@@ -194,7 +195,8 @@ def test_wifi_main_default_timeout_is_longer_now(monkeypatch, tmp_path):
     rc = wse.main(["--iface", "wlan0mon", "--out", str(out),
                    "--text", "--seconds", "1"])
     assert rc == 0
-    assert cap["timeout"] == 20.0  # default (was 6.0 before long-range work)
+    # Default text UI: long disappeared window so findings stay browsable
+    assert cap["timeout"] == 90.0
 
 
 def test_wifi_clients_expand_key_shows_associated_clients():
@@ -212,8 +214,14 @@ def test_wifi_clients_expand_key_shows_associated_clients():
     online, _ = scanner.poll()
     assert online[0]["bssid"] == "00:1A:E9:AA:BB:CC"
     assert online[0]["clients_count"] == 2
-    # The panel iterates ap['clients'] directly; ensure it's a MAC list.
-    assert all(isinstance(m, str) and ":" in m for m in online[0]["clients"])
+    # Panel accepts MAC strings or {mac: ...} dicts (live_enrich normalizes).
+    def _mac(c):
+        if isinstance(c, str):
+            return c
+        if isinstance(c, dict):
+            return str(c.get("mac") or c.get("station") or "")
+        return str(c)
+    assert all(":" in _mac(m) for m in online[0]["clients"])
 
 
 def test_wifi_text_ui_client_view_command(monkeypatch, tmp_path, capsys):

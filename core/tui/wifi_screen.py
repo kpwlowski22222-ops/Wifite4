@@ -1084,7 +1084,7 @@ class WiFiScreen(BaseScreen):
             if prefer_embedded_scan() and self.stdscr is not None:
                 self.activity_log.append(
                     f"[*] In-TUI WiFi scan on {self.interface} "
-                    "(same style as main dashboard; q=back)"
+                    "(LIVE until q/Ctrl+C; ENTER mark · A AIO · ↑↓ move)"
                 )
                 sel = run_embedded_wifi_scan(
                     self.stdscr,
@@ -1092,17 +1092,64 @@ class WiFiScreen(BaseScreen):
                     out_path=out_path,
                     activity_log=self.activity_log,
                 )
+                # Load full catalog so operator can move across findings
+                networks: list = []
+                aio_flag = False
+                try:
+                    import json as _json
+                    from pathlib import Path as _P
+                    p = _P(out_path)
+                    if p.is_file():
+                        data = _json.loads(p.read_text(encoding="utf-8"))
+                        networks = list(data.get("networks") or [])
+                        aio_flag = bool(data.get("aio_attack"))
+                        if not sel and data.get("selected"):
+                            sel = data.get("selected")
+                except Exception:
+                    pass
                 if sel:
                     sel = dict(sel)
                     sel["interface"] = self.interface
+                    aio_flag = aio_flag or bool(sel.get("aio_attack"))
                     self.selected_target = sel
-                    self.scan_results = [sel]
-                    self.targets = [sel]
+                    catalog = networks if networks else [sel]
+                    # Ensure selected is first / present
+                    bss = str(sel.get("bssid") or "").upper()
+                    rest = [
+                        n for n in catalog
+                        if str((n or {}).get("bssid") or "").upper() != bss
+                    ]
+                    self.scan_results = [sel] + rest
+                    self.targets = list(self.scan_results)
+                    if aio_flag:
+                        self.activity_log.append(
+                            f"[+] Selected AP: {sel.get('ssid') or '<hidden>'} "
+                            f"[{sel.get('bssid')}] — starting engagement"
+                        )
+                        self.aio_attack()
+                    else:
+                        self.activity_log.append(
+                            f"[+] Selected AP: {sel.get('ssid') or '<hidden>'} "
+                            f"[{sel.get('bssid')}] · "
+                            f"{len(self.targets)} target(s) — use ↑↓ / "
+                            f"Start engagement when ready"
+                        )
+                        # Open navigable findings list (menu no longer stuck)
+                        try:
+                            self._enter_targets_view()
+                        except Exception:
+                            pass
+                elif networks:
+                    self.scan_results = list(networks)
+                    self.targets = list(networks)
                     self.activity_log.append(
-                        f"[+] Selected AP: {sel.get('ssid') or '<hidden>'} "
-                        f"[{sel.get('bssid')}] — starting engagement"
+                        f"[i] Scan catalog: {len(networks)} AP(s) — "
+                        f"no selection; browse targets list"
                     )
-                    self.aio_attack()
+                    try:
+                        self._enter_targets_view()
+                    except Exception:
+                        pass
                 return
         except Exception as e:
             self.activity_log.append(

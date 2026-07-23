@@ -99,6 +99,64 @@ def _strip_code_fence(text: str) -> str:
     return s.strip()
 
 
+def _extract_json_object(text: str) -> str:
+    """Best-effort pull of a JSON object from LLM prose / fences.
+
+    Returns a string ready for ``json.loads`` (may still fail). Empty
+    string when no object-looking span is found.
+    """
+    raw = _strip_code_fence(text)
+    if not raw:
+        return ""
+    # Already pure JSON?
+    try:
+        json.loads(raw)
+        return raw
+    except Exception:
+        pass
+    # First balanced {...} span
+    start = raw.find("{")
+    if start < 0:
+        return ""
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(start, len(raw)):
+        ch = raw[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                candidate = raw[start: i + 1]
+                try:
+                    json.loads(candidate)
+                    return candidate
+                except Exception:
+                    # keep scanning for a later complete object
+                    start2 = raw.find("{", i + 1)
+                    if start2 < 0:
+                        return candidate  # let caller surface JSONDecodeError
+                    start = start2
+                    depth = 0
+                    in_str = False
+                    esc = False
+                    # restart from new start — simpler: recurse on remainder
+                    rest = _extract_json_object(raw[start2:])
+                    return rest or candidate
+    return ""
+
+
 @dataclass
 class ZeroDayConcept:
     """A 0-day concept draft. Mutable; the store updates ``status`` /
@@ -329,13 +387,23 @@ class ZeroDayProposer:
                 except Exception:
                     pass
 
-        raw = _strip_code_fence(text)
+        raw = _extract_json_object(text) or _strip_code_fence(text)
         if not raw:
             raise ZeroDayRefusal("LLM returned empty response")
         try:
             obj = json.loads(raw)
         except json.JSONDecodeError as e:
-            raise ZeroDayRefusal(f"LLM returned non-JSON: {e}") from e
+            # One more pass: strip leading/trailing non-JSON noise
+            repaired = _extract_json_object(text)
+            if repaired and repaired != raw:
+                try:
+                    obj = json.loads(repaired)
+                except json.JSONDecodeError:
+                    raise ZeroDayRefusal(
+                        f"LLM returned non-JSON: {e}"
+                    ) from e
+            else:
+                raise ZeroDayRefusal(f"LLM returned non-JSON: {e}") from e
         if isinstance(obj, dict) and obj.get("refusal") is True:
             raise ZeroDayRefusal(
                 f"LLM refused: {obj.get('reason', 'no reason given')}"
