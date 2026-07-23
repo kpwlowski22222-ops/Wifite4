@@ -22,6 +22,7 @@ from core.tui.osint_web_screen import OSINTWebScreen
 from core.tui.post_exploit_screen import PostExploitScreen
 from core.tui.ble_screen import BLEScreen
 from core.tui.settings_screen import SettingsScreen
+from core.tui.learn_screen import LearnScreen
 from core.ai_backend.zero_day_exploit import (
     ZeroDayExploitStore,
     ZeroDayExploitBuilder,
@@ -52,6 +53,7 @@ class KfiosaDashboard:
             ("BLE", "ble"),
             ("OSINT People", "osint_people"),
             ("OSINT Web", "osint_web"),
+            ("Learn", "learn"),
             ("OPEN DASHBOARD", "open_dashboard"),
             ("Settings", "settings"),
             ("Quit", "quit"),
@@ -1156,6 +1158,7 @@ class KfiosaDashboard:
             "osint_web": OSINTWebScreen,
             "post_exploit": PostExploitScreen,
             "ble": BLEScreen,
+            "learn": LearnScreen,
             "settings": SettingsScreen,
         }
 

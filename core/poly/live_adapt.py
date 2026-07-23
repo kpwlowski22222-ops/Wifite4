@@ -20,6 +20,23 @@ def plan_creativity() -> str:
     return "high"
 
 
+def _client_count(t: Dict[str, Any], data: Dict[str, Any]) -> int:
+    for src in (t.get("clients"), data.get("clients"), t.get("client_count"), data.get("client_count")):
+        if isinstance(src, list):
+            return len(src)
+        if isinstance(src, dict):
+            try:
+                return int((src.get("data") or src).get("count") or src.get("count") or 0)
+            except Exception:
+                return 0
+        if src is not None and src != "":
+            try:
+                return int(src)
+            except (TypeError, ValueError):
+                continue
+    return 0
+
+
 def observe(
     target: Optional[Dict[str, Any]] = None,
     last_result: Optional[Dict[str, Any]] = None,
@@ -38,7 +55,7 @@ def observe(
             or "sae" in str(t.get("encryption") or t.get("enc") or "").lower()
             or "wpa3" in str(t.get("encryption") or "").lower()
         ),
-        "clients": int(t.get("clients") or t.get("client_count") or data.get("clients") or 0),
+        "clients": _client_count(t, data),
         "rssi": t.get("rssi") or data.get("rssi"),
         "injection": bool(
             (t.get("adapter_caps") or {}).get("injection_capable")
