@@ -303,7 +303,13 @@ class KfiosaDashboard:
                     from core.mcp import call_mcp_tool as _call_mcp_tool
                 class _InProcessMCPClient:
                     def call(self, tool, args):
-                        return _call_mcp_tool(tool, args or {})
+                        # record=False: orchestrator records with domain/target
+                        try:
+                            return _call_mcp_tool(
+                                tool, args or {}, record=False,
+                            )
+                        except TypeError:
+                            return _call_mcp_tool(tool, args or {})
                 mcp_client = _InProcessMCPClient()
                 self.activity_log.append(
                     "[+] In-process MCP client wired (call_mcp_tool)"

@@ -3064,6 +3064,34 @@ class AutonomousOrchestrator:
             handler(step, seed, report)
             return
         if action == "mcp_call":
+            domain = str(
+                report.get("domain")
+                or getattr(self, "_current_domain", "")
+                or seed.get("domain")
+                or ""
+            ) if isinstance(seed, dict) else str(
+                report.get("domain") or getattr(self, "_current_domain", "") or ""
+            )
+
+            def _ltm_record(tool_name: str, res: Any, a: Any = None) -> None:
+                """Remember success/failure so later plans AVOID bad patterns."""
+                try:
+                    from core.mcp.tool_memory import record_from_result
+                    record_from_result(
+                        str(tool_name or ""),
+                        res,
+                        args=a if isinstance(a, dict) else {},
+                        domain=domain,
+                        target_key=str(
+                            (seed or {}).get("bssid")
+                            or (seed or {}).get("target_key")
+                            or ""
+                        ) if isinstance(seed, dict) else "",
+                        source="orchestrator.mcp_call",
+                    )
+                except Exception:  # noqa: BLE001
+                    pass
+
             if self.mcp_client is not None:
                 try:
                     res = self.mcp_client.call(tool, args)
@@ -3076,6 +3104,9 @@ class AutonomousOrchestrator:
                     }
                     report["executed"].append(entry)
                     self._record_access(report, entry)
+                    # Client may already record via call_mcp_tool; still
+                    # record for remote MCP clients that skip LTM.
+                    _ltm_record(tool, res, args)
                     # A session_id in the result flips report["access"];
                     # the end-of-chain gain-access hook
                     # (_maybe_run_gain_access_hooks) then drives auto
@@ -3084,6 +3115,7 @@ class AutonomousOrchestrator:
                     return
                 except Exception as e:
                     self._emit(f"[!] mcp_client.call({tool}) failed: {e}; falling through")
+                    _ltm_record(tool, {"ok": False, "error": str(e)[:200]}, args)
             # Default path: registry'd MCP wrappers (airodump-ng, etc.).
             # Without this, tool names like "airodump-ng" fell through to
             # _execute_step as action labels and returned
@@ -3096,7 +3128,11 @@ class AutonomousOrchestrator:
                         or (args or {}).get("timeout")
                         or 30
                     )
-                    res = call_mcp_tool(tool, args or {}, timeout=timeout)
+                    # record=False here — we _ltm_record below with domain/target
+                    res = call_mcp_tool(
+                        tool, args or {}, timeout=timeout,
+                        record=False, domain=domain,
+                    )
                     self._emit(
                         f"[+] mcp_call {tool}: ok={res.get('ok')} "
                         f"via call_mcp_tool"
@@ -3112,12 +3148,14 @@ class AutonomousOrchestrator:
                     }
                     report["executed"].append(entry)
                     self._record_access(report, entry)
+                    _ltm_record(tool, res, args)
                     return
             except Exception as e:  # noqa: BLE001
                 self._emit(
                     f"[!] call_mcp_tool({tool}) failed: {e}; "
                     f"falling through to legacy"
                 )
+                _ltm_record(tool, {"ok": False, "error": str(e)[:200]}, args)
             # Legacy path: map known tool aliases into _execute_step
             # action names (airodump-ng → airodump, etc.).
             _TOOL_ACTION_ALIASES = {

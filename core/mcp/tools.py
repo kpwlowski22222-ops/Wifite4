@@ -777,30 +777,59 @@ def mcp_tools_context_block(domain: Optional[str] = None,
 
     Returns ``""`` on any failure (never raises). The chain planner
     injects this so the LLM can pick a tool whose schema matches the
-    target/CVE and inherit its ``risk_level``."""
-    try:
-        import json as _json
-        tools = list_mcp_tools(domain)
-        lines: List[str] = []
-        for t in tools[:limit]:
-            schema = t.get("inputSchema") or {}
+    target/CVE and inherit its ``risk_level``.
+
+    Cached ~60s per (domain, limit) — tool inventory is stable within
+    an engagement and this block is rebuilt on every ``plan()`` call.
+    """
+    def _build() -> str:
+        try:
+            import json as _json
+            tools = list_mcp_tools(domain)
+            lines: List[str] = [
+                "Fluent: flow_recommend → flow_invoke / flow_pipeline; "
+                "memory_avoid / memory_works for learned lessons.",
+            ]
+            for t in tools[:limit]:
+                schema = t.get("inputSchema") or {}
+                try:
+                    schema_s = _json.dumps(schema) if schema else "{}"
+                except Exception:  # noqa: BLE001
+                    schema_s = str(schema)[:200]
+                ex = t.get("examples") or []
+                ex_s = "; ".join(str(e) for e in ex[:2])
+                desc = (t.get("description") or "").strip().replace("\n", " ")
+                lines.append(
+                    f"- {t.get('name')} (risk={t.get('risk_level')}): "
+                    f"{desc[:160]}"
+                )
+                lines.append(f"    schema: {schema_s[:300]}")
+                if ex_s:
+                    lines.append(f"    examples: {ex_s[:200]}")
+            # Append long-term AVOID / WORKS lessons for this domain
             try:
-                schema_s = _json.dumps(schema) if schema else "{}"
+                from core.mcp.tool_memory import (
+                    avoid_list_for_prompt, works_list_for_prompt,
+                )
+                w = works_list_for_prompt(domain=domain or "", limit=4)
+                a = avoid_list_for_prompt(domain=domain or "", limit=5)
+                if w:
+                    lines.append(w)
+                if a:
+                    lines.append(a)
             except Exception:  # noqa: BLE001
-                schema_s = str(schema)[:200]
-            ex = t.get("examples") or []
-            ex_s = "; ".join(str(e) for e in ex[:2])
-            desc = (t.get("description") or "").strip().replace("\n", " ")
-            lines.append(
-                f"- {t.get('name')} (risk={t.get('risk_level')}): "
-                f"{desc[:160]}"
-            )
-            lines.append(f"    schema: {schema_s[:300]}")
-            if ex_s:
-                lines.append(f"    examples: {ex_s[:200]}")
-        return "\n".join(lines)
-    except Exception:  # noqa: BLE001 — never raise; empty block is safe
-        return ""
+                pass
+            return "\n".join(lines)
+        except Exception:  # noqa: BLE001 — never raise; empty block is safe
+            return ""
+
+    try:
+        from core.utils.hot_cache import GLOBAL_CACHE
+        return GLOBAL_CACHE.get_or_set(
+            "mcp_tools_block", (domain or "", int(limit)), _build, ttl_s=60.0,
+        )
+    except Exception:
+        return _build()
 
 
 # ---------------------------------------------------------------------------
@@ -2062,10 +2091,61 @@ def get_mcp_tool(name: str) -> Optional[Dict[str, Any]]:
 
 
 def call_mcp_tool(name: str, args: Dict[str, Any],
-                  timeout: int = 30) -> Dict[str, Any]:
+                  timeout: int = 30,
+                  *,
+                  record: bool = True,
+                  domain: str = "") -> Dict[str, Any]:
     """Dispatch an MCP tool call to its wrapper. Returns the wrapper's
-    ``run()`` result dict."""
+    ``run()`` result dict.
+
+    When ``record=True`` (default), outcomes feed MemOS LTM so later
+    plans learn WORKS / AVOID patterns. Set ``record=False`` when the
+    outer MCP ``tools/call`` handler already records (avoids doubles).
+    """
+    import time as _time
     w = KALI_TOOL_WRAPPERS.get(name)
     if w is None:
-        return {"ok": False, "error": f"unknown MCP tool: {name}"}
-    return w.run(args, timeout=timeout)
+        out: Dict[str, Any] = {"ok": False, "error": f"unknown MCP tool: {name}"}
+        if record:
+            try:
+                from core.mcp.tool_memory import record_from_result
+                record_from_result(
+                    name, out, args=args,
+                    domain=domain or str((args or {}).get("domain") or ""),
+                    source="call_mcp_tool",
+                )
+            except Exception:  # noqa: BLE001
+                pass
+        return out
+
+    t0 = _time.time()
+    try:
+        out = w.run(args, timeout=timeout)
+    except Exception as e:
+        # Record failure then re-raise (callers / tests expect propagation)
+        if record:
+            try:
+                from core.mcp.tool_memory import record_from_result
+                record_from_result(
+                    name,
+                    {"ok": False, "error": str(e)[:200]},
+                    args=args,
+                    domain=domain or str((args or {}).get("domain") or ""),
+                    duration_s=_time.time() - t0,
+                    source="call_mcp_tool",
+                )
+            except Exception:  # noqa: BLE001
+                pass
+        raise
+    duration = _time.time() - t0
+    if record:
+        try:
+            from core.mcp.tool_memory import record_from_result
+            dom = domain or str((args or {}).get("domain") or "")
+            record_from_result(
+                name, out, args=args, domain=dom,
+                duration_s=duration, source="call_mcp_tool",
+            )
+        except Exception:  # noqa: BLE001
+            pass
+    return out if isinstance(out, dict) else {"ok": True, "result": out}

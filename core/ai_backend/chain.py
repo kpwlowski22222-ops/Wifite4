@@ -3064,8 +3064,19 @@ class AIChainPlanner:
             "Always: CVE lookup (NVD key only) → target-adaptive exploit "
             "draft (cve_to_exploit) when CVEs exist; use run_toolbox / "
             "mcp_call for catalog/ toolboxes/ and Kali tools; poly_adapt "
-            "before heavy steps; never invent CVEs/PSKs/access.\n\n"
+            "before heavy steps; never invent CVEs/PSKs/access.\n"
+            "Fluent MCP: prefer flow_recommend(goal) then flow_invoke / "
+            "flow_pipeline; honor memory AVOID lessons (failed prior calls) "
+            "and prefer WORKS patterns from long-term memory.\n\n"
         )
+        # Inject learned WORKS / AVOID from MCP tool memory (MemOS LTM)
+        try:
+            from core.mcp.flow import prepare_context
+            flow_ctx = prepare_context(str(domain or ""), tool_limit=12)
+            if flow_ctx:
+                eng_block += "MCP FLOW + LTM LESSONS:\n" + flow_ctx[:2500] + "\n\n"
+        except Exception:  # noqa: BLE001
+            pass
 
         creat = str(ctx.get("plan_creativity") or "high")
         live = ctx.get("live_adapt") if isinstance(ctx.get("live_adapt"), dict) else {}

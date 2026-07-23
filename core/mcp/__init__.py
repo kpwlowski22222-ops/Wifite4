@@ -37,6 +37,9 @@ Exposed tools (MCP ``tools/call``):
     catalog_get / catalog_run / catalog_surfaces / catalog_merge_registry /
     catalog_count / catalog_by_kind / catalog_by_tag / catalog_random /
     catalog_export_ids / catalog_page
+    flow_recommend / flow_invoke / flow_pipeline  -> fluent multi-tool data flow
+    memory_lessons / memory_avoid / memory_works / memory_distill
+                                                  -> LTM success + failure lessons
     catalog.<name>                             -> per-entry virtual tools (dynamic tools/list)
 
 Exposed resources (MCP ``resources/read``):
@@ -63,7 +66,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 PROTOCOL_VERSION = "2024-11-05"
-SERVER_INFO = {"name": "kfiosa-tool-mcp", "version": "1.2.0"}
+SERVER_INFO = {"name": "kfiosa-tool-mcp", "version": "1.3.0"}
 
 
 # ---------------------------------------------------------------------------
@@ -259,8 +262,9 @@ def t_call_tool(args: Dict[str, Any]) -> Dict[str, Any]:
         from core.mcp.tools import call_mcp_tool, get_mcp_tool
     except Exception as e:  # noqa: BLE001
         return {"ok": False, "error": f"mcp.tools import: {e}"}
+    # record=False: tools/call handler records once into LTM
     if get_mcp_tool(name) is not None:
-        return call_mcp_tool(name, tool_args, timeout=timeout)
+        return call_mcp_tool(name, tool_args, timeout=timeout, record=False)
     # Fallback: treat as catalog name
     try:
         from core.mcp.catalog_bridge import run_catalog_tool, get_catalog_tool
@@ -271,7 +275,7 @@ def t_call_tool(args: Dict[str, Any]) -> Dict[str, Any]:
             )
     except Exception:
         pass
-    return call_mcp_tool(name, tool_args, timeout=timeout)
+    return call_mcp_tool(name, tool_args, timeout=timeout, record=False)
 
 
 def t_run_tool(args: Dict[str, Any]) -> Dict[str, Any]:
@@ -530,6 +534,113 @@ MCP_TOOLS: List[Dict[str, Any]] = [
             },
         },
     },
+    {
+        "name": "flow_recommend",
+        "description": (
+            "Fluent tool picker: ranks catalog+registry+MCP wrappers for a goal, "
+            "boosts learned WORKS patterns and demotes AVOID failures."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "required": ["goal"],
+            "properties": {
+                "goal": {"type": "string", "description": "what the AI wants to do"},
+                "domain": {"type": "string", "description": "wifi|ble|osint|post_exploit|…"},
+                "limit": {"type": "integer", "default": 12},
+            },
+        },
+    },
+    {
+        "name": "flow_invoke",
+        "description": (
+            "Fluent single tool call (any catalog/registry/wrapper). "
+            "Records success/failure into long-term memory automatically."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+                "name": {"type": "string"},
+                "args": {"type": "object"},
+                "domain": {"type": "string"},
+                "target_key": {"type": "string"},
+                "timeout": {"type": "integer", "default": 120},
+                "record": {"type": "boolean", "default": True},
+            },
+        },
+    },
+    {
+        "name": "flow_pipeline",
+        "description": (
+            "Fluent multi-step tool chain: [{name, args}, …]. "
+            "Stops on failure by default; each step is remembered."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "required": ["steps"],
+            "properties": {
+                "steps": {
+                    "type": "array",
+                    "items": {"type": "object"},
+                    "description": "list of {name, args?, timeout?, pass_result?}",
+                },
+                "domain": {"type": "string"},
+                "target_key": {"type": "string"},
+                "stop_on_fail": {"type": "boolean", "default": True},
+            },
+        },
+    },
+    {
+        "name": "memory_lessons",
+        "description": "Search long-term tool lessons (WORKS + AVOID) for planning.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string"},
+                "tool": {"type": "string"},
+                "domain": {"type": "string"},
+                "only_avoid": {"type": "boolean"},
+                "only_success": {"type": "boolean"},
+                "limit": {"type": "integer", "default": 12},
+            },
+        },
+    },
+    {
+        "name": "memory_avoid",
+        "description": "List what NOT to do (failed tool patterns from MemOS LTM).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "domain": {"type": "string"},
+                "tool": {"type": "string"},
+                "limit": {"type": "integer", "default": 10},
+            },
+        },
+    },
+    {
+        "name": "memory_works",
+        "description": "List successful tool patterns to prefer.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "domain": {"type": "string"},
+                "limit": {"type": "integer", "default": 10},
+            },
+        },
+    },
+    {
+        "name": "memory_distill",
+        "description": (
+            "Distill WORKS+AVOID lessons into an L3 domain policy for faster "
+            "future planning (long-term memory crystallization)."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "domain": {"type": "string", "description": "wifi|ble|osint|…"},
+            },
+        },
+    },
 ]
 
 # Append schema'd wrappers (Kali tools, mt7921e.*, cve_lookup) at module
@@ -674,6 +785,87 @@ def t_catalog_page(args: Dict[str, Any]) -> Dict[str, Any]:
     )
 
 
+def t_flow_recommend(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.flow import recommend
+    return recommend(
+        str(args.get("goal") or ""),
+        domain=str(args.get("domain") or ""),
+        limit=int(args.get("limit") or 12),
+    )
+
+
+def t_flow_invoke(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.flow import invoke
+    name = str(args.get("name") or "")
+    tool_args = args.get("args") if isinstance(args.get("args"), dict) else {}
+    # Allow flat args at top level too
+    if not tool_args:
+        tool_args = {
+            k: v for k, v in (args or {}).items()
+            if k not in (
+                "name", "domain", "target_key", "timeout", "record", "args",
+            )
+        }
+    return invoke(
+        name,
+        tool_args,
+        domain=str(args.get("domain") or ""),
+        target_key=str(args.get("target_key") or ""),
+        timeout=int(args.get("timeout") or 120),
+        record=bool(args.get("record", True)),
+    )
+
+
+def t_flow_pipeline(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.flow import pipeline
+    steps = args.get("steps") or []
+    if not isinstance(steps, list):
+        return {"ok": False, "error": "steps must be a list"}
+    return pipeline(
+        steps,
+        domain=str(args.get("domain") or ""),
+        target_key=str(args.get("target_key") or ""),
+        stop_on_fail=bool(args.get("stop_on_fail", True)),
+        record=bool(args.get("record", True)),
+    )
+
+
+def t_memory_lessons(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.tool_memory import lessons_for
+    return lessons_for(
+        str(args.get("query") or ""),
+        tool=str(args.get("tool") or ""),
+        domain=str(args.get("domain") or ""),
+        only_avoid=bool(args.get("only_avoid")),
+        only_success=bool(args.get("only_success")),
+        limit=int(args.get("limit") or 12),
+    )
+
+
+def t_memory_avoid(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.tool_memory import lessons_for
+    return lessons_for(
+        tool=str(args.get("tool") or ""),
+        domain=str(args.get("domain") or ""),
+        only_avoid=True,
+        limit=int(args.get("limit") or 10),
+    )
+
+
+def t_memory_works(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.tool_memory import lessons_for
+    return lessons_for(
+        domain=str(args.get("domain") or ""),
+        only_success=True,
+        limit=int(args.get("limit") or 10),
+    )
+
+
+def t_memory_distill(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.tool_memory import distill_domain_policy
+    return distill_domain_policy(str(args.get("domain") or ""))
+
+
 _TOOL_DISPATCH = {
     "list_tools": t_list_tools,
     "search_tools": t_search_tools,
@@ -694,6 +886,13 @@ _TOOL_DISPATCH = {
     "catalog_random": t_catalog_random,
     "catalog_export_ids": t_catalog_export_ids,
     "catalog_page": t_catalog_page,
+    "flow_recommend": t_flow_recommend,
+    "flow_invoke": t_flow_invoke,
+    "flow_pipeline": t_flow_pipeline,
+    "memory_lessons": t_memory_lessons,
+    "memory_avoid": t_memory_avoid,
+    "memory_works": t_memory_works,
+    "memory_distill": t_memory_distill,
 }
 
 
@@ -852,6 +1051,7 @@ def handle_request(req: Dict[str, Any]) -> Optional[Dict[str, Any]]:
                             name,
                             args if isinstance(args, dict) else {},
                             timeout=int((args or {}).get("timeout") or 30),
+                            record=False,  # outer handler records once
                         )
                     else:
                         from core.mcp.catalog_bridge import (
@@ -868,6 +1068,39 @@ def handle_request(req: Dict[str, Any]) -> Optional[Dict[str, Any]]:
                             return _error(req_id, -32602, f"unknown tool: {name}")
                 except Exception:
                     return _error(req_id, -32602, f"unknown tool: {name}")
+            # Auto-record non-flow tool outcomes into long-term memory
+            # (flow_invoke/pipeline already record). Keeps learning continuous.
+            if name not in (
+                "flow_invoke", "flow_pipeline", "flow_recommend",
+                "memory_lessons", "memory_avoid", "memory_works",
+                "memory_distill",
+                "list_tools", "search_tools", "catalog_list",
+                "catalog_search", "catalog_stats", "catalog_count",
+                "catalog_export_ids", "catalog_page", "catalog_random",
+            ):
+                try:
+                    from core.mcp.tool_memory import record_tool_outcome
+                    ok_out = isinstance(out, dict) and not (
+                        out.get("error") or out.get("blocked") or out.get("ok") is False
+                    )
+                    if isinstance(out, dict) and "rc" in out:
+                        ok_out = out.get("rc") == 0
+                    record_tool_outcome(
+                        str(name or ""),
+                        ok=bool(ok_out),
+                        args=args if isinstance(args, dict) else {},
+                        error=str(
+                            (out or {}).get("error")
+                            or (out or {}).get("reason")
+                            or ""
+                        )[:300] if isinstance(out, dict) else "",
+                        domain=str(
+                            (args or {}).get("domain") or ""
+                        ) if isinstance(args, dict) else "",
+                        source="mcp.tools/call",
+                    )
+                except Exception:
+                    pass
             # MCP expects content blocks; wrap structured data as text.
             return _result(req_id, {
                 "content": [{"type": "text",
@@ -879,6 +1112,17 @@ def handle_request(req: Dict[str, Any]) -> Optional[Dict[str, Any]]:
             })
         except Exception as e:
             logger.exception("tool call failed")
+            # Record hard failures too
+            try:
+                from core.mcp.tool_memory import record_tool_outcome
+                record_tool_outcome(
+                    str(params.get("name") or ""),
+                    ok=False,
+                    error=str(e)[:200],
+                    source="mcp.tools/call_exception",
+                )
+            except Exception:
+                pass
             return _error(req_id, -32603, f"tool error: {e}")
 
     # --- resources ---
