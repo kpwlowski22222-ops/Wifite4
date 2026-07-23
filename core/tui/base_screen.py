@@ -19,7 +19,8 @@ logger = logging.getLogger(__name__)
 class BaseScreen:
     def __init__(self, stdscr, parent_callback, activity_log: List[str],
                  ai_backend=None, kb=None, post_runner=None,
-                 settings_manager=None, dashboard=None, **kwargs):
+                 settings_manager=None, dashboard=None,
+                 tui_confirm=None, **kwargs):
         self.stdscr = stdscr
         self.parent_callback = parent_callback
         self.activity_log = activity_log
@@ -28,6 +29,7 @@ class BaseScreen:
         self.post_runner = post_runner
         self.settings_manager = settings_manager
         self.dashboard = dashboard
+        self.tui_confirm = tui_confirm
         self.menu_index = 0
         self.menu_items: List[Tuple[str, Any]] = []
         self.title = "Screen"
@@ -47,6 +49,10 @@ class BaseScreen:
         self.input_fn: Optional[Callable[[str], str]] = kwargs.get("input_fn")
         self.thread_runner: Optional[Callable[[Callable], Any]] = kwargs.get("thread_runner")
         self.scanner_cls = kwargs.get("scanner_cls")
+        # Activity log panel: 0 = follow newest; >0 scrolled into history
+        self.log_scroll: int = 0
+        self._log_follow: bool = True  # auto-snap to tail when new lines arrive
+        self._log_len_seen: int = len(self.activity_log) if self.activity_log else 0
 
     # ------------------------------------------------------------------
     # Testability helpers
@@ -230,9 +236,9 @@ class BaseScreen:
         try:
             height, width = self.stdscr.getmaxyx()
             self.stdscr.attron(curses.color_pair(5) | curses.A_BOLD)
-            banner = f" ╔══════════════════════════════════════════════════════════╗"
+            banner = " ╔══════════════════════════════════════════════════════════╗"
             banner2 = f" ║          KFIOSA — {title.upper().center(30)}          ║"
-            banner3 = f" ╚══════════════════════════════════════════════════════════╝"
+            banner3 = " ╚══════════════════════════════════════════════════════════╝"
 
             self.stdscr.addstr(0, max(0, (width - len(banner)) // 2), banner[:width-1])
             self.stdscr.addstr(1, max(0, (width - len(banner2)) // 2), banner2[:width-1])
@@ -252,81 +258,109 @@ class BaseScreen:
         except Exception as e:
             logger.debug(f"Error drawing header: {e}")
 
-    def draw_menu(self, start_y: int = 6):
-        """Draw selectable menu options"""
+    def draw_menu(self, start_y: int = 6, max_width: Optional[int] = None):
+        """Draw selectable menu options (optionally clipped to left panel width)."""
         try:
-            height, width = self.stdscr.getmaxyx()
+            height, term_w = self.stdscr.getmaxyx()
+            width = int(max_width) if max_width else term_w
+            width = max(24, min(width, term_w))
             self.stdscr.attron(curses.color_pair(4) | curses.A_BOLD)
             if self.flow_state == "targets":
-                label = "Select Target (number keys or UP/DOWN + ENTER):"
+                label = "Select Target (1-9 / ↑↓ + ENTER):"
             elif self.flow_state == "advanced":
                 label = "Advanced Operations:"
             else:
                 label = "Select Operation:"
-            self.stdscr.addstr(start_y - 1, 2, label)
+            self.stdscr.addstr(start_y - 1, 2, label[: max(8, width - 4)])
             self.stdscr.attroff(curses.color_pair(4) | curses.A_BOLD)
 
             for i, (label, _) in enumerate(self.menu_items):
                 y = start_y + i
-                if y < height - 6:
+                if y < height - 2:
                     selected = (i == self.menu_index)
                     marker = "[>]" if selected else "   "
 
-                    # Highlight selected line
                     if selected:
                         self.stdscr.attron(curses.A_REVERSE | curses.color_pair(1))
                     else:
                         self.stdscr.attron(curses.color_pair(6))
 
-                    self.stdscr.addstr(y, 2, f"{marker} {label}".ljust(width - 5)[:width-4])
-                    self.stdscr.attroff(curses.A_REVERSE | curses.color_pair(1) | curses.color_pair(6))
+                    line = f"{marker} {label}".ljust(width - 3)[: max(8, width - 3)]
+                    self.stdscr.addstr(y, 2, line)
+                    self.stdscr.attroff(
+                        curses.A_REVERSE | curses.color_pair(1) | curses.color_pair(6)
+                    )
         except Exception as e:
             logger.debug(f"Error drawing menu: {e}")
 
-    def draw_activity_log(self, start_y: int, max_height: int):
-        """Render shared activity log log panel at bottom"""
+    def log(self, msg: str, *, timestamp: bool = True, narrative: bool = True) -> None:
+        """Append to the shared activity log (capped, optional clock + prose)."""
+        text = str(msg)
+        if narrative:
+            try:
+                from core.tui.narrative_log import narrate
+                text = narrate(
+                    text,
+                    domain=str(getattr(self, "domain", "") or getattr(self, "title", "")),
+                    target=getattr(self, "selected_target", None),
+                )
+            except Exception:
+                pass
         try:
-            height, width = self.stdscr.getmaxyx()
-            log_height = min(max_height, height - start_y - 3)
-            if log_height <= 0:
-                return
+            from core.tui.activity_log_view import append_log
+            append_log(self.activity_log, text, timestamp=timestamp)
+        except Exception:
+            try:
+                self.activity_log.append(text)
+            except Exception:
+                pass
+        # New lines snap view to live tail when following
+        if getattr(self, "_log_follow", True):
+            self.log_scroll = 0
 
-            self.stdscr.attron(curses.color_pair(4) | curses.A_BOLD)
-            self.stdscr.addstr(start_y, 2, "Activity Log:")
-            self.stdscr.attroff(curses.color_pair(4) | curses.A_BOLD)
-
-            logs_to_show = self.activity_log[-log_height:]
-            for i, log_line in enumerate(logs_to_show):
-                y = start_y + 1 + i
-                if y < height - 2:
-                    # Clean up long lines
-                    display_line = log_line.replace("\n", " ").replace("\t", "    ")[:width-6]
-
-                    self.stdscr.addstr(y, 2, " ")
-                    if "[+]" in display_line:
-                        self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
-                        self.stdscr.addstr(y, 3, "[+]")
-                        self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
-                        self.stdscr.addstr(y, 6, display_line[display_line.find("[+]")+3:])
-                    elif "[!]" in display_line:
-                        self.stdscr.attron(curses.color_pair(2) | curses.A_BOLD)
-                        self.stdscr.addstr(y, 3, "[!]")
-                        self.stdscr.attroff(curses.color_pair(2) | curses.A_BOLD)
-                        self.stdscr.addstr(y, 6, display_line[display_line.find("[!]" )+3:])
-                    elif "[*]" in display_line:
-                        self.stdscr.attron(curses.color_pair(3) | curses.A_BOLD)
-                        self.stdscr.addstr(y, 3, "[*]")
-                        self.stdscr.attroff(curses.color_pair(3) | curses.A_BOLD)
-                        self.stdscr.addstr(y, 6, display_line[display_line.find("[*]")+3:])
-                    elif "[i]" in display_line:
-                        self.stdscr.attron(curses.color_pair(4) | curses.A_BOLD)
-                        self.stdscr.addstr(y, 3, "[i]")
-                        self.stdscr.attroff(curses.color_pair(4) | curses.A_BOLD)
-                        self.stdscr.addstr(y, 6, display_line[display_line.find("[i]")+3:])
-                    else:
-                        self.stdscr.addstr(y, 3, display_line)
+    def draw_activity_log(
+        self,
+        start_y: int,
+        max_height: int,
+        *,
+        start_x: int = 0,
+        panel_width: Optional[int] = None,
+    ):
+        """Render shared activity log panel (scrollable, colour-tagged, wrapped)."""
+        try:
+            from core.tui.activity_log_view import draw_activity_log as _draw
+            # Auto-follow: if log grew and we were following, stay on tail
+            n = len(self.activity_log) if self.activity_log else 0
+            if n > getattr(self, "_log_len_seen", 0) and getattr(self, "_log_follow", True):
+                self.log_scroll = 0
+            self._log_len_seen = n
+            used = _draw(
+                self.stdscr,
+                self.activity_log or [],
+                start_y,
+                max_height,
+                scroll_from_end=int(getattr(self, "log_scroll", 0) or 0),
+                wrap=True,
+                title="Live story",
+                start_x=int(start_x or 0),
+                panel_width=panel_width,
+            )
+            self.log_scroll = int(used)
         except Exception as e:
             logger.debug(f"Error drawing activity log: {e}")
+            # Minimal fallback
+            try:
+                height, width = self.stdscr.getmaxyx()
+                self.stdscr.addstr(start_y, 2, "Activity Log:"[: width - 3])
+                for i, line in enumerate((self.activity_log or [])[-(max(1, max_height - 1)):]):
+                    y = start_y + 1 + i
+                    if y < height - 1:
+                        self.stdscr.addnstr(
+                            y, 2, str(line).replace("\n", " ")[: width - 4],
+                            width - 4,
+                        )
+            except Exception:
+                pass
 
     def render_kb_tool(self, t: dict):
         """Append one KB tool entry to the activity log."""
@@ -404,12 +438,21 @@ class BaseScreen:
         """Status instructions bar"""
         try:
             height, width = self.stdscr.getmaxyx()
+            scroll_bit = " PgUp/PgDn: Log"
+            if getattr(self, "log_scroll", 0):
+                scroll_bit = f" PgUp/PgDn: Log(↑{self.log_scroll}) End:live"
             if self.flow_state == "targets":
-                status_text = " 1-9: Select Target | ENTER: Select Highlighted | BACK/Q: Back"
+                status_text = (
+                    f" 1-9 Target | ENTER Select | BACK/Q Back |{scroll_bit}"
+                )
             elif self.flow_state == "advanced":
-                status_text = " UP/DOWN: Navigate | ENTER: Select | BACK/Q: Back to Primary"
+                status_text = (
+                    f" ↑↓ Navigate | ENTER Select | BACK/Q Primary |{scroll_bit}"
+                )
             else:
-                status_text = " UP/DOWN: Navigate | ENTER: Select | BACKSPACE: Go Back | Q: Quit Screen"
+                status_text = (
+                    f" ↑↓ Navigate | ENTER Select | BACK/Q Back |{scroll_bit}"
+                )
             self.stdscr.attron(curses.color_pair(6))
             self.stdscr.addstr(height - 1, 0, status_text.ljust(width)[:width-1])
             self.stdscr.attroff(curses.color_pair(6))
@@ -440,6 +483,19 @@ class BaseScreen:
         key = read_curses_key(self.stdscr)
         if key == -1:
             return None
+
+        # ---- activity log scroll (works in all flow states) ----
+        try:
+            from core.tui.activity_log_view import handle_log_scroll_key
+            new_scroll = handle_log_scroll_key(
+                key, int(getattr(self, "log_scroll", 0) or 0), page=6,
+            )
+            if new_scroll is not None:
+                self.log_scroll = max(0, int(new_scroll))
+                self._log_follow = (self.log_scroll == 0)
+                return None
+        except Exception:
+            pass
 
         # ---- target-selection view ----
         if self.flow_state == "targets":
@@ -505,7 +561,7 @@ class BaseScreen:
         return None
 
     def render(self):
-        """Default full render method for screens"""
+        """Default full render — split layout on wide terminals (log on right)."""
         height, width = self.stdscr.getmaxyx()
         if height < 20 or width < 70:
             self.stdscr.erase()
@@ -515,13 +571,27 @@ class BaseScreen:
             return
 
         self.draw_header(self.title)
-        self.draw_menu(start_y=6)
+        try:
+            from core.tui.layout import layout_panels
+            lay = layout_panels(height, width, header_h=5, status_h=1)
+        except Exception:
+            lay = None
 
-        # Log panel height calculation
-        menu_height = len(self.menu_items)
-        log_y = 6 + menu_height + 1
-        log_h = height - log_y - 2
-        self.draw_activity_log(start_y=log_y, max_height=log_h)
+        if lay is not None and lay.mode == "split":
+            # Left: menu · Right: narrative log (full body height)
+            self.draw_menu(start_y=lay.left.y + 1, max_width=lay.left.w - 1)
+            self.draw_activity_log(
+                start_y=lay.right.y,
+                max_height=lay.right.h,
+                start_x=lay.right.x,
+                panel_width=lay.right.w,
+            )
+        else:
+            self.draw_menu(start_y=6)
+            menu_height = len(self.menu_items)
+            log_y = 6 + menu_height + 1
+            log_h = height - log_y - 2
+            self.draw_activity_log(start_y=log_y, max_height=log_h)
 
         self.draw_status_bar()
 

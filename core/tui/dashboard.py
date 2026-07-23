@@ -801,50 +801,78 @@ class KfiosaDashboard:
         except Exception:
             pass
 
-        # ── Selectable main menu ──────────────────────────────────────────
+        # ── Split layout: menu left · live story right ────────────────────
         try:
-            menu_start = 4 if (_theme_ok and is_focus_mode()) else 7
+            from core.tui.layout import layout_panels
+            lay = layout_panels(height, width, header_h=5, status_h=1)
+        except Exception:
+            lay = None
+
+        menu_start = 4 if (_theme_ok and is_focus_mode()) else 6
+        left_w = width
+        if lay is not None and lay.mode == "split":
+            left_w = lay.left.w
+            menu_start = max(menu_start, lay.left.y + 1)
+
+        try:
             self.stdscr.attron(curses.color_pair(4) | curses.A_BOLD)
-            self.stdscr.addstr(menu_start - 1, 2, "Main Control Menu:")
+            self.stdscr.addstr(menu_start - 1, 2, "Main Control Menu:"[: max(8, left_w - 4)])
             self.stdscr.attroff(curses.color_pair(4) | curses.A_BOLD)
 
             for i, (label, _) in enumerate(self.menu_items):
                 y = menu_start + i
-                if y < height - 6:
+                if y < height - 2:
                     selected = (i == self.menu_index)
                     marker = "[>]" if selected else "   "
                     if selected:
                         self.stdscr.attron(curses.A_REVERSE | curses.color_pair(1))
                     else:
                         self.stdscr.attron(curses.color_pair(6))
-                    self.stdscr.addstr(y, 2,
-                                       f"{marker} {label}".ljust(width - 5)[:width - 4])
+                    line = f"{marker} {label}".ljust(left_w - 3)[: max(8, left_w - 3)]
+                    self.stdscr.addstr(y, 2, line)
                     self.stdscr.attroff(
                         curses.A_REVERSE | curses.color_pair(1) | curses.color_pair(6)
                     )
         except Exception:
             pass
 
-        # ── Activity log (scrollable, colour-tagged, wrapped) ─────────────
-        log_y = (4 if (_theme_ok and is_focus_mode()) else 8) + len(self.menu_items) + 2
-        log_h = height - log_y - 2
+        # Activity narrative (right panel when split; else under menu)
         try:
             from core.tui.activity_log_view import draw_activity_log as _draw_log
             n = len(self.activity_log)
             if n > getattr(self, "_log_len_seen", 0) and getattr(self, "_log_follow", True):
                 self.log_scroll = 0
             self._log_len_seen = n
-            self.log_scroll = _draw_log(
-                self.stdscr,
-                self.activity_log,
-                log_y,
-                log_h,
-                scroll_from_end=int(getattr(self, "log_scroll", 0) or 0),
-                wrap=True,
-            )
+            if lay is not None and lay.mode == "split":
+                self.log_scroll = _draw_log(
+                    self.stdscr,
+                    self.activity_log,
+                    lay.right.y,
+                    lay.right.h,
+                    scroll_from_end=int(getattr(self, "log_scroll", 0) or 0),
+                    wrap=True,
+                    title="Live story",
+                    start_x=lay.right.x,
+                    panel_width=lay.right.w,
+                )
+            else:
+                log_y = menu_start + len(self.menu_items) + 2
+                log_h = height - log_y - 2
+                self.log_scroll = _draw_log(
+                    self.stdscr,
+                    self.activity_log,
+                    log_y,
+                    log_h,
+                    scroll_from_end=int(getattr(self, "log_scroll", 0) or 0),
+                    wrap=True,
+                    title="Live story",
+                )
         except Exception:
-            dummy_screen = BaseScreen(self.stdscr, None, self.activity_log)
-            dummy_screen.draw_activity_log(log_y, log_h)
+            try:
+                dummy_screen = BaseScreen(self.stdscr, None, self.activity_log)
+                dummy_screen.draw_activity_log(menu_start + len(self.menu_items) + 2, 8)
+            except Exception:
+                pass
 
         # Status bar — show [F] Focus Mode + log scroll hints
         try:

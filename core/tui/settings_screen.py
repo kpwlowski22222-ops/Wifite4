@@ -28,6 +28,8 @@ class SettingsScreen(BaseScreen):
             ("API keys presence (.env)", self.view_api_keys_status),
             ("Set Ollama endpoint", self.set_ollama_endpoint),
             ("Model per domain (wifi/ble/osint/…)", self.select_domain_model),
+            ("Plan creativity (balanced/high/max)", self.configure_plan_creativity),
+            ("Narrative live story (on/off)", self.configure_narrative_log),
             ("Scan timeouts (wifi / ble)", self.adjust_timeouts),
             ("External terminal", self.configure_external_terminal),
             ("Scan window font scale", self.configure_scan_font_scale),
@@ -63,6 +65,8 @@ class SettingsScreen(BaseScreen):
             ("API keys presence (.env)", self.view_api_keys_status),
             ("Set Ollama endpoint", self.set_ollama_endpoint),
             ("Model per domain (wifi/ble/osint/…)", self.select_domain_model),
+            ("Plan creativity (balanced/high/max)", self.configure_plan_creativity),
+            ("Narrative live story (on/off)", self.configure_narrative_log),
             ("Scan timeouts (wifi / ble)", self.adjust_timeouts),
             ("External terminal", self.configure_external_terminal),
             ("Scan window font scale", self.configure_scan_font_scale),
@@ -71,6 +75,54 @@ class SettingsScreen(BaseScreen):
         ]
         self.menu_index = 0
         self.activity_log.append("[i] Settings → simple list")
+
+    def configure_plan_creativity(self):
+        """Set AI plan creativity: balanced | high | max."""
+        cur = (os.environ.get("KFIOSA_PLAN_CREATIVITY") or "high").strip().lower()
+        self.activity_log.append(f"[i] Plan creativity now: {cur}")
+        raw = self.get_input(
+            f"Creativity [{cur}] (balanced / high / max; blank=keep)"
+        ).strip().lower()
+        if not raw:
+            self.activity_log.append("[i] Creativity unchanged.")
+            return
+        if raw not in ("balanced", "high", "max"):
+            self.activity_log.append("[!] Use balanced, high, or max.")
+            return
+        os.environ["KFIOSA_PLAN_CREATIVITY"] = raw
+        try:
+            self.settings_manager.update_setting("ai.plan_creativity", raw)
+        except Exception:
+            pass
+        self.activity_log.append(
+            f"[+] Plan creativity set to {raw} "
+            "(more creative chains; ACCEPT gates still apply)."
+        )
+
+    def configure_narrative_log(self):
+        """Toggle human-language live story panel."""
+        cur = (os.environ.get("KFIOSA_NARRATIVE_LOG") or "1").strip().lower()
+        on = cur not in ("0", "false", "no", "off")
+        self.activity_log.append(
+            f"[i] Narrative live story is {'ON' if on else 'OFF'}"
+        )
+        raw = self.get_input(
+            f"Narrative log [{'on' if on else 'off'}] (on/off; blank=toggle)"
+        ).strip().lower()
+        if not raw:
+            on = not on
+        elif raw in ("on", "1", "true", "yes"):
+            on = True
+        elif raw in ("off", "0", "false", "no"):
+            on = False
+        else:
+            self.activity_log.append("[!] Use on or off.")
+            return
+        os.environ["KFIOSA_NARRATIVE_LOG"] = "1" if on else "0"
+        self.activity_log.append(
+            f"[+] Narrative live story {'ON' if on else 'OFF'} "
+            "(right-side story panel)."
+        )
 
     def holo_os_agent_status(self):
         """Probe holo-desktop-cli (OS agentic tool) without driving the desktop."""

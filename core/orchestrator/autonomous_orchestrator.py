@@ -308,6 +308,15 @@ class AutonomousOrchestrator:
 
     # ------------------------------------------------------------------
     def _emit(self, msg: str):
+        try:
+            from core.tui.narrative_log import narrate
+            msg = narrate(
+                msg,
+                domain=str(getattr(self, "_current_domain", "") or ""),
+                target=getattr(self, "_current_seed", None),
+            )
+        except Exception:
+            pass
         self.on_event(msg)
         logger.info(msg)
 
