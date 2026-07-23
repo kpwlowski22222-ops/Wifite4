@@ -1004,12 +1004,12 @@ class WiFiScreen(BaseScreen):
         )
 
     def scan_networks(self):
-        """Open an external airgeddon/wifite-like scan TUI, then load selection.
+        """Live scan inside the main TUI (same aesthetics as the dashboard).
 
-        Prefer launching ``core.tui.wifi_scan_external`` in a separate
-        terminal (xterm/gnome-terminal/…). Arrows move, SPACE/ENTER
-        select, **A** queues AIO ATTACK. Fallback: in-process enhanced
-        scanner + numbered targets view (tests inject ``scanner_cls``).
+        Default: embedded full-screen scan overlay (ONLINE / OFFLINE /
+        CLIENTS panels, KFIOSA banner, theme colours). Set
+        ``KFIOSA_EXTERNAL_SCAN=1`` to restore external xterm windows.
+        Tests inject ``scanner_cls`` → hermetic in-process path.
         """
         # Tests: injected scanner_cls → hermetic in-process path (no auto
         # iface pick, no external terminal).
@@ -1076,7 +1076,40 @@ class WiFiScreen(BaseScreen):
         except Exception:
             pass
 
-        # Prefer triple external windows: UL=online APs, UR=clients, BR=offline.
+        # Default: embedded in-TUI scan (main dashboard aesthetics)
+        try:
+            from core.tui.embedded_scan import (
+                prefer_embedded_scan, run_embedded_wifi_scan,
+            )
+            if prefer_embedded_scan() and self.stdscr is not None:
+                self.activity_log.append(
+                    f"[*] In-TUI WiFi scan on {self.interface} "
+                    "(same style as main dashboard; q=back)"
+                )
+                sel = run_embedded_wifi_scan(
+                    self.stdscr,
+                    iface=str(self.interface),
+                    out_path=out_path,
+                    activity_log=self.activity_log,
+                )
+                if sel:
+                    sel = dict(sel)
+                    sel["interface"] = self.interface
+                    self.selected_target = sel
+                    self.scan_results = [sel]
+                    self.targets = [sel]
+                    self.activity_log.append(
+                        f"[+] Selected AP: {sel.get('ssid') or '<hidden>'} "
+                        f"[{sel.get('bssid')}] — starting engagement"
+                    )
+                    self.aio_attack()
+                return
+        except Exception as e:
+            self.activity_log.append(
+                f"[i] Embedded scan unavailable ({e}); trying external…"
+            )
+
+        # Optional external windows when KFIOSA_EXTERNAL_SCAN=1
         try:
             from core.tui import wifi_scan_bus as scan_bus
             from core.utils.external_terminal import get_scan_font_scale
@@ -1096,14 +1129,6 @@ class WiFiScreen(BaseScreen):
                     f"[+] Triple scan windows on {self.interface} "
                     f"({n_ok}/3) bus={bus_dir}"
                 )
-                self.activity_log.append(
-                    "[*] UL: APs live ↑↓ ENTER/SPACE select · BACKSPACE clear · q quit · "
-                    "UR: clients of focus · BR: offline + timestamps"
-                )
-                self.activity_log.append(
-                    "[*] Selecting an AP starts engagement automatically "
-                    "(recon→CVE→plan→attack→post)."
-                )
 
                 def _wait_triple():
                     import json
@@ -1113,15 +1138,13 @@ class WiFiScreen(BaseScreen):
                     )
                     if not sel:
                         self.activity_log.append(
-                            "[i] No AP selected (quit/timeout) — "
-                            "use Scan again or Advanced."
+                            "[i] No AP selected (quit/timeout)."
                         )
                         return
                     sel = dict(sel)
                     sel["from_external_scan"] = True
                     sel["interface"] = self.interface
                     self.selected_target = sel
-                    # Mirror into legacy path for AIO loaders
                     try:
                         Path("logs").mkdir(parents=True, exist_ok=True)
                         Path(out_path).write_text(
@@ -1143,77 +1166,11 @@ class WiFiScreen(BaseScreen):
 
                 self._spawn(_wait_triple)
                 return
-            for k, v in (trip.get("procs") or {}).items():
-                if k.endswith("_error"):
-                    self.activity_log.append(f"[i] window {k}: {v}")
         except Exception as e:
-            self.activity_log.append(f"[i] Triple scan launch: {e}")
-
-        # Fallback: single external wifi_scan_external window
-        from core.utils.external_terminal import get_scan_font_scale
-        cmd_argv = [
-            sys.executable, "-m", "core.tui.wifi_scan_external",
-            "--iface", str(self.interface),
-            "--out", out_path,
-            "--seconds", "30",
-            "--long-range",
-        ]
-        log_path = "logs/steps/wifi_scan_external.log"
-        launched = False
-        if self.external_terminal is not None:
-            try:
-                launch = getattr(
-                    self.external_terminal, "launch_script_in_project_root", None
-                )
-                if callable(launch):
-                    sm = getattr(self, "settings_manager", None)
-                    launch(
-                        cmd_argv,
-                        log_path,
-                        title=f"KFIOSA WiFi Scan — {self.interface}",
-                        font_scale=get_scan_font_scale(sm),
-                        position="topleft",
-                    )
-                    launched = True
-            except Exception as e:
-                self.activity_log.append(f"[i] External terminal launch: {e}")
-
-        if launched:
-            self.activity_log.append(
-                f"[+] External scan window opened on {self.interface}. "
-                "Use ↑↓, SPACE/ENTER to select, A for AIO engagement, q when done."
-            )
-
-            def _wait_selection():
-                import time
-                from pathlib import Path
-                deadline = time.time() + 180
-                while time.time() < deadline:
-                    if Path(out_path).is_file():
-                        time.sleep(0.5)
-                        if self._load_external_scan_selection():
-                            try:
-                                import json
-                                data = json.loads(
-                                    Path(out_path).read_text(encoding="utf-8")
-                                )
-                                if data.get("aio_attack") or data.get("selected"):
-                                    self.activity_log.append(
-                                        "[AIO] Selection → engagement"
-                                    )
-                                    self.aio_attack()
-                            except Exception:
-                                pass
-                        return
-                    time.sleep(1.0)
-                self.activity_log.append(
-                    "[i] No external selection yet — press ▶ Start engagement after picking."
-                )
-            self._spawn(_wait_selection)
-            return
+            self.activity_log.append(f"[i] External triple scan: {e}")
 
         self.activity_log.append(
-            "[i] No external terminal — falling back to in-dashboard scan."
+            "[i] Falling back to background in-dashboard scan."
         )
         self._scan_networks_inprocess()
 

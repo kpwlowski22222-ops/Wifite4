@@ -140,6 +140,13 @@ def detail_for_item(item: Dict[str, Any], kind: str = "wifi") -> str:
     )
 
 
+def _theme_pair(n: int) -> int:
+    try:
+        return curses.color_pair(n)
+    except Exception:
+        return 0
+
+
 def draw_scan_window(
     stdscr,
     state: ScanWindowState,
@@ -147,32 +154,60 @@ def draw_scan_window(
     row_fmt: Callable[[Dict[str, Any]], str],
     help_line: str = HELP_LINE,
 ) -> None:
-    """Paint a full scan window frame."""
+    """Paint a full scan window frame (main-TUI palette when colours exist)."""
     stdscr.erase()
     try:
         h, w = stdscr.getmaxyx()
     except Exception:
         return
+    # Apply shared theme once (no-op if already applied)
+    try:
+        from core.tui.ui_theme import apply_theme, get_current_theme
+        apply_theme(stdscr, theme=get_current_theme())
+    except Exception:
+        pass
+
+    # KFIOSA-style mini banner (matches BaseScreen.draw_header accent)
     title = f" {state.title}  n={len(state.items)} "
     if state.selected_id:
         title += f"  SEL={state.selected_id[:17]} "
+    banner = " ╔" + "═" * min(56, max(20, w - 6)) + "╗"
     try:
-        stdscr.addnstr(0, 0, title.ljust(w - 1), w - 1, curses.A_REVERSE)
-        stdscr.addnstr(1, 0, help_line[: w - 1], w - 1)
+        stdscr.addnstr(
+            0, max(0, (w - len(banner)) // 2), banner[: w - 1], w - 1,
+            _theme_pair(5) | curses.A_BOLD,
+        )
+        mid = f" ║  KFIOSA — {title.strip()[:40].center(40)}  ║"
+        stdscr.addnstr(
+            1, max(0, (w - len(mid)) // 2), mid[: w - 1], w - 1,
+            _theme_pair(5) | curses.A_BOLD,
+        )
+        bot = " ╚" + "═" * min(56, max(20, w - 6)) + "╝"
+        stdscr.addnstr(
+            2, max(0, (w - len(bot)) // 2), bot[: w - 1], w - 1,
+            _theme_pair(5) | curses.A_BOLD,
+        )
+        stdscr.addnstr(
+            3, 0, help_line[: w - 1], w - 1, _theme_pair(4),
+        )
+        stdscr.addnstr(4, 0, ("─" * (w - 1))[: w - 1], w - 1, _theme_pair(6))
     except curses.error:
         pass
 
     detail_rows = 2 if state.detail else 0
-    max_rows = max(1, h - 4 - detail_rows)
+    max_rows = max(1, h - 7 - detail_rows)
     n = len(state.items)
     idx = clamp_idx(state.idx, n)
     start = max(0, idx - max_rows + 1) if idx >= max_rows else 0
 
     for row, item in enumerate(state.items[start: start + max_rows]):
-        y = row + 2
+        y = row + 5
         i = start + row
         line = row_fmt(item)
-        attr = curses.A_REVERSE if i == idx else curses.A_NORMAL
+        if i == idx:
+            attr = curses.A_REVERSE | _theme_pair(1)
+        else:
+            attr = _theme_pair(6)
         try:
             stdscr.addnstr(y, 0, line[: w - 1], w - 1, attr)
         except curses.error:
@@ -181,13 +216,18 @@ def draw_scan_window(
     if state.detail:
         dy = h - 2 - 1
         try:
-            stdscr.addnstr(dy, 0, ("─" * (w - 1))[: w - 1], w - 1)
-            stdscr.addnstr(dy + 1, 0, state.detail[: w - 1], w - 1, curses.A_DIM)
+            stdscr.addnstr(dy, 0, ("─" * (w - 1))[: w - 1], w - 1, _theme_pair(6))
+            stdscr.addnstr(
+                dy + 1, 0, state.detail[: w - 1], w - 1, _theme_pair(4),
+            )
         except curses.error:
             pass
 
     try:
-        stdscr.addnstr(h - 1, 0, (state.msg or "")[: w - 1], w - 1)
+        stdscr.addnstr(
+            h - 1, 0, (state.msg or "")[: w - 1], w - 1,
+            _theme_pair(3) | curses.A_BOLD,
+        )
     except curses.error:
         pass
     try:

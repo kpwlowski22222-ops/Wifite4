@@ -258,8 +258,11 @@ class BLEScreen(BaseScreen):
         return True
 
     def scan_ble_devices(self):
-        """Open external live long-range BLE scan TUI (like WiFi), then load
-        selection. Tests inject ``scanner_cls`` → hermetic in-process path."""
+        """Live BLE scan inside the main TUI (dashboard aesthetics).
+
+        Default: embedded overlay. ``KFIOSA_EXTERNAL_SCAN=1`` restores
+        external terminal windows. Tests inject ``scanner_cls``.
+        """
         # Tests: injected scanner_cls → hermetic in-process path
         if self.scanner_cls is not None:
             return self._scan_ble_inprocess()
@@ -286,7 +289,42 @@ class BLEScreen(BaseScreen):
         except Exception:
             pass
 
-        # Prefer triple external windows: UL=online, UR=detail, BR=offline.
+        # Default: embedded in-TUI scan
+        try:
+            from core.tui.embedded_scan import (
+                prefer_embedded_scan, run_embedded_ble_scan,
+            )
+            if prefer_embedded_scan() and self.stdscr is not None:
+                self.activity_log.append(
+                    f"[*] In-TUI BLE scan (adapter={self.interface or 'auto'}; "
+                    "main-dashboard style; q=back)"
+                )
+                sel = run_embedded_ble_scan(
+                    self.stdscr,
+                    adapter=self.interface,
+                    out_path=out_path,
+                    activity_log=self.activity_log,
+                )
+                if sel:
+                    sel = dict(sel)
+                    if self.interface:
+                        sel.setdefault("adapter", self.interface)
+                    self.selected_device = sel
+                    self.selected_target = sel
+                    self.ble_devices = [sel]
+                    self.targets = [sel]
+                    self.activity_log.append(
+                        f"[+] Selected BLE: {sel.get('name')} "
+                        f"[{sel.get('address')}] — starting engagement"
+                    )
+                    self.aio_attack()
+                return
+        except Exception as e:
+            self.activity_log.append(
+                f"[i] Embedded BLE scan unavailable ({e}); trying external…"
+            )
+
+        # Optional external windows when KFIOSA_EXTERNAL_SCAN=1
         try:
             from core.tui import ble_scan_bus as scan_bus
             from core.utils.external_terminal import get_scan_font_scale
@@ -305,10 +343,6 @@ class BLEScreen(BaseScreen):
                 self.activity_log.append(
                     f"[+] Triple BLE windows (adapter={self.interface or 'auto'}) "
                     f"{n_ok}/3 bus={bus_dir}"
-                )
-                self.activity_log.append(
-                    "[*] UL: devices live ↑↓ ENTER/SPACE · BACKSPACE clear · q quit · "
-                    "UR: detail · BR: offline + timestamps"
                 )
 
                 def _wait_triple():
@@ -350,75 +384,11 @@ class BLEScreen(BaseScreen):
                 self._spawn(_wait_triple)
                 return
         except Exception as e:
-            self.activity_log.append(f"[i] Triple BLE launch: {e}")
+            self.activity_log.append(f"[i] External triple BLE: {e}")
 
-        from core.utils.external_terminal import get_scan_font_scale
-        cmd_argv = [
-            sys.executable, "-m", "core.tui.ble_scan_external",
-            "--out", out_path,
-            "--seconds", "40",
-            "--pulse", "12",
-            "--long-range",
-        ]
-        if self.interface:
-            cmd_argv += ["--adapter", str(self.interface)]
-        log_path = "logs/steps/ble_scan_external.log"
-        launched = False
-        if self.external_terminal is not None:
-            try:
-                launch = getattr(
-                    self.external_terminal, "launch_script_in_project_root", None
-                )
-                if callable(launch):
-                    sm = getattr(self, "settings_manager", None)
-                    launch(
-                        cmd_argv,
-                        log_path,
-                        title=f"KFIOSA BLE Scan — {self.interface or 'auto'}",
-                        font_scale=get_scan_font_scale(sm),
-                        position="topleft",
-                    )
-                    launched = True
-            except Exception as e:
-                self.activity_log.append(f"[i] External terminal launch: {e}")
-
-        if launched:
-            self.activity_log.append(
-                f"[+] External BLE scan window opened "
-                f"(adapter={self.interface or 'auto'}). "
-                "Use ↑↓, SPACE/ENTER to select, A for AIO engagement, q when done."
-            )
-
-            def _wait_selection():
-                import time
-                from pathlib import Path
-                deadline = time.time() + 300
-                while time.time() < deadline:
-                    if Path(out_path).is_file():
-                        time.sleep(0.5)
-                        if self._load_external_scan_selection():
-                            try:
-                                import json
-                                data = json.loads(
-                                    Path(out_path).read_text(encoding="utf-8")
-                                )
-                                if data.get("aio_attack") or data.get("selected"):
-                                    self.activity_log.append(
-                                        "[AIO] Selection → engagement"
-                                    )
-                                    self.aio_attack()
-                            except Exception:
-                                pass
-                        return
-                    time.sleep(1.0)
-                self.activity_log.append(
-                    "[i] No external selection yet — press ▶ Start engagement after picking."
-                )
-            self._spawn(_wait_selection)
-            return
 
         self.activity_log.append(
-            "[i] No external terminal — falling back to in-dashboard long-range scan."
+            "[i] Falling back to background in-dashboard BLE scan."
         )
         self._scan_ble_inprocess()
 
