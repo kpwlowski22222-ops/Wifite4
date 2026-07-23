@@ -39,7 +39,7 @@ class TestRegistryCounts:
     def test_adaptive_count(self):
         # Phase 4 T20: 35 (pre-Phase 4) + 11 new adapt = 45
         adapt = [n for n in list_poly_adapt_methods() if n.startswith("adapt_")]
-        assert len(adapt) == 45, f"adapt={len(adapt)}"
+        assert len(adapt) == 48, f"adapt={len(adapt)}"
 
     def test_risk_dict_covers_all(self):
         names = set(list_poly_adapt_methods())

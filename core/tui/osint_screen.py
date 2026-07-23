@@ -46,6 +46,7 @@ class OSINTScreen(BaseScreen):
         # ---- wifite-style primary flow ----
         self.primary_items = [
             ("Set OSINT Target (Domain / Email / User / Phone)", self.set_osint_target),
+            ("Auto OSINT (classify + multi-category)", self.run_auto_osint),
             ("Run All OSINT + Attack Chain (AI-orchestrated)", self.run_full_osint_chain),
             ("Show Findings (numbered list)", self._show_findings_view),
             ("Show Report (last engagement)", self.show_report),
@@ -59,6 +60,7 @@ class OSINTScreen(BaseScreen):
             ("Domain & Port OSINT (shodan)", self.run_domain_osint),
             ("CVE Lookup (NVD)", self.run_cve_lookup),
             ("Social Media OSINT (toutatis)", self.run_social_osint),
+            ("Breach check (HIBP / heuristic)", self.run_breach_check),
             ("AI-Driven Autonomous OSINT Chaining", self.run_autonomous_osint),
             ("Post-Exploit Plan from OSINT (AI+KB)", self.plan_post_exploit),
             ("Post-Exploit: Execute Plan (gated)", self.execute_post_exploit),
@@ -147,16 +149,34 @@ class OSINTScreen(BaseScreen):
         """Flatten a people-search result into ``self.osint_findings``."""
         if not isinstance(res, dict):
             return
+        before = len(self.osint_findings)
+        seen = {
+            (f.get("type"), f.get("value"))
+            for f in self.osint_findings
+            if isinstance(f, dict)
+        }
+        bucket = list(res.get("findings") or [])
         for cat, r in (res.get("categories") or {}).items():
-            for f in r.get("findings", []):
-                self.osint_findings.append({
-                    "type": f.get("type", cat),
-                    "value": f.get("value", ""),
-                })
-        if self.osint_findings:
+            if isinstance(r, dict):
+                for f in r.get("findings") or []:
+                    bucket.append(f)
+        for f in bucket:
+            if not isinstance(f, dict):
+                continue
+            key = (f.get("type"), f.get("value"))
+            if key in seen:
+                continue
+            seen.add(key)
+            self.osint_findings.append({
+                "type": f.get("type", "finding"),
+                "value": f.get("value", ""),
+                "source": f.get("source", ""),
+            })
+        added = len(self.osint_findings) - before
+        if added:
             self.activity_log.append(
-                f"[+] Collected {len(self.osint_findings)} OSINT finding(s) — "
-                "view via 'Show Findings'."
+                f"[+] Collected +{added} OSINT finding(s) "
+                f"(total {len(self.osint_findings)}) — view via 'Show Findings'."
             )
 
     # ------------------------------------------------------------------
@@ -195,7 +215,94 @@ class OSINTScreen(BaseScreen):
         if target:
             self.target = target
             self.osint_findings = []  # reset findings for the new target
-            self.activity_log.append(f"[+] Active OSINT target set to: {self.target}")
+            try:
+                from core.osint.runner import classify_osint_target
+                cls = classify_osint_target(target)
+                self.activity_log.append(
+                    f"[+] Active OSINT target set to: {self.target} "
+                    f"(kind={cls.get('kind')}, normalized={cls.get('normalized')})"
+                )
+            except Exception:
+                self.activity_log.append(f"[+] Active OSINT target set to: {self.target}")
+
+    def run_auto_osint(self):
+        """Classify target and run the best multi-category OSINT plan."""
+        if not self.target:
+            self.activity_log.append("[!] Set an OSINT target first.")
+            return
+        self.activity_log.append(f"[*] Auto OSINT for '{self.target}'...")
+        runner = self._osint_runner()
+
+        def run():
+            res = runner.run_auto(self.target, timeout=90)
+            cls = res.get("classification") or {}
+            self.activity_log.append(
+                f"[i] Classified as {cls.get('kind')} → plan={res.get('plan')}"
+            )
+            if res.get("adapt_pick"):
+                self.activity_log.append(f"[i] Adapt pick: {res['adapt_pick']}")
+            total = 0
+            for cat, r in (res.get("categories") or {}).items():
+                findings = r.get("findings") or []
+                total += len(findings)
+                if r.get("error"):
+                    self.activity_log.append(f"[!] {cat}: {r['error']}")
+                    continue
+                tool = r.get("ran_tool") or "—"
+                self.activity_log.append(
+                    f"[+] {cat} via {tool}: {len(findings)} finding(s)"
+                )
+                for f in findings[:20]:
+                    self.activity_log.append(
+                        f"    [{f.get('type')}] {f.get('value')}"
+                    )
+            for name, probe in (res.get("local_probes") or {}).items():
+                self.activity_log.append(
+                    f"[i] local {name}: {probe.get('type') or name}"
+                )
+            self._absorb_people_findings(res)
+            agg = res.get("aggregate") or {}
+            self.activity_log.append(
+                f"[i] Auto OSINT complete: {agg.get('count', total)} unique finding(s)."
+            )
+
+        self._spawn(run)
+
+    def run_breach_check(self):
+        """HIBP (if keyed) or honest risk-indicator breach correlate."""
+        if not self.target:
+            self.activity_log.append("[!] Set an OSINT target first.")
+            return
+        runner = self._osint_runner()
+
+        def run():
+            res = runner._correlate_breach_data(self.target)
+            val = res.get("value") or {}
+            self.activity_log.append(
+                f"[i] Breach likelihood: {val.get('breach_likelihood')} "
+                f"({val.get('source_note')})"
+            )
+            for ind in val.get("risk_indicators") or []:
+                self.activity_log.append(f"    indicator: {ind}")
+            breaches = val.get("identified_breaches") or []
+            if breaches:
+                for b in breaches[:15]:
+                    if isinstance(b, dict):
+                        self.activity_log.append(
+                            f"    [breach] {b.get('Name')} "
+                            f"({b.get('BreachDate') or '?'})"
+                        )
+                    else:
+                        self.activity_log.append(f"    [breach] {b}")
+            else:
+                self.activity_log.append(
+                    "[i] No live breach names "
+                    "(set KFIOSA_HIBP_KEY for HIBP API)."
+                )
+            if val.get("recommendation"):
+                self.activity_log.append(f"[i] {val['recommendation']}")
+
+        self._spawn(run)
 
     def run_people_search(self):
         """Search for a person across username + social + phone (real CLIs)."""
@@ -207,6 +314,11 @@ class OSINTScreen(BaseScreen):
 
         def run():
             res = runner.run_people(self.target, timeout=90)
+            cls = res.get("classification") or {}
+            if cls:
+                self.activity_log.append(
+                    f"[i] Classified as {cls.get('kind')} plan={res.get('plan')}"
+                )
             total = 0
             for cat, r in res.get("categories", {}).items():
                 findings = r.get("findings", [])
@@ -221,10 +333,13 @@ class OSINTScreen(BaseScreen):
                 for f in findings[:25]:
                     self.activity_log.append(f"    [{f['type']}] {f['value']}")
             self._absorb_people_findings(res)
-            self.activity_log.append(f"[i] People search complete: {total} finding(s).")
+            agg = res.get("aggregate") or {}
+            self.activity_log.append(
+                f"[i] People search complete: "
+                f"{agg.get('count', total)} unique finding(s)."
+            )
 
         self._spawn(run)
-
     def plan_post_exploit(self):
         if not self.target:
             self.activity_log.append("[!] Set an OSINT target first.")

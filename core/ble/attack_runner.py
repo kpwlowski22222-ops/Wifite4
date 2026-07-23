@@ -136,7 +136,12 @@ class BLEAttackRunner:
         self.args = args or {}
 
     # -- discovery (reuses the real EnhancedBLEScanner) -----------------
-    def _scan(self, duration: int = 15) -> Dict[str, Any]:
+    def _scan(self, duration: int = None) -> Dict[str, Any]:
+        try:
+            from core.scanners.scan_limits import ble_scan_s
+            duration = ble_scan_s(duration)
+        except Exception:
+            duration = int(duration) if duration is not None else 300
         if self._scanner is not None:
             return self._scanner.scan(duration=duration, adapter=self.adapter)
         from core.scanners.enhanced_ble_scanner import EnhancedBLEScanner

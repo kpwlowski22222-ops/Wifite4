@@ -75,73 +75,150 @@ def _err(step: Dict[str, Any], msg: str) -> Dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 def poly_deauth_burst_pattern_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Pick a deauth-burst pattern variant based on the args seed."""
-    import random
+    """Pick a deauth-burst pattern variant ranked by target features.
+
+    Uses PMF / client_count / signal from context (not just RNG seed).
+    """
+    from core.utils.poly_adapt import (
+        extract_target_features, pick_best_variant, wifi_deauth_score_rules,
+    )
     step = _step("poly_deauth_burst_pattern_grammar")
-    seed = (args or {}).get("seed") or (args or {}).get("bssid") or "default"
-    rng = random.Random(str(seed))
+    feats = extract_target_features(args)
     patterns = [
-        "ramp_50_200", "constant_100", "burst_three_30",
-        "staggered_50_150", "exponential_backoff",
+        {"name": "ramp_50_200", "score": 0.55},
+        {"name": "constant_100", "score": 0.5},
+        {"name": "burst_three_30", "score": 0.5},
+        {"name": "staggered_50_150", "score": 0.5},
+        {"name": "exponential_backoff", "score": 0.45},
+        {"name": "broadcast_deauth_burst", "score": 0.45},
+        {"name": "directed_deauth", "score": 0.45},
+        {"name": "sa_query_flood", "score": 0.4},
     ]
-    # Grammar: pick 3 patterns with non-uniform weights (prefer ramp+constant)
-    weights = [3, 3, 2, 2, 1]
-    picked = rng.choices(patterns, weights=weights, k=3)
+    best, ranked = pick_best_variant(
+        patterns, features=feats, rules=wifi_deauth_score_rules(),
+    )
+    names = [v["name"] for v in ranked[:5]]
+    primary = (best or {}).get("name") or names[0]
     return _ok(step, {
         "grammar": "deauth_burst_pattern",
-        "variants": picked,
-        "primary": picked[0],
+        "variants": names,
+        "variant_scores": [
+            {"name": v["name"], "score": v["score"]} for v in ranked[:5]
+        ],
+        "primary": primary,
+        "picked_score": (best or {}).get("score", 0.5),
+        "features_used": {
+            "pmf_supported": feats.get("pmf_supported"),
+            "client_count": feats.get("client_count"),
+            "signal": feats.get("signal"),
+        },
         "model": "polymorphic (heuristic)",
-        "note": "Use the primary pattern for the next deauth chain step.",
+        "note": "Primary is score-ranked for the observed target; not random.",
     })
 
 
 def poly_eapol_replay_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Pick an EAPOL replay counter strategy."""
-    import random
+    """Pick an EAPOL replay counter strategy ranked by WPA version / pcap."""
+    from core.utils.poly_adapt import (
+        extract_target_features, pick_best_variant, wifi_handshake_score_rules,
+    )
     step = _step("poly_eapol_replay_grammar")
-    seed = (args or {}).get("seed") or "eapol"
-    rng = random.Random(str(seed))
+    feats = extract_target_features(args)
     strategies = [
-        "linear_increment", "random_reseed", "monotonic_skip",
-        "batched_4x_then_pause", "burst_until_anonce_seen",
+        {"name": "linear_increment", "score": 0.5},
+        {"name": "random_reseed", "score": 0.45},
+        {"name": "monotonic_skip", "score": 0.5},
+        {"name": "batched_4x_then_pause", "score": 0.5},
+        {"name": "burst_until_anonce_seen", "score": 0.55},
+        {"name": "eapol_key_replay_msg3", "score": 0.5},
     ]
-    picked = rng.sample(strategies, k=3)
+    best, ranked = pick_best_variant(
+        strategies, features=feats, rules=wifi_handshake_score_rules(),
+    )
+    names = [v["name"] for v in ranked[:4]]
     return _ok(step, {
         "grammar": "eapol_replay",
-        "variants": picked,
-        "primary": picked[0],
+        "variants": names,
+        "variant_scores": [
+            {"name": v["name"], "score": v["score"]} for v in ranked[:4]
+        ],
+        "primary": (best or {}).get("name") or names[0],
+        "picked_score": (best or {}).get("score", 0.5),
+        "features_used": {
+            "wpa_version": feats.get("wpa_version"),
+            "has_pcap": feats.get("has_pcap"),
+            "pmf_supported": feats.get("pmf_supported"),
+        },
         "model": "polymorphic (heuristic)",
     })
 
 
 def poly_pmkid_eapol_field_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Pick which EAPOL fields to mutate for PMKID harvesting."""
+    """Pick which EAPOL fields to mutate for PMKID harvesting (target-ranked)."""
+    from core.utils.poly_adapt import (
+        extract_target_features, pick_best_variant, wifi_pmkid_score_rules,
+    )
     step = _step("poly_pmkid_eapol_field_grammar")
+    feats = extract_target_features(args)
     variants = [
-        "key_info_clear", "key_data_random_pad", "replay_counter_increment",
-        "mic_zero_then_random", "wpa_ssid_replay",
+        {"name": "key_info_clear", "score": 0.55},
+        {"name": "key_data_random_pad", "score": 0.45},
+        {"name": "replay_counter_increment", "score": 0.5},
+        {"name": "mic_zero_then_random", "score": 0.45},
+        {"name": "wpa_ssid_replay", "score": 0.5},
+        {"name": "rsn_ie_request", "score": 0.5},
     ]
+    best, ranked = pick_best_variant(
+        variants, features=feats, rules=wifi_pmkid_score_rules(),
+    )
+    names = [v["name"] for v in ranked]
     return _ok(step, {
         "grammar": "pmkid_eapol_field",
-        "variants": variants,
-        "primary": variants[0],
+        "variants": names,
+        "variant_scores": [
+            {"name": v["name"], "score": v["score"]} for v in ranked
+        ],
+        "primary": (best or {}).get("name") or names[0],
+        "picked_score": (best or {}).get("score", 0.5),
+        "features_used": {
+            "wpa_version": feats.get("wpa_version"),
+            "client_count": feats.get("client_count"),
+            "has_pcap": feats.get("has_pcap"),
+        },
         "model": "polymorphic (heuristic)",
-        "note": "Always try the first variant; mutate if no PMKID after 3s.",
+        "note": "Try primary first; fall through ranked list if no PMKID after 3s.",
     })
 
 
 def poly_wps_eap_failure_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Pick a WPS EAP failure injection variant."""
+    """Pick a WPS EAP failure injection variant ranked by WPS/target state."""
+    from core.utils.poly_adapt import (
+        extract_target_features, pick_best_variant, generic_keyword_boost,
+    )
     step = _step("poly_wps_eap_failure_grammar")
+    feats = extract_target_features(args)
     variants = [
-        "eap_failure_msg", "wps_nack_msg", "eap_duplicate_msg",
-        "wps_frag_reassemble", "eap_fragmentation",
+        {"name": "eap_failure_msg", "score": 0.55},
+        {"name": "wps_nack_msg", "score": 0.5},
+        {"name": "eap_duplicate_msg", "score": 0.45},
+        {"name": "wps_frag_reassemble", "score": 0.45},
+        {"name": "eap_fragmentation", "score": 0.45},
+        {"name": "wps_pixie_dust_prep", "score": 0.5},
     ]
+    rules = [generic_keyword_boost(
+        {},
+        {"wps": ("pixie", "nack", "eap_failure"), "pmf_supported": ("frag",)},
+    )]
+    best, ranked = pick_best_variant(variants, features=feats, rules=rules)
+    names = [v["name"] for v in ranked]
     return _ok(step, {
         "grammar": "wps_eap_failure",
-        "variants": variants,
-        "primary": variants[0],
+        "variants": names,
+        "variant_scores": [
+            {"name": v["name"], "score": v["score"]} for v in ranked
+        ],
+        "primary": (best or {}).get("name") or names[0],
+        "picked_score": (best or {}).get("score", 0.5),
         "model": "polymorphic (heuristic)",
     })
 
@@ -165,28 +242,78 @@ def poly_evil_twin_hostapd_conf_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def poly_passive_scan_channel_hop_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Pick a channel-hop sequence for passive scan."""
+    """Pick a channel-hop sequence ranked by target band / channel."""
+    from core.utils.poly_adapt import extract_target_features
     step = _step("poly_passive_scan_channel_hop_grammar")
-    sequences = [
-        [1, 6, 11], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        [36, 40, 44, 48], [1, 36, 6, 40, 11, 44],
+    feats = extract_target_features(args)
+    band = (feats.get("band") or "").lower()
+    channel = int(feats.get("channel") or 0)
+    # Named sequences keep list payloads intact (not stringified by enrich)
+    pool = [
+        {"name": "popular_1_6_11", "params": {"channels": [1, 6, 11]}, "score": 0.55},
+        {"name": "linear_1_11", "params": {"channels": list(range(1, 12))}, "score": 0.5},
+        {"name": "unii1_5g", "params": {"channels": [36, 40, 44, 48]}, "score": 0.45},
+        {"name": "interleaved_2g_5g", "params": {"channels": [1, 36, 6, 40, 11, 44]}, "score": 0.5},
     ]
+    if band in ("5", "5ghz", "5g") or channel >= 36:
+        for v in pool:
+            if "5g" in v["name"] or "unii" in v["name"] or "interleaved" in v["name"]:
+                v["score"] += 0.25
+            if "1_6_11" in v["name"] or "linear_1" in v["name"]:
+                v["score"] -= 0.1
+    elif band in ("2.4", "2.4ghz", "2g") or (1 <= channel <= 14):
+        for v in pool:
+            if "1_6_11" in v["name"] or "linear" in v["name"]:
+                v["score"] += 0.2
+    pool.sort(key=lambda x: (-x["score"], x["name"]))
+    # Preserve legacy shape: variants as channel lists, primary as list
+    sequences = [v["params"]["channels"] for v in pool]
     return _ok(step, {
         "grammar": "passive_scan_channel_hop",
         "variants": sequences,
+        "variant_scores": [
+            {"name": v["name"], "score": round(v["score"], 4),
+             "channels": v["params"]["channels"]}
+            for v in pool
+        ],
         "primary": sequences[0],
+        "picked_score": pool[0]["score"],
+        "features_used": {"band": band or None, "channel": channel or None},
         "model": "polymorphic (heuristic)",
     })
 
 
 def poly_client_probe_request_grammar(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Pick which client probe types to listen for."""
+    """Pick which client probe types to listen for (band-aware)."""
+    from core.utils.poly_adapt import extract_target_features, pick_best_variant
     step = _step("poly_client_probe_request_grammar")
-    variants = ["directed", "wildcard", "ssid_list", "mesh_probe", "6e_probe"]
+    feats = extract_target_features(args)
+    band = (feats.get("band") or "").lower()
+    variants = [
+        {"name": "directed", "score": 0.5},
+        {"name": "wildcard", "score": 0.55},
+        {"name": "ssid_list", "score": 0.5},
+        {"name": "mesh_probe", "score": 0.4},
+        {"name": "6e_probe", "score": 0.35},
+    ]
+    if band in ("6", "6ghz", "6g"):
+        for v in variants:
+            if "6e" in v["name"]:
+                v["score"] += 0.35
+    if feats.get("ssid"):
+        for v in variants:
+            if v["name"] in ("directed", "ssid_list"):
+                v["score"] += 0.15
+    best, ranked = pick_best_variant(variants, features=feats)
+    names = [v["name"] for v in ranked]
     return _ok(step, {
         "grammar": "client_probe_request",
-        "variants": variants,
-        "primary": "wildcard",
+        "variants": names,
+        "variant_scores": [
+            {"name": v["name"], "score": v["score"]} for v in ranked
+        ],
+        "primary": (best or {}).get("name") or "wildcard",
+        "picked_score": (best or {}).get("score", 0.5),
         "model": "polymorphic (heuristic)",
     })
 
@@ -246,43 +373,115 @@ def _pick_step(name: str) -> Dict[str, Any]:
 
 
 def adapt_attack_deauth_strategy_picker(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Pick a deauth strategy based on observed state."""
+    """Pick a deauth strategy from full target features + profile hints."""
+    from core.utils.poly_adapt import extract_target_features
     step = _pick_step("adapt_attack_deauth_strategy_picker")
-    pmf_supported = bool((args or {}).get("pmf_supported", False))
-    client_count = int((args or {}).get("client_count", 0))
+    feats = extract_target_features(args)
+    pmf_supported = bool(feats.get("pmf_supported"))
+    client_count = int(feats.get("client_count") or 0)
+    signal = feats.get("signal")
+    profile_hint = ""
+    try:
+        from core.modules.polymorphic_adapter import PolymorphicTargetAdapter
+        adapter = PolymorphicTargetAdapter()
+        ttype = adapter.classify_target(feats.get("_raw") or args or {})
+        profile_hint = getattr(ttype, "value", str(ttype))
+    except Exception:  # noqa: BLE001
+        profile_hint = ""
+
+    score = 0.6
     if pmf_supported and client_count < 3:
         pick, rationale = "sa_query_flood", "PMF on + few clients → SA-Query flood"
+        score = 0.85
     elif pmf_supported:
         pick, rationale = "krack_like_replay", "PMF on + many clients → KRACK-like"
+        score = 0.8
     elif client_count >= 5:
         pick, rationale = "broadcast_deauth_burst", "no PMF + many clients → broadcast"
+        score = 0.8
+    elif signal is not None and int(signal) < -80:
+        pick, rationale = "staggered_directed_deauth", "weak signal → staggered directed"
+        score = 0.75
     else:
         pick, rationale = "directed_deauth", "no PMF + few clients → directed"
+        score = 0.7
+    if profile_hint == "enterprise_ap" and not pmf_supported:
+        pick, rationale = "low_and_slow_directed", "enterprise profile → low-and-slow directed"
+        score = 0.78
+    elif profile_hint == "public_hotspot":
+        pick, rationale = "burst_three_30", "public hotspot → short burst (less sticky clients)"
+        score = 0.72
     return _ok(step, {
         "pick": pick,
         "rationale": rationale,
+        "score": score,
+        "features": {
+            "pmf_supported": pmf_supported,
+            "client_count": client_count,
+            "signal": signal,
+            "target_profile": profile_hint or None,
+        },
         "model": "target-adaptive (heuristic)",
     })
 
 
 def adapt_attack_handshake_strategy_picker(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Pick a handshake-capture strategy."""
+    """Pick a handshake-capture strategy from encryption / PMF / transition."""
+    from core.utils.poly_adapt import extract_target_features
     step = _pick_step("adapt_attack_handshake_strategy_picker")
-    wpa_version = (args or {}).get("wpa_version", "wpa2")
+    feats = extract_target_features(args)
+    wpa_version = feats.get("wpa_version") or "wpa2"
+    score = 0.7
     if wpa_version == "wpa3":
-        # Honest: SAE auth-frame capture + transition check; not a free
-        # offline crack. Dragonblood is research/vendor-specific.
-        pick, rationale = (
-            "sae_handshake_capture",
-            "WPA3 → SAE commit/confirm capture + transition-mode check",
-        )
+        if feats.get("transition_mode"):
+            pick, rationale = (
+                "sae_then_wpa2_transition",
+                "WPA3 transition mode → SAE capture + WPA2 fallback path",
+            )
+            score = 0.88
+        else:
+            # Honest: SAE auth-frame capture + transition check; not a free
+            # offline crack. Dragonblood is research/vendor-specific.
+            pick, rationale = (
+                "sae_handshake_capture",
+                "WPA3 → SAE commit/confirm capture + transition-mode check",
+            )
+            score = 0.85
     elif wpa_version == "wpa2_enterprise":
         pick, rationale = "eap_tls_capture", "WPA2-Enterprise → EAP-TLS capture"
+        score = 0.85
+    elif wpa_version == "wep":
+        pick, rationale = "wep_iv_collect", "WEP → IV collection (not 4-way)"
+        score = 0.8
+    elif wpa_version == "open":
+        pick, rationale = "open_assoc_monitor", "Open network → association monitor only"
+        score = 0.75
     else:
-        pick, rationale = "wpa2_4way_capture", "WPA2 → standard 4-way capture"
+        if feats.get("pmf_supported"):
+            pick, rationale = (
+                "wpa2_4way_passive",
+                "WPA2+PMF → passive 4-way (avoid deauth)",
+            )
+            score = 0.82
+        elif feats.get("client_count", 0) == 0:
+            pick, rationale = (
+                "pmkid_clientless",
+                "WPA2 + no clients → prefer PMKID clientless path",
+            )
+            score = 0.84
+        else:
+            pick, rationale = "wpa2_4way_capture", "WPA2 → standard 4-way capture"
+            score = 0.8
     return _ok(step, {
         "pick": pick,
         "rationale": rationale,
+        "score": score,
+        "features": {
+            "wpa_version": wpa_version,
+            "pmf_supported": feats.get("pmf_supported"),
+            "transition_mode": feats.get("transition_mode"),
+            "client_count": feats.get("client_count"),
+        },
         "model": "target-adaptive (heuristic)",
     })
 
@@ -325,7 +524,7 @@ def adapt_wifi_adapter_mode_picker(args: Dict[str, Any]) -> Dict[str, Any]:
         "iface": name,
         "mode": mode,
         "want": want,
-        "model": "target-adaptive (adapter state)",
+        "model": "target-adaptive (heuristic, adapter state)",
     })
 
 
@@ -344,7 +543,7 @@ def adapt_ble_adapter_power_picker(args: Dict[str, Any]) -> Dict[str, Any]:
     return _ok(step, {
         "pick": pick,
         "rationale": rationale,
-        "model": "target-adaptive (BLE power)",
+        "model": "target-adaptive (heuristic, BLE power)",
     })
 
 
@@ -471,7 +670,7 @@ def adapt_wpa3_sae_one_click_plan(args: Dict[str, Any]) -> Dict[str, Any]:
     return _ok(step, {
         "pick": primary,
         "rationale": f"one-click plan for {ssid} ({bssid}) enc={enc or '?'}",
-        "model": "target-adaptive (honest WPA3/WPA2)",
+        "model": "target-adaptive (heuristic, WPA3/WPA2)",
         "ssid": ssid,
         "bssid": bssid,
         "channel": channel,
@@ -2293,8 +2492,44 @@ def describe_poly_adapt_method(name: str) -> Optional[Dict[str, str]]:
     }
 
 
-def run_poly_adapt(name: str, args: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-    """Dispatch a polymorphic / target-adaptive method by name."""
+def run_poly_adapt(name: str, args: Optional[Dict[str, Any]] = None,
+                   *, use_memo: bool = True,
+                   merge_features: bool = True) -> Dict[str, Any]:
+    """Dispatch a polymorphic / target-adaptive method by name.
+
+    Optimizations (target-adaptive):
+      * Normalises ``args`` via :func:`extract_target_features` and
+        merges flat features into the call so companions see
+        ``wpa_version`` / ``pmf_supported`` / ``client_count`` even
+        when the orchestrator only passed ``encryption`` + ``clients``.
+      * Optional 15s memo cache for identical ``(name, features)``.
+      * Post-ranks ``data.variants`` with domain score rules so
+        ``primary`` / ``picked`` reflect the target, not list order.
+    """
+    from core.utils.poly_adapt import (
+        apply_os_boost,
+        enrich_poly_result,
+        extract_target_features,
+        memo_get,
+        memo_put,
+        rules_for_method,
+    )
+
+    raw_args = dict(args or {})
+    features = extract_target_features(raw_args)
+    if merge_features:
+        # Non-destructive: only fill missing / empty keys
+        for k, v in features.items():
+            if k == "_raw":
+                continue
+            if k not in raw_args or raw_args.get(k) in (None, "", [], {}):
+                raw_args[k] = v
+
+    if use_memo:
+        cached = memo_get(name, raw_args)
+        if cached is not None:
+            return cached
+
     fn = POLY_ADAPT_REGISTRY.get(name)
     if fn is None:
         return {
@@ -2303,13 +2538,36 @@ def run_poly_adapt(name: str, args: Optional[Dict[str, Any]] = None) -> Dict[str
             "data": None, "duration_s": 0.0,
         }
     try:
-        return fn(args or {})
+        result = fn(raw_args)
     except Exception as e:  # noqa: BLE001
         step = _step(name)
         step["ok"] = False
         step["error"] = f"unhandled: {e}"
         step["duration_s"] = round(time.time() - step.get("started", time.time()), 3)
         return step
+
+    if isinstance(result, dict) and result.get("ok"):
+        rules = list(rules_for_method(name))
+        if features.get("os"):
+            rules.append(apply_os_boost(features))
+        # Only re-rank when:
+        #   * companion did not already attach scores, AND
+        #   * we have domain rules (or OS boost) that can actually
+        #     differentiate variants. Blind alphabetical re-rank of
+        #   equal scores would clobber intentional primaries.
+        data = result.get("data") if isinstance(result.get("data"), dict) else {}
+        already_scored = bool(
+            data.get("variant_scores") or data.get("picked_score") is not None
+        )
+        if (
+            data.get("variants")
+            and not already_scored
+            and rules
+        ):
+            result = enrich_poly_result(result, features, rules=rules)
+        if use_memo and result.get("ok"):
+            memo_put(name, raw_args, result)
+    return result
 
 
 # Phase 5 prompt stanza

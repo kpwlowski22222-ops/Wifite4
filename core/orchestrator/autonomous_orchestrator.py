@@ -1636,13 +1636,37 @@ class AutonomousOrchestrator:
             result = {
                 "cve_id": cve_id, "ok": False, "error": f"raised: {e}",
             }
-        # Normalize to dict.
-        if hasattr(result, "to_dict"):
-            res_dict = result.to_dict()
+        # Normalize to dict (dataclass CveToExploitResult or plain dict).
+        if hasattr(result, "to_dict") and callable(getattr(result, "to_dict")):
+            try:
+                res_dict = result.to_dict()
+            except Exception:  # noqa: BLE001
+                res_dict = None
         elif isinstance(result, dict):
             res_dict = result
         else:
-            res_dict = {"cve_id": cve_id, "ok": False, "error": "non-dict result"}
+            res_dict = None
+        if not isinstance(res_dict, dict):
+            # Last-resort: dataclasses.asdict for CveToExploitResult-like
+            # objects that forgot to_dict (never report bare "non-dict").
+            try:
+                from dataclasses import asdict, is_dataclass
+                if is_dataclass(result) and not isinstance(result, type):
+                    res_dict = asdict(result)
+                else:
+                    res_dict = {
+                        "cve_id": cve_id,
+                        "ok": bool(getattr(result, "ok", False)),
+                        "error": (
+                            getattr(result, "error", None)
+                            or f"non-dict result: {type(result).__name__}"
+                        ),
+                    }
+            except Exception:  # noqa: BLE001
+                res_dict = {
+                    "cve_id": cve_id, "ok": False,
+                    "error": f"non-dict result: {type(result).__name__}",
+                }
         ok = bool(res_dict.get("ok"))
         if ok:
             self._emit(
@@ -2440,6 +2464,74 @@ class AutonomousOrchestrator:
         }
         report["executed"].append(entry)
 
+    def _dispatch_holo_desktop(self, step: Dict[str, Any],
+                               seed: Dict[str, Any],
+                               report: Dict[str, Any]) -> None:
+        """Drive the OS via holo-desktop-cli (Holo3 vision agent).
+
+        Used to open tools, manage Ollama models, and navigate desktop
+        UI when CLI alone is insufficient. Always ACCEPT-gated by the
+        Holo bridge (default-deny without confirm_fn).
+        """
+        from core.desktop.holo_agent import HoloDesktopBridge
+
+        args = step.get("args") or {}
+        if not isinstance(args, dict):
+            args = {}
+        task = (
+            args.get("task")
+            or step.get("task")
+            or args.get("prompt")
+            or ""
+        )
+        goal = args.get("goal") or args.get("preset") or ""
+        tool = args.get("tool") or args.get("app") or ""
+        model_name = args.get("model_name") or args.get("ollama_model") or ""
+        fake = bool(args.get("fake") or os.environ.get("KFIOSA_HOLO_FAKE") == "1")
+        dry = bool(args.get("dry_run"))
+
+        bridge = HoloDesktopBridge(
+            confirm_fn=self.confirm_fn,
+            settings=getattr(self, "settings", None)
+            or getattr(self, "settings_manager", None),
+        )
+        self._emit(
+            f"[*] holo_desktop goal={goal or 'custom'} tool={tool or '-'} "
+            f"model={model_name or '-'}"
+        )
+        result = bridge.run(
+            task=str(task),
+            goal=str(goal),
+            tool=str(tool),
+            model_name=str(model_name),
+            extra=str(args.get("extra") or ""),
+            max_steps=args.get("max_steps"),
+            max_time_s=args.get("max_time_s"),
+            fake=fake,
+            dry_run=dry,
+        )
+        ok = bool(result.get("ok"))
+        self._emit(
+            f"[{'+' if ok else '!'}] holo_desktop ok={ok} "
+            f"{(result.get('error') or '')[:120]}"
+        )
+        entry = {
+            "desc": step.get("desc", "holo_desktop"),
+            "kind": "ai",
+            "action": "holo_desktop",
+            "tool": "core.desktop.holo_agent",
+            "result": result,
+        }
+        report["executed"].append(entry)
+        if isinstance(seed, dict) and ok:
+            seed.setdefault("holo", {})
+            if isinstance(seed["holo"], dict):
+                seed["holo"]["last"] = {
+                    "ok": True,
+                    "task": (result.get("task") or "")[:200],
+                    "duration_s": result.get("duration_s"),
+                }
+
     def _dispatch_poly_adapt(self, step: Dict[str, Any],
                              seed: Dict[str, Any],
                              report: Dict[str, Any]) -> None:
@@ -2495,9 +2587,32 @@ class AutonomousOrchestrator:
             }
             report["executed"].append(entry)
             return
-        result = run_poly_adapt(method, args)
+        # Merge live seed features so companions are target-adaptive
+        # (encryption, clients, pmf, chipset, …) not just step.args.
+        merged = dict(args)
+        if isinstance(seed, dict):
+            for k, v in seed.items():
+                if k in ("recon", "cves", "kb_hits", "executed"):
+                    # keep recon nested for extract_target_features
+                    if k == "recon" and k not in merged:
+                        merged[k] = v
+                    continue
+                if k not in merged or merged.get(k) in (None, "", [], {}):
+                    merged[k] = v
+        result = run_poly_adapt(method, merged)
+        pick = None
+        if isinstance(result.get("data"), dict):
+            pick = result["data"].get("primary") or result["data"].get("pick")
+            # Stash for downstream chain steps
+            report.setdefault("poly_adapt_last", {})[method] = {
+                "pick": pick,
+                "score": result["data"].get("picked_score")
+                or result["data"].get("score"),
+                "ok": result.get("ok"),
+            }
         self._emit(
             f"[+] poly_adapt {method}: ok={result.get('ok')}"
+            + (f" pick={pick}" if pick else "")
         )
         entry = {
             "desc": step.get("desc", f"poly_adapt {method}"),
@@ -2621,6 +2736,9 @@ class AutonomousOrchestrator:
             return
         if action == "external_terminal":
             self._dispatch_external_terminal(step, seed, report)
+            return
+        if action in ("holo_desktop", "desktop_nav", "holo_run"):
+            self._dispatch_holo_desktop(step, seed, report)
             return
         if action == "mt7921e_test_injection":
             self._dispatch_mt7921e_test_injection(step, seed, report)

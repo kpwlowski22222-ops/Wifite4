@@ -20,6 +20,7 @@ os.chdir(REPO_ROOT)
 # Keep the unit tests hermetic: no real AI/CVE network, no MCP autostart.
 os.environ.setdefault("KFIOSA_MCP_AUTOSTART", "0")
 os.environ.setdefault("KFIOSA_SMOKE", "0")
+os.environ.setdefault("KFIOSA_SKIP_NVD", "1")  # adaptive engagement: no live NVD
 os.environ.setdefault("GROQ_API_KEY", "")
 os.environ.setdefault("NVD_API_KEY", "")
 
@@ -49,7 +50,7 @@ def _make_screen(cls, activity_log, **overrides):
         # tests that need to assert on the recon report can grab the
         # instance via the factory's ``last_instance`` attribute.
         external_terminal=FakeExternalTerminal(),
-        catalog_recon_factory=None,
+        catalog_recon_factory=lambda target: FakeCatalogRecon({"target": target}),
     )
     kwargs.update(overrides)
     return cls(None, lambda: None, activity_log, **kwargs)

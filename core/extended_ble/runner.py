@@ -79,17 +79,40 @@ def _finalize(step: Dict[str, Any], started: float, *,
     return step
 
 
-def _which(tool: str) -> bool:
+def _which(tool: str, *, try_install: bool = False,
+           confirm_fn=None) -> bool:
     """Return True iff the tool binary is on PATH.
 
-    In Phase 4+, this becomes ``_which_with_install`` to wire the
-    tool-installer (so the runner can attempt an apt-install before
-    degrading). For now, we just check presence — never fabricate a
-    successful tool call.
+    When ``try_install`` is True (or env ``KFIOSA_AUTO_INSTALL_TOOLS=1``),
+    attempts :func:`core.tool_installer.install.maybe_install` before
+    degrading. Never fabricates a successful tool call — install must
+    actually put the binary on PATH.
     """
-    # TODO(Phase 4+): replace with _which_with_install to wire the
-    # tool-installer. For now, presence-only.
-    return shutil.which(tool) is not None
+    return _which_with_install(tool, try_install=try_install,
+                               confirm_fn=confirm_fn)
+
+
+def _which_with_install(tool: str, *, try_install: bool = False,
+                        confirm_fn=None, auto: bool = False) -> bool:
+    """PATH check with optional catalog install (Phase 4+ TODO resolved)."""
+    if shutil.which(tool):
+        return True
+    import os as _os
+    do_install = (
+        try_install
+        or _os.environ.get("KFIOSA_AUTO_INSTALL_TOOLS", "").strip() in (
+            "1", "true", "yes", "on",
+        )
+    )
+    if not do_install:
+        return False
+    try:
+        from core.tool_installer.install import maybe_install
+        return bool(maybe_install(
+            tool, auto=auto, confirm_fn=confirm_fn,
+        ))
+    except Exception:  # noqa: BLE001 — install is best-effort
+        return False
 
 
 def _run(cmd: List[str], timeout: int = 20,

@@ -360,12 +360,25 @@ class Catalog:
     def wifi_entries(self, limit: int = DEFAULT_PROMPT_LIMIT
                      ) -> List[CatalogEntry]:
         """Return WiFi-relevant Kali packages (or GitHub repos) up to
-        ``limit``. Falls back to the first ``limit`` entries if nothing
-        matches the WiFi keywords."""
-        pool = filter_by_keywords(self.entries(), WIFI_KEYWORDS)
-        if not pool:
-            pool = self.entries()
-        return pool[:limit]
+        ``limit``. Uses a streaming match so startup does not parse the
+        entire catalog tree. Falls back to a capped full load if no
+        keyword hits."""
+        if self._loaded and self._entries:
+            pool = filter_by_keywords(self._entries, WIFI_KEYWORDS)
+            if pool:
+                return pool[:limit]
+        # Fast path: stop once we have ``limit`` WiFi hits
+        try:
+            pool = load_catalog_matching(WIFI_KEYWORDS, root=self._root,
+                                         limit=limit)
+        except Exception:  # noqa: BLE001
+            pool = []
+        if pool:
+            return pool
+        # Fallback: load at most 4× limit entries then filter
+        pool = load_catalog(self._root, limit=max(limit * 4, 50))
+        matched = filter_by_keywords(pool, WIFI_KEYWORDS)
+        return (matched or pool)[:limit]
 
     def context_block(self, domain: Optional[str] = None,
                       limit: int = DEFAULT_PROMPT_LIMIT,
@@ -403,14 +416,52 @@ class Catalog:
 _CATALOG_CACHE: Optional[Catalog] = None
 
 
+def load_catalog_matching(
+    tokens: Iterable[str],
+    root: Path = CATALOG_DIR,
+    limit: int = 50,
+) -> List[CatalogEntry]:
+    """Load only enough catalog files to satisfy ``limit`` keyword hits.
+
+    Avoids parsing thousands of JSON files on TUI startup when the
+    caller only needs a small WiFi (or other) subset.
+    """
+    out: List[CatalogEntry] = []
+    tok = tuple(tokens)
+    for path in _iter_catalog_files(root):
+        try:
+            blob = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+        except (OSError, json.JSONDecodeError) as e:
+            logger.debug("skip catalog %s: %s", path.name, e)
+            continue
+        entry = _parse_entry(path, blob)
+        if entry is None:
+            continue
+        if not entry.matches(tok):
+            continue
+        out.append(entry)
+        if len(out) >= limit:
+            break
+    return out
+
+
 def get_catalog() -> Catalog:
-    """Return a process-cached :class:`Catalog` instance. The first call
-    parses the JSON files; subsequent calls return the same object."""
+    """Return a process-cached :class:`Catalog` instance.
+
+    First call uses a **lazy** Catalog that does not parse every JSON
+    file until :meth:`Catalog.entries` is forced. Use
+    :meth:`Catalog.wifi_entries` / :func:`load_catalog_matching` for
+    fast partial loads at startup.
+    """
     global _CATALOG_CACHE
     if _CATALOG_CACHE is None:
         try:
-            _CATALOG_CACHE = Catalog.load()
-            logger.debug("loaded %d catalog entries", len(_CATALOG_CACHE.entries()))
+            # Lazy: empty shell; entries() loads on demand. wifi_entries
+            # short-circuits via load_catalog_matching.
+            _CATALOG_CACHE = Catalog(entries=None, root=CATALOG_DIR)
+            _CATALOG_CACHE._loaded = False
+            _CATALOG_CACHE._entries = []
+            logger.debug("catalog cache initialized (lazy)")
         except Exception as e:
             logger.warning("catalog load failed: %s", e)
             _CATALOG_CACHE = Catalog(entries=[])

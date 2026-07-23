@@ -92,14 +92,18 @@ def pick_device(stdscr, activity_log: List[str],
                 if i == idx:
                     stdscr.attroff(curses.A_REVERSE)
             stdscr.refresh()
-            key = stdscr.getch()
+            try:
+                from core.tui.base_screen import read_curses_key
+                key = read_curses_key(stdscr)
+            except Exception:
+                key = stdscr.getch()
             if key == -1:
                 continue
-            if key in (curses.KEY_UP,):
+            if key in (curses.KEY_UP, ord("k"), ord("K")):
                 idx = (idx - 1) % len(devices)
-            elif key in (curses.KEY_DOWN,):
+            elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
                 idx = (idx + 1) % len(devices)
-            elif key in (curses.KEY_ENTER, 10, 13):
+            elif key in (curses.KEY_ENTER, 10, 13, ord(" ")):
                 mac = devices[idx].get("mac")
                 activity_log.append(f"[+] Selected device: {mac}")
                 result = mac

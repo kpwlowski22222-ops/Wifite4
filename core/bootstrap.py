@@ -58,10 +58,14 @@ def check_tools() -> Dict[str, bool]:
     return {tool: bool(shutil.which(tool)) for tool in _TOOLCHAIN}
 
 
-def check_ollama(endpoint: str = "http://127.0.0.1:11434") -> Dict[str, Any]:
+def check_ollama(endpoint: str = "http://127.0.0.1:11434",
+                 timeout: float = 1.2) -> Dict[str, Any]:
     """Probe a local Ollama instance.
 
     Returns {reachable, models, endpoint}.
+
+    ``timeout`` defaults to 1.2s so an unreachable daemon does not
+    stall TUI / preflight startup (was 5s per probe).
     """
     info: Dict[str, Any] = {"reachable": False, "models": [], "endpoint": endpoint}
     try:
@@ -69,7 +73,7 @@ def check_ollama(endpoint: str = "http://127.0.0.1:11434") -> Dict[str, Any]:
         ep = endpoint
         if ep and "://" not in ep:
             ep = "http://" + ep
-        r = requests.get(f"{ep.rstrip('/')}/api/tags", timeout=5)
+        r = requests.get(f"{ep.rstrip('/')}/api/tags", timeout=float(timeout))
         if r.status_code == 200:
             info["reachable"] = True
             info["models"] = [
@@ -80,6 +84,29 @@ def check_ollama(endpoint: str = "http://127.0.0.1:11434") -> Dict[str, Any]:
     except Exception as e:
         logger.debug(f"Ollama probe failed: {e}")
     return info
+
+
+def _find_ollama_bin() -> str:
+    """Locate the ollama binary (sudo-safe PATH + common install paths)."""
+    which = shutil.which("ollama")
+    if which:
+        return which
+    candidates = [
+        "/usr/local/bin/ollama",
+        "/usr/bin/ollama",
+        "/opt/ollama/bin/ollama",
+        "/snap/bin/ollama",
+    ]
+    sudo_user = os.environ.get("SUDO_USER") or ""
+    if sudo_user:
+        candidates.insert(0, f"/home/{sudo_user}/.local/bin/ollama")
+    home = os.path.expanduser("~")
+    if home:
+        candidates.append(os.path.join(home, ".local", "bin", "ollama"))
+    for c in candidates:
+        if c and os.path.isfile(c) and os.access(c, os.X_OK):
+            return c
+    return ""
 
 
 def _ollama_endpoint(settings: Any = None) -> str:
@@ -143,29 +170,37 @@ def ensure_ollama_ready(
         "error": "",
     }
 
-    info = check_ollama(endpoint)
-    if not info["reachable"] and start_serve and shutil.which("ollama"):
-        log("[*] Ollama unreachable — starting `ollama serve` in background…")
+    info = check_ollama(endpoint, timeout=1.0)
+    ollama_bin = _find_ollama_bin()
+    if not info["reachable"] and start_serve and ollama_bin:
+        log(f"[*] Ollama unreachable — starting `{ollama_bin} serve`…")
         try:
             import subprocess
+            env = os.environ.copy()
+            # Prefer binding on localhost; honor OLLAMA_HOST if set.
+            env.setdefault("OLLAMA_HOST", endpoint.replace("http://", "").replace("https://", ""))
             subprocess.Popen(
-                ["ollama", "serve"],
+                [ollama_bin, "serve"],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 stdin=subprocess.DEVNULL,
                 start_new_session=True,
+                env=env,
             )
             report["started_serve"] = True
-            # Wait briefly for the API.
+            # Fast poll: 0.2s × 20 = 4s max (was 0.5s × 20 = 10s).
             import time
             for _ in range(20):
-                time.sleep(0.5)
-                info = check_ollama(endpoint)
+                time.sleep(0.2)
+                info = check_ollama(endpoint, timeout=0.8)
                 if info["reachable"]:
                     break
         except Exception as e:
             report["error"] = f"ollama serve failed: {e}"
             log(f"[!] {report['error']}")
+    elif not info["reachable"] and start_serve and not ollama_bin:
+        report["error"] = "ollama binary not found on PATH"
+        log(f"[!] {report['error']} — install ollama or fix PATH")
 
     report["reachable"] = bool(info.get("reachable"))
     report["models"] = list(info.get("models") or [])
@@ -305,25 +340,42 @@ def _resolve_domain_models(
     return out
 
 
-def preflight(settings: Any = None) -> Dict[str, Any]:
+def preflight(settings: Any = None, *, ensure_ollama: bool = True
+              ) -> Dict[str, Any]:
     """Run all checks and return a single report dict.
 
     Args:
         settings: a SettingsManager (or None) — used to read the configured
             Ollama endpoint.
+        ensure_ollama: when True (default), start ``ollama serve`` if the
+            API is down and the binary is present. Set False when the
+            caller already ran :func:`ensure_ollama_ready`.
     Prints a human-readable present/missing table to stdout (pre-curses).
     """
     deps = check_requirements()
     tools = check_tools()
 
-    endpoint = "http://127.0.0.1:11434"
-    if settings is not None:
+    endpoint = _ollama_endpoint(settings)
+    ollama_ready: Dict[str, Any] = {}
+    if ensure_ollama:
         try:
-            endpoint = settings.get_setting("ollama.endpoint", endpoint) or endpoint
-        except Exception:
-            pass
-    endpoint = os.getenv("OLLAMA_HOST", endpoint)
-    ollama = check_ollama(endpoint)
+            ollama_ready = ensure_ollama_ready(
+                settings=settings,
+                on_event=lambda m: print(m),
+                pull_missing=False,
+                start_serve=True,
+            )
+            ollama = {
+                "reachable": bool(ollama_ready.get("reachable")),
+                "models": list(ollama_ready.get("models") or []),
+                "endpoint": ollama_ready.get("endpoint") or endpoint,
+                "started_serve": bool(ollama_ready.get("started_serve")),
+            }
+        except Exception as e:
+            logger.debug("ensure_ollama_ready in preflight: %s", e)
+            ollama = check_ollama(endpoint, timeout=1.0)
+    else:
+        ollama = check_ollama(endpoint, timeout=1.0)
 
     # Pretty-print before curses.
     print("=" * 64)
@@ -337,12 +389,17 @@ def preflight(settings: Any = None) -> Dict[str, Any]:
         print(f"  {mark:8} {dep}{label}")
 
     print("\n[Ollama]")
-    if ollama["reachable"]:
+    if ollama.get("reachable"):
         print(f"  OK       endpoint {ollama['endpoint']}  ({len(ollama['models'])} models)")
-        for m in ollama["models"]:
+        if ollama.get("started_serve"):
+            print("             (daemon was started this session)")
+        for m in (ollama.get("models") or [])[:12]:
             print(f"             - {m}")
+        if len(ollama.get("models") or []) > 12:
+            print(f"             … +{len(ollama['models']) - 12} more")
     else:
-        print(f"  UNREACHABLE  {ollama['endpoint']}  (AI will fall back to Groq/heuristic)")
+        print(f"  UNREACHABLE  {ollama.get('endpoint') or endpoint}  "
+              f"(AI will fall back to heuristic)")
 
     print("\n[Offensive toolchain]")
     present = [t for t, ok in tools.items() if ok]
@@ -366,6 +423,7 @@ def preflight(settings: Any = None) -> Dict[str, Any]:
         "deps": deps,
         "tools": tools,
         "ollama": ollama,
+        "ollama_ready": ollama_ready,
         "hard_missing": hard_missing,
     }
 

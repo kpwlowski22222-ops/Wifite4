@@ -147,8 +147,31 @@ def _curses_main(runner: PostAccessRunner, state: SessionState,
                 ch = stdscr.getch()
                 if ch == -1:
                     return ""
-                # Map a few special keys
+                if ch == curses.KEY_UP:
+                    return "\x1b[A"
+                if ch == curses.KEY_DOWN:
+                    return "\x1b[B"
+                if ch == curses.KEY_RIGHT:
+                    return "\x1b[C"
+                if ch == curses.KEY_LEFT:
+                    return "\x1b[D"
+                # Map special keys & escape sequences
                 if ch == 27:  # ESC
+                    try:
+                        stdscr.timeout(0)
+                        ch1 = stdscr.getch()
+                        if ch1 in (ord("["), ord("O")):
+                            ch2 = stdscr.getch()
+                            if ch2 in (ord("A"), ord("a")):
+                                return "\x1b[A"
+                            elif ch2 in (ord("B"), ord("b")):
+                                return "\x1b[B"
+                            elif ch2 in (ord("C"), ord("c")):
+                                return "\x1b[C"
+                            elif ch2 in (ord("D"), ord("d")):
+                                return "\x1b[D"
+                    except Exception:
+                        pass
                     return "\x1b"
                 if ch == curses.KEY_F12:
                     return "KEY_F12"

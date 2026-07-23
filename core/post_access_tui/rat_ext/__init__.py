@@ -845,7 +845,7 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
             mime = environ.get("CONTENT_TYPE", "image/png").split(";")[0].strip()
             res = _screen.save_screenshot(sid, raw, declared_mime=mime)
             return _json(res)
-        # Legacy capability route
+        # Legacy capability route (+ v5 drawer-friendly pretty field)
         if len(parts) >= 3 and parts[0] == "cap":
             sid = parts[1]
             cap = parts[2]
@@ -859,6 +859,18 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
                     "session_id": sid,
                     "capability": cap,
                 }
+            try:
+                from . import v5_enhancements as _v5
+                pretty = _v5.format_capability_result(payload)
+                if isinstance(payload, dict):
+                    payload = dict(payload)
+                    payload["pretty"] = pretty.get("pretty")
+                    payload.setdefault("session_id", sid)
+                    payload.setdefault("capability", cap)
+                else:
+                    payload = pretty
+            except Exception:  # noqa: BLE001
+                pass
             return _json(payload)
         # Per-session API routes
         if parts[0] == "api" and len(parts) >= 3 and parts[1] == "session":
@@ -1043,6 +1055,31 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
                     "hardware", "plan_preview",
                 ],
                 "model": "rat-dashboard-v4",
+            }, status="404 Not Found")
+        # ---------------------------------------------------------------
+        # v5 dashboard UX: health, summary, shortcuts, refresh config
+        # ---------------------------------------------------------------
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "v5" and method == "GET"):
+            from . import v5_enhancements as _v5
+            sub = parts[2] if len(parts) >= 3 else ""
+            if sub == "health":
+                return _json(_v5.dashboard_health(sessions_list))
+            if sub == "summary":
+                return _json(_v5.session_summary(sessions_list))
+            if sub == "shortcuts":
+                return _json({
+                    "ok": True,
+                    "shortcuts": _v5.keyboard_shortcuts(),
+                    "model": "rat-dashboard-v5",
+                })
+            if sub == "refresh":
+                return _json(_v5.live_refresh_config())
+            return _json({
+                "ok": False,
+                "error": f"unknown v5 endpoint {sub!r}",
+                "endpoints": ["health", "summary", "shortcuts", "refresh"],
+                "model": "rat-dashboard-v5",
             }, status="404 Not Found")
         if (parts[0] == "api" and len(parts) >= 3
                 and parts[1] == "v4" and parts[2] == "plan_preview"

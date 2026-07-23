@@ -339,6 +339,14 @@ TOOL_CATALOG: dict[str, InstallSpec] = {
     ),
     # --- AI / BLE (apt + pip) ---
     "ollama":        InstallSpec(apt="ollama"),
+    "holo":          InstallSpec(
+        pip="holo-desktop-cli",
+        git=(
+            "https://github.com/hcompai/holo-desktop-cli",
+            "toolboxes/tools/holo-desktop-cli",
+        ),
+        confirm_required=True,
+    ),
     "bleak":         InstallSpec(pip="bleak"),
     # --- iOS / Android transitive (apt + pip) ---
     "ios-deploy":    InstallSpec(apt="ios-deploy"),

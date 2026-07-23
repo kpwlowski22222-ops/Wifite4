@@ -3,7 +3,9 @@ import logging
 import subprocess
 import re
 from typing import List, Dict, Any
-from core.modules.debug_logger import debug, info, warning, error, debug_dict, time_it
+from core.modules.debug_logger import (
+    debug, info, warning, error, debug_dict, time_it, debug_exception,
+)
 
 class ReconnaissanceModule:
     def __init__(self):
@@ -105,12 +107,12 @@ class ReconnaissanceModule:
             info(f"Airodump-ng scan completed: {len(networks)} networks found")
             
         except FileNotFoundError:
-            warning("airodump-ng not found - using simulated scan for development")
-            networks = await self._simulated_scan(interface)
+            warning("airodump-ng not found — cannot scan (install aircrack-ng)")
+            return []
         except Exception as e:
             error(f"Error running airodump-ng scan: {e}")
             debug_exception("Airodump-ng scan")
-            networks = await self._simulated_scan(interface)
+            return []
             
         return networks
         
@@ -167,97 +169,69 @@ class ReconnaissanceModule:
         return networks
         
     @time_it
-    async def _simulated_scan(self, interface: str) -> List[Dict[str, Any]]:
-        """Simulate a network scan for development/testing"""
-        info(f"Running simulated scan on interface {interface}")
-        
-        # Simulate some delay
-        await asyncio.sleep(2)
-        
-        # Generate simulated networks
-        simulated_networks = [
-            {
-                "bssid": "AA:BB:CC:DD:EE:01",
-                "ssid": "HomeNetwork",
-                "channel": "6",
-                "encryption": "WPA2-PSK",
-                "power": "-45",
-                "beacons": "120",
-                "iv": "0",
-                "lan_ip": "192.168.1.1",
-                "id_length": "",
-                "essid": "HomeNetwork",
-                "key": ""
-            },
-            {
-                "bssid": "AA:BB:CC:DD:EE:02", 
-                "ssid": "CORP_NETWORK",
-                "channel": "36",
-                "encryption": "WPA2-ENTERPRISE",
-                "power": "-60",
-                "beacons": "85",
-                "iv": "0",
-                "lan_ip": "10.0.0.1",
-                "id_length": "",
-                "essid": "CORP_NETWORK",
-                "key": ""
-            },
-            {
-                "bssid": "AA:BB:CC:DD:EE:03",
-                "ssid": "Free_Public_WiFi",
-                "channel": "1",
-                "encryption": "Open",
-                "power": "-35",
-                "beacons": "200",
-                "iv": "0",
-                "lan_ip": "",
-                "id_length": "",
-                "essid": "Free_Public_WiFi",
-                "key": ""
-            }
-        ]
-        
-        info(f"Simulated scan completed: {len(simulated_networks)} networks generated")
-        debug_dict("Simulated Networks", simulated_networks)
-        
-        return simulated_networks
-        
-    @time_it
     async def execute_action(self, target: Any, action: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
+        """Run a real recon action. Never fabricates networks or packet counts."""
         info(f"Executing reconnaissance action: {action}")
         debug_dict("Recon Action Parameters", {"target": str(target), "action": action, "parameters": parameters})
         
         try:
-            # Simulate different reconnaissance actions
-            if "scan" in action.lower():
-                # Perform a quick scan
-                await asyncio.sleep(1)
+            action_l = (action or "").lower()
+            iface = (
+                parameters.get("interface")
+                or self.interface
+                or getattr(target, "interface", None)
+                or (target.get("interface") if isinstance(target, dict) else None)
+            )
+            if "scan" in action_l:
+                if not iface:
+                    return {
+                        "success": False,
+                        "action": action,
+                        "error": "interface required for scan",
+                        "message": "Pass parameters.interface or set module.interface",
+                    }
+                networks = await self.scan(str(iface))
                 result = {
                     "success": True,
                     "action": action,
-                    "data": {"networks_found": 3, "scan_type": "quick"},
-                    "message": "Quick reconnaissance scan completed"
+                    "data": {
+                        "networks_found": len(networks),
+                        "networks": networks[:50],
+                        "scan_type": "airodump-ng",
+                        "interface": str(iface),
+                    },
+                    "message": f"Scan completed: {len(networks)} networks",
                 }
-            elif "monitor" in action.lower():
-                # Monitor traffic
-                await asyncio.sleep(2)
+            elif "monitor" in action_l:
+                # Bounded airodump capture if iface present; else honest fail.
+                if not iface:
+                    return {
+                        "success": False,
+                        "action": action,
+                        "error": "interface required for monitor",
+                        "message": "Pass parameters.interface for traffic monitor",
+                    }
+                networks = await self._run_airodump_scan(str(iface))
                 result = {
                     "success": True,
                     "action": action,
-                    "data": {"packets_captured": 1500, "devices_seen": 5},
-                    "message": "Traffic monitoring completed"
+                    "data": {
+                        "networks_observed": len(networks),
+                        "networks": networks[:50],
+                        "interface": str(iface),
+                        "note": "passive airodump window; not a long-running capture",
+                    },
+                    "message": f"Monitor window complete: {len(networks)} APs",
                 }
             else:
-                # Generic reconnaissance action
-                await asyncio.sleep(0.5)
                 result = {
-                    "success": True,
+                    "success": False,
                     "action": action,
-                    "data": {"completed": True},
-                    "message": f"Reconnaissance action {action} completed"
+                    "error": f"unknown recon action {action!r}",
+                    "message": "Supported: scan, monitor (requires interface)",
                 }
                 
-            info(f"Reconnaissance action {action} completed successfully")
+            info(f"Reconnaissance action {action}: success={result.get('success')}")
             debug_dict("Recon Action Result", result)
             return result
             

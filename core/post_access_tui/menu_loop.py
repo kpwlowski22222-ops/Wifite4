@@ -34,8 +34,8 @@ logger = logging.getLogger(__name__)
 
 # Token normalization. Tests / piped stdin send plain text;
 # real terminals send ANSI escape sequences. We map both.
-_UP_TOKENS = ("\x1b[A", "key_up", "up", "UP", "k")
-_DOWN_TOKENS = ("\x1b[B", "key_down", "down", "DOWN", "j")
+_UP_TOKENS = ("\x1b[A", "\x1bOA", "key_up", "up", "UP", "k", "K")
+_DOWN_TOKENS = ("\x1b[B", "\x1bOB", "key_down", "down", "DOWN", "j", "J")
 _ENTER_TOKENS = ("\r", "\n", " ", "key_enter", "enter", "ENTER")
 _BACK_TOKENS = ("\x1b", "\x1b\x1b", "key_backspace", "backspace",
                  "BACKSPACE", "127", "8", "q", "Q")

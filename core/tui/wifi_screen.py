@@ -72,6 +72,7 @@ class WiFiScreen(BaseScreen):
         self.primary_items = [
             ("Scan Networks (external airgeddon/wifite window)", self.scan_networks),
             ("▶ AIO ATTACK selected target", self.aio_attack),
+            ("▶ Adaptive until-access (recon→CVE→plan→poly→RAT)", self.adaptive_until_access),
             ("▶ One-click plan + attack", self.one_click_attack),
             ("Select Target (in-dashboard)", self._select_target_prompt),
             ("Report", self.show_report),
@@ -217,7 +218,7 @@ class WiFiScreen(BaseScreen):
             self.activity_log.append(f"[!] one-click planner failed: {e}")
 
         # Reuse the full recon + gated attack chain.
-        self.run_attack_chain()
+        self._run_adaptive(until_access=True)
 
     def aio_attack(self):
         """All-In-One attack on the selected AP (ACCEPT-gated).
@@ -237,7 +238,7 @@ class WiFiScreen(BaseScreen):
             loaded = self._load_external_scan_selection()
             if not loaded:
                 self.activity_log.append(
-                    "[!] Select a target first (Scan → external window → ENTER/A)."
+                    "[!] Select a target first (Scan → number key)."
                 )
                 return
         if not self.orchestrator:
@@ -305,13 +306,15 @@ class WiFiScreen(BaseScreen):
 
         self.selected_target = t
         self.activity_log.append(
-            "[AIO] Starting full chain: recon → CVE/NVD → exploits/0-day → "
-            "post-exploit → anti-forensics (each step ACCEPT/CANCEL)."
+            "[AIO] Adaptive until-access: recon → CVE/NVD → CVE-code → "
+            "plan → poly → attack → post-exploit → RAT (ACCEPT/CANCEL)."
         )
-        self.run_attack_chain()
+        self._run_adaptive(until_access=True)
 
     def _load_external_scan_selection(self) -> bool:
         """Load target written by ``wifi_scan_external`` if present."""
+        if getattr(self, "_no_external_load", False):
+            return False
         from pathlib import Path
         import json
         path = Path("logs") / "wifi_scan_selection.json"
@@ -398,21 +401,13 @@ class WiFiScreen(BaseScreen):
     # ------------------------------------------------------------------
     # Primary-flow actions
     # ------------------------------------------------------------------
-    def run_attack_chain(self):
-        """Run the catalog-driven recon pass (ungated) followed by the
-        AI-orchestrated WiFi attack chain (per-step ACCEPT/CANCEL).
+    def adaptive_until_access(self):
+        """Full target-adaptive loop until access is granted (bounded).
 
-        The recon pass runs first: it probes WPS, enumerates clients,
-        looks up CVEs from NVD, generates a weakpass wordlist, searches
-        the knowledge base, and walks the catalog for the target's
-        toolset. The recon results are persisted to
-        ``logs/recon/<bssid>_<ts>.json``.
-
-        Once recon is done, the gated attack chain runs. The AI
-        orchestrator walks the steps; long-running steps (airodump,
-        deauth, hashcat, evil-twin, msfconsole) spawn in the
-        operator's external terminal of choice (xterm/gnome-terminal
-        /tmux) so live logs are visible.
+        select → recon → NVD CVE → optional CVE→code → plan →
+        polymorphism → attack with live replan → post-exploit →
+        RAT dashboard with dynamic capabilities → reverse stubs →
+        outer cycle until access (or max cycles).
         """
         if not self.selected_target:
             self.activity_log.append("[!] Select a target first (Scan → number key).")
@@ -420,150 +415,64 @@ class WiFiScreen(BaseScreen):
         if not self.orchestrator:
             self.activity_log.append("[!] Orchestrator unavailable.")
             return
+        self._run_adaptive(until_access=True)
+
+    def run_attack_chain(self):
+        """Adaptive WiFi engagement (default path).
+
+        Uses :class:`core.orchestrator.adaptive_engagement.AdaptiveEngagement`
+        for target-adaptive recon → CVE → plan → poly → live replan →
+        post-access RAT. Long-running steps still spawn in the external
+        terminal; ACCEPT/CANCEL is preserved.
+        """
+        if not self.selected_target:
+            self.activity_log.append("[!] Select a target first (Scan → number key).")
+            return
+        if not self.orchestrator:
+            self.activity_log.append("[!] Orchestrator unavailable.")
+            return
+        # One full adaptive cycle by default; AIO / Adaptive menu force until-access.
+        self._run_adaptive(until_access=False)
+
+    def _run_adaptive(self, *, until_access: bool) -> None:
         self.orchestrator.interface = self.interface
         target = dict(self.selected_target)
         target.setdefault("interface", self.interface)
+        target["adapter_caps"] = self.adapter_caps or {"mt7921e": False}
 
         def run():
             try:
-                # UNGATED: catalog-driven recon pass.
-                recon_report = None
-                if self.catalog_recon_factory is not None:
-                    try:
-                        self.activity_log.append(
-                            f"[*] Running catalog recon on "
-                            f"{target.get('ssid') or '<hidden>'} "
-                            f"({target.get('bssid') or 'no-bssid'})"
-                        )
-                        recon = self.catalog_recon_factory(target)
-                        recon_report = recon.run(with_probes=True)
-                        self._last_recon = recon_report
-                        # Per-step lines for the operator.
-                        for k in ("wps", "clients", "cves", "weakpass",
-                                  "kb_hits", "catalog_runs",
-                                  "probe_profile", "hidden_ssid",
-                                  "signal_map", "handshake_harvest",
-                                  "eapol_monitor", "channel_plan",
-                                  "deauth_detect", "gps_wardrive",
-                                  "beacon_parse"):
-                            s = recon_report.get(k) or {}
-                            if not s:
-                                continue
-                            mark = "+" if s.get("ok") else "!"
-                            self.activity_log.append(
-                                f"[recon] {mark} {k}: {s.get('error') or 'ok'} "
-                                f"({s.get('duration_s', 0):.1f}s)"
-                            )
-                        self.activity_log.append(
-                            f"[+] recon done: wps={recon_report['wps'].get('data',{}).get('enabled','?')}, "
-                            f"clients={recon_report['clients'].get('data',{}).get('count','?')}, "
-                            f"cves={recon_report['cves'].get('data',{}).get('count','?')}, "
-                            f"kb_hits={recon_report['kb_hits'].get('data',{}).get('count','?')}"
-                        )
-                    except Exception as e:
-                        self.activity_log.append(
-                            f"[!] recon pass failed (continuing to attack): {e}"
-                        )
-                else:
-                    self.activity_log.append(
-                        "[i] No catalog-recon factory injected -- skipping recon pass."
-                    )
-
-                # Merge recon into the seed so the chain planner attacks
-                # the *selected target's* real CVEs (not a generic tool
-                # list). Vendor + normalized CVE list + per-target KB
-                # hits + the full recon dict (the 0-day build dispatcher
-                # merges concept.recon_context with live recon). Guard
-                # each lookup — recon can partially fail and must never
-                # break the chain.
-                if recon_report:
-                    try:
-                        target["vendor"] = (
-                            recon_report.get("vendor") or target.get("vendor")
-                        )
-                        cves_step = recon_report.get("cves", {}) or {}
-                        target["cves"] = (
-                            (cves_step.get("data", {}) or {}).get("cves", [])
-                            or []
-                        )
-                        kb_step = recon_report.get("kb_hits", {}) or {}
-                        target["kb_hits"] = (
-                            (kb_step.get("data", {}) or {}).get("hits", [])
-                            or []
-                        )
-                        # Drop any live back-reference before attaching.
-                        # Older catalog_recon builds stored
-                        # recon["target"] = self.target (same object as
-                        # ``target``); assigning target["recon"] = recon
-                        # then creates a cycle that breaks AI chaining.
-                        if isinstance(recon_report, dict):
-                            recon_attach = dict(recon_report)
-                            nested = recon_attach.get("target")
-                            if nested is target or (
-                                isinstance(nested, dict)
-                                and nested is self.selected_target
-                            ):
-                                recon_attach["target"] = {
-                                    k: nested.get(k)
-                                    for k in (
-                                        "bssid", "ssid", "channel",
-                                        "encryption", "enc", "interface",
-                                        "vendor",
-                                    )
-                                    if isinstance(nested, dict) and k in nested
-                                }
-                            target["recon"] = recon_attach
-                        else:
-                            target["recon"] = recon_report
-                        # Surface any recon-produced capture so crack/pmkid
-                        # steps do not report "no cap_file" after a successful
-                        # handshake_harvest / eapol_monitor probe.
-                        for key in ("handshake_harvest", "eapol_monitor"):
-                            data = ((recon_report.get(key) or {}).get("data")
-                                    or {})
-                            pcap = data.get("pcap") or data.get("cap_file")
-                            if pcap:
-                                target.setdefault("cap_file", pcap)
-                                target.setdefault("pcap", pcap)
-                                self.activity_log.append(
-                                    f"[+] recon pcap wired into seed: {pcap}"
-                                )
-                                break
-                        # Weakpass wordlist path if recon generated one.
-                        wp = (recon_report.get("weakpass") or {}).get("data") or {}
-                        wl = wp.get("path") or wp.get("wordlist") or wp.get("file")
-                        if wl:
-                            target.setdefault("wordlist", wl)
-                            target.setdefault("weakpass", wl)
-                    except Exception as e:
-                        self.activity_log.append(
-                            f"[i] recon-merge skipped: {e}"
-                        )
-
-                # Carry the mt7921e adapter capability probe (Part 5) onto
-                # the seed so the planner + orchestrator can branch on
-                # it (raw-frame deauth, gated injection steps). Falls
-                # back to a non-mt7921e marker when no probe ran.
-                target["adapter_caps"] = (
-                    self.adapter_caps or {"mt7921e": False}
+                from core.orchestrator.adaptive_engagement import (
+                    AdaptiveEngagement,
                 )
-
-                # GATED: existing attack chain. New `use_ai_chain=True`
-                # routes through AIChainPlanner + uncensored fallback
-                # when the per-domain model refuses; back-compat with
-                # the legacy hardcoded ladder is preserved. The
-                # per-engagement ``attach_zero_day`` flag (Advanced-menu
-                # toggle) overrides the settings-based default so the
-                # operator can attach the optional 0-day tail per chain.
-                self.orchestrator.run(
+                eng = AdaptiveEngagement(
+                    self.orchestrator,
+                    catalog_recon_factory=self.catalog_recon_factory,
+                    on_event=lambda m: self.activity_log.append(m),
+                    until_access=until_access,
+                    enable_cve_code=True,
+                    enable_reverse_stubs=True,
+                )
+                report = eng.run(
                     "wifi", target,
-                    use_ai_chain=True,
                     attach_zero_day=self.attach_zero_day,
                 )
-                self._last_report = {"domain": "wifi", "target": target,
-                                     "recon": recon_report}
+                self._last_report = report
+                self._last_recon = (target.get("recon") if isinstance(target, dict)
+                                    else None)
+                access = (report or {}).get("access") or {}
+                if access.get("achieved"):
+                    self.activity_log.append(
+                        f"[+] Adaptive ACCESS: session={access.get('session_id')} "
+                        f"creds={'yes' if access.get('creds') else 'no'}"
+                    )
+                else:
+                    self.activity_log.append(
+                        f"[i] Adaptive finished without access "
+                        f"({len((report or {}).get('cycles') or [])} cycle(s))"
+                    )
             except Exception as e:
-                self.activity_log.append(f"[!] attack chain error: {e}")
+                self.activity_log.append(f"[!] adaptive engagement error: {e}")
 
         self._spawn(run)
 
@@ -1045,23 +954,48 @@ class WiFiScreen(BaseScreen):
             return self._scan_networks_inprocess()
 
         if not getattr(self, "interface", None):
-            # Auto-pick mt7921e if present (production only).
+            # Prefer an interface already in monitor mode, then mt7921e.
             try:
-                from core.modules.mt7921e_tools import detect_mt7921e_interfaces
-                found = detect_mt7921e_interfaces()
-                if found:
-                    self.interface = found[0].name
+                from core.scanners.wifi_radio import pick_best_scan_iface
+                best = pick_best_scan_iface(None)
+                if best:
+                    self.interface = best
                     self.activity_log.append(
                         f"[+] Auto-selected {self.interface} for scan"
                     )
             except Exception:
                 pass
+            if not getattr(self, "interface", None):
+                try:
+                    from core.modules.mt7921e_tools import detect_mt7921e_interfaces
+                    found = detect_mt7921e_interfaces()
+                    if found:
+                        self.interface = found[0].name
+                        self.activity_log.append(
+                            f"[+] Auto-selected {self.interface} for scan"
+                        )
+                except Exception:
+                    pass
         if not getattr(self, "interface", None):
             self.activity_log.append(
                 "[!] No interface selected — pick one first "
                 "(Advanced → Pick Interface)."
             )
             return
+
+        # Prefer actual monitor-mode VIF when the selected name is managed
+        # (e.g. operator picked wlan0 but airmon already created wlan0mon).
+        try:
+            from core.scanners.wifi_radio import pick_best_scan_iface, iface_mode
+            if iface_mode(self.interface) != "monitor":
+                alt = pick_best_scan_iface(self.interface)
+                if alt and alt != self.interface and iface_mode(alt) == "monitor":
+                    self.activity_log.append(
+                        f"[i] {self.interface} is not monitor; using {alt}"
+                    )
+                    self.interface = alt
+        except Exception:
+            pass
 
         out_path = "logs/wifi_scan_selection.json"
         try:
@@ -1190,8 +1124,15 @@ class WiFiScreen(BaseScreen):
 
     def _scan_networks_inprocess(self):
         """Original in-dashboard scan (also used by pytest via scanner_cls)."""
+        try:
+            from core.scanners.scan_limits import wifi_scan_s, DEFAULT_WIFI_SCAN_S
+            _scan_s = wifi_scan_s(None)
+        except Exception:
+            _scan_s = 300
+            DEFAULT_WIFI_SCAN_S = 300
         self.activity_log.append(
-            f"[*] Starting WiFi scan on {self.interface} (10s timeout)..."
+            f"[*] Starting long-range WiFi scan on {self.interface} "
+            f"({_scan_s}s multi-band hop; override KFIOSA_WIFI_SCAN_S)..."
         )
 
         def run_scan():
@@ -1205,8 +1146,10 @@ class WiFiScreen(BaseScreen):
                 if hasattr(scanner, "initialize"):
                     scanner.initialize()
 
-                self.activity_log.append("[*] Scanning wireless frequencies...")
-                scan_data = scanner.scan(self.interface, timeout=10)
+                self.activity_log.append(
+                    "[*] Scanning 2.4+5 GHz (full hop, long dwell)..."
+                )
+                scan_data = scanner.scan(self.interface, timeout=_scan_s)
                 networks = scan_data.get("networks", [])
                 error = scan_data.get("error")
 

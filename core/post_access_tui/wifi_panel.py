@@ -262,20 +262,27 @@ class WiFiPanelClient:
     # ------------------------------------------------------------------
     # Scan (read-only airodump-ng)
     # ------------------------------------------------------------------
-    def scan(self, adapter: str, *, duration_s: int = 8) -> Dict[str, Any]:
+    def scan(self, adapter: str, *, duration_s: int = None) -> Dict[str, Any]:
         """Run airodump-ng for ``duration_s`` seconds and parse the
-        results. The parse is best-effort; an empty list is a valid
-        result (no APs found)."""
+        results. Long-range default via :func:`wifi_scan_s` (up to 1h).
+        The parse is best-effort; an empty list is a valid result."""
+        try:
+            from core.scanners.scan_limits import wifi_scan_s
+            duration_s = wifi_scan_s(duration_s)
+        except Exception:
+            duration_s = int(duration_s) if duration_s is not None else 300
         started = time.time()
         # Use a tmp prefix for the airodump output files
         prefix = f"/tmp/kfiosa_airodump_{int(started)}"
         try:
             proc = subprocess.Popen(
                 ["airodump-ng", adapter, "-w", prefix,
-                 "--output-format", "csv", "--write-interval", "1"],
+                 "--output-format", "csv", "--write-interval", "1",
+                 "--band", "abg",
+                 "--berlin", str(max(duration_s, 120))],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             )
-            time.sleep(min(duration_s, 30))
+            time.sleep(max(2, int(duration_s)))
             proc.terminate()
             try:
                 proc.wait(timeout=5)

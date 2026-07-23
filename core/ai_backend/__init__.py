@@ -383,6 +383,36 @@ class AIBackend:
         )
         self.deepseek_endpoint = "https://api.deepseek.com/chat/completions"
 
+        # Gemini fallback (cloud) — positioned right next to DeepSeek
+        # (settings.gemini mirrors settings.deepseek).
+        gemini_cfg = {}
+        if settings is not None:
+            try:
+                gemini_cfg = settings.get_setting("gemini", {}) or {}
+            except Exception:
+                gemini_cfg = {}
+        if not gemini_cfg and isinstance(config, dict):
+            gemini_cfg = config.get("gemini", {}) or {}
+
+        self.gemini_api_key = (
+            os.getenv("GEMINI_API_KEY")
+            or gemini_cfg.get("api_key")
+            or (config.get("gemini_api_key") if isinstance(config, dict) else None)
+            or ""
+        )
+        # Prefer 2.5 Pro for chain JSON / long reasoning; flash is the
+        # speed fallback in query() if Pro is rate-limited.
+        self.gemini_model = (
+            os.getenv("GEMINI_MODEL")
+            or gemini_cfg.get("model")
+            or (config.get("gemini_model") if isinstance(config, dict) else None)
+            or "gemini-2.5-pro"
+        )
+        self.gemini_endpoint = (
+            gemini_cfg.get("endpoint")
+            or "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+        )
+
         # Groq fallback (cloud) — only used if Ollama, NVIDIA, and DeepSeek are unreachable.
         self.groq_api_key = (
             os.getenv("GROQ_API_KEY")
@@ -395,6 +425,21 @@ class AIBackend:
             or "openai/gpt-oss-120b"
         )
         self.groq_endpoint = "https://api.groq.com/openai/v1/chat/completions"
+
+        # Grok (xAI) provider / fallback
+        self.grok_api_key = (
+            os.getenv("GROK_API_KEY")
+            or os.getenv("XAI_API_KEY")
+            or (config.get("grok_api_key") if isinstance(config, dict) else None)
+            or (config.get("xai_api_key") if isinstance(config, dict) else None)
+            or ""
+        )
+        self.grok_model = (
+            os.getenv("GROK_MODEL")
+            or (config.get("grok_model") if isinstance(config, dict) else None)
+            or "grok-2-latest"
+        )
+        self.grok_endpoint = "https://api.x.ai/v1/chat/completions"
 
         self.domain_prompts = {
             "wifi": WIFI_SYSTEM_PROMPT,
@@ -433,16 +478,22 @@ class AIBackend:
         """Report backend availability for the status line / settings screen."""
         ollama_ok = self.ollama.reachable()
         ollama_models = self.ollama.list_models() if ollama_ok else []
+        grok_ok = bool(self.grok_api_key)
         groq_ok = bool(self.groq_api_key)
         nvidia_ok = bool(self.nvidia_api_key)
         deepseek_ok = bool(self.deepseek_api_key)
+        gemini_ok = bool(self.gemini_api_key)
         
         if ollama_ok:
             active = "ollama"
+        elif grok_ok:
+            active = "grok"
         elif nvidia_ok:
             active = "nvidia"
         elif deepseek_ok:
             active = "deepseek"
+        elif gemini_ok:
+            active = "gemini"
         elif groq_ok:
             active = "groq"
         else:
@@ -452,11 +503,15 @@ class AIBackend:
             "ollama": ollama_ok,
             "ollama_endpoint": self.ollama.endpoint,
             "ollama_models": ollama_models,
+            "grok": grok_ok,
+            "grok_model": self.grok_model,
             "nvidia": nvidia_ok,
             "nvidia_endpoint": self.nvidia_base_url,
             "nvidia_model": self.nvidia_model,
             "deepseek": deepseek_ok,
             "deepseek_model": self.deepseek_model,
+            "gemini": gemini_ok,
+            "gemini_model": self.gemini_model,
             "groq": groq_ok,
             "active": active,
         }
@@ -503,9 +558,10 @@ class AIBackend:
               context: Optional[Dict[str, Any]] = None) -> str:
         """Query the AI engine using the specialized domain prompt.
 
-        Routing: Ollama (primary) → NVIDIA → DeepSeek → Groq (cloud) →
-        heuristic (real computed planner). Never returns fabricated/canned
-        model text; on total failure returns an explicit error string.
+        Routing: Ollama (primary) → NVIDIA → DeepSeek → Gemini → Groq
+        (cloud) → heuristic (real computed planner). Never returns
+        fabricated/canned model text; on total failure returns an
+        explicit error string.
         """
         system_prompt = self.domain_prompts.get(
             domain, "You are a helpful penetration testing assistant."
@@ -652,6 +708,56 @@ class AIBackend:
                 except Exception as e:
                     logger.error(f"DeepSeek model {model} failed: {e}")
 
+        # 3b) Gemini fallback (cloud API — right after DeepSeek)
+        if self.gemini_api_key:
+            # Best → fast fallbacks. Pro first for structured chain JSON.
+            for model in (
+                self.gemini_model,
+                "gemini-2.5-pro",
+                "gemini-2.5-flash",
+                "gemini-2.0-flash",
+            ):
+                try:
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {self.gemini_api_key}",
+                    }
+                    payload = {
+                        "model": model,
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": full_user_prompt},
+                        ],
+                        "temperature": 0.3,
+                        "max_tokens": 2048,
+                    }
+                    # OpenAI-compat endpoint also accepts ?key= for API keys.
+                    url = self.gemini_endpoint
+                    if "key=" not in url:
+                        sep = "&" if "?" in url else "?"
+                        url = f"{url}{sep}key={self.gemini_api_key}"
+                    logger.info(f"Querying Gemini API: {self.gemini_endpoint} (model: {model})")
+                    response = requests.post(
+                        url, headers=headers, json=payload, timeout=90
+                    )
+                    if response.status_code == 200:
+                        body = response.json()
+                        reply = (
+                            body.get("choices", [{}])[0]
+                            .get("message", {})
+                            .get("content")
+                            or ""
+                        )
+                        if reply.strip():
+                            logger.info(f"Gemini responded with model: {model}")
+                            return reply
+                    logger.warning(
+                        f"Gemini model {model} failed status "
+                        f"{response.status_code}: {response.text[:200]}"
+                    )
+                except Exception as e:
+                    logger.error(f"Gemini model {model} failed: {e}")
+
         # 4) Groq fallback
         if self.groq_api_key:
             for model in (
@@ -687,6 +793,42 @@ class AIBackend:
                     )
                 except Exception as e:
                     logger.error(f"Groq model {model} failed: {e}")
+
+        # 5) Grok (xAI) provider
+        if self.grok_api_key:
+            for model in (
+                self.grok_model,
+                "grok-2-latest",
+                "grok-beta",
+            ):
+                try:
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {self.grok_api_key}",
+                    }
+                    payload = {
+                        "model": model,
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": full_user_prompt},
+                        ],
+                        "temperature": 0.3,
+                        "max_tokens": 1024,
+                    }
+                    logger.info(f"Querying Grok (xAI): {self.grok_endpoint} (model: {model})")
+                    response = requests.post(
+                        self.grok_endpoint, headers=headers, json=payload, timeout=30
+                    )
+                    if response.status_code == 200:
+                        reply = response.json()["choices"][0]["message"]["content"]
+                        if reply.strip():
+                            logger.info(f"Grok (xAI) responded with model: {model}")
+                            return reply
+                    logger.warning(
+                        f"Grok model {model} failed status {response.status_code}"
+                    )
+                except Exception as e:
+                    logger.error(f"Grok model {model} failed: {e}")
 
         # 5) Real heuristic planner — NOT canned fake text; computed from target.
         heuristic = self._heuristic(domain, context or {})

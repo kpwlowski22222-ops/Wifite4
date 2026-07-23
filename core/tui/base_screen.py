@@ -427,15 +427,17 @@ class BaseScreen:
             except Exception:
                 pass
 
+    # ---- input handling (key dispatch) ----
+
     def handle_input(self) -> Optional[str]:
         """Process keyboard keys. Dispatches by ``flow_state``:
-        - ``targets``: digit keys select; UP/DOWN/ENTER navigate; Q/BACK exits.
+        - ``targets``: digit keys select; UP/DOWN/ENTER/SPACE navigate & select; Q/BACK exits.
         - ``menu``/``advanced``: standard menu nav; Q/BACK from advanced
           returns to primary, from primary returns "back" (exit screen).
         """
         if self.stdscr is None:
             return None
-        key = self.stdscr.getch()
+        key = read_curses_key(self.stdscr)
         if key == -1:
             return None
 
@@ -454,7 +456,7 @@ class BaseScreen:
                 self.menu_index = min(len(self.menu_items) - 1,
                                       self.menu_index + 1) if self.menu_items else 0
                 return None
-            if key in (curses.KEY_ENTER, 10, 13):
+            if key in (curses.KEY_ENTER, 10, 13, ord(" ")):
                 if 0 <= self.menu_index < len(self.menu_items):
                     _, handler = self.menu_items[self.menu_index]
                     if handler:
@@ -478,7 +480,7 @@ class BaseScreen:
             self.menu_index = (self.menu_index - 1) % len(self.menu_items) if self.menu_items else 0
         elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
             self.menu_index = (self.menu_index + 1) % len(self.menu_items) if self.menu_items else 0
-        elif key in (curses.KEY_ENTER, 10, 13):
+        elif key in (curses.KEY_ENTER, 10, 13, ord(" ")):
             # Execute selected menu handler
             if 0 <= self.menu_index < len(self.menu_items):
                 _, handler = self.menu_items[self.menu_index]
@@ -522,3 +524,46 @@ class BaseScreen:
         self.draw_activity_log(start_y=log_y, max_height=log_h)
 
         self.draw_status_bar()
+
+
+# ── Module-level helper ───────────────────────────────────────────────
+def read_curses_key(stdscr, timeout_ms: int = -1) -> int:
+    """Read a key from curses stdscr with ANSI escape sequence fallback.
+
+    Handles ANSI escape sequences for arrow keys (\\x1b[A, \\x1b[B, \\x1b[C, \\x1b[D,
+    \\x1bOA, \\x1bOB, \\x1bOC, \\x1bOD) when keypad(True) is unsupported or unmapped by terminfo.
+    Returns curses.KEY_UP, curses.KEY_DOWN, curses.KEY_RIGHT, curses.KEY_LEFT,
+    or the original key code.
+    """
+    if stdscr is None:
+        return -1
+    try:
+        key = stdscr.getch()
+    except Exception:
+        return -1
+
+    if key == 27:  # ESC character — check if ANSI arrow key sequence follows
+        try:
+            stdscr.timeout(0)
+            ch1 = stdscr.getch()
+            if ch1 in (ord("["), ord("O")):
+                ch2 = stdscr.getch()
+                if ch2 in (ord("A"), ord("a")):
+                    return curses.KEY_UP
+                elif ch2 in (ord("B"), ord("b")):
+                    return curses.KEY_DOWN
+                elif ch2 in (ord("C"), ord("c")):
+                    return curses.KEY_RIGHT
+                elif ch2 in (ord("D"), ord("d")):
+                    return curses.KEY_LEFT
+        except Exception:
+            pass
+        finally:
+            try:
+                if timeout_ms >= 0:
+                    stdscr.timeout(timeout_ms)
+                else:
+                    stdscr.nodelay(False)
+            except Exception:
+                pass
+    return key

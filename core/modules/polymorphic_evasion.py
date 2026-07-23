@@ -214,35 +214,66 @@ class PolymorphicEvasion:
         return new_code, changes
     
     def _obfuscate_strings(self, code: str) -> tuple:
-        """Obfuscate string literals in code"""
+        """Obfuscate string literals with base64 + injected decode helper.
+
+        Replaces non-empty string literals and ensures a
+        ``_kfiosa_b64`` helper is present so the result remains
+        syntactically valid Python.
+        """
+        import base64
         import re
-        
-        # Find string literals
-        string_pattern = r'(["\'])(.*?)\1'
-        matches = re.findall(string_pattern, code)
-        
-        new_code = code
+
+        helper = (
+            "import base64 as _b64\n"
+            "def _kfiosa_b64(s):\n"
+            "    return _b64.b64decode(s.encode()).decode()\n"
+        )
+        # Simple non-nested string literals (single or double quotes)
+        pattern = re.compile(r'(["\'])([^"\'\\]*(?:\\.[^"\'\\]*)*)\1')
         changes = []
-        
-        for quote, string_content in matches:
-            if len(string_content) > 0:  # Don't obfuscate empty strings
-                # Obfuscate the string content
-                obfuscated = self.obfuscate_string(string_content, "base64")
-                # Replace in code: "original" -> base64("original")
-                old_string = f'{quote}{string_content}{quote}'
-                new_string = f'{quote}base64_decode("{obfuscated}"){quote}'
-                # For simplicity, we'll just note the change
-                changes.append(f"string_obfuscated:{string_content[:20]}...")
-                # In a real implementation, we'd need to add a decode function
-        
+        count = [0]
+
+        def _repl(m):
+            content = m.group(2)
+            if not content or len(content) > 200:
+                return m.group(0)
+            # Skip already-obfuscated / helper calls
+            if content.startswith("_kfiosa") or "base64" in content:
+                return m.group(0)
+            try:
+                raw = bytes(content, "utf-8").decode("unicode_escape")
+            except Exception:  # noqa: BLE001
+                raw = content
+            enc = base64.b64encode(raw.encode("utf-8")).decode("ascii")
+            count[0] += 1
+            changes.append(f"string_obfuscated:{raw[:20]}...")
+            return f'_kfiosa_b64("{enc}")'
+
+        new_code = pattern.sub(_repl, code)
+        if count[0] and "_kfiosa_b64" not in code:
+            new_code = helper + new_code
+            changes.append("injected:_kfiosa_b64_helper")
         return new_code, changes
-    
+
     def _modify_control_flow(self, code: str) -> tuple:
-        """Modify control flow to confuse analysis"""
-        # This is a simplified implementation
-        # Real control flow flattening is much more complex
-        changes = ["control_flow_modified"]
-        return code, changes
+        """Lightweight control-flow noise: wrap body in opaque predicates.
+
+        Full CFF is out of scope; this injects always-true predicates
+        and an unused branch so static pattern matching is harder.
+        """
+        import hashlib
+        seed = hashlib.sha1(code.encode("utf-8", errors="replace")).hexdigest()[:8]
+        # Opaque true: (hash % 2 == hash % 2)
+        n = int(seed[:2], 16)
+        prelude = (
+            f"_kfiosa_pred = ({n} % 2 == {n} % 2)\n"
+            f"if not _kfiosa_pred:\n"
+            f"    raise RuntimeError('unreachable-{seed}')  # dead\n"
+        )
+        changes = [f"opaque_predicate:{seed}", "dead_branch_injected"]
+        if "_kfiosa_pred" in code:
+            return code, ["control_flow_already_modified"]
+        return prelude + code, changes
     
     def _insert_dead_code(self, code: str) -> tuple:
         """Insert dead code to confuse analysis"""

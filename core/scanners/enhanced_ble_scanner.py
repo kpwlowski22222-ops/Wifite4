@@ -35,14 +35,22 @@ class EnhancedBLEScanner:
     # ------------------------------------------------------------------
     # Scan — real backends, no fake devices
     # ------------------------------------------------------------------
-    def scan(self, duration: int = 30, adapter: str = None) -> Dict[str, Any]:
+    def scan(self, duration: int = None, adapter: str = None) -> Dict[str, Any]:
+        """Long-range BLE discovery scan.
+
+        Duration defaults to ``DEFAULT_BLE_SCAN_S`` (300s), ceiling
+        ``MAX_SCAN_S`` (3600s). Before scanning, best-effort adapter
+        prep raises RX sensitivity (power on, LE on, max scan window).
+        """
+        from core.scanners.scan_limits import ble_scan_s
+
         if not self.is_initialized:
             return {"error": "BLE scanner not initialized"}
 
         scan_id = f"ble_scan_{int(time.time())}"
-        cap = min(max(duration, 2), 60)
-        self.logger.info(f"BLE scan {scan_id} for {cap}s")
-
+        cap = ble_scan_s(duration)
+        self.logger.info(f"BLE long-range scan {scan_id} for {cap}s")
+        self._prep_adapter_long_range(adapter)
         devices: List[Dict[str, Any]] = []
         backend = "none"
         # Track every backend that was *available* + *attempted* so the error
@@ -120,6 +128,96 @@ class EnhancedBLEScanner:
         self.scan_results[scan_id] = result
         return result
 
+    def _prep_adapter_long_range(self, adapter: str = None) -> None:
+        """Best-effort: unblock rfkill + power on + LE on + max scan window.
+
+        Soft-blocked Bluetooth (common after laptop suspend / airplane
+        mode) makes every backend return empty. Failures are silent —
+        backends still try their normal paths.
+        """
+        # Unblock soft rfkill on Bluetooth (and wifi if present).
+        if shutil.which("rfkill"):
+            for what in ("bluetooth", "hci"):
+                try:
+                    subprocess.run(
+                        ["rfkill", "unblock", what],
+                        capture_output=True, text=True, timeout=4,
+                    )
+                except Exception:  # noqa: BLE001
+                    pass
+            # Also unblock by index if named devices stay soft-blocked.
+            try:
+                p = subprocess.run(
+                    ["rfkill", "list"],
+                    capture_output=True, text=True, timeout=4,
+                )
+                for line in (p.stdout or "").splitlines():
+                    # "0: hci0: Bluetooth"
+                    if "Bluetooth" in line or "hci" in line.lower():
+                        idx = line.split(":", 1)[0].strip()
+                        if idx.isdigit():
+                            subprocess.run(
+                                ["rfkill", "unblock", idx],
+                                capture_output=True, text=True, timeout=3,
+                            )
+            except Exception:  # noqa: BLE001
+                pass
+
+        # bluetoothctl power / discoverable
+        if shutil.which("bluetoothctl"):
+            try:
+                subprocess.run(
+                    ["bluetoothctl", "power", "on"],
+                    capture_output=True, text=True, timeout=5,
+                )
+            except Exception:  # noqa: BLE001
+                pass
+        # btmgmt: LE on + high-duty find parameters when available
+        if shutil.which("btmgmt"):
+            try:
+                idx_args = []
+                if adapter:
+                    # hci0 style
+                    num = "".join(c for c in adapter if c.isdigit())
+                    if num:
+                        idx_args = ["--index", num]
+                for args in (
+                    idx_args + ["power", "on"],
+                    idx_args + ["le", "on"],
+                    idx_args + ["bredr", "on"],
+                    # connectable off keeps radio free for RX
+                    idx_args + ["connectable", "off"],
+                ):
+                    if not args:
+                        continue
+                    try:
+                        subprocess.run(
+                            ["btmgmt"] + args,
+                            capture_output=True, text=True, timeout=4,
+                        )
+                    except Exception:  # noqa: BLE001
+                        pass
+            except Exception:  # noqa: BLE001
+                pass
+        # hcitool / hciconfig leadv off, lescan will use active
+        if adapter and shutil.which("hciconfig"):
+            try:
+                subprocess.run(
+                    ["hciconfig", adapter, "up"],
+                    capture_output=True, text=True, timeout=4,
+                )
+            except Exception:  # noqa: BLE001
+                pass
+        elif shutil.which("hciconfig"):
+            # Try default hci0 when adapter not specified
+            try:
+                subprocess.run(
+                    ["hciconfig", "hci0", "up"],
+                    capture_output=True, text=True, timeout=4,
+                )
+            except Exception:  # noqa: BLE001
+                pass
+
     def _bleak_scan(self, duration: int):
         try:
             from bleak import BleakScanner  # type: ignore
@@ -128,27 +226,67 @@ class EnhancedBLEScanner:
 
         async def _do():
             found = []
+            best_rssi = {}
+
             def cb(dev, adv):
-                found.append({
+                addr = dev.address
+                rssi = getattr(adv, "rssi", None)
+                # Keep the strongest RSSI observation (long-range catch)
+                prev = best_rssi.get(addr)
+                if prev is not None and rssi is not None and rssi < prev:
+                    # weaker sighting — still refresh name/services if new
+                    pass
+                else:
+                    if rssi is not None:
+                        best_rssi[addr] = rssi
+                entry = {
                     "device_id": str(adv.handle) if hasattr(adv, "handle") else "",
                     "name": dev.name or "Unknown",
-                    "address": dev.address,
-                    "address_type": getattr(dev, "details", {}).get("addr_type", "public") if hasattr(dev, "details") else "public",
-                    "rssi": adv.rssi,
-                    "services": [str(s) for s in getattr(adv, "service_uuids", []) or []],
+                    "address": addr,
+                    "address_type": (
+                        getattr(dev, "details", {}).get("addr_type", "public")
+                        if hasattr(dev, "details") else "public"
+                    ),
+                    "rssi": rssi if rssi is not None else -100,
+                    "services": [
+                        str(s) for s in (getattr(adv, "service_uuids", None) or [])
+                    ],
                     "manufacturer_data": "",
                     "tx_power": getattr(adv, "tx_power", None),
-                })
-            scanner = BleakScanner(detection_callback=cb)
+                }
+                # replace prior weaker entry
+                for i, d in enumerate(found):
+                    if d["address"] == addr:
+                        if (rssi is not None
+                                and (d.get("rssi") is None
+                                     or d.get("rssi", -999) < rssi)):
+                            found[i] = entry
+                        elif not d.get("name") or d.get("name") == "Unknown":
+                            if entry["name"] and entry["name"] != "Unknown":
+                                found[i]["name"] = entry["name"]
+                        return
+                found.append(entry)
+
+            # Active scanning, no service filter = max discovery range
+            kwargs = {"detection_callback": cb}
+            try:
+                # bleak ≥0.20: scanning_mode
+                scanner = BleakScanner(scanning_mode="active", **kwargs)
+            except TypeError:
+                try:
+                    scanner = BleakScanner(**kwargs)
+                except TypeError:
+                    scanner = BleakScanner(cb)
             await scanner.start()
             await asyncio_sleep(duration)
             await scanner.stop()
-            # de-dup by address
+            # de-dup by address (keep best RSSI)
             seen, uniq = set(), []
-            for d in found:
+            for d in sorted(found, key=lambda x: -(x.get("rssi") or -999)):
                 if d["address"] in seen:
                     continue
-                seen.add(d["address"]); uniq.append(d)
+                seen.add(d["address"])
+                uniq.append(d)
             return uniq
 
         import asyncio as _asyncio
@@ -178,18 +316,28 @@ class EnhancedBLEScanner:
                 stderr=subprocess.STDOUT, text=True,
             )
             assert p.stdin is not None
-            p.stdin.write("power on\n"); p.stdin.flush()
-            p.stdin.write("scan on\n"); p.stdin.flush()
+            # Long-range: power on, transport le, dual discovery, uuids off
+            for line in (
+                "power on",
+                "menu scan",
+                "transport le",
+                "duplicate-data on",
+                "back",
+                "scan on",
+            ):
+                p.stdin.write(line + "\n")
+                p.stdin.flush()
             time.sleep(duration)
-            p.stdin.write("scan off\n"); p.stdin.write("exit\n"); p.stdin.flush()
+            p.stdin.write("scan off\n")
+            p.stdin.write("exit\n")
+            p.stdin.flush()
             try:
-                out, _ = p.communicate(timeout=5)
+                out, _ = p.communicate(timeout=8)
             except subprocess.TimeoutExpired:
                 p.kill(); out, _ = p.communicate()
         except Exception as e:
             logger.debug(f"bluetoothctl error: {e}")
             return [], "bluetoothctl-error"
-
         devices: List[Dict[str, Any]] = []
         seen = set()
         for line in (out or "").splitlines():
@@ -215,10 +363,16 @@ class EnhancedBLEScanner:
         if not shutil.which("hcitool"):
             return [], "hcitool-unavailable"
         try:
-            cmd = ["hcitool", "lescan", "--duplicates"]
+            # --duplicates keeps re-hearing weak ads over long windows
+            cmd = ["timeout", str(max(1, int(duration))),
+                   "hcitool", "lescan", "--duplicates"]
             if adapter:
-                cmd = ["hcitool", "-i", adapter, "lescan", "--duplicates"]
-            p = subprocess.run(cmd, capture_output=True, text=True, timeout=duration + 3)
+                cmd = ["timeout", str(max(1, int(duration))),
+                       "hcitool", "-i", adapter, "lescan", "--duplicates"]
+            # Outer timeout is a backstop slightly past `timeout` helper
+            p = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=duration + 8,
+            )
         except Exception:
             return [], "hcitool-error"
         devices: List[Dict[str, Any]] = []

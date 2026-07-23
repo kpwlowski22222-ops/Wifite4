@@ -35,6 +35,7 @@ class SettingsScreen(BaseScreen):
             ("Run KB Re-categorization (info)", self.kb_recategorize_info),
             ("View AI Engine & Model Status", self.view_model_status),
             ("View API Keys Presence Status", self.view_api_keys_status),
+            ("AI Vision OS Navigation & UI Auto-Labeling", self.toggle_vision_os_learning),
             ("Adjust Scan Timeouts", self.adjust_timeouts),
             ("Print Current Settings Profile", self.print_settings),
             ("Reset Configuration to Defaults", self.reset_settings),
@@ -250,6 +251,44 @@ class SettingsScreen(BaseScreen):
         self.activity_log.append("    python scripts/kb_recategorize.py --dry-run")
         self.activity_log.append("    python scripts/kb_recategorize.py --apply")
 
+    def toggle_vision_os_learning(self):
+        """Toggle Host OS Screen Vision, crop region indexing, and Gemini auto-labeling."""
+        import threading
+        cfg = self.settings.get("vision_os_learning", {}) or {}
+        curr = bool(cfg.get("enabled", False))
+        new_state = not curr
+        self.settings_manager.update_setting("vision_os_learning.enabled", new_state)
+        self.activity_log.append("=== AI Vision OS Navigation & UI Auto-Labeling ===")
+        self.activity_log.append(f"[+] Status: {'ENABLED' if new_state else 'DISABLED'}")
+        self.activity_log.append(f"[i] Screenshot & cropping cache: logs/screen_cache/")
+        self.activity_log.append(f"[i] Vision model: {self.settings.get('gemini', {}).get('model', 'gemini-2.5-flash')}")
+        self.activity_log.append("[i] Scans host controls across Kali, auto-labels regions & stores in ui_labels_index.json.")
+
+        if new_state:
+            from core.utils.ui_navigator import navigator
+            self.activity_log.append(
+                "[i] Active learning started: Navigating host OS & auto-labeling UI controls..."
+            )
+
+            def _log_cb(msg: str):
+                self.activity_log.append(msg)
+
+            def _run_learning():
+                try:
+                    navigator.start_learning_session(steps=3, callback=_log_cb)
+                except Exception as e:
+                    self.activity_log.append(f"[!] Vision learning note: {e}")
+
+            tr = getattr(self, "thread_runner", None)
+            if callable(tr):
+                tr(_run_learning)
+            else:
+                t = threading.Thread(target=_run_learning, daemon=True)
+                t.start()
+        else:
+            self.activity_log.append("[i] Vision learning mode disabled.")
+
+
     def enrich_kb(self):
         """Fetch real GitHub READMEs + run Ollama extraction on a small batch.
 
@@ -343,10 +382,11 @@ class SettingsScreen(BaseScreen):
         
         keys = {
             "NVIDIA_API_KEY": "NVIDIA NIM/API",
+            "DEEPSEEK_API_KEY": "DeepSeek Engine",
+            "GEMINI_API_KEY": "Google Gemini (next to DeepSeek)",
             "GROQ_API_KEY": "Groq Engine",
             "SHODAN_API_KEY": "Shodan Scanner",
             "NVD_API_KEY": "NVD CVE Lookup",
-            "GEMINI_API_KEY": "Google Gemini",
             "GOOGLE_PROJECT_ID": "Google Cloud Platform"
         }
         

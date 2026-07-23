@@ -556,7 +556,7 @@ class ChainPlanError(RuntimeError):
 _CHAIN_STEP_SCHEMA_HINT = """{
   "chain": [
     {
-      "action": "<one of: mcp_call, post_exploit, external_terminal, zero_day_propose, zero_day_build, zero_day_execute, zero_day_crash_triager, zero_day_side_channel_finder, zero_day_fuzz_harness_gen, zero_day_control_flow_surfer, zero_day_patch_differ, zero_day_memory_class_predictor, zero_day_auth_path_auditor, zero_day_crypto_weakness_finder, zero_day_race_analyzer, zero_day_logic_flaw_heuristic, run_toolbox, run_python_lib, kismet_scan, mt7921e_test_injection, mt7921e_inject, external_inject, recon_probe, ble_probe, ble_attack, wifi_attack, post_exploit_ext, post_exploit_anti_forensic, extended_wifi, ble_post_exploit, osint_ext, osint_module, forensic_module, extended_ble, open_shell, open_post_access_tui, cve_to_exploit, cve_to_exploit_batch, open_ble_tui, open_network_tui, crack, crack_gpu, pmkid, wps_pixie, wps_online, join_network, host_discovery, deploy_payload, run_tool, parse, decide, osint_probe, post_exploit_probe, live_edit, tool_install, c2_framework, poly_adapt>",
+      "action": "<one of: mcp_call, post_exploit, external_terminal, holo_desktop, desktop_nav, zero_day_propose, zero_day_build, zero_day_execute, zero_day_crash_triager, zero_day_side_channel_finder, zero_day_fuzz_harness_gen, zero_day_control_flow_surfer, zero_day_patch_differ, zero_day_memory_class_predictor, zero_day_auth_path_auditor, zero_day_crypto_weakness_finder, zero_day_race_analyzer, zero_day_logic_flaw_heuristic, run_toolbox, run_python_lib, kismet_scan, mt7921e_test_injection, mt7921e_inject, external_inject, recon_probe, ble_probe, ble_attack, wifi_attack, post_exploit_ext, post_exploit_anti_forensic, extended_wifi, ble_post_exploit, osint_ext, osint_module, forensic_module, extended_ble, open_shell, open_post_access_tui, cve_to_exploit, cve_to_exploit_batch, open_ble_tui, open_network_tui, crack, crack_gpu, pmkid, wps_pixie, wps_online, join_network, host_discovery, deploy_payload, run_tool, parse, decide, osint_probe, post_exploit_probe, live_edit, tool_install, c2_framework, poly_adapt>",
       "tool": "<canonical tool name, e.g. airodump-ng, aireplay-ng, msfconsole, mt7921e.test_injection, cve_lookup>",
       "args": { ... tool-specific args ... },
       "rationale": "<one-sentence why this step>",
@@ -600,6 +600,26 @@ TOOL_INSTALL_PROMPT_STANZA = (
     "    The per-step ACCEPT gate already fired in _walk_ai_step; the\n"
     "    install goes through and is logged to core/tool_installer/_log.json\n"
     "    for audit. If install fails the runner degrades honestly.\n"
+)
+
+# Holo desktop agent — OS UI navigation for tools & AI models
+# (https://github.com/hcompai/holo-desktop-cli)
+HOLO_DESKTOP_PROMPT_STANZA = (
+    "  - holo_desktop / desktop_nav (risk DESTRUCTIVE, GATED) drives the\n"
+    "    real desktop via Holo3 (holo-desktop-cli). Use when you need to\n"
+    "    open apps, pull/switch Ollama models, or click through GUIs that\n"
+    "    have no clean CLI. Step shape:\n"
+    "    {\"action\": \"holo_desktop\", \"args\": {\n"
+    "       \"goal\": \"ollama_list|ollama_pull_primary|open_terminal|…\",\n"
+    "       \"task\": \"<free-text if no goal>\",\n"
+    "       \"tool\": \"<app name>\", \"model_name\": \"<ollama tag>\",\n"
+    "       \"max_steps\": 40, \"max_time_s\": 600\n"
+    "    }}.\n"
+    "    The bridge is default-deny without the operator ACCEPT gate.\n"
+    "    Kill switch: double-Esc or `holo stop`. Never invent that a\n"
+    "    model was pulled — only report Holo's real stdout/stderr.\n"
+    "    Local private models: set settings holo.base_url to an\n"
+    "    OpenAI-compatible server (self-hosted Holo3).\n"
 )
 
 # osint_ext action — AI-driven extended OSINT
@@ -1455,6 +1475,7 @@ _SYSTEM_PROMPT = (
     "    le_audio_codec_manipulation, ble_ai_full_auto_pwn.\n"
     f"{LIVE_EDIT_PROMPT_STANZA}\n"
     f"{TOOL_INSTALL_PROMPT_STANZA}\n"
+    f"{HOLO_DESKTOP_PROMPT_STANZA}\n"
     f"{OSINT_EXT_PROMPT_STANZA}\n"
     f"{OSINT_MODULE_PROMPT_STANZA}\n"
     f"{FORENSIC_MODULE_PROMPT_STANZA}\n"
@@ -1485,97 +1506,380 @@ _SYSTEM_PROMPT = (
 # the existing ``AIBackend._heuristic`` in spirit but emits the new
 # ChainStep shape. Reused for any domain; per-domain logic is in
 # ``_heuristic_for_domain``.
+#
+# Phase poly-opt / chain-precision: steps are target-adaptive (PMF,
+# client count, WPA version, band) and post-processed by
+# :func:`refine_chain_steps` so LLM and heuristic chains share one
+# accuracy pass.
+
+_KNOWN_CHAIN_ACTIONS = frozenset({
+    "mcp_call", "post_exploit", "external_terminal", "zero_day_propose",
+    "zero_day_build", "zero_day_execute", "zero_day_crash_triager",
+    "zero_day_side_channel_finder", "zero_day_fuzz_harness_gen",
+    "zero_day_control_flow_surfer", "zero_day_patch_differ",
+    "zero_day_memory_class_predictor", "zero_day_auth_path_auditor",
+    "zero_day_crypto_weakness_finder", "zero_day_race_analyzer",
+    "zero_day_logic_flaw_heuristic", "run_toolbox", "run_python_lib",
+    "kismet_scan", "mt7921e_test_injection", "mt7921e_inject",
+    "external_inject", "recon_probe", "ble_probe", "ble_attack",
+    "wifi_attack", "post_exploit_ext", "post_exploit_anti_forensic",
+    "extended_wifi", "ble_post_exploit", "osint_ext", "osint_module",
+    "forensic_module", "extended_ble", "open_shell", "open_post_access_tui",
+    "cve_to_exploit", "cve_to_exploit_batch", "open_ble_tui", "open_network_tui",
+    "crack", "crack_gpu", "pmkid", "wps_pixie", "wps_online", "join_network",
+    "host_discovery", "deploy_payload", "run_tool", "parse", "decide",
+    "osint_probe", "post_exploit_probe", "live_edit", "tool_install",
+    "c2_framework", "poly_adapt", "deauth", "wifi_attack",
+})
+
+_PHASE_RANK = {
+    "recon_probe": 10, "kismet_scan": 10, "ble_probe": 10, "osint_probe": 10,
+    "parse": 15, "decide": 15, "mt7921e_test_injection": 20,
+    "poly_adapt": 25, "mcp_call": 30, "wifi_attack": 35, "ble_attack": 35,
+    "wps_pixie": 40, "wps_online": 45, "deauth": 50, "mt7921e_inject": 50,
+    "external_inject": 50, "pmkid": 55, "crack": 60, "crack_gpu": 65,
+    "join_network": 70, "host_discovery": 75, "cve_to_exploit": 80,
+    "post_exploit": 90, "post_exploit_ext": 90, "deploy_payload": 95,
+    "open_shell": 100, "open_post_access_tui": 105, "c2_framework": 110,
+    "post_exploit_anti_forensic": 120,
+}
+
+
+def _target_features(target: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        from core.utils.poly_adapt import extract_target_features
+        return extract_target_features(target if isinstance(target, dict) else {})
+    except Exception:  # noqa: BLE001
+        t = target if isinstance(target, dict) else {}
+        enc = str(t.get("encryption") or t.get("enc") or "").lower()
+        return {
+            "bssid": t.get("bssid") or "",
+            "ssid": t.get("ssid") or t.get("essid") or "",
+            "encryption": enc,
+            "wpa_version": (
+                "wpa3" if "wpa3" in enc or "sae" in enc else
+                "wpa2_enterprise" if "enterprise" in enc else
+                "wep" if "wep" in enc else
+                "open" if enc in ("open", "none", "opn") else "wpa2"
+            ),
+            "pmf_supported": bool(t.get("pmf") or t.get("pmf_supported")),
+            "transition_mode": bool(t.get("transition") or t.get("transition_mode")),
+            "client_count": (
+                len(t["clients"]) if isinstance(t.get("clients"), list)
+                else int(t.get("client_count") or 0)
+            ),
+            "channel": t.get("channel") or 0,
+            "has_pcap": bool(t.get("cap_file") or t.get("pcap")),
+            "wps": bool(t.get("wps")),
+            "address": t.get("address") or t.get("addr") or t.get("mac") or "",
+        }
+
+
+def refine_chain_steps(
+    steps: List[Dict[str, Any]],
+    domain: str,
+    target: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    """Make a planned chain more accurate and precise for *this* target.
+
+    - Fill missing args from target (bssid/channel/iface/addr)
+    - Drop unknown / empty actions
+    - Drop deauth when PMF is required (ineffective / noisy)
+    - Cap GPU mask fan-out (1 mask by default; 2 if wordlist missing)
+    - Prefer PMKID-before-deauth when clientless
+    - Soft phase-order so recon stays before crack
+    - Deduplicate identical (action, tool, method) triples
+    Never invents tools or credentials.
+    """
+    if not steps:
+        return steps
+    feats = _target_features(target)
+    domain = (domain or "").lower()
+    out: List[Dict[str, Any]] = []
+    seen: set = set()
+    gpu_masks = 0
+    # Cap GPU fan-out: 1 mask if wordlist present, else 2
+    max_gpu = 2 if not (target.get("wordlist") or target.get("weakpass")) else 1
+    pmf = bool(feats.get("pmf_supported"))
+    clients = int(feats.get("client_count") or 0)
+    wv = feats.get("wpa_version") or ""
+
+    for raw in steps:
+        if not isinstance(raw, dict):
+            continue
+        s = dict(raw)
+        action = str(s.get("action") or "").strip()
+        if not action:
+            continue
+        # Keep unknown actions (LLM extensions) but tag them
+        if action not in _KNOWN_CHAIN_ACTIONS:
+            s.setdefault("note", "")
+            s["note"] = (s["note"] + " " if s.get("note") else "") + (
+                f"[unknown action {action!r} — may be skipped by orchestrator]"
+            )
+
+        args = s.get("args") if isinstance(s.get("args"), dict) else {}
+        args = dict(args)
+
+        # Target-adaptive arg fill
+        if domain == "wifi":
+            for k, src in (
+                ("bssid", feats.get("bssid") or target.get("bssid")),
+                ("channel", feats.get("channel") or target.get("channel")),
+                ("interface", target.get("interface") or target.get("iface")),
+                ("ssid", feats.get("ssid") or target.get("ssid")),
+                ("essid", feats.get("ssid") or target.get("essid")),
+            ):
+                if src not in (None, "", [], {}) and k not in args:
+                    args[k] = src
+            if target.get("cap_file") or target.get("pcap"):
+                args.setdefault(
+                    "cap_file", target.get("cap_file") or target.get("pcap")
+                )
+        elif domain == "ble":
+            addr = feats.get("address") or target.get("address") or target.get("addr")
+            if addr:
+                args.setdefault("addr", addr)
+                args.setdefault("address", addr)
+
+        # Precision filters
+        if action in ("deauth",) or (
+            action == "mt7921e_inject"
+            and str(args.get("mode") or "").lower() == "deauth"
+        ):
+            if pmf and not feats.get("transition_mode"):
+                # PMF makes classic deauth ineffective
+                continue
+            if clients == 0 and action == "deauth":
+                # No client to kick — skip noisy broadcast deauth
+                continue
+
+        if action == "crack_gpu":
+            gpu_masks += 1
+            if gpu_masks > max_gpu:
+                continue
+            # Pure SAE without transition: dictionary/GPU on 4-way is
+            # usually a waste — keep only if we have a pcap already.
+            if wv == "wpa3" and not feats.get("transition_mode") and not feats.get("has_pcap"):
+                continue
+
+        if action == "crack" and wv == "wpa3" and not feats.get("transition_mode"):
+            # Offline aircrack on pure SAE rarely works; keep only with pcap
+            if not feats.get("has_pcap"):
+                s["rationale"] = (
+                    (s.get("rationale") or "")
+                    + " [note: pure WPA3-SAE — offline crack only if "
+                    "transition/PMKID material exists]"
+                ).strip()
+
+        if action == "pmkid" and wv == "wpa3" and not feats.get("transition_mode"):
+            # PMKID is an RSN/WPA2 construct; pure SAE often has none
+            s["rationale"] = (
+                (s.get("rationale") or "")
+                + " [low confidence on pure SAE — prefer transition/downgrade]"
+            ).strip()
+
+        # Normalize risk_level
+        rl = str(s.get("risk_level") or "intrusive").lower()
+        if rl not in ("read", "intrusive", "destructive"):
+            rl = "intrusive"
+        s["risk_level"] = rl
+        try:
+            s["expected_runtime_seconds"] = int(
+                s.get("expected_runtime_seconds") or 30
+            )
+        except (TypeError, ValueError):
+            s["expected_runtime_seconds"] = 30
+
+        s["args"] = args
+        method = str(args.get("method") or args.get("mode") or "")
+        key = (action, s.get("tool"), method)
+        if key in seen and action not in ("poly_adapt", "mcp_call"):
+            continue
+        seen.add(key)
+        s["_phase"] = _PHASE_RANK.get(action, 50)
+        out.append(s)
+
+    # Soft stable sort by phase (preserves relative order within same phase)
+    out.sort(key=lambda x: (int(x.get("_phase", 50)),))
+    for s in out:
+        s.pop("_phase", None)
+
+    # Clientless WiFi: ensure pmkid appears before deauth if both present
+    if domain == "wifi" and clients == 0:
+        pmkid_i = next((i for i, s in enumerate(out) if s.get("action") == "pmkid"), None)
+        deauth_i = next((i for i, s in enumerate(out) if s.get("action") == "deauth"), None)
+        if pmkid_i is not None and deauth_i is not None and pmkid_i > deauth_i:
+            out[pmkid_i], out[deauth_i] = out[deauth_i], out[pmkid_i]
+
+    return out
+
+
 def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Deterministic fallback chain when no LLM is reachable.
 
-    WiFi targets get a scan→capture→crack chain. Other domains get
-    a minimal 'no automated chain available' response so the operator
-    sees a clean failure rather than a fake success.
+    Target-adaptive WiFi (WEP / open / WPA2 / WPA3 / enterprise / WPS)
+    and a real BLE recon→probe chain. Other domains get a minimal
+    honest parse step.
     """
+    domain = (domain or "").lower()
+    target = target if isinstance(target, dict) else {}
+    feats = _target_features(target)
+
+    if domain == "ble":
+        return refine_chain_steps(_heuristic_ble(target, feats), "ble", target)
+    if domain == "osint":
+        return refine_chain_steps(_heuristic_osint(target, feats), "osint", target)
     if domain != "wifi":
-        return [{
-            "action": "parse",
-            "tool": None,
-            "args": {},
-            "rationale": (
-                f"AI unavailable; no heuristic chain implemented for "
-                f"domain={domain}. Operator must drive this chain manually."
-            ),
-            "expected_outcome": "operator-driven chain",
+        return [
+            {
+                "action": "parse",
+                "tool": "operator_manual",
+                "args": {"domain": domain, "target": target},
+                "rationale": (
+                    f"No LLM available to plan a {domain.upper()} attack chain; "
+                    f"inspect target manually."
+                ),
+                "expected_outcome": "operator inspects target details",
+                "risk_level": "read",
+                "expected_runtime_seconds": 0,
+            }
+        ]
+
+    steps = _heuristic_wifi(target, feats)
+    if _zero_day_tail_auto_enabled():
+        auto_tail = _zero_day_tail(target)
+        if auto_tail:
+            steps = steps + auto_tail
+    return refine_chain_steps(steps, "wifi", target)
+
+
+def _heuristic_ble(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[str, Any]]:
+    addr = feats.get("address") or target.get("address") or target.get("addr") or ""
+    name = target.get("name") or target.get("local_name") or "unknown"
+    steps: List[Dict[str, Any]] = [
+        {
+            "action": "ble_probe",
+            "tool": "bluetoothctl",
+            "args": {"addr": addr, "address": addr, "name": name},
+            "rationale": f"Passive BLE recon for {name} ({addr or 'scan-first'}).",
+            "expected_outcome": "advertising + services enumerated",
+            "risk_level": "read",
+            "expected_runtime_seconds": 30,
+        },
+        {
+            "action": "ble_probe",
+            "tool": "gatttool",
+            "args": {"addr": addr, "address": addr, "mode": "primary"},
+            "rationale": "GATT primary service discovery for writeable chars.",
+            "expected_outcome": "service/characteristic map",
+            "risk_level": "read",
+            "expected_runtime_seconds": 45,
+        },
+    ]
+    if addr:
+        steps.append({
+            "action": "ble_attack",
+            "tool": "bettercap",
+            "args": {"addr": addr, "address": addr},
+            "rationale": "Active BLE interaction only after recon map exists.",
+            "expected_outcome": "write/notify test or pairing observation",
+            "risk_level": "intrusive",
+            "expected_runtime_seconds": 60,
+        })
+    steps.append({
+        "action": "poly_adapt",
+        "tool": "adapt_attack_gatt_strategy_picker",
+        "args": {"method": "adapt_attack_gatt_strategy_picker", "addr": addr},
+        "rationale": "Target-adaptive GATT strategy from observed IO/auth.",
+        "expected_outcome": "scored pick for next BLE step",
+        "risk_level": "read",
+        "expected_runtime_seconds": 1,
+    })
+    return steps
+
+
+def _heuristic_osint(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[str, Any]]:
+    q = (
+        target.get("query") or target.get("username") or target.get("email")
+        or target.get("domain") or target.get("target") or ""
+    )
+    return [
+        {
+            "action": "osint_probe",
+            "tool": "sherlock",
+            "args": {"query": q, "username": q},
+            "rationale": f"Username/handle footprint for {q or 'target'}.",
+            "expected_outcome": "platform hit list (no fabricated profiles)",
+            "risk_level": "read",
+            "expected_runtime_seconds": 90,
+        },
+        {
+            "action": "osint_probe",
+            "tool": "theHarvester",
+            "args": {"query": q, "domain": target.get("domain") or q},
+            "rationale": "Public email/host harvest for domain or org.",
+            "expected_outcome": "emails/hosts from public sources",
+            "risk_level": "read",
+            "expected_runtime_seconds": 120,
+        },
+        {
+            "action": "poly_adapt",
+            "tool": "adapt_osint_source_picker",
+            "args": {"method": "adapt_osint_source_picker", "query": q},
+            "rationale": "Pick next OSINT source from jurisdiction/query type.",
+            "expected_outcome": "scored source pick",
             "risk_level": "read",
             "expected_runtime_seconds": 1,
-        }]
+        },
+    ]
 
-    bssid = target.get("bssid", "TARGET_BSSID")
-    channel = target.get("channel", 1)
-    iface = target.get("interface", "wlan0mon")
-    essid = (target.get("essid") or target.get("ssid")
-             or "TARGET_ESSID")
+
+def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[str, Any]]:
+    bssid = feats.get("bssid") or target.get("bssid") or "TARGET_BSSID"
+    channel = feats.get("channel") or target.get("channel") or 1
+    iface = target.get("interface") or target.get("iface") or "wlan0mon"
+    essid = feats.get("ssid") or target.get("essid") or target.get("ssid") or "TARGET_ESSID"
+    wv = feats.get("wpa_version") or "wpa2"
+    pmf = bool(feats.get("pmf_supported"))
+    clients = int(feats.get("client_count") or 0)
+    transition = bool(feats.get("transition_mode"))
+    has_wps = bool(feats.get("wps") or target.get("wps"))
+    cap_path = f"/tmp/kfiosa-{str(bssid).replace(':', '')}-01.cap"
 
     steps: List[Dict[str, Any]] = []
-    # mt7921e adapter: run an injection-quality probe before attacking so
-    # the operator gets a 0-100 reading (and the chain can branch on it).
-    # Only prepended when the mt7921e capability is present, so non-mt7921e
-    # chains stay byte-identical to the legacy heuristic.
+
+    # mt7921e quality probe
     if target.get("adapter_caps", {}).get("mt7921e"):
         steps.append({
             "action": "mt7921e_test_injection",
             "tool": "mt7921e_tools",
             "args": {},
             "rationale": (
-                "mt7921e adapter detected: run aireplay-ng --test to verify "
-                "packet injection quality before attacking."
+                "mt7921e adapter detected: aireplay-ng --test for injection quality."
             ),
             "expected_outcome": "injection quality 0-100 reported",
             "risk_level": "intrusive",
             "expected_runtime_seconds": 20,
         })
-        # When a client is associated with the target, a directed deauth
-        # before the capture often surfaces the EAPOL handshake faster.
-        # Minimal and defensive: only emitted when mt7921e is present AND
-        # a client is reported. Non-mt7921e paths stay byte-identical.
-        _clients = target.get("clients")
-        if not _clients:
-            _clients = target.get("recon", {}).get(
-                "clients", {}).get("data", {})
-        client_count = 0
-        if isinstance(_clients, list):
-            client_count = len(_clients)
-        elif isinstance(_clients, dict):
-            client_count = int(_clients.get("count", 0) or 0)
-        if client_count > 0:
+        if clients > 0 and not pmf:
             steps.append({
                 "action": "mt7921e_inject",
                 "tool": "mt7921e_tools",
                 "args": {"mode": "deauth", "bssid": bssid},
-                "rationale": (
-                    "mt7921e adapter + associated client detected: emit a "
-                    "directed deauth to force the client to reconnect "
-                    "and surface a fresh EAPOL handshake for capture."
-                ),
-                "expected_outcome": "client reconnect; EAPOL handshake visible",
+                "rationale": "mt7921e + clients, no PMF: directed deauth for EAPOL.",
+                "expected_outcome": "client reconnect; EAPOL visible",
                 "risk_level": "destructive",
                 "expected_runtime_seconds": 10,
             })
 
-    # Per-encryption strategy. The orchestrator resolves the wordlist
-    # (weakpass → rockyou), so we leave args.wordlist unset unless the
-    # operator wants a specific one.
-    enc = (target.get("encryption") or target.get("cipher")
-           or target.get("enc") or "wpa2").lower()
-    has_wps = bool(target.get("wps"))
-    has_pmkid = bool(target.get("pmkid"))
-    cap_path = f"/tmp/kfiosa-{bssid.replace(':', '')}-01.cap"
-
-    # WPS first — often yields the PSK with no handshake.
-    if has_wps:
+    if has_wps and (wv != "wpa3" or transition):
         steps.extend([
             {
                 "action": "wps_pixie",
                 "tool": "reaver",
                 "args": {"bssid": bssid, "interface": iface},
-                "rationale": "Target advertises WPS: try Pixie-Dust first "
-                             "(fast, often no handshake needed).",
+                "rationale": "WPS advertised: Pixie-Dust first (fast path).",
                 "expected_outcome": "WPS PIN + WPA PSK recovered",
                 "risk_level": "intrusive",
                 "expected_runtime_seconds": 120,
@@ -1584,16 +1888,13 @@ def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str,
                 "action": "wps_online",
                 "tool": "reaver",
                 "args": {"bssid": bssid, "interface": iface},
-                "rationale": "If pixie fails, fall back to an online WPS PIN "
-                             "bruteforce (slower).",
+                "rationale": "Pixie miss → online WPS PIN (slower fallback).",
                 "expected_outcome": "WPS PIN/PSK recovered",
                 "risk_level": "intrusive",
                 "expected_runtime_seconds": 900,
             },
         ])
 
-    # Prefer a pcap already produced by catalog recon (handshake_harvest /
-    # eapol_monitor) so we don't waste a capture slot when one exists.
     recon = target.get("recon") if isinstance(target.get("recon"), dict) else {}
     for key in ("handshake_harvest", "eapol_monitor"):
         data = ((recon.get(key) or {}).get("data") or {})
@@ -1604,17 +1905,39 @@ def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str,
     if target.get("cap_file") or target.get("pcap"):
         cap_path = str(target.get("cap_file") or target.get("pcap"))
 
-    if enc in ("wep",):
-        # WEP: capture IVs, optional mt7921e replay, then crack -a 1.
+    # Open network
+    if wv == "open":
+        steps.append({
+            "action": "join_network",
+            "tool": "nmcli",
+            "args": {"ssid": essid, "bssid": bssid},
+            "rationale": "Open network — associate and map L3, no crack path.",
+            "expected_outcome": "associated; DHCP lease if available",
+            "risk_level": "intrusive",
+            "expected_runtime_seconds": 30,
+        })
+        steps.append({
+            "action": "host_discovery",
+            "tool": "nmap",
+            "args": {"target": "localnet"},
+            "rationale": "Post-assoc host discovery on open segment.",
+            "expected_outcome": "live hosts list",
+            "risk_level": "intrusive",
+            "expected_runtime_seconds": 60,
+        })
+        return steps
+
+    # WEP
+    if wv == "wep" or str(feats.get("encryption") or "").lower() == "wep":
         steps.append({
             "action": "mcp_call",
             "tool": "airodump-ng",
             "args": {
                 "channel": channel, "bssid": bssid,
-                "write": f"/tmp/kfiosa-{bssid.replace(':', '')}",
+                "write": f"/tmp/kfiosa-{str(bssid).replace(':', '')}",
                 "interface": iface, "output_format": "both",
             },
-            "rationale": f"Capture WEP traffic/IVs for {bssid} on ch{channel}.",
+            "rationale": f"Capture WEP IVs for {bssid} on ch{channel}.",
             "expected_outcome": "IV-rich .cap written",
             "risk_level": "intrusive",
             "expected_runtime_seconds": 45,
@@ -1625,8 +1948,7 @@ def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str,
                     "action": "mt7921e_inject",
                     "tool": "mt7921e_tools",
                     "args": {"mode": mode, "bssid": bssid},
-                    "rationale": f"WEP target: {mode} to gather IVs / decrypt "
-                                 f"frames.",
+                    "rationale": f"WEP: {mode} to gather IVs / decrypt frames.",
                     "expected_outcome": "sufficient IVs / decrypted frame",
                     "risk_level": "destructive",
                     "expected_runtime_seconds": 60,
@@ -1635,105 +1957,192 @@ def _heuristic_for_domain(domain: str, target: Dict[str, Any]) -> List[Dict[str,
             "action": "crack",
             "tool": "aircrack-ng",
             "args": {"cap_file": cap_path, "bssid": bssid, "wep": True},
-            "rationale": "Crack the WEP capture with aircrack-ng (-a 1).",
+            "rationale": "Crack WEP capture with aircrack-ng (-a 1).",
             "expected_outcome": "WEP key recovered",
             "risk_level": "intrusive",
             "expected_runtime_seconds": 120,
         })
         return steps
 
-    # WPA / WPA2 / WPA3 default path.
-    steps.append({
-        "action": "mcp_call",
-        "tool": "airodump-ng",
-        "args": {
-            "channel": channel,
-            "bssid": bssid,
-            "write": f"/tmp/kfiosa-{bssid.replace(':', '')}",
-            "interface": iface,
-            "output_format": "both",
-        },
-        "rationale": (
-            f"Lock onto {bssid} ({essid}) on ch{channel} and capture "
-            f"WPA handshake to {cap_path}."
-        ),
-        "expected_outcome": "handshake captured in .cap file",
-        "risk_level": "intrusive",
-        "expected_runtime_seconds": 30,
-    })
-    # Deauth to force a fresh handshake (always useful; not mt7921e-only).
-    steps.append({
-        "action": "deauth",
-        "tool": "aireplay-ng",
-        "args": {"bssid": bssid, "interface": iface, "channel": channel},
-        "rationale": (
-            "Force associated clients to re-auth so airodump / PMKID "
-            "capture sees EAPOL frames."
-        ),
-        "expected_outcome": "client reconnect; EAPOL visible",
-        "risk_level": "destructive",
-        "expected_runtime_seconds": 15,
-    })
-    # Clientless PMKID (always try once — cheap, no client required).
-    steps.append({
-        "action": "pmkid",
-        "tool": "hashcat",
-        "args": {"cap_file": cap_path, "bssid": bssid, "channel": channel,
-                 "interface": iface},
-        "rationale": "Clientless PMKID capture+crack via hcxtools/hashcat "
-                     "-m 22000.",
-        "expected_outcome": "WPA PSK recovered from PMKID",
-        "risk_level": "intrusive",
-        "expected_runtime_seconds": 120,
-    })
-    # Dictionary crack (the orchestrator resolves weakpass → rockyou).
-    steps.append({
-        "action": "crack",
-        "tool": "aircrack-ng",
-        "args": {"cap_file": cap_path, "bssid": bssid},
-        "rationale": "Crack the captured handshake with aircrack-ng + "
-                     "resolved wordlist (weakpass → rockyou).",
-        "expected_outcome": "WPA PSK recovered",
-        "risk_level": "intrusive",
-        "expected_runtime_seconds": 120,
-    })
-    # GPU mask bruteforce fan-out — optional, emitted so the re-plan
-    # loop can reach access when dictionary fails. Common 8-10 digit
-    # numeric masks first (default), then a lowercase-letters mask.
-    for mask, rt in (("?d?d?d?d?d?d?d?d", 300),
-                     ("?d?d?d?d?d?d?d?d?d?d", 900),
-                     ("?l?l?l?l?l?l?l?l", 900)):
+    # Enterprise
+    if wv == "wpa2_enterprise":
         steps.append({
-            "action": "crack_gpu",
-            "tool": "hashcat",
-            "args": {"cap_file": cap_path, "mask": mask},
-            "rationale": f"Dictionary may fail: GPU mask bruteforce "
-                         f"({mask}) as a fan-out to reach access.",
-            "expected_outcome": "WPA PSK recovered via hashcat -a 3",
+            "action": "mcp_call",
+            "tool": "airodump-ng",
+            "args": {
+                "channel": channel, "bssid": bssid,
+                "write": f"/tmp/kfiosa-{str(bssid).replace(':', '')}",
+                "interface": iface, "output_format": "both",
+            },
+            "rationale": "Capture EAP identity / cert material (enterprise).",
+            "expected_outcome": "EAPOL identity frames in .cap",
             "risk_level": "intrusive",
-            "expected_runtime_seconds": rt,
+            "expected_runtime_seconds": 45,
         })
-    if enc.startswith("wpa3"):
-        # SAE/Dragonfly defeats the standard PMK handshake.
+        steps.append({
+            "action": "wifi_attack",
+            "tool": "hostapd-wpe",
+            "args": {"ssid": essid, "channel": channel},
+            "rationale": "Evil-twin / WPE path for enterprise credential harvest.",
+            "expected_outcome": "EAP creds or certs harvested",
+            "risk_level": "destructive",
+            "expected_runtime_seconds": 300,
+        })
+        return steps
+
+    # WPA3 pure SAE
+    if wv == "wpa3" and not transition:
+        steps.append({
+            "action": "poly_adapt",
+            "tool": "adapt_wpa3_sae_one_click_plan",
+            "args": {
+                "method": "adapt_wpa3_sae_one_click_plan",
+                "encryption": feats.get("encryption") or "WPA3",
+                "bssid": bssid, "ssid": essid, "channel": channel,
+                "pmf": True,
+            },
+            "rationale": "Pure WPA3-SAE: target-adaptive one-click plan (honest).",
+            "expected_outcome": "ranked SAE-aware step plan",
+            "risk_level": "read",
+            "expected_runtime_seconds": 2,
+        })
+        steps.append({
+            "action": "mcp_call",
+            "tool": "airodump-ng",
+            "args": {
+                "channel": channel, "bssid": bssid,
+                "write": f"/tmp/kfiosa-{str(bssid).replace(':', '')}",
+                "interface": iface, "output_format": "both",
+            },
+            "rationale": "Passive capture of SAE commit/confirm + beacons.",
+            "expected_outcome": "SAE frames in .cap for analysis",
+            "risk_level": "intrusive",
+            "expected_runtime_seconds": 45,
+        })
         steps.append({
             "action": "parse",
             "tool": None,
             "args": {},
-            "rationale": "WPA3 SAE/Dragonfly defeats the PMK handshake path; "
-                         "attempt PMKID, else route to dragonblood CVEs / "
-                         "a zero_day tail.",
-            "expected_outcome": "operator notes SAE; route to CVE/0-day",
+            "rationale": (
+                "WPA3 SAE/Dragonfly defeats offline 4-way crack; route to "
+                "transition check, vendor CVEs, or optional zero_day tail."
+            ),
+            "expected_outcome": "operator notes SAE; CVE/0-day path if opted-in",
             "risk_level": "read",
             "expected_runtime_seconds": 1,
         })
-    # Phase 2.2.G: auto-append the zero-day tail on the heuristic
-    # fallback path. Opt-in via ``KFIOSA_ZERO_DAY_TAIL_AUTO=1`` so the
-    # default behavior is unchanged. Each tail step is marked
-    # ``optional: True`` and per-step ACCEPT-gated by the orchestrator.
-    if _zero_day_tail_auto_enabled():
-        auto_tail = _zero_day_tail(target)
-        if auto_tail:
-            steps = steps + auto_tail
+        return steps
+
+    # WPA2 / transition WPA3 default path (precise order)
+    steps.append({
+        "action": "mcp_call",
+        "tool": "airodump-ng",
+        "args": {
+            "channel": channel, "bssid": bssid,
+            "write": f"/tmp/kfiosa-{str(bssid).replace(':', '')}",
+            "interface": iface, "output_format": "both",
+        },
+        "rationale": (
+            f"Lock onto {bssid} ({essid}) on ch{channel}; capture to {cap_path}."
+        ),
+        "expected_outcome": "handshake / EAPOL in .cap",
+        "risk_level": "intrusive",
+        "expected_runtime_seconds": 30,
+    })
+
+    # Clientless → PMKID first (no deauth)
+    if clients == 0:
+        steps.append({
+            "action": "pmkid",
+            "tool": "hashcat",
+            "args": {
+                "cap_file": cap_path, "bssid": bssid,
+                "channel": channel, "interface": iface,
+            },
+            "rationale": "No clients observed → clientless PMKID (hcx/hashcat -m 22000).",
+            "expected_outcome": "WPA PSK from PMKID",
+            "risk_level": "intrusive",
+            "expected_runtime_seconds": 120,
+        })
+    else:
+        if not pmf:
+            steps.append({
+                "action": "deauth",
+                "tool": "aireplay-ng",
+                "args": {
+                    "bssid": bssid, "interface": iface, "channel": channel,
+                },
+                "rationale": f"{clients} clients, no PMF → directed/broadcast deauth for EAPOL.",
+                "expected_outcome": "client reconnect; EAPOL visible",
+                "risk_level": "destructive",
+                "expected_runtime_seconds": 15,
+            })
+        else:
+            steps.append({
+                "action": "poly_adapt",
+                "tool": "adapt_attack_deauth_strategy_picker",
+                "args": {
+                    "method": "adapt_attack_deauth_strategy_picker",
+                    "pmf_supported": True,
+                    "client_count": clients,
+                },
+                "rationale": "PMF on → pick SA-Query / KRACK-like path, not classic deauth.",
+                "expected_outcome": "scored non-classic force-reauth pick",
+                "risk_level": "read",
+                "expected_runtime_seconds": 1,
+            })
+        steps.append({
+            "action": "pmkid",
+            "tool": "hashcat",
+            "args": {
+                "cap_file": cap_path, "bssid": bssid,
+                "channel": channel, "interface": iface,
+            },
+            "rationale": "Also try clientless PMKID as parallel cheap path.",
+            "expected_outcome": "WPA PSK from PMKID",
+            "risk_level": "intrusive",
+            "expected_runtime_seconds": 120,
+        })
+
+    steps.append({
+        "action": "crack",
+        "tool": "aircrack-ng",
+        "args": {"cap_file": cap_path, "bssid": bssid},
+        "rationale": "Dictionary crack (orchestrator resolves weakpass → rockyou).",
+        "expected_outcome": "WPA PSK recovered",
+        "risk_level": "intrusive",
+        "expected_runtime_seconds": 120,
+    })
+    # One precise GPU mask by default (refine may allow a second)
+    steps.append({
+        "action": "crack_gpu",
+        "tool": "hashcat",
+        "args": {"cap_file": cap_path, "mask": "?d?d?d?d?d?d?d?d"},
+        "rationale": "Dictionary miss → GPU 8-digit numeric mask (precise fan-out).",
+        "expected_outcome": "WPA PSK via hashcat -a 3",
+        "risk_level": "intrusive",
+        "expected_runtime_seconds": 300,
+    })
+    if not (target.get("wordlist") or target.get("weakpass")):
+        steps.append({
+            "action": "crack_gpu",
+            "tool": "hashcat",
+            "args": {"cap_file": cap_path, "mask": "?d?d?d?d?d?d?d?d?d?d"},
+            "rationale": "No wordlist provided → second GPU mask (10-digit).",
+            "expected_outcome": "WPA PSK via hashcat -a 3",
+            "risk_level": "intrusive",
+            "expected_runtime_seconds": 900,
+        })
+    if transition:
+        steps.append({
+            "action": "parse",
+            "tool": None,
+            "args": {},
+            "rationale": "WPA3 transition mode: prefer WPA2 path above; note SAE if clients prefer it.",
+            "expected_outcome": "operator aware of transition dual-stack",
+            "risk_level": "read",
+            "expected_runtime_seconds": 1,
+        })
     return steps
 
 
@@ -1981,6 +2390,20 @@ def _parse_chain_json(text: str) -> List[Dict[str, Any]]:
         steps = obj
     elif isinstance(obj, dict) and isinstance(obj.get("chain"), list):
         steps = obj["chain"]
+    elif isinstance(obj, dict) and isinstance(obj.get("steps"), list):
+        # Common alias some models use instead of "chain".
+        steps = obj["steps"]
+    elif isinstance(obj, dict) and isinstance(obj.get("actions"), list):
+        steps = obj["actions"]
+    elif isinstance(obj, dict) and (
+        obj.get("type") == "object" or (
+            "properties" in obj and "chain" not in obj and "steps" not in obj
+        )
+    ):
+        # Models sometimes echo the JSON *schema* instead of an instance.
+        raise ChainPlanError(
+            "LLM returned a JSON schema (type/properties), not a chain instance"
+        )
     else:
         raise ChainPlanError(
             "LLM JSON did not contain a 'chain' list "
@@ -2044,6 +2467,11 @@ class AIChainPlanner:
         # prior step outcomes fed to the last re-plan call.
         self._last_context: Dict[str, Any] = {}
         self._last_prior_results: Optional[List[Dict[str, Any]]] = None
+        # When True, every LLM path (primary/alt/uncensored) already failed
+        # this engagement and we used the heuristic. Re-plans skip the
+        # multi-model crawl so each step does not burn minutes on models
+        # that only return prose/schema.
+        self._ai_json_unavailable: bool = False
 
     # ------------------------------------------------------------------
     # Public
@@ -2148,6 +2576,23 @@ class AIChainPlanner:
 
         steps: Optional[List[Dict[str, Any]]] = None
 
+        # Fast path for re-plan: if the full LLM ladder already failed
+        # once this engagement, skip multi-model retries and go straight
+        # to the heuristic. Stops the live log from thrashing llama /
+        # wizard / uncensored on every step after first AI failure.
+        if prior_results and self._ai_json_unavailable:
+            steps = _heuristic_for_domain(domain, target)
+            if steps:
+                self._emit(
+                    "[chain-planner] re-plan via heuristic "
+                    "(AI JSON unavailable this engagement)"
+                )
+                used_heuristic_early = True
+            else:
+                used_heuristic_early = False
+        else:
+            used_heuristic_early = False
+
         # Detect persona models known to ignore the JSON contract
         # (return product blurbs). Prefer instruction models first for
         # those so chaining is not permanently stuck on heuristic.
@@ -2166,8 +2611,9 @@ class AIChainPlanner:
             for x in ("xploiter/pentester", "pentester:latest")
         )
 
-        # 1) Primary LLM call (skipped for known non-JSON persona models).
-        if not persona_skips_json:
+        # 1) Primary LLM call (skipped for known non-JSON persona models
+        # and when the re-plan heuristic fast-path already filled steps).
+        if steps is None and not persona_skips_json:
             try:
                 text = self._query_primary(domain, prompt, ctx,
                                              target_class=target_class)
@@ -2176,7 +2622,7 @@ class AIChainPlanner:
                 self._emit(f"[chain-planner] primary LLM failed: {e}")
             except Exception as e:  # noqa: BLE001
                 self._emit(f"[chain-planner] primary LLM errored: {e}")
-        else:
+        elif steps is None and persona_skips_json:
             self._emit(
                 f"[chain-planner] domain model {primary_tag!r} skips JSON "
                 f"contracts — trying instruction models first"
@@ -2213,7 +2659,7 @@ class AIChainPlanner:
                 self._emit(f"[chain-planner] uncensored model errored: {e}")
 
         # 3) Deterministic heuristic fallback.
-        used_heuristic = False
+        used_heuristic = bool(used_heuristic_early)
         if steps is None:
             steps = _heuristic_for_domain(domain, target)
             if not steps:
@@ -2225,29 +2671,55 @@ class AIChainPlanner:
                 f"[chain-planner] using heuristic chain ({len(steps)} steps); "
                 f"AI was unavailable"
             )
+        if used_heuristic:
+            # Latch for this planner instance (whole engagement): re-plans
+            # will skip the LLM multi-model crawl.
+            self._ai_json_unavailable = True
 
         # Re-plan path: drop steps whose (action, tool) already ran so the
         # orchestrator gets a true *remaining* tail (not a full replay).
         if prior_results and steps:
+            done_action_tools = set()
             done_sigs = set()
             for e in prior_results:
                 if not isinstance(e, dict):
                     continue
                 a = e.get("action") or e.get("desc") or ""
                 t = e.get("tool") or ""
+                args = e.get("args") or {}
+                if not isinstance(args, dict):
+                    args = {}
+                m = args.get("method") or args.get("mode") or ""
                 if a:
-                    done_sigs.add((a, t))
+                    done_action_tools.add((a, t))
+                    if m:
+                        done_sigs.add((a, t, str(m)))
             before = len(steps)
-            steps = [
-                s for s in steps
-                if (s.get("action") or "", s.get("tool") or "") not in done_sigs
-            ]
+            filtered_steps = []
+            for s in steps:
+                s_a = s.get("action") or ""
+                s_t = s.get("tool") or ""
+                s_args = s.get("args") or {}
+                if not isinstance(s_args, dict):
+                    s_args = {}
+                s_m = s_args.get("method") or s_args.get("mode") or ""
+                # If step has a specific method/mode, only drop if exact (action, tool, method) match.
+                # Otherwise, drop if (action, tool) was executed.
+                if s_m:
+                    if (s_a, s_t, str(s_m)) in done_sigs or (s_a, s_t) in done_action_tools and not done_sigs:
+                        continue
+                elif (s_a, s_t) in done_action_tools:
+                    continue
+                filtered_steps.append(s)
+            steps = filtered_steps
             if before != len(steps):
                 self._emit(
                     f"[chain-planner] re-plan filter: dropped "
                     f"{before - len(steps)} already-executed step(s); "
                     f"{len(steps)} remain"
                 )
+
+
 
         # Optional 0-day exploit-generator tail (opt-in). Each step is
         # operator-gated; appended only when the operator opts in.
@@ -2266,7 +2738,7 @@ class AIChainPlanner:
         # step injection. Only on the *initial* plan (not every re-plan),
         # otherwise each re-plan re-injects the same OPSEC steps and the
         # chain never converges.
-        if attach_post_exploit and not prior_results:
+        if attach_post_exploit:
             try:
                 from .post_exploit_selector import (
                     select_anti_forensic_sequence, explain_sequence,
@@ -2338,6 +2810,12 @@ class AIChainPlanner:
         # Done BEFORE the steps return so the per-step ACCEPT prompt shows
         # the auto-chosen mode to the operator (no post-gate arg mutation).
         steps = [self._enrich_inject_step(s, ctx) for s in steps]
+        # Final precision pass: fill args, drop PMF-deauth, cap GPU masks,
+        # soft phase-order. Shared by LLM and heuristic paths.
+        try:
+            steps = refine_chain_steps(steps, domain, target)
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[chain-planner] refine_chain_steps skipped: {e}")
         return steps
 
     def _enrich_inject_step(self, step: Dict[str, Any],

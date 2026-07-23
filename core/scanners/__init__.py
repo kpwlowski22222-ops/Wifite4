@@ -47,7 +47,17 @@ from .enhanced_wifi_scanner import (
 from .enhanced_ble_scanner import (
     EnhancedBLEScanner,
 )
-
+from .scan_limits import (
+    DEFAULT_BLE_SCAN_S,
+    DEFAULT_WIFI_SCAN_S,
+    MAX_SCAN_S,
+    ble_scan_s,
+    wifi_scan_s,
+)
+from .wifi_radio import (
+    prep_for_wifi_scan,
+    pick_best_scan_iface,
+)
 
 # --- Top-level entrypoint helpers (4-touchpoint layer 2) ----
 def scan_wifi(*args, **kwargs):
@@ -73,6 +83,15 @@ __all__ = [
     "KismetRunResult",
     "KismetRunner",
     "is_kismet_installed",
+    # Long-range scan limits
+    "DEFAULT_BLE_SCAN_S",
+    "DEFAULT_WIFI_SCAN_S",
+    "MAX_SCAN_S",
+    "ble_scan_s",
+    "wifi_scan_s",
+    # Radio pre-flight
+    "prep_for_wifi_scan",
+    "pick_best_scan_iface",
     # Scanners
     "WiFiScanner",
     "EnhancedWiFiScanner",

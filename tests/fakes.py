@@ -278,6 +278,15 @@ class FakeOrchestrator:
         self.runs.append({"domain": domain, "target": target, "kw": kw})
         return {"domain": domain, "executed": [], "skipped": []}
 
+    def _build_steps(self, domain, seed, report):
+        return [{"action": f"{domain}_attack", "tool": "fake_tool"}]
+
+    def _walk_static_step(self, step, seed, report, autonomous=False):
+        self.runs.append({"domain": seed.get("domain", "wifi"), "target": seed, "step": step})
+
+    def _maybe_run_gain_access_hooks(self, domain, seed, report, autonomous=False):
+        pass
+
 
 class FakeSettingsManager:
     def __init__(self, settings: Optional[Dict[str, Any]] = None):

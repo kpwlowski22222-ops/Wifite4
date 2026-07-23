@@ -151,3 +151,12 @@ def test_reset_settings_canceled(log):
     sc.reset_settings()
     assert sm.resets == 0
     assert any("Reset canceled" in l for l in log)
+
+
+def test_toggle_vision_os_learning(log):
+    sm = FakeSettingsManager()
+    sc = _settings(log, settings_manager=sm, thread_runner=sync_thread_runner)
+    sc.toggle_vision_os_learning()
+    assert any(u["key"] == "vision_os_learning.enabled" for u in sm.updates)
+    assert any("AI Vision OS Navigation & UI Auto-Labeling" in l for l in log)
+    assert any("Active learning started" in l for l in log)

@@ -37,6 +37,7 @@ class BLEScreen(BaseScreen):
             ("Scan for BLE Devices (AI-Enhanced)", self.scan_ble_devices),
             ("Select Target (number keys)", self._select_target_prompt),
             ("Run All Attacks (AI-orchestrated, ACCEPT/CANCEL)", self.run_attack_chain),
+            ("Adaptive until-access (recon→CVE→plan→poly→RAT)", self.adaptive_until_access),
             ("Show Report (last engagement)", self.show_report),
             ("Advanced…", self._show_advanced),
             ("Back to Main Menu", self.parent_callback),
@@ -93,6 +94,16 @@ class BLEScreen(BaseScreen):
     # ------------------------------------------------------------------
     # Primary-flow actions
     # ------------------------------------------------------------------
+    def adaptive_until_access(self):
+        """BLE target-adaptive loop until access (bounded cycles)."""
+        if not self.selected_device:
+            self.activity_log.append("[!] Select a BLE device first (Scan → number key).")
+            return
+        if not self.orchestrator:
+            self.activity_log.append("[!] Orchestrator unavailable.")
+            return
+        self._run_adaptive(until_access=True)
+
     def run_attack_chain(self):
         if not self.selected_device:
             self.activity_log.append("[!] Select a BLE device first (Scan → number key).")
@@ -100,17 +111,40 @@ class BLEScreen(BaseScreen):
         if not self.orchestrator:
             self.activity_log.append("[!] Orchestrator unavailable.")
             return
+        self._run_adaptive(until_access=False)
+
+    def _run_adaptive(self, *, until_access: bool) -> None:
         target = dict(self.selected_device)
+        if self.interface:
+            target.setdefault("adapter", self.interface)
 
         def run():
             try:
-                # New: route through AIChainPlanner when the planner
-                # is wired in. Falls back to the legacy ladder when
-                # chain_planner is None on the orchestrator.
-                self.orchestrator.run("ble", target, use_ai_chain=True)
-                self._last_report = {"domain": "ble", "target": target}
+                from core.orchestrator.adaptive_engagement import (
+                    AdaptiveEngagement,
+                )
+                eng = AdaptiveEngagement(
+                    self.orchestrator,
+                    catalog_recon_factory=None,
+                    on_event=lambda m: self.activity_log.append(m),
+                    until_access=until_access,
+                    enable_cve_code=True,
+                    enable_reverse_stubs=True,
+                )
+                report = eng.run("ble", target)
+                self._last_report = report
+                access = (report or {}).get("access") or {}
+                if access.get("achieved"):
+                    self.activity_log.append(
+                        f"[+] BLE adaptive ACCESS: session={access.get('session_id')}"
+                    )
+                else:
+                    self.activity_log.append(
+                        f"[i] BLE adaptive finished without access "
+                        f"({len((report or {}).get('cycles') or [])} cycle(s))"
+                    )
             except Exception as e:
-                self.activity_log.append(f"[!] attack chain error: {e}")
+                self.activity_log.append(f"[!] adaptive engagement error: {e}")
 
         self._spawn(run)
 
@@ -131,7 +165,16 @@ class BLEScreen(BaseScreen):
                 if hasattr(scanner, "initialize"):
                     scanner.initialize()
 
-                scan_data = scanner.scan(duration=8)
+                try:
+                    from core.scanners.scan_limits import ble_scan_s
+                    _ble_s = ble_scan_s(None)
+                except Exception:
+                    _ble_s = 300
+                self.activity_log.append(
+                    f"[*] Long-range BLE scan ({_ble_s}s; "
+                    f"override KFIOSA_BLE_SCAN_S)..."
+                )
+                scan_data = scanner.scan(duration=_ble_s)
                 devices = scan_data.get("devices", [])
                 error = scan_data.get("error")
 

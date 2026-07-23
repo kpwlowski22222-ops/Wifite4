@@ -33,9 +33,20 @@ class SettingsManager:
                 "base_url": "https://integrate.api.nvidia.com/v1",
                 "model": "z-ai/glm-5.2"
             },
+            # Cloud fallbacks (order in AIBackend.query: NVIDIA → DeepSeek → Gemini → Groq)
+            "deepseek": {
+                "api_key": "",
+                "model": "deepseek-chat",
+                "endpoint": "https://api.deepseek.com/chat/completions"
+            },
+            "gemini": {
+                "api_key": "",
+                "model": "gemini-2.5-pro",
+                "endpoint": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+            },
             "tools": {},
             "nvd": {
-                "api_key": "b4eb1ae2-8fcf-4e8b-bbd9-3bb8ac36586e",
+                "api_key": "",
                 "base_url": "https://services.nvd.nist.gov/rest/json/cves/2.0"
             },
             "ai_models": {
@@ -68,6 +79,25 @@ class SettingsManager:
                 "ble_timeout": 30,
                 "osint_sources": ["search_engines", "social_media", "public_records"]
             },
+            "vision_os_learning": {
+                "enabled": True,
+                "capture_interval_s": 5,
+                "auto_label_ui": True,
+                "internet_navigation_assist": True,
+                "cache_dir": "logs/screen_cache"
+            },
+            # Holo desktop agent (https://github.com/hcompai/holo-desktop-cli)
+            # Drives real OS UI for tool setup + AI model management.
+            # base_url: empty = H Company hosted API (requires `holo login`);
+            #           set to local OpenAI-compatible server for private Holo3.
+            "holo": {
+                "enabled": True,
+                "base_url": "",
+                "model": "",
+                "max_steps": 40,
+                "max_time_s": 600,
+            },
+
             "logging": {
                 "level": "INFO",
                 "file": "logs/dashboard.log",

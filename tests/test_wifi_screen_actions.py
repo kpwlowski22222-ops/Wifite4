@@ -130,6 +130,7 @@ def test_primary_menu_has_one_click_first(log):
 
 def test_aio_attack_requires_target(log):
     sc = _wifi(log, orchestrator=FakeOrchestrator())
+    sc._no_external_load = True
     sc.interface = "wlan0"
     sc.aio_attack()
     assert any("Select a target first" in l for l in log)

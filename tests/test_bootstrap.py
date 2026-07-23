@@ -110,8 +110,8 @@ class TestCheckOllama:
         assert out["endpoint"] == "http://127.0.0.1:11434"
 
     def test_unreachable_endpoint(self):
-        # Use a clearly unreachable endpoint
-        out = mod.check_ollama("http://127.0.0.1:1")
+        # Use a high unused port (port 1 can be claimed on some hosts)
+        out = mod.check_ollama("http://127.0.0.1:59999", timeout=0.8)
         assert out["reachable"] is False
         assert out["models"] == []
 

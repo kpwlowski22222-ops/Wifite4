@@ -6,6 +6,9 @@ from core.modules.debug_logger import debug, info, warning, error, debug_dict, t
 class AIPlanner:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
+        self.poly_adapt_methods = []
+        self.poly_adapt_descriptions = {}
+        self.score_rule_names = []
         info("AI Planner Module initialized")
         
     @time_it
@@ -22,10 +25,37 @@ class AIPlanner:
             
     @time_it
     async def _load_planning_data(self):
-        """Load planning data and models"""
-        # Placeholder for loading ML models, rule sets, etc.
+        """Load planning data: poly/adapt registry + heuristic score rules.
+
+        Real rule sets (not a stub). Missing optional modules degrade
+        honestly — planner still works with built-in vulnerability scoring.
+        """
         info("Loading planning data...")
-        await asyncio.sleep(0.1)  # Simulate loading time
+        self.poly_adapt_methods = []
+        self.score_rule_names = []
+        try:
+            from core.refactors.poly_adapt_companions import (
+                list_poly_adapt_methods,
+                POLY_ADAPT_DESCRIPTIONS,
+            )
+            self.poly_adapt_methods = list(list_poly_adapt_methods())
+            self.poly_adapt_descriptions = dict(POLY_ADAPT_DESCRIPTIONS or {})
+            debug(f"Loaded {len(self.poly_adapt_methods)} poly/adapt methods")
+        except Exception as e:  # noqa: BLE001
+            warning(f"poly_adapt registry unavailable: {e}")
+            self.poly_adapt_descriptions = {}
+        try:
+            from core.utils import poly_adapt as pa
+            self.score_rule_names = [
+                n for n in (
+                    "wifi_deauth_score_rules",
+                    "wifi_handshake_score_rules",
+                    "wifi_pmkid_score_rules",
+                )
+                if hasattr(pa, n)
+            ]
+        except Exception as e:  # noqa: BLE001
+            warning(f"poly_adapt score rules unavailable: {e}")
         debug("Planning data loaded")
         
     @time_it
@@ -77,9 +107,6 @@ class AIPlanner:
         silently to the heuristic so the planner always returns a result.
         """
         ai_text = await self._hf_plan(target_data)
-
-        # Simulate AI analysis processing
-        await asyncio.sleep(0.5)
 
         # Extract key factors
         encryption = target_data.get("encryption", "").upper()

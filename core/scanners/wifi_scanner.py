@@ -173,18 +173,23 @@ class WiFiScanner:
     # ------------------------------------------------------------------
     # Scan (real airodump-ng CSV parsing; no fake APs)
     # ------------------------------------------------------------------
-    def scan(self, interface: str = None, timeout: int = 60) -> Dict[str, Any]:
-        """Scan for WiFi networks using airodump-ng.
+    def scan(self, interface: str = None, timeout: int = None) -> Dict[str, Any]:
+        """Scan for WiFi networks using airodump-ng (max RF / hop coverage).
 
         Args:
             interface: monitor-mode interface. If None, the scanner uses
                 its constructor interface or auto-selects the first
                 detected monitor-capable adapter.
-            timeout: capture duration in seconds (capped to 60).
+            timeout: capture duration in seconds. Default long-range
+                (``DEFAULT_WIFI_SCAN_S``, 300s); hard ceiling
+                ``MAX_SCAN_S`` (3600s) via :mod:`core.scanners.scan_limits`.
+                Multi-band hop (2.4 + 5 GHz) for maximum spatial coverage.
 
         Returns:
             {networks: [...], total_found, interface, duration, error?}
         """
+        from core.scanners.scan_limits import wifi_scan_s
+
         if not self.is_initialized:
             return {"error": "WiFi scanner not initialized"}
 
@@ -210,49 +215,119 @@ class WiFiScanner:
                 "interface": iface,
             }
 
-        # Ensure monitor mode (best-effort; if not root, report honestly).
-        mon = self.ensure_monitor(iface)
-        if "error" in mon:
-            return {
-                "networks": [],
-                "error": f"monitor mode on {iface}: {mon['error']} "
-                         f"(needs root)",
-                "total_found": 0,
-                "interface": iface,
-            }
+        # Pre-flight: stop NM/wpa, collapse dual-mon VIFs, ensure monitor.
+        # Critical: use the *post*-prep interface name (airmon often
+        # renames wlan0 → wlan0mon).
+        try:
+            from core.scanners.wifi_radio import prep_for_wifi_scan, airodump_cmd
+            prep = prep_for_wifi_scan(iface, kill_interferers=True, collapse_dups=True)
+        except Exception as e:
+            prep = {"ok": False, "error": str(e), "interface": iface, "notes": []}
+
+        if not prep.get("ok"):
+            # Fall back to legacy ensure_monitor path
+            mon = self.ensure_monitor(iface)
+            if "error" in mon:
+                return {
+                    "networks": [],
+                    "error": (
+                        f"monitor prep on {iface}: "
+                        f"{prep.get('error') or mon.get('error')} (needs root)"
+                    ),
+                    "total_found": 0,
+                    "interface": iface,
+                    "notes": prep.get("notes") or [],
+                }
+            scan_iface = mon.get("interface") or iface
+            prep_notes = list(prep.get("notes") or [])
+        else:
+            scan_iface = prep.get("interface") or iface
+            prep_notes = list(prep.get("notes") or [])
+            for n in prep_notes:
+                self.logger.info("wifi prep: %s", n)
+
+        # Track post-monitor name for restore.
+        if scan_iface and scan_iface not in self._restored_ifaces:
+            self._restored_ifaces.append(scan_iface)
+        self.interface = scan_iface
 
         scan_id = f"wifi_scan_{int(time.time())}"
-        cap = min(max(timeout, 2), 60)
+        cap = wifi_scan_s(timeout)
         prefix = f"/tmp/kfiosa_{scan_id}"
-        self.logger.info(f"airodump-ng on {iface} for {cap}s -> {prefix}")
+        self.logger.info(
+            f"airodump-ng on {scan_iface} for {cap}s "
+            f"(long-range multi-band) -> {prefix}"
+        )
 
+        # Long-range airodump:
+        #  * --band abg  → hop 2.4 GHz + 5 GHz (max spatial coverage)
+        #  * no -c lock  → full channel hop (default)
+        #  * --berlin    → keep weak/intermittent APs listed for the full
+        #                  scan window (not the short default ~120s)
+        #  * --write-interval 1 → stream CSV so mid-scan APs are kept
+        berlin = max(cap, 120)
         try:
-            # --write-interval 1 + -w writes CSV (and pcap). We only parse CSV.
-            p = subprocess.run(
-                ["airodump-ng", iface, "-w", prefix, "--write-interval", "1",
-                 "--output-format", "csv", "--berlin", str(cap)],
-                capture_output=True, text=True, timeout=cap + 8,
+            attempts = airodump_cmd(
+                scan_iface, prefix, berlin=berlin, multi_band=True,
             )
-        except subprocess.TimeoutExpired:
-            pass
-        except FileNotFoundError:
-            return {"networks": [], "error": "airodump-ng not found",
-                    "total_found": 0, "interface": iface}
-        except Exception as e:
-            return {"networks": [], "error": f"airodump-ng: {e}",
-                    "total_found": 0, "interface": iface}
+        except Exception:
+            attempts = [[
+                "airodump-ng", scan_iface,
+                "-w", prefix,
+                "--write-interval", "1",
+                "--output-format", "csv",
+                "--berlin", str(berlin),
+                "--band", "abg",
+            ], [
+                "airodump-ng", scan_iface,
+                "-w", prefix,
+                "--write-interval", "1",
+                "--output-format", "csv",
+                "--berlin", str(berlin),
+            ]]
+
+        last_err = ""
+        for cmd in attempts:
+            try:
+                subprocess.run(
+                    cmd,
+                    capture_output=True, text=True, timeout=cap + 15,
+                )
+                last_err = ""
+                break
+            except subprocess.TimeoutExpired:
+                # Expected: airodump runs until our timeout kills it.
+                last_err = ""
+                break
+            except FileNotFoundError:
+                return {"networks": [], "error": "airodump-ng not found",
+                        "total_found": 0, "interface": scan_iface}
+            except Exception as e:
+                last_err = str(e)
+                continue
+        if last_err and not os.path.exists(f"{prefix}-01.csv"):
+            return {"networks": [], "error": f"airodump-ng: {last_err}",
+                    "total_found": 0, "interface": scan_iface,
+                    "notes": prep_notes}
 
         networks = self._parse_airodump_csv(f"{prefix}-01.csv")
 
         self.scan_results[scan_id] = {
             "timestamp": self._get_timestamp(),
-            "interface": iface,
+            "interface": scan_iface,
             "duration": cap,
             "networks": networks,
             "total_found": len(networks),
+            "notes": prep_notes,
         }
-        # Restore managed mode if we set monitor here.
-        self.restore_managed(iface)
+        if not networks:
+            self.scan_results[scan_id]["error"] = (
+                f"no APs heard on {scan_iface} after {cap}s — "
+                "check antenna / rfkill / that NM is not re-grabbing the radio"
+            )
+        # Do NOT auto-restore managed after a successful pentest scan —
+        # operator stays in monitor for follow-up attacks. Only restore
+        # when we never saw a monitor-ready iface (prep failed mid-way).
         return self.scan_results[scan_id]
 
     def _parse_airodump_csv(self, path: str) -> List[Dict[str, Any]]:

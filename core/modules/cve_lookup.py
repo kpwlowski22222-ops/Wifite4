@@ -28,9 +28,14 @@ class CVELookup:
         self.cache_timeout = 3600  # 1 hour cache
         
     async def _get_session(self):
-        """Get or create aiohttp session"""
+        """Get or create aiohttp session with hard timeouts.
+
+        Unbounded HTTP hangs made adaptive engagement (and post-scan AIO)
+        freeze for minutes when NVD was slow/unreachable.
+        """
         if self.session is None or self.session.closed:
-            self.session = aiohttp.ClientSession()
+            timeout = aiohttp.ClientTimeout(total=12, connect=4, sock_read=8)
+            self.session = aiohttp.ClientSession(timeout=timeout)
         return self.session
     
     async def close(self):
@@ -60,24 +65,46 @@ class CVELookup:
                         "keywordSearch": keyword,
                         "resultsPerPage": limit
                     }
-                    headers = {"apiKey": self.config.get("nvd_api_key", "")}
-                elif "cve.circl.lu" in api_url:
-                    params = {
-                        "search": keyword
-                    }
+                    # Never send an empty apiKey header — NVD rejects it
+                    # (operators often see 404/403 in the activity log).
                     headers = {}
+                    nvd_key = (self.config.get("nvd_api_key") or "").strip()
+                    if nvd_key:
+                        headers["apiKey"] = nvd_key
+                elif "cve.circl.lu" in api_url:
+                    # Legacy ``?search=`` HTML landing is dead; use browse
+                    # search path when keyword looks like vendor/product.
+                    # Skip generic WiFi keywords — they only return HTML.
+                    kw = (keyword or "").strip()
+                    if not kw or " " in kw or len(kw) < 3:
+                        continue
+                    api_url = f"https://cve.circl.lu/api/search/{kw}"
+                    params = {}
+                    headers = {"Accept": "application/json"}
                 elif "vulners.com" in api_url:
+                    # Requires auth; skip unless a key is configured.
+                    vkey = (self.config.get("vulners_api_key") or "").strip()
+                    if not vkey:
+                        continue
                     params = {
                         "query": keyword,
                         "size": limit
                     }
-                    headers = {}
+                    headers = {"X-Api-Key": vkey}
                 else:
                     continue
                 
                 async with session.get(api_url, params=params, headers=headers) as response:
                     if response.status == 200:
-                        data = await response.json()
+                        # Circl sometimes returns HTML with 200 — require JSON.
+                        ctype = (response.headers.get("Content-Type") or "").lower()
+                        if "json" not in ctype and "javascript" not in ctype:
+                            logger.debug(
+                                "CVE API %s returned non-JSON content-type %s",
+                                api_url, ctype,
+                            )
+                            continue
+                        data = await response.json(content_type=None)
                         
                         # Process and normalize the data
                         processed_data = self._process_cve_data(data, api_url)
@@ -88,96 +115,122 @@ class CVELookup:
                         logger.info(f"Found {len(processed_data.get('vulnerabilities', []))} CVEs for {keyword}")
                         return processed_data
                     else:
-                        logger.warning(f"CVE API {api_url} returned status {response.status}")
+                        logger.debug(
+                            "CVE API %s returned status %s (will try next / offline)",
+                            api_url, response.status,
+                        )
                         
             except Exception as e:
-                logger.error(f"Error querying CVE API {api_url}: {e}")
+                logger.debug(f"Error querying CVE API {api_url}: {e}")
                 continue
         
-        # If all APIs fail, return simulated local database results for demo/offline robustness
-        logger.error(f"All CVE APIs failed for keyword: {keyword}")
-        
-        # Simulated local offline CVE/exploit database for common WiFi and exploit keywords
-        local_db = {
+        # Offline knowledge: only real, well-known public CVEs. Never
+        # invent CVE-IDs. If keyword does not match, return empty + error.
+        logger.info(
+            "CVE live APIs unavailable for %r — using offline knowledge base",
+            keyword,
+        )
+
+        offline_db = {
             "wpa2": [
                 {
                     "id": "CVE-2017-13077",
-                    "description": "KRACK: Wi-Fi Protected Access II (WPA2) handshake vulnerability allowing decryption, packet replay, and TCP connection hijacking.",
+                    "description": "KRACK: WPA2 4-way handshake key reinstallation.",
                     "published": "2017-10-16",
                     "cvssScore": 8.1,
                     "cvssVector": "CVSS:3.0/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
                     "references": [{"url": "https://krackattacks.com"}],
-                    "source": "LocalFallback"
+                    "source": "OfflineKnowledge",
                 },
                 {
                     "id": "CVE-2020-24588",
-                    "description": "FragAttacks: Design flaw in WPA2/WPA3 frame aggregation mechanisms allowing injection of arbitrary frames.",
+                    "description": "FragAttacks: 802.11 frame aggregation design flaw.",
                     "published": "2021-05-11",
                     "cvssScore": 6.5,
                     "cvssVector": "CVSS:3.1/AV:A/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N",
                     "references": [{"url": "https://www.fragattacks.com"}],
-                    "source": "LocalFallback"
-                }
+                    "source": "OfflineKnowledge",
+                },
+            ],
+            "wpa3": [
+                {
+                    "id": "CVE-2019-9494",
+                    "description": "Dragonblood SAE side-channel / timing issues (WPA3).",
+                    "published": "2019-04-10",
+                    "cvssScore": 5.9,
+                    "cvssVector": "CVSS:3.0/AV:A/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                    "references": [{"url": "https://wpa3.mathyvanhoef.com/"}],
+                    "source": "OfflineKnowledge",
+                },
             ],
             "wps": [
                 {
-                    "id": "CVE-2014-5678",
-                    "description": "WPS Pin brute force vulnerability via design flaw in the authentication mechanism (wash + reaver).",
-                    "published": "2014-08-25",
-                    "cvssScore": 9.3,
-                    "cvssVector": "AV:A/AC:L/Au:N/C:C/I:C/A:C",
+                    "id": "CVE-2011-5053",
+                    "description": "WPS PIN brute-force design weakness (offline/online PIN).",
+                    "published": "2011-12-29",
+                    "cvssScore": 5.8,
+                    "cvssVector": "AV:A/AC:L/Au:N/C:P/I:P/A:P",
                     "references": [],
-                    "source": "LocalFallback"
+                    "source": "OfflineKnowledge",
                 },
-                {
-                    "id": "CVE-2021-34527",
-                    "description": "PrintNightmare: Windows Print Spooler Remote Code Execution Vulnerability.",
-                    "published": "2021-07-01",
-                    "cvssScore": 8.8,
-                    "cvssVector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
-                    "references": [],
-                    "source": "LocalFallback"
-                }
             ],
             "802.11": [
                 {
                     "id": "CVE-2019-15126",
-                    "description": "Krook vulnerability in Broadcom and Cypress Wi-Fi chips allowing decryption of WPA2-encrypted traffic.",
+                    "description": "KR00K: Broadcom/Cypress Wi-Fi chipset WPA2 decryption issue.",
                     "published": "2020-02-26",
                     "cvssScore": 3.1,
                     "cvssVector": "CVSS:3.1/AV:A/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
                     "references": [],
-                    "source": "LocalFallback"
-                }
-            ]
-        }
-        
-        fallback_vulns = []
-        kw_lower = keyword.lower()
-        for key, vulns in local_db.items():
-            if key in kw_lower or any(part in kw_lower for part in key.split('.')):
-                fallback_vulns.extend(vulns)
-                
-        # Generic fallback if no specific keyword matched
-        if not fallback_vulns:
-            fallback_vulns = [
+                    "source": "OfflineKnowledge",
+                },
+            ],
+            "krack": [
                 {
-                    "id": f"CVE-2026-{abs(hash(keyword)) % 9999:04d}",
-                    "description": f"Simulated vulnerability related to {keyword} for penetration testing and validation.",
-                    "published": "2026-01-01",
-                    "cvssScore": 7.5,
-                    "cvssVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                    "references": [],
-                    "source": "LocalFallback"
-                }
-            ]
-            
-        processed_data = {
-            "vulnerabilities": fallback_vulns[:limit],
-            "totalResults": len(fallback_vulns),
-            "source": "LocalFallback"
+                    "id": "CVE-2017-13077",
+                    "description": "KRACK: WPA2 4-way handshake key reinstallation.",
+                    "published": "2017-10-16",
+                    "cvssScore": 8.1,
+                    "cvssVector": "CVSS:3.0/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                    "references": [{"url": "https://krackattacks.com"}],
+                    "source": "OfflineKnowledge",
+                },
+            ],
         }
-        
+
+        fallback_vulns = []
+        kw_lower = (keyword or "").lower()
+        for key, vulns in offline_db.items():
+            if key in kw_lower or any(part in kw_lower for part in key.split(".") if part):
+                fallback_vulns.extend(vulns)
+
+        # Deduplicate by CVE id
+        seen = set()
+        unique = []
+        for v in fallback_vulns:
+            vid = v.get("id")
+            if vid and vid not in seen:
+                seen.add(vid)
+                unique.append(v)
+
+        if not unique:
+            processed_data = {
+                "vulnerabilities": [],
+                "totalResults": 0,
+                "source": "none",
+                "error": (
+                    f"all online CVE APIs failed and no offline knowledge "
+                    f"match for keyword {keyword!r}"
+                ),
+            }
+        else:
+            processed_data = {
+                "vulnerabilities": unique[:limit],
+                "totalResults": len(unique),
+                "source": "OfflineKnowledge",
+                "note": "online APIs unreachable; curated public CVEs only",
+            }
+
         self.cache[cache_key] = (processed_data, time.time())
         return processed_data
     

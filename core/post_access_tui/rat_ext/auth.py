@@ -127,9 +127,7 @@ def parse_cookie(cookie_header: Optional[str], name: str = COOKIE_NAME
 
 
 def build_login_html(error: str = "") -> bytes:
-    """Render a minimal login page. No JS, no CSS framework — just
-    a single form. The operator pastes their token; the server
-    sets the cookie on POST /login."""
+    """Render a minimal login page with sleek dark glassmorphism styling."""
     msg = ""
     if error == "mismatch":
         msg = '<div class="err">wrong token — try again</div>'
@@ -141,20 +139,30 @@ def build_login_html(error: str = "") -> bytes:
     body = (
         '<!doctype html><html><head><meta charset="utf-8"><title>'
         'KFIOSA dashboard login</title>'
-        '<style>body{font-family:monospace;background:#0a0a0a;'
-        'color:#e0e0e0;padding:2em;}input{background:#1a1a1a;'
-        'color:#e0e0e0;border:1px solid #444;padding:0.5em;'
-        'width:30em;}button{background:#3a86ff;color:#fff;'
-        'border:none;padding:0.5em 1em;cursor:pointer;}'
-        '.err{color:#ff6b6b;margin-top:1em;}</style></head>'
-        '<body><h2>KFIOSA RAT dashboard</h2>'
+        '<link rel="preconnect" href="https://fonts.googleapis.com">'
+        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+        '<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">'
+        '<style>'
+        'body{font-family:"Outfit",sans-serif;background:radial-gradient(circle at 50% 30%,#0f172a 0%,#07090e 100%);color:#f1f5f9;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;box-sizing:border-box;}'
+        '.card{background:rgba(18,24,35,0.85);backdrop-filter:blur(16px);border:1px solid rgba(94,234,212,0.2);border-radius:16px;padding:2.5rem;width:min(440px,90%);box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 20px rgba(94,234,212,0.1);}'
+        'h2{margin:0 0 0.5rem 0;color:#5eead4;font-size:1.6rem;letter-spacing:-0.02em;}'
+        'p{color:#94a3b8;font-size:0.9rem;margin:0 0 1.5rem 0;font-family:"JetBrains Mono",monospace;}'
+        'input{background:rgba(15,19,24,0.9);color:#f1f5f9;border:1px solid rgba(255,255,255,0.12);padding:0.75rem 1rem;width:100%;border-radius:8px;font-family:"JetBrains Mono",monospace;font-size:0.9rem;box-sizing:border-box;transition:all 0.2s ease;}'
+        'input:focus{outline:none;border-color:#5eead4;box-shadow:0 0 16px rgba(94,234,212,0.25);}'
+        'button{margin-top:1.2rem;width:100%;background:linear-gradient(135deg,#0d9488 0%,#0891b2 100%);color:#ccfbf1;border:none;padding:0.8rem 1.2rem;border-radius:8px;cursor:pointer;font-family:"Outfit",sans-serif;font-weight:600;font-size:1rem;transition:all 0.2s ease;box-shadow:0 4px 12px rgba(13,148,136,0.3);}'
+        'button:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(94,234,212,0.4);}'
+        '.err{color:#f87171;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:0.6rem 0.9rem;border-radius:8px;margin-top:1.2rem;font-size:0.85rem;font-family:"JetBrains Mono",monospace;}'
+        '</style></head>'
+        '<body><div class="card">'
+        '<h2>KFIOSA RAT dashboard</h2>'
         '<p>paste the bearer token from RAT_DASHBOARD_TOKEN:</p>'
         f'<form method="POST" action="/login">'
         f'<input type="password" name="token" autofocus>'
         f'<button type="submit">log in</button></form>'
-        f'{msg}</body></html>'
+        f'{msg}</div></body></html>'
     )
     return body.encode("utf-8")
+
 
 
 def build_set_cookie(value: str, max_age: int = COOKIE_MAX_AGE) -> str:

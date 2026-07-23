@@ -681,7 +681,11 @@ class KfiosaDashboard:
             logger.debug(f"confirm render: {e}")
 
     def handle_confirm_input(self):
-        key = self.stdscr.getch()
+        try:
+            from core.tui.base_screen import read_curses_key
+            key = read_curses_key(self.stdscr)
+        except Exception:
+            key = self.stdscr.getch()
         if key == -1:
             return
         if key in (ord('y'), ord('Y'), curses.KEY_ENTER, 10, 13):
@@ -807,7 +811,11 @@ class KfiosaDashboard:
 
     def handle_main_menu_input(self):
         """Handle keyboard input on main menu"""
-        key = self.stdscr.getch()
+        try:
+            from core.tui.base_screen import read_curses_key
+            key = read_curses_key(self.stdscr)
+        except Exception:
+            key = self.stdscr.getch()
         if key == -1:
             return
             
@@ -815,7 +823,7 @@ class KfiosaDashboard:
             self.menu_index = (self.menu_index - 1) % len(self.menu_items)
         elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
             self.menu_index = (self.menu_index + 1) % len(self.menu_items)
-        elif key in (curses.KEY_ENTER, 10, 13):
+        elif key in (curses.KEY_ENTER, 10, 13, ord(" ")):
             # Select state
             _, target_state = self.menu_items[self.menu_index]
             if target_state == "quit":

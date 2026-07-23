@@ -185,11 +185,17 @@ class BLEPanelClient:
     # ------------------------------------------------------------------
     # Discovery
     # ------------------------------------------------------------------
-    def scan(self, duration_s: int = 8) -> Dict[str, Any]:
-        """``hcitool lescan`` for ``duration_s`` seconds. Returns
-        envelope with ``data.devices`` (list of :class:`BLEDevice`).
+    def scan(self, duration_s: int = None) -> Dict[str, Any]:
+        """``hcitool lescan`` for ``duration_s`` seconds (long-range default).
+
+        Returns envelope with ``data.devices`` (list of :class:`BLEDevice`).
         No auto-pairing; we only LIST devices.
         """
+        try:
+            from core.scanners.scan_limits import ble_scan_s
+            duration_s = ble_scan_s(duration_s)
+        except Exception:
+            duration_s = int(duration_s) if duration_s is not None else 300
         started = _now()
         argv = self._hcitool() + ["lescan", "--duplicates"]
         try:
@@ -197,7 +203,7 @@ class BLEPanelClient:
                 argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                 text=True,
             )
-            time.sleep(max(1, duration_s))
+            time.sleep(max(2, int(duration_s)))
             try:
                 p.terminate()
             except Exception:  # noqa: BLE001

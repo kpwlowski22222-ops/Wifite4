@@ -78,11 +78,10 @@ class AIEngine:
         # Extract features from context
         features = self._extract_features(context)
 
-        # Use AI model if available, otherwise use rule-based fallback
-        if 'decision' in self.models and len(features) > 0:
+        # Use loaded decision model when present; else feature heuristic /
+        # rule-based fallback (labels are honest — see _make_ml_decision).
+        if "decision" in self.models and len(features) > 0:
             try:
-                # In a real implementation, this would use the actual ML model
-                # For now, we'll simulate
                 decision = await self._make_ml_decision(features)
             except Exception as e:
                 logger.warning(f"ML decision failed, falling back to rule-based: {e}")
@@ -144,42 +143,94 @@ class AIEngine:
             except (ValueError, TypeError):
                 features.append(0.0)
 
-            # Network age (if available)
-            features.append(1.0)  # Placeholder
+            # Network age / uptime hours when provided (else 0 = unknown)
+            try:
+                features.append(float(network.get("uptime_hours",
+                                                  network.get("age_hours", 0))))
+            except (ValueError, TypeError):
+                features.append(0.0)
 
-        # Environmental factors
-        features.append(1.0)  # Time of day factor (simplified)
-        features.append(1.0)  # Day of week factor (simplified)
+        # Environmental factors (real clock — not placeholders)
+        from datetime import datetime
+        now = datetime.now()
+        # Hour of day normalized 0–1
+        features.append(now.hour / 23.0)
+        # Day of week normalized 0–1 (Mon=0)
+        features.append(now.weekday() / 6.0)
 
         return features
 
     async def _make_ml_decision(self, features: List[float]) -> Dict[str, Any]:
-        """Make a decision using ML model"""
-        # This is a placeholder for actual ML inference
-        # In a real implementation, this would use self.models['decision']
+        """Make a decision using a loaded model, else honest feature heuristic.
 
-        # Simulate ML decision based on features
+        If ``self.models['decision']`` is a callable / sklearn-like
+        estimator, use it. Otherwise fall back to deterministic rules
+        and label the method ``feature_heuristic`` (never pretends to
+        be trained ML when no model file loaded).
+        """
+        model = self.models.get("decision")
+        if model is not None:
+            try:
+                import numpy as _np
+                x = _np.asarray(features, dtype=float).reshape(1, -1)
+                if hasattr(model, "predict_proba"):
+                    proba = model.predict_proba(x)[0]
+                    idx = int(_np.argmax(proba))
+                    classes = list(getattr(model, "classes_", range(len(proba))))
+                    action = str(classes[idx])
+                    confidence = float(proba[idx])
+                elif hasattr(model, "predict"):
+                    action = str(model.predict(x)[0])
+                    confidence = 0.7
+                elif callable(model):
+                    out = model(features)
+                    if isinstance(out, dict):
+                        return {
+                            "action": out.get("action", "gather_more_info"),
+                            "confidence": float(out.get("confidence", 0.5)),
+                            "method": "ml_model",
+                            "features_used": len(features),
+                            "timestamp": self._get_timestamp(),
+                        }
+                    action = str(out)
+                    confidence = 0.65
+                else:
+                    raise TypeError("unsupported decision model type")
+                return {
+                    "action": action,
+                    "confidence": confidence,
+                    "method": "ml_model",
+                    "features_used": len(features),
+                    "timestamp": self._get_timestamp(),
+                }
+            except Exception as e:  # noqa: BLE001
+                logger.warning("decision model inference failed: %s", e)
+
+        # Feature heuristic (honest label — not "ml_based" without a model)
         if len(features) >= 3:
             signal_strength = features[0] if len(features) > 0 else 50
             encryption = features[1] if len(features) > 1 else 0
             channel = features[2] if len(features) > 2 else 6
+            hour_n = features[-2] if len(features) >= 2 else 0.5
 
-            # Simple heuristic-based decision (would be replaced by actual ML)
-            if signal_strength > 70 and encryption in [2, 3]:  # Strong signal, WPA/WPA2
+            if signal_strength > 70 and encryption in [2, 3]:
                 action = "attempt_handshake_capture"
                 confidence = 0.8
-            elif encryption == 0:  # Open network
+            elif encryption == 0:
                 action = "direct_connection"
                 confidence = 0.9
-            elif encryption == 1:  # WEP
+            elif encryption == 1:
                 action = "wep_crack"
                 confidence = 0.85
-            elif encryption == 4:  # WPA3
+            elif encryption == 4:
                 action = "research_vulnerabilities"
                 confidence = 0.3
             else:
                 action = "gather_more_info"
                 confidence = 0.5
+            # Slight night-time caution (lower confidence 00:00–05:00)
+            if hour_n < (5 / 23.0):
+                confidence = max(0.2, confidence - 0.1)
         else:
             action = "gather_more_info"
             confidence = 0.5
@@ -187,9 +238,9 @@ class AIEngine:
         return {
             "action": action,
             "confidence": confidence,
-            "method": "ml_based",
+            "method": "feature_heuristic",
             "features_used": len(features),
-            "timestamp": self._get_timestamp()
+            "timestamp": self._get_timestamp(),
         }
 
     async def _make_rule_based_decision(self, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -260,11 +311,37 @@ class AIEngine:
 
     async def plan_attack_sequence(self, target_info: Dict[str, Any],
                                  available_tools: List[str]) -> Dict[str, Any]:
-        """Plan an attack sequence using AI"""
+        """Plan an attack sequence using AI / target-adaptive heuristic chain."""
         logger.info("Planning attack sequence with AI")
 
-        # This would use the attack planning model
-        # For now, return a structured plan
+        # Prefer project chain planner heuristic (precise, target-adaptive)
+        try:
+            from core.ai_backend.chain import _heuristic_for_domain
+            steps = _heuristic_for_domain("wifi", dict(target_info or {}))
+            if steps:
+                return {
+                    "target": target_info.get("ssid") or target_info.get("bssid") or "unknown",
+                    "phases": [
+                        {
+                            "phase": s.get("action"),
+                            "action": s.get("action"),
+                            "tools": [s.get("tool")] if s.get("tool") else [],
+                            "args": s.get("args") or {},
+                            "estimated_time": int(s.get("expected_runtime_seconds") or 30),
+                            "success_probability": 0.5,
+                            "rationale": s.get("rationale") or "",
+                        }
+                        for s in steps
+                    ],
+                    "estimated_time": sum(
+                        int(s.get("expected_runtime_seconds") or 0) for s in steps
+                    ),
+                    "success_probability": 0.5,
+                    "source": "heuristic_chain",
+                    "available_tools": list(available_tools or []),
+                }
+        except Exception as e:  # noqa: BLE001
+            logger.debug("heuristic chain plan unavailable: %s", e)
 
         encryption = target_info.get('encryption', '').lower()
         signal_strength = target_info.get('signal_strength', '-50dBm')
@@ -370,17 +447,63 @@ class AIEngine:
             await self._retrain_models()
 
     async def _retrain_models(self):
-        """Retrain AI models with accumulated experience"""
-        logger.info("Retraining AI models with new experience")
+        """Retrain a simple frequency-based decision model from experience.
 
-        # In a real implementation, this would:
-        # 1. Prepare training data from self.training_data
-        # 2. Train/retrain the models in self.models
-        # 3. Save the updated models
-        # 4. Clear old training data if needed
+        Builds an action → (success_rate, count) table from
+        ``self.training_data`` and stores a callable under
+        ``self.models['decision']``. Persists via pickle when possible.
+        """
+        logger.info(
+            "Retraining decision model with %d experiences",
+            len(self.training_data),
+        )
+        if not self.training_data:
+            return
+        stats: Dict[str, Dict[str, float]] = {}
+        for exp in self.training_data:
+            if not isinstance(exp, dict):
+                continue
+            action = str(
+                (exp.get("decision") or {}).get("action")
+                or exp.get("action")
+                or ""
+            )
+            if not action:
+                continue
+            success = 1.0 if exp.get("success") else 0.0
+            bucket = stats.setdefault(action, {"n": 0.0, "ok": 0.0})
+            bucket["n"] += 1.0
+            bucket["ok"] += success
+        if not stats:
+            return
 
-        # For now, just log that we would retrain
-        logger.info(f"Would retrain models with {len(self.training_data)} experiences")
+        # Callable model: pick action with highest empirical success rate
+        ranked = sorted(
+            stats.items(),
+            key=lambda kv: (kv[1]["ok"] / max(1.0, kv[1]["n"]), kv[1]["n"]),
+            reverse=True,
+        )
+
+        def _freq_model(features):
+            best_action, best = ranked[0]
+            rate = best["ok"] / max(1.0, best["n"])
+            return {
+                "action": best_action,
+                "confidence": float(min(0.95, 0.4 + 0.5 * rate)),
+                "method": "freq_model",
+                "stats": {a: dict(v) for a, v in stats.items()},
+            }
+
+        self.models["decision"] = _freq_model
+        try:
+            self._save_models()
+        except Exception as e:  # noqa: BLE001
+            logger.debug("save after retrain failed: %s", e)
+        logger.info(
+            "Decision model retrained; top action=%s (n=%s)",
+            ranked[0][0],
+            int(ranked[0][1]["n"]),
+        )
 
     def get_model_status(self) -> Dict[str, Any]:
         """Get status of AI models"""

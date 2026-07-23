@@ -522,12 +522,16 @@ def _pick(stdscr, activity_log: List[str], title: str,
                 pass
             stdscr.refresh()
             _maybe_dump_picker_screen(stdscr, title=title)
-            key = stdscr.getch()
+            try:
+                from core.tui.base_screen import read_curses_key
+                key = read_curses_key(stdscr)
+            except Exception:
+                key = stdscr.getch()
             if key == -1:
                 continue
-            if key in (curses.KEY_UP, ord("k")):
+            if key in (curses.KEY_UP, ord("k"), ord("K")):
                 idx = (idx - 1) % len(items)
-            elif key in (curses.KEY_DOWN, ord("j")):
+            elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
                 idx = (idx + 1) % len(items)
             elif key in (curses.KEY_ENTER, 10, 13):
                 result = items[idx].get("name")

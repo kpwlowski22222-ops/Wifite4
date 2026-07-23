@@ -159,8 +159,13 @@ class KaliToolsIntegration:
                 "success": False
             }
     
-    async def wifi_scan(self, interface: str, duration: int = 30) -> Dict[str, Any]:
-        """Perform WiFi scanning using airodump-ng"""
+    async def wifi_scan(self, interface: str, duration: int = None) -> Dict[str, Any]:
+        """Perform WiFi scanning using airodump-ng (long-range default)."""
+        try:
+            from core.scanners.scan_limits import wifi_scan_s
+            duration = wifi_scan_s(duration)
+        except Exception:
+            duration = int(duration) if duration is not None else 300
         logger.info(f"Starting WiFi scan on interface {interface} for {duration} seconds")
         
         # Start airodump-ng in background

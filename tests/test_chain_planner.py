@@ -113,6 +113,7 @@ def test_heuristic_wifi_emits_capture_and_crack():
     steps = _heuristic_for_domain("wifi", {
         "bssid": "AA:BB:CC:DD:EE:01", "channel": 6,
         "interface": "wlan0mon", "essid": "Test",
+        "client_count": 2,
     })
     # WPA2 default path: airodump capture + dictionary crack + GPU
     # mask fan-out. No WPS/PMKID flags set, no mt7921e caps.
@@ -124,12 +125,50 @@ def test_heuristic_wifi_emits_capture_and_crack():
     assert cap_steps and cap_steps[0]["args"]["bssid"] == "AA:BB:CC:DD:EE:01"
 
 
-def test_heuristic_non_wifi_emits_single_parse_step():
+def test_heuristic_wifi_clientless_prefers_pmkid_skips_deauth():
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:02", "channel": 11,
+        "interface": "wlan0mon", "encryption": "WPA2",
+        "client_count": 0,
+    })
+    actions = [s["action"] for s in steps]
+    assert "pmkid" in actions
+    assert "deauth" not in actions
+
+
+def test_heuristic_wifi_pmf_skips_classic_deauth():
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:03", "channel": 6,
+        "encryption": "WPA2", "pmf_supported": True,
+        "client_count": 4,
+    })
+    actions = [s["action"] for s in steps]
+    assert "deauth" not in actions
+
+
+def test_heuristic_wifi_wpa3_pure_sae_no_gpu_spam():
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:04", "channel": 36,
+        "encryption": "WPA3-SAE", "pmf": True,
+    })
+    actions = [s["action"] for s in steps]
+    assert "crack_gpu" not in actions
+    assert any("sae" in (s.get("rationale") or "").lower()
+               or s.get("action") == "poly_adapt" for s in steps)
+
+
+def test_heuristic_ble_emits_probe_chain():
     steps = _heuristic_for_domain("ble", {"addr": "AA:BB:CC:DD:EE:01"})
+    actions = [s["action"] for s in steps]
+    assert "ble_probe" in actions
+    assert len(steps) >= 2
+
+
+def test_heuristic_unknown_domain_parse():
+    steps = _heuristic_for_domain("scada", {"host": "10.0.0.1"})
     assert len(steps) == 1
     assert steps[0]["action"] == "parse"
     assert "manually" in steps[0]["rationale"].lower()
-
 
 # ----------------------------------------------------------------------
 # Planner.plan() — three fallback layers
@@ -212,22 +251,25 @@ def test_planner_falls_back_to_heuristic_on_total_failure():
 
 
 def test_planner_no_backend_uses_heuristic():
-    """No AI backend, no exploit-gen manager. For non-wifi domains the
-    heuristic returns a single 'parse' step (operator-driven). For
-    wifi it returns a real chain."""
+    """No AI backend, no exploit-gen manager. BLE gets a real probe
+    chain; unknown domains get a single parse step; wifi gets capture
+    + crack."""
     p = AIChainPlanner(ai_backend=None, exploit_gen_manager=None)
     ble_steps = p.plan("ble", {"addr": "AA"})
-    assert len(ble_steps) == 1
-    assert ble_steps[0]["action"] == "parse"
+    assert len(ble_steps) >= 2
+    assert any(s["action"] == "ble_probe" for s in ble_steps)
+    scada_steps = p.plan("scada", {"host": "10.0.0.1"})
+    assert len(scada_steps) == 1
+    assert scada_steps[0]["action"] == "parse"
     wifi_steps = p.plan("wifi", {
         "bssid": "AA:BB:CC:DD:EE:01", "channel": 6,
         "interface": "wlan0mon", "essid": "Test",
+        "client_count": 2,
     })
     # Heuristic WPA2 path: airodump capture + crack + GPU fan-out.
     wifi_tools = [s["tool"] for s in wifi_steps]
     assert "airodump-ng" in wifi_tools
     assert "aircrack-ng" in wifi_tools
-
 
 def test_planner_emits_on_event_lines():
     """Activity log lines should fire on every fallback (one per layer)."""

@@ -50,7 +50,7 @@ class EnhancedWiFiScanner(BaseWiFiScanner):
             logger.error(f"Failed to initialize CVE lookup: {e}")
             self.cve_lookup = None
     
-    async def scan_with_cve_assessment(self, interface: str = None, timeout: int = 60) -> Dict[str, Any]:
+    async def scan_with_cve_assessment(self, interface: str = None, timeout: int = None) -> Dict[str, Any]:
         """
         Scan for WiFi networks and perform CVE vulnerability assessment
         
