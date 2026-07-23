@@ -1931,10 +1931,28 @@ def run_attack(method: str, adapter: Optional[str] = None,
     :class:`BLEAttackRunner` and run the named attack. Used by the MCP
     wrappers and the orchestrator's ``ble_attack`` dispatch. ``args``
     carries per-attack inputs (address, uuid, payload, pin_list, session).
+
+    Polymorphic / target-adaptive via :func:`core.poly.domain_adapt.prepare_run`.
     Never raises."""
+    poly_meta: Dict[str, Any] = {}
+    try:
+        from core.poly.domain_adapt import prepare_run, stamp_result
+        method, args, poly_meta = prepare_run(
+            "ble", method, args,
+            seed=(args or {}).get("session") if isinstance(args, dict) else None,
+            phase="exploit",
+            auto_pick=True,
+        )
+    except Exception:
+        args = args or {}
     try:
         runner = BLEAttackRunner(adapter=adapter, scanner=scanner, args=args)
-        return runner.run_attack(method)
+        res = runner.run_attack(method)
+        try:
+            return stamp_result(res, poly_meta)
+        except Exception:
+            return res
     except Exception as e:  # noqa: BLE001
         return {"name": method, "ok": False, "error": str(e),
-                "data": None, "duration_s": 0.0}
+                "data": None, "duration_s": 0.0,
+                "domain_poly": poly_meta or None}

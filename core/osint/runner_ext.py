@@ -3147,10 +3147,34 @@ def run_probe(method: str,
     :class:`OSINTExtRunner` and run the named action. Used by the MCP
     wrappers and the orchestrator's ``osint_ext`` dispatch. ``args``
     carries per-action inputs (domain, email, username, phone, image,
-    ip, company, ...). Never raises."""
+    ip, company, ...).
+
+    Polymorphic / target-adaptive (people vs web) via domain_adapt.
+    Never raises."""
+    poly_meta: Dict[str, Any] = {}
+    try:
+        from core.poly.domain_adapt import prepare_run, stamp_result
+        # Classify OSINT subtype from args
+        a0 = dict(args or {})
+        if a0.get("email") or a0.get("phone") or a0.get("username"):
+            dom = "osint_people"
+        elif a0.get("url") or a0.get("domain") or a0.get("ip"):
+            dom = "osint_web"
+        else:
+            dom = "osint"
+        method, args, poly_meta = prepare_run(
+            dom, method, a0, phase="recon", auto_pick=True,
+        )
+    except Exception:
+        args = args or {}
     try:
         runner = OSINTExtRunner(args=args)
-        return runner.run_probe(method)
+        res = runner.run_probe(method)
+        try:
+            return stamp_result(res, poly_meta)
+        except Exception:
+            return res
     except Exception as e:  # noqa: BLE001
         return {"name": method, "ok": False, "error": str(e),
-                "data": None, "duration_s": 0.0}
+                "data": None, "duration_s": 0.0,
+                "domain_poly": poly_meta or None}

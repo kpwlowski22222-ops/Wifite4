@@ -543,12 +543,42 @@ class OSINTRunner:
     ) -> Dict[str, Any]:
         """Classify target and run the best OSINT categories for it.
 
+        Polymorphic / target-adaptive: multi-engine domain_adapt reorders
+        the category plan by target kind + ensemble focus.
+
         Never fabricates findings. Missing tools reported per category.
         """
         cls = classify_osint_target(target)
         kind = cls["kind"]
         norm = cls["normalized"] or target
         plan = self._plan_for_kind(kind)
+        domain_poly_meta: Dict[str, Any] = {}
+        # Domain adaptive prepare (people vs web vs generic OSINT)
+        try:
+            from core.poly.domain_adapt import prepare, normalize_domain
+            dom = "osint_people" if kind in (
+                "email", "phone", "username",
+            ) else ("osint_web" if kind in ("url", "domain", "ip") else "osint")
+            prep = prepare(
+                dom,
+                {"query": norm, "query_type": kind, "target": norm, **(cls.get("meta") or {})},
+                phase="recon",
+            )
+            domain_poly_meta = {
+                "domain": dom,
+                "engines": prep.get("engines"),
+                "focus": (prep.get("ensemble") or {}).get("focus"),
+                "depth": (prep.get("ensemble") or {}).get("depth"),
+            }
+            # Soft reorder: prefer categories matching ensemble focus
+            focus = str((prep.get("ensemble") or {}).get("focus") or "").lower()
+            if focus and plan:
+                preferred = [c for c in plan if focus in str(c).lower()]
+                rest = [c for c in plan if c not in preferred]
+                if preferred:
+                    plan = preferred + rest
+        except Exception:  # noqa: BLE001
+            pass
         # Optional poly_adapt playbook hint
         adapt_pick = None
         try:
@@ -604,6 +634,8 @@ class OSINTRunner:
             "local_probes": local_probes,
             "aggregate": agg,
             "findings": agg["findings"],
+            "domain_poly": domain_poly_meta or None,
+            "model": "target-adaptive (osint poly ensemble)",
         }
 
     def _plan_for_kind(self, kind: str) -> List[str]:

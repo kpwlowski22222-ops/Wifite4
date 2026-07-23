@@ -4509,6 +4509,19 @@ class AutonomousOrchestrator:
         method = (args.get("method") or step.get("tool") or "").strip()
         if method.startswith("wifi_attack_"):
             method = method[len("wifi_attack_"):]
+        # Target-adaptive auto-pick when method empty / auto / poly
+        if not method or method.lower() in ("auto", "poly", "adaptive"):
+            try:
+                from core.poly.domain_adapt import pick as domain_pick
+                p = domain_pick("wifi", seed, phase="exploit")
+                if p.get("ok") and p.get("method"):
+                    method = str(p["method"])
+                    self._emit(
+                        f"[poly] wifi_attack auto-pick → {method} "
+                        f"({(p.get('rationale') or '')[:80]})"
+                    )
+            except Exception as e:  # noqa: BLE001
+                self._emit(f"[i] wifi poly pick: {e}")
         if method not in wifiattack.WiFiAttackRunner.WIFI_ATTACK_METHODS:
             self._emit(
                 f"[-] wifi_attack: unknown method {method!r}; one of "

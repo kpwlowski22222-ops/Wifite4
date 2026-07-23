@@ -37,3 +37,17 @@ try:
     )
 except Exception:  # pragma: no cover
     pass
+
+try:
+    from core.poly.domain_adapt import (  # noqa: F401
+        prepare,
+        pick,
+        plan,
+        prepare_run,
+        describe_domains,
+        list_domains,
+        list_domain_methods,
+        domain_poly_enabled,
+    )
+except Exception:  # pragma: no cover
+    pass

@@ -3485,10 +3485,32 @@ def run_attack(method: str, adapter: Optional[str] = None,
     :class:`WiFiAttackRunner` and run the named attack. Used by the MCP
     wrappers and the orchestrator's ``wifi_attack`` dispatch. ``args``
     carries per-attack inputs (interface, bssid, channel, station, cap_file,
-    hash_file, wordlist, plan_steps, ...). Never raises."""
+    hash_file, wordlist, plan_steps, ...).
+
+    Polymorphic / target-adaptive: when ``method`` is empty/auto, or
+    ``KFIOSA_DOMAIN_POLY`` is on (default), :func:`prepare_run` injects
+    multi-engine poly knobs and may pick the best attack for the target.
+    Never raises."""
+    poly_meta: Dict[str, Any] = {}
+    try:
+        from core.poly.domain_adapt import prepare_run, stamp_result
+        method, args, poly_meta = prepare_run(
+            "wifi", method, args,
+            seed=(args or {}).get("session") if isinstance(args, dict) else None,
+            phase="exploit",
+            auto_pick=True,
+        )
+    except Exception:
+        args = args or {}
     try:
         runner = WiFiAttackRunner(adapter=adapter, scanner=scanner, args=args)
-        return runner.run_attack(method)
+        res = runner.run_attack(method)
+        try:
+            from core.poly.domain_adapt import stamp_result as _st
+            return _st(res, poly_meta)
+        except Exception:
+            return res
     except Exception as e:  # noqa: BLE001
         return {"name": method, "ok": False, "error": str(e),
-                "data": None, "duration_s": 0.0}
+                "data": None, "duration_s": 0.0,
+                "domain_poly": poly_meta or None}
