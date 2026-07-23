@@ -1,4 +1,8 @@
-"""Polymorphic / target-adaptive helpers for live engagements."""
+"""Polymorphic / target-adaptive helpers for live engagements.
+
+Includes plum-dispatch multiple dispatch (Python ≥3.10) via
+:mod:`core.poly.plum_adapt` for typed target adaptation.
+"""
 from core.poly.live_adapt import (  # noqa: F401
     observe,
     pick,
@@ -13,3 +17,13 @@ from core.poly.offensive_inject import (  # noqa: F401
     pick_priv_esc,
     react_inject,
 )
+
+try:
+    from core.poly.plum_adapt import (  # noqa: F401
+        adapt_target,
+        coerce_target,
+        plum_available,
+        plum_prompt_block,
+    )
+except Exception:  # pragma: no cover
+    pass

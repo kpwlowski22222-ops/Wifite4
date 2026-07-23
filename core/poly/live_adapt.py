@@ -346,9 +346,47 @@ def react(
     *,
     history: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
-    """One live adaptation cycle: observe → pick (excluding history)."""
+    """One live adaptation cycle: observe → plum-dispatch → pick.
+
+    Plum multiple-dispatch (when installed) types the target and
+    prefers the matching method so AI chains adapt to the surface.
+    """
     feats = observe(target, last_result, domain=domain)
     choice = pick(domain, feats, exclude=history or [])
+    # Attach plum typed adaptation (params/boosts) without clobbering
+    # the live method pick unless history banned it and plum differs.
+    try:
+        from core.poly.plum_adapt import adapt_target
+        penv = adapt_target(target, domain=domain)
+        if penv.get("ok"):
+            plum_blob = {
+                "target_type": penv.get("target_type"),
+                "method": penv.get("method"),
+                "focus": penv.get("focus"),
+                "depth": penv.get("depth"),
+                "engine": penv.get("engine"),
+                "boosts": penv.get("boosts") or {},
+                "tool_order": penv.get("tool_order") or [],
+                "rationale": penv.get("rationale"),
+            }
+            choice["plum"] = plum_blob
+            # Merge plum params under choice.params (non-destructive)
+            params = dict(choice.get("params") or {})
+            for k, v in (penv.get("params") or {}).items():
+                params.setdefault(k, v)
+            if penv.get("tool_order"):
+                params.setdefault("tool_order", penv["tool_order"])
+            if penv.get("depth"):
+                params.setdefault("poly_depth", penv["depth"])
+            if penv.get("focus"):
+                params.setdefault("poly_focus", penv["focus"])
+            choice["params"] = params
+            if penv.get("rationale"):
+                choice["rationale"] = (
+                    f"{choice.get('rationale') or ''}; {penv['rationale']}"
+                ).strip("; ")
+    except Exception:  # noqa: BLE001
+        pass
     choice["features"] = feats
     return choice
 
@@ -356,14 +394,22 @@ def react(
 def poly_pre_step(domain: str, target: Dict[str, Any]) -> Dict[str, Any]:
     """Build a chain-ready poly_adapt step dict for insertion."""
     choice = react(domain, target, None)
+    args = {
+        "method": choice.get("method"),
+        "params": choice.get("params") or {},
+        **(choice.get("params") or {}),
+    }
+    plum = choice.get("plum") if isinstance(choice.get("plum"), dict) else {}
+    if plum:
+        args["poly_depth"] = plum.get("depth")
+        args["poly_focus"] = plum.get("focus")
+        if plum.get("tool_order"):
+            args["tool_order"] = plum["tool_order"]
+        args["_plum"] = plum
     return {
         "action": "poly_adapt",
         "tool": choice.get("method") or "poly_adapt",
-        "args": {
-            "method": choice.get("method"),
-            "params": choice.get("params") or {},
-            **(choice.get("params") or {}),
-        },
+        "args": args,
         "rationale": choice.get("rationale") or "live target-adaptive pick",
         "expected_outcome": "variant/params chosen for this target",
         "risk": "read",

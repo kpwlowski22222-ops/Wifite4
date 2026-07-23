@@ -435,9 +435,81 @@ def situational_pick(
                          "description": s.description})
     alts.sort(key=lambda x: (-x["score"], x["name"]))
 
+    # Plum multiple-dispatch (Python ≥3.10) — typed target adaptation.
+    # Soft integration: re-rank registry alts with plum boosts; only
+    # replace pick when plum method is an exact registry strategy name.
+    plum_meta: Dict[str, Any] = {}
+    try:
+        from core.poly.plum_adapt import adapt_target
+        penv = adapt_target(raw, domain=dom.value)
+        plum_meta = {
+            "target_type": penv.get("target_type"),
+            "method": penv.get("method"),
+            "focus": penv.get("focus"),
+            "depth": penv.get("depth"),
+            "engine": penv.get("engine"),
+            "boosts": penv.get("boosts") or {},
+            "rationale": penv.get("rationale"),
+            "tool_order": penv.get("tool_order") or [],
+        }
+        boosts = plum_meta.get("boosts") or {}
+        # Map plum focus → known strategy names for soft re-rank
+        focus = str(penv.get("focus") or "").lower()
+        focus_map = {
+            Domain.WIFI: {
+                "sae": "wpa3_sae", "pmkid": "wpa2", "handshake": "wpa2",
+                "passive": "wifi_recon_passive", "evil_twin": "wpa2",
+            },
+            Domain.BLE: {
+                "gatt": "gatt_write", "advertising": "recon",
+                "smp": "pairing", "l2cap": "mesh",
+            },
+            Domain.OSINT: {
+                "breach": "breach", "passive": "username",
+                "graph": "domain",
+            },
+            Domain.POST_EXPLOIT: {
+                "lateral": "lateral", "enum": "enum",
+                "persist": "persist", "exfil": "exfil",
+            },
+        }
+        mapped = (focus_map.get(dom) or {}).get(focus)
+        pm = str(penv.get("method") or "")
+        # Exact registry hit only (preserve scorer API for tests)
+        if pm and any(a["name"] == pm for a in alts):
+            pick_name = pm
+            kind = PolyKind.TARGET_ADAPTIVE
+        elif mapped and any(a["name"] == mapped for a in alts):
+            # Soft re-rank: if mapped strategy already scores well, keep scorer
+            # pick; only override when scorer pick is generic recon and plum
+            # has a stronger focus.
+            if pick_name in ("enum", "recon", "catalog_recon", "hypothesis"):
+                pick_name = mapped
+                kind = PolyKind.TARGET_ADAPTIVE
+        # Boost alt scores for transparency
+        if boosts or mapped:
+            for a in alts:
+                n = a["name"]
+                if n in boosts:
+                    a["score"] = round(float(a["score"]) + float(boosts[n]), 4)
+                if mapped and n == mapped:
+                    a["score"] = round(float(a["score"]) + 0.15, 4)
+            alts.sort(key=lambda x: (-x["score"], x["name"]))
+    except Exception:  # noqa: BLE001
+        pass
+
     # AI-driven override: accept hint only if it scores > 0 against features
-    model = "target-adaptive (heuristic)"
+    model = (
+        "target-adaptive (plum heuristic)"
+        if str(plum_meta.get("engine") or "").startswith("plum")
+        else "target-adaptive (heuristic)"
+    )
     rationale = f"match/case + domain scorer → {pick_name}"
+    if plum_meta.get("method"):
+        rationale = (
+            f"plum[{plum_meta.get('target_type')}] "
+            f"{plum_meta.get('method')} + {rationale}"
+        )
     if ai_hint:
         hint = str(ai_hint).strip()
         # score hint as a fake strategy
@@ -482,7 +554,7 @@ def situational_pick(
             else:
                 rationale += f"; AI hint {hint!r} rejected (not feature-compatible)"
 
-    return {
+    out: PolyEnvelope = {
         "ok": True,
         "pick": pick_name,
         "domain": dom.value,
@@ -500,6 +572,9 @@ def situational_pick(
         "model": model,
         "error": None,
     }
+    if plum_meta:
+        out["plum"] = plum_meta
+    return out
 
 
 def ai_driven_pick(

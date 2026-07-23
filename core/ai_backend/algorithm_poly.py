@@ -17,10 +17,9 @@ from __future__ import annotations
 
 import hashlib
 import os
-import random
 import time
 from dataclasses import dataclass, field
-from functools import wraps
+from functools import lru_cache, wraps
 from typing import Any, Callable, Dict, List, Optional, Sequence, Set, Tuple
 
 # ---------------------------------------------------------------------------
@@ -109,9 +108,11 @@ _FAMILY_RULES: Tuple[Tuple[str, Tuple[str, ...]], ...] = (
 )
 
 
+@lru_cache(maxsize=256)
 def classify_family(action: str) -> str:
-    """Map algorithm / action name → surface family."""
-    a = (action or "").lower()
+    """Map algorithm / action name → surface family (cached)."""
+    raw = action or ""
+    a = raw.lower()
     # Strip common prefixes
     for pfx in ("zero_day_", "analyze_", "poly_", "adapt_", "algo_"):
         if a.startswith(pfx):
@@ -120,9 +121,9 @@ def classify_family(action: str) -> str:
         for k in keys:
             if k in a:
                 return family
-    if "poly" in (action or "").lower():
+    if "poly" in raw.lower():
         return "polymorphic"
-    if "adapt" in (action or "").lower():
+    if "adapt" in raw.lower():
         return "adaptive"
     return "generic"
 
@@ -409,6 +410,12 @@ class PolyPick:
     seed: str = ""
 
     def as_dict(self) -> Dict[str, Any]:
+        eng = str(self.knobs.get("plum_engine") or "")
+        model = (
+            "polymorphic (plum heuristic)"
+            if eng.startswith("plum")
+            else "polymorphic (heuristic)"
+        )
         return {
             "enabled": True,
             "action": self.action,
@@ -421,7 +428,8 @@ class PolyPick:
             },
             "alternatives": self.alternatives[:6],
             "seed": self.seed,
-            "model": "polymorphic (heuristic)",
+            "model": model,
+            "plum_target_type": self.features.get("plum_target_type"),
         }
 
 
@@ -434,11 +442,38 @@ def pick_variant(
     exclude: Optional[Sequence[str]] = None,
     force_variant: str = "",
 ) -> PolyPick:
-    """Pick the best polymorphic variant for this algorithm + target."""
+    """Pick the best polymorphic variant for this algorithm + target.
+
+    Uses plum-dispatch multiple dispatch (Python ≥3.10) to adapt to the
+    *typed* target first, then re-ranks family grammars with those boosts
+    so AI plans land on the right depth/focus/tool_order for the surface.
+    """
     family = classify_family(action)
     feats = _features(target, recon, args)
     ban: Set[str] = {str(x) for x in (exclude or []) if x}
     variants = list(_FAMILY_VARIANTS.get(family) or _FAMILY_VARIANTS["generic"])
+
+    # Plum multiple-dispatch adaptation (typed target → boosts / depth / tools)
+    plum_env: Dict[str, Any] = {}
+    plum_boosts: Dict[str, float] = {}
+    try:
+        from core.poly.plum_adapt import adapt_target, apply_boosts_to_scores
+        dom = str(
+            (args or {}).get("domain")
+            or (target or {}).get("domain")
+            or family
+            or ""
+        )
+        plum_env = adapt_target(target, recon=recon, domain=dom)
+        plum_boosts = dict(plum_env.get("boosts") or {})
+        # Align family with plum when algorithm family is generic
+        if family in ("generic", "adaptive", "polymorphic") and plum_env.get("family"):
+            family = str(plum_env["family"])
+            variants = list(
+                _FAMILY_VARIANTS.get(family) or _FAMILY_VARIANTS["generic"]
+            )
+    except Exception:  # noqa: BLE001
+        apply_boosts_to_scores = None  # type: ignore
 
     # Operator / chain may force a variant name
     forced = (force_variant or (args or {}).get("poly_variant") or "").strip()
@@ -448,6 +483,11 @@ def pick_variant(
         if name in ban:
             continue
         sc = _score_variant(v, feats, family)
+        # Prefer plum depth when present
+        if plum_env.get("depth") and v.get("depth") == plum_env.get("depth"):
+            sc += 0.12
+        if plum_env.get("focus") and v.get("focus") == plum_env.get("focus"):
+            sc += 0.18
         if forced and name == forced:
             sc += 10.0
         ranked.append((sc, v))
@@ -459,19 +499,44 @@ def pick_variant(
         family = family or "generic"
 
     ranked.sort(key=lambda t: (-t[0], t[1].get("name") or ""))
+    if plum_boosts and apply_boosts_to_scores is not None:
+        try:
+            ranked = apply_boosts_to_scores(ranked, plum_boosts)
+        except Exception:  # noqa: BLE001
+            pass
+
     best_score, best = ranked[0]
+    # Merge plum tool_order into knobs when variant lacks one
+    knobs = {k: v for k, v in best.items() if k not in ("weight",)}
+    if plum_env.get("tool_order") and not knobs.get("tool_order"):
+        knobs["tool_order"] = list(plum_env["tool_order"])
+    if plum_env.get("method"):
+        knobs["plum_method"] = plum_env["method"]
+    if plum_env.get("engine"):
+        knobs["plum_engine"] = plum_env["engine"]
+
     # Stable-but-live seed for reproducible mutation within a step
     seed_src = (
         f"{action}|{best.get('name')}|{feats.get('encryption')}|"
-        f"{feats.get('client_count')}|{int(time.time()) // 30}"
+        f"{feats.get('client_count')}|{plum_env.get('target_type')}|"
+        f"{int(time.time()) // 30}"
     )
     seed = hashlib.sha1(seed_src.encode()).hexdigest()[:12]
 
-    knobs = {k: v for k, v in best.items() if k not in ("weight",)}
     alts = [
         {"name": v.get("name"), "score": round(sc, 4), "focus": v.get("focus")}
         for sc, v in ranked[1:7]
     ]
+    feat_out = {
+        k: feats.get(k)
+        for k in (
+            "encryption", "pmf_supported", "client_count", "rssi",
+            "os", "has_url", "domain", "service",
+        )
+        if feats.get(k) not in (None, "", [], {})
+    }
+    if plum_env.get("target_type"):
+        feat_out["plum_target_type"] = plum_env["target_type"]
     return PolyPick(
         action=action,
         family=family,
@@ -479,14 +544,7 @@ def pick_variant(
         knobs=knobs,
         score=best_score,
         alternatives=alts,
-        features={
-            k: feats.get(k)
-            for k in (
-                "encryption", "pmf_supported", "client_count", "rssi",
-                "os", "has_url", "domain", "service",
-            )
-            if feats.get(k) not in (None, "", [], {})
-        },
+        features=feat_out,
         seed=seed,
     )
 
