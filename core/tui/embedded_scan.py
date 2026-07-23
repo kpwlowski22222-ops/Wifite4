@@ -1,16 +1,15 @@
-"""In-TUI live scan panels — same aesthetics as the main KFIOSA dashboard.
+"""In-TUI live scan panels — smooth input-first WiFi / BLE scanners.
 
-Replaces external xterm/gnome-terminal scan windows with a full-screen
-overlay on the shared ``stdscr``:
+Layout (wide terminal):
+  Left top    ONLINE APs / devices
+  Left bottom OFFLINE / SEEN
+  Right       Clients (WiFi) or Services/detail (BLE) for the *focused* row
 
-  * KFIOSA box banner (color_pair 5) + status strip (pair 4)
-  * ONLINE / OFFLINE tables with SELECTED reverse highlight (pair 1)
-  * Detail strip + help footer matching BaseScreen / ui_theme
-  * Live scan runs **infinitely** until q / Ctrl+C (never auto-stops)
-  * Keys: ↑↓ j/k · ←→/TAB · 1-9 · ENTER mark · A AIO+exit · r rescan · q/Ctrl+C exit
+Focus (cursor) drives the right panel — ENTER only *marks* a target for AIO;
+it is not an engagement accept. Scan runs infinitely until q / Ctrl+C (or A).
 
-Default path for WiFi/BLE Scan; set ``KFIOSA_EXTERNAL_SCAN=1`` to restore
-external windows.
+Design: keys are always handled before catalog I/O. Background scan is slow
+on purpose so arrow movement stays smooth.
 """
 from __future__ import annotations
 
@@ -28,6 +27,7 @@ from core.tui.scan_window_shell import (
     format_ble_offline,
     format_ble_online,
     format_client_row,
+    format_kv_row,
     format_wifi_offline,
     format_wifi_online,
     handle_nav_key,
@@ -36,15 +36,21 @@ from core.tui.scan_window_shell import (
 logger = logging.getLogger(__name__)
 
 HELP_WIFI = (
-    "↑↓/jk move · ←→/TAB · 1-9 · ENTER mark · A AIO · r rescan · q/Ctrl+C exit · LIVE"
+    "↑↓/jk move · TAB panels · ENTER mark · A AIO · r rescan · q/Ctrl+C exit · LIVE slow"
 )
 HELP_BLE = (
-    "↑↓/jk move · ←→/TAB · 1-9 · ENTER mark · A AIO · r rescan · q/Ctrl+C exit · LIVE"
+    "↑↓/jk move · TAB panels · ENTER mark · A AIO · r rescan · q/Ctrl+C exit · LIVE slow"
 )
+
+# Catalog refresh deliberately slow — UI smoothness > scan refresh rate
+WIFI_POLL_S = 1.25
+BLE_POLL_S = 1.20
+KEY_TIMEOUT_MS = 20
+IDLE_PAINT_S = 0.45
 
 
 def _item_id(item: Optional[Dict[str, Any]]) -> str:
-    """Stable identity for cursor tracking across catalog re-sorts."""
+    """Stable identity for cursor tracking across catalog updates."""
     if not isinstance(item, dict):
         return ""
     for k in ("bssid", "address", "addr", "mac", "id"):
@@ -57,7 +63,6 @@ def _item_id(item: Optional[Dict[str, Any]]) -> str:
 def _idx_for_id(
     items: List[Dict[str, Any]], item_id: str, fallback: int = 0
 ) -> int:
-    """Locate item by stable id; fall back to clamped index."""
     n = len(items)
     if n <= 0:
         return 0
@@ -68,14 +73,13 @@ def _idx_for_id(
     return clamp_idx(fallback, n)
 
 
-def _prepare_stdscr(stdscr, timeout_ms: int = 200) -> None:
-    """Enable keypad + non-blocking so arrows/j/k navigate targets."""
+def _prepare_stdscr(stdscr, timeout_ms: int = KEY_TIMEOUT_MS) -> None:
     try:
         curses.curs_set(0)
     except Exception:
         pass
     try:
-        stdscr.keypad(True)  # map arrow keys → KEY_UP/DOWN (required)
+        stdscr.keypad(True)
     except Exception:
         pass
     try:
@@ -85,8 +89,12 @@ def _prepare_stdscr(stdscr, timeout_ms: int = 200) -> None:
         pass
 
 
-def _read_key(stdscr, timeout_ms: int = 200) -> int:
-    """Read one key with ANSI arrow fallback (same as main TUI)."""
+def _read_key(stdscr, timeout_ms: int = KEY_TIMEOUT_MS) -> int:
+    """Read one key; set timeout for this read then restore."""
+    try:
+        stdscr.timeout(int(timeout_ms))
+    except Exception:
+        pass
     try:
         from core.tui.base_screen import read_curses_key
         return int(read_curses_key(stdscr, timeout_ms=timeout_ms))
@@ -98,18 +106,56 @@ def _read_key(stdscr, timeout_ms: int = 200) -> int:
 
 
 def _move_idx(idx: int, n: int, delta: int) -> int:
-    """Move selection; wrap at ends so movement always feels responsive."""
     if n <= 0:
         return 0
     return (int(idx) + int(delta)) % n
 
 
+def _drain_nav_burst(stdscr, first_key: int) -> int:
+    """Coalesce held/mashed ↑↓/jk into one net step (smooth high-rate move)."""
+
+    def step_for(k: int) -> int:
+        if k in (curses.KEY_UP, ord("k"), ord("K")):
+            return -1
+        if k in (curses.KEY_DOWN, ord("j"), ord("J")):
+            return 1
+        if k in (curses.KEY_PPAGE,):
+            return -5
+        if k in (curses.KEY_NPAGE,):
+            return 5
+        return 0
+
+    steps = step_for(first_key)
+    if steps == 0 or stdscr is None:
+        return steps
+    try:
+        stdscr.timeout(0)
+        for _ in range(64):
+            k = stdscr.getch()
+            if k == -1:
+                break
+            d = step_for(k)
+            if d == 0:
+                try:
+                    curses.ungetch(k)
+                except Exception:
+                    pass
+                break
+            steps += d
+    except Exception:
+        pass
+    finally:
+        try:
+            stdscr.timeout(KEY_TIMEOUT_MS)
+        except Exception:
+            pass
+    return steps
+
+
 def prefer_embedded_scan() -> bool:
-    """True unless operator forces external windows."""
     raw = (os.environ.get("KFIOSA_EXTERNAL_SCAN") or "").strip().lower()
     if raw in ("1", "true", "yes", "on", "external"):
         return False
-    # settings optional: scan.embed_in_tui
     return True
 
 
@@ -142,7 +188,6 @@ def _draw_kfiosa_header(
     offline_n: int,
     err: str = "",
 ) -> int:
-    """Return first body row y (below header)."""
     try:
         h, w = stdscr.getmaxyx()
     except Exception:
@@ -154,11 +199,10 @@ def _draw_kfiosa_header(
     _safe_add(stdscr, 0, max(0, (w - len(banner)) // 2), banner, attr, w)
     _safe_add(stdscr, 1, max(0, (w - len(mid)) // 2), mid, attr, w)
     _safe_add(stdscr, 2, max(0, (w - len(bot)) // 2), bot, attr, w)
-
     status = (
         f" [ iface: {iface or 'auto'} ] "
         f"[ online: {online_n} ] [ offline: {offline_n} ] "
-        f"[ LIVE SCAN ] "
+        f"[ LIVE · slow catalog ] "
     )
     if err:
         status += f"[ ! {err[:28]} ]"
@@ -182,6 +226,7 @@ def _draw_table_block(
     idx: int,
     row_fmt: Callable[[Dict[str, Any]], str],
     focused: bool,
+    marked_id: str = "",
 ) -> None:
     head_attr = (
         (_pair(4) | curses.A_BOLD | curses.A_REVERSE)
@@ -201,16 +246,81 @@ def _draw_table_block(
         y = top + 1 + row
         i = start + row
         line = row_fmt(item)
-        selected = focused and i == idx
-        if selected:
+        is_focus = focused and i == idx
+        is_mark = bool(marked_id) and _item_id(item) == marked_id
+        if is_focus:
             attr = curses.A_REVERSE | _pair(1)
             prefix = "▶ "
+        elif is_mark:
+            attr = _pair(1) | curses.A_BOLD
+            prefix = "* "
         else:
             attr = _pair(6)
-            # Number prefix for first 9 rows so 1-9 jump is discoverable
             prefix = f"{i + 1} " if i < 9 else "  "
         _safe_add(stdscr, y, x + 1, (prefix + line), attr, width - 1)
 
+
+def _clients_from_ap(ap: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    if not ap:
+        return []
+    out: List[Dict[str, Any]] = []
+    for c in ap.get("clients") or []:
+        if isinstance(c, dict):
+            out.append(c)
+        else:
+            out.append({"mac": str(c)})
+    return out
+
+
+def _ble_detail_rows(dev: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Right-panel rows for focused BLE device (not ENTER-accept)."""
+    if not dev:
+        return []
+    rows: List[Dict[str, Any]] = []
+    rows.append({"key": "name", "value": str(dev.get("name") or "?")})
+    rows.append({"key": "addr", "value": str(dev.get("address") or "")})
+    if dev.get("rssi") is not None:
+        rows.append({"key": "rssi", "value": str(dev.get("rssi"))})
+    if dev.get("vendor"):
+        rows.append({"key": "vendor", "value": str(dev["vendor"])[:40]})
+    if dev.get("connectable") is not None:
+        rows.append({"key": "connectable", "value": str(bool(dev.get("connectable")))})
+    for s in (dev.get("services") or [])[:12]:
+        rows.append({"key": "svc", "value": str(s)[:48]})
+    for u in (dev.get("service_uuids") or dev.get("uuids") or [])[:8]:
+        rows.append({"key": "uuid", "value": str(u)[:48]})
+    if dev.get("manufacturer_data") or dev.get("mfg_note"):
+        rows.append({
+            "key": "mfg",
+            "value": str(dev.get("mfg_note") or dev.get("manufacturer_data"))[:48],
+        })
+    badges = dev.get("recon_badges") or []
+    if badges:
+        rows.append({"key": "badges", "value": " ".join(str(b) for b in badges[:8])})
+    return rows
+
+
+def _focus_item(
+    focus: str,
+    online: List[Dict[str, Any]],
+    offline: List[Dict[str, Any]],
+    online_idx: int,
+    offline_idx: int,
+) -> Optional[Dict[str, Any]]:
+    if focus == "online" and online:
+        return online[clamp_idx(online_idx, len(online))]
+    if focus == "offline" and offline:
+        return offline[clamp_idx(offline_idx, len(offline))]
+    if online:
+        return online[clamp_idx(online_idx, len(online))]
+    if offline:
+        return offline[clamp_idx(offline_idx, len(offline))]
+    return None
+
+
+# ---------------------------------------------------------------------------
+# WiFi
+# ---------------------------------------------------------------------------
 
 def run_embedded_wifi_scan(
     stdscr,
@@ -219,7 +329,7 @@ def run_embedded_wifi_scan(
     out_path: str = "logs/wifi_scan_selection.json",
     activity_log: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
-    """Full-screen embedded WiFi live scan. Returns selected AP or None."""
+    """Full-screen embedded WiFi live scan — input-first, infinite until q/A."""
     from core.tui.wifi_scan_external import LiveScanner
 
     log = activity_log if activity_log is not None else []
@@ -229,340 +339,318 @@ def run_embedded_wifi_scan(
     except Exception:
         pass
 
-    # Keep disappeared APs visible long enough to browse; scan itself never
-    # auto-stops — only q / Ctrl+C / AIO exit the overlay.
     scanner = LiveScanner(iface, disappeared_timeout=120.0)
+    scanner.sort_mode = "stable"
     scanner.start()
     log.append(
-        f"[*] Embedded WiFi scan on {iface} (LIVE until q/Ctrl+C; "
-        f"↑↓ move · ENTER mark · A AIO)"
+        f"[*] Embedded WiFi scan on {iface} — LIVE until q/Ctrl+C "
+        f"(↑↓ move · focus shows clients · ENTER mark · A AIO)"
     )
 
     focus = "online"  # online | offline | clients
-    online_idx = 0
-    offline_idx = 0
-    clients_idx = 0
-    # Stable ids so re-sort by power/RSSI does not jump the cursor / "stick"
-    online_id = ""
-    offline_id = ""
-    clients_id = ""
+    online_idx = offline_idx = clients_idx = 0
+    online_id = offline_id = clients_id = ""
     selected: Optional[Dict[str, Any]] = None
     aio = False
-    last_online: List[Dict[str, Any]] = []
-    last_offline: List[Dict[str, Any]] = []
     online: List[Dict[str, Any]] = []
     offline: List[Dict[str, Any]] = []
     clients: List[Dict[str, Any]] = []
-    focus_ap: Optional[Dict[str, Any]] = None
-    msg = "LIVE scanning… (never auto-stops)"
+    msg = "LIVE · catalog ~1 Hz · keys never wait on scan"
     last_poll_t = 0.0
     last_draw_t = 0.0
-    last_draw_sig: Optional[Tuple[Any, ...]] = None
-    poll_every = 0.35  # CSV/catalog work is expensive — don't thrash
-    draw_every = 0.12  # ~8 fps idle paint
-    try:
-        _prepare_stdscr(stdscr, timeout_ms=80)
+    exit_loop = False
 
-        while True:
-            now = time.monotonic()
-            # Throttle heavy poll(); still service keys every loop
-            if (now - last_poll_t) >= poll_every or not last_online and not last_offline:
-                online, offline = scanner.poll()
-                online = list(online or [])
-                offline = list(offline or [])
-                last_online, last_offline = online, offline
-                last_poll_t = now
-            else:
-                online, offline = last_online, last_offline
+    def refresh_catalog() -> None:
+        nonlocal online, offline, online_idx, offline_idx, online_id, offline_id
+        nonlocal clients, clients_idx, clients_id, focus
+        on, off = scanner.poll()
+        online = list(on or [])
+        offline = list(off or [])
+        if focus == "online" and not online and offline:
+            focus = "offline"
+        elif focus == "offline" and not offline and online:
+            focus = "online"
+        online_idx = _idx_for_id(online, online_id, online_idx)
+        offline_idx = _idx_for_id(offline, offline_id, offline_idx)
+        if online:
+            online_id = _item_id(online[online_idx]) or online_id
+        if offline:
+            offline_id = _item_id(offline[offline_idx]) or offline_id
+        ap = _focus_item(focus, online, offline, online_idx, offline_idx)
+        # Clients always follow *focus* AP (not ENTER mark)
+        if focus in ("online", "offline"):
+            clients = _clients_from_ap(ap)
+        clients_idx = _idx_for_id(clients, clients_id, clients_idx)
+        if clients:
+            clients_id = _item_id(clients[clients_idx]) or clients_id
+        if focus == "clients" and not clients:
+            focus = "online" if online else "offline"
 
-            # Auto-land on a non-empty table so arrows always do something
-            if focus == "online" and not online and offline:
-                focus = "offline"
-            elif focus == "offline" and not offline and online:
-                focus = "online"
-            # Re-anchor index by BSSID so catalog re-sorts don't freeze movement
-            online_idx = _idx_for_id(online, online_id, online_idx)
-            offline_idx = _idx_for_id(offline, offline_id, offline_idx)
-            if online:
-                online_id = _item_id(online[online_idx]) or online_id
-            if offline:
-                offline_id = _item_id(offline[offline_idx]) or offline_id
-            focus_ap = None
-            if focus == "online" and online:
-                focus_ap = online[online_idx]
-            elif focus == "offline" and offline:
-                focus_ap = offline[offline_idx]
-            elif online:
-                focus_ap = online[clamp_idx(online_idx, len(online))]
-            clients = []
-            if focus_ap:
-                raw_cli = focus_ap.get("clients") or []
-                for c in raw_cli:
-                    if isinstance(c, dict):
-                        clients.append(c)
-                    else:
-                        clients.append({"mac": str(c)})
-            clients_idx = _idx_for_id(clients, clients_id, clients_idx)
-            if clients:
-                clients_id = _item_id(clients[clients_idx]) or clients_id
-            if focus == "clients" and not clients:
-                focus = "online" if online else "offline"
-
-            draw_sig = (
-                focus, online_idx, offline_idx, clients_idx,
-                len(online), len(offline), len(clients),
-                online_id, offline_id, msg,
-                selected.get("bssid") if selected else None,
+    def paint() -> None:
+        nonlocal last_draw_t
+        try:
+            h, w = stdscr.getmaxyx()
+        except Exception:
+            h, w = 24, 80
+        # Keep clients panel in sync with focus without full re-poll
+        ap = _focus_item(focus, online, offline, online_idx, offline_idx)
+        cli = clients
+        if focus in ("online", "offline"):
+            cli = _clients_from_ap(ap)
+        marked = _item_id(selected)
+        stdscr.erase()
+        body_y = _draw_kfiosa_header(
+            stdscr,
+            title="WiFi SCAN",
+            iface=scanner.iface or iface,
+            online_n=len(online),
+            offline_n=len(offline),
+            err=scanner.last_error or "",
+        )
+        avail = max(6, h - body_y - 3)
+        if w >= 90:
+            left_w = max(40, int(w * 0.62))
+            right_w = w - left_w
+            h_on = max(4, (avail * 6) // 10)
+            h_off = max(3, avail - h_on)
+            _draw_table_block(
+                stdscr, top=body_y, height=h_on, width=left_w, x=0,
+                title="ONLINE APs", items=online, idx=online_idx,
+                row_fmt=format_wifi_online, focused=(focus == "online"),
+                marked_id=marked,
             )
-            need_draw = (
-                draw_sig != last_draw_sig
-                or (now - last_draw_t) >= draw_every
+            _draw_table_block(
+                stdscr, top=body_y + h_on, height=h_off, width=left_w, x=0,
+                title="OFFLINE / SEEN", items=offline, idx=offline_idx,
+                row_fmt=format_wifi_offline, focused=(focus == "offline"),
+                marked_id=marked,
             )
-            if need_draw:
-                try:
-                    h, w = stdscr.getmaxyx()
-                except Exception:
-                    h, w = 24, 80
-                stdscr.erase()
-                enrich_note = ""
-                try:
-                    enr = getattr(scanner, "_enricher", None)
-                    if enr is not None:
-                        st = enr.snapshot_stats()
-                        enrich_note = (
-                            f"recon deep={st.get('deep_ok', 0)}/"
-                            f"{st.get('deep_count', 0)} "
-                            f"pass={st.get('passive_ticks', 0)}"
-                        )
-                except Exception:
-                    pass
-                body_y = _draw_kfiosa_header(
-                    stdscr,
-                    title="WiFi SCAN",
-                    iface=scanner.iface or iface,
-                    online_n=len(online),
-                    offline_n=len(offline),
-                    err=scanner.last_error or enrich_note,
-                )
-                # Layout: left 60% online+offline stacked, right 40% clients
-                avail = max(6, h - body_y - 3)
-                if w >= 90:
-                    left_w = max(40, int(w * 0.62))
-                    right_w = w - left_w
-                    h_on = max(4, (avail * 6) // 10)
-                    h_off = max(3, avail - h_on)
-                    _draw_table_block(
-                        stdscr, top=body_y, height=h_on, width=left_w, x=0,
-                        title="ONLINE APs", items=online, idx=online_idx,
-                        row_fmt=format_wifi_online, focused=(focus == "online"),
-                    )
-                    _draw_table_block(
-                        stdscr, top=body_y + h_on, height=h_off, width=left_w,
-                        x=0,
-                        title="OFFLINE / SEEN", items=offline, idx=offline_idx,
-                        row_fmt=format_wifi_offline,
-                        focused=(focus == "offline"),
-                    )
-                    _draw_table_block(
-                        stdscr, top=body_y, height=avail, width=right_w,
-                        x=left_w,
-                        title="CLIENTS (focus AP)", items=clients,
-                        idx=clients_idx,
-                        row_fmt=format_client_row,
-                        focused=(focus == "clients"),
-                    )
-                else:
-                    h_on = max(4, (avail * 6) // 10)
-                    h_off = max(3, avail - h_on)
-                    _draw_table_block(
-                        stdscr, top=body_y, height=h_on, width=w, x=0,
-                        title="ONLINE APs", items=online, idx=online_idx,
-                        row_fmt=format_wifi_online, focused=(focus == "online"),
-                    )
-                    _draw_table_block(
-                        stdscr, top=body_y + h_on, height=h_off, width=w, x=0,
-                        title="OFFLINE / SEEN", items=offline, idx=offline_idx,
-                        row_fmt=format_wifi_offline,
-                        focused=(focus == "offline"),
-                    )
+            _draw_table_block(
+                stdscr, top=body_y, height=avail, width=right_w, x=left_w,
+                title="CLIENTS (focused AP)", items=cli, idx=clients_idx,
+                row_fmt=format_client_row, focused=(focus == "clients"),
+            )
+        else:
+            h_on = max(4, (avail * 6) // 10)
+            h_off = max(3, avail - h_on)
+            _draw_table_block(
+                stdscr, top=body_y, height=h_on, width=w, x=0,
+                title="ONLINE APs", items=online, idx=online_idx,
+                row_fmt=format_wifi_online, focused=(focus == "online"),
+                marked_id=marked,
+            )
+            _draw_table_block(
+                stdscr, top=body_y + h_on, height=h_off, width=w, x=0,
+                title="OFFLINE / SEEN", items=offline, idx=offline_idx,
+                row_fmt=format_wifi_offline, focused=(focus == "offline"),
+                marked_id=marked,
+            )
+        detail = detail_for_item(ap or {}, "wifi") if ap else ""
+        _safe_add(stdscr, h - 3, 0, "─" * max(1, w - 1), _pair(6), w)
+        _safe_add(stdscr, h - 2, 0, detail, _pair(4), w)
+        n_cur = (
+            len(online) if focus == "online"
+            else len(offline) if focus == "offline"
+            else len(cli)
+        )
+        i_cur = (
+            online_idx if focus == "online"
+            else offline_idx if focus == "offline"
+            else clients_idx
+        )
+        foot = (
+            f" {HELP_WIFI}  ·  focus={focus} "
+            f"#{i_cur + 1}/{n_cur or 0}  ·  {msg}"
+        )
+        _safe_add(stdscr, h - 1, 0, foot, _pair(3) | curses.A_BOLD, w)
+        try:
+            stdscr.refresh()
+        except curses.error:
+            pass
+        last_draw_t = time.monotonic()
 
-                detail = (
-                    detail_for_item(focus_ap or {}, "wifi") if focus_ap else ""
-                )
-                _safe_add(stdscr, h - 3, 0, "─" * max(1, w - 1), _pair(6), w)
-                _safe_add(stdscr, h - 2, 0, detail, _pair(4), w)
-                n_cur = (
-                    len(online) if focus == "online"
-                    else len(offline) if focus == "offline"
-                    else len(clients)
-                )
-                i_cur = (
-                    online_idx if focus == "online"
-                    else offline_idx if focus == "offline"
-                    else clients_idx
-                )
-                foot = (
-                    f" {HELP_WIFI}  ·  focus={focus} "
-                    f"#{i_cur + 1}/{n_cur or 0}  ·  {msg}"
-                )
-                _safe_add(stdscr, h - 1, 0, foot, _pair(3) | curses.A_BOLD, w)
-                try:
-                    stdscr.refresh()
-                except curses.error:
-                    pass
-                last_draw_t = now
-                last_draw_sig = draw_sig
+    def handle_key(ch: int) -> bool:
+        """Return True to exit loop."""
+        nonlocal focus, online_idx, offline_idx, clients_idx
+        nonlocal online_id, offline_id, clients_id, selected, aio, msg, scanner
+        nonlocal clients
 
-            # Short key poll — never block long enough to feel stuck
-            ch = _read_key(stdscr, timeout_ms=50)
-            if ch in (-1,):
-                continue
-            # Force repaint after any key so movement is instant
-            last_draw_sig = None
+        if ch in (3,):  # Ctrl+C
+            msg = "Ctrl+C — leaving live scan"
+            return True
+        order = ["online", "offline", "clients"]
+        if ch in (9, ord("\t"), curses.KEY_RIGHT):
+            focus = order[(order.index(focus) + 1) % len(order)]
+            msg = f"table={focus}"
+            return False
+        if ch in (curses.KEY_LEFT,):
+            focus = order[(order.index(focus) - 1) % len(order)]
+            msg = f"table={focus}"
+            return False
+        if ch in (ord("r"), ord("R")):
+            scanner.stop()
+            scanner = LiveScanner(iface, disappeared_timeout=120.0)
+            scanner.sort_mode = "stable"
+            scanner.start()
+            msg = "rescanning… still LIVE"
+            return False
+        if ch in (ord("a"), ord("A")):
+            items = online if focus == "online" else offline
+            idx = online_idx if focus == "online" else offline_idx
+            if items:
+                selected = dict(items[clamp_idx(idx, len(items))])
+                aio = True
+                return True
+            if selected:
+                aio = True
+                return True
+            msg = "nothing to AIO-select"
+            return False
 
-            # Ctrl+C → clean exit (keep marked selection if any)
-            if ch in (3,):  # ^C
-                msg = "Ctrl+C — leaving live scan"
-                break
+        items = (
+            online if focus == "online"
+            else offline if focus == "offline"
+            else clients
+        )
+        n = len(items)
+        idx = (
+            online_idx if focus == "online"
+            else offline_idx if focus == "offline"
+            else clients_idx
+        )
 
-            order = ["online", "offline", "clients"]
-            # TAB / LEFT / RIGHT cycle tables
-            if ch in (9, ord("\t"), curses.KEY_RIGHT):
-                focus = order[(order.index(focus) + 1) % len(order)]
-                msg = f"table={focus}"
-                continue
-            if ch in (curses.KEY_LEFT,):
-                focus = order[(order.index(focus) - 1) % len(order)]
-                msg = f"table={focus}"
-                continue
-            if ch in (ord("r"), ord("R")):
-                scanner.stop()
-                scanner = LiveScanner(iface, disappeared_timeout=120.0)
-                scanner.start()
-                msg = "rescanning… (still LIVE until q/Ctrl+C)"
-                continue
-            if ch in (ord("a"), ord("A")):
-                items = online if focus == "online" else offline
-                idx = online_idx if focus == "online" else offline_idx
-                if items:
-                    selected = dict(items[clamp_idx(idx, len(items))])
-                    aio = True
-                    msg = "AIO — leaving scan"
-                    break
-                if selected:
-                    aio = True
-                    msg = "AIO with marked target"
-                    break
-                msg = "nothing to AIO-select"
-                continue
-
-            # 1-9 jump to target in focused list
-            if 0 <= ch < 256 and chr(ch).isdigit() and chr(ch) != "0":
-                jump = int(chr(ch)) - 1
-                items = (
-                    online if focus == "online"
-                    else offline if focus == "offline"
-                    else clients
-                )
-                if items and 0 <= jump < len(items):
-                    if focus == "online":
-                        online_idx = jump
-                        online_id = _item_id(items[jump])
-                    elif focus == "offline":
-                        offline_idx = jump
-                        offline_id = _item_id(items[jump])
-                    else:
-                        clients_idx = jump
-                        clients_id = _item_id(items[jump])
-                    msg = f"jump #{jump + 1}"
-                continue
-
-            # Home / End
-            if ch in (curses.KEY_HOME, ord("g")):
+        if 0 <= ch < 256 and chr(ch).isdigit() and chr(ch) != "0":
+            jump = int(chr(ch)) - 1
+            if items and 0 <= jump < len(items):
                 if focus == "online":
-                    online_idx = 0
-                    online_id = _item_id(online[0]) if online else ""
+                    online_idx, online_id = jump, _item_id(items[jump])
+                    clients = _clients_from_ap(items[jump])
+                    clients_idx, clients_id = 0, ""
                 elif focus == "offline":
-                    offline_idx = 0
-                    offline_id = _item_id(offline[0]) if offline else ""
+                    offline_idx, offline_id = jump, _item_id(items[jump])
+                    clients = _clients_from_ap(items[jump])
+                    clients_idx, clients_id = 0, ""
                 else:
-                    clients_idx = 0
-                    clients_id = _item_id(clients[0]) if clients else ""
-                msg = "first"
-                continue
-            if ch in (curses.KEY_END, ord("G")):
-                if focus == "online" and online:
-                    online_idx = len(online) - 1
-                    online_id = _item_id(online[online_idx])
-                elif focus == "offline" and offline:
-                    offline_idx = len(offline) - 1
-                    offline_id = _item_id(offline[offline_idx])
-                elif clients:
-                    clients_idx = len(clients) - 1
-                    clients_id = _item_id(clients[clients_idx])
-                msg = "last"
-                continue
-
-            n = (
-                len(online) if focus == "online"
-                else len(offline) if focus == "offline"
-                else len(clients)
-            )
-            idx = (
-                online_idx if focus == "online"
-                else offline_idx if focus == "offline"
-                else clients_idx
-            )
-            # Explicit arrow / vim move (wrap) — never a no-op when n>0
-            if ch in (curses.KEY_UP, ord("k"), ord("K")):
-                new_idx = _move_idx(idx, n, -1)
-                act = None
-            elif ch in (curses.KEY_DOWN, ord("j"), ord("J")):
-                new_idx = _move_idx(idx, n, +1)
-                act = None
-            else:
-                new_idx, act = handle_nav_key(ch, idx, n)
-
+                    clients_idx, clients_id = jump, _item_id(items[jump])
+                msg = f"jump #{jump + 1}"
+            return False
+        if ch in (curses.KEY_HOME, ord("g")):
             if focus == "online":
-                online_idx = new_idx
-                if online:
-                    online_id = _item_id(online[online_idx])
+                online_idx = 0
+                online_id = _item_id(online[0]) if online else ""
+                clients = _clients_from_ap(online[0] if online else None)
+                clients_idx, clients_id = 0, ""
             elif focus == "offline":
-                offline_idx = new_idx
-                if offline:
-                    offline_id = _item_id(offline[offline_idx])
+                offline_idx = 0
+                offline_id = _item_id(offline[0]) if offline else ""
+                clients = _clients_from_ap(offline[0] if offline else None)
+                clients_idx, clients_id = 0, ""
             else:
-                clients_idx = new_idx
-                if clients:
-                    clients_id = _item_id(clients[clients_idx])
+                clients_idx = 0
+                clients_id = _item_id(clients[0]) if clients else ""
+            msg = "first"
+            return False
+        if ch in (curses.KEY_END, ord("G")):
+            if focus == "online" and online:
+                online_idx = len(online) - 1
+                online_id = _item_id(online[online_idx])
+                clients = _clients_from_ap(online[online_idx])
+                clients_idx, clients_id = 0, ""
+            elif focus == "offline" and offline:
+                offline_idx = len(offline) - 1
+                offline_id = _item_id(offline[offline_idx])
+                clients = _clients_from_ap(offline[offline_idx])
+                clients_idx, clients_id = 0, ""
+            elif clients:
+                clients_idx = len(clients) - 1
+                clients_id = _item_id(clients[clients_idx])
+            msg = "last"
+            return False
 
-            if act == "quit":
-                # q / ESC — leave live scan; keep marked selection if any
-                break
-            if act == "back":
-                selected = None
-                msg = "selection cleared"
-                continue
-            if act == "select":
-                # ENTER/SPACE: mark target but KEEP scanning (infinite until q/A)
-                if focus == "clients":
-                    msg = "select an AP (←/→ or TAB to ONLINE)"
-                    continue
-                items = online if focus == "online" else offline
-                if not items:
-                    msg = "no targets"
-                    continue
-                selected = dict(items[clamp_idx(new_idx, len(items))])
-                msg = (
-                    f"MARKED {selected.get('ssid') or '<hidden>'} "
-                    f"[{selected.get('bssid')}] — A=AIO · q=done · still LIVE"
-                )
-                continue
-            if n > 0 and act is None and ch in (
-                curses.KEY_UP, curses.KEY_DOWN, ord("j"), ord("k"),
-                ord("J"), ord("K"), curses.KEY_PPAGE, curses.KEY_NPAGE,
-            ):
+        if ch in (
+            curses.KEY_UP, ord("k"), ord("K"),
+            curses.KEY_DOWN, ord("j"), ord("J"),
+            curses.KEY_PPAGE, curses.KEY_NPAGE,
+        ):
+            steps = _drain_nav_burst(stdscr, ch)
+            if n > 0:
+                new_idx = _move_idx(idx, n, steps)
+                if focus == "online":
+                    online_idx = new_idx
+                    online_id = _item_id(online[online_idx])
+                    clients = _clients_from_ap(online[online_idx])
+                    clients_idx = 0
+                    clients_id = ""
+                elif focus == "offline":
+                    offline_idx = new_idx
+                    offline_id = _item_id(offline[offline_idx])
+                    clients = _clients_from_ap(offline[offline_idx])
+                    clients_idx = 0
+                    clients_id = ""
+                else:
+                    clients_idx = new_idx
+                    clients_id = (
+                        _item_id(clients[clients_idx]) if clients else ""
+                    )
                 msg = f"#{new_idx + 1}/{n}"
+            return False
+
+        new_idx, act = handle_nav_key(ch, idx, n)
+        if focus == "online":
+            online_idx = new_idx
+            if online:
+                online_id = _item_id(online[online_idx])
+        elif focus == "offline":
+            offline_idx = new_idx
+            if offline:
+                offline_id = _item_id(offline[offline_idx])
+        else:
+            clients_idx = new_idx
+            if clients:
+                clients_id = _item_id(clients[clients_idx])
+        if act == "quit":
+            return True
+        if act == "back":
+            selected = None
+            msg = "selection cleared"
+            return False
+        if act == "select":
+            if focus == "clients":
+                msg = "select an AP (TAB → ONLINE) — clients follow focus"
+                return False
+            items2 = online if focus == "online" else offline
+            if not items2:
+                msg = "no targets"
+                return False
+            selected = dict(items2[clamp_idx(new_idx, len(items2))])
+            msg = (
+                f"MARKED {selected.get('ssid') or '<hidden>'} "
+                f"[{selected.get('bssid')}] — A=AIO · q=done · still LIVE"
+            )
+            return False
+        return False
+
+    try:
+        _prepare_stdscr(stdscr, timeout_ms=KEY_TIMEOUT_MS)
+        refresh_catalog()
+        paint()
+        while not exit_loop:
+            # 1) KEYS FIRST — never blocked by scan I/O
+            ch = _read_key(stdscr, timeout_ms=KEY_TIMEOUT_MS)
+            if ch != -1:
+                if handle_key(ch):
+                    break
+                paint()  # immediate visual feedback
+                continue
+
+            # 2) Slow catalog refresh only when idle (no key)
+            now = time.monotonic()
+            if (now - last_poll_t) >= WIFI_POLL_S:
+                refresh_catalog()
+                last_poll_t = now
+                paint()
+            elif (now - last_draw_t) >= IDLE_PAINT_S:
+                paint()
     finally:
         try:
             scanner.stop()
@@ -577,9 +665,9 @@ def run_embedded_wifi_scan(
         except Exception:
             pass
 
-    networks_snapshot = list(last_online) + [
-        a for a in last_offline
-        if _item_id(a) not in {_item_id(x) for x in last_online}
+    networks_snapshot = list(online) + [
+        a for a in offline
+        if _item_id(a) not in {_item_id(x) for x in online}
     ]
     if selected:
         selected["interface"] = scanner.iface or iface
@@ -593,7 +681,7 @@ def run_embedded_wifi_scan(
                     "selected": selected,
                     "aio_attack": bool(aio),
                     "networks": networks_snapshot or [selected],
-                    "disappeared_networks": list(last_offline),
+                    "disappeared_networks": list(offline),
                     "ts": time.time(),
                     "embedded": True,
                 }, ensure_ascii=False, default=str),
@@ -607,7 +695,6 @@ def run_embedded_wifi_scan(
             + (" — AIO" if aio else f" · {len(networks_snapshot)} in catalog")
         )
     else:
-        # Still persist catalog so operator can re-open targets later
         try:
             if networks_snapshot:
                 Path("logs").mkdir(parents=True, exist_ok=True)
@@ -616,7 +703,7 @@ def run_embedded_wifi_scan(
                         "selected": None,
                         "aio_attack": False,
                         "networks": networks_snapshot,
-                        "disappeared_networks": list(last_offline),
+                        "disappeared_networks": list(offline),
                         "ts": time.time(),
                         "embedded": True,
                     }, ensure_ascii=False, default=str),
@@ -631,6 +718,10 @@ def run_embedded_wifi_scan(
     return selected
 
 
+# ---------------------------------------------------------------------------
+# BLE
+# ---------------------------------------------------------------------------
+
 def run_embedded_ble_scan(
     stdscr,
     *,
@@ -638,7 +729,7 @@ def run_embedded_ble_scan(
     out_path: str = "logs/ble_scan_selection.json",
     activity_log: Optional[List[str]] = None,
 ) -> Optional[Dict[str, Any]]:
-    """Full-screen embedded BLE live scan. Returns selected device or None."""
+    """Full-screen embedded BLE live scan — same layout/feel as WiFi."""
     from core.tui.ble_scan_external import LiveBLEScanner
 
     log = activity_log if activity_log is not None else []
@@ -649,218 +740,296 @@ def run_embedded_ble_scan(
         pass
 
     scanner = LiveBLEScanner(
-        adapter=adapter, disappeared_timeout=120.0, pulse_s=8,
+        adapter=adapter, disappeared_timeout=120.0, pulse_s=4,
     )
+    scanner.sort_mode = "stable"
     scanner.start()
     log.append(
         f"[*] Embedded BLE scan (adapter={adapter or 'auto'}) — "
-        f"LIVE until q/Ctrl+C; ↑↓ move · ENTER mark · A AIO"
+        f"LIVE until q/Ctrl+C; focus shows services · ENTER mark · A AIO"
     )
 
-    focus = "online"
-    online_idx = 0
-    offline_idx = 0
-    online_id = ""
-    offline_id = ""
+    focus = "online"  # online | offline | detail
+    online_idx = offline_idx = detail_idx = 0
+    online_id = offline_id = ""
     selected: Optional[Dict[str, Any]] = None
     aio = False
-    last_online: List[Dict[str, Any]] = []
-    last_offline: List[Dict[str, Any]] = []
     online: List[Dict[str, Any]] = []
     offline: List[Dict[str, Any]] = []
-    msg = "LIVE scanning… (never auto-stops)"
+    detail_rows: List[Dict[str, Any]] = []
+    msg = "LIVE · catalog ~1 Hz · keys never wait on scan"
     last_poll_t = 0.0
     last_draw_t = 0.0
-    last_draw_sig: Optional[Tuple[Any, ...]] = None
-    poll_every = 0.40
-    draw_every = 0.12
-    try:
-        _prepare_stdscr(stdscr, timeout_ms=80)
 
-        while True:
-            now = time.monotonic()
-            if (now - last_poll_t) >= poll_every or not last_online and not last_offline:
-                online, offline = scanner.poll()
-                online = list(online or [])
-                offline = list(offline or [])
-                last_online, last_offline = online, offline
-                last_poll_t = now
-            else:
-                online, offline = last_online, last_offline
-            if focus == "online" and not online and offline:
-                focus = "offline"
-            elif focus == "offline" and not offline and online:
-                focus = "online"
-            online_idx = _idx_for_id(online, online_id, online_idx)
-            offline_idx = _idx_for_id(offline, offline_id, offline_idx)
-            if online:
-                online_id = _item_id(online[online_idx]) or online_id
-            if offline:
-                offline_id = _item_id(offline[offline_idx]) or offline_id
-            cur = None
-            if focus == "online" and online:
-                cur = online[online_idx]
-            elif focus == "offline" and offline:
-                cur = offline[offline_idx]
+    def refresh_catalog() -> None:
+        nonlocal online, offline, online_idx, offline_idx, online_id, offline_id
+        nonlocal detail_rows, detail_idx, focus
+        on, off = scanner.poll()
+        online = list(on or [])
+        offline = list(off or [])
+        if focus == "online" and not online and offline:
+            focus = "offline"
+        elif focus == "offline" and not offline and online:
+            focus = "online"
+        online_idx = _idx_for_id(online, online_id, online_idx)
+        offline_idx = _idx_for_id(offline, offline_id, offline_idx)
+        if online:
+            online_id = _item_id(online[online_idx]) or online_id
+        if offline:
+            offline_id = _item_id(offline[offline_idx]) or offline_id
+        dev = _focus_item(focus, online, offline, online_idx, offline_idx)
+        if focus in ("online", "offline"):
+            detail_rows = _ble_detail_rows(dev)
+            detail_idx = clamp_idx(detail_idx, len(detail_rows))
+        if focus == "detail" and not detail_rows:
+            focus = "online" if online else "offline"
 
-            draw_sig = (
-                focus, online_idx, offline_idx, len(online), len(offline),
-                online_id, offline_id, msg,
+    def paint() -> None:
+        nonlocal last_draw_t
+        try:
+            h, w = stdscr.getmaxyx()
+        except Exception:
+            h, w = 24, 80
+        dev = _focus_item(focus, online, offline, online_idx, offline_idx)
+        rows = detail_rows
+        if focus in ("online", "offline"):
+            rows = _ble_detail_rows(dev)
+        marked = _item_id(selected)
+        stdscr.erase()
+        body_y = _draw_kfiosa_header(
+            stdscr,
+            title="BLE SCAN",
+            iface=adapter or "auto",
+            online_n=len(online),
+            offline_n=len(offline),
+            err=scanner.last_error or "",
+        )
+        avail = max(6, h - body_y - 3)
+        if w >= 90:
+            left_w = max(40, int(w * 0.58))
+            right_w = w - left_w
+            h_on = max(4, (avail * 6) // 10)
+            h_off = max(3, avail - h_on)
+            _draw_table_block(
+                stdscr, top=body_y, height=h_on, width=left_w, x=0,
+                title="ONLINE DEVICES", items=online, idx=online_idx,
+                row_fmt=format_ble_online, focused=(focus == "online"),
+                marked_id=marked,
             )
-            need_draw = (
-                draw_sig != last_draw_sig or (now - last_draw_t) >= draw_every
+            _draw_table_block(
+                stdscr, top=body_y + h_on, height=h_off, width=left_w, x=0,
+                title="OFFLINE / SEEN", items=offline, idx=offline_idx,
+                row_fmt=format_ble_offline, focused=(focus == "offline"),
+                marked_id=marked,
             )
-            if need_draw:
-                try:
-                    h, w = stdscr.getmaxyx()
-                except Exception:
-                    h, w = 24, 80
-                stdscr.erase()
-                body_y = _draw_kfiosa_header(
-                    stdscr,
-                    title="BLE SCAN",
-                    iface=adapter or "auto",
-                    online_n=len(online),
-                    offline_n=len(offline),
-                    err=scanner.last_error or "",
-                )
-                avail = max(6, h - body_y - 3)
-                h_on = max(4, (avail * 6) // 10)
-                h_off = max(3, avail - h_on)
-                _draw_table_block(
-                    stdscr, top=body_y, height=h_on, width=w, x=0,
-                    title="ONLINE DEVICES", items=online, idx=online_idx,
-                    row_fmt=format_ble_online, focused=(focus == "online"),
-                )
-                _draw_table_block(
-                    stdscr, top=body_y + h_on, height=h_off, width=w, x=0,
-                    title="OFFLINE / SEEN", items=offline, idx=offline_idx,
-                    row_fmt=format_ble_offline, focused=(focus == "offline"),
-                )
-                detail = detail_for_item(cur or {}, "ble") if cur else ""
-                n_cur = len(online) if focus == "online" else len(offline)
-                i_cur = online_idx if focus == "online" else offline_idx
-                _safe_add(stdscr, h - 3, 0, "─" * max(1, w - 1), _pair(6), w)
-                _safe_add(stdscr, h - 2, 0, detail, _pair(4), w)
-                _safe_add(
-                    stdscr, h - 1, 0,
-                    f" {HELP_BLE}  ·  focus={focus} "
-                    f"#{i_cur + 1}/{n_cur or 0}  ·  {msg}",
-                    _pair(3) | curses.A_BOLD, w,
-                )
-                try:
-                    stdscr.refresh()
-                except curses.error:
-                    pass
-                last_draw_t = now
-                last_draw_sig = draw_sig
+            _draw_table_block(
+                stdscr, top=body_y, height=avail, width=right_w, x=left_w,
+                title="DETAIL (focused device)", items=rows, idx=detail_idx,
+                row_fmt=format_kv_row, focused=(focus == "detail"),
+            )
+        else:
+            h_on = max(4, (avail * 6) // 10)
+            h_off = max(3, avail - h_on)
+            _draw_table_block(
+                stdscr, top=body_y, height=h_on, width=w, x=0,
+                title="ONLINE DEVICES", items=online, idx=online_idx,
+                row_fmt=format_ble_online, focused=(focus == "online"),
+                marked_id=marked,
+            )
+            _draw_table_block(
+                stdscr, top=body_y + h_on, height=h_off, width=w, x=0,
+                title="OFFLINE / SEEN", items=offline, idx=offline_idx,
+                row_fmt=format_ble_offline, focused=(focus == "offline"),
+                marked_id=marked,
+            )
+        detail = detail_for_item(dev or {}, "ble") if dev else ""
+        _safe_add(stdscr, h - 3, 0, "─" * max(1, w - 1), _pair(6), w)
+        _safe_add(stdscr, h - 2, 0, detail, _pair(4), w)
+        n_cur = (
+            len(online) if focus == "online"
+            else len(offline) if focus == "offline"
+            else len(rows)
+        )
+        i_cur = (
+            online_idx if focus == "online"
+            else offline_idx if focus == "offline"
+            else detail_idx
+        )
+        foot = (
+            f" {HELP_BLE}  ·  focus={focus} "
+            f"#{i_cur + 1}/{n_cur or 0}  ·  {msg}"
+        )
+        _safe_add(stdscr, h - 1, 0, foot, _pair(3) | curses.A_BOLD, w)
+        try:
+            stdscr.refresh()
+        except curses.error:
+            pass
+        last_draw_t = time.monotonic()
 
-            ch = _read_key(stdscr, timeout_ms=50)
-            if ch in (-1,):
-                continue
-            last_draw_sig = None
-            if ch in (3,):  # Ctrl+C
-                msg = "Ctrl+C — leaving live scan"
-                break
-            if ch in (9, ord("\t"), curses.KEY_RIGHT, curses.KEY_LEFT):
-                focus = "offline" if focus == "online" else "online"
-                msg = f"table={focus}"
-                continue
-            if ch in (ord("r"), ord("R")):
-                scanner.stop()
-                scanner = LiveBLEScanner(
-                    adapter=adapter, disappeared_timeout=120.0, pulse_s=8,
-                )
-                scanner.start()
-                msg = "rescanning… (still LIVE until q/Ctrl+C)"
-                continue
-            if ch in (ord("a"), ord("A")):
-                items = online if focus == "online" else offline
-                idx = online_idx if focus == "online" else offline_idx
-                if items:
-                    selected = dict(items[clamp_idx(idx, len(items))])
-                    aio = True
-                    break
-                if selected:
-                    aio = True
-                    break
-                msg = "nothing to select"
-                continue
+    def handle_key(ch: int) -> bool:
+        nonlocal focus, online_idx, offline_idx, detail_idx
+        nonlocal online_id, offline_id, selected, aio, msg, scanner
+        nonlocal detail_rows
 
+        if ch in (3,):
+            msg = "Ctrl+C — leaving live scan"
+            return True
+        order = ["online", "offline", "detail"]
+        if ch in (9, ord("\t"), curses.KEY_RIGHT):
+            focus = order[(order.index(focus) + 1) % len(order)]
+            msg = f"table={focus}"
+            return False
+        if ch in (curses.KEY_LEFT,):
+            focus = order[(order.index(focus) - 1) % len(order)]
+            msg = f"table={focus}"
+            return False
+        if ch in (ord("r"), ord("R")):
+            scanner.stop()
+            scanner = LiveBLEScanner(
+                adapter=adapter, disappeared_timeout=120.0, pulse_s=4,
+            )
+            scanner.sort_mode = "stable"
+            scanner.start()
+            msg = "rescanning… still LIVE"
+            return False
+        if ch in (ord("a"), ord("A")):
             items = online if focus == "online" else offline
             idx = online_idx if focus == "online" else offline_idx
-            n = len(items)
+            if focus == "detail":
+                items = online if online else offline
+                idx = online_idx if online else offline_idx
+            if items:
+                selected = dict(items[clamp_idx(idx, len(items))])
+                aio = True
+                return True
+            if selected:
+                aio = True
+                return True
+            msg = "nothing to select"
+            return False
 
-            if 0 <= ch < 256 and chr(ch).isdigit() and chr(ch) != "0":
-                jump = int(chr(ch)) - 1
-                if items and 0 <= jump < len(items):
-                    if focus == "online":
-                        online_idx = jump
-                        online_id = _item_id(items[jump])
-                    else:
-                        offline_idx = jump
-                        offline_id = _item_id(items[jump])
-                    msg = f"jump #{jump + 1}"
-                continue
-            if ch in (curses.KEY_HOME, ord("g")):
+        items = (
+            online if focus == "online"
+            else offline if focus == "offline"
+            else detail_rows
+        )
+        n = len(items)
+        idx = (
+            online_idx if focus == "online"
+            else offline_idx if focus == "offline"
+            else detail_idx
+        )
+
+        if 0 <= ch < 256 and chr(ch).isdigit() and chr(ch) != "0":
+            jump = int(chr(ch)) - 1
+            if items and 0 <= jump < len(items) and focus != "detail":
                 if focus == "online":
-                    online_idx = 0
-                    online_id = _item_id(online[0]) if online else ""
+                    online_idx, online_id = jump, _item_id(items[jump])
+                    detail_rows = _ble_detail_rows(items[jump])
+                    detail_idx = 0
                 else:
-                    offline_idx = 0
-                    offline_id = _item_id(offline[0]) if offline else ""
-                msg = "first"
-                continue
-            if ch in (curses.KEY_END, ord("G")):
-                if focus == "online" and online:
-                    online_idx = len(online) - 1
-                    online_id = _item_id(online[online_idx])
-                elif offline:
-                    offline_idx = len(offline) - 1
-                    offline_id = _item_id(offline[offline_idx])
-                msg = "last"
-                continue
-
-            if ch in (curses.KEY_UP, ord("k"), ord("K")):
-                new_idx = _move_idx(idx, n, -1)
-                act = None
-            elif ch in (curses.KEY_DOWN, ord("j"), ord("J")):
-                new_idx = _move_idx(idx, n, +1)
-                act = None
-            else:
-                new_idx, act = handle_nav_key(ch, idx, n)
-
+                    offline_idx, offline_id = jump, _item_id(items[jump])
+                    detail_rows = _ble_detail_rows(items[jump])
+                    detail_idx = 0
+                msg = f"jump #{jump + 1}"
+            return False
+        if ch in (curses.KEY_HOME, ord("g")):
             if focus == "online":
-                online_idx = new_idx
-                if online:
-                    online_id = _item_id(online[online_idx])
+                online_idx = 0
+                online_id = _item_id(online[0]) if online else ""
+            elif focus == "offline":
+                offline_idx = 0
+                offline_id = _item_id(offline[0]) if offline else ""
             else:
-                offline_idx = new_idx
-                if offline:
+                detail_idx = 0
+            msg = "first"
+            return False
+        if ch in (curses.KEY_END, ord("G")):
+            if focus == "online" and online:
+                online_idx = len(online) - 1
+                online_id = _item_id(online[online_idx])
+            elif focus == "offline" and offline:
+                offline_idx = len(offline) - 1
+                offline_id = _item_id(offline[offline_idx])
+            elif detail_rows:
+                detail_idx = len(detail_rows) - 1
+            msg = "last"
+            return False
+
+        if ch in (
+            curses.KEY_UP, ord("k"), ord("K"),
+            curses.KEY_DOWN, ord("j"), ord("J"),
+            curses.KEY_PPAGE, curses.KEY_NPAGE,
+        ):
+            steps = _drain_nav_burst(stdscr, ch)
+            if n > 0:
+                new_idx = _move_idx(idx, n, steps)
+                if focus == "online":
+                    online_idx = new_idx
+                    online_id = _item_id(online[online_idx])
+                    detail_rows = _ble_detail_rows(online[online_idx])
+                    detail_idx = 0
+                elif focus == "offline":
+                    offline_idx = new_idx
                     offline_id = _item_id(offline[offline_idx])
-            if act == "quit":
-                # leave live scan; keep marked selection if any
-                break
-            if act == "back":
-                selected = None
-                msg = "cleared"
-                continue
-            if act == "select":
-                # Mark but keep LIVE scanning
-                if not items:
-                    msg = "no devices"
-                    continue
-                selected = dict(items[clamp_idx(new_idx, len(items))])
-                msg = (
-                    f"MARKED {selected.get('name') or '?'} "
-                    f"[{selected.get('address')}] — A=AIO · q=done · still LIVE"
-                )
-                continue
-            if n > 0 and act is None and ch in (
-                curses.KEY_UP, curses.KEY_DOWN, ord("j"), ord("k"),
-                ord("J"), ord("K"),
-            ):
+                    detail_rows = _ble_detail_rows(offline[offline_idx])
+                    detail_idx = 0
+                else:
+                    detail_idx = new_idx
                 msg = f"#{new_idx + 1}/{n}"
+            return False
+
+        new_idx, act = handle_nav_key(ch, idx, n)
+        if focus == "online":
+            online_idx = new_idx
+            if online:
+                online_id = _item_id(online[online_idx])
+        elif focus == "offline":
+            offline_idx = new_idx
+            if offline:
+                offline_id = _item_id(offline[offline_idx])
+        else:
+            detail_idx = new_idx
+        if act == "quit":
+            return True
+        if act == "back":
+            selected = None
+            msg = "cleared"
+            return False
+        if act == "select":
+            if focus == "detail":
+                msg = "select a device (TAB → ONLINE)"
+                return False
+            items2 = online if focus == "online" else offline
+            if not items2:
+                msg = "no devices"
+                return False
+            selected = dict(items2[clamp_idx(new_idx, len(items2))])
+            msg = (
+                f"MARKED {selected.get('name') or '?'} "
+                f"[{selected.get('address')}] — A=AIO · q=done · still LIVE"
+            )
+            return False
+        return False
+
+    try:
+        _prepare_stdscr(stdscr, timeout_ms=KEY_TIMEOUT_MS)
+        refresh_catalog()
+        paint()
+        while True:
+            ch = _read_key(stdscr, timeout_ms=KEY_TIMEOUT_MS)
+            if ch != -1:
+                if handle_key(ch):
+                    break
+                paint()
+                continue
+            now = time.monotonic()
+            if (now - last_poll_t) >= BLE_POLL_S:
+                refresh_catalog()
+                last_poll_t = now
+                paint()
+            elif (now - last_draw_t) >= IDLE_PAINT_S:
+                paint()
     finally:
         try:
             scanner.stop()
@@ -875,9 +1044,9 @@ def run_embedded_ble_scan(
         except Exception:
             pass
 
-    devices_snapshot = list(last_online) + [
-        d for d in last_offline
-        if _item_id(d) not in {_item_id(x) for x in last_online}
+    devices_snapshot = list(online) + [
+        d for d in offline
+        if _item_id(d) not in {_item_id(x) for x in online}
     ]
     if selected:
         if adapter:
@@ -931,6 +1100,12 @@ __all__ = [
     "prefer_embedded_scan",
     "_item_id",
     "_idx_for_id",
+    "_move_idx",
+    "_drain_nav_burst",
+    "_clients_from_ap",
+    "_ble_detail_rows",
     "run_embedded_wifi_scan",
     "run_embedded_ble_scan",
+    "WIFI_POLL_S",
+    "BLE_POLL_S",
 ]

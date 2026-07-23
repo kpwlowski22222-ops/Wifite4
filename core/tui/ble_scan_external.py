@@ -119,8 +119,8 @@ class LiveBLEScanner:
     ):
         self.adapter = adapter
         self.disappeared_timeout = float(disappeared_timeout)
-        # Shorter pulses = snappier UI; discovery still continuous in bg
-        self.pulse_s = max(2, min(int(pulse_s), 6))
+        # Slow discovery pulses — bg thread only; UI never waits on a pulse
+        self.pulse_s = max(3, min(int(pulse_s), 5))
         self.device_catalog: Dict[str, Dict[str, Any]] = {}
         self.last_seen_ts: Dict[str, float] = {}
         self._thread: Optional[threading.Thread] = None
@@ -137,8 +137,10 @@ class LiveBLEScanner:
             Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]
         ] = None
         self._poll_cache_ts: float = 0.0
-        self._poll_cache_ttl: float = 0.15
+        self._poll_cache_ttl: float = 0.55
         self._catalog_gen: int = 0
+        # "stable" = first_seen/address (smooth); "rssi" = signal rank
+        self.sort_mode: str = "stable"
 
     def start(self) -> None:
         self._running = True
@@ -340,10 +342,20 @@ class LiveBLEScanner:
                 dev["status"] = "disappeared"
                 disappeared.append(dev)
 
-        online.sort(
-            key=lambda d: d.get("rssi") if d.get("rssi") is not None else -999,
-            reverse=True,
-        )
+        if getattr(self, "sort_mode", "stable") == "rssi":
+            online.sort(
+                key=lambda d: (
+                    d.get("rssi") if d.get("rssi") is not None else -999
+                ),
+                reverse=True,
+            )
+        else:
+            online.sort(
+                key=lambda d: (
+                    float(d.get("first_seen_ts") or 0.0),
+                    str(d.get("address") or ""),
+                )
+            )
         disappeared.sort(
             key=lambda d: d.get("last_seen_ts") or 0.0, reverse=True
         )

@@ -360,7 +360,10 @@ class LiveScanner:
         # Cache last partition so rapid UI polls are cheap when idle
         self._poll_cache: Optional[Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]] = None
         self._poll_cache_ts: float = 0.0
-        self._poll_cache_ttl: float = 0.12  # ~8 Hz max partition rebuild
+        # UI re-polls slowly; cache keeps partition cheap between CSV changes
+        self._poll_cache_ttl: float = 0.55
+        # "stable" = first_seen/bssid order (smooth cursor); "power" = strength
+        self.sort_mode: str = "stable"
 
     def start(self) -> None:
         self._running = True
@@ -401,10 +404,10 @@ class LiveScanner:
                 domain="wifi",
                 interface=str(self.iface or ""),
                 get_targets=_targets,
-                # Slower deep probes → less radio/CPU contention with airodump
-                deep_interval_s=8.0,
+                # Very slow deep probes — UI smoothness > enrich rate
+                deep_interval_s=14.0,
                 max_deep_per_tick=1,
-                max_deep_total=24,
+                max_deep_total=16,
             )
             self._enricher.start()
         except Exception as e:
@@ -715,7 +718,18 @@ class LiveScanner:
                 ap["status"] = "disappeared"
                 disappeared_aps.append(ap)
 
-        online_aps.sort(key=lambda a: a.get("power") or -999, reverse=True)
+        # Stable order keeps the cursor from fighting power re-sorts every poll
+        if getattr(self, "sort_mode", "stable") == "power":
+            online_aps.sort(
+                key=lambda a: a.get("power") or -999, reverse=True
+            )
+        else:
+            online_aps.sort(
+                key=lambda a: (
+                    float(a.get("first_seen_ts") or 0.0),
+                    str(a.get("bssid") or ""),
+                )
+            )
         disappeared_aps.sort(
             key=lambda a: a.get("last_seen_ts") or 0.0, reverse=True
         )

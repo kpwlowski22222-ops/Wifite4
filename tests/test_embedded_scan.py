@@ -263,6 +263,61 @@ def test_idx_for_id_stable_across_reorder():
     assert _idx_for_id(reordered, bid, 0) == 2
 
 
+def test_clients_follow_focus_not_enter():
+    """Clients panel is derived from focused AP without ENTER mark."""
+    from core.tui.embedded_scan import _clients_from_ap
+    ap = {
+        "bssid": "AA:BB:CC:DD:EE:FF",
+        "clients": ["11:22:33:44:55:66", {"mac": "AA:00:00:00:00:01"}],
+    }
+    cli = _clients_from_ap(ap)
+    assert len(cli) == 2
+    assert cli[0]["mac"] == "11:22:33:44:55:66"
+    assert _clients_from_ap(None) == []
+
+
+def test_ble_detail_rows_from_focus():
+    from core.tui.embedded_scan import _ble_detail_rows
+    rows = _ble_detail_rows({
+        "name": "sensor",
+        "address": "AA:BB:CC:DD:EE:FF",
+        "rssi": -55,
+        "services": ["HeartRate", "Battery"],
+        "vendor": "Test",
+    })
+    keys = {r["key"] for r in rows}
+    assert "name" in keys and "svc" in keys
+
+
+def test_wifi_stable_sort_mode():
+    import time
+    from core.tui.wifi_scan_external import LiveScanner
+    sc = LiveScanner("wlan0mon", disappeared_timeout=30.0)
+    sc.sort_mode = "stable"
+    now = time.time()
+    # stronger signal added second — stable order keeps first_seen
+    sc._merge_ap("AA:AA:AA:AA:AA:01", {
+        "bssid": "AA:AA:AA:AA:AA:01", "ssid": "weak", "power": -80,
+        "encryption": "WPA2", "clients": [], "clients_count": 0,
+    }, now)
+    sc._merge_ap("AA:AA:AA:AA:AA:02", {
+        "bssid": "AA:AA:AA:AA:AA:02", "ssid": "strong", "power": -30,
+        "encryption": "WPA2", "clients": [], "clients_count": 0,
+    }, now + 0.01)
+    online, _ = sc.poll()
+    assert online[0]["bssid"] == "AA:AA:AA:AA:AA:01"
+    sc.sort_mode = "power"
+    sc._poll_cache = None
+    online2, _ = sc.poll()
+    assert online2[0]["bssid"] == "AA:AA:AA:AA:AA:02"
+
+
+def test_poll_interval_slow():
+    from core.tui.embedded_scan import WIFI_POLL_S, BLE_POLL_S
+    assert WIFI_POLL_S >= 1.0
+    assert BLE_POLL_S >= 1.0
+
+
 def test_handle_nav_arrows_still_work():
     import curses
     from core.tui.scan_window_shell import handle_nav_key
