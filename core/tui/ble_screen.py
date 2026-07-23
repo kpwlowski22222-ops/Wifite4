@@ -307,8 +307,8 @@ class BLEScreen(BaseScreen):
                     f"{n_ok}/3 bus={bus_dir}"
                 )
                 self.activity_log.append(
-                    "[*] UL: devices live ↑↓ ENTER/SPACE · "
-                    "UR: detail · BR: offline + timestamps · Ctrl+C quit"
+                    "[*] UL: devices live ↑↓ ENTER/SPACE · BACKSPACE clear · q quit · "
+                    "UR: detail · BR: offline + timestamps"
                 )
 
                 def _wait_triple():

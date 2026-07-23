@@ -44,7 +44,12 @@ def humanize_event(msg: str, *, domain: str = "", target: Any = None) -> str:
     if not body.startswith("[") and not body.startswith("==="):
         return raw
 
-    # Access / success
+    # Access / success — keep AUTO→access latch markers searchable
+    if "auto→access" in low or "auto->access" in low:
+        return (
+            f"We're in on {tname}. AUTO→access cleared — further steps will "
+            f"prompt again (y ACCEPT / n CANCEL / a AUTO)."
+        )
     if "access achieved" in low or "engagement access" in low:
         return f"We're in on {tname}. Locking the path and preparing post-exploit."
     if "flask dashboard" in low and ("http://" in low or "https://" in low):

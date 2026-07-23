@@ -67,11 +67,29 @@ def read_json(path: Path) -> Dict[str, Any]:
 
 
 def update_state(bus_dir: Path, **fields: Any) -> Dict[str, Any]:
-    st = read_json(Path(bus_dir) / "state.json")
-    st.update(fields)
-    st["updated_at"] = time.time()
-    write_json(Path(bus_dir) / "state.json", st)
-    return st
+    """Merge fields into state.json under a short exclusive lock."""
+    bus_dir = Path(bus_dir)
+    lock_path = bus_dir / ".state.lock"
+    st_path = bus_dir / "state.json"
+    try:
+        import fcntl
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(lock_path, "a+", encoding="utf-8") as lf:
+            fcntl.flock(lf.fileno(), fcntl.LOCK_EX)
+            try:
+                st = read_json(st_path)
+                st.update(fields)
+                st["updated_at"] = time.time()
+                write_json(st_path, st)
+                return st
+            finally:
+                fcntl.flock(lf.fileno(), fcntl.LOCK_UN)
+    except Exception:
+        st = read_json(st_path)
+        st.update(fields)
+        st["updated_at"] = time.time()
+        write_json(st_path, st)
+        return st
 
 
 def set_selection(bus_dir: Path, dev: Dict[str, Any]) -> None:

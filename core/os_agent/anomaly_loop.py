@@ -32,12 +32,19 @@ def classify_anomaly(
         kind = "missing_tool"
     elif "429" in err or "rate limit" in err:
         kind = "rate_limit"
-    elif "permission" in err or "operation not permitted" in err:
+    elif (
+        event.get("permission")
+        or "permission" in err
+        or "operation not permitted" in err
+        or "adapter_blocked" in err
+        or "rfkill" in err
+        or "blocked" in err and "adapter" in err
+    ):
         kind = "permission"
+    elif event.get("empty_scan") or "no ap" in err or "no device" in err:
+        kind = "empty_scan"
     elif "failed" in err or event.get("ok") is False:
         kind = "step_failed"
-    elif event.get("empty_scan"):
-        kind = "empty_scan"
     return {
         "ok": True,
         "kind": kind,

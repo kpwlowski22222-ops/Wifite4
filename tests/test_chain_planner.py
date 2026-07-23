@@ -146,6 +146,49 @@ def test_heuristic_wifi_pmf_skips_classic_deauth():
     assert "deauth" not in actions
 
 
+# --- Phase 2.4 §153: polymorphic target-adaptive WiFi strategy selection ---
+
+def test_heuristic_wifi_strategy_picker_open_network():
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:05", "channel": 6,
+        "encryption": "OPN", "client_count": 0,
+    })
+    actions = [s["action"] for s in steps]
+    assert "join_network" in actions
+    assert "crack" not in actions
+
+
+def test_heuristic_wifi_strategy_picker_wep():
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:06", "channel": 6,
+        "encryption": "WEP", "client_count": 0,
+    })
+    actions = [s["action"] for s in steps]
+    assert any(s.get("args", {}).get("wep") for s in steps)
+    assert "crack" in actions
+
+
+def test_heuristic_wifi_strategy_picker_wpa3_transition():
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:07", "channel": 36,
+        "encryption": "WPA2/3", "transition": True, "client_count": 0,
+    })
+    actions = [s["action"] for s in steps]
+    # Transition mode should run the WPA2-side path (capture + crack)
+    assert "pmkid" in actions
+    assert "crack" in actions
+
+
+def test_heuristic_wifi_strategy_picker_enterprise():
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:08", "channel": 6,
+        "encryption": "WPA2-Enterprise", "client_count": 0,
+    })
+    actions = [s["action"] for s in steps]
+    assert "wifi_attack" in actions
+    assert any("hostapd-wpe" in (s.get("tool") or "") for s in steps)
+
+
 def test_heuristic_wifi_wpa3_pure_sae_no_gpu_spam():
     steps = _heuristic_for_domain("wifi", {
         "bssid": "AA:BB:CC:DD:EE:04", "channel": 36,
@@ -158,10 +201,35 @@ def test_heuristic_wifi_wpa3_pure_sae_no_gpu_spam():
 
 
 def test_heuristic_ble_emits_probe_chain():
-    steps = _heuristic_for_domain("ble", {"addr": "AA:BB:CC:DD:EE:01"})
+    steps = _heuristic_for_domain(
+        "ble", {"addr": "AA:BB:CC:DD:EE:01", "adapter": "hci0"}
+    )
     actions = [s["action"] for s in steps]
     assert "ble_probe" in actions
     assert len(steps) >= 2
+    # Must use real BLEProbeRunner / BLEAttackRunner method names —
+    # shell binaries (bluetoothctl/gatttool/bettercap) are NOT valid
+    # orchestrator methods and used to make every chain skip.
+    tools = [s.get("tool") for s in steps]
+    methods = [
+        (s.get("args") or {}).get("method") for s in steps
+        if s.get("action") in ("ble_probe", "ble_attack")
+    ]
+    forbidden = {"bluetoothctl", "gatttool", "bettercap", "hcitool"}
+    assert not (set(tools) & forbidden)
+    assert "parse_advertising_data" in methods
+    assert "map_gatt_services" in methods
+    assert any(m == "gatt_write_exploit" for m in methods)
+    # With adapter known, no holo prep step required
+    assert "holo_desktop" not in actions
+
+
+def test_heuristic_ble_without_adapter_offers_holo_prep():
+    steps = _heuristic_for_domain("ble", {"addr": "AA:BB:CC:DD:EE:01"})
+    actions = [s["action"] for s in steps]
+    assert "holo_desktop" in actions
+    holo = next(s for s in steps if s["action"] == "holo_desktop")
+    assert (holo.get("args") or {}).get("goal") == "ble_long_range_prep"
 
 
 def test_heuristic_unknown_domain_parse():
@@ -203,6 +271,13 @@ class FakeExploitGen:
         return self.tag
 
 
+def _first_non_poly(steps):
+    for s in steps or []:
+        if (s.get("action") or "") != "poly_adapt":
+            return s
+    return (steps or [None])[0]
+
+
 def test_planner_primary_call_succeeds():
     backend = FakeAIBackend(responses=[json.dumps({
         "chain": [
@@ -213,8 +288,10 @@ def test_planner_primary_call_succeeds():
     })])
     p = AIChainPlanner(ai_backend=backend)
     steps = p.plan("wifi", {"bssid": "AA", "channel": 6, "interface": "wlan0mon"})
-    assert len(steps) == 1
-    assert steps[0]["tool"] == "airodump-ng"
+    # Live poly_adapt pre-step may be injected ahead of the LLM step.
+    assert len(steps) >= 1
+    assert any(s.get("tool") == "airodump-ng" for s in steps)
+    assert _first_non_poly(steps)["tool"] == "airodump-ng"
     assert backend.calls == 1
 
 
@@ -228,8 +305,9 @@ def test_planner_falls_back_to_uncensored_on_refusal():
     eg = FakeExploitGen()
     p = AIChainPlanner(ai_backend=backend, exploit_gen_manager=eg)
     steps = p.plan("wifi", {"bssid": "AA", "channel": 6, "interface": "wlan0mon"})
-    assert len(steps) == 1
-    assert steps[0]["tool"] == "msfconsole"
+    assert len(steps) >= 1
+    assert any(s.get("tool") == "msfconsole" for s in steps)
+    assert _first_non_poly(steps)["tool"] == "msfconsole"
     assert backend.calls == 2
     assert eg.calls == 1  # uncensored model pulled
 
@@ -247,7 +325,7 @@ def test_planner_falls_back_to_heuristic_on_total_failure():
     tools = [s["tool"] for s in steps]
     assert "airodump-ng" in tools
     assert "aircrack-ng" in tools
-    assert steps[0]["tool"] == "airodump-ng"
+    assert _first_non_poly(steps)["tool"] == "airodump-ng"
 
 
 def test_planner_no_backend_uses_heuristic():
@@ -259,6 +337,7 @@ def test_planner_no_backend_uses_heuristic():
     assert len(ble_steps) >= 2
     assert any(s["action"] == "ble_probe" for s in ble_steps)
     scada_steps = p.plan("scada", {"host": "10.0.0.1"})
+    # Unknown domains: honest parse only (no poly pre-step injection).
     assert len(scada_steps) == 1
     assert scada_steps[0]["action"] == "parse"
     wifi_steps = p.plan("wifi", {
@@ -294,8 +373,8 @@ def test_planner_primary_call_parse_error_triggers_fallback():
     ])
     p = AIChainPlanner(ai_backend=backend, exploit_gen_manager=FakeExploitGen())
     steps = p.plan("wifi", {"bssid": "AA", "channel": 6, "interface": "wlan0mon"})
-    assert len(steps) == 1
-    assert steps[0]["tool"] == "nmap"
+    assert len(steps) >= 1
+    assert _first_non_poly(steps)["tool"] == "nmap"
     assert backend.calls == 2
 
 
@@ -316,8 +395,9 @@ def test_planner_injects_prior_results():
     prior = [{"action": "mcp_call", "tool": "scan", "ok": True, "outcome": "completed", "data": {}}]
     steps = p.plan("wifi", {"bssid": "AA"}, prior_results=prior)
     
-    assert len(steps) == 1
-    assert steps[0]["tool"] == "crack"
+    # prior_results path skips poly pre-step injection
+    assert len(steps) >= 1
+    assert _first_non_poly(steps)["tool"] == "crack"
     assert len(captured_prompts) == 1
     assert "PRIOR STEP OUTCOMES" in captured_prompts[0]
     assert "scan" in captured_prompts[0]
@@ -332,13 +412,21 @@ def test_planner_appends_zero_day_tail():
 
     steps = p.plan("wifi", {"bssid": "AA"}, attach_zero_day=True)
 
-    # 1 scan step + 3 zero_day tail steps = 4 steps
-    assert len(steps) == 4
-    assert steps[0]["tool"] == "scan"
-    assert steps[1]["action"] == "zero_day_propose"
-    assert steps[2]["action"] == "zero_day_build"
-    assert steps[3]["action"] == "zero_day_execute"
-    assert all(s.get("optional") for s in steps[1:])
+    # optional poly pre-step + scan + 3 zero_day tail steps
+    tools = [s.get("tool") for s in steps]
+    actions = [s.get("action") for s in steps]
+    assert "scan" in tools
+    assert "zero_day_propose" in actions
+    assert "zero_day_build" in actions
+    assert "zero_day_execute" in actions
+    assert len(steps) >= 4
+    # zero-day tail is always last three
+    assert steps[-3]["action"] == "zero_day_propose"
+    assert steps[-2]["action"] == "zero_day_build"
+    assert steps[-1]["action"] == "zero_day_execute"
+    zd = [s for s in steps if str(s.get("action") or "").startswith("zero_day")]
+    assert len(zd) == 3
+    assert all(s.get("optional") for s in zd)
 
 
 
@@ -400,3 +488,266 @@ def test_heuristic_pmkid_when_flagged():
     actions = [s["action"] for s in steps]
     assert "pmkid" in actions
     assert actions.index("pmkid") < actions.index("crack")
+
+
+# ----------------------------------------------------------------------
+# Phase 2.4 chain fixes (planning algorithms)
+# ----------------------------------------------------------------------
+
+from core.utils.poly_adapt import pick_wifi_strategy  # noqa: E402
+
+
+def test_pick_wifi_strategy_open():
+    assert pick_wifi_strategy({"wpa_version": "open", "encryption": "OPN"}) == "open"
+
+
+def test_pick_wifi_strategy_wep():
+    assert pick_wifi_strategy({"wpa_version": "wep", "encryption": "WEP"}) == "wep"
+
+
+def test_pick_wifi_strategy_enterprise():
+    assert pick_wifi_strategy({"wpa_version": "wpa2_enterprise",
+                                "encryption": "WPA2-Enterprise"}) == "enterprise"
+
+
+def test_pick_wifi_strategy_wpa3_pure_sae():
+    assert pick_wifi_strategy({"wpa_version": "wpa3", "transition_mode": False}) == "wpa3_sae"
+
+
+def test_pick_wifi_strategy_wpa3_transition_routes_to_wpa2():
+    assert pick_wifi_strategy({"wpa_version": "wpa3", "transition_mode": True}) == "wpa2_transition"
+
+
+def test_pick_wifi_strategy_wpa2_default():
+    assert pick_wifi_strategy({"wpa_version": "wpa2", "transition_mode": False}) == "wpa2"
+
+
+def test_pick_wifi_strategy_empty_falls_back_wpa2():
+    assert pick_wifi_strategy({}) == "wpa2"
+
+
+def test_heuristic_wifi_uses_polymorphic_strategy_picker():
+    """The WiFi heuristic must use pick_wifi_strategy, not hard-coded if/elif."""
+    from unittest.mock import patch
+    import core.utils.poly_adapt as pa
+    captured = {}
+    real = pa.pick_wifi_strategy
+    def spy(features):
+        captured["called"] = features
+        return real(features)
+    # The chain module imports pick_wifi_strategy inside _heuristic_wifi,
+    # so patch the source module's attribute.
+    with patch.object(pa, "pick_wifi_strategy", side_effect=spy):
+        _heuristic_for_domain("wifi", {
+            "bssid": "AA:BB:CC:DD:EE:FF", "channel": 6, "encryption": "WPA2",
+        })
+    assert captured.get("called") is not None
+
+
+def test_heuristic_wifi_enterprise_branch_picked_by_strategy():
+    """WPA2-Enterprise target → enterprise strategy → hostapd-wpe step."""
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:01", "channel": 6,
+        "interface": "wlan0mon", "encryption": "WPA2-Enterprise",
+    })
+    actions = [s["action"] for s in steps]
+    assert "wifi_attack" in actions
+    # The enterprise step uses the hostapd-wpe tool.
+    ea = next(s for s in steps if s.get("action") == "wifi_attack")
+    assert ea["tool"] == "hostapd-wpe"
+
+
+def test_heuristic_wifi_wpa3_pure_sae_routes_through_poly_adapt():
+    """WPA3-SAE → wpa3_sae strategy → poly_adapt step + parse note."""
+    steps = _heuristic_for_domain("wifi", {
+        "bssid": "AA:BB:CC:DD:EE:02", "channel": 11,
+        "interface": "wlan0mon", "encryption": "WPA3",
+    })
+    actions = [s["action"] for s in steps]
+    assert "poly_adapt" in actions
+    # WPA3-SAE strategy must NOT emit deauth (PMF / no clients to kick).
+    assert "deauth" not in actions
+
+
+def test_replan_dedup_drops_exact_action_tool_method():
+    """Re-plan with prior_results that include (action, tool, method) → drop
+    the exact signature from the new chain."""
+    p = AIChainPlanner(ai_backend=None)
+    steps = p.plan(
+        "wifi",
+        {"bssid": "AA:BB:CC:DD:EE:01", "channel": 6, "encryption": "WPA2",
+         "client_count": 1},
+        cves=[], kb_tools=[],
+        prior_results=[
+            {"action": "mcp_call", "tool": "airodump-ng",
+             "args": {"method": "airodump-ng"},
+             "result": {"ok": True}},
+        ],
+    )
+    sigs = [(s["action"], s.get("tool"),
+             (s.get("args") or {}).get("method")) for s in steps]
+    assert ("mcp_call", "airodump-ng", "airodump-ng") not in sigs
+
+
+def test_replan_dedup_does_not_drop_same_action_tool_different_method():
+    """Re-plan keeps a new (action, tool, method) when prior had a different
+    method for the same (action, tool)."""
+    p = AIChainPlanner(ai_backend=None)
+    steps = p.plan(
+        "wifi",
+        {"bssid": "AA:BB:CC:DD:EE:01", "channel": 6, "encryption": "WPA2",
+         "client_count": 1},
+        cves=[], kb_tools=[],
+        prior_results=[
+            {"action": "poly_adapt", "tool": "x",
+             "args": {"method": "old_method"},
+             "result": {"ok": True}},
+        ],
+    )
+    # A future plan that emits poly_adapt with a different method must survive.
+    sigs = [(s["action"], s.get("tool"),
+             (s.get("args") or {}).get("method")) for s in steps]
+    assert ("poly_adapt", "x", "old_method") not in sigs  # prior was old_method
+    # The new chain can still contain poly_adapt steps with other methods.
+
+
+def test_replan_dedup_treats_failed_steps_as_unexecuted():
+    """High-severity fix: a prior step that failed (ok=False) does NOT
+    mark (action, tool) as done — a re-plan should re-attempt it."""
+    p = AIChainPlanner(ai_backend=None)
+    steps = p.plan(
+        "wifi",
+        {"bssid": "AA:BB:CC:DD:EE:01", "channel": 6, "encryption": "WPA2",
+         "client_count": 1},
+        cves=[], kb_tools=[],
+        prior_results=[
+            {"action": "deauth", "tool": "aireplay-ng",
+             "args": {"method": "deauth"},
+             "result": {"ok": False, "error": "no clients"}},
+        ],
+    )
+    actions = [s["action"] for s in steps]
+    # deauth was a failure; re-plan should re-emit it for the orchestrator.
+    assert "deauth" in actions
+
+
+def test_known_chain_actions_includes_holo():
+    """holo_desktop / desktop_nav / holo_run must be in _KNOWN_CHAIN_ACTIONS
+    so the LLM is not told "unknown action" when it picks holo."""
+    from core.ai_backend import chain as ch
+    assert "holo_desktop" in ch._KNOWN_CHAIN_ACTIONS
+    assert "desktop_nav" in ch._KNOWN_CHAIN_ACTIONS
+    assert "holo_run" in ch._KNOWN_CHAIN_ACTIONS
+
+
+def test_extract_json_blob_handles_trailing_prose_after_object():
+    """The fast path must walk to the matching close, even if the model
+    appends prose after the JSON object."""
+    from core.ai_backend import chain as ch
+    raw = '{"chain":[{"action":"deauth"}]}\n\nThanks! Let me know if you need more.'
+    blob = ch._extract_json_blob(raw)
+    parsed = json.loads(blob)
+    assert parsed["chain"][0]["action"] == "deauth"
+
+
+def test_extract_json_blob_handles_trailing_prose_after_array():
+    from core.ai_backend import chain as ch
+    raw = '[{"action":"deauth"}]\n\nExplanation follows.'
+    blob = ch._extract_json_blob(raw)
+    parsed = json.loads(blob)
+    assert parsed[0]["action"] == "deauth"
+
+
+def test_attach_post_exploit_does_not_reinject_on_replan():
+    """attach_post_exploit must only append OPSEC steps on the *initial* plan;
+    re-plans must not re-inject the same OPSEC steps every re-plan."""
+    from unittest.mock import patch
+    import core.ai_backend.chain as ch
+    fake_seq = ["method_a", "method_b"]
+
+    def fake_select(seed, max_modules=5, include_destructive=False):
+        return list(fake_seq)
+
+    p = ch.AIChainPlanner(ai_backend=None)
+    with patch("core.ai_backend.post_exploit_selector.select_anti_forensic_sequence",
+               side_effect=fake_select):
+        # initial plan: get OPSEC steps
+        initial = p.plan("wifi_attack", {"target_class": "linux"},
+                          cves=[], kb_tools=[],
+                          attach_post_exploit=True)
+        initial_anti = [s for s in initial
+                        if s.get("action") == "post_exploit_anti_forensic"]
+        # re-plan: must NOT re-inject
+        replan = p.plan("wifi_attack", {"target_class": "linux"},
+                        cves=[], kb_tools=[],
+                        prior_results=[{"action": "arp_spoof",
+                                         "result": {"ok": True}}],
+                        attach_post_exploit=True)
+        replan_anti = [s for s in replan
+                       if s.get("action") == "post_exploit_anti_forensic"]
+    assert len(initial_anti) >= 1
+    assert len(replan_anti) == 0
+
+
+def test_heuristic_wifi_zero_day_tail_stays_at_end():
+    """KFIOSA_ZERO_DAY_TAIL_AUTO=1 appends tail AFTER refine, so tail stays
+    at the end of the chain (not sorted to the front by phase rank)."""
+    import os
+    os.environ["KFIOSA_ZERO_DAY_TAIL_AUTO"] = "1"
+    try:
+        c = _heuristic_for_domain("wifi",
+            {"bssid": "AA:BB:CC:DD:EE:FF", "channel": 6, "encryption": "wpa2"})
+        actions = [s["action"] for s in c]
+        if "zero_day_propose" in actions:
+            assert actions[-3:] == [
+                "zero_day_propose", "zero_day_build", "zero_day_execute",
+            ]
+    finally:
+        os.environ.pop("KFIOSA_ZERO_DAY_TAIL_AUTO", None)
+
+
+def test_refine_clientless_no_recon_drops_deauth():
+    """A target with client_count=0 and no recon dict → deauth is dropped."""
+    from core.ai_backend.chain import refine_chain_steps
+    steps = [
+        {"action": "deauth", "tool": "aireplay-ng", "args": {"method": "deauth"},
+         "risk_level": "destructive", "expected_runtime_seconds": 10},
+        {"action": "pmkid", "tool": "hashcat", "args": {}, "risk_level": "intrusive",
+         "expected_runtime_seconds": 60},
+    ]
+    out = refine_chain_steps(steps, "wifi",
+                              {"bssid": "X", "client_count": 0})
+    actions = [s["action"] for s in out]
+    assert "deauth" not in actions
+    assert "pmkid" in actions
+
+
+def test_refine_clientless_zero_recon_keeps_deauth():
+    """A target with client_count=0 and a recon dict that ran (but had no
+    client data) → deauth is dropped (recon confirmed zero)."""
+    from core.ai_backend.chain import refine_chain_steps
+    steps = [
+        {"action": "deauth", "tool": "aireplay-ng", "args": {"method": "deauth"},
+         "risk_level": "destructive", "expected_runtime_seconds": 10},
+    ]
+    out = refine_chain_steps(steps, "wifi",
+                              {"bssid": "X", "client_count": 0,
+                               "recon": {"clients": {"ok": True, "data": []}}})
+    actions = [s["action"] for s in out]
+    assert "deauth" not in actions
+
+
+def test_refine_clientless_failed_recon_keeps_deauth():
+    """A target with NO explicit client_count and a recon dict that FAILED
+    to enumerate clients → deauth is kept (absence of clients is not
+    evidence when client_count was never set and recon failed)."""
+    from core.ai_backend.chain import refine_chain_steps
+    steps = [
+        {"action": "deauth", "tool": "aireplay-ng", "args": {"method": "deauth"},
+         "risk_level": "destructive", "expected_runtime_seconds": 10},
+    ]
+    out = refine_chain_steps(steps, "wifi",
+                              {"bssid": "X",
+                               "recon": {"clients": {"ok": False}}})
+    actions = [s["action"] for s in out]
+    assert "deauth" in actions

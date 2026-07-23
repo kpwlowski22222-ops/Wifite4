@@ -22,6 +22,7 @@ def run_curses(bus_dir: Path) -> int:
 
     def on_select(dev: Dict[str, Any]) -> None:
         bus.set_selection(bus_dir, {**dev, "from_offline": True})
+        bus.request_quit(bus_dir)
 
     return run_list_loop(
         title="BLE OFFLINE  (history + timestamps)",

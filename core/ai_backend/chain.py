@@ -3154,13 +3154,24 @@ class AIChainPlanner:
 
         # Live poly pre-step: ensure first intrusive path is target-adaptive
         # when the LLM omitted poly_adapt (algorithmic skeleton always wins).
+        # Only for offensive domains; skip unknown/manual-only domains so a
+        # single honest parse step stays a single step.
         if steps and not prior_results:
             has_poly = any(
                 (s.get("action") or "") == "poly_adapt" for s in steps
                 if isinstance(s, dict)
             )
             pre = ctx.get("poly_pre_step") if isinstance(ctx.get("poly_pre_step"), dict) else None
-            if not has_poly and pre and pre.get("action"):
+            poly_domains = {
+                "wifi", "ble", "osint", "osint_web", "osint_people",
+                "post_exploit", "c2",
+            }
+            if (
+                not has_poly
+                and pre
+                and pre.get("action")
+                and (domain or "").lower() in poly_domains
+            ):
                 steps = [pre] + list(steps)
                 self._emit(
                     f"[chain-planner] injected live poly_adapt pre-step "

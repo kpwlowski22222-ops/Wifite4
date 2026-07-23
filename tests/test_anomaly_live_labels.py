@@ -19,6 +19,18 @@ def test_classify_and_design_port_in_use():
     assert d["moves"]
 
 
+def test_classify_adapter_blocked_as_permission():
+    a = classify_anomaly({
+        "error": "adapter_blocked",
+        "permission": True,
+        "domain": "wifi",
+    })
+    assert a["kind"] == "permission"
+    d = design_reaction({**a, "domain": "wifi"})
+    types = [m.get("type") for m in d["moves"]]
+    assert any(t in ("holo_preset", "holo_wifi_or_ble_prep", "suggest_sudo") for t in types)
+
+
 def test_react_to_anomaly_dry_run():
     r = react_to_anomaly(
         {"error": "timeout waiting", "elapsed_s": 99, "domain": "wifi"},

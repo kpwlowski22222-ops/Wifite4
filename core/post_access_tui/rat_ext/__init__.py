@@ -351,20 +351,26 @@ def build_session_roster(
     from . import rat_dynamic as _rd
 
     # Merge long-running people/website jobs into the operator roster.
+    # Opt out with KFIOSA_DASHBOARD_MERGE_JOBS=0 so hermetic tests stay empty.
     merged: List[Dict[str, Any]] = list(sessions or [])
-    try:
-        from .long_jobs import jobs_as_sessions
-        seen = {
-            (s.get("id") or s.get("session_id"))
-            for s in merged if isinstance(s, dict)
-        }
-        for js in jobs_as_sessions():
-            jid = js.get("id") or js.get("session_id")
-            if jid and jid not in seen:
-                merged.append(js)
-                seen.add(jid)
-    except Exception:
-        pass
+    merge_jobs = (
+        (os.environ.get("KFIOSA_DASHBOARD_MERGE_JOBS") or "1").strip().lower()
+        not in ("0", "false", "no", "off")
+    )
+    if merge_jobs:
+        try:
+            from .long_jobs import jobs_as_sessions
+            seen = {
+                (s.get("id") or s.get("session_id"))
+                for s in merged if isinstance(s, dict)
+            }
+            for js in jobs_as_sessions():
+                jid = js.get("id") or js.get("session_id")
+                if jid and jid not in seen:
+                    merged.append(js)
+                    seen.add(jid)
+        except Exception:
+            pass
 
     roster: List[Dict[str, Any]] = []
     for s in merged:
@@ -443,8 +449,10 @@ def _esc(s: str) -> str:
 def default_dashboard_html(roster: List[Dict[str, Any]]) -> str:
     """Render the universal multi-kind RAT dashboard (SQL tasks + sessions).
 
-    Primary UI is :mod:`dashboard_hub` (wifi / ble / osint_web / osint_people).
-    Falls back to rat_dynamic HTML, then a minimal page.
+    When the roster carries **capability menus** (post-access control plane),
+    prefer :mod:`rat_dynamic` so operators get PDF / shell / GATT actions.
+    Otherwise prefer :mod:`dashboard_hub` (wifi / ble / osint tabs + tasks).
+    Falls back to a minimal page.
     """
     tasks: List[Dict[str, Any]] = []
     try:
@@ -452,39 +460,57 @@ def default_dashboard_html(roster: List[Dict[str, Any]]) -> str:
         tasks = list_tasks(limit=200)
     except Exception:
         tasks = []
-    # Merge SQL sessions into roster for kind counts
+    # Merge SQL sessions into roster for kind counts / reconnect UX.
+    # Opt out with KFIOSA_DASHBOARD_MERGE_SQL=0 (tests / static dry-run).
     sessions = list(roster or [])
-    try:
-        from core.db import sqlstore
-        sqlstore.init()
-        for row in sqlstore.list_sessions(limit=200) or []:
-            if not isinstance(row, dict):
-                continue
-            sid = row.get("sid") or row.get("id")
-            if not sid:
-                continue
-            if any((s.get("id") or s.get("session_id")) == sid for s in sessions):
-                continue
-            sessions.append({
-                "id": sid,
-                "kind": row.get("kind") or "unknown",
-                "label": row.get("target") or sid,
-                "transport": row.get("kind") or "",
-                "achieved": set(),
-            })
-    except Exception:
-        pass
-    try:
-        from . import dashboard_hub as _hub
-        html = _hub.hub_html(sessions=sessions, tasks=tasks, active_kind="wifi")
+    merge_sql = (
+        (os.environ.get("KFIOSA_DASHBOARD_MERGE_SQL") or "1").strip().lower()
+        not in ("0", "false", "no", "off")
+    )
+    if merge_sql:
         try:
-            from . import v6_enhancements as _v6
-            html = _v6.inject_shell(html, sessions=sessions)
+            from core.db import sqlstore
+            sqlstore.init()
+            for row in sqlstore.list_sessions(limit=200) or []:
+                if not isinstance(row, dict):
+                    continue
+                sid = row.get("sid") or row.get("id")
+                if not sid:
+                    continue
+                if any((s.get("id") or s.get("session_id")) == sid for s in sessions):
+                    continue
+                sessions.append({
+                    "id": sid,
+                    "kind": row.get("kind") or "unknown",
+                    "label": row.get("target") or sid,
+                    "transport": row.get("kind") or "",
+                    "achieved": set(),
+                })
         except Exception:
             pass
-        return html
-    except Exception:
-        pass
+
+    # Capability-bearing rosters need the classic session control HTML.
+    force_ui = (os.environ.get("KFIOSA_DASHBOARD_UI") or "").strip().lower()
+    has_caps = any(
+        isinstance(r, dict) and (r.get("capabilities") or r.get("rat_menu"))
+        for r in (roster or [])
+    )
+    prefer_hub = force_ui in ("hub", "tasks") or (
+        force_ui not in ("classic", "session", "rat_dynamic") and not has_caps
+    )
+
+    if prefer_hub:
+        try:
+            from . import dashboard_hub as _hub
+            html = _hub.hub_html(sessions=sessions, tasks=tasks, active_kind="wifi")
+            try:
+                from . import v6_enhancements as _v6
+                html = _v6.inject_shell(html, sessions=sessions)
+            except Exception:
+                pass
+            return html
+        except Exception:
+            pass
     try:
         from . import rat_dynamic as _rd
         active = None
@@ -1612,27 +1638,33 @@ def spawn_rat_dashboard(
     if orchestrator is not None:
         set_dashboard_orchestrator(orchestrator)
     sess = list(sessions or [])
-    # Hydrate from SQL so reopening the tool shows prior sessions/tasks
-    try:
-        from core.db import sqlstore
-        sqlstore.init()
-        for row in sqlstore.list_sessions(limit=100) or []:
-            if not isinstance(row, dict):
-                continue
-            sid = row.get("sid") or row.get("id")
-            if not sid:
-                continue
-            if any((s.get("id") or s.get("session_id")) == sid for s in sess):
-                continue
-            sess.append({
-                "id": sid,
-                "kind": row.get("kind") or "unknown",
-                "label": row.get("target") or sid,
-                "transport": row.get("kind") or "",
-                "achieved": {"restored"},
-            })
-    except Exception:
-        pass
+    # Hydrate from SQL so reopening the tool shows prior sessions/tasks.
+    # Opt out with KFIOSA_DASHBOARD_MERGE_SQL=0 (hermetic tests / dry-run).
+    merge_sql = (
+        (os.environ.get("KFIOSA_DASHBOARD_MERGE_SQL") or "1").strip().lower()
+        not in ("0", "false", "no", "off")
+    )
+    if merge_sql:
+        try:
+            from core.db import sqlstore
+            sqlstore.init()
+            for row in sqlstore.list_sessions(limit=100) or []:
+                if not isinstance(row, dict):
+                    continue
+                sid = row.get("sid") or row.get("id")
+                if not sid:
+                    continue
+                if any((s.get("id") or s.get("session_id")) == sid for s in sess):
+                    continue
+                sess.append({
+                    "id": sid,
+                    "kind": row.get("kind") or "unknown",
+                    "label": row.get("target") or sid,
+                    "transport": row.get("kind") or "",
+                    "achieved": {"restored"},
+                })
+        except Exception:
+            pass
     if not sess and isinstance(report, dict):
         access = report.get("access") or {}
         if access.get("achieved") or access.get("session_id"):

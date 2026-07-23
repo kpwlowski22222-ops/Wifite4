@@ -23,6 +23,17 @@ os.environ.setdefault("KFIOSA_SMOKE", "0")
 os.environ.setdefault("KFIOSA_SKIP_NVD", "1")  # adaptive engagement: no live NVD
 os.environ.setdefault("GROQ_API_KEY", "")
 os.environ.setdefault("NVD_API_KEY", "")
+# KismetRunner requires operator-provided credentials; give tests a fake pair.
+os.environ.setdefault("KISMET_CLIENT_USERNAME", "unit-test-user")
+os.environ.setdefault("KISMET_CLIENT_PASSWORD", "unit-test-password")
+# Isolate dashboard roster/SQL/jobs from the operator's live ~/.kfiosa state.
+os.environ.setdefault("KFIOSA_DASHBOARD_MERGE_SQL", "0")
+os.environ.setdefault("KFIOSA_DASHBOARD_MERGE_JOBS", "0")
+# Per-test job dirs still override via fixtures; default away from home.
+if "KFIOSA_RAT_JOBS" not in os.environ:
+    _jobs = REPO_ROOT / ".pytest_rat_jobs"
+    _jobs.mkdir(exist_ok=True)
+    os.environ["KFIOSA_RAT_JOBS"] = str(_jobs)
 
 from tests.fakes import (  # noqa: E402
     FakeAIBackend, FakeBLEScanner, FakeCatalogRecon, FakeConfirmFn,

@@ -1097,8 +1097,8 @@ class WiFiScreen(BaseScreen):
                     f"({n_ok}/3) bus={bus_dir}"
                 )
                 self.activity_log.append(
-                    "[*] UL: APs live ↑↓ ENTER/SPACE select · "
-                    "UR: clients of focus · BR: offline + timestamps · Ctrl+C quit"
+                    "[*] UL: APs live ↑↓ ENTER/SPACE select · BACKSPACE clear · q quit · "
+                    "UR: clients of focus · BR: offline + timestamps"
                 )
                 self.activity_log.append(
                     "[*] Selecting an AP starts engagement automatically "

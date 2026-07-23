@@ -23,6 +23,7 @@ def run_curses(bus_dir: Path) -> int:
     def on_select(ap: Dict[str, Any]) -> None:
         # Offline select still records for operator review / re-engage
         bus.set_selection(bus_dir, {**ap, "from_offline": True})
+        bus.request_quit(bus_dir)
 
     return run_list_loop(
         title="APs OFFLINE  (history + timestamps)",

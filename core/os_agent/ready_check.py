@@ -59,11 +59,18 @@ def ready_check(*, domain: str = "wifi") -> Dict[str, Any]:
     else:
         critical = True
 
+    try:
+        from core.poly.target_score import full_auto_enabled
+        fa = full_auto_enabled()
+    except Exception:
+        fa = (os.environ.get("KFIOSA_FULL_AUTO") or "0").strip().lower() in (
+            "1", "true", "yes", "on",
+        )
     return {
         "ok": ok_all and critical,
         "critical_ok": critical,
         "checks": checks,
         "domain": domain,
-        "full_auto": (os.environ.get("KFIOSA_FULL_AUTO") or "0") in ("1", "true", "yes"),
+        "full_auto": fa,
         "model": "ready_check_v1",
     }

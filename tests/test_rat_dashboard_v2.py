@@ -644,7 +644,8 @@ class TestAutoPDF:
 
 class TestDashboardHTML:
     def test_dashboard_html_contains_pdf_button(self, rat_dashboard,
-                                                  sample_sessions):
+                                                  sample_sessions, monkeypatch):
+        monkeypatch.setenv("KFIOSA_DASHBOARD_MERGE_SQL", "0")
         roster = rat_dashboard.build_session_roster(sample_sessions)
         html = rat_dashboard.default_dashboard_html(roster)
         assert "KFIOSA" in html
@@ -654,12 +655,15 @@ class TestDashboardHTML:
         for s in sample_sessions:
             assert s["session_id"] in html
 
-    def test_dashboard_html_empty(self, rat_dashboard):
+    def test_dashboard_html_empty(self, rat_dashboard, monkeypatch):
+        monkeypatch.setenv("KFIOSA_DASHBOARD_MERGE_SQL", "0")
         html = rat_dashboard.default_dashboard_html([])
         assert "No active sessions" in html
 
     def test_dashboard_html_has_recommend_and_stream(self, rat_dashboard,
-                                                      sample_sessions):
+                                                      sample_sessions,
+                                                      monkeypatch):
+        monkeypatch.setenv("KFIOSA_DASHBOARD_MERGE_SQL", "0")
         roster = rat_dashboard.build_session_roster(sample_sessions)
         html = rat_dashboard.default_dashboard_html(roster)
         assert "recommend" in html
@@ -674,7 +678,8 @@ class TestDashboardHTML:
 
 
 class TestWSGIIntegration:
-    def test_root(self, rat_dashboard, sample_sessions):
+    def test_root(self, rat_dashboard, sample_sessions, monkeypatch):
+        monkeypatch.setenv("KFIOSA_DASHBOARD_MERGE_SQL", "0")
         roster = rat_dashboard.build_session_roster(sample_sessions)
         app = rat_dashboard._build_wsgi_app(roster, sessions=sample_sessions)
         r = _call(app, "/")
