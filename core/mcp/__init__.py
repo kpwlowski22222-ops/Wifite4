@@ -32,10 +32,16 @@ Exposed tools (MCP ``tools/call``):
     search_tools(query, limit?)                -> scored search
     get_tool_usage(name, source?)              -> full record (usage/entry points)
     run_tool(command, timeout?, cwd?)          -> gated subprocess execution
+    call_tool(name, args?)                     -> schema'd Kali/mt7921e/cve wrappers
+    catalog_sync / catalog_stats / catalog_list / catalog_search /
+    catalog_get / catalog_run / catalog_surfaces / catalog_merge_registry
+    catalog.<name>                             -> per-entry virtual tools (when expanded)
 
 Exposed resources (MCP ``resources/read``):
     registry://summary                         -> build stats
     tool://<source>/<name>                     -> one tool record
+    catalog://summary                          -> SQL/json catalog stats
+    catalog://entry/<id>                       -> one catalog entry
 """
 
 import json
@@ -55,7 +61,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 PROTOCOL_VERSION = "2024-11-05"
-SERVER_INFO = {"name": "kfiosa-tool-mcp", "version": "1.0.0"}
+SERVER_INFO = {"name": "kfiosa-tool-mcp", "version": "1.2.0"}
 
 
 # ---------------------------------------------------------------------------
@@ -98,30 +104,101 @@ def t_list_tools(args: Dict[str, Any]) -> Dict[str, Any]:
     domain = args.get("domain")
     source = args.get("source")
     limit = int(args.get("limit", 50))
+    include_catalog = str(args.get("include_catalog", "1")).lower() not in (
+        "0", "false", "no", "off",
+    )
     tools = reg.tools
     if domain:
         tools = [t for t in tools if t.get("domain") == domain]
     if source:
         tools = [t for t in tools if t.get("source") == source]
     out = [_public_record(t) for t in tools[:limit]]
-    # Also surface the schema'd MCP tool wrappers (Kali + mt7921e.* +
-    # cve_lookup). The new AI chain uses these directly.
+    # Schema'd MCP tool wrappers (Kali + mt7921e.* + cve_lookup).
     try:
         from core.mcp.tools import list_mcp_tools
         out.extend(list_mcp_tools(domain=domain))
     except Exception as e:
         logger.debug(f"mcp.tools.list_mcp_tools failed: {e}")
-    return {"count": len(out[:limit]), "tools": out[:limit]}
+    # Every catalog entry from SQL/json (paginated)
+    catalog_meta = {}
+    if include_catalog and (not source or source == "catalog"):
+        try:
+            from core.mcp.catalog_bridge import list_catalog_tools
+            cat = list_catalog_tools(
+                domain=domain or "",
+                limit=min(limit, 500),
+                offset=int(args.get("catalog_offset") or 0),
+            )
+            catalog_meta = {
+                "catalog_source": cat.get("source"),
+                "catalog_total_estimate": cat.get("total_estimate"),
+                "catalog_count": cat.get("count"),
+            }
+            for t in cat.get("tools") or []:
+                out.append({
+                    "name": t.get("mcp_name") or t.get("name"),
+                    "source": "catalog",
+                    "domain": t.get("domain"),
+                    "path": t.get("toolbox_path") or t.get("path"),
+                    "url": t.get("url"),
+                    "description": t.get("description"),
+                    "usage": t.get("usage") or [],
+                    "entry_points": t.get("entry_points") or [],
+                    "id": t.get("id"),
+                    "kind": t.get("kind"),
+                    "attack_surface": t.get("attack_surface"),
+                })
+        except Exception as e:
+            logger.debug(f"catalog list failed: {e}")
+            catalog_meta = {"catalog_error": str(e)[:120]}
+    return {
+        "count": len(out[: max(limit, 500)]),
+        "tools": out[: max(limit, 500)],
+        **catalog_meta,
+    }
 
 
 def t_search_tools(args: Dict[str, Any]) -> Dict[str, Any]:
     query = args.get("query", "")
     if not query:
         return {"error": "query required"}
+    limit = int(args.get("limit", 20))
     reg = _registry()
-    results = reg.search(query, limit=int(args.get("limit", 20)))
-    return {"query": query, "count": len(results),
-            "tools": [_public_record(t) for t in results]}
+    results = reg.search(query, limit=limit)
+    out = [_public_record(t) for t in results]
+    # Catalog SQL/json FTS
+    try:
+        from core.mcp.catalog_bridge import list_catalog_tools
+        cat = list_catalog_tools(text=query, limit=limit)
+        for t in cat.get("tools") or []:
+            out.append({
+                "name": t.get("mcp_name") or t.get("name"),
+                "source": "catalog",
+                "domain": t.get("domain"),
+                "path": t.get("toolbox_path") or t.get("path"),
+                "url": t.get("url"),
+                "description": t.get("description"),
+                "usage": t.get("usage") or [],
+                "entry_points": t.get("entry_points") or [],
+                "id": t.get("id"),
+                "kind": t.get("kind"),
+            })
+    except Exception as e:
+        logger.debug(f"catalog search failed: {e}")
+    # Dedupe by name+source
+    seen = set()
+    deduped = []
+    for t in out:
+        key = f"{t.get('source')}:{t.get('name')}"
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(t)
+    return {
+        "query": query,
+        "count": len(deduped[:limit]),
+        "tools": deduped[:limit],
+    }
 
 
 def t_get_tool_usage(args: Dict[str, Any]) -> Dict[str, Any]:
@@ -137,25 +214,61 @@ def t_get_tool_usage(args: Dict[str, Any]) -> Dict[str, Any]:
             return rec
     except Exception as e:
         logger.debug(f"mcp.tools.get_mcp_tool failed: {e}")
+    # Catalog entry (id or catalog.name)
+    if (source in (None, "", "catalog")
+            or str(name).startswith("catalog.")
+            or ":" in str(name)
+            or str(name).startswith("github")):
+        try:
+            from core.mcp.catalog_bridge import get_catalog_tool
+            got = get_catalog_tool(name)
+            if got.get("ok"):
+                return {"ok": True, **(got.get("tool") or {}), "source": "catalog"}
+        except Exception as e:
+            logger.debug(f"catalog get failed: {e}")
     reg = _registry()
     # Match by name, optionally narrowed by source.
     for t in reg.tools:
         if t.get("name") == name and (not source or t.get("source") == source):
             return _public_record(t)
+        if t.get("mcp_name") == name:
+            return _public_record(t)
     return {"error": f"tool not found: {name}"}
 
 
 def t_call_tool(args: Dict[str, Any]) -> Dict[str, Any]:
-    """Invoke a schema'd MCP tool (Kali / mt7921e.* / cve_lookup)."""
+    """Invoke a schema'd MCP tool (Kali / mt7921e.* / cve) or catalog entry."""
     name = args.get("name")
     if not name:
         return {"error": "name required"}
-    try:
-        from core.mcp.tools import call_mcp_tool
-    except Exception as e:  # noqa: BLE001
-        return {"ok": False, "error": f"mcp.tools import: {e}"}
     tool_args = args.get("args") or {}
     timeout = int(args.get("timeout", 30))
+    # Catalog virtual tools
+    if str(name).startswith("catalog.") or str(name).startswith("github:"):
+        try:
+            from core.mcp.catalog_bridge import run_catalog_tool
+            return run_catalog_tool(
+                name, args=tool_args, timeout=timeout,
+                command=str(tool_args.get("command") or ""),
+            )
+        except Exception as e:
+            return {"ok": False, "error": str(e)[:160]}
+    try:
+        from core.mcp.tools import call_mcp_tool, get_mcp_tool
+    except Exception as e:  # noqa: BLE001
+        return {"ok": False, "error": f"mcp.tools import: {e}"}
+    if get_mcp_tool(name) is not None:
+        return call_mcp_tool(name, tool_args, timeout=timeout)
+    # Fallback: treat as catalog name
+    try:
+        from core.mcp.catalog_bridge import run_catalog_tool, get_catalog_tool
+        if get_catalog_tool(name).get("ok"):
+            return run_catalog_tool(
+                name, args=tool_args, timeout=timeout,
+                command=str(tool_args.get("command") or ""),
+            )
+    except Exception:
+        pass
     return call_mcp_tool(name, tool_args, timeout=timeout)
 
 
@@ -251,6 +364,97 @@ MCP_TOOLS: List[Dict[str, Any]] = [
             },
         },
     },
+    {
+        "name": "call_tool",
+        "description": "Invoke a schema'd wrapper (Kali/mt7921e/cve) or catalog tool.",
+        "inputSchema": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+                "name": {"type": "string"},
+                "args": {"type": "object"},
+                "timeout": {"type": "integer", "default": 120},
+            },
+        },
+    },
+    {
+        "name": "catalog_sync",
+        "description": "Ingest all catalog/*.json into SQLite for fast MCP listing.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "force": {"type": "boolean", "default": False},
+                "max_files": {"type": "integer", "default": 0},
+            },
+        },
+    },
+    {
+        "name": "catalog_stats",
+        "description": "Catalog coverage stats (SQL vs disk file count).",
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "catalog_list",
+        "description": "List every catalog tool from SQL/json (paginated).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "domain": {"type": "string"},
+                "surface": {"type": "string"},
+                "kind": {"type": "string"},
+                "text": {"type": "string"},
+                "limit": {"type": "integer", "default": 100},
+                "offset": {"type": "integer", "default": 0},
+                "prefer": {"type": "string", "description": "sql|memory|json"},
+            },
+        },
+    },
+    {
+        "name": "catalog_search",
+        "description": "FTS/search across all catalog tools (SQL preferred).",
+        "inputSchema": {
+            "type": "object",
+            "required": ["query"],
+            "properties": {
+                "query": {"type": "string"},
+                "surface": {"type": "string"},
+                "limit": {"type": "integer", "default": 30},
+            },
+        },
+    },
+    {
+        "name": "catalog_get",
+        "description": "Get one catalog entry by id, name, or catalog.* mcp name.",
+        "inputSchema": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {"name": {"type": "string"}},
+        },
+    },
+    {
+        "name": "catalog_run",
+        "description": "Run a catalog tool entry point (gated: KFIOSA_MCP_ALLOW_EXEC=1).",
+        "inputSchema": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+                "name": {"type": "string"},
+                "argv": {"type": "string"},
+                "command": {"type": "string"},
+                "timeout": {"type": "integer", "default": 120},
+            },
+        },
+    },
+    {
+        "name": "catalog_surfaces",
+        "description": "List attack_surface buckets and counts from catalog SQL.",
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "catalog_merge_registry",
+        "description": "Merge all catalog tools into data/tool_registry.json.",
+        "inputSchema": {"type": "object", "properties": {}},
+    },
 ]
 
 # Append schema'd wrappers (Kali tools, mt7921e.*, cve_lookup) at module
@@ -267,12 +471,102 @@ except Exception:
     # The legacy `run_tool` path is still usable.
     pass
 
+# Expand virtual per-entry catalog tools when SQL is ready (cap via env).
+try:  # noqa: E402
+    _exp = (os.environ.get("KFIOSA_MCP_EXPAND_CATALOG") or "1").strip().lower()
+    if _exp not in ("0", "false", "no", "off"):
+        from core.mcp.catalog_bridge import expand_mcp_tool_records
+        _cap = int(os.environ.get("KFIOSA_MCP_CATALOG_EXPAND_LIMIT") or "800")
+        for _rec in expand_mcp_tool_records(limit=_cap):
+            if isinstance(_rec, dict) and _rec.get("name"):
+                MCP_TOOLS.append(_rec)
+except Exception:
+    pass
+
+
+def t_catalog_sync(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import sync_catalog_to_sql
+    return sync_catalog_to_sql(
+        force=bool(args.get("force")),
+        max_files=int(args.get("max_files") or 0),
+    )
+
+
+def t_catalog_stats(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import catalog_source_stats
+    return catalog_source_stats()
+
+
+def t_catalog_list(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import list_catalog_tools
+    return list_catalog_tools(
+        domain=str(args.get("domain") or ""),
+        surface=str(args.get("surface") or ""),
+        kind=str(args.get("kind") or ""),
+        text=str(args.get("text") or ""),
+        limit=int(args.get("limit") or 100),
+        offset=int(args.get("offset") or 0),
+        prefer=str(args.get("prefer") or ""),
+    )
+
+
+def t_catalog_search(args: Dict[str, Any]) -> Dict[str, Any]:
+    q = args.get("query") or args.get("text") or ""
+    if not q:
+        return {"error": "query required"}
+    from core.mcp.catalog_bridge import list_catalog_tools
+    return list_catalog_tools(
+        text=str(q),
+        surface=str(args.get("surface") or ""),
+        limit=int(args.get("limit") or 30),
+    )
+
+
+def t_catalog_get(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import get_catalog_tool
+    return get_catalog_tool(str(args.get("name") or ""))
+
+
+def t_catalog_run(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import run_catalog_tool
+    return run_catalog_tool(
+        str(args.get("name") or ""),
+        args={"argv": args.get("argv")},
+        timeout=int(args.get("timeout") or 120),
+        command=str(args.get("command") or ""),
+    )
+
+
+def t_catalog_surfaces(args: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        from core.catalog.sql_store import list_surfaces, sql_ready
+        if sql_ready():
+            return {"ok": True, "source": "sql", "surfaces": list_surfaces()}
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:160]}
+    st = t_catalog_stats({})
+    return {"ok": True, "source": st.get("source"), "stats": st}
+
+
+def t_catalog_merge_registry(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import merge_into_registry
+    return merge_into_registry()
+
+
 _TOOL_DISPATCH = {
     "list_tools": t_list_tools,
     "search_tools": t_search_tools,
     "get_tool_usage": t_get_tool_usage,
     "run_tool": t_run_tool,
     "call_tool": t_call_tool,
+    "catalog_sync": t_catalog_sync,
+    "catalog_stats": t_catalog_stats,
+    "catalog_list": t_catalog_list,
+    "catalog_search": t_catalog_search,
+    "catalog_get": t_catalog_get,
+    "catalog_run": t_catalog_run,
+    "catalog_surfaces": t_catalog_surfaces,
+    "catalog_merge_registry": t_catalog_merge_registry,
 }
 
 
@@ -281,7 +575,10 @@ _TOOL_DISPATCH = {
 # ---------------------------------------------------------------------------
 def resources_list() -> List[Dict[str, Any]]:
     reg = _registry()
-    out = [{"uri": "registry://summary", "name": "Registry summary"}]
+    out = [
+        {"uri": "registry://summary", "name": "Registry summary"},
+        {"uri": "catalog://summary", "name": "Catalog SQL/json summary"},
+    ]
     for t in reg.tools[:500]:  # cap to keep the list manageable
         src = t.get("source", "x")
         name = t.get("name", "?")
@@ -290,6 +587,19 @@ def resources_list() -> List[Dict[str, Any]]:
             "name": f"{src}:{name}",
             "mimeType": "application/json",
         })
+    # Catalog entries as resources
+    try:
+        from core.mcp.catalog_bridge import list_catalog_tools
+        cat = list_catalog_tools(limit=300)
+        for t in cat.get("tools") or []:
+            eid = t.get("id") or t.get("name") or "?"
+            out.append({
+                "uri": f"catalog://entry/{eid}",
+                "name": t.get("mcp_name") or eid,
+                "mimeType": "application/json",
+            })
+    except Exception:
+        pass
     return out
 
 
@@ -300,8 +610,21 @@ def resources_read(uri: str) -> str:
             "total": len(reg.tools),
             "by_domain": reg._by_domain_counts(),
             "sources": {s: sum(1 for t in reg.tools if t.get("source") == s)
-                        for s in ("toolbox", "kali", "kali-dpkg", "venv")},
+                        for s in ("toolbox", "kali", "kali-dpkg", "venv", "catalog")},
         }, indent=2)
+    if uri == "catalog://summary":
+        try:
+            from core.mcp.catalog_bridge import catalog_source_stats
+            return json.dumps(catalog_source_stats(), indent=2, default=str)
+        except Exception as e:
+            return json.dumps({"error": str(e)})
+    if uri.startswith("catalog://entry/"):
+        eid = uri[len("catalog://entry/"):]
+        try:
+            from core.mcp.catalog_bridge import get_catalog_tool
+            return json.dumps(get_catalog_tool(eid), indent=2, default=str)
+        except Exception as e:
+            return json.dumps({"error": str(e)})
     if uri.startswith("tool://"):
         rest = uri[len("tool://"):]
         if "/" in rest:
@@ -309,6 +632,12 @@ def resources_read(uri: str) -> str:
             for t in reg.tools:
                 if t.get("source") == src and t.get("name") == name:
                     return json.dumps(_public_record(t), indent=2)
+            if src == "catalog":
+                try:
+                    from core.mcp.catalog_bridge import get_catalog_tool
+                    return json.dumps(get_catalog_tool(name), indent=2, default=str)
+                except Exception as e:
+                    return json.dumps({"error": str(e)})
         return json.dumps({"error": "resource not found"})
     return json.dumps({"error": "unknown resource"})
 
@@ -354,15 +683,55 @@ def handle_request(req: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         return _result(req_id, {"tools": MCP_TOOLS})
     if method == "tools/call":
         name = params.get("name")
-        if name not in _TOOL_DISPATCH:
-            return _error(req_id, -32602, f"unknown tool: {name}")
         try:
-            out = _TOOL_DISPATCH[name](args)
+            if name in _TOOL_DISPATCH:
+                out = _TOOL_DISPATCH[name](args)
+            elif name and (
+                str(name).startswith("catalog.")
+                or str(name).startswith("github:")
+                or str(name).startswith("kali:")
+            ):
+                # Virtual per-entry catalog tool
+                from core.mcp.catalog_bridge import run_catalog_tool
+                out = run_catalog_tool(
+                    name,
+                    args=args if isinstance(args, dict) else {},
+                    timeout=int((args or {}).get("timeout") or 120),
+                    command=str((args or {}).get("command") or ""),
+                )
+            else:
+                # Try schema'd wrappers then catalog by plain name
+                try:
+                    from core.mcp.tools import call_mcp_tool, get_mcp_tool
+                    if get_mcp_tool(name) is not None:
+                        out = call_mcp_tool(
+                            name,
+                            args if isinstance(args, dict) else {},
+                            timeout=int((args or {}).get("timeout") or 30),
+                        )
+                    else:
+                        from core.mcp.catalog_bridge import (
+                            run_catalog_tool, get_catalog_tool,
+                        )
+                        if get_catalog_tool(name).get("ok"):
+                            out = run_catalog_tool(
+                                name,
+                                args=args if isinstance(args, dict) else {},
+                                timeout=int((args or {}).get("timeout") or 120),
+                                command=str((args or {}).get("command") or ""),
+                            )
+                        else:
+                            return _error(req_id, -32602, f"unknown tool: {name}")
+                except Exception:
+                    return _error(req_id, -32602, f"unknown tool: {name}")
             # MCP expects content blocks; wrap structured data as text.
             return _result(req_id, {
                 "content": [{"type": "text",
                              "text": json.dumps(out, indent=2, default=str)}],
-                "isError": bool(isinstance(out, dict) and out.get("error")),
+                "isError": bool(
+                    isinstance(out, dict)
+                    and (out.get("error") or out.get("blocked"))
+                ),
             })
         except Exception as e:
             logger.exception("tool call failed")
@@ -518,6 +887,16 @@ def self_test() -> int:
                         "params": {"name": "run_tool",
                                    "arguments": {"command": "echo hi"}}})
     print(json.loads(r["result"]["content"][0]["text"]))
+    print("=== tools/call catalog_stats ===")
+    r = handle_request({"jsonrpc": "2.0", "id": 9, "method": "tools/call",
+                        "params": {"name": "catalog_stats", "arguments": {}}})
+    print(json.loads(r["result"]["content"][0]["text"]))
+    print("=== tools/call catalog_list(limit=2) ===")
+    r = handle_request({"jsonrpc": "2.0", "id": 10, "method": "tools/call",
+                        "params": {"name": "catalog_list",
+                                   "arguments": {"limit": 2}}})
+    print("catalog_list count",
+          json.loads(r["result"]["content"][0]["text"]).get("count"))
     print("=== resources/list (first 3) ===")
     print(handle_request({"jsonrpc": "2.0", "id": 7,
                           "method": "resources/list"})["result"]["resources"][:3])
@@ -525,6 +904,11 @@ def self_test() -> int:
     r = handle_request({"jsonrpc": "2.0", "id": 8,
                         "method": "resources/read",
                         "params": {"uri": "registry://summary"}})
+    print(r["result"]["contents"][0]["text"][:200])
+    print("=== resources/read catalog://summary ===")
+    r = handle_request({"jsonrpc": "2.0", "id": 11,
+                        "method": "resources/read",
+                        "params": {"uri": "catalog://summary"}})
     print(r["result"]["contents"][0]["text"][:200])
     print("=== notifications/initialized (should be None) ===")
     print(handle_request({"jsonrpc": "2.0", "method": "notifications/initialized"}))

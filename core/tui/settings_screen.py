@@ -745,14 +745,31 @@ class SettingsScreen(BaseScreen):
         self.activity_log.append(
             "    an Ollama MCP bridge, custom agents). It offers:"
         )
-        self.activity_log.append("    tools: list_tools, search_tools, get_tool_usage, run_tool")
-        self.activity_log.append("    resources: registry://summary, tool://<source>/<name>")
+        self.activity_log.append(
+            "    tools: list_tools, search_tools, get_tool_usage, run_tool, call_tool"
+        )
+        self.activity_log.append(
+            "    catalog: catalog_sync, catalog_list, catalog_search, "
+            "catalog_get, catalog_run, catalog_stats, catalog_merge_registry"
+        )
+        self.activity_log.append(
+            "    + catalog.<name> virtual tools for every catalog/ entry (SQL)"
+        )
+        self.activity_log.append(
+            "    resources: registry://summary, catalog://summary, "
+            "catalog://entry/<id>, tool://…"
+        )
         self.activity_log.append("[i] Start it in a separate terminal:")
         self.activity_log.append("    source .venv/bin/activate && python -m core.mcp_server")
+        self.activity_log.append("[i] Ingest catalog → SQL (once / when catalog grows):")
+        self.activity_log.append(
+            "    python -c \"from core.mcp.catalog_bridge import sync_catalog_to_sql; "
+            "print(sync_catalog_to_sql())\""
+        )
         self.activity_log.append("[i] Self-test (no client needed):")
         self.activity_log.append("    python -m core.mcp_server --self-test")
         self.activity_log.append(
-            "[!] run_tool is gated (default-deny); enable with"
+            "[!] run_tool / catalog_run gated; enable with"
         )
         self.activity_log.append("    KFIOSA_MCP_ALLOW_EXEC=1 python -m core.mcp_server")
 
