@@ -108,6 +108,7 @@ class LiveBLEScanner:
         self._lock = threading.Lock()
         self._did_prep = False
         self._scanner = None
+        self._enricher: Optional[Any] = None
 
     def start(self) -> None:
         self._running = True
@@ -115,6 +116,24 @@ class LiveBLEScanner:
         self._did_prep = False
         self._thread = threading.Thread(target=self._loop, daemon=True)
         self._thread.start()
+        # Passive polymorphic enrich (OUI, badges, name gaps) while UI is open
+        try:
+            from core.scanners.live_enrich import LiveTargetEnricher
+
+            def _targets() -> List[Dict[str, Any]]:
+                with self._lock:
+                    return list(self.device_catalog.values())
+
+            self._enricher = LiveTargetEnricher(
+                domain="ble",
+                interface=str(self.adapter or ""),
+                get_targets=_targets,
+                deep_interval_s=6.0,
+                max_deep_per_tick=0,  # BLE stays passive live
+            )
+            self._enricher.start()
+        except Exception:
+            self._enricher = None
 
     def _loop(self) -> None:
         while self._running:
@@ -178,6 +197,11 @@ class LiveBLEScanner:
             entry["address"] = addr
             entry["vendor"] = vendor
             entry["first_seen_ts"] = now
+            try:
+                from core.scanners.live_enrich import passive_enrich_ble
+                passive_enrich_ble(entry)
+            except Exception:
+                pass
             self.device_catalog[addr] = entry
         else:
             cur = self.device_catalog[addr]
@@ -195,7 +219,7 @@ class LiveBLEScanner:
                     services.append(s)
             cur["services"] = services
             for k in ("manufacturer_data", "tx_power", "address_type",
-                      "backend", "seen_by"):
+                      "backend", "seen_by", "connectable", "service_uuids"):
                 if dev.get(k) not in (None, "", [], {}):
                     if k == "seen_by":
                         merged = set(cur.get("seen_by") or [])
@@ -204,6 +228,11 @@ class LiveBLEScanner:
                         cur["seen_by"] = sorted(merged)
                     else:
                         cur[k] = dev[k]
+            try:
+                from core.scanners.live_enrich import passive_enrich_ble
+                passive_enrich_ble(cur)
+            except Exception:
+                pass
         self.last_seen_ts[addr] = now
 
     def poll(self) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
@@ -221,6 +250,11 @@ class LiveBLEScanner:
             dev["last_seen_ts"] = last_ts
             vendor = dev.get("vendor") or _get_oui_vendor(addr)
             dev["vendor"] = vendor
+            try:
+                from core.scanners.live_enrich import passive_enrich_ble
+                passive_enrich_ble(dev)
+            except Exception:
+                pass
             svc_n = len(dev.get("services") or [])
             dev["recon_info"] = {
                 "vendor": vendor,
@@ -229,6 +263,8 @@ class LiveBLEScanner:
                 "rssi": dev.get("rssi"),
                 "last_seen_ago": dev["last_seen_ago"],
                 "seen_by": list(dev.get("seen_by") or []),
+                "badges": list(dev.get("recon_badges") or []),
+                "enrich_methods": list(dev.get("enrich_methods") or []),
             }
             if (now - last_ts) <= self.disappeared_timeout:
                 dev["status"] = "online"
@@ -248,6 +284,12 @@ class LiveBLEScanner:
 
     def stop(self) -> None:
         self._running = False
+        try:
+            if getattr(self, "_enricher", None) is not None:
+                self._enricher.stop()
+        except Exception:
+            pass
+        self._enricher = None
         if self._thread and self._thread.is_alive():
             self._thread.join(timeout=2.0)
         self._thread = None

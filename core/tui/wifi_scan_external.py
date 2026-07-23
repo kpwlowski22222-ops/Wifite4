@@ -306,7 +306,11 @@ def scan_networks(iface: str, seconds: int = 12) -> List[Dict[str, Any]]:
 
 
 class LiveScanner:
-    """Manages live background WiFi scanning via airodump-ng or fallback scanner."""
+    """Manages live background WiFi scanning via airodump-ng or fallback scanner.
+
+    Also runs a polymorphic :class:`LiveTargetEnricher` so each AP accumulates
+    vendor / PMF / hidden-SSID / WPS / client OUI data while the UI is open.
+    """
 
     def __init__(self, iface: str, disappeared_timeout: float = 6.0):
         self.iface = iface
@@ -324,6 +328,8 @@ class LiveScanner:
         self.prep_notes: List[str] = []
         self._stderr_path: Optional[Path] = None
         self._stderr_fh: Optional[Any] = None
+        self._catalog_lock = threading.RLock()
+        self._enricher: Optional[Any] = None
 
     def start(self) -> None:
         self._running = True
@@ -352,6 +358,25 @@ class LiveScanner:
 
         self.prefix = self.outdir / f"live_scan_{int(time.time())}_{os.getpid()}"
         self._stderr_path = self.outdir / f"{self.prefix.name}.err"
+        # Polymorphic live recon (hidden SSID, WPS, OUI, flags) in background
+        try:
+            from core.scanners.live_enrich import LiveTargetEnricher
+
+            def _targets() -> List[Dict[str, Any]]:
+                with self._catalog_lock:
+                    return list(self.ap_catalog.values())
+
+            self._enricher = LiveTargetEnricher(
+                domain="wifi",
+                interface=str(self.iface or ""),
+                get_targets=_targets,
+                deep_interval_s=5.0,
+                max_deep_per_tick=1,
+            )
+            self._enricher.start()
+        except Exception as e:
+            self.prep_notes.append(f"live enrich off: {e}")
+            self._enricher = None
         berlin = 300
         cmd_variants = [
             [
@@ -489,29 +514,41 @@ class LiveScanner:
 
     def _merge_ap(self, bssid: str, ap: Dict[str, Any], now: float) -> None:
         bssid_upper = bssid.upper()
-        if bssid_upper not in self.ap_catalog:
-            vendor = _get_oui_vendor(bssid_upper)
-            ap["vendor"] = vendor
-            ap["first_seen_ts"] = now
-            ap["bssid"] = bssid_upper
-            self.ap_catalog[bssid_upper] = ap
-        else:
-            cur = self.ap_catalog[bssid_upper]
-            if ap.get("ssid") and ap.get("ssid") != "<hidden>":
-                cur["ssid"] = ap["ssid"]
-            if ap.get("channel"):
-                cur["channel"] = ap["channel"]
-            if ap.get("power"):
-                cur["power"] = ap["power"]
-            if ap.get("encryption"):
-                cur["encryption"] = ap["encryption"]
-                cur["enc"] = ap["encryption"]
-            if "clients" in ap:
-                cur["clients"] = ap["clients"]
-                cur["clients_count"] = ap["clients_count"]
-            if ap.get("beacons"):
-                cur["beacons"] = ap["beacons"]
-        self.last_seen_ts[bssid_upper] = now
+        with self._catalog_lock:
+            if bssid_upper not in self.ap_catalog:
+                vendor = _get_oui_vendor(bssid_upper)
+                ap["vendor"] = vendor
+                ap["first_seen_ts"] = now
+                ap["bssid"] = bssid_upper
+                try:
+                    from core.scanners.live_enrich import passive_enrich_wifi
+                    passive_enrich_wifi(ap)
+                except Exception:
+                    pass
+                self.ap_catalog[bssid_upper] = ap
+            else:
+                cur = self.ap_catalog[bssid_upper]
+                # Never overwrite a revealed SSID with <hidden>
+                if ap.get("ssid") and ap.get("ssid") != "<hidden>":
+                    cur["ssid"] = ap["ssid"]
+                if ap.get("channel"):
+                    cur["channel"] = ap["channel"]
+                if ap.get("power"):
+                    cur["power"] = ap["power"]
+                if ap.get("encryption"):
+                    cur["encryption"] = ap["encryption"]
+                    cur["enc"] = ap["encryption"]
+                if "clients" in ap:
+                    cur["clients"] = ap["clients"]
+                    cur["clients_count"] = ap["clients_count"]
+                if ap.get("beacons"):
+                    cur["beacons"] = ap["beacons"]
+                try:
+                    from core.scanners.live_enrich import passive_enrich_wifi
+                    passive_enrich_wifi(cur)
+                except Exception:
+                    pass
+            self.last_seen_ts[bssid_upper] = now
 
     def poll(self) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         now = time.time()
@@ -538,19 +575,33 @@ class LiveScanner:
         online_aps: List[Dict[str, Any]] = []
         disappeared_aps: List[Dict[str, Any]] = []
 
-        for bssid, ap in self.ap_catalog.items():
+        with self._catalog_lock:
+            items = list(self.ap_catalog.items())
+        for bssid, ap in items:
             last_ts = self.last_seen_ts.get(bssid, 0.0)
             ago = max(0, int(now - last_ts))
             ap["last_seen_ago"] = f"{ago}s ago"
             ap["last_seen_ts"] = last_ts
             vendor = ap.get("vendor") or _get_oui_vendor(bssid)
             ap["vendor"] = vendor
+            try:
+                from core.scanners.live_enrich import passive_enrich_wifi
+                passive_enrich_wifi(ap)
+            except Exception:
+                pass
             ap["recon_info"] = {
                 "vendor": vendor,
                 "clients_count": len(ap.get("clients") or []),
                 "clients": ap.get("clients") or [],
                 "beacons": ap.get("beacons") or 0,
                 "last_seen_ago": ap["last_seen_ago"],
+                "badges": list(ap.get("recon_badges") or []),
+                "enrich_methods": list(ap.get("enrich_methods") or []),
+                "revealed_ssid": ap.get("revealed_ssid"),
+                "hidden": ap.get("hidden"),
+                "pmf": ap.get("pmf") or ap.get("pmf_supported"),
+                "band": ap.get("band"),
+                "wps_enabled": ap.get("wps_enabled"),
             }
             if (now - last_ts) <= self.disappeared_timeout:
                 ap["status"] = "online"
@@ -567,6 +618,12 @@ class LiveScanner:
 
     def stop(self) -> None:
         self._running = False
+        try:
+            if self._enricher is not None:
+                self._enricher.stop()
+        except Exception:
+            pass
+        self._enricher = None
         if self.proc:
             try:
                 self.proc.terminate()

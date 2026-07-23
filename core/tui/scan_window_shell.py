@@ -38,20 +38,40 @@ def clamp_idx(idx: int, n: int) -> int:
     return max(0, min(int(idx), n - 1))
 
 
+def _wifi_ssid_label(ap: Dict[str, Any], width: int = 16) -> str:
+    """Prefer revealed ESSID; mark still-hidden clearly."""
+    if ap.get("revealed_ssid"):
+        return str(ap["revealed_ssid"])[:width]
+    ssid = str(ap.get("ssid_display") or ap.get("ssid") or "?")
+    if ap.get("hidden") or ssid in ("<hidden>", "?", "hidden", ""):
+        return "<hidden>"[:width]
+    return ssid[:width]
+
+
+def _badge_tail(item: Dict[str, Any], max_n: int = 4) -> str:
+    badges = item.get("recon_badges") or []
+    if not badges:
+        return ""
+    return " " + " ".join(str(b) for b in badges[:max_n])
+
+
 def format_wifi_online(ap: Dict[str, Any]) -> str:
     bssid = str(ap.get("bssid") or "")[:17]
-    ssid = str(ap.get("ssid") or "?")[:16]
+    ssid = _wifi_ssid_label(ap, 16)
     ch = str(ap.get("channel") or "?")
     enc = str(ap.get("encryption") or ap.get("enc") or "?")[:8]
     pwr = str(ap.get("power") if ap.get("power") is not None else "")
     cli = str(ap.get("clients_count") or len(ap.get("clients") or []))
-    pmf = "PMF" if ap.get("pmf") or ap.get("pmf_supported") else ""
-    return f"{bssid}  {ssid:<16} ch={ch:<3} {enc:<8} pwr={pwr:<4} cli={cli} {pmf}"
+    vendor = str(ap.get("vendor") or "")[:10]
+    return (
+        f"{bssid}  {ssid:<16} ch={ch:<3} {enc:<8} pwr={pwr:<4} "
+        f"cli={cli} {vendor}{_badge_tail(ap)}"
+    )
 
 
 def format_wifi_offline(ap: Dict[str, Any]) -> str:
     bssid = str(ap.get("bssid") or "")[:17]
-    ssid = str(ap.get("ssid") or "?")[:14]
+    ssid = _wifi_ssid_label(ap, 14)
     last = _fmt_ts(ap.get("last_seen_ts") or ap.get("disappeared_at"))
     first = _fmt_ts(ap.get("first_seen_ts"))
     enc = str(ap.get("encryption") or ap.get("enc") or "")[:8]
@@ -63,19 +83,22 @@ def format_wifi_offline(ap: Dict[str, Any]) -> str:
         except Exception:
             dur = None
     dur_s = f"{dur}s" if dur is not None else "-"
+    vendor = str(ap.get("vendor") or "")[:10]
     return (
         f"{bssid}  {ssid:<14} last={last} first={first} "
-        f"{enc} ch={ch} seen={dur_s}"
+        f"{enc} ch={ch} seen={dur_s} {vendor}{_badge_tail(ap, 3)}"
     )
 
 
 def format_ble_online(dev: Dict[str, Any]) -> str:
     addr = str(dev.get("address") or dev.get("addr") or "")[:17]
     name = str(dev.get("name") or dev.get("local_name") or "?")[:16]
+    if dev.get("name_missing") and name in ("?", "Unknown", ""):
+        name = "<noname>"
     rssi = str(dev.get("rssi") if dev.get("rssi") is not None else "?")
     vendor = str(dev.get("vendor") or "")[:12]
     conn = "conn" if dev.get("connectable") else ""
-    return f"{addr}  {name:<16} rssi={rssi:<5} {vendor} {conn}"
+    return f"{addr}  {name:<16} rssi={rssi:<5} {vendor} {conn}{_badge_tail(dev)}"
 
 
 def format_ble_offline(dev: Dict[str, Any]) -> str:
@@ -85,7 +108,10 @@ def format_ble_offline(dev: Dict[str, Any]) -> str:
     first = _fmt_ts(dev.get("first_seen_ts"))
     rssi = dev.get("rssi")
     vendor = str(dev.get("vendor") or "")[:10]
-    return f"{addr}  {name:<14} last={last} first={first} rssi={rssi} {vendor}"
+    return (
+        f"{addr}  {name:<14} last={last} first={first} "
+        f"rssi={rssi} {vendor}{_badge_tail(dev, 3)}"
+    )
 
 
 def format_client_row(cli: Dict[str, Any]) -> str:
@@ -117,27 +143,40 @@ def _fmt_ts(ts: Any) -> str:
 
 
 def detail_for_item(item: Dict[str, Any], kind: str = "wifi") -> str:
-    """Multi-field detail strip for selected/highlighted target."""
+    """Multi-field detail strip for selected/highlighted target (incl. live recon)."""
     if not item:
         return ""
+    extra = ""
+    try:
+        from core.scanners.live_enrich import format_enrich_detail
+        extra = format_enrich_detail(item, kind=kind)
+    except Exception:
+        extra = ""
     if kind.startswith("ble"):
-        return (
+        base = (
             f"addr={item.get('address') or item.get('addr')}  "
             f"name={item.get('name') or item.get('local_name')}  "
             f"rssi={item.get('rssi')}  vendor={item.get('vendor')}  "
             f"connectable={item.get('connectable')}  "
+            f"uuids={item.get('uuid_count') or len(item.get('services') or [])}  "
             f"first={_fmt_ts(item.get('first_seen_ts'))}  "
             f"last={_fmt_ts(item.get('last_seen_ts'))}"
         )
-    return (
-        f"bssid={item.get('bssid')}  ssid={item.get('ssid')}  "
-        f"ch={item.get('channel')}  enc={item.get('encryption') or item.get('enc')}  "
+        return f"{base}  {extra}".strip()
+    ssid = item.get("revealed_ssid") or item.get("ssid")
+    base = (
+        f"bssid={item.get('bssid')}  ssid={ssid}  "
+        f"ch={item.get('channel')}  band={item.get('band')}  "
+        f"enc={item.get('encryption') or item.get('enc')}  "
         f"pwr={item.get('power')}  pmf={item.get('pmf') or item.get('pmf_supported')}  "
+        f"hidden={item.get('hidden')}  "
         f"vendor={item.get('vendor')}  "
+        f"wps={item.get('wps_enabled')}  "
         f"first={_fmt_ts(item.get('first_seen_ts'))}  "
         f"last={_fmt_ts(item.get('last_seen_ts'))}  "
         f"clients={item.get('clients_count') or len(item.get('clients') or [])}"
     )
+    return f"{base}  {extra}".strip()
 
 
 def _theme_pair(n: int) -> int:

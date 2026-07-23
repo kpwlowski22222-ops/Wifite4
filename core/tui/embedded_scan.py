@@ -35,10 +35,10 @@ from core.tui.scan_window_shell import (
 logger = logging.getLogger(__name__)
 
 HELP_WIFI = (
-    "↑↓/jk move · ←→/TAB tables · 1-9 jump · ENTER/SPACE select · A AIO · r rescan · q back"
+    "↑↓/jk move · ←→/TAB · 1-9 · ENTER select · A AIO · r rescan · q back · bg RECON live"
 )
 HELP_BLE = (
-    "↑↓/jk move · ←→/TAB tables · 1-9 jump · ENTER/SPACE select · A AIO · r rescan · q back"
+    "↑↓/jk move · ←→/TAB · 1-9 · ENTER select · A AIO · r rescan · q back · bg RECON live"
 )
 
 
@@ -252,13 +252,25 @@ def run_embedded_wifi_scan(
             except Exception:
                 h, w = 24, 80
             stdscr.erase()
+            enrich_note = ""
+            try:
+                enr = getattr(scanner, "_enricher", None)
+                if enr is not None:
+                    st = enr.snapshot_stats()
+                    enrich_note = (
+                        f"recon deep={st.get('deep_ok', 0)}/"
+                        f"{st.get('deep_count', 0)} "
+                        f"pass={st.get('passive_ticks', 0)}"
+                    )
+            except Exception:
+                pass
             body_y = _draw_kfiosa_header(
                 stdscr,
                 title="WiFi SCAN",
                 iface=scanner.iface or iface,
                 online_n=len(online),
                 offline_n=len(offline),
-                err=scanner.last_error or "",
+                err=scanner.last_error or enrich_note,
             )
             # Layout: left 60% online+offline stacked, right 40% clients
             avail = max(6, h - body_y - 3)
