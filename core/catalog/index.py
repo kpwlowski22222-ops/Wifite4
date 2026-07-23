@@ -126,7 +126,11 @@ def build_index(catalog_dir: Optional[Path] = None,
         if not catalog_dir.exists():
             return {"ok": False, "error": f"catalog dir not found: {catalog_dir}"}
         count = 0
-        for path in catalog_dir.glob("github_*.json"):
+        # Index all catalog JSON (github_*, kali_*, pypi_*, …) except schema
+        _skip = {"catalog.schema.json", "catalog.txt", "catalog.min.json"}
+        for path in catalog_dir.glob("*.json"):
+            if path.name in _skip:
+                continue
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     data = json.load(f)
@@ -149,24 +153,32 @@ def build_index(catalog_dir: Optional[Path] = None,
         return {"ok": False, "error": f"build_index: {e}"}
 
 
-def search(attack_surface: str = "",
-           phase_hint: str = "",
-           tag: str = "",
-           text: str = "",
-           limit: int = 50,
-           catalog_dir: Optional[Path] = None) -> List[Dict[str, Any]]:
-    """Search the catalog index.
-
-    Returns a list of entry dicts that match the filters.  The
-    filters are AND-combined.  An empty filter matches everything.
-
-    Lookup is O(1) on the triple index when ``attack_surface``
-    and ``phase_hint`` are set; O(1) on the tag index when
-    ``tag`` is set; O(n / vocab) on the fulltext index when
-    ``text`` is set.
-    """
+def search_memory(attack_surface: str = "",
+                  phase_hint: str = "",
+                  tag: str = "",
+                  text: str = "",
+                  limit: int = 50,
+                  catalog_dir: Optional[Path] = None) -> List[Dict[str, Any]]:
+    """In-memory index search only (no SQL router — safe for internal use)."""
     if _INDEX.get("count", 0) == 0:
         build_index(catalog_dir)
+    return _search_memory_impl(
+        attack_surface=attack_surface,
+        phase_hint=phase_hint,
+        tag=tag,
+        text=text,
+        limit=limit,
+    )
+
+
+def _search_memory_impl(
+    *,
+    attack_surface: str = "",
+    phase_hint: str = "",
+    tag: str = "",
+    text: str = "",
+    limit: int = 50,
+) -> List[Dict[str, Any]]:
     paths: Optional[List[str]] = None
     if attack_surface and phase_hint:
         key = f"{attack_surface.lower()}|{phase_hint.lower()}"
@@ -212,6 +224,55 @@ def search(attack_surface: str = "",
         if len(out) >= limit:
             break
     return out
+
+
+def search(attack_surface: str = "",
+           phase_hint: str = "",
+           tag: str = "",
+           text: str = "",
+           limit: int = 50,
+           catalog_dir: Optional[Path] = None,
+           prefer: str = "") -> List[Dict[str, Any]]:
+    """Search catalog — SQL when ready (router), else in-memory index.
+
+    Set ``prefer`` to ``sql`` / ``memory`` / ``json`` to force a source.
+    """
+    prefer = (prefer or "").strip().lower()
+    if prefer in ("memory", "json"):
+        return search_memory(
+            attack_surface=attack_surface,
+            phase_hint=phase_hint,
+            tag=tag,
+            text=text,
+            limit=limit,
+            catalog_dir=catalog_dir,
+        )
+    # Prefer SQL via router (no recursion — fetch uses search_memory)
+    try:
+        from core.catalog.source_router import fetch as catalog_fetch
+        routed = catalog_fetch(
+            attack_surface=attack_surface,
+            phase_hint=phase_hint,
+            tag=tag,
+            text=text,
+            limit=limit,
+            prefer=prefer or "",
+            catalog_dir=catalog_dir,
+        )
+        if routed.get("ok") and routed.get("source_used") == "sql":
+            return list(routed.get("results") or [])
+        if routed.get("ok") and routed.get("results") is not None:
+            return list(routed.get("results") or [])
+    except Exception:  # noqa: BLE001
+        pass
+    return search_memory(
+        attack_surface=attack_surface,
+        phase_hint=phase_hint,
+        tag=tag,
+        text=text,
+        limit=limit,
+        catalog_dir=catalog_dir,
+    )
 
 
 def index_stats() -> Dict[str, Any]:

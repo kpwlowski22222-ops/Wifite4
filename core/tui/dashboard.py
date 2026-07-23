@@ -118,6 +118,20 @@ class KfiosaDashboard:
         self.stdscr.timeout(100)
         self.stdscr.keypad(True)
 
+        # Catalog SQL bg counts / incremental ingest (optional NPU accel)
+        try:
+            if os.getenv("KFIOSA_CATALOG_BG", "0").strip().lower() in (
+                "1", "true", "yes", "on",
+            ):
+                from core.catalog.bg_stats import start_background
+                bg = start_background(interval_s=180.0)
+                self.activity_log.append(
+                    f"[i] Catalog SQL bg stats "
+                    f"accel={bg.get('accel')} interval=180s"
+                )
+        except Exception as e:
+            logger.debug("catalog bg start: %s", e)
+
         # Auto-start the MCP server in the background (unless disabled).
         # Done last so a failure here never blocks the TUI from coming up.
         self._start_mcp()
