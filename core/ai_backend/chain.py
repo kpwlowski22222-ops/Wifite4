@@ -116,6 +116,11 @@ def _build_zero_day_algorithms_prompt_stanza() -> str:
         "  draft that the operator ACKs or rejects. The destructive\n"
         "  follow-up (PoC compile, run, exploitation) is OUT OF SCOPE\n"
         "  for these steps — the operator runs them in the lab.\n"
+        "  ALL algorithms are POLYMORPHIC: at dispatch, target features\n"
+        "  pick a variant (depth/focus/tool_order); results carry a\n"
+        "  ``polymorphic`` envelope. Failures auto-retry an alternate\n"
+        "  variant. Pass ``poly_variant`` / ``poly_exclude`` in args to\n"
+        "  steer; ``poly_disable`` turns wrapping off for one call.\n"
         "  Choose the algorithm based on what recon has surfaced:\n",
     ]
     # Group the actions by surface so the LLM can find the right one.

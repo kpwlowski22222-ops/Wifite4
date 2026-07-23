@@ -1181,9 +1181,34 @@ def _choice_from_algo(algo_id: str, reason: str, source: str,
 def _choice_from_type(type_id: str, reason: str, source: str,
                       preferred_algo: Optional[str] = None,
                       complexity: float = 0.0,
-                      hybrid: bool = False) -> ThinkingChoice:
+                      hybrid: bool = False,
+                      context: Optional[Dict[str, Any]] = None) -> ThinkingChoice:
     t = DEEP_THINKING_TYPES[type_id]
     algo_id = preferred_algo if preferred_algo in t.algorithm_ids else t.algorithm_ids[0]
+    # Polymorphic sub-algorithm pick within the type (feature-scored)
+    if preferred_algo is None and len(t.algorithm_ids) > 1:
+        try:
+            from core.ai_backend.algorithm_poly import pick_variant, poly_enabled
+            if poly_enabled():
+                ctx = context if isinstance(context, dict) else {}
+                pick = pick_variant(
+                    f"thinking_{type_id}",
+                    target=ctx.get("target") if isinstance(ctx.get("target"), dict) else ctx,
+                    recon=ctx.get("recon") if isinstance(ctx.get("recon"), dict) else {},
+                    args={"domain": ctx.get("domain"), "complexity": complexity},
+                )
+                # Map poly depth → algorithm index within type
+                depth = str(pick.knobs.get("depth") or "medium")
+                ids = list(t.algorithm_ids)
+                if depth == "shallow":
+                    algo_id = ids[0]
+                elif depth == "deep":
+                    algo_id = ids[-1]
+                else:
+                    algo_id = ids[min(1, len(ids) - 1)]
+                reason = f"{reason} [poly:{pick.variant}/{depth}]"
+        except Exception:  # noqa: BLE001
+            pass
     return _choice_from_algo(algo_id, reason, source, complexity=complexity, hybrid=hybrid)
 
 
@@ -1420,6 +1445,7 @@ def resolve_override(
                 reason=f"override type={key}",
                 source="override",
                 preferred_algo=preferred,
+                context=ctx,
             )
     return None
 
@@ -1833,6 +1859,7 @@ def apply_deep_thinking(
                 reason=f"forced type={forced_type}",
                 source="forced",
                 complexity=complexity,
+                context=context if isinstance(context, dict) else None,
             )
             choice = _enrich_choice(
                 choice,

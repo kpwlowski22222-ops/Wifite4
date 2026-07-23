@@ -90,12 +90,30 @@ def _llm_query(ai_backend, domain: str, prompt: str,
                context: Optional[Dict[str, Any]] = None) -> str:
     """Issue a strict-JSON LLM query. Injects the system prompt
     on the backend for the duration of the call. Returns the raw
-    text. Never raises (callers check for empty / non-JSON)."""
+    text. Never raises (callers check for empty / non-JSON).
+
+    When ``context`` carries ``args`` with ``_poly`` knobs, appends a
+    polymorphic variant hint so the model varies technique under the
+    selected grammar.
+    """
     if ai_backend is None:
         raise RuntimeError("no AI backend wired into zero-day algorithm")
     sys_prompt = _ALGO_SYSTEM_PROMPT
     original = getattr(ai_backend, "domain_prompts", {}) or {}
     injected = False
+    # Polymorphic prompt addon (variant / focus / depth)
+    poly_addon = ""
+    try:
+        from core.ai_backend.algorithm_poly import poly_prompt_addon
+        ctx = context or {}
+        poly_addon = poly_prompt_addon(
+            ctx.get("args") if isinstance(ctx.get("args"), dict) else ctx
+        )
+    except Exception:  # noqa: BLE001
+        poly_addon = ""
+    full_prompt = prompt
+    if poly_addon:
+        full_prompt = f"{prompt}\n\n{poly_addon}"
     try:
         if domain not in original:
             try:
@@ -103,7 +121,7 @@ def _llm_query(ai_backend, domain: str, prompt: str,
                 injected = True
             except Exception:
                 injected = False
-        return ai_backend.query(domain, prompt, context=context or {})
+        return ai_backend.query(domain, full_prompt, context=context or {})
     finally:
         if injected:
             try:
@@ -1143,6 +1161,12 @@ _REGISTRY_BUILT = False
 def _build_registry() -> Dict[str, Callable[..., Dict[str, Any]]]:
     global _REGISTRY_BUILT
     if _REGISTRY_BUILT:
+        # Always re-ensure polymorphic wraps (idempotent).
+        try:
+            from core.ai_backend.algorithm_poly import ensure_all_polymorphic
+            ensure_all_polymorphic(ZERO_DAY_ALGORITHMS)
+        except Exception:  # noqa: BLE001
+            pass
         return ZERO_DAY_ALGORITHMS
     ZERO_DAY_ALGORITHMS.update({
         # Phase 1 (the original 10)
@@ -1226,6 +1250,16 @@ def _build_registry() -> Dict[str, Callable[..., Dict[str, Any]]]:
         "zero_day_tpm_sidechannel": analyze_tpm_sidechannel,
         "zero_day_browser_js_engine": analyze_browser_js_engine,
     })
+    # Make EVERY algorithm polymorphic (variant pick + arg mutation + stamp).
+    try:
+        from core.ai_backend.algorithm_poly import (
+            ensure_all_polymorphic,
+            register_algorithms_as_strategies,
+        )
+        ensure_all_polymorphic(ZERO_DAY_ALGORITHMS)
+        register_algorithms_as_strategies(list(ZERO_DAY_ALGORITHMS.keys()))
+    except Exception as e:  # noqa: BLE001 — never block registry on poly
+        logger.debug("algorithm poly wrap skipped: %s", e)
     _REGISTRY_BUILT = True
     return ZERO_DAY_ALGORITHMS
 
@@ -1243,20 +1277,59 @@ def dispatch(
     **kwargs: Any,
 ) -> Dict[str, Any]:
     """Dispatch a chain step to the named algorithm. The orchestrator
-    calls this; the per-step ACCEPT gate has already fired."""
-    fn = _build_registry().get(action)
+    calls this; the per-step ACCEPT gate has already fired.
+
+    Every algorithm is polymorphic: target features select a variant
+    grammar (depth / focus / tool order) before the local pass runs.
+    """
+    reg = _build_registry()
+    fn = reg.get(action)
     if fn is None:
         return {"ok": False, "error": f"unknown zero_day_algorithm: {action!r}"}
+    # Ensure this entry is wrapped even if registered after first build
+    # (Phase 6 late updates).
+    if not getattr(fn, "_kfiosa_poly_wrapped", False):
+        try:
+            from core.ai_backend.algorithm_poly import wrap_algorithm
+            fn = wrap_algorithm(action, fn)
+            reg[action] = fn
+        except Exception:  # noqa: BLE001
+            pass
     try:
         return fn(target, recon, args, **kwargs)
     except Exception as e:  # noqa: BLE001 — never raise from a chain step
         return {"ok": False, "error": f"algorithm {action!r} raised: {e}"}
 
 
+def describe_poly(action: str = "") -> Dict[str, Any]:
+    """List polymorphic families / variants for one or all algorithms."""
+    try:
+        from core.ai_backend.algorithm_poly import (
+            describe_algorithm_poly, classify_family, poly_enabled,
+        )
+    except Exception as e:  # noqa: BLE001
+        return {"ok": False, "error": str(e)}
+    if action:
+        return describe_algorithm_poly(action)
+    names = list_algorithms()
+    by_family: Dict[str, List[str]] = {}
+    for n in names:
+        by_family.setdefault(classify_family(n), []).append(n)
+    return {
+        "ok": True,
+        "enabled": poly_enabled(),
+        "algorithm_count": len(names),
+        "families": {k: len(v) for k, v in sorted(by_family.items())},
+        "by_family": by_family,
+        "model": "polymorphic (heuristic)",
+    }
+
+
 __all__ = [
     "ZERO_DAY_ALGORITHMS",
     "list_algorithms",
     "dispatch",
+    "describe_poly",
     # Phase 1 (original 10)
     "analyze_crash_triager",
     "analyze_side_channel_finder",
@@ -5086,3 +5159,9 @@ ZERO_DAY_ALGORITHMS.update({
     "zero_day_adapt_supply_chain_audit": analyze_adapt_supply_chain_audit,
     "zero_day_adapt_target_skill_path": analyze_adapt_target_skill_path,
 })
+# Polymorphic wrap for late-registered Phase 6 entries too
+try:
+    from core.ai_backend.algorithm_poly import ensure_all_polymorphic
+    ensure_all_polymorphic(ZERO_DAY_ALGORITHMS)
+except Exception:  # noqa: BLE001
+    pass

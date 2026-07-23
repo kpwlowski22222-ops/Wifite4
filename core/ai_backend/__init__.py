@@ -1177,6 +1177,7 @@ try:
         ZERO_DAY_ALGORITHMS,
         list_algorithms,
         dispatch,
+        describe_poly,
         analyze_crash_triager,
         analyze_side_channel_finder,
         analyze_fuzz_harness_gen,
@@ -1189,6 +1190,7 @@ try:
         analyze_logic_flaw_heuristic,
     )
 except Exception:  # pragma: no cover - depends on import order
+    describe_poly = None  # type: ignore[assignment]
     pass
 
 
@@ -1305,10 +1307,11 @@ __all__ = [
     "analyze_race_analyzer",
     "analyze_side_channel_finder",
     "dispatch",
+    "describe_poly",
     "get_hf_token",
     "get_nvd_key",
     "list_algorithms",
-    # Zero-day registry
+    # Zero-day registry (all entries polymorphic-wrapped)
     "ZERO_DAY_ALGORITHMS",
     # v3 method registry (Phase 2.4)
     "V3_REGISTRY",
