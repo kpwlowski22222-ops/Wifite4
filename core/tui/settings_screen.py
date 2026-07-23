@@ -30,6 +30,8 @@ class SettingsScreen(BaseScreen):
             ("Model per domain (wifi/ble/osint/…)", self.select_domain_model),
             ("Plan creativity (balanced/high/max)", self.configure_plan_creativity),
             ("Narrative live story (on/off)", self.configure_narrative_log),
+            ("Engagement memory (on/off)", self.configure_engagement_memory),
+            ("Session compaction (on/off)", self.configure_session_compact),
             ("Scan timeouts (wifi / ble)", self.adjust_timeouts),
             ("External terminal", self.configure_external_terminal),
             ("Scan window font scale", self.configure_scan_font_scale),
@@ -37,6 +39,8 @@ class SettingsScreen(BaseScreen):
             ("Back to Main Menu", self.parent_callback),
         ]
         self._advanced_items = [
+            ("Memory status / recent notes", self.view_memory_status),
+            ("holaOS external status (optional)", self.holaos_external_status),
             ("Pull models (info)", self.pull_models_info),
             ("Holo desktop agent — status", self.holo_os_agent_status),
             ("Holo — dry-run task", self.holo_os_agent_dry_run),
@@ -67,6 +71,8 @@ class SettingsScreen(BaseScreen):
             ("Model per domain (wifi/ble/osint/…)", self.select_domain_model),
             ("Plan creativity (balanced/high/max)", self.configure_plan_creativity),
             ("Narrative live story (on/off)", self.configure_narrative_log),
+            ("Engagement memory (on/off)", self.configure_engagement_memory),
+            ("Session compaction (on/off)", self.configure_session_compact),
             ("Scan timeouts (wifi / ble)", self.adjust_timeouts),
             ("External terminal", self.configure_external_terminal),
             ("Scan window font scale", self.configure_scan_font_scale),
@@ -75,6 +81,115 @@ class SettingsScreen(BaseScreen):
         ]
         self.menu_index = 0
         self.activity_log.append("[i] Settings → simple list")
+
+    def configure_engagement_memory(self):
+        cur = (os.environ.get("KFIOSA_MEMORY") or "1").strip().lower()
+        on = cur not in ("0", "false", "no", "off")
+        raw = self.get_input(
+            f"Engagement memory [{'on' if on else 'off'}] (on/off; blank=toggle)"
+        ).strip().lower()
+        if not raw:
+            on = not on
+        elif raw in ("on", "1", "true", "yes"):
+            on = True
+        elif raw in ("off", "0", "false", "no"):
+            on = False
+        else:
+            self.activity_log.append("[!] Use on or off.")
+            return
+        os.environ["KFIOSA_MEMORY"] = "1" if on else "0"
+        self.activity_log.append(
+            f"[+] Engagement memory {'ON' if on else 'OFF'} "
+            "(local notes under data/memory/)."
+        )
+
+    def configure_session_compact(self):
+        cur = (os.environ.get("KFIOSA_SESSION_COMPACT") or "1").strip().lower()
+        on = cur not in ("0", "false", "no", "off")
+        raw = self.get_input(
+            f"Session compaction [{'on' if on else 'off'}] (on/off; blank=toggle)"
+        ).strip().lower()
+        if not raw:
+            on = not on
+        elif raw in ("on", "1", "true", "yes"):
+            on = True
+        elif raw in ("off", "0", "false", "no"):
+            on = False
+        else:
+            self.activity_log.append("[!] Use on or off.")
+            return
+        os.environ["KFIOSA_SESSION_COMPACT"] = "1" if on else "0"
+        self.activity_log.append(
+            f"[+] Session compaction {'ON' if on else 'OFF'} "
+            "(long re-plans use a compact checkpoint)."
+        )
+
+    def view_memory_status(self):
+        try:
+            from core.memory.store import list_notes, memory_root, memory_enabled
+            from core.workspace.engagement_ws import list_recent, workspace_root
+            self.activity_log.append("=== Engagement memory / workspaces ===")
+            self.activity_log.append(
+                f"[i] memory={'on' if memory_enabled() else 'off'} "
+                f"root={memory_root()}"
+            )
+            notes = list_notes(limit=8)
+            self.activity_log.append(f"[i] recent notes: {len(notes)}")
+            for n in notes[:5]:
+                self.activity_log.append(
+                    f"  · [{n.get('kind')}] {(n.get('text') or '')[:80]}"
+                )
+            self.activity_log.append(f"[i] workspaces: {workspace_root()}")
+            for w in list_recent(5):
+                self.activity_log.append(
+                    f"  · {w.get('id')} domain={w.get('domain')} "
+                    f"label={w.get('label')}"
+                )
+        except Exception as e:
+            self.activity_log.append(f"[!] memory status: {e}")
+
+    def holaos_external_status(self):
+        """Detect optional external holaOS install (not required)."""
+        import pathlib
+        candidates = []
+        env_home = (os.environ.get("HOLAOS_HOME") or "").strip()
+        if env_home:
+            candidates.append(pathlib.Path(env_home))
+        home = pathlib.Path.home()
+        candidates.extend([
+            home / "holaboss-ai",
+            home / "holaOS",
+            home / "holaos",
+        ])
+        self.activity_log.append("=== holaOS (external, optional) ===")
+        self.activity_log.append(
+            "[i] KFIOSA ports memory/workspace/compaction concepts natively."
+        )
+        self.activity_log.append(
+            "[i] Full product: https://github.com/holaboss-ai/holaOS"
+        )
+        found = None
+        for p in candidates:
+            if p.is_dir() and (p / "package.json").is_file():
+                found = p
+                break
+        if found:
+            self.activity_log.append(f"[+] Found install at {found}")
+        else:
+            self.activity_log.append(
+                "[i] No local holaOS tree found (OK — not required)."
+            )
+        # Distinguish from holo-desktop-cli
+        try:
+            from core.desktop.holo_agent import holo_status
+            st = holo_status()
+            self.activity_log.append(
+                f"[i] holo-desktop-cli (GUI driver): "
+                f"{'found' if st.get('holo_bin') else 'missing'} "
+                f"{st.get('holo_bin') or ''}"
+            )
+        except Exception as e:
+            self.activity_log.append(f"[i] holo-desktop probe: {e}")
 
     def configure_plan_creativity(self):
         """Set AI plan creativity: balanced | high | max."""

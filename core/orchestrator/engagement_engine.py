@@ -158,6 +158,44 @@ class EngagementEngine:
             or seed.get("address") or seed.get("query") or seed.get("url")
             or "?"
         )
+        # holaOS-inspired: workspace + memory recall for continuity
+        try:
+            from core.workspace.engagement_ws import create_workspace, append_decision
+            from core.memory.recall import recall, target_key_from
+            from core.memory.store import ingest, memory_enabled
+            tkey = target_key_from(seed)
+            if not seed.get("workspace_id"):
+                ws = create_workspace(domain, seed, label=str(tgt_label))
+                if ws.get("ok"):
+                    seed["workspace_id"] = ws.get("id")
+                    seed["workspace_path"] = ws.get("path")
+                    self.log(
+                        f"Note: engagement workspace ready at {ws.get('path')}"
+                    )
+            if memory_enabled():
+                mem = recall(
+                    str(tgt_label), domain=domain, target_key=tkey, limit=6,
+                )
+                if mem.get("count"):
+                    seed["memory_context"] = mem.get("summary") or ""
+                    seed["memory_hits"] = mem.get("hits") or []
+                    self.log(
+                        f"Remembered {mem.get('count')} note(s) about "
+                        f"“{tgt_label}” — loading them into the plan."
+                    )
+                ingest(
+                    "target",
+                    f"Engagement start domain={domain} target={tgt_label}",
+                    domain=domain, target_key=tkey, tags=["start"],
+                )
+                if seed.get("workspace_id"):
+                    append_decision(
+                        seed["workspace_id"],
+                        f"start domain={domain} until_access={ua}",
+                    )
+        except Exception as e:
+            self.log(f"[i] workspace/memory continuity skipped: {e}")
+
         # Friendly narrative + live polymorphic pick for this target
         try:
             from core.tui.narrative_log import step_begin, step_adapt, narrate
@@ -183,6 +221,15 @@ class EngagementEngine:
                     f"[poly] live_adapt → {adapt.get('method')}: "
                     f"{adapt.get('rationale')}"
                 )
+            if seed.get("workspace_id"):
+                try:
+                    from core.workspace.engagement_ws import append_decision
+                    append_decision(
+                        seed["workspace_id"],
+                        f"live_adapt {adapt.get('method')}: {adapt.get('rationale')}",
+                    )
+                except Exception:
+                    pass
         except Exception as e:
             self.log(f"[i] live_adapt skipped: {e}")
 
@@ -240,11 +287,51 @@ class EngagementEngine:
             self.log(f"[!] {report['error']}")
 
         report["duration_s"] = round(time.time() - report["started"], 3)
+        report["workspace_id"] = seed.get("workspace_id")
+        access = report.get("access") or {}
+        achieved = bool(access.get("achieved"))
         self.log(
             f"[*] EngagementEngine done ok={report.get('ok')} "
-            f"access={bool((report.get('access') or {}).get('achieved'))} "
+            f"access={achieved} "
             f"in {report['duration_s']}s"
         )
+        # Persist continuity (memory + workspace findings)
+        try:
+            from core.memory.store import ingest
+            from core.memory.recall import target_key_from
+            from core.workspace.engagement_ws import (
+                append_finding, set_next_steps, append_decision,
+            )
+            tkey = target_key_from(seed)
+            summary = (
+                f"Engagement finished domain={domain} access={achieved} "
+                f"session={access.get('session_id') or '-'} "
+                f"duration_s={report.get('duration_s')}"
+            )
+            ingest(
+                "finding" if achieved else "lesson",
+                summary,
+                domain=domain, target_key=tkey,
+                tags=["end", "access" if achieved else "no_access"],
+            )
+            wid = seed.get("workspace_id")
+            if wid:
+                append_finding(wid, summary)
+                if achieved:
+                    append_decision(wid, "access achieved — PE/dashboard path")
+                    set_next_steps(wid, [
+                        "post-exploit OPSEC",
+                        "keep session / open Flask dashboard",
+                        "export findings from workspace",
+                    ])
+                else:
+                    set_next_steps(wid, [
+                        "retry with different poly_adapt variant",
+                        "verify adapter / monitor / BLE power",
+                        "review findings.md for failed paths",
+                    ])
+        except Exception:
+            pass
         return report
 
     # ------------------------------------------------------------------

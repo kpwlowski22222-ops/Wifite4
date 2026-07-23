@@ -2858,26 +2858,66 @@ class AIChainPlanner:
             mcp_block = ""
         ctx["mcp_tools"] = mcp_block
 
-        # Polymorphic re-plan: when the orchestrator feeds back live step
-        # outcomes, surface them (most recent first, capped) with a
-        # directive to emit only the next 1-3 steps. Skipped when no
-        # prior results (default chain shape unchanged).
+        # Polymorphic re-plan: compact older steps (holaOS-inspired) + recent
+        # raw outcomes. Skipped when no prior results (default chain unchanged).
         prior_block = ""
         if prior_results:
             try:
-                recent = list(reversed(prior_results[-12:]))
-                prior_block = (
-                    "PRIOR STEP OUTCOMES (live, most recent first):\n"
-                    + _safe_json_dumps(recent, limit=2000)
-                    + "\n\nGiven those live outcomes, emit the NEXT 1-3 steps "
-                      "only (not the whole chain). Do NOT repeat steps that "
-                      "already succeeded (same action+tool). If a CVE/exploit "
-                      "step failed, try the next CVE or an alternate path. If "
-                      "access is achieved (a step's data has creds or "
-                      "session_id), emit post_exploit and/or open_shell next.\n"
+                from core.memory.compaction import (
+                    compact_prior, checkpoint_prompt_block,
                 )
+                compact = compact_prior(
+                    prior_results,
+                    seed=target if isinstance(target, dict) else {},
+                    domain=domain,
+                )
+                ctx["session_checkpoint"] = compact.get("checkpoint")
+                if compact.get("compacted"):
+                    prior_block = checkpoint_prompt_block(compact)
+                    recent = list(reversed(list(compact.get("recent") or [])[-8:]))
+                    prior_block += (
+                        "RECENT STEP OUTCOMES (verbatim, most recent first):\n"
+                        + _safe_json_dumps(recent, limit=1600)
+                        + "\n"
+                    )
+                    self._emit(
+                        f"[chain-planner] compacted {compact.get('dropped')} "
+                        f"older step(s); keeping {len(compact.get('recent') or [])} recent"
+                    )
+                else:
+                    recent = list(reversed(prior_results[-12:]))
+                    prior_block = (
+                        "PRIOR STEP OUTCOMES (live, most recent first):\n"
+                        + _safe_json_dumps(recent, limit=2000)
+                        + "\n\nGiven those live outcomes, emit the NEXT 1-3 steps "
+                          "only (not the whole chain). Do NOT repeat steps that "
+                          "already succeeded (same action+tool). If a CVE/exploit "
+                          "step failed, try the next CVE or an alternate path. If "
+                          "access is achieved (a step's data has creds or "
+                          "session_id), emit post_exploit and/or open_shell next.\n"
+                    )
             except Exception:  # noqa: BLE001 — never break planning on serialization
-                prior_block = ""
+                try:
+                    recent = list(reversed(prior_results[-12:]))
+                    prior_block = (
+                        "PRIOR STEP OUTCOMES (live, most recent first):\n"
+                        + _safe_json_dumps(recent, limit=2000) + "\n"
+                    )
+                except Exception:
+                    prior_block = ""
+
+        # Working memory recall (continuity across sessions)
+        mem_ctx = ""
+        if isinstance(target, dict):
+            mem_ctx = str(target.get("memory_context") or ctx.get("memory_context") or "")
+        if mem_ctx:
+            prior_block = (
+                "WORKING MEMORY (local-first, operator-owned; use only as context, "
+                "never invent new facts from it):\n"
+                + mem_ctx[:1500]
+                + "\n\n"
+                + prior_block
+            )
 
         # EngagementEngine / simplified TUI injects engagement_context so
         # the model prefers catalog/, toolboxes/, Kali binaries, Holo, and

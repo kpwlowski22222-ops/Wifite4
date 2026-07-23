@@ -22,6 +22,7 @@ sudo python main.py          # launch dashboard
 - **OPEN DASHBOARD** — Flask/WSGI universal RAT UI (tabs: WiFi · BLE · OSINT Web · OSINT People). Tasks run **until success** (access + post-exploit + connection) and persist in SQL (`~/.kfiosa/kfiosa.db`).
 - Post-exploit is **auto-attached** to engagement chains (not a separate menu mode).
 - Settings are a short practical list; power tools live under **Advanced…**.
+- **holaOS-inspired continuity** (native Python — not the Electron app): engagement **workspaces** (`data/workspaces/`), **working memory** (`data/memory/`), and **session compaction** for long AI re-plans. Optional external install detect via `HOLAOS_HOME`. GUI drive still uses **holo-desktop-cli** (`core/desktop/holo_agent.py`).
 
 ---
 
