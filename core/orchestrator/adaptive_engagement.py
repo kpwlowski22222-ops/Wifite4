@@ -1039,24 +1039,63 @@ class AdaptiveEngagement:
             errors.append(str(e))
             self.log(f"[!] NVD lookup error: {e}")
 
-        seed["cves"] = found
-        self.log(f"[i] CVE pool size={len(found)} keywords={keywords[:5]}")
+        # Attach scored CVEs to this live target + SQL history (cve_id)
+        attach_meta: Dict[str, Any] = {}
+        try:
+            from core.cve_attach import attach_cves_to_target, list_history_cve_ids
+            seed.setdefault("domain", domain)
+            att = attach_cves_to_target(
+                seed, found, domain=domain, top_n=8,
+                sid=str(seed.get("workspace_id") or seed.get("session_id") or ""),
+            )
+            if att.get("ok"):
+                seed.update({
+                    k: att["target"][k]
+                    for k in ("attached_cves", "cves", "cve_target_key", "cve_session_id")
+                    if k in (att.get("target") or {})
+                })
+                # Prefer ranked list on seed
+                seed["cves"] = att["target"].get("cves") or found
+                attach_meta = {
+                    "attached_ids": att.get("cve_ids") or [],
+                    "count": att.get("count") or 0,
+                    "session_id": att.get("session_id"),
+                }
+                self.log(
+                    f"[+] Attached {attach_meta['count']} CVEs to target "
+                    f"(sql history sid={attach_meta.get('session_id')})"
+                )
+                # Surface prior history ids for operator continuity
+                hist_ids = list_history_cve_ids(str(att.get("session_id") or ""))
+                if hist_ids:
+                    seed["cve_history_ids"] = hist_ids[:20]
+        except Exception as e:  # noqa: BLE001
+            seed["cves"] = found
+            errors.append(f"attach: {e}")
+            self.log(f"[i] CVE attach skipped: {e}")
+
+        self.log(f"[i] CVE pool size={len(seed.get('cves') or found)} keywords={keywords[:5]}")
         return {
             "ok": bool(found) or not errors,
-            "count": len(found),
+            "count": len(seed.get("cves") or found),
             "keywords": keywords[:5],
             "errors": errors[:5],
+            "attached": attach_meta,
         }
 
     def _cve_keywords(self, domain: str, seed: Dict[str, Any]) -> List[str]:
+        """Build NVD keyword list biased to *this* target's features."""
         kws: List[str] = []
         if domain == "wifi":
             for k in (
                 seed.get("vendor"),
+                seed.get("chipset"),
+                seed.get("model"),
                 seed.get("ssid"),
                 seed.get("encryption") or seed.get("enc"),
                 "WPA2",
                 "802.11",
+                "wireless access point",
             ):
                 if k and str(k) not in kws:
                     kws.append(str(k))
@@ -1065,7 +1104,7 @@ class AdaptiveEngagement:
                 if not isinstance(sec, dict):
                     continue
                 data = sec.get("data") if isinstance(sec.get("data"), dict) else {}
-                for key in ("vendor", "chipset", "model", "device_name"):
+                for key in ("vendor", "chipset", "model", "device_name", "firmware"):
                     v = data.get(key)
                     if v and str(v) not in kws:
                         kws.append(str(v))
@@ -1074,6 +1113,7 @@ class AdaptiveEngagement:
                 seed.get("name"),
                 seed.get("manufacturer"),
                 seed.get("vendor"),
+                seed.get("model"),
                 "Bluetooth",
                 "BLE GATT",
             ):
@@ -1082,20 +1122,72 @@ class AdaptiveEngagement:
         return [k for k in kws if k and k.lower() not in ("unknown", "none", "n/a")]
 
     def _phase_cve_code(self, seed: Dict[str, Any]) -> Dict[str, Any]:
-        """Optional: generate exploit-oriented code drafts for top CVEs."""
-        cves = [
-            c for c in (seed.get("cves") or [])
-            if isinstance(c, dict) and c.get("id")
+        """Code PoCs for top attached CVEs — once per (target, cve_id).
+
+        Reuses already-coded PoCs on the seed / SQL history so we do not
+        re-draft the same CVE for the same target. Generated code is
+        target-conditioned and the CVE id is stored in SQL history.
+        """
+        # Prefer attached (scored) list; fall back to raw pool
+        pool = [
+            c for c in (seed.get("attached_cves") or seed.get("cves") or [])
+            if isinstance(c, dict) and (c.get("id") or c.get("cve_id"))
         ]
-        if not cves:
+        if not pool:
             return {"ok": False, "error": "no CVEs to code", "drafts": []}
         if self.orch is None:
             return {"ok": False, "error": "no orchestrator", "drafts": []}
 
         drafts: List[Dict[str, Any]] = []
-        for cve in cves[:MAX_CVE_CODE]:
-            cve_id = cve.get("id")
-            step = {"action": "cve_to_exploit", "args": {"cve_id": cve_id}}
+        try:
+            from core.cve_attach import already_coded, mark_cve_coded
+        except Exception:  # noqa: BLE001
+            already_coded = None  # type: ignore
+            mark_cve_coded = None  # type: ignore
+
+        for cve in pool[:MAX_CVE_CODE]:
+            cve_id = cve.get("id") or cve.get("cve_id")
+            # One-time: skip if PoC already coded for this target
+            if already_coded is not None:
+                prior = already_coded(seed, cve_id)
+                if prior:
+                    self.log(
+                        f"[i] CVE {cve_id} already coded for target "
+                        f"({prior.get('poc_bytes') or 0} bytes) — reuse"
+                    )
+                    drafts.append({
+                        "cve_id": cve_id,
+                        "reused": True,
+                        "poc_bytes": prior.get("poc_bytes") or 0,
+                        "exploit_path": prior.get("exploit_path") or "",
+                    })
+                    seed.setdefault("cve_code_drafts", []).append({
+                        "cve_id": cve_id,
+                        "reused": True,
+                        "data": {
+                            "ok": True,
+                            "exploit_code": prior.get("exploit_code") or "",
+                            "exploit_path": prior.get("exploit_path") or "",
+                        },
+                    })
+                    continue
+
+            step = {
+                "action": "cve_to_exploit",
+                "args": {
+                    "cve_id": cve_id,
+                    # Pass target so pipeline codes the PoC *to* this target
+                    "target": {
+                        k: seed.get(k)
+                        for k in (
+                            "domain", "bssid", "ssid", "address", "addr",
+                            "channel", "interface", "vendor", "encryption",
+                            "enc", "chipset", "name",
+                        )
+                        if seed.get(k) not in (None, "", [], {})
+                    },
+                },
+            }
             report: Dict[str, Any] = {
                 "executed": [], "skipped": [],
                 "access": {"achieved": False},
@@ -1107,14 +1199,36 @@ class AdaptiveEngagement:
                     "executed": report.get("executed"),
                     "skipped": report.get("skipped"),
                 })
-                # Attach any resulting paths into seed recon context
                 for ent in report.get("executed") or []:
                     res = _safe_dict(ent.get("result"))
-                    data = _safe_dict(res.get("data"))
-                    if data:
+                    if res:
                         seed.setdefault("cve_code_drafts", []).append({
-                            "cve_id": cve_id, "data": data,
+                            "cve_id": cve_id, "data": res,
                         })
+                        # Persist coded CVE id + bind PoC to target
+                        if mark_cve_coded is not None:
+                            marked = mark_cve_coded(
+                                seed,
+                                cve_id,
+                                exploit_code=str(res.get("exploit_code") or ""),
+                                model_used=str(res.get("model_used") or ""),
+                                ok=bool(res.get("ok")),
+                                error=str(res.get("error") or ""),
+                                sid=str(
+                                    seed.get("cve_session_id")
+                                    or seed.get("workspace_id")
+                                    or ""
+                                ),
+                            )
+                            if marked.get("target"):
+                                seed["attached_cves"] = marked["target"].get(
+                                    "attached_cves", seed.get("attached_cves")
+                                )
+                                if marked.get("exploit_path"):
+                                    self.log(
+                                        f"[+] CVE {cve_id} PoC saved "
+                                        f"{marked.get('exploit_path')}"
+                                    )
             except Exception as e:  # noqa: BLE001
                 drafts.append({"cve_id": cve_id, "error": str(e)})
                 self.log(f"[i] cve_to_exploit {cve_id}: {e}")

@@ -1778,12 +1778,60 @@ class AutonomousOrchestrator:
             self._emit("[!] cve_to_exploit: missing cve_id in args")
             report["skipped"].append("cve_to_exploit: no cve_id")
             return
+        # Live target for coding the PoC *to* this engagement
+        tgt = args.get("target") if isinstance(args.get("target"), dict) else None
+        if not tgt and isinstance(seed, dict):
+            tgt = {
+                k: seed.get(k)
+                for k in (
+                    "domain", "bssid", "ssid", "address", "addr", "channel",
+                    "interface", "vendor", "encryption", "enc", "chipset", "name",
+                )
+                if seed.get(k) not in (None, "", [], {})
+            } or None
+        # One-time reuse: if already coded for this target, skip pipeline
+        try:
+            from core.cve_attach import already_coded, mark_cve_coded
+            prior = already_coded(seed if isinstance(seed, dict) else {}, cve_id)
+            if prior and prior.get("exploit_code"):
+                self._emit(
+                    f"[i] cve_to_exploit: reusing coded PoC for {cve_id} "
+                    f"({prior.get('poc_bytes') or 0} bytes)"
+                )
+                res_dict = {
+                    "cve_id": cve_id,
+                    "ok": True,
+                    "exploit_code": prior.get("exploit_code") or "",
+                    "model_used": prior.get("model_used") or "reused",
+                    "reused": True,
+                    "attached": True,
+                    "ts": prior.get("coded_at") or 0,
+                }
+                entry = {
+                    "desc": f"cve_to_exploit {cve_id} (reused)",
+                    "kind": "ai", "action": "cve_to_exploit",
+                    "tool": "core.cve_to_exploit",
+                    "result": res_dict,
+                }
+                report["executed"].append(entry)
+                seed.setdefault("exploits", []).append(res_dict)
+                report.setdefault("exploits", []).append(res_dict)
+                self._push_dashboard_exploit_status({
+                    "last_cve_id": cve_id,
+                    "last_model": "reused",
+                    "ok": True,
+                    "last_ts": res_dict.get("ts", 0.0),
+                })
+                return
+        except Exception:  # noqa: BLE001
+            mark_cve_coded = None  # type: ignore
         try:
             result = cve_to_exploit_pipeline(
                 cve_id,
                 ai_backend=self.ai_backend,
                 exploit_gen_manager=self.exploit_gen_manager,
                 on_event=self._emit,
+                target=tgt,
             )
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] cve_to_exploit raised: {e!r}")
@@ -1843,12 +1891,42 @@ class AutonomousOrchestrator:
         # Seed + report exploit index (operator-readable).
         seed.setdefault("exploits", []).append(res_dict)
         report.setdefault("exploits", []).append(res_dict)
+        # Attach coded CVE id to target + SQL history (once)
+        try:
+            from core.cve_attach import mark_cve_coded as _mark
+            marked = _mark(
+                seed if isinstance(seed, dict) else {},
+                cve_id,
+                exploit_code=str(res_dict.get("exploit_code") or ""),
+                model_used=str(res_dict.get("model_used") or ""),
+                ok=ok,
+                error=str(res_dict.get("error") or ""),
+                sid=str(
+                    (seed or {}).get("cve_session_id")
+                    or (seed or {}).get("workspace_id")
+                    or (seed or {}).get("session_id")
+                    or ""
+                ),
+            )
+            if isinstance(seed, dict) and marked.get("target"):
+                seed["attached_cves"] = marked["target"].get(
+                    "attached_cves", seed.get("attached_cves")
+                )
+                if marked.get("exploit_path"):
+                    res_dict["exploit_path"] = marked["exploit_path"]
+            self._emit(
+                f"[+] cve attached to target history: {cve_id} "
+                f"coded={ok} sid={marked.get('session_id')}"
+            )
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[i] cve history attach skipped: {e}")
         # Dashboard pill.
         self._push_dashboard_exploit_status({
             "last_cve_id": cve_id,
             "last_model": res_dict.get("model_used", "") or "",
             "ok": ok,
             "last_ts": res_dict.get("ts", 0.0),
+            "attached": True,
         })
 
 
