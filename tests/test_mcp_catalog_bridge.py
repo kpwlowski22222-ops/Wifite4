@@ -72,7 +72,8 @@ def test_mcp_handlers(tiny_cat, monkeypatch):
     # reimport dispatch tools
     from core.mcp import (
         t_catalog_list, t_catalog_search, t_catalog_stats,
-        t_list_tools, t_search_tools, handle_request,
+        t_catalog_count, t_catalog_random, t_catalog_export_ids,
+        t_catalog_page, t_list_tools, handle_request,
     )
     st = t_catalog_stats({})
     assert st.get("ok")
@@ -90,3 +91,25 @@ def test_mcp_handlers(tiny_cat, monkeypatch):
     })
     body = json.loads(r["result"]["content"][0]["text"])
     assert body.get("ok") is True
+    cnt = t_catalog_count({})
+    assert cnt.get("ok") and cnt.get("count") >= 2
+    rnd = t_catalog_random({"n": 2})
+    assert rnd.get("ok") and rnd.get("count") >= 1
+    ids = t_catalog_export_ids({"limit": 10})
+    assert ids.get("ok") and ids.get("count") >= 1
+    page = t_catalog_page({"page": 1, "page_size": 1})
+    assert page.get("ok") and page.get("page") == 1
+
+
+def test_dynamic_tools_list_includes_catalog(tiny_cat, monkeypatch):
+    monkeypatch.setenv("KFIOSA_MCP_EXPAND_CATALOG", "1")
+    monkeypatch.setenv("KFIOSA_MCP_CATALOG_EXPAND_LIMIT", "50")
+    from core.mcp import handle_request
+    r = handle_request({
+        "jsonrpc": "2.0", "id": 2, "method": "tools/list",
+    })
+    tools = r["result"]["tools"]
+    names = [t["name"] for t in tools]
+    assert "catalog_sync" in names
+    assert "catalog_count" in names
+    assert any(n.startswith("catalog.") for n in names)

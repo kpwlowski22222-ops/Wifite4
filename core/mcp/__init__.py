@@ -34,8 +34,10 @@ Exposed tools (MCP ``tools/call``):
     run_tool(command, timeout?, cwd?)          -> gated subprocess execution
     call_tool(name, args?)                     -> schema'd Kali/mt7921e/cve wrappers
     catalog_sync / catalog_stats / catalog_list / catalog_search /
-    catalog_get / catalog_run / catalog_surfaces / catalog_merge_registry
-    catalog.<name>                             -> per-entry virtual tools (when expanded)
+    catalog_get / catalog_run / catalog_surfaces / catalog_merge_registry /
+    catalog_count / catalog_by_kind / catalog_by_tag / catalog_random /
+    catalog_export_ids / catalog_page
+    catalog.<name>                             -> per-entry virtual tools (dynamic tools/list)
 
 Exposed resources (MCP ``resources/read``):
     registry://summary                         -> build stats
@@ -455,6 +457,79 @@ MCP_TOOLS: List[Dict[str, Any]] = [
         "description": "Merge all catalog tools into data/tool_registry.json.",
         "inputSchema": {"type": "object", "properties": {}},
     },
+    {
+        "name": "catalog_count",
+        "description": "Fast counts (total / by kind / by surface / filtered).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "surface": {"type": "string"},
+                "kind": {"type": "string"},
+                "text": {"type": "string"},
+            },
+        },
+    },
+    {
+        "name": "catalog_by_kind",
+        "description": "List catalog tools filtered by kind (e.g. external_repository).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "kind": {"type": "string"},
+                "limit": {"type": "integer", "default": 50},
+                "offset": {"type": "integer", "default": 0},
+            },
+        },
+    },
+    {
+        "name": "catalog_by_tag",
+        "description": "List catalog tools matching a tag/keyword.",
+        "inputSchema": {
+            "type": "object",
+            "required": ["tag"],
+            "properties": {
+                "tag": {"type": "string"},
+                "limit": {"type": "integer", "default": 50},
+            },
+        },
+    },
+    {
+        "name": "catalog_random",
+        "description": "Sample random catalog tools (discovery / poly pick).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "n": {"type": "integer", "default": 5},
+                "surface": {"type": "string"},
+            },
+        },
+    },
+    {
+        "name": "catalog_export_ids",
+        "description": "Export entry ids + mcp_names for bulk AI routing.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "surface": {"type": "string"},
+                "kind": {"type": "string"},
+                "limit": {"type": "integer", "default": 5000},
+            },
+        },
+    },
+    {
+        "name": "catalog_page",
+        "description": "1-based paginated catalog browser.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "page": {"type": "integer", "default": 1},
+                "page_size": {"type": "integer", "default": 100},
+                "surface": {"type": "string"},
+                "kind": {"type": "string"},
+                "text": {"type": "string"},
+            },
+        },
+    },
 ]
 
 # Append schema'd wrappers (Kali tools, mt7921e.*, cve_lookup) at module
@@ -471,17 +546,9 @@ except Exception:
     # The legacy `run_tool` path is still usable.
     pass
 
-# Expand virtual per-entry catalog tools when SQL is ready (cap via env).
-try:  # noqa: E402
-    _exp = (os.environ.get("KFIOSA_MCP_EXPAND_CATALOG") or "1").strip().lower()
-    if _exp not in ("0", "false", "no", "off"):
-        from core.mcp.catalog_bridge import expand_mcp_tool_records
-        _cap = int(os.environ.get("KFIOSA_MCP_CATALOG_EXPAND_LIMIT") or "800")
-        for _rec in expand_mcp_tool_records(limit=_cap):
-            if isinstance(_rec, dict) and _rec.get("name"):
-                MCP_TOOLS.append(_rec)
-except Exception:
-    pass
+# Static catalog virtual tools are NOT expanded at import (too heavy /
+# stale). tools/list rebuilds them dynamically from SQL via
+# dynamic_mcp_tools_list().
 
 
 def t_catalog_sync(args: Dict[str, Any]) -> Dict[str, Any]:
@@ -553,6 +620,60 @@ def t_catalog_merge_registry(args: Dict[str, Any]) -> Dict[str, Any]:
     return merge_into_registry()
 
 
+def t_catalog_count(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import catalog_count
+    return catalog_count(
+        surface=str(args.get("surface") or ""),
+        kind=str(args.get("kind") or ""),
+        text=str(args.get("text") or ""),
+    )
+
+
+def t_catalog_by_kind(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import catalog_by_kind
+    return catalog_by_kind(
+        str(args.get("kind") or ""),
+        limit=int(args.get("limit") or 50),
+        offset=int(args.get("offset") or 0),
+    )
+
+
+def t_catalog_by_tag(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import catalog_by_tag
+    return catalog_by_tag(
+        str(args.get("tag") or ""),
+        limit=int(args.get("limit") or 50),
+    )
+
+
+def t_catalog_random(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import catalog_random
+    return catalog_random(
+        n=int(args.get("n") or 5),
+        surface=str(args.get("surface") or ""),
+    )
+
+
+def t_catalog_export_ids(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import catalog_export_ids
+    return catalog_export_ids(
+        surface=str(args.get("surface") or ""),
+        kind=str(args.get("kind") or ""),
+        limit=int(args.get("limit") or 5000),
+    )
+
+
+def t_catalog_page(args: Dict[str, Any]) -> Dict[str, Any]:
+    from core.mcp.catalog_bridge import catalog_page
+    return catalog_page(
+        page=int(args.get("page") or 1),
+        page_size=int(args.get("page_size") or 100),
+        surface=str(args.get("surface") or ""),
+        kind=str(args.get("kind") or ""),
+        text=str(args.get("text") or ""),
+    )
+
+
 _TOOL_DISPATCH = {
     "list_tools": t_list_tools,
     "search_tools": t_search_tools,
@@ -567,7 +688,29 @@ _TOOL_DISPATCH = {
     "catalog_run": t_catalog_run,
     "catalog_surfaces": t_catalog_surfaces,
     "catalog_merge_registry": t_catalog_merge_registry,
+    "catalog_count": t_catalog_count,
+    "catalog_by_kind": t_catalog_by_kind,
+    "catalog_by_tag": t_catalog_by_tag,
+    "catalog_random": t_catalog_random,
+    "catalog_export_ids": t_catalog_export_ids,
+    "catalog_page": t_catalog_page,
 }
+
+
+def _all_mcp_tools_for_list() -> List[Dict[str, Any]]:
+    """Meta + schema wrappers + live catalog virtual tools from SQL."""
+    tools = list(MCP_TOOLS)
+    try:
+        from core.mcp.catalog_bridge import dynamic_mcp_tools_list
+        seen = {t.get("name") for t in tools if isinstance(t, dict)}
+        for rec in dynamic_mcp_tools_list():
+            n = rec.get("name") if isinstance(rec, dict) else None
+            if n and n not in seen:
+                tools.append(rec)
+                seen.add(n)
+    except Exception as e:
+        logger.debug("dynamic catalog tools: %s", e)
+    return tools
 
 
 # ---------------------------------------------------------------------------
@@ -680,7 +823,8 @@ def handle_request(req: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 
     # --- tools ---
     if method == "tools/list":
-        return _result(req_id, {"tools": MCP_TOOLS})
+        # Dynamic: meta tools + wrappers + every catalog entry from SQL
+        return _result(req_id, {"tools": _all_mcp_tools_for_list()})
     if method == "tools/call":
         name = params.get("name")
         try:

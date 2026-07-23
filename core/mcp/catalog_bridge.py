@@ -9,11 +9,16 @@ Sources (router picks fastest)::
 MCP meta-tools (always registered)::
 
   catalog_sync, catalog_stats, catalog_list, catalog_search,
-  catalog_get, catalog_run, catalog_surfaces
+  catalog_get, catalog_run, catalog_surfaces, catalog_merge_registry,
+  catalog_count, catalog_by_kind, catalog_by_tag, catalog_random,
+  catalog_export_ids, catalog_page
 
 Each catalog entry can also appear as a virtual tool name::
 
   catalog.<sanitized_id>
+
+``tools/list`` rebuilds virtual tools from SQL at request time when
+``KFIOSA_MCP_EXPAND_CATALOG=1`` (default).
 
 Execution is gated (``KFIOSA_MCP_ALLOW_EXEC=1``) and only runs real
 entry points under ``toolboxes/`` or PATH binaries — never fabricates
@@ -180,53 +185,82 @@ def list_catalog_tools(
     prefer: str = "",
 ) -> Dict[str, Any]:
     """List tools from SQL catalog (or file index). Paginated."""
-    limit = max(1, min(int(limit or 200), 2000))
+    limit = max(1, min(int(limit or 200), 10000))
     offset = max(0, int(offset or 0))
     t0 = time.time()
 
-    # Prefer SQL
+    # Prefer SQL — use OFFSET/LIMIT natively for full inventory pages
     use_sql = (prefer or "").lower() in ("", "sql", "auto")
     if use_sql:
         try:
-            from core.catalog.sql_store import search_sql, sql_ready, count_stats
+            from core.catalog.sql_store import (
+                sql_ready, count_stats, init_catalog_db, _connect,
+            )
             if sql_ready():
-                # fetch a page — SQL search doesn't offset; over-fetch then slice
-                need = offset + limit
-                r = search_sql(
-                    attack_surface=surface or domain,
-                    kind=kind,
-                    text=text,
-                    limit=min(need, 2000),
-                    include_payload=True,
-                )
-                if r.get("ok"):
+                init_catalog_db()
+                conn = _connect()
+                where: List[str] = []
+                params: List[Any] = []
+                surf = (surface or domain or "").lower()
+                if surface:
+                    where.append("attack_surface = ?")
+                    params.append(surface.lower())
+                elif domain:
+                    where.append(
+                        "(attack_surface = ? OR attack_surface LIKE ? "
+                        "OR category LIKE ? OR kind LIKE ?)"
+                    )
+                    d = domain.lower()
+                    params.extend([d, f"%{d}%", f"%{d}%", f"%{d}%"])
+                if kind:
+                    where.append("kind = ?")
+                    params.append(kind)
+                if text and text.strip():
+                    # FTS then filter
+                    from core.catalog.sql_store import search_sql
+                    r = search_sql(
+                        attack_surface=surface,
+                        kind=kind,
+                        text=text,
+                        limit=min(offset + limit, 10000),
+                        include_payload=True,
+                    )
                     raw = r.get("results") or []
-                    tools = [
-                        _entry_to_tool(e, path=str(e.get("_path") or ""))
-                        for e in raw
-                        if isinstance(e, dict)
-                    ]
-                    # domain filter soft-match
-                    if domain and not surface:
-                        d = domain.lower()
-                        tools = [
-                            t for t in tools
-                            if d in (t.get("domain") or "")
-                            or d in (t.get("attack_surface") or "")
-                            or d in (t.get("category") or "").lower()
-                        ]
+                    tools = [_entry_to_tool(e) for e in raw if isinstance(e, dict)]
                     page = tools[offset: offset + limit]
-                    total = count_stats(refresh=False).get("total") or len(tools)
                     return {
                         "ok": True,
                         "source": "sql",
                         "count": len(page),
-                        "total_estimate": total,
+                        "total_estimate": len(tools),
                         "offset": offset,
                         "limit": limit,
                         "tools": page,
                         "took_s": round(time.time() - t0, 4),
                     }
+                sql = "SELECT payload_json, path FROM catalog_entries"
+                if where:
+                    sql += " WHERE " + " AND ".join(where)
+                sql += f" ORDER BY entry_id LIMIT {int(limit)} OFFSET {int(offset)}"
+                rows = conn.execute(sql, params).fetchall()
+                tools = []
+                for row in rows:
+                    try:
+                        ent = json.loads(row["payload_json"])
+                        tools.append(_entry_to_tool(ent, path=str(row["path"] or "")))
+                    except Exception:
+                        continue
+                total = count_stats(refresh=False).get("total") or 0
+                return {
+                    "ok": True,
+                    "source": "sql",
+                    "count": len(tools),
+                    "total_estimate": total,
+                    "offset": offset,
+                    "limit": limit,
+                    "tools": tools,
+                    "took_s": round(time.time() - t0, 4),
+                }
         except Exception as e:
             sql_fallback = str(e)[:120]
     else:
@@ -419,12 +453,27 @@ def _run_argv(command: str, *, timeout: int, cwd: str) -> Dict[str, Any]:
 
 def expand_mcp_tool_records(
     *,
-    limit: int = 500,
+    limit: int = 5000,
     domain: str = "",
 ) -> List[Dict[str, Any]]:
     """Build MCP tools/list records for catalog entries (virtual tools)."""
-    limit = max(1, min(int(limit or 500), 2000))
-    listed = list_catalog_tools(domain=domain, limit=limit)
+    limit = max(1, min(int(limit or 5000), 20000))
+    # Page through full inventory so expand covers entire SQL catalog
+    out_tools: List[Dict[str, Any]] = []
+    offset = 0
+    page = 1000
+    while len(out_tools) < limit:
+        listed = list_catalog_tools(
+            domain=domain, limit=min(page, limit - len(out_tools)), offset=offset,
+        )
+        batch = listed.get("tools") or []
+        if not batch:
+            break
+        out_tools.extend(batch)
+        offset += len(batch)
+        if len(batch) < page:
+            break
+    listed = {"tools": out_tools[:limit], "source": "sql"}
     out: List[Dict[str, Any]] = []
     for t in listed.get("tools") or []:
         mcp_name = t.get("mcp_name") or _safe_name(t.get("id") or "", t.get("name") or "")
@@ -432,7 +481,7 @@ def expand_mcp_tool_records(
         out.append({
             "name": mcp_name,
             "description": (
-                f"[catalog/{t.get('source', 'catalog')}] {desc} "
+                f"[catalog] {desc} "
                 f"(surface={t.get('attack_surface') or '-'}, "
                 f"kind={t.get('kind') or '-'})"
             ),
@@ -464,34 +513,219 @@ def merge_into_registry() -> Dict[str, Any]:
         reg.load()
         # Remove previous catalog source entries
         reg.tools = [t for t in reg.tools if t.get("source") != "catalog"]
-        listed = list_catalog_tools(limit=5000)
+        # Pull full inventory from SQL in pages
         added = 0
-        for t in listed.get("tools") or []:
-            rec = {
-                "name": t.get("name"),
-                "source": "catalog",
-                "domain": t.get("domain") or "misc",
-                "path": t.get("toolbox_path") or t.get("path") or "",
-                "url": t.get("url") or "",
-                "description": t.get("description") or "",
-                "usage": t.get("usage") or [],
-                "entry_points": t.get("entry_points") or [],
-                "language": t.get("language") or "",
-                "id": t.get("id"),
-                "mcp_name": t.get("mcp_name"),
-                "kind": t.get("kind"),
-                "category": t.get("category"),
-                "attack_surface": t.get("attack_surface"),
-            }
-            reg.tools.append(rec)
-            added += 1
+        offset = 0
+        page = 1000
+        source = "sql"
+        while True:
+            listed = list_catalog_tools(limit=page, offset=offset)
+            batch = listed.get("tools") or []
+            if not batch:
+                break
+            source = listed.get("source") or source
+            for t in batch:
+                rec = {
+                    "name": t.get("name"),
+                    "source": "catalog",
+                    "domain": t.get("domain") or "misc",
+                    "path": t.get("toolbox_path") or t.get("path") or "",
+                    "url": t.get("url") or "",
+                    "description": t.get("description") or "",
+                    "usage": t.get("usage") or [],
+                    "entry_points": t.get("entry_points") or [],
+                    "language": t.get("language") or "",
+                    "id": t.get("id"),
+                    "mcp_name": t.get("mcp_name"),
+                    "kind": t.get("kind"),
+                    "category": t.get("category"),
+                    "attack_surface": t.get("attack_surface"),
+                }
+                reg.tools.append(rec)
+                added += 1
+            offset += page
+            if len(batch) < page or offset >= 20000:
+                break
         reg._reindex()
         reg._save()
         return {
             "ok": True,
             "added": added,
             "total": len(reg.tools),
-            "source": listed.get("source"),
+            "source": source,
         }
     except Exception as e:
         return {"ok": False, "error": str(e)[:200]}
+
+
+def catalog_count(
+    *,
+    surface: str = "",
+    kind: str = "",
+    text: str = "",
+) -> Dict[str, Any]:
+    """Fast count-only (SQL aggregates preferred)."""
+    try:
+        from core.catalog.sql_store import count_stats, sql_ready, search_sql
+        if not sql_ready():
+            return {"ok": False, "error": "sql not ready — catalog_sync first", "count": 0}
+        if not surface and not kind and not text:
+            st = count_stats(refresh=False)
+            return {
+                "ok": True,
+                "count": st.get("total") or 0,
+                "by_kind": st.get("by_kind"),
+                "by_surface": st.get("by_surface"),
+                "source": "sql_stats",
+            }
+        # Filtered count via search (over-fetch cap)
+        r = search_sql(
+            attack_surface=surface,
+            kind=kind,
+            text=text,
+            limit=5000,
+            include_payload=False,
+        )
+        return {
+            "ok": bool(r.get("ok")),
+            "count": r.get("count") or 0,
+            "source": "sql_filter",
+            "took_s": r.get("took_s"),
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:160], "count": 0}
+
+
+def catalog_by_kind(kind: str = "", *, limit: int = 50, offset: int = 0) -> Dict[str, Any]:
+    return list_catalog_tools(kind=kind, limit=limit, offset=offset)
+
+
+def catalog_by_tag(tag: str, *, limit: int = 50) -> Dict[str, Any]:
+    """Tag search uses FTS/LIKE on tags field."""
+    tag = (tag or "").strip()
+    if not tag:
+        return {"ok": False, "error": "tag required", "tools": []}
+    return list_catalog_tools(text=tag, limit=limit)
+
+
+def catalog_random(*, n: int = 5, surface: str = "") -> Dict[str, Any]:
+    """Sample random catalog tools (SQL ORDER BY RANDOM)."""
+    n = max(1, min(int(n or 5), 50))
+    try:
+        from core.catalog.sql_store import _connect, sql_ready, init_catalog_db
+        if not sql_ready():
+            return {"ok": False, "error": "sql not ready", "tools": []}
+        init_catalog_db()
+        conn = _connect()
+        if surface:
+            rows = conn.execute(
+                "SELECT payload_json FROM catalog_entries "
+                "WHERE attack_surface = ? ORDER BY RANDOM() LIMIT ?",
+                (surface.lower(), n),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT payload_json FROM catalog_entries "
+                "ORDER BY RANDOM() LIMIT ?",
+                (n,),
+            ).fetchall()
+        tools = []
+        for r in rows:
+            try:
+                ent = json.loads(r["payload_json"])
+                tools.append(_entry_to_tool(ent))
+            except Exception:
+                continue
+        return {"ok": True, "count": len(tools), "tools": tools, "source": "sql"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:160], "tools": []}
+
+
+def catalog_export_ids(
+    *,
+    surface: str = "",
+    kind: str = "",
+    limit: int = 5000,
+) -> Dict[str, Any]:
+    """Export entry ids + mcp_names for bulk AI routing."""
+    limit = max(1, min(int(limit or 5000), 20000))
+    try:
+        from core.catalog.sql_store import _connect, sql_ready, init_catalog_db
+        if not sql_ready():
+            return {"ok": False, "error": "sql not ready", "ids": []}
+        init_catalog_db()
+        conn = _connect()
+        where = []
+        params: List[Any] = []
+        if surface:
+            where.append("attack_surface = ?")
+            params.append(surface.lower())
+        if kind:
+            where.append("kind = ?")
+            params.append(kind)
+        sql = "SELECT entry_id, name, kind, attack_surface FROM catalog_entries"
+        if where:
+            sql += " WHERE " + " AND ".join(where)
+        sql += f" LIMIT {limit}"
+        rows = conn.execute(sql, params).fetchall()
+        ids = []
+        for r in rows:
+            eid = r["entry_id"]
+            name = r["name"] or eid
+            ids.append({
+                "id": eid,
+                "name": name,
+                "mcp_name": _safe_name(eid, name),
+                "kind": r["kind"],
+                "attack_surface": r["attack_surface"],
+            })
+        return {"ok": True, "count": len(ids), "ids": ids, "source": "sql"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:160], "ids": []}
+
+
+def catalog_page(
+    *,
+    page: int = 1,
+    page_size: int = 100,
+    surface: str = "",
+    kind: str = "",
+    text: str = "",
+) -> Dict[str, Any]:
+    """1-based page helper over list_catalog_tools."""
+    page = max(1, int(page or 1))
+    page_size = max(1, min(int(page_size or 100), 500))
+    offset = (page - 1) * page_size
+    r = list_catalog_tools(
+        surface=surface, kind=kind, text=text,
+        limit=page_size, offset=offset,
+    )
+    r["page"] = page
+    r["page_size"] = page_size
+    return r
+
+
+def dynamic_mcp_tools_list(
+    *,
+    limit: Optional[int] = None,
+    domain: str = "",
+) -> List[Dict[str, Any]]:
+    """Build full MCP tools/list payload: meta + wrappers + catalog virtuals."""
+    expand = (os.environ.get("KFIOSA_MCP_EXPAND_CATALOG") or "1").strip().lower()
+    if expand in ("0", "false", "no", "off"):
+        return []
+    if limit is None:
+        try:
+            limit = int(os.environ.get("KFIOSA_MCP_CATALOG_EXPAND_LIMIT") or "0")
+        except ValueError:
+            limit = 0
+        if limit <= 0:
+            # Default: full SQL inventory (capped at 20k for safety)
+            try:
+                from core.catalog.sql_store import count_stats
+                limit = int((count_stats(refresh=False) or {}).get("total") or 5000)
+            except Exception:
+                limit = 5000
+            limit = max(limit, 5000)
+        limit = min(limit, 20000)
+    return expand_mcp_tool_records(limit=limit, domain=domain)

@@ -453,7 +453,8 @@ def search_sql(
         }
     try:
         conn = _connect(db_path)
-        limit = max(1, min(int(limit or 50), 500))
+        # Allow large pages for MCP bulk merge / export (was 500).
+        limit = max(1, min(int(limit or 50), 20000))
         params: List[Any] = []
         where: List[str] = []
         if attack_surface:
