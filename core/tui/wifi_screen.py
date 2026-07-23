@@ -78,17 +78,18 @@ class WiFiScreen(BaseScreen):
             ("Advanced…", self._show_advanced),
             ("Back", self.parent_callback),
         ]
+        # Post-exploit Plan/Execute are intentionally NOT listed: PE is
+        # auto-attached to every engagement chain (attach_post_exploit).
         self.advanced_items = [
             ("Pick Wireless Interface (auto-detect + monitor)", self.pick_interface),
             ("Generate Attack Plan (AI only)", self.generate_attack_plan),
-            ("Post-Exploit: Plan (AI+KB+MSF)", self.plan_post_exploit),
-            ("Post-Exploit: Execute Plan (gated)", self.execute_post_exploit),
             ("Launch Metasploit polymorphic exploit", self.launch_metasploit_exploit),
             ("Establish C2 Beacon (MITRE T1041)", self.establish_c2_beacon),
             ("Show KB Tools for WiFi", self.show_kb_tools),
             ("Fetch WiFi tool repos (clone into toolboxes/)", lambda: self.fetch_domain_repos("wifi")),
             ("Prepare WiFi tools (install deps)", lambda: self.prepare_domain_tools("wifi")),
             ("Toggle 0-day exploit generator on chain (optional)", self.toggle_attach_zero_day),
+            ("Open Flask dashboard", self.open_flask_dashboard),
             ("Back to Primary", self._show_primary),
         ]
         # Initialise the interface-mode label (no iface selected →
@@ -212,8 +213,17 @@ class WiFiScreen(BaseScreen):
             if self.selected_target is not None:
                 self.selected_target["one_click_plan"] = data
                 self.selected_target["attack_plan"] = data
+                self.selected_target["attach_post_exploit"] = True
+                self.selected_target["post_exploit"] = True
+                self.selected_target.setdefault("anti_forensics", True)
         except Exception as e:
             self.activity_log.append(f"[!] one-click planner failed: {e}")
+
+        # PE auto-attached on every engagement (not a separate TUI mode).
+        if isinstance(self.selected_target, dict):
+            self.selected_target["attach_post_exploit"] = True
+            self.selected_target["post_exploit"] = True
+            self.selected_target.setdefault("anti_forensics", True)
 
         # Reuse the full recon + gated attack chain.
         self._run_adaptive(until_access=True)
@@ -259,11 +269,12 @@ class WiFiScreen(BaseScreen):
             )
             return
 
-        # Force full AIO options on the engagement.
+        # Force full AIO options on the engagement (PE always on chain).
         self.attach_zero_day = True
         t = dict(self.selected_target)
         t["aio"] = True
         t["attach_zero_day"] = True
+        t["attach_post_exploit"] = True
         t["post_exploit"] = True
         t["anti_forensics"] = True
         t["polymorphic"] = True
@@ -453,6 +464,10 @@ class WiFiScreen(BaseScreen):
         target.setdefault("aio", True)
         target.setdefault("polymorphic", True)
         target["attach_zero_day"] = bool(self.attach_zero_day or True)
+        # Post-exploit always rides on the engagement chain (not a TUI mode).
+        target["attach_post_exploit"] = True
+        target["post_exploit"] = True
+        target.setdefault("anti_forensics", True)
 
         def run():
             try:
@@ -479,6 +494,11 @@ class WiFiScreen(BaseScreen):
                         f"[+] Engagement ACCESS: session={access.get('session_id')} "
                         f"creds={'yes' if access.get('creds') else 'no'}"
                     )
+                    # Best-effort: open Flask dashboard with live session.
+                    try:
+                        self._spawn_flask_for_report(report)
+                    except Exception as e:
+                        self.activity_log.append(f"[i] Flask auto-open: {e}")
                 else:
                     cycles = ((report or {}).get("adaptive") or {}).get("cycles") or []
                     self.activity_log.append(
@@ -490,25 +510,50 @@ class WiFiScreen(BaseScreen):
 
         self._spawn(run)
 
-    def open_flask_dashboard(self):
-        """Best-effort: open / remind operator of the Flask RAT dashboard."""
+    def _spawn_flask_for_report(self, report: Optional[dict] = None) -> None:
+        """Spawn/reuse Flask RAT dashboard; log URL. Never raises."""
         try:
             from core.post_access_tui.rat_ext import spawn_rat_dashboard
-            rep = spawn_rat_dashboard(sessions=[])
+            sessions = []
+            access = (report or {}).get("access") or {}
+            if access.get("achieved") or access.get("session_id"):
+                sessions.append({
+                    "id": access.get("session_id") or "session",
+                    "kind": "wifi",
+                    "transport": access.get("transport") or "wifi",
+                    "achieved": set(access.get("achieved_set") or access.get("achievements") or {"access"}),
+                    "label": access.get("label") or "WiFi foothold",
+                })
+            rep = spawn_rat_dashboard(sessions=sessions, report=report)
             if isinstance(rep, dict) and rep.get("ok"):
                 host = rep.get("host") or "127.0.0.1"
                 port = rep.get("port")
-                self.activity_log.append(
-                    f"[+] Flask dashboard: http://{host}:{port}/"
-                )
+                url = rep.get("url") or f"http://{host}:{port}/"
+                self.activity_log.append(f"[+] Flask dashboard: {url}")
             else:
                 self.activity_log.append(
                     f"[i] Flask dashboard: {(rep or {}).get('error') or rep}"
                 )
+        except TypeError:
+            # Older signature without report=
+            try:
+                from core.post_access_tui.rat_ext import spawn_rat_dashboard
+                rep = spawn_rat_dashboard(sessions=[])
+                if isinstance(rep, dict) and rep.get("ok"):
+                    host = rep.get("host") or "127.0.0.1"
+                    port = rep.get("port")
+                    self.activity_log.append(
+                        f"[+] Flask dashboard: http://{host}:{port}/"
+                    )
+            except Exception as e:
+                self.activity_log.append(f"[i] Flask dashboard: {e}")
         except Exception as e:
-            self.activity_log.append(
-                f"[i] Flask dashboard spawn: {e} — try post-access after foothold"
-            )
+            self.activity_log.append(f"[i] Flask dashboard: {e}")
+
+    def open_flask_dashboard(self):
+        """Start the Flask/WSGI RAT dashboard (empty roster if no foothold yet)."""
+        self._spawn_flask_for_report(self._last_report if isinstance(
+            getattr(self, "_last_report", None), dict) else None)
 
     def pick_interface(self):
         """Detect wireless adapters, let the operator pick one, then put it

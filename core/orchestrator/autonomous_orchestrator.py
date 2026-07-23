@@ -269,16 +269,112 @@ class AutonomousOrchestrator:
         self.exploit_gen_manager = exploit_gen_manager
         self.zero_day_proposer = zero_day_proposer
         self.zero_day_exploit_builder = zero_day_exploit_builder
+        # Lazy O(1) action → handler map (see _action_dispatch_table).
+        self._action_dispatch: Optional[Dict[str, Callable]] = None
         self.zero_day_exploit_runner = zero_day_exploit_runner
         self.zero_day_classifier = zero_day_classifier
         # Post-exploit runner (defaults to building one lazily if we
         # have an AI backend; tests can pass a Fake).
         self.post_exploit_runner = post_exploit_runner
 
+        # Default 0-day pipeline wiring. When the caller did not inject
+        # explicit proposer/builder/runner instances and an AI backend is
+        # available, build lightweight defaults so the optional 0-day tail
+        # is functional instead of silently skipped. The classifier stays
+        # optional (it pulls a HuggingFace model and degrades gracefully).
+        if ai_backend is not None:
+            try:
+                from core.ai_backend.zero_day import ZeroDayProposer
+                from core.ai_backend.zero_day_exploit import (
+                    ZeroDayExploitBuilder,
+                    ZeroDayExploitRunner,
+                )
+                if self.zero_day_proposer is None:
+                    self.zero_day_proposer = ZeroDayProposer(
+                        ai_backend=ai_backend,
+                        on_event=self.on_event,
+                    )
+                if self.zero_day_exploit_builder is None:
+                    self.zero_day_exploit_builder = ZeroDayExploitBuilder(
+                        ai_backend=ai_backend,
+                        on_event=self.on_event,
+                    )
+                if self.zero_day_exploit_runner is None:
+                    self.zero_day_exploit_runner = ZeroDayExploitRunner(
+                        on_event=self.on_event,
+                    )
+            except Exception as e:  # noqa: BLE001
+                logger.debug("default 0-day wiring failed: %s", e)
+
     # ------------------------------------------------------------------
     def _emit(self, msg: str):
         self.on_event(msg)
         logger.info(msg)
+
+    def _action_dispatch_table(self) -> Dict[str, Callable]:
+        """Build (once) action-name → bound handler for O(1) step dispatch.
+
+        Zero-day *algorithm* action names stay dynamic (checked via
+        :func:`zero_day_algorithms_action_names` at call time) because the
+        registry can grow without restarting the orchestrator.
+        """
+        if self._action_dispatch is not None:
+            return self._action_dispatch
+        table: Dict[str, Callable] = {
+            "zero_day_propose": self._dispatch_zero_day,
+            "zero_day_build": self._dispatch_zero_day_build,
+            "zero_day_execute": self._dispatch_zero_day_execute,
+            "zero_day_docker_sim": self._dispatch_zero_day_docker_sim,
+            "post_exploit": self._dispatch_auto_post_exploit,
+            "external_terminal": self._dispatch_external_terminal,
+            "holo_desktop": self._dispatch_holo_desktop,
+            "desktop_nav": self._dispatch_holo_desktop,
+            "holo_run": self._dispatch_holo_desktop,
+            "mt7921e_test_injection": self._dispatch_mt7921e_test_injection,
+            "mt7921e_inject": self._dispatch_mt7921e_inject,
+            "external_inject": self._dispatch_external_inject,
+            "recon_probe": self._dispatch_recon_probe,
+            "ble_probe": self._dispatch_ble_probe,
+            "ble_attack": self._dispatch_ble_attack,
+            "wifi_attack": self._dispatch_wifi_attack,
+            "post_exploit_ext": self._dispatch_post_exploit_ext,
+            "post_exploit_anti_forensic": self._dispatch_post_exploit_anti_forensic,
+            "microsoft_attack": self._dispatch_microsoft_attack,
+            "android_attack": self._dispatch_android_attack,
+            "ios_attack": self._dispatch_ios_attack,
+            "live_target": self._dispatch_live_target,
+            "extended_wifi": self._dispatch_extended_wifi,
+            "ble_post_exploit": self._dispatch_ble_post_exploit,
+            "extended_ble": self._dispatch_extended_ble,
+            "osint_probe": self._dispatch_osint_probe,
+            "osint_ext": self._dispatch_osint_ext,
+            "osint_module": self._dispatch_osint_module,
+            "forensic_module": self._dispatch_forensic_module,
+            "post_exploit_probe": self._dispatch_post_exploit_probe,
+            "open_shell": self._dispatch_open_shell,
+            "open_post_access_tui": self._dispatch_open_post_access_tui,
+            "open_ble_tui": self._dispatch_open_ble_tui,
+            "open_network_tui": self._dispatch_open_network_tui,
+            "cve_to_exploit": self._dispatch_cve_to_exploit,
+            "cve_to_exploit_batch": self._dispatch_cve_to_exploit_batch,
+            "run_toolbox": self._dispatch_run_toolbox,
+            "run_python_lib": self._dispatch_run_python_lib,
+            "kismet_scan": self._dispatch_kismet_scan,
+            "crack": self._dispatch_crack,
+            "crack_gpu": self._dispatch_crack_gpu,
+            "pmkid": self._dispatch_pmkid,
+            "wps_pixie": self._dispatch_wps_pixie,
+            "wps_online": self._dispatch_wps_online,
+            "join_network": self._dispatch_join_network,
+            "host_discovery": self._dispatch_host_discovery,
+            "deploy_payload": self._dispatch_deploy_payload,
+            "live_edit": self._dispatch_live_edit,
+            "tool_install": self._dispatch_tool_install,
+            "c2_framework": self._dispatch_c2_framework,
+            "poly_adapt": self._dispatch_poly_adapt,
+        }
+        self._action_dispatch = table
+        return table
 
     def run(self, domain: str, seed: Dict[str, Any],
             *, autonomous: bool = False,
@@ -953,13 +1049,20 @@ class AutonomousOrchestrator:
         # engagement context. Defaults to ON (catch-all
         # post_clear_bash_history always fires; the operator can
         # CANCEL the rest).
-        attach_pe = self._resolve_attach_post_exploit(None)
+        # Prefer seed flags from EngagementEngine / simplified TUI
+        pe_flag = seed.get("attach_post_exploit")
+        if pe_flag is None and seed.get("post_exploit"):
+            pe_flag = True
+        attach_pe = self._resolve_attach_post_exploit(
+            pe_flag if pe_flag is not None else None
+        )
         try:
             steps = self.chain_planner.plan(
                 domain=domain, target=seed,
                 cves=cves, kb_tools=kb_tools,
                 attach_zero_day=attach_zd,
                 attach_post_exploit=attach_pe,
+                prior_results=list(seed.get("prior_results") or []) or None,
             )
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] chain_planner.plan failed: {e}; using empty chain")
@@ -1031,11 +1134,13 @@ class AutonomousOrchestrator:
             report["executed"].append(entry)
             self._record_access(report, entry)
             return
-        # real step — execute. Mark pre_accepted so nested tools
+        # real step — execute. Mark _kfiosa_pre_accepted so nested tools
         # (WiFiScanner.deauth_attack, crack helpers, …) do not re-prompt
-        # after this outer ACCEPT (single gate per step).
+        # after this outer ACCEPT (single gate per step).  The underscore
+        # prefix signals an internal-only flag; step data from the planner
+        # cannot bypass the gate by setting ``pre_accepted``.
         exec_step = dict(step)
-        exec_step["pre_accepted"] = True
+        exec_step["_kfiosa_pre_accepted"] = True
         res = self._execute_step(exec_step, seed)
         self._emit(f"[+] {desc}: {res}")
         entry = {"desc": desc, "kind": "real", "result": res}
@@ -1218,6 +1323,9 @@ class AutonomousOrchestrator:
             # step); the spawner itself is operator-gated via the
             # ACCEPT prompt that lives inside ``spawn_post_access_tui``.
             self._maybe_spawn_post_access_tui(report, autonomous=autonomous)
+            # Flask/WSGI RAT dashboard — auto-open once per foothold so the
+            # operator has a browser control plane without a separate TUI mode.
+            self._maybe_spawn_flask_dashboard(report)
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] gain-access hooks failed: {e}")
 
@@ -1351,6 +1459,43 @@ class AutonomousOrchestrator:
             self._emit(f"[i] post-access TUI: {err}")
             if manual:
                 self._emit(f"[i] manual: {manual}")
+
+    def _maybe_spawn_flask_dashboard(self, report: Dict[str, Any]) -> None:
+        """Auto-open the Flask/WSGI RAT dashboard once per foothold.
+
+        One-shot via ``report["access"]["flask_opened"]``. Never raises.
+        Does not re-prompt: access was already ACCEPT-gated.
+        """
+        try:
+            access = report.get("access") if isinstance(report, dict) else None
+            if not isinstance(access, dict) or not access.get("achieved"):
+                return
+            if access.get("flask_opened"):
+                return
+            from core.post_access_tui.rat_ext import spawn_rat_dashboard
+            sess = []
+            if access.get("session_id") or access.get("achieved"):
+                sess.append({
+                    "id": str(access.get("session_id") or "session"),
+                    "kind": access.get("kind") or access.get("transport") or "network",
+                    "transport": access.get("transport") or "network",
+                    "achieved": set(
+                        access.get("achieved_set")
+                        or access.get("achievements")
+                        or {"access"}
+                    ),
+                    "label": access.get("label") or "foothold",
+                })
+            res = spawn_rat_dashboard(sessions=sess, report=report)
+            if isinstance(res, dict) and res.get("ok"):
+                access["flask_opened"] = True
+                access["flask_url"] = res.get("url")
+                self._emit(f"[+] Flask dashboard: {res.get('url')}")
+            else:
+                err = (res or {}).get("error") if isinstance(res, dict) else res
+                self._emit(f"[i] Flask dashboard: {err}")
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[i] Flask dashboard spawn: {e}")
 
     def open_interactive_session(self, session_id, report: Dict[str, Any],
                                  *, autonomous: bool) -> Dict[str, Any]:
@@ -2495,21 +2640,55 @@ class AutonomousOrchestrator:
             settings=getattr(self, "settings", None)
             or getattr(self, "settings_manager", None),
         )
-        self._emit(
-            f"[*] holo_desktop goal={goal or 'custom'} tool={tool or '-'} "
-            f"model={model_name or '-'}"
+
+        # Plan mode (deep holo OS-agent integration): when the AI emits a
+        # ``plan`` (or the flat plan fields ``what_to_click`` /
+        # ``predicted_outcome``), run the predict→act→read→label loop
+        # instead of a one-shot desktop action.
+        plan = args.get("plan")
+        plan_fields = any(
+            args.get(k) for k in ("what_to_click", "where", "what_for",
+                                  "predicted_outcome")
         )
-        result = bridge.run(
-            task=str(task),
-            goal=str(goal),
-            tool=str(tool),
-            model_name=str(model_name),
-            extra=str(args.get("extra") or ""),
-            max_steps=args.get("max_steps"),
-            max_time_s=args.get("max_time_s"),
-            fake=fake,
-            dry_run=dry,
-        )
+        if isinstance(plan, dict) or plan_fields:
+            if not isinstance(plan, dict):
+                plan = {}
+            # Merge flat plan fields into the plan dict if the AI emitted
+            # them at the args top level (convenience).
+            for k in ("what_to_click", "where", "what_for",
+                      "predicted_outcome", "goal", "tool", "model",
+                      "extra"):
+                if args.get(k) and not plan.get(k):
+                    plan[k] = args.get(k)
+            self._emit(
+                f"[*] holo_desktop PLAN what_for={str(plan.get('what_for'))[:60] or '-'} "
+                f"click={str(plan.get('what_to_click'))[:60] or '-'}"
+            )
+            result = bridge.run_plan(
+                plan,
+                max_steps=args.get("max_steps"),
+                max_time_s=args.get("max_time_s"),
+                fake=fake,
+                dry_run=dry,
+                read_labels=bool(args.get("read_labels", True)),
+                label_duration_s=float(args.get("label_duration_s") or 6.0),
+            )
+        else:
+            self._emit(
+                f"[*] holo_desktop goal={goal or 'custom'} tool={tool or '-'} "
+                f"model={model_name or '-'}"
+            )
+            result = bridge.run(
+                task=str(task),
+                goal=str(goal),
+                tool=str(tool),
+                model_name=str(model_name),
+                extra=str(args.get("extra") or ""),
+                max_steps=args.get("max_steps"),
+                max_time_s=args.get("max_time_s"),
+                fake=fake,
+                dry_run=dry,
+            )
         ok = bool(result.get("ok"))
         self._emit(
             f"[{'+' if ok else '!'}] holo_desktop ok={ok} "
@@ -2530,6 +2709,8 @@ class AutonomousOrchestrator:
                     "ok": True,
                     "task": (result.get("task") or "")[:200],
                     "duration_s": result.get("duration_s"),
+                    "prediction_match": result.get("prediction_match"),
+                    "mode": "plan" if (isinstance(plan, dict) or plan_fields) else "oneshot",
                 }
 
     def _dispatch_poly_adapt(self, step: Dict[str, Any],
@@ -2568,7 +2749,24 @@ class AutonomousOrchestrator:
             }
             report["executed"].append(entry)
             return
-        if method not in list_poly_adapt_methods():
+        # Cache the method name set for the engagement (registry is static).
+        try:
+            from core.utils.hot_cache import GLOBAL_CACHE
+            known = GLOBAL_CACHE.get_or_set(
+                "poly_adapt_methods",
+                "all",
+                lambda: frozenset(list_poly_adapt_methods()),
+                ttl_s=300.0,
+            )
+        except Exception:
+            known = frozenset(list_poly_adapt_methods())
+        # Universal situational methods (poly_runtime) — always allowed.
+        _UNIVERSAL = frozenset({
+            "situational_pick", "poly_runtime", "ai_driven_pick",
+            "pick_wifi_strategy", "pick_ble_strategy",
+            "pick_osint_strategy", "pick_post_exploit_strategy",
+        })
+        if method not in known and method not in _UNIVERSAL:
             self._emit(
                 f"[!] poly_adapt: unknown method {method!r}"
             )
@@ -2581,12 +2779,63 @@ class AutonomousOrchestrator:
                     "ok": False,
                     "error": (
                         f"unknown poly_adapt method {method!r}; "
-                        f"available: {list_poly_adapt_methods()}"
+                        f"available: {sorted(known)[:40]}"
                     ),
                 },
             }
             report["executed"].append(entry)
             return
+        # Universal situational pick path (Python 3.10 poly_runtime).
+        if method in _UNIVERSAL:
+            try:
+                from core.utils.poly_runtime import situational_pick
+                merged_u = dict(args)
+                if isinstance(seed, dict):
+                    for k, v in seed.items():
+                        if k not in merged_u and k not in (
+                            "recon", "holo", "history",
+                        ):
+                            merged_u[k] = v
+                domain_u = (
+                    args.get("domain")
+                    or step.get("domain")
+                    or (seed or {}).get("domain")
+                    or "wifi"
+                )
+                result_u = situational_pick(
+                    domain_u,
+                    context=merged_u,
+                    phase=str(args.get("phase") or "any"),
+                    ai_hint=args.get("ai_hint") or args.get("hint"),
+                )
+                self._emit(
+                    f"[+] poly_adapt {method}: pick="
+                    f"{result_u.get('pick')} kind={result_u.get('poly_kind')}"
+                )
+                entry = {
+                    "desc": step.get("desc", "poly_adapt"),
+                    "kind": "ai",
+                    "action": "poly_adapt",
+                    "method": method,
+                    "result": result_u,
+                }
+                report["executed"].append(entry)
+                if isinstance(seed, dict) and result_u.get("ok"):
+                    seed.setdefault("poly", {})
+                    if isinstance(seed["poly"], dict):
+                        seed["poly"]["last"] = result_u
+                return
+            except Exception as e:  # noqa: BLE001
+                self._emit(f"[!] situational_pick failed: {e}")
+                entry = {
+                    "desc": step.get("desc", "poly_adapt"),
+                    "kind": "ai",
+                    "action": "poly_adapt",
+                    "method": method,
+                    "result": {"ok": False, "error": str(e)[:200]},
+                }
+                report["executed"].append(entry)
+                return
         # Merge live seed features so companions are target-adaptive
         # (encryption, clients, pmf, chipset, …) not just step.args.
         merged = dict(args)
@@ -2718,153 +2967,14 @@ class AutonomousOrchestrator:
                     "until access (creds/session) is achieved"
                 )
 
-        # Dispatch on action.
-        if action == "zero_day_propose":
-            self._dispatch_zero_day(step, seed, report)
-            return
-        if action == "zero_day_build":
-            self._dispatch_zero_day_build(step, seed, report)
-            return
-        if action == "zero_day_execute":
-            self._dispatch_zero_day_execute(step, seed, report)
-            return
-        if action in zero_day_algorithms_action_names():
-            self._dispatch_zero_day_algorithm(step, seed, report)
-            return
-        if action == "post_exploit":
-            self._dispatch_auto_post_exploit(step, seed, report)
-            return
-        if action == "external_terminal":
-            self._dispatch_external_terminal(step, seed, report)
-            return
-        if action in ("holo_desktop", "desktop_nav", "holo_run"):
-            self._dispatch_holo_desktop(step, seed, report)
-            return
-        if action == "mt7921e_test_injection":
-            self._dispatch_mt7921e_test_injection(step, seed, report)
-            return
-        if action == "mt7921e_inject":
-            self._dispatch_mt7921e_inject(step, seed, report)
-            return
-        if action == "external_inject":
-            self._dispatch_external_inject(step, seed, report)
-            return
-        if action == "recon_probe":
-            self._dispatch_recon_probe(step, seed, report)
-            return
-        if action == "ble_probe":
-            self._dispatch_ble_probe(step, seed, report)
-            return
-        if action == "ble_attack":
-            self._dispatch_ble_attack(step, seed, report)
-            return
-        if action == "wifi_attack":
-            self._dispatch_wifi_attack(step, seed, report)
-            return
-        if action == "post_exploit_ext":
-            self._dispatch_post_exploit_ext(step, seed, report)
-            return
-        if action == "post_exploit_anti_forensic":
-            self._dispatch_post_exploit_anti_forensic(step, seed, report)
-            return
-        if action == "microsoft_attack":
-            self._dispatch_microsoft_attack(step, seed, report)
-            return
-        if action == "android_attack":
-            self._dispatch_android_attack(step, seed, report)
-            return
-        if action == "ios_attack":
-            self._dispatch_ios_attack(step, seed, report)
-            return
-        if action == "live_target":
-            self._dispatch_live_target(step, seed, report)
-            return
-        if action == "extended_wifi":
-            self._dispatch_extended_wifi(step, seed, report)
-            return
-        if action == "ble_post_exploit":
-            self._dispatch_ble_post_exploit(step, seed, report)
-            return
-        if action == "extended_ble":
-            self._dispatch_extended_ble(step, seed, report)
-            return
-        if action == "osint_probe":
-            self._dispatch_osint_probe(step, seed, report)
-            return
-        if action == "osint_ext":
-            self._dispatch_osint_ext(step, seed, report)
-            return
-        if action == "osint_module":
-            self._dispatch_osint_module(step, seed, report)
-            return
-        if action == "forensic_module":
-            self._dispatch_forensic_module(step, seed, report)
-            return
-        if action == "post_exploit_probe":
-            self._dispatch_post_exploit_probe(step, seed, report)
-            return
-        if action == "open_shell":
-            self._dispatch_open_shell(step, seed, report)
-            return
-        if action == "open_post_access_tui":
-            self._dispatch_open_post_access_tui(step, seed, report)
-            return
-        if action == "open_ble_tui":
-            self._dispatch_open_ble_tui(step, seed, report)
-            return
-        if action == "open_network_tui":
-            self._dispatch_open_network_tui(step, seed, report)
-            return
-        if action == "cve_to_exploit":
-            self._dispatch_cve_to_exploit(step, seed, report)
-            return
-        if action == "cve_to_exploit_batch":
-            self._dispatch_cve_to_exploit_batch(step, seed, report)
-            return
-        if action == "run_toolbox":
-            self._dispatch_run_toolbox(step, seed, report)
-            return
-        if action == "run_python_lib":
-            self._dispatch_run_python_lib(step, seed, report)
-            return
-        if action == "kismet_scan":
-            self._dispatch_kismet_scan(step, seed, report)
-            return
-        if action == "crack":
-            self._dispatch_crack(step, seed, report)
-            return
-        if action == "crack_gpu":
-            self._dispatch_crack_gpu(step, seed, report)
-            return
-        if action == "pmkid":
-            self._dispatch_pmkid(step, seed, report)
-            return
-        if action == "wps_pixie":
-            self._dispatch_wps_pixie(step, seed, report)
-            return
-        if action == "wps_online":
-            self._dispatch_wps_online(step, seed, report)
-            return
-        if action == "join_network":
-            self._dispatch_join_network(step, seed, report)
-            return
-        if action == "host_discovery":
-            self._dispatch_host_discovery(step, seed, report)
-            return
-        if action == "deploy_payload":
-            self._dispatch_deploy_payload(step, seed, report)
-            return
-        if action == "live_edit":
-            self._dispatch_live_edit(step, seed, report)
-            return
-        if action == "tool_install":
-            self._dispatch_tool_install(step, seed, report)
-            return
-        if action == "c2_framework":
-            self._dispatch_c2_framework(step, seed, report)
-            return
-        if action == "poly_adapt":
-            self._dispatch_poly_adapt(step, seed, report)
+        # O(1) dispatch table (built once per orchestrator instance).
+        # Replaces a 40+ branch if-chain — same handlers, faster path,
+        # fewer branch mispredicts on long engagements.
+        handler = self._action_dispatch_table().get(action)
+        if handler is None and action in zero_day_algorithms_action_names():
+            handler = self._dispatch_zero_day_algorithm
+        if handler is not None:
+            handler(step, seed, report)
             return
         if action == "mcp_call":
             if self.mcp_client is not None:
@@ -2947,7 +3057,7 @@ class AutonomousOrchestrator:
                 "external": risk in ("intrusive", "destructive"),
                 # Walk already ACCEPTed — do not re-prompt inside
                 # _execute_step (one gate per step).
-                "pre_accepted": True,
+                "_kfiosa_pre_accepted": True,
             }
             res = self._execute_step(legacy_step, seed)
             self._emit(f"[+] {tool or action}: {res}")
@@ -3014,7 +3124,7 @@ class AutonomousOrchestrator:
                 "client": args.get("client") or args.get("station"),
                 "expected_runtime_seconds": step.get("expected_runtime_seconds"),
                 "external": risk in ("intrusive", "destructive"),
-                "pre_accepted": True,
+                "_kfiosa_pre_accepted": True,
             }
             res = self._execute_step(legacy_step, seed)
             # Stamp capture if airodump produced one.
@@ -3172,6 +3282,76 @@ class AutonomousOrchestrator:
         except Exception as e:
             self._emit(f"[!] zero_day_build failed: {e}")
             report["skipped"].append(f"zero_day_build: {e}")
+
+    def _dispatch_zero_day_docker_sim(self, step: Dict[str, Any],
+                                      seed: Dict[str, Any],
+                                      report: Dict[str, Any]) -> None:
+        """Recon → Docker twin → sim test → adapt → gated promote to real.
+
+        Pipeline lives in :mod:`core.zero_day_sandbox`. Real-target
+        promotion uses ``confirm_fn`` again (sim success ≠ real auth).
+        """
+        try:
+            from core.zero_day_sandbox import run_zero_day_docker_pipeline
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] zero_day_docker_sim import failed: {e}")
+            report["skipped"].append(f"zero_day_docker_sim: {e}")
+            return
+        args = step.get("args", {}) or {}
+        skip_real = bool(args.get("skip_real") or args.get("sim_only"))
+        max_rounds = int(args.get("max_adapt_rounds") or 5)
+        harness = str(args.get("harness_code") or args.get("code") or "")
+        recon = args.get("recon") or (seed.get("recon") if isinstance(seed, dict) else {})
+        exploit = None
+        exploit_id = args.get("exploit_id")
+        if exploit_id and self.zero_day_exploit_builder is not None:
+            try:
+                store = getattr(self.zero_day_exploit_builder, "store", None)
+                if store is not None and hasattr(store, "get"):
+                    exploit = store.get(exploit_id)
+            except Exception as e:  # noqa: BLE001
+                self._emit(f"[!] docker_sim: exploit load failed: {e}")
+        try:
+            result = run_zero_day_docker_pipeline(
+                seed=seed if isinstance(seed, dict) else {},
+                recon=recon if isinstance(recon, dict) else {},
+                harness_code=harness,
+                exploit=exploit,
+                target=args.get("target") or seed,
+                confirm_fn=self.confirm_fn,
+                skip_real=skip_real,
+                max_adapt_rounds=max_rounds,
+                on_event=self._emit,
+            )
+        except Exception as e:  # noqa: BLE001
+            self._emit(f"[!] zero_day_docker_sim failed: {e}")
+            report["skipped"].append(f"zero_day_docker_sim: {e}")
+            return
+        ok = bool(result.get("ok"))
+        self._emit(
+            f"[{'+' if ok else '!'}] zero_day_docker_sim stage="
+            f"{result.get('stage')} sim_ok={ok}"
+        )
+        entry = {
+            "desc": step.get("desc", "zero_day_docker_sim"),
+            "kind": "ai",
+            "action": "zero_day_docker_sim",
+            "tool": "core.zero_day_sandbox",
+            "result": {
+                k: result.get(k)
+                for k in (
+                    "ok", "stage", "error", "promoted", "cancelled_real",
+                    "seconds", "history", "adapt_log", "profile", "sim",
+                    "real", "model",
+                )
+                if k in result
+            },
+        }
+        report["executed"].append(entry)
+        if isinstance(seed, dict):
+            seed.setdefault("zero_day_docker", {})
+            if isinstance(seed["zero_day_docker"], dict):
+                seed["zero_day_docker"]["last"] = entry["result"]
 
     def _dispatch_zero_day_execute(self, step: Dict[str, Any],
                                    seed: Dict[str, Any],
@@ -5122,6 +5302,11 @@ class AutonomousOrchestrator:
         # Nested confirm: only re-prompt when the outer walk did NOT
         # already ACCEPT (pre_accepted). A True no-op keeps the single
         # gate contract used by AI walk / static walk after ACCEPT.
+        if pre_accepted:
+            self._emit(
+                "[!] SECURITY: deauth gate short-circuited because the outer "
+                "ACCEPT/CANCEL gate already approved this step."
+            )
         nested_confirm = (lambda _p: True) if pre_accepted else self.confirm_fn
         ws = WiFiScanner(interface=iface, confirm_fn=nested_confirm)
         ws.initialize()
@@ -5132,11 +5317,11 @@ class AutonomousOrchestrator:
     def _step_confirm(self, step: Dict[str, Any], prompt: str) -> bool:
         """Second-line confirm inside ``_execute_step``.
 
-        When the AI walk already ACCEPTed the step (``pre_accepted``),
+        When the AI walk already ACCEPTed the step (``_kfiosa_pre_accepted``),
         skip the nested prompt so the operator is not asked twice for
         the same action (designed: one gate per step).
         """
-        if step.get("pre_accepted"):
+        if step.get("_kfiosa_pre_accepted"):
             return True
         return bool(self.confirm_fn(prompt))
 
@@ -5209,7 +5394,7 @@ class AutonomousOrchestrator:
                     step.get("bssid") or (step.get("args") or {}).get("bssid"),
                     step.get("channel") or seed.get("channel"),
                     seed,
-                    pre_accepted=bool(step.get("pre_accepted")),
+                    pre_accepted=bool(step.get("_kfiosa_pre_accepted")),
                 )
             if action == "crack":
                 # Real aircrack-ng dictionary crack on the captured

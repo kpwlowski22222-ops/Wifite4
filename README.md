@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # 🛡️ KFIOSA / Wifite4
 
@@ -17,7 +17,8 @@ sudo python main.py          # launch dashboard
 ./run_tui.sh                  # alternative launcher
 ```
 
-**Main Menu:** WiFi Scan · BLE Scan · OSINT · Settings · Quit
+**Main Menu:** WiFi · BLE · OSINT People · OSINT Web · Settings · Quit  
+*(Post-exploit is auto-attached to engagement chains — not a separate menu mode.)*
 
 ---
 
@@ -29,33 +30,40 @@ sudo python main.py          # launch dashboard
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [What is KFIOSA](#-what-is-kfiosa)
-- [Feature Matrix](#-feature-matrix)
-- [Architecture Overview](#-architecture-overview)
-- [Quick Start](#-quick-start)
-- [AI Models & Providers](#-ai-models--providers)
-- [WiFi Capabilities](#-wifi-capabilities)
-- [BLE Capabilities](#-ble-capabilities)
-- [OSINT Capabilities](#-osint-capabilities)
-- [Post-Exploitation & Post-Access](#-post-exploitation--post-access)
-- [CVE-to-Exploit Pipeline](#-cve-to-exploit-pipeline)
-- [Polymorphic Evasion Engine](#-polymorphic-evasion-engine)
-- [Autonomous Orchestrator](#-autonomous-orchestrator)
-- [MCP Server](#-mcp-server)
-- [Holographic Desktop Agent](#-holographic-desktop-agent)
-- [Tool Catalog](#-tool-catalog)
-- [Configuration](#%EF%B8%8F-configuration)
-- [Project Layout](#-project-layout)
-- [Safety Model](#-safety-model)
-- [Development & Testing](#-development--testing)
-- [Known Issues & Roadmap](#-known-issues--roadmap)
-- [License](#-license)
-- [Disclaimer](#%EF%B8%8F-disclaimer)
+- [What is KFIOSA](#what-is-kfiosa)
+- [Feature Matrix](#feature-matrix)
+- [Architecture Overview](#architecture-overview)
+- [Dependencies](#dependencies)
+- [Quick Start](#quick-start)
+- [Large Archives (multi-part restore)](#large-archives-multi-part-restore)
+- [AI Models & Providers](#ai-models--providers)
+- [WiFi Capabilities](#wifi-capabilities)
+- [BLE Capabilities](#ble-capabilities)
+- [External Scan Windows & Terminal](#external-scan-windows--terminal)
+- [Kismet Integration](#kismet-integration)
+- [OSINT Capabilities](#osint-capabilities)
+- [Post-Exploitation & Post-Access](#post-exploitation--post-access)
+- [CVE-to-Exploit Pipeline](#cve-to-exploit-pipeline)
+- [Polymorphic Evasion Engine](#polymorphic-evasion-engine)
+- [Autonomous Orchestrator](#autonomous-orchestrator)
+- [MCP Server](#mcp-server)
+- [Holographic Desktop Agent](#holographic-desktop-agent)
+- [Tool Catalog](#tool-catalog)
+- [Configuration](#configuration)
+- [Project Layout](#project-layout)
+- [Safety Model](#safety-model)
+- [Development & Testing](#development--testing)
+- [Known Issues & Roadmap](#known-issues--roadmap)
+- [License](#license)
+- [Disclaimer](#disclaimer)
 
 ---
 
+---
+
+<a id="what-is-kfiosa"></a>
 ## 🔍 What is KFIOSA
 
 KFIOSA (also known as **Wifite4**) is a next-generation, AI-driven offensive security platform that combines:
@@ -77,6 +85,7 @@ KFIOSA (also known as **Wifite4**) is a next-generation, AI-driven offensive sec
 
 ---
 
+<a id="feature-matrix"></a>
 ## 🎯 Feature Matrix
 
 | Attack Surface | Capabilities | Module Count |
@@ -93,6 +102,7 @@ KFIOSA (also known as **Wifite4**) is a next-generation, AI-driven offensive sec
 
 ---
 
+<a id="architecture-overview"></a>
 ## 🏗 Architecture Overview
 
 ```
@@ -164,66 +174,253 @@ KFIOSA (also known as **Wifite4**) is a next-generation, AI-driven offensive sec
 
 ---
 
+<a id="dependencies"></a>
+## 📦 Dependencies
+
+KFIOSA is a **Linux-first** stack. Missing tools degrade to honest errors — install only what you need for your engagement surface.
+
+### Platform
+
+| Requirement | Notes |
+|-------------|--------|
+| **OS** | Linux (Kali / Debian / Ubuntu recommended) |
+| **Python** | **3.10+** (3.11+ recommended for newer Frida) |
+| **Shell** | `bash` / `zsh`; `sudo` for monitor mode & injection |
+| **Display** | X11 (or Wayland with XWayland) for external scan terminals |
+| **Disk** | ≥2 GB for clone + venv; multi-GB if restoring `archives/toolboxes*` |
+| **RAM / VRAM** | 8 GB+ for TUI alone; 12–32 GB VRAM for local 14B–30B Ollama models |
+
+### Python (pip) — `requirements.txt`
+
+Install into a virtualenv (never system-wide on Kali if you can avoid it):
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip wheel
+pip install -r requirements.txt
+```
+
+| Package | Role |
+|---------|------|
+| `requests`, `python-dotenv`, `aiohttp` | HTTP, env loading, async scanners |
+| `torch`, `transformers`, `datasets`, `huggingface_hub` | Local ML / HF models / 0-day triage |
+| `bleak` | BLE GATT / scan |
+| `shodan` | OSINT Shodan API |
+| `dnslib`, `pycryptodome` | C2 lab DNS/crypto |
+| `pymetasploit3` | Metasploit RPC |
+| `frida`, `frida-tools` | Mobile instrumentation (pinned for Py3.10) |
+| `google-cloud-aiplatform`, `google-auth*`, `google-api-python-client` | Optional Google Cloud |
+| `windows-curses` | **Windows only** (curses is stdlib on Linux) |
+
+Optional extras used by advanced paths (install if you hit ImportError):
+
+```bash
+pip install scapy rich prompt-toolkit selenium playwright opencv-python-headless
+pip install holo-desktop-cli   # OS desktop agent (Holo)
+```
+
+### System packages (apt / Kali)
+
+**Core WiFi / radio**
+
+```bash
+sudo apt update
+sudo apt install -y \
+  aircrack-ng hashcat hcxtools hcxdumptool reaver bully mdk4 \
+  hostapd dnsmasq iw wireless-tools net-tools \
+  tcpdump wireshark-common tshark
+```
+
+**BLE**
+
+```bash
+sudo apt install -y bluez bluez-tools bluetooth rfkill
+# optional long-range / HCI tools
+sudo apt install -y bluez-hcidump || true
+```
+
+**OSINT / recon / general**
+
+```bash
+sudo apt install -y \
+  nmap masscan nikto sqlmap whatweb \
+  git curl wget jq zstd tar \
+  python3-venv python3-dev build-essential \
+  libffi-dev libssl-dev
+```
+
+**Metasploit / exploitation (optional)**
+
+```bash
+sudo apt install -y metasploit-framework
+# or use official MSF installer
+```
+
+**Kismet (optional wireless IDS)**
+
+```bash
+sudo apt install -y kismet
+# Web UI: http://127.0.0.1:2501  (default operator login often admin/admin
+# after first-run config in /root/.kismet/kismet_httpd.conf)
+```
+
+**External terminal emulators** (for triple live scan windows)
+
+```bash
+sudo apt install -y xterm   # default; also supported: kitty foot alacritty
+# optional: gnome-terminal xfce4-terminal konsole
+```
+
+### External services (optional)
+
+| Service | Used for | Install / account |
+|---------|----------|-------------------|
+| **Ollama** | Primary LLM chain planner | https://ollama.com — `curl -fsSL https://ollama.com/install.sh \| sh` |
+| **Groq / DeepSeek / Gemini** | Cloud LLM fallbacks | API keys in `.env` |
+| **Shodan** | Host/port OSINT | `SHODAN_API_KEY` |
+| **NVD** | CVE lookup rate limits | `NVD_API_KEY` (recommended) |
+| **Hugging Face** | Gated models | `HF_TOKEN` |
+| **Kismet** | Live wireless spectrum UI/API | local server + optional API token |
+
+### Hardware
+
+| Surface | Recommended hardware |
+|---------|----------------------|
+| **WiFi** | MediaTek **MT7922 / `mt7921e`** (injection-capable); any mac80211 NIC for monitor mode |
+| **BLE** | BlueZ-compatible HCI (`hci0`); USB long-range adapters for field work |
+| **GPU** | NVIDIA (CUDA) optional for local torch / large Ollama models |
+
+### What is **not** committed (reinstall / restore)
+
+| Path | How to obtain |
+|------|----------------|
+| `.venv/` | `python3 -m venv .venv && pip install -r requirements.txt` |
+| `models/` | Restore from `archives/models.tar.zst.part_*` or pull via Ollama/HF |
+| `toolboxes/` | Restore from `archives/toolboxes.tar.zst.part_*` or `scripts/fetch_toolboxes.py` |
+| `data/finetune/` | Restore from `archives/data-finetune.tar.zst.part_*` |
+| `workspace/` | Local-only finetune scratch (not shipped) |
+| `.env` | `cp .env.example .env` — **never commit real secrets** |
+
+---
+
+<a id="quick-start"></a>
 ## 🚀 Quick Start
-
-### Prerequisites
-
-- **OS:** Linux (Kali Linux recommended)
-- **Python:** 3.10 or higher
-- **Hardware (WiFi):** MediaTek MT7922 / `mt7921e` or any mac80211 adapter for monitor mode
-- **Hardware (BLE):** Any BlueZ-compatible HCI adapter
-- **Root/sudo:** Required for monitor mode, injection, and some scanners
 
 ### Installation
 
 ```bash
-# 1. Clone the repository
+# 1. Clone
 git clone https://github.com/kpwlowski22222-ops/Wifite4.git
 cd Wifite4
 
-# 2. Create and activate virtual environment
+# 2. (If using Git LFS for multi-part archives)
+git lfs install
+git lfs pull   # downloads archives/* large objects
+
+# 3. Restore large assets (optional — see Archives section)
+cat archives/models.tar.zst.part_* | zstd -d | tar -xf -
+cat archives/toolboxes.tar.zst.part_* | zstd -d | tar -xf -
+# or rebuild toolboxes from catalog:
+# python scripts/fetch_toolboxes.py --all --limit 15
+
+# 4. Virtualenv + Python deps
 python3 -m venv .venv
 source .venv/bin/activate
-
-# 3. Install Python dependencies
+pip install -U pip wheel
 pip install -r requirements.txt
 
-# 4. Copy environment template (all keys optional)
+# 5. Environment template (all keys optional)
 cp .env.example .env
-# Edit .env and fill in API keys you want to use
+# Edit .env — OLLAMA_CLOUD_TOKEN, NVD_API_KEY, SHODAN_API_KEY, …
 
-# 5. (Recommended) Install Ollama for AI features
+# 6. System tools (example — Kali)
+sudo apt install -y aircrack-ng hashcat bluez zstd xterm
+
+# 7. Ollama (recommended for AI chains)
 curl -fsSL https://ollama.com/install.sh | sh
 ollama serve &
-ollama pull minimax-m3:cloud    # primary cloud model
-# Or pull a local model:
-# ollama pull qwen2.5-coder:14b
+ollama pull minimax-m3:cloud    # cloud primary (needs OLLAMA_CLOUD_TOKEN)
+# ollama pull qwen2.5-coder:14b  # local alternative
 ```
 
 ### Launch
 
 ```bash
-# Launch the TUI dashboard (recommended)
-sudo python main.py
-
-# Alternative launcher script
+# TUI dashboard (recommended)
+sudo -E env PATH="$PATH" .venv/bin/python main.py
+# or
 sudo ./run_tui.sh
 
-# Run the full pipeline (advanced)
+# Full pipeline (advanced)
 sudo ./run_full_pipeline.sh
+
+# CLI helpers
+python main.py --cli holo status
+python main.py --cli ble-scan --text --seconds 20
+python main.py --cli wifi-scan --iface wlan0mon --text
 ```
 
 ### First Run
 
 On first launch, KFIOSA will:
-1. Expand `PATH` for common tool locations (`/usr/local/bin`, etc.)
+1. Expand `PATH` for common tool locations (`/usr/local/bin`, Kali paths, …)
 2. Load settings from `config/dashboard_settings.json`
 3. Probe/start `ollama serve` if available
 4. Run preflight checks for dependencies
-5. Launch the curses dashboard
+5. Launch the curses dashboard (WiFi · BLE · OSINT · Settings · Quit)
+
+### Settings TUI highlights
+
+| Setting | Purpose |
+|---------|---------|
+| **External Terminal** | Detect/pick `xterm`, `kitty`, `foot`, `alacritty`, … or `tail` |
+| **Scan Window Font Scale** | `1.0` = TUI density; `2.0` = larger external windows (geometry shrinks to fit) |
+| Ollama endpoint / domain models | Per-domain model mapping |
+| Scan timeouts | WiFi / BLE scan duration defaults |
+
+Env override for scan font: `KFIOSA_SCAN_FONT_SCALE=2.0`.
 
 ---
 
+<a id="large-archives-multi-part-restore"></a>
+## 📚 Large Archives (multi-part restore)
+
+GitHub hard-limits files at **100 MB**. Multi-gigabyte trees are stored under **`archives/`** as **zstd tar streams split into ≤90 MB parts**, tracked with **Git LFS** when available.
+
+| Prefix | Restores | Typical size |
+|--------|----------|--------------|
+| `models.tar.zst.part_*` | `models/` | ~0.5–1 GB compressed |
+| `data-finetune.tar.zst.part_*` | `data/finetune/` | hundreds of MB |
+| `toolboxes.tar.zst.part_*` | `toolboxes/` | multi-GB |
+| `wordlists.tar.zst` | `wordlists/` | small |
+| `datasets.tar.zst` | `datasets/` | small |
+
+**Restore** (from repo root; needs `zstd` + `tar`):
+
+```bash
+# Integrity (optional)
+cd archives && sha256sum -c MANIFEST.sha256 && cd ..
+
+cat archives/models.tar.zst.part_*        | zstd -d | tar -xf -
+cat archives/data-finetune.tar.zst.part_* | zstd -d | tar -xf -
+cat archives/toolboxes.tar.zst.part_*     | zstd -d | tar -xf -
+zstd -d -c archives/wordlists.tar.zst | tar -xf -
+zstd -d -c archives/datasets.tar.zst  | tar -xf -
+```
+
+Full maintainer notes: [`archives/README.md`](archives/README.md).
+
+**Without archives** — rebuild toolboxes from the catalog:
+
+```bash
+python scripts/fetch_toolboxes.py --all --limit 15
+python scripts/prepare_toolboxes.py --all
+```
+
+---
+
+<a id="ai-models--providers"></a>
 ## 🤖 AI Models & Providers
 
 KFIOSA uses a sophisticated multi-provider AI backend with automatic fallback:
@@ -264,11 +461,36 @@ Each attack surface uses a specialized model for optimal results:
 | **Zero-Day Triage Classifier** | `cpranavsharma/Zero-Day-Agent` (Hugging Face) | Scores 0-day hypotheses — classification only |
 | **Exploit Body Generator** | Uncensored Ollama ladder via `ExploitGenModelManager` | PoC code generation |
 | **Chain Planner** | Primary Ollama model | Multi-step attack chain reasoning |
+| **Deep Thinking** | Auto-selected prompt layer (`core/ai_backend/deep_thinking.py`) | One of 4 reasoning types on every `AIBackend.query` |
+
+### Deep-Thinking Algorithms (auto-choice)
+
+Every AI model call auto-selects one of **ten** deep-thinking types (plus a named sub-algorithm). Override with `context["deep_thinking_type"]` / `context["deep_thinking_algorithm"]`. Disable with `KFIOSA_DEEP_THINKING=0` or `context["deep_thinking_enabled"]=False`.
+
+| Type | Pattern | Auto-picked when | Source inspiration |
+|------|---------|------------------|--------------------|
+| **`chain_of_thought`** | Sequential CoT | Chain/plan requests; post-exploit / C2 | CoT (Wei et al.) |
+| **`tree_of_thought`** | Branch & score | Choose/compare tools or attacks; WiFi/BLE | ToT (Yao et al.) |
+| **`self_critique`** | Propose → critique → revise | Replan-on-failure; zero-day hypotheses | Self-refine / critique |
+| **`react_grounded`** | Observe → reason → act | OSINT / recon; evidence-first | ReAct (Yao et al.) |
+| **`graph_of_thought`** | Merge / refine sub-results | Correlate recon+CVE+tools; subgoal reuse | GoT (Besta et al.) |
+| **`self_consistency`** | Multi-path majority vote | Consensus, cross-check, high stakes | CoT-SC (Wang et al.) |
+| **`least_to_most`** | Easy → hard decomposition | Break down complex goals / compound Qs | LtM (Zhou et al.) |
+| **`plan_and_solve`** | Plan phase then execute | Plan-then-execute; missing-step fill | Plan-and-Solve |
+| **`reflexion`** | Verbal RL from history | Engagement history, stuck strategy | Reflexion (Shinn et al.) |
+| **`multi_agent_debate`** | Red/blue / panel debate | Debate, pros/cons, specialist panel | Multi-agent debate |
+
+Sub-algorithms: **3 per type (30 total)** — see `core/ai_backend/deep_thinking.py`.
+
+**Enhancements:** structured scratch/budget/checklist protocol (JSON-safe for chain schemas); ToT score rubrics; GoT generate→link→aggregate→refine→distill; PS+ variable extract + missing-step audit; universal self-consistency synthesize on vote split; Reflexion lesson templates; debate judges must address Blue’s objections; complexity-aware auto-select + optional hybrid PS+/near-tie enhancers for high-complexity CoT/ToT.
+
+Heavier / high-intensity types **soft-prefer** the Tier-2 THINKING overlay model when it is installed; light types (most ReAct) do not. The domain primary model is still tried first.
 
 Override the primary model: set `OLLAMA_DEFAULT_MODEL` in `.env`.
 
 ---
 
+<a id="wifi-capabilities"></a>
 ## 📡 WiFi Capabilities
 
 **Hardware focus:** MediaTek **MT7922 / `mt7921e`** + generic mac80211 adapters (`airmon-ng` / `iw`).
@@ -279,7 +501,8 @@ Override the primary model: set `OLLAMA_DEFAULT_MODEL` in `.env`.
 - Interface management and monitor mode toggling
 - WPS probe and status detection
 - Enhanced scan with **NVD CVE** keyword correlation
-- **Kismet** server/client helpers (requires `KISMET_API_KEY`)
+- **Kismet** server/client helpers (HTTP API + optional API token; see [Kismet Integration](#kismet-integration))
+- **Triple external scan windows** (UL APs / UR clients / BR offline) with scale-aware geometry
 - Catalog-based recon: client enumeration, hidden SSID detection, signal mapping, handshake/EAPOL capture, channel planning, wardrive data fusion, weakpass wordlists
 
 ### Attack Engine
@@ -320,9 +543,25 @@ Located in `core/wifi_attack/` and `core/extended_wifi/` — **140+ modules** in
 
 ---
 
+<a id="ble-capabilities"></a>
 ## 📶 BLE Capabilities
 
 **Adapter:** Any BlueZ-compatible HCI adapter (`hci0` default); interface picker in `core/ble/adapter_select.py`.
+
+### Live Scan (external TUI)
+
+Same pattern as WiFi: **Scan Devices** opens a dedicated external terminal with a live long-range BLE scanner (`core/tui/ble_scan_external.py`):
+
+| Control | Action |
+|---------|--------|
+| **↑ / ↓** | Move selection |
+| **TAB** | Switch online ↔ disappeared tables |
+| **ENTER / SPACE** | Select target |
+| **A** | Queue **AIO ATTACK** (writes selection JSON + closes) |
+| **r** | Rescan / reset catalog |
+| **q** | Quit (keeps selection if any) |
+
+**Long-range defaults:** multi-backend merge (bleak → bluetoothctl → hcitool), LE Coded PHY when supported, max HCI scan duty cycle (`0x4000`), RSSI floor −127, active scan, no service filter. Override duration with `KFIOSA_BLE_SCAN_S`.
 
 ### Probe Engine (`BLEProbeRunner`) — 50+ Modules
 
@@ -360,6 +599,7 @@ All modules feature **honest degradation** — if `btmgmt`, `gatttool`, or scapy
 
 ---
 
+<a id="osint-capabilities"></a>
 ## 🔎 OSINT Capabilities
 
 Three-layer architecture with ~90+ integrated tool modules:
@@ -407,6 +647,7 @@ Additional: deep graphing, Google dorks, leak/CT helpers, data correlation engin
 
 ---
 
+<a id="post-exploitation--post-access"></a>
 ## 🔓 Post-Exploitation & Post-Access
 
 ### Post-Exploit Modules (`core/post_exploit/`)
@@ -438,6 +679,7 @@ Interactive session management interface after gaining access:
 
 ---
 
+<a id="cve-to-exploit-pipeline"></a>
 ## 🔬 CVE-to-Exploit Pipeline
 
 Located in `core/cve_to_exploit/`:
@@ -461,6 +703,7 @@ NVD Query → CVE Match → Exploit Database Correlation → PoC Template Select
 
 ---
 
+<a id="polymorphic-evasion-engine"></a>
 ## 🎭 Polymorphic Evasion Engine
 
 `core/modules/polymorphic_evasion.py` + `core/refactors/poly_adapt_companions.py`
@@ -479,6 +722,7 @@ The polymorphic engine mutates payloads to evade signature-based detection:
 
 ---
 
+<a id="autonomous-orchestrator"></a>
 ## 🤖 Autonomous Orchestrator
 
 `core/orchestrator/autonomous_orchestrator.py` + `core/orchestrator/adaptive_engagement.py`
@@ -496,6 +740,80 @@ The orchestrator enables fully autonomous or semi-autonomous attack campaigns:
 
 ---
 
+<a id="external-scan-windows--terminal"></a>
+## 🖥 External Scan Windows & Terminal
+
+Live WiFi/BLE scans can open **external terminal windows** so the operator watches dense live lists while the main dashboard stays free.
+
+### Triple layout (default when available)
+
+| Slot | WiFi | BLE |
+|------|------|-----|
+| **Top-left** | APs online | Devices online |
+| **Top-right** | Clients of focused AP | Device detail |
+| **Bottom-right** | Offline APs + timestamps | Offline devices |
+
+Selection in a window writes to a **scan bus** directory; the main TUI polls and can auto-start **engagement** (ACCEPT-gated chain).
+
+### Font scale & geometry
+
+- Default scale **1.0** (same information density as the main TUI).
+- Override: env `KFIOSA_SCAN_FONT_SCALE` or Settings → **Scan Window Font Scale**.
+- `geometry_string()` shrinks `COLSxROWS` with font size so 2×–4× fonts **still fit** the half-screen slot (no overflow).
+- Screen size: `xdpyinfo` or `KFIOSA_SCREEN_W` / `KFIOSA_SCREEN_H`.
+
+### Terminal backend
+
+Detection order: `xterm` → `gnome-terminal` → `konsole` → `xfce4-terminal` → `alacritty` → `kitty` → `foot` → `tmux` → `tail` (log-only fallback).  
+Persisted in `config/dashboard_settings.json` key `terminal`. CLI font knobs work for xterm/kitty/foot/alacritty.
+
+Implementation: `core/utils/external_terminal.py`, `core/tui/wifi_scan_bus.py`, `core/tui/ble_scan_bus.py`.
+
+---
+
+<a id="kismet-integration"></a>
+## 📡 Kismet Integration
+
+| Item | Detail |
+|------|--------|
+| **Package** | `kismet` (apt) — binary `/usr/bin/kismet` |
+| **Web UI** | `http://127.0.0.1:2501` |
+| **Remote capture** | `127.0.0.1:3501` |
+| **Auth file (root)** | `/root/.kismet/kismet_httpd.conf` (`httpd_username` / `httpd_password`) |
+| **API tokens** | `GET /auth/apikey/list.json` (HTTP basic) |
+| **KFIOSA client** | `core/scanners/kismet_runner.py` — env `KISMET_CLIENT_USERNAME` / `KISMET_CLIENT_PASSWORD` (defaults often `admin`/`admin`) |
+
+**Start**
+
+```bash
+sudo kismet --no-ncurses --daemonize
+# or interactive:
+sudo kismet
+```
+
+**If start fails with “Address already in use”**
+
+An old/stopped instance still holds ports 2501/3501:
+
+```bash
+sudo pkill -x kismet || true
+sudo pkill -9 -x kismet || true
+sudo ss -ltnp | grep -E '2501|3501'   # should be empty
+sudo kismet --no-ncurses --daemonize
+```
+
+**Smoke-test API**
+
+```bash
+curl -s -u admin:admin http://127.0.0.1:2501/system/status.json | head
+curl -s -u admin:admin http://127.0.0.1:2501/auth/apikey/list.json
+```
+
+Live capture DBs (`Kismet-*.kismet`) are **gitignored** (operator noise).
+
+---
+
+<a id="mcp-server"></a>
 ## 🔌 MCP Server
 
 `core/mcp/` — Model Context Protocol server for agent tool access.
@@ -507,12 +825,52 @@ Enables external AI agents to invoke KFIOSA's tools programmatically while the T
 
 ---
 
-## 🖥️ Holographic Desktop Agent
+<a id="holographic-desktop-agent"></a>
+## 🖥️ Holographic Desktop Agent (OS Agentic CLI)
 
-`core/desktop/holo_agent.py` — Experimental desktop agent integration for extended UI capabilities beyond the terminal TUI.
+KFIOSA integrates **[holo-desktop-cli](https://github.com/hcompai/holo-desktop-cli)** (H Company Holo3) so the AI chain and operator can drive the **real OS desktop** when terminal tools alone are not enough — Bluetooth system settings, WiFi monitor prep, Ollama model pulls, browser UIs.
+
+| Surface | How |
+|---------|-----|
+| **Chain action** | `holo_desktop` / `desktop_nav` (ACCEPT-gated, default-deny) |
+| **Settings TUI** | OS Agentic CLI — status / dry-run / enable toggle |
+| **BLE Advanced** | Long-range prep, Bluetooth system settings, stack diagnose |
+| **CLI** | `python main.py --cli holo …` |
+
+### CLI examples
+
+```bash
+# Probe install / login (no desktop control)
+python main.py --cli holo status
+python main.py --cli holo presets
+
+# Dry-run (print argv only)
+python main.py --cli holo run --goal ble_long_range_prep --dry-run
+
+# Real desktop control (explicit ACCEPT on this CLI call)
+python main.py --cli holo run --goal ble_long_range_prep --yes
+python main.py --cli holo run --goal ble_scan_cli --yes
+python main.py --cli holo run --goal wifi_monitor_prep --yes
+
+# Kill switch
+python main.py --cli holo stop
+
+# Long-range scanners without the dashboard
+python main.py --cli ble-scan --text --seconds 20
+python main.py --cli wifi-scan --iface wlan0mon --text
+```
+
+**Presets** (partial): `ble_long_range_prep`, `ble_scan_cli`, `ble_adapter_help`, `ble_system_settings`, `wifi_monitor_prep`, `wifi_scan_cli`, `ollama_list`, `ollama_serve`, `install_holo`, `open_terminal`.
+
+**Safety:** real desktop control is default-deny without a confirm gate (`--yes` on CLI, ACCEPT/CANCEL in the TUI). Missing `holo` binary → honest error + install hint — never fake success.
+
+**Install:** `pip install holo-desktop-cli` or the upstream installer; binary is also looked up under `~/.holo/bin` (including under `sudo` via `SUDO_USER`).
+
+Bridge code: `core/desktop/holo_agent.py`.
 
 ---
 
+<a id="tool-catalog"></a>
 ## 📚 Tool Catalog
 
 Located in `catalog/` with ~5,100 entries spanning GitHub repositories and Kali Linux packages.
@@ -542,11 +900,25 @@ Each entry includes:
 
 ---
 
+<a id="configuration"></a>
 ## ⚙️ Configuration
 
 ### Environment Variables (`.env`)
 
-Copy `.env.example` → `.env`. **All keys are optional** — the TUI reports `MISSING` when a feature cannot run.
+Copy `.env.example` → `.env` and fill credentials once. **All keys are optional** unless a feature needs them — the TUI reports `MISSING` when a feature cannot run.
+
+**Python tools** (any script under the repo):
+
+```python
+from core.env_loader import load_project_env, env, require_env, credentials_status
+
+load_project_env()                    # loads repo-root .env into os.environ
+nvd = env("NVD_API_KEY")              # "" if unset
+# shodan = require_env("SHODAN_API_KEY")  # raises if blank
+print(credentials_status()["present"])  # booleans only — never prints secrets
+```
+
+`main.py` and `AIBackend` also load `.env` automatically at startup.
 
 | Variable | Purpose | Required |
 |----------|---------|----------|
@@ -558,7 +930,12 @@ Copy `.env.example` → `.env`. **All keys are optional** — the TUI reports `M
 | `SHODAN_API_KEY` | Shodan host/port enrichment (OSINT) | No |
 | `NVD_API_KEY` | NVD CVE API (raises rate limit from 5/30s) | Recommended |
 | `HF_TOKEN` | Gated Hugging Face model pulls | No |
-| `KISMET_API_KEY` | Local Kismet server API | No |
+| `KISMET_API_KEY` | Optional Kismet API token (if not using session/basic) | No |
+| `KISMET_CLIENT_USERNAME` / `KISMET_CLIENT_PASSWORD` | Kismet HTTP basic (often `admin`/`admin`) | No |
+| `KFIOSA_SCAN_FONT_SCALE` | External scan window font multiplier (default `1.0`) | No |
+| `KFIOSA_SCREEN_W` / `KFIOSA_SCREEN_H` | Override screen pixels for window placement | No |
+| `KFIOSA_PYTHON` | Python used inside external scan windows | No |
+| `KFIOSA_DEEP_THINKING` | Set `0` to disable deep-thinking prompt layer | No |
 | `GOOGLE_PROJECT_ID` | Google Cloud integration | No |
 | `APP_URL` | Public URL for deployments | No |
 
@@ -576,6 +953,7 @@ Runtime configuration stored in `config/dashboard_settings.json`:
 
 ---
 
+<a id="project-layout"></a>
 ## 📁 Project Layout
 
 ```
@@ -603,6 +981,7 @@ kfiosa/
 │   │   ├── dashboard.py             #   Main dashboard (5-item menu)
 │   │   ├── wifi_screen.py           #   WiFi scan/attack screen
 │   │   ├── ble_screen.py            #   BLE scan/attack screen
+│   │   ├── ble_scan_external.py     #   External live BLE scan TUI
 │   │   ├── osint_screen.py          #   OSINT screen
 │   │   ├── settings_screen.py       #   Settings management
 │   │   ├── device_screen.py         #   Device details view
@@ -684,35 +1063,53 @@ kfiosa/
 │
 ├── catalog/                         # ~5,100 tool JSON entries
 ├── config/                          # Configuration files
-│   ├── dashboard_settings.json      #   Dashboard preferences
+│   ├── dashboard_settings.json      #   Dashboard preferences (terminal, models, …)
 │   └── grok_mcp_config.json         #   MCP configuration
 │
-├── data/                            # Runtime data
-│   ├── exploit_knowledge.db         #   SQLite exploit database
-│   └── zero_day_drafts/             #   0-day hypothesis drafts
+├── archives/                        # Multi-part ≤90MB zstd archives (Git LFS)
+│   ├── README.md                    #   Restore / recreate instructions
+│   ├── MANIFEST.sha256              #   Checksums
+│   ├── models.tar.zst.part_*        #   → models/
+│   ├── data-finetune.tar.zst.part_* #   → data/finetune/
+│   ├── toolboxes.tar.zst.part_*     #   → toolboxes/
+│   ├── wordlists.tar.zst            #   → wordlists/
+│   └── datasets.tar.zst             #   → datasets/
 │
+├── data/                            # Runtime data (finetune via archive)
+│   ├── exploit_knowledge.db         #   SQLite exploit database
+│   ├── tool_registry.json           #   Built tool registry snapshot
+│   ├── zero_day_drafts/             #   0-day hypothesis drafts
+│   └── finetune/                    #   (restore from archives/)
+│
+├── models/                          # Local/finetuned weights (restore from archives/)
+├── toolboxes/                       # Cloned tools (restore from archives/ or fetch script)
+├── wordlists/                       # Wordlists (archive or local)
 ├── datasets/                        # Training/reference datasets
 ├── docs/                            # Documentation
 ├── assets/                          # Project assets
 ├── scripts/                         # Helper scripts
+│   ├── fetch_toolboxes.py           #   Clone catalog tools into toolboxes/
+│   ├── prepare_toolboxes.py         #   pip/chmod prepare cloned tools
+│   ├── model_downloader.py          #   HF/Ollama model helper
+│   ├── fetch_hf_datasets.py         #   HF dataset fetch
+│   ├── run_qlora_finetune.py        #   QLoRA finetune entry
 │   ├── grok_mcp_bridge.py           #   MCP bridge for Grok
 │   └── setup_grok_cowork.py         #   Grok co-working setup
 │
 ├── tests/                           # pytest test suite
-│   ├── conftest.py                  #   Test fixtures
-│   ├── fakes.py                     #   Mock/fake objects
-│   ├── test_bootstrap.py            #   Bootstrap tests
-│   ├── test_chain_planner.py        #   Chain planner tests
-│   ├── test_catalog_chain_examples.py #  Catalog chain tests
-│   ├── test_poly_adapt_*.py         #   Polymorphic engine tests
-│   ├── test_settings_screen_actions.py # Settings UI tests
-│   ├── test_wifi_screen_actions.py  #   WiFi UI tests
-│   ├── test_adaptive_engagement.py  #   Orchestrator tests
-│   ├── test_scan_limits.py          #   Scan limiter tests
-│   └── ...                          #   Additional test modules
+│   ├── conftest.py / fakes.py       #   Fixtures + fakes
+│   ├── test_external_geometry.py    #   Scale-aware window geometry
+│   ├── test_external_terminal.py    #   Terminal launch / font scale
+│   ├── test_scan_bus.py             #   WiFi/BLE scan bus + placement
+│   ├── test_wifi_screen_actions.py  #   WiFi TUI
+│   ├── test_ble_screen_actions.py   #   BLE TUI
+│   ├── test_settings_screen_actions.py
+│   ├── test_chain_planner.py        #   AI chain planning
+│   ├── test_poly_adapt_*.py         #   Polymorphic engine
+│   └── ...                          #   Many more modules
 │
 ├── wifi_offensive_ai/               # WiFi Offensive AI engine
-│   └── core/engine.py               #   Core WiFi AI engine
+│   └── core/engine.py
 │
 ├── ai_pentest_engine.py             # Standalone AI pentest engine
 ├── metasploit_post_exploit.py       # Metasploit post-exploit runner
@@ -722,6 +1119,7 @@ kfiosa/
 
 ---
 
+<a id="safety-model"></a>
 ## 🛡 Safety Model
 
 KFIOSA implements a defense-in-depth safety architecture:
@@ -753,6 +1151,7 @@ No fabricated results. If a tool is missing, unavailable, or fails:
 
 ---
 
+<a id="development--testing"></a>
 ## 🧪 Development & Testing
 
 ### Setup
@@ -794,15 +1193,32 @@ python_functions = test_*
 | `test_chain_planner.py` | AI chain planning logic |
 | `test_catalog_chain_examples.py` | Catalog chain examples validation |
 | `test_poly_adapt_*.py` | Polymorphic evasion engine |
-| `test_settings_screen_actions.py` | Settings TUI actions |
+| `test_settings_screen_actions.py` | Settings TUI (terminal, font scale, …) |
 | `test_wifi_screen_actions.py` | WiFi TUI actions |
+| `test_ble_screen_actions.py` | BLE TUI actions |
+| `test_external_geometry.py` | Scale-aware external window geometry |
+| `test_external_terminal.py` | Font scale argv, placement, script launch |
+| `test_scan_bus.py` | Triple-window placement + bus selection |
+| `test_wifi_scan_external.py` / `test_ble_scan_external.py` | External scan UIs |
 | `test_adaptive_engagement.py` | Orchestrator adaptive engagement |
 | `test_scan_limits.py` | Scan rate limiting |
 | `test_holo_desktop.py` | Desktop agent |
 | `test_wifi_radio.py` | WiFi radio control |
 
+Focused external-scan / geometry suite:
+
+```bash
+.venv/bin/python -m pytest \
+  tests/test_external_geometry.py \
+  tests/test_external_terminal.py \
+  tests/test_scan_bus.py \
+  tests/test_wifi_screen_actions.py \
+  tests/test_settings_screen_actions.py -q
+```
+
 ---
 
+<a id="known-issues--roadmap"></a>
 ## 📋 Known Issues & Roadmap
 
 See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for current bugs and limitations.
@@ -817,6 +1233,7 @@ See [TODO.md](TODO.md) for the development roadmap, organized by phases:
 
 ---
 
+<a id="license"></a>
 ## 📄 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
@@ -827,6 +1244,7 @@ MIT License — Copyright (c) 2026 WiFi Offensive AI Toolkit
 
 ---
 
+<a id="disclaimer"></a>
 ## ⚖️ Disclaimer
 
 > **This software is provided for education and authorized penetration testing only.**
@@ -846,4 +1264,3 @@ MIT License — Copyright (c) 2026 WiFi Offensive AI Toolkit
 **Built with 🐍 Python • 🤖 AI-Powered • 📡 Wireless-Native • 🛡️ Ethically Gated**
 
 </div>
-]]>

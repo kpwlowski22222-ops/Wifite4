@@ -350,8 +350,26 @@ def build_session_roster(
     """
     from . import rat_dynamic as _rd
 
+    # Merge long-running people/website jobs into the operator roster.
+    merged: List[Dict[str, Any]] = list(sessions or [])
+    try:
+        from .long_jobs import jobs_as_sessions
+        seen = {
+            (s.get("id") or s.get("session_id"))
+            for s in merged if isinstance(s, dict)
+        }
+        for js in jobs_as_sessions():
+            jid = js.get("id") or js.get("session_id")
+            if jid and jid not in seen:
+                merged.append(js)
+                seen.add(jid)
+    except Exception:
+        pass
+
     roster: List[Dict[str, Any]] = []
-    for s in sessions or []:
+    for s in merged:
+        if not isinstance(s, dict):
+            continue
         sid = s.get("id") or s.get("session_id") or ""
         transport = (s.get("transport") or s.get("kind") or "network").lower()
         achieved = set(s.get("achieved") or [])
@@ -359,11 +377,14 @@ def build_session_roster(
             pool = BLUETOOTH_CAPABILITIES
             transport = "ble"
         elif transport in ("wifi", "wpa", "wpa2", "wpa3"):
-            # Wi-Fi sessions reuse network caps when a shell was earned,
-            # plus always surface channel-map style read probes via
-            # the dynamic RAT menu (rat_dynamic).
             pool = NETWORK_CAPABILITIES
             transport = "wifi"
+        elif transport in ("website", "web", "http", "https", "url"):
+            pool = []  # capabilities come from rat_dynamic menu
+            transport = "website"
+        elif transport in ("people", "person", "osint_people", "profile"):
+            pool = []
+            transport = "people"
         else:
             pool = NETWORK_CAPABILITIES
             if transport not in ("network", "host", "ssh", "msf", "msfconsole"):
@@ -371,7 +392,6 @@ def build_session_roster(
         visible = []
         for cap in pool:
             if not cap.required_achievements:
-                # Always available (e.g. RSSI track, channel map)
                 visible.append({
                     "name": cap.name,
                     "label": cap.label,
@@ -391,13 +411,16 @@ def build_session_roster(
         entry = {
             "id": sid,
             "transport": transport,
-            "target": s.get("target", ""),
+            "kind": transport if transport in (
+                "wifi", "ble", "website", "people", "host", "network",
+            ) else s.get("kind") or transport,
+            "target": s.get("target") or s.get("host") or s.get("label") or s.get("url") or s.get("query") or "",
             "meta": s.get("meta", {}),
             "achieved": sorted(achieved),
             "capabilities": visible,
-            "phase": s.get("phase") or s.get("attack_phase") or "",
-            "note": s.get("note") or "",
-            "last_activity": s.get("last_activity"),
+            "phase": s.get("phase") or s.get("attack_phase") or s.get("status") or "",
+            "note": s.get("note") or s.get("label") or "",
+            "last_activity": s.get("last_activity") or s.get("updated_at"),
         }
         roster.append(_rd.enrich_roster_entry(entry, s))
     return roster
@@ -444,18 +467,31 @@ def default_dashboard_html(roster: List[Dict[str, Any]]) -> str:
                   "kind": r.get("kind")} for r in (roster or [])],
                 active_session_id=active,
             )
-        return _rd.build_rat_dashboard_html(
+        html = _rd.build_rat_dashboard_html(
             roster or [], attack_state=state, active_session_id=active,
         )
+        # v6 anti-lag shell (CSS/JS + adaptive poll) — never blocks render
+        try:
+            from . import v6_enhancements as _v6
+            html = _v6.inject_shell(html, sessions=roster)
+        except Exception:
+            pass
+        return html
     except Exception:
         # Minimal fallback (never raise to the browser).
         n = len(roster or [])
-        return (
+        html = (
             "<!doctype html><html><body style='background:#111;color:#eee;"
             f"font-family:monospace'><h1>KFIOSA RAT</h1>"
             f"<p>{n} session(s)</p>"
             "<a href='/api/attack_state'>attack state</a></body></html>"
         )
+        try:
+            from . import v6_enhancements as _v6
+            html = _v6.inject_shell(html, sessions=roster)
+        except Exception:
+            pass
+        return html
 
 
 # ---------------------------------------------------------------------------
@@ -610,12 +646,65 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
         if (parts[0] == "api" and len(parts) >= 2
                 and parts[1] == "attack_state" and method == "GET"):
             return _json(_rd.GLOBAL_REGISTRY.attack_state())
+        # v4 / v5 / v6 health endpoints used by inject_shell JS pollers
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "v4" and len(parts) >= 3
+                and parts[2] == "ai_status" and method == "GET"):
+            try:
+                from . import v4_enhancements as _v4
+                payload = _v4.ai_status()
+                if isinstance(payload, dict):
+                    payload.setdefault("sessions", len(sessions_list))
+                return _json(payload)
+            except Exception as e:  # noqa: BLE001
+                return _json({
+                    "ok": True, "model": "rat-dashboard-v4",
+                    "ai": "unavailable", "error": str(e)[:200],
+                    "sessions": len(sessions_list),
+                })
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "v5" and len(parts) >= 3
+                and parts[2] == "health" and method == "GET"):
+            try:
+                from . import v5_enhancements as _v5
+                return _json(_v5.dashboard_health(sessions_list))
+            except Exception as e:  # noqa: BLE001
+                return _json({
+                    "ok": True, "model": "rat-dashboard-v5",
+                    "sessions": len(sessions_list), "error": str(e)[:200],
+                })
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "v6" and len(parts) >= 3
+                and parts[2] == "poll" and method == "GET"):
+            try:
+                from . import v6_enhancements as _v6
+                idle = len(sessions_list) == 0
+                return _json(_v6.adaptive_poll_config(
+                    sessions=sessions_list, idle=idle,
+                ))
+            except Exception as e:  # noqa: BLE001
+                return _json({
+                    "ok": True, "model": "rat-dashboard-v6",
+                    "attack_state_ms": 5000, "error": str(e)[:200],
+                })
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "v6" and len(parts) >= 3
+                and parts[2] == "health" and method == "GET"):
+            try:
+                from . import v6_enhancements as _v6
+                return _json(_v6.health_v6(sessions_list))
+            except Exception as e:  # noqa: BLE001
+                return _json({
+                    "ok": True, "model": "rat-dashboard-v6",
+                    "sessions": len(sessions_list), "error": str(e)[:200],
+                })
         if (parts[0] == "api" and len(parts) >= 2
                 and parts[1] == "sessions" and method == "GET"):
             # Unified sessions API: kind filter (rat_dynamic) + free-text
             # search / compact mode (v3) + optional adaptive surface
             # filter (v4). Always exposes matched/total so clients and
             # tests do not hit a silent route-shadowing bug.
+            # Also merges long-running people/website jobs from disk.
             qs = _qs(environ)
             kind = qs.get("kind") or None
             rows = _rd.GLOBAL_REGISTRY.list_sessions(kind=kind)
@@ -629,6 +718,26 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
                             "host" if kind == "network" else kind
                         )
                     ]
+            # Merge people/website long jobs (disk-backed)
+            try:
+                from .long_jobs import jobs_as_sessions
+                if kind is None or kind in ("people", "website", "all"):
+                    job_kind = kind if kind in ("people", "website") else None
+                    for js in jobs_as_sessions(kind=job_kind):
+                        jid = js.get("id") or js.get("session_id")
+                        if not jid:
+                            continue
+                        if any(
+                            (r.get("id") or r.get("session_id")) == jid
+                            for r in rows if isinstance(r, dict)
+                        ):
+                            continue
+                        if kind and kind not in ("all", None):
+                            if _rd.normalize_kind(js) != kind:
+                                continue
+                        rows.append(js)
+            except Exception:
+                pass
             total_before_q = len(rows)
             # T6.2 — free-text capability / session search
             query = qs.get("q", "") or ""
@@ -685,6 +794,63 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
                 return _json({"ok": False, "error": f"unknown session {sid}"},
                              status="404 Not Found")
             return _json(_rd.rat_menu_for_session(sess))
+        # People profile + website session long jobs (POST create)
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "people" and len(parts) >= 3
+                and parts[2] == "profile" and method == "POST"):
+            try:
+                size = int(environ.get("CONTENT_LENGTH", 0) or 0)
+                raw = environ["wsgi.input"].read(size).decode("utf-8")
+                payload = _json_mod.loads(raw) if raw else {}
+            except Exception:  # noqa: BLE001
+                payload = {}
+            query = str(
+                payload.get("query") or payload.get("target") or ""
+            ).strip()
+            if not query:
+                return _json(
+                    {"ok": False, "error": "query required"},
+                    status="400 Bad Request",
+                )
+            try:
+                from .long_jobs import enqueue_people_job
+                jid = enqueue_people_job(
+                    query, status=str(payload.get("status") or "queued"),
+                    meta=payload.get("meta") if isinstance(
+                        payload.get("meta"), dict
+                    ) else {},
+                )
+                return _json({"ok": True, "id": jid, "kind": "people"})
+            except Exception as e:  # noqa: BLE001
+                return _json({"ok": False, "error": str(e)})
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "website" and len(parts) >= 3
+                and parts[2] == "session" and method == "POST"):
+            try:
+                size = int(environ.get("CONTENT_LENGTH", 0) or 0)
+                raw = environ["wsgi.input"].read(size).decode("utf-8")
+                payload = _json_mod.loads(raw) if raw else {}
+            except Exception:  # noqa: BLE001
+                payload = {}
+            url = str(
+                payload.get("url") or payload.get("target") or ""
+            ).strip()
+            if not url:
+                return _json(
+                    {"ok": False, "error": "url required"},
+                    status="400 Bad Request",
+                )
+            try:
+                from .long_jobs import enqueue_website_session
+                jid = enqueue_website_session(
+                    url, status=str(payload.get("status") or "attached"),
+                    meta=payload.get("meta") if isinstance(
+                        payload.get("meta"), dict
+                    ) else {},
+                )
+                return _json({"ok": True, "id": jid, "kind": "website"})
+            except Exception as e:  # noqa: BLE001
+                return _json({"ok": False, "error": str(e)})
         # SQL store (B.11 / v3) — read-only view of the
         # persistent log + history + exfil + persistence rows.
         # The /api/sql_health endpoint reports the active
@@ -1081,6 +1247,47 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
                 "endpoints": ["health", "summary", "shortcuts", "refresh"],
                 "model": "rat-dashboard-v5",
             }, status="404 Not Found")
+        # ---------------------------------------------------------------
+        # v6: anti-lag poll, polymorphic cap filter, situational recommend
+        # ---------------------------------------------------------------
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "v6" and method == "GET"):
+            from . import v6_enhancements as _v6
+            sub = parts[2] if len(parts) >= 3 else ""
+            q = _qs(environ)
+            if sub == "poll":
+                idle = (q.get("idle") or "").lower() in ("1", "true", "yes")
+                return _json(_v6.adaptive_poll_config(
+                    sessions=sessions_list, idle=idle,
+                ))
+            if sub == "health":
+                return _json(_v6.health_v6(sessions_list))
+            if sub == "assets":
+                return _json(_v6.ui_shell_assets())
+            if sub == "recommend":
+                sid = q.get("sid") or q.get("session_id") or ""
+                sess = sessions_by_sid.get(sid) if sid else None
+                if not sess and sessions_list:
+                    sess = sessions_list[0]
+                return _json(_v6.situational_recommend(sess))
+            if sub == "filter_caps":
+                sid = q.get("sid") or ""
+                sess = sessions_by_sid.get(sid) if sid else {}
+                caps = []
+                if isinstance(sess, dict):
+                    caps = list(sess.get("capabilities") or [])
+                return _json(_v6.polymorphic_capability_filter(
+                    caps, session=sess,
+                    surface=q.get("surface") or "",
+                ))
+            return _json({
+                "ok": False,
+                "error": f"unknown v6 endpoint {sub!r}",
+                "endpoints": [
+                    "poll", "health", "assets", "recommend", "filter_caps",
+                ],
+                "model": "rat-dashboard-v6",
+            }, status="404 Not Found")
         if (parts[0] == "api" and len(parts) >= 3
                 and parts[1] == "v4" and parts[2] == "plan_preview"
                 and method == "POST"):
@@ -1265,6 +1472,9 @@ class RatDashboardServer:
 # Spawner
 # ---------------------------------------------------------------------------
 
+# Last successful spawn (optional reuse / introspection).
+_ACTIVE_DASHBOARD: Optional[Dict[str, Any]] = None
+
 
 def is_rat_dashboard_available() -> bool:
     """Return True if the dashboard can be spawned in this env.
@@ -1278,20 +1488,21 @@ def is_rat_dashboard_available() -> bool:
 
 
 def spawn_rat_dashboard(
-    sessions: List[Dict[str, Any]],
+    sessions: Optional[List[Dict[str, Any]]] = None,
     capability_runner: Optional[Callable[[str, str], Dict[str, Any]]] = None,
     host: Optional[str] = None,
+    report: Optional[Dict[str, Any]] = None,
+    **_kwargs: Any,
 ) -> Dict[str, Any]:
     """Spawn the RAT dashboard and return a status envelope.
 
-    Returns ``{ok, port, thread, host, manual, error}``. The
+    Returns ``{ok, port, thread, host, url, manual, error}``. The
     operator can browse to ``http://<host>:<port>/`` to interact
     with the dashboard.
 
-    The dashboard runs in a daemon thread on the operator's
-    machine. The chain step that called this function is the only
-    place the per-step ACCEPT gate fires; the dashboard itself
-    does NOT re-confirm individual capability calls.
+    ``sessions`` may be empty (dashboard still serves health/HTML).
+    Optional ``report`` is used only to derive a session when
+    ``sessions`` is empty and ``report["access"]`` shows foothold.
 
     When the bind host is ``0.0.0.0`` (remote access), the env
     var ``RAT_DASHBOARD_TOKEN`` is REQUIRED — without it the
@@ -1299,7 +1510,22 @@ def spawn_rat_dashboard(
     development (no token required).
     """
     from . import auth as _auth
-    roster = build_session_roster(sessions or [])
+    sess = list(sessions or [])
+    if not sess and isinstance(report, dict):
+        access = report.get("access") or {}
+        if access.get("achieved") or access.get("session_id"):
+            sess.append({
+                "id": str(access.get("session_id") or "session"),
+                "kind": access.get("kind") or access.get("transport") or "network",
+                "transport": access.get("transport") or "network",
+                "achieved": set(
+                    access.get("achieved_set")
+                    or access.get("achievements")
+                    or {"access"}
+                ),
+                "label": access.get("label") or "foothold",
+            })
+    roster = build_session_roster(sess)
     bind_host = (host if host is not None
                  else os.environ.get("RAT_DASHBOARD_HOST", "127.0.0.1"))
     if bind_host in ("0.0.0.0", "::") and not _auth.get_required_token():
@@ -1315,7 +1541,7 @@ def spawn_rat_dashboard(
         port=0,
         capability_runner=capability_runner,
     )
-    server._sessions = list(sessions or [])
+    server._sessions = list(sess)
     started = server.try_serve()
     if started is None:
         return {
@@ -1325,6 +1551,18 @@ def spawn_rat_dashboard(
             "host": bind_host,
         }
     actual_port, _t = started
+    # Keep a process-global handle so re-opens can prefer an already-running
+    # dashboard (best-effort; multiple spawns still allowed for hermetic tests).
+    global _ACTIVE_DASHBOARD  # noqa: PLW0603
+    try:
+        _ACTIVE_DASHBOARD = {
+            "server": server,
+            "port": actual_port,
+            "host": bind_host,
+            "url": f"http://{bind_host}:{actual_port}/",
+        }
+    except Exception:
+        pass
     return {
         "ok": True,
         "port": actual_port,

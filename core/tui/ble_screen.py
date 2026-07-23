@@ -50,6 +50,7 @@ class BLEScreen(BaseScreen):
             ("Advanced…", self._show_advanced),
             ("Back", self.parent_callback),
         ]
+        # Post-exploit is auto-attached to engagement chains — not a menu mode.
         self.advanced_items = [
             ("Pick Bluetooth Adapter (auto-detect)", self.pick_adapter),
             ("OS Agent: long-range BLE prep (Holo CLI)", self.holo_ble_long_range_prep),
@@ -57,11 +58,10 @@ class BLEScreen(BaseScreen):
             ("OS Agent: diagnose BLE stack (dry-run OK)", self.holo_ble_adapter_help),
             ("Connect to Device / Enumerate GATT", self.connect_and_enumerate),
             ("AI Device Vulnerability Assessment", self.run_ai_risk_assessment),
-            ("Post-Exploit Plan (AI+KB)", self.plan_post_exploit),
-            ("Post-Exploit: Execute Plan (gated)", self.execute_post_exploit),
             ("Show KB Tools for BLE", self.show_kb_tools),
             ("Fetch BLE tool repos (clone into toolboxes/)", lambda: self.fetch_domain_repos("ble")),
             ("Prepare BLE tools (install deps)", lambda: self.prepare_domain_tools("ble")),
+            ("Open Flask dashboard", self.open_flask_dashboard),
             ("Back to Primary", self._show_primary),
         ]
         self._show_primary()
@@ -132,9 +132,19 @@ class BLEScreen(BaseScreen):
             self.activity_log.append("[!] Orchestrator unavailable.")
             return
         d = self.selected_device
+        # PE always rides the engagement chain.
+        if isinstance(d, dict):
+            d = dict(d)
+            d["attach_post_exploit"] = True
+            d["post_exploit"] = True
+            d.setdefault("anti_forensics", True)
+            d.setdefault("polymorphic", True)
+            d.setdefault("aio", True)
+            self.selected_device = d
+            self.selected_target = d
         self.activity_log.append(
             f"[AIO] BLE adaptive until-access on {d.get('name')} "
-            f"[{d.get('address')}] (ACCEPT/CANCEL gated)."
+            f"[{d.get('address')}] (PE auto-attached; ACCEPT/CANCEL gated)."
         )
         self._run_adaptive(until_access=True)
 
@@ -157,6 +167,10 @@ class BLEScreen(BaseScreen):
         target.setdefault("from_external_scan", True)
         target.setdefault("aio", True)
         target.setdefault("polymorphic", True)
+        target["attach_post_exploit"] = True
+        target["post_exploit"] = True
+        target.setdefault("anti_forensics", True)
+        target.setdefault("attach_zero_day", True)
 
         def run():
             try:
@@ -180,6 +194,10 @@ class BLEScreen(BaseScreen):
                     self.activity_log.append(
                         f"[+] BLE engagement ACCESS: session={access.get('session_id')}"
                     )
+                    try:
+                        self.open_flask_dashboard()
+                    except Exception as e:
+                        self.activity_log.append(f"[i] Flask auto-open: {e}")
                 else:
                     cycles = ((report or {}).get("adaptive") or {}).get("cycles") or []
                     self.activity_log.append(
@@ -190,6 +208,26 @@ class BLEScreen(BaseScreen):
                 self.activity_log.append(f"[!] engagement engine error: {e}")
 
         self._spawn(run)
+
+    def open_flask_dashboard(self):
+        """Start Flask/WSGI RAT dashboard (PE is chain-attached; this is view-only)."""
+        try:
+            from core.post_access_tui.rat_ext import spawn_rat_dashboard
+            rep = spawn_rat_dashboard(
+                sessions=[],
+                report=self._last_report if isinstance(
+                    getattr(self, "_last_report", None), dict) else None,
+            )
+            if isinstance(rep, dict) and rep.get("ok"):
+                self.activity_log.append(
+                    f"[+] Flask dashboard: {rep.get('url') or rep}"
+                )
+            else:
+                self.activity_log.append(
+                    f"[i] Flask dashboard: {(rep or {}).get('error') or rep}"
+                )
+        except Exception as e:
+            self.activity_log.append(f"[i] Flask dashboard: {e}")
 
     def _load_external_scan_selection(self) -> bool:
         """Load target written by ``ble_scan_external`` if present."""

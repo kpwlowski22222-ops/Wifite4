@@ -17,6 +17,9 @@ from typing import List, Dict, Any, Optional
 from core.tui.base_screen import BaseScreen
 from core.tui.wifi_screen import WiFiScreen
 from core.tui.osint_screen import OSINTScreen
+from core.tui.osint_people_screen import OSINTPeopleScreen
+from core.tui.osint_web_screen import OSINTWebScreen
+from core.tui.post_exploit_screen import PostExploitScreen
 from core.tui.ble_screen import BLEScreen
 from core.tui.settings_screen import SettingsScreen
 from core.ai_backend.zero_day_exploit import (
@@ -40,13 +43,22 @@ class KfiosaDashboard:
 
         # Menu index for main menu
         self.menu_index = 0
+        # Simplified main menu (few operator-facing options).
+        # Post-exploit is NOT a main-menu mode: it is attached automatically
+        # to WiFi/BLE engagement chains (attach_post_exploit=True) and run
+        # via gain-access hooks. See orchestrator + chain planner.
         self.menu_items = [
-            ("WiFi Scan", "wifi"),
-            ("BLE Scan", "ble"),
-            ("OSINT", "osint"),
+            ("WiFi", "wifi"),
+            ("BLE", "ble"),
+            ("OSINT People", "osint_people"),
+            ("OSINT Web", "osint_web"),
             ("Settings", "settings"),
-            ("Quit", "quit")
+            ("Quit", "quit"),
         ]
+        # Shared activity log panel state (PgUp/PgDn scroll; 0 = live tail)
+        self.log_scroll: int = 0
+        self._log_follow: bool = True
+        self._log_len_seen: int = 1
 
         # Post-access TUI status: filled in by the orchestrator when a
         # chain step achieves access. The dashboard pill reads this so
@@ -388,6 +400,27 @@ class KfiosaDashboard:
         except Exception as e:
             logger.warning(f"catalog recon factory init failed: {e}")
             self.catalog_recon_factory = None
+
+        # Holo OS-agent readiness (honest probe; never blocks boot)
+        try:
+            from core.desktop.holo_agent import holo_status, TASK_PRESETS
+            st = holo_status()
+            self.holo_status = st
+            if st.get("ok"):
+                self.activity_log.append(
+                    f"[holo] ready bin={st.get('holo_bin')} "
+                    f"presets={len(TASK_PRESETS)} "
+                    f"(chain action: holo_desktop)"
+                )
+            else:
+                self.activity_log.append(
+                    "[holo] binary missing — CLI path only; "
+                    "install holo-desktop-cli or Settings → OS Agentic CLI"
+                )
+        except Exception as e:
+            self.holo_status = {"ok": False, "error": str(e)}
+            logger.debug("holo status at boot: %s", e)
+
     def _init_colors(self):
         try:
             from core.tui.ui_theme import apply_theme, load_theme_from_env
@@ -791,23 +824,46 @@ class KfiosaDashboard:
         except Exception:
             pass
 
-        # ── Activity log ──────────────────────────────────────────────────
+        # ── Activity log (scrollable, colour-tagged, wrapped) ─────────────
         log_y = (4 if (_theme_ok and is_focus_mode()) else 8) + len(self.menu_items) + 2
         log_h = height - log_y - 2
-        dummy_screen = BaseScreen(self.stdscr, None, self.activity_log)
-        dummy_screen.draw_activity_log(log_y, log_h)
+        try:
+            from core.tui.activity_log_view import draw_activity_log as _draw_log
+            n = len(self.activity_log)
+            if n > getattr(self, "_log_len_seen", 0) and getattr(self, "_log_follow", True):
+                self.log_scroll = 0
+            self._log_len_seen = n
+            self.log_scroll = _draw_log(
+                self.stdscr,
+                self.activity_log,
+                log_y,
+                log_h,
+                scroll_from_end=int(getattr(self, "log_scroll", 0) or 0),
+                wrap=True,
+            )
+        except Exception:
+            dummy_screen = BaseScreen(self.stdscr, None, self.activity_log)
+            dummy_screen.draw_activity_log(log_y, log_h)
 
-        # Status bar — show [F] Focus Mode hint
+        # Status bar — show [F] Focus Mode + log scroll hints
         try:
             in_focus = _theme_ok and is_focus_mode()
             hint = "[F] Focus OFF" if in_focus else "[F] Focus ON"
-            hint_full = f"  ↑↓ Navigate  ENTER Select  Q Quit  {hint}"
+            scroll_hint = "PgUp/PgDn Log"
+            if getattr(self, "log_scroll", 0):
+                scroll_hint = f"PgUp/PgDn Log↑{self.log_scroll} End=live"
+            hint_full = (
+                f"  ↑↓ Nav  ENTER Select  Q Quit  {scroll_hint}  {hint}"
+            )
             self.stdscr.attron(curses.color_pair(6))
             self.stdscr.addstr(height - 1, 0,
                                hint_full.ljust(width - 1)[:width - 1])
             self.stdscr.attroff(curses.color_pair(6))
         except Exception:
-            dummy_screen.draw_status_bar()
+            try:
+                BaseScreen(self.stdscr, None, self.activity_log).draw_status_bar()
+            except Exception:
+                pass
 
     def handle_main_menu_input(self):
         """Handle keyboard input on main menu"""
@@ -818,7 +874,20 @@ class KfiosaDashboard:
             key = self.stdscr.getch()
         if key == -1:
             return
-            
+
+        # Activity log scroll
+        try:
+            from core.tui.activity_log_view import handle_log_scroll_key
+            new_scroll = handle_log_scroll_key(
+                key, int(getattr(self, "log_scroll", 0) or 0), page=6,
+            )
+            if new_scroll is not None:
+                self.log_scroll = max(0, int(new_scroll))
+                self._log_follow = (self.log_scroll == 0)
+                return
+        except Exception:
+            pass
+
         if key in (curses.KEY_UP, ord("k"), ord("K")):
             self.menu_index = (self.menu_index - 1) % len(self.menu_items)
         elif key in (curses.KEY_DOWN, ord("j"), ord("J")):
@@ -977,9 +1046,12 @@ class KfiosaDashboard:
         """Delegates rendering to active sub-screen"""
         screen_class_map = {
             "wifi": WiFiScreen,
-            "osint": OSINTScreen,
+            "osint": OSINTScreen,  # legacy full OSINT (reachable via Settings if needed)
+            "osint_people": OSINTPeopleScreen,
+            "osint_web": OSINTWebScreen,
+            "post_exploit": PostExploitScreen,
             "ble": BLEScreen,
-            "settings": SettingsScreen
+            "settings": SettingsScreen,
         }
 
         if self.state not in self.screens:
@@ -999,12 +1071,27 @@ class KfiosaDashboard:
 
         sub_screen = self.screens.get(self.state)
         if sub_screen:
+            # Keep log scroll position in sync (shared activity_log list)
+            try:
+                sub_screen.log_scroll = int(getattr(self, "log_scroll", 0) or 0)
+                sub_screen._log_follow = bool(getattr(self, "_log_follow", True))
+            except Exception:
+                pass
             sub_screen.render()
             res = sub_screen.handle_input()
+            try:
+                self.log_scroll = int(getattr(sub_screen, "log_scroll", 0) or 0)
+                self._log_follow = bool(getattr(sub_screen, "_log_follow", True))
+            except Exception:
+                pass
             if res == "back":
                 self.go_back()
 
     def go_back(self):
         """Return to main menu"""
         self.state = "main_menu"
-        self.activity_log.append("[i] Returned to Main Menu")
+        try:
+            from core.tui.activity_log_view import append_log
+            append_log(self.activity_log, "[i] Returned to Main Menu")
+        except Exception:
+            self.activity_log.append("[i] Returned to Main Menu")
