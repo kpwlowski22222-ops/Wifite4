@@ -4,8 +4,6 @@ import subprocess
 import sys
 import types
 
-import pytest
-
 from core.tui.settings_screen import SettingsScreen
 from tests.conftest import _make_screen
 from tests.fakes import FakeAIBackend, FakeInput, FakeSettingsManager, sync_thread_runner
@@ -56,6 +54,83 @@ def test_pull_models_info(log):
     sc = _settings(log)
     sc.pull_models_info()
     assert any("Pull models via CLI" in l for l in log)
+
+
+def test_holo_os_agent_status(log, monkeypatch):
+    monkeypatch.setattr(
+        "core.desktop.holo_agent._find_holo_bin", lambda: ""
+    )
+    sc = _settings(log, settings_manager=FakeSettingsManager())
+    sc.holo_os_agent_status()
+    assert any("OS Agentic CLI" in l for l in log)
+    assert any("main.py --cli holo" in l for l in log)
+
+
+def test_holo_os_agent_dry_run(log, monkeypatch):
+    monkeypatch.setattr(
+        "core.desktop.holo_agent._find_holo_bin", lambda: "/usr/bin/holo"
+    )
+    sc = _settings(
+        log,
+        settings_manager=FakeSettingsManager(),
+        input_fn=FakeInput(["ble_long_range_prep"]),
+    )
+    sc.holo_os_agent_dry_run()
+    assert any("dry_run" in l for l in log)
+
+
+def test_holo_os_agent_plan(log, monkeypatch):
+    """Holo AI-decided plan path: collect plan params and run predict→act→read→label."""
+    captured = {}
+
+    class FakeBridge:
+        def __init__(self, confirm_fn=None, settings=None):
+            self.confirm_fn = confirm_fn
+            self.settings = settings
+
+        def run_plan(self, plan, **kwargs):
+            captured["plan"] = plan
+            captured["kwargs"] = kwargs
+            return {
+                "ok": True,
+                "predicted_outcome": "terminal window appears",
+                "observed": {"ok": True, "count": 3, "labels": ["terminal"]},
+                "prediction_match": True,
+                "live_labels_count": 2,
+                "error": "",
+            }
+
+    monkeypatch.setattr(
+        "core.desktop.holo_agent.HoloDesktopBridge", FakeBridge
+    )
+    # Inputs: what, where, what_for, predicted, goal, tool, model,
+    # max_steps, read_labels, label_duration_s, dry_run.
+    inputs = [
+        "terminal icon", "top-left dock", "open a shell",
+        "terminal window appears", "open_terminal", "", "",
+        "", "n", "", "",
+    ]
+    sc = _settings(
+        log,
+        input_fn=FakeInput(inputs),
+        thread_runner=sync_thread_runner,
+    )
+    sc.holo_os_agent_plan()
+    assert any("Holo plan" in l for l in log)
+    assert any("predicted: terminal window appears" in l for l in log)
+    assert any("observed 3 labels" in l for l in log)
+    assert any("prediction verified" in l for l in log)
+    assert any("live labels: 2" in l for l in log)
+    assert captured["plan"]["what_to_click"] == "terminal icon"
+    assert captured["kwargs"]["dry_run"] is False
+    assert captured["kwargs"]["read_labels"] is False
+
+
+def test_toggle_holo_enabled(log):
+    sm = FakeSettingsManager()
+    sc = _settings(log, settings_manager=sm)
+    sc.toggle_holo_enabled()
+    assert any(u["key"] == "holo.enabled" for u in sm.updates)
 
 
 def test_fetch_toolboxes(log, monkeypatch):
@@ -129,6 +204,62 @@ def test_adjust_timeouts_invalid(log):
     sc = _settings(log, input_fn=FakeInput(["abc", "xyz"]))
     sc.adjust_timeouts()
     assert any("Invalid timeout" in l for l in log)
+
+
+def test_configure_external_terminal_pick(log, monkeypatch):
+    monkeypatch.setattr(
+        "core.utils.external_terminal.list_available",
+        lambda: ["xterm", "kitty", "tail"],
+    )
+    monkeypatch.setattr(
+        "core.utils.external_terminal.detect",
+        lambda settings=None: "xterm",
+    )
+    sm = FakeSettingsManager()
+    sc = _settings(log, settings_manager=sm, input_fn=FakeInput(["kitty"]))
+    # detect after update still returns xterm from monkeypatch — that's fine;
+    # we only assert the setting was written and log shows confirmation.
+    sc.configure_external_terminal()
+    assert any(u["key"] == "terminal" and u["value"] == "kitty" for u in sm.updates)
+    assert any("External Terminal" in l for l in log)
+
+
+def test_configure_external_terminal_keep(log, monkeypatch):
+    monkeypatch.setattr(
+        "core.utils.external_terminal.list_available",
+        lambda: ["xterm", "tail"],
+    )
+    monkeypatch.setattr(
+        "core.utils.external_terminal.detect",
+        lambda settings=None: "xterm",
+    )
+    sm = FakeSettingsManager()
+    sc = _settings(log, settings_manager=sm, input_fn=FakeInput([""]))
+    sc.configure_external_terminal()
+    assert not any(u["key"] == "terminal" for u in sm.updates)
+    assert any("unchanged" in l for l in log)
+
+
+def test_configure_scan_font_scale(log, monkeypatch):
+    monkeypatch.delenv("KFIOSA_SCAN_FONT_SCALE", raising=False)
+    sm = FakeSettingsManager()
+    sc = _settings(log, settings_manager=sm, input_fn=FakeInput(["2.0"]))
+    sc.configure_scan_font_scale()
+    assert any(
+        u["key"] == "scanning.font_scale" and u["value"] == 2.0
+        for u in sm.updates
+    )
+    assert any("font scale set to 2.0" in l for l in log)
+    # restore default for other tests
+    from core.utils.external_terminal import set_scan_font_scale
+    set_scan_font_scale(1.0)
+
+
+def test_configure_scan_font_scale_invalid(log):
+    sm = FakeSettingsManager()
+    sc = _settings(log, settings_manager=sm, input_fn=FakeInput(["nope"]))
+    sc.configure_scan_font_scale()
+    assert any("Enter a number" in l for l in log)
 
 
 def test_print_settings(log):

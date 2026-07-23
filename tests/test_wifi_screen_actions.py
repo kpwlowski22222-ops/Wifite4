@@ -124,7 +124,8 @@ def test_one_click_builds_wpa3_plan_and_runs_chain(log):
 def test_primary_menu_has_one_click_first(log):
     sc = _wifi(log)
     labels = [item[0] for item in sc.primary_items]
-    assert any("ATTACK" in lab for lab in labels)
+    # Primary engagement entry is "▶ Start engagement …".
+    assert any("Start engagement" in lab for lab in labels)
     assert any(lab.startswith("▶") for lab in labels)
 
 

@@ -68,15 +68,13 @@ class WiFiScreen(BaseScreen):
         self._last_report = None
         self._last_one_click_plan = None
 
-        # ---- simplified primary flow (scan + AIO first) ----
+        # ---- simplified primary flow (triple windows → engagement) ----
         self.primary_items = [
-            ("Scan Networks (external airgeddon/wifite window)", self.scan_networks),
-            ("▶ AIO ATTACK selected target", self.aio_attack),
-            ("▶ Adaptive until-access (recon→CVE→plan→poly→RAT)", self.adaptive_until_access),
-            ("▶ One-click plan + attack", self.one_click_attack),
-            ("Select Target (in-dashboard)", self._select_target_prompt),
+            ("Pick adapter / monitor mode", self.pick_interface),
+            ("Scan Networks (3 live windows UL/UR/BR)", self.scan_networks),
+            ("▶ Start engagement (selected AP)", self.aio_attack),
             ("Report", self.show_report),
-            ("Clients", self.list_devices),
+            ("Open Flask dashboard", self.open_flask_dashboard),
             ("Advanced…", self._show_advanced),
             ("Back", self.parent_callback),
         ]
@@ -113,7 +111,7 @@ class WiFiScreen(BaseScreen):
         t = self.selected_target
         self.activity_log.append(
             f"[+] Target #{idx + 1} selected: {t.get('ssid') or '<hidden>'} "
-            f"({t.get('bssid')}) — press ▶ ATTACK for one-click engagement."
+            f"({t.get('bssid')}) — press ▶ Start engagement."
         )
 
     # ------------------------------------------------------------------
@@ -133,7 +131,7 @@ class WiFiScreen(BaseScreen):
         """
         if not self.selected_target:
             self.activity_log.append(
-                "[!] Select a target first (Scan → number key), then ATTACK."
+                "[!] Select a target first (Scan → number key), then Start engagement."
             )
             return
         if not self.interface:
@@ -304,10 +302,20 @@ class WiFiScreen(BaseScreen):
         except Exception as e:
             self.activity_log.append(f"[i] AIO planner note: {e}")
 
+        # Mark external/AIO identity so adaptive recon stays lean and
+        # does not freeze the TUI on 15× airodump probes.
+        t["from_external_scan"] = bool(
+            t.get("from_external_scan")
+            or t.get("bssid")
+        )
         self.selected_target = t
         self.activity_log.append(
             "[AIO] Adaptive until-access: recon → CVE/NVD → CVE-code → "
             "plan → poly → attack → post-exploit → RAT (ACCEPT/CANCEL)."
+        )
+        self.activity_log.append(
+            "[AIO] Recon is budgeted (lean pass + progress logs); "
+            "menu stays responsive. Override budget: KFIOSA_RECON_BUDGET_S."
         )
         self._run_adaptive(until_access=True)
 
@@ -327,6 +335,8 @@ class WiFiScreen(BaseScreen):
         sel = data.get("selected")
         if not isinstance(sel, dict) or not sel.get("bssid"):
             return False
+        sel = dict(sel)
+        sel["from_external_scan"] = True
         self.selected_target = sel
         nets = data.get("networks") or []
         if nets:
@@ -439,23 +449,26 @@ class WiFiScreen(BaseScreen):
         target = dict(self.selected_target)
         target.setdefault("interface", self.interface)
         target["adapter_caps"] = self.adapter_caps or {"mt7921e": False}
+        target.setdefault("from_external_scan", True)
+        target.setdefault("aio", True)
+        target.setdefault("polymorphic", True)
+        target["attach_zero_day"] = bool(self.attach_zero_day or True)
 
         def run():
             try:
-                from core.orchestrator.adaptive_engagement import (
-                    AdaptiveEngagement,
-                )
-                eng = AdaptiveEngagement(
+                from core.orchestrator.engagement_engine import EngagementEngine
+                eng = EngagementEngine(
                     self.orchestrator,
                     catalog_recon_factory=self.catalog_recon_factory,
                     on_event=lambda m: self.activity_log.append(m),
                     until_access=until_access,
-                    enable_cve_code=True,
-                    enable_reverse_stubs=True,
+                    enable_bg_zero_day=True,
+                    enable_holo_prep=True,
                 )
                 report = eng.run(
                     "wifi", target,
-                    attach_zero_day=self.attach_zero_day,
+                    until_access=until_access,
+                    attach_zero_day=True,
                 )
                 self._last_report = report
                 self._last_recon = (target.get("recon") if isinstance(target, dict)
@@ -463,18 +476,39 @@ class WiFiScreen(BaseScreen):
                 access = (report or {}).get("access") or {}
                 if access.get("achieved"):
                     self.activity_log.append(
-                        f"[+] Adaptive ACCESS: session={access.get('session_id')} "
+                        f"[+] Engagement ACCESS: session={access.get('session_id')} "
                         f"creds={'yes' if access.get('creds') else 'no'}"
                     )
                 else:
+                    cycles = ((report or {}).get("adaptive") or {}).get("cycles") or []
                     self.activity_log.append(
-                        f"[i] Adaptive finished without access "
-                        f"({len((report or {}).get('cycles') or [])} cycle(s))"
+                        f"[i] Engagement finished without access "
+                        f"({len(cycles)} cycle(s))"
                     )
             except Exception as e:
-                self.activity_log.append(f"[!] adaptive engagement error: {e}")
+                self.activity_log.append(f"[!] engagement engine error: {e}")
 
         self._spawn(run)
+
+    def open_flask_dashboard(self):
+        """Best-effort: open / remind operator of the Flask RAT dashboard."""
+        try:
+            from core.post_access_tui.rat_ext import spawn_rat_dashboard
+            rep = spawn_rat_dashboard(sessions=[])
+            if isinstance(rep, dict) and rep.get("ok"):
+                host = rep.get("host") or "127.0.0.1"
+                port = rep.get("port")
+                self.activity_log.append(
+                    f"[+] Flask dashboard: http://{host}:{port}/"
+                )
+            else:
+                self.activity_log.append(
+                    f"[i] Flask dashboard: {(rep or {}).get('error') or rep}"
+                )
+        except Exception as e:
+            self.activity_log.append(
+                f"[i] Flask dashboard spawn: {e} — try post-access after foothold"
+            )
 
     def pick_interface(self):
         """Detect wireless adapters, let the operator pick one, then put it
@@ -999,112 +1033,138 @@ class WiFiScreen(BaseScreen):
 
         out_path = "logs/wifi_scan_selection.json"
         try:
-            Path = __import__("pathlib").Path
-            Path("logs").mkdir(parents=True, exist_ok=True)
-            # Clear previous selection so we don't auto-load stale AIO.
-            p = Path(out_path)
+            from pathlib import Path as _P
+            _P("logs").mkdir(parents=True, exist_ok=True)
+            p = _P(out_path)
             if p.is_file():
                 p.unlink()
         except Exception:
             pass
 
-        # Run from project root with a real TERM so curses works in xterm.
-        # Nested/dumb TTY auto-falls back to text UI inside wifi_scan_external.
-        from pathlib import Path as _P
-        _root = str(_P(__file__).resolve().parents[2])
+        # Prefer triple external windows: UL=online APs, UR=clients, BR=offline.
+        try:
+            from core.tui import wifi_scan_bus as scan_bus
+            from core.utils.external_terminal import get_scan_font_scale
+            sm = getattr(self, "settings_manager", None)
+            trip = scan_bus.launch_triple_wifi_windows(
+                str(self.interface),
+                settings=sm,
+                font_scale=get_scan_font_scale(sm),
+            )
+            bus_dir = trip.get("bus_dir")
+            n_ok = sum(
+                1 for k in ("topleft", "topright", "bottomright")
+                if trip.get("procs", {}).get(k) is not None
+            )
+            if bus_dir and n_ok > 0:
+                self.activity_log.append(
+                    f"[+] Triple scan windows on {self.interface} "
+                    f"({n_ok}/3) bus={bus_dir}"
+                )
+                self.activity_log.append(
+                    "[*] UL: APs live ↑↓ ENTER/SPACE select · "
+                    "UR: clients of focus · BR: offline + timestamps · Ctrl+C quit"
+                )
+                self.activity_log.append(
+                    "[*] Selecting an AP starts engagement automatically "
+                    "(recon→CVE→plan→attack→post)."
+                )
+
+                def _wait_triple():
+                    import json
+                    from pathlib import Path
+                    sel = scan_bus.wait_for_selection(
+                        Path(bus_dir), timeout_s=600.0
+                    )
+                    if not sel:
+                        self.activity_log.append(
+                            "[i] No AP selected (quit/timeout) — "
+                            "use Scan again or Advanced."
+                        )
+                        return
+                    sel = dict(sel)
+                    sel["from_external_scan"] = True
+                    sel["interface"] = self.interface
+                    self.selected_target = sel
+                    # Mirror into legacy path for AIO loaders
+                    try:
+                        Path("logs").mkdir(parents=True, exist_ok=True)
+                        Path(out_path).write_text(
+                            json.dumps({
+                                "selected": sel,
+                                "aio_attack": True,
+                                "networks": [sel],
+                                "ts": __import__("time").time(),
+                            }, ensure_ascii=False, default=str),
+                            encoding="utf-8",
+                        )
+                    except Exception:
+                        pass
+                    self.activity_log.append(
+                        f"[+] Selected AP: {sel.get('ssid') or '<hidden>'} "
+                        f"[{sel.get('bssid')}] — starting engagement"
+                    )
+                    self.aio_attack()
+
+                self._spawn(_wait_triple)
+                return
+            for k, v in (trip.get("procs") or {}).items():
+                if k.endswith("_error"):
+                    self.activity_log.append(f"[i] window {k}: {v}")
+        except Exception as e:
+            self.activity_log.append(f"[i] Triple scan launch: {e}")
+
+        # Fallback: single external wifi_scan_external window
+        from core.utils.external_terminal import get_scan_font_scale
         cmd_argv = [
             sys.executable, "-m", "core.tui.wifi_scan_external",
             "--iface", str(self.interface),
             "--out", out_path,
-            "--seconds", "12",
+            "--seconds", "30",
+            "--long-range",
         ]
         log_path = "logs/steps/wifi_scan_external.log"
-        import shlex
-        shell_cmd = (
-            f"cd {shlex.quote(_root)} && "
-            f"export TERM=xterm-256color && "
-            f"export PYTHONPATH={shlex.quote(_root)}"
-            f"${{PYTHONPATH:+:$PYTHONPATH}} && "
-            + " ".join(shlex.quote(c) for c in cmd_argv)
-            + "; echo; echo '[scan done — close window or press Enter]'; read _"
-        )
         launched = False
         if self.external_terminal is not None:
             try:
-                launch = getattr(self.external_terminal, "launch", None)
+                launch = getattr(
+                    self.external_terminal, "launch_script_in_project_root", None
+                )
                 if callable(launch):
-                    # Prefer shell form so TERM/cwd are set in a real TTY.
+                    sm = getattr(self, "settings_manager", None)
                     launch(
-                        ["bash", "-lc", shell_cmd],
+                        cmd_argv,
                         log_path,
                         title=f"KFIOSA WiFi Scan — {self.interface}",
+                        font_scale=get_scan_font_scale(sm),
+                        position="topleft",
                     )
                     launched = True
             except Exception as e:
                 self.activity_log.append(f"[i] External terminal launch: {e}")
 
-        if not launched:
-            # Direct Popen with detected terminal (must be a real TTY).
-            import subprocess
-            import shutil
-            term = None
-            for t in ("xterm", "gnome-terminal", "konsole", "xfce4-terminal"):
-                if shutil.which(t):
-                    term = t
-                    break
-            try:
-                if term == "xterm":
-                    subprocess.Popen(
-                        ["xterm", "-T", f"KFIOSA Scan {self.interface}",
-                         "-e", "bash", "-lc", shell_cmd],
-                        start_new_session=True,
-                        cwd=_root,
-                    )
-                    launched = True
-                elif term == "gnome-terminal":
-                    subprocess.Popen(
-                        ["gnome-terminal", "--", "bash", "-lc", shell_cmd],
-                        start_new_session=True,
-                        cwd=_root,
-                    )
-                    launched = True
-                elif term:
-                    subprocess.Popen(
-                        [term, "-e", f"bash -lc {shell_cmd}"],
-                        start_new_session=True,
-                        cwd=_root,
-                    )
-                    launched = True
-            except Exception as e:
-                self.activity_log.append(f"[i] term spawn failed: {e}")
-
         if launched:
             self.activity_log.append(
                 f"[+] External scan window opened on {self.interface}. "
-                "Use ↑↓, SPACE/ENTER to select, A for AIO ATTACK, q when done."
+                "Use ↑↓, SPACE/ENTER to select, A for AIO engagement, q when done."
             )
-            self.activity_log.append(
-                "[*] After the window closes, press ▶ AIO ATTACK (or wait — "
-                "auto-load on next AIO)."
-            )
-            # Poll once shortly for selection (non-blocking style via spawn).
+
             def _wait_selection():
                 import time
                 from pathlib import Path
                 deadline = time.time() + 180
                 while time.time() < deadline:
                     if Path(out_path).is_file():
-                        time.sleep(0.5)  # allow write to finish
+                        time.sleep(0.5)
                         if self._load_external_scan_selection():
-                            # If external set aio_attack, start AIO.
                             try:
                                 import json
                                 data = json.loads(
                                     Path(out_path).read_text(encoding="utf-8")
                                 )
-                                if data.get("aio_attack"):
+                                if data.get("aio_attack") or data.get("selected"):
                                     self.activity_log.append(
-                                        "[AIO] External window requested AIO ATTACK"
+                                        "[AIO] Selection → engagement"
                                     )
                                     self.aio_attack()
                             except Exception:
@@ -1112,7 +1172,7 @@ class WiFiScreen(BaseScreen):
                         return
                     time.sleep(1.0)
                 self.activity_log.append(
-                    "[i] No external selection yet — press AIO ATTACK after picking."
+                    "[i] No external selection yet — press ▶ Start engagement after picking."
                 )
             self._spawn(_wait_selection)
             return

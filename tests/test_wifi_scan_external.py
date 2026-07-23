@@ -145,3 +145,114 @@ def test_read_curses_key_arrow_sequences():
     dummy_esc = DummyStdscr([27])
     assert read_curses_key(dummy_esc) == 27
 
+
+
+def _install_fake_live_scanner(monkeypatch, cap):
+    import core.tui.wifi_scan_external as wse
+
+    class FakeScanner:
+        def __init__(self, iface, disappeared_timeout=6.0):
+            cap["timeout"] = float(disappeared_timeout)
+            self.iface = iface
+            self.prep_notes = []
+            self.backends_tried = []
+            self.last_error = ""
+
+        def start(self):
+            pass
+
+        def stop(self):
+            pass
+
+        def poll(self):
+            return [], []
+
+    monkeypatch.setattr(wse, "LiveScanner", FakeScanner)
+    monkeypatch.setattr(wse.time, "sleep", lambda *a, **k: None)
+    # Avoid any real airodump/iw subprocess on the empty-catalog retry path.
+    monkeypatch.setattr(wse, "_scan_airodump_oneshot", lambda *a, **k: [])
+    monkeypatch.setattr(wse, "_scan_fallback", lambda *a, **k: [])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: "q")
+
+
+def test_wifi_main_long_range_threads_long_timeout(monkeypatch, tmp_path):
+    import core.tui.wifi_scan_external as wse
+    cap = {}
+    _install_fake_live_scanner(monkeypatch, cap)
+    out = tmp_path / "sel.json"
+    rc = wse.main(["--iface", "wlan0mon", "--out", str(out),
+                   "--text", "--seconds", "1", "--long-range"])
+    assert rc == 0
+    assert cap["timeout"] == 60.0  # long-range keeps APs longer
+
+
+def test_wifi_main_default_timeout_is_longer_now(monkeypatch, tmp_path):
+    import core.tui.wifi_scan_external as wse
+    cap = {}
+    _install_fake_live_scanner(monkeypatch, cap)
+    out = tmp_path / "sel.json"
+    rc = wse.main(["--iface", "wlan0mon", "--out", str(out),
+                   "--text", "--seconds", "1"])
+    assert rc == 0
+    assert cap["timeout"] == 20.0  # default (was 6.0 before long-range work)
+
+
+def test_wifi_clients_expand_key_shows_associated_clients():
+    """The `c` key path: a focused AP with clients surfaces its client MACs.
+    We exercise the data path the panel renders from (ap['clients'])."""
+    from core.tui.wifi_scan_external import LiveScanner
+    scanner = LiveScanner(iface="wlan0mon", disappeared_timeout=2.0)
+    ap = {
+        "bssid": "00:1A:E9:AA:BB:CC", "ssid": "TestNet", "channel": 6,
+        "power": -55, "encryption": "WPA2", "beacons": 100,
+        "clients": ["AA:BB:CC:11:22:33", "DD:EE:FF:44:55:66"],
+        "clients_count": 2,
+    }
+    scanner._merge_ap("00:1A:E9:AA:BB:CC", ap, time.time())
+    online, _ = scanner.poll()
+    assert online[0]["bssid"] == "00:1A:E9:AA:BB:CC"
+    assert online[0]["clients_count"] == 2
+    # The panel iterates ap['clients'] directly; ensure it's a MAC list.
+    assert all(isinstance(m, str) and ":" in m for m in online[0]["clients"])
+
+
+def test_wifi_text_ui_client_view_command(monkeypatch, tmp_path, capsys):
+    """Text-mode `c 1` prints the associated client MACs for the first AP."""
+    import core.tui.wifi_scan_external as wse
+
+    class FakeScannerWithClients:
+        def __init__(self, iface, disappeared_timeout=6.0):
+            self.iface = iface
+            self.prep_notes = []
+
+        def start(self):
+            pass
+
+        def stop(self):
+            pass
+
+        def poll(self):
+            ap = {
+                "bssid": "00:1A:E9:AA:BB:CC", "ssid": "TestNet",
+                "channel": 6, "power": -55, "encryption": "WPA2",
+                "clients": ["AA:BB:CC:11:22:33", "DD:EE:FF:44:55:66"],
+                "clients_count": 2,
+            }
+            return [ap], []
+
+    monkeypatch.setattr(wse, "LiveScanner", FakeScannerWithClients)
+    monkeypatch.setattr(wse.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(wse, "_scan_airodump_oneshot", lambda *a, **k: [])
+    monkeypatch.setattr(wse, "_scan_fallback", lambda *a, **k: [])
+
+    inputs = iter(["c 1", "q"])
+    monkeypatch.setattr("builtins.input", lambda *a, **k: next(inputs))
+
+    out = tmp_path / "sel.json"
+    rc = wse.main(["--iface", "wlan0mon", "--out", str(out),
+                   "--text", "--seconds", "1"])
+    assert rc == 0
+    captured = capsys.readouterr().out
+    assert "Clients for TestNet [00:1A:E9:AA:BB:CC]" in captured
+    assert "AA:BB:CC:11:22:33" in captured
+    assert "DD:EE:FF:44:55:66" in captured

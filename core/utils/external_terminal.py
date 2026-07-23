@@ -30,7 +30,7 @@ import shutil
 import subprocess
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +85,123 @@ EXTERNAL_TERMINAL_RUNTIME_THRESHOLD = 5  # seconds
 
 # Default log directory for per-step outputs (created on demand).
 LOG_DIR = Path("logs") / "steps"
+
+# Font scale applied to scanner windows (WiFi/BLE live scan TUI) so the
+# operator can enlarge the display when reading from across the room.
+# 1.0 = the terminal's own default (same density as the main KFIOSA TUI).
+# The earlier 4.0 default made the windows so large that only a few words
+# fit per line; 1.0 restores a normal, information-dense scan window that
+# behaves like the main TUI. Override per-launch with
+# ``KFIOSA_SCAN_FONT_SCALE`` (e.g. ``KFIOSA_SCAN_FONT_SCALE=2.0``).
+def _parse_scan_font_scale(raw: Optional[str] = None) -> float:
+    """Parse a font-scale value; invalid/non-positive → 1.0."""
+    if raw is None:
+        return 1.0
+    try:
+        val = float(raw)
+    except (TypeError, ValueError):
+        return 1.0
+    if val != val or val <= 0.0:  # NaN or non-positive
+        return 1.0
+    return val
+
+
+def get_scan_font_scale(settings=None) -> float:
+    """Effective scan-window font scale.
+
+    Precedence: ``KFIOSA_SCAN_FONT_SCALE`` env (when set) →
+    ``settings.scanning.font_scale`` → ``1.0``.
+    """
+    env = os.environ.get("KFIOSA_SCAN_FONT_SCALE")
+    if env is not None and str(env).strip() != "":
+        return _parse_scan_font_scale(env)
+    if settings is not None:
+        try:
+            saved = settings.get_setting("scanning.font_scale", None)
+            if saved is not None and str(saved).strip() != "":
+                return _parse_scan_font_scale(str(saved))
+        except Exception:
+            pass
+    return 1.0
+
+
+def set_scan_font_scale(value, settings=None) -> float:
+    """Persist scan font scale (settings + process env) and return the
+    clamped value used by subsequent launches in this process."""
+    global SCAN_WINDOW_FONT_SCALE
+    val = _parse_scan_font_scale(str(value))
+    os.environ["KFIOSA_SCAN_FONT_SCALE"] = str(val)
+    SCAN_WINDOW_FONT_SCALE = val
+    if settings is not None:
+        try:
+            settings.update_setting("scanning.font_scale", val)
+        except Exception as e:
+            logger.debug("persist scanning.font_scale: %s", e)
+    return val
+
+
+# Default at import (env or 1.0). Prefer :func:`get_scan_font_scale` when a
+# settings manager is available so operator UI changes take effect.
+SCAN_WINDOW_FONT_SCALE = get_scan_font_scale()
+
+# Approximate default point size each terminal ships with, used as the
+# base that ``font_scale`` multiplies. Only terminals with a reliable
+# command-line font knob are scaled; the rest inherit the host font.
+_BASE_FONT_SIZE: Dict[str, int] = {
+    "xterm": 8,
+    "kitty": 11,
+    "foot": 12,
+    "alacritty": 12,
+}
+
+# Approximate pixel cell size (w, h) for each terminal's *base* font, used
+# by :func:`geometry_string` to turn a screen-slot pixel rect into a
+# ``COLSxROWS`` terminal geometry. When ``font_scale`` > 1 the cell
+# grows proportionally so the window still fits its slot instead of
+# overflowing off-screen (which was why a 4x font showed only a few
+# words — the geometry kept 120 columns that no longer fit).
+_BASE_CELL_PX: Dict[str, Tuple[int, int]] = {
+    "xterm": (8, 16),
+    "kitty": (8, 16),
+    "foot": (9, 18),
+    "alacritty": (9, 18),
+}
+
+
+def font_argv(term: str, font_scale: Optional[float] = None) -> List[str]:
+    """Return extra argv to scale ``term``'s font by ``font_scale``.
+
+    ``font_scale`` of ``None`` or ``<= 1.0`` means "no change" → empty
+    list. Only terminals with a reliable CLI font knob are handled
+    (``xterm``, ``kitty``, ``foot``, ``alacritty``); ``gnome-terminal``,
+    ``konsole``, ``xfce4-terminal`` and ``tmux`` have no stable CLI
+    font-size flag, so they inherit the host terminal's font and this
+    returns ``[]`` (the caller still launches normally).
+
+    Examples::
+
+        font_argv("xterm", 4.0)    -> ["-fa", "Mono", "-fs", "32"]
+        font_argv("kitty", 4.0)     -> ["-o", "font_size=44"]
+        font_argv("foot", 4.0)      -> ["--font", "Mono:size=48"]
+        font_argv("alacritty", 4.0) -> ["-o", "font.size=48"]
+        font_argv("xterm", None)    -> []
+        font_argv("gnome-terminal", 4.0) -> []
+    """
+    if not font_scale or font_scale <= 1.0:
+        return []
+    base = _BASE_FONT_SIZE.get(term)
+    if base is None:
+        return []
+    size = max(2, int(round(base * float(font_scale))))
+    if term == "xterm":
+        return ["-fa", "Mono", "-fs", str(size)]
+    if term == "kitty":
+        return ["-o", f"font_size={size}"]
+    if term == "foot":
+        return ["--font", f"Mono:size={size}"]
+    if term == "alacritty":
+        return ["-o", f"font.size={size}"]
+    return []
 
 
 def step_title(step: Dict[str, Any]) -> str:
@@ -234,8 +351,97 @@ def _wrap_for_terminal(term: str, cmd: List[str], log_path: str,
     return ["bash", "-c", inner]
 
 
+def screen_size() -> tuple:
+    """Return (width, height) in pixels. Fallback 1920x1080."""
+    # env override for tests / headless
+    env_w = os.environ.get("KFIOSA_SCREEN_W")
+    env_h = os.environ.get("KFIOSA_SCREEN_H")
+    if env_w and env_h:
+        try:
+            return int(env_w), int(env_h)
+        except ValueError:
+            pass
+    try:
+        r = subprocess.run(
+            ["xdpyinfo"], capture_output=True, text=True, timeout=2,
+        )
+        for line in (r.stdout or "").splitlines():
+            if "dimensions:" in line:
+                # dimensions:    1920x1080 pixels
+                part = line.split("dimensions:")[-1].strip().split()[0]
+                w, h = part.lower().split("x")
+                return int(w), int(h)
+    except Exception:
+        pass
+    return 1920, 1080
+
+
+def screen_layout_rects() -> Dict[str, Dict[str, int]]:
+    """Pixel rects for triple scan windows (topleft / topright / bottomright).
+
+    Each value: {x, y, w, h} in pixels. Char geometry derived in
+    :func:`geometry_string`.
+    """
+    sw, sh = screen_size()
+    half_w, half_h = sw // 2, sh // 2
+    return {
+        "topleft": {"x": 0, "y": 0, "w": half_w, "h": half_h},
+        "topright": {"x": half_w, "y": 0, "w": half_w, "h": half_h},
+        "bottomright": {"x": half_w, "y": half_h, "w": half_w, "h": half_h},
+        "bottomleft": {"x": 0, "y": half_h, "w": half_w, "h": half_h},
+    }
+
+
+def _effective_cell_size(term: str, font_scale: Optional[float]) -> Tuple[int, int]:
+    """Return the (width, height) in pixels of one terminal cell for
+    ``term`` given ``font_scale``.
+
+    The cell grows proportionally with the font scale so a window placed
+    in a fixed screen slot always fits: at ``font_scale=4.0`` a cell is
+    ~4× wider/taller, so :func:`geometry_string` emits ~4× fewer
+    columns/rows for the same slot. This is what makes a scaled scanner
+    window show a few large lines instead of overflowing off-screen.
+    """
+    base_w, base_h = _BASE_CELL_PX.get(term, (8, 16))
+    scale = float(font_scale) if font_scale and font_scale > 1.0 else 1.0
+    return max(2, int(round(base_w * scale))), max(4, int(round(base_h * scale)))
+
+
+def geometry_string(
+    position: str,
+    *,
+    cell_w: Optional[int] = None,
+    cell_h: Optional[int] = None,
+    font_scale: Optional[float] = None,
+    term: Optional[str] = None,
+) -> str:
+    """Return X11-style ``COLSxROWS+X+Y`` for *position* slot.
+
+    When ``cell_w`` / ``cell_h`` are not supplied they are derived from
+    ``font_scale`` and ``term`` (see :func:`_effective_cell_size`) so the
+    window fits its screen slot at any font scale. Pass explicit cell
+    sizes to override (legacy behaviour).
+    """
+    rects = screen_layout_rects()
+    r = rects.get(position) or rects["topleft"]
+    if cell_w is None or cell_h is None:
+        ew, eh = _effective_cell_size(term or "", font_scale)
+        cell_w = cell_w if cell_w is not None else ew
+        cell_h = cell_h if cell_h is not None else eh
+    # Fit the pixel slot exactly. Never force floors that overflow at
+    # large font_scale (old max(40, …)/max(12, …) made 3×–4× fonts spill
+    # past the quadrant: 40×32px cells = 1280px on a 960px half-screen).
+    cols = max(1, r["w"] // max(cell_w, 1))
+    rows = max(1, r["h"] // max(cell_h, 1))
+    # xterm uses pixel offsets in +X+Y
+    return f"{cols}x{rows}+{r['x']}+{r['y']}"
+
+
 def launch(cmd: List[str], log_path: str, settings=None,
-           title: Optional[str] = None) -> subprocess.Popen:
+           title: Optional[str] = None,
+           font_scale: Optional[float] = None,
+           geometry: Optional[str] = None,
+           position: Optional[str] = None) -> subprocess.Popen:
     """Spawn ``cmd`` inside the detected external terminal, streaming
     output to ``log_path``.
 
@@ -246,6 +452,13 @@ def launch(cmd: List[str], log_path: str, settings=None,
         settings: optional settings manager; used for terminal selection
             if no cached choice is available.
         title: optional window/tab title.
+        font_scale: optional multiplier on the terminal's base font size
+            (e.g. ``4.0`` for a 4x-bigger scanner window, per the operator's
+            request). Only terminals with a reliable CLI font knob are
+            scaled (see :func:`font_argv`); others inherit the host font.
+            ``None``/``<= 1.0`` leaves the font unchanged.
+        geometry: optional ``COLSxROWS+X+Y`` (overrides *position*).
+        position: optional slot ``topleft|topright|bottomright|bottomleft``.
 
     Returns:
         The :class:`subprocess.Popen` of the terminal process. The caller
@@ -270,23 +483,74 @@ def launch(cmd: List[str], log_path: str, settings=None,
 
     title = title or (cmd[0] if cmd else "kfiosa")
     wrapped = _wrap_for_terminal(term, cmd, log_path)
+    fargv = font_argv(term, font_scale)
+    if geometry is None and position:
+        try:
+            geometry = geometry_string(position, font_scale=font_scale, term=term)
+        except Exception:
+            geometry = None
+    gargv: List[str] = []
+    if geometry:
+        if term == "xterm":
+            gargv = ["-geometry", geometry]
+        elif term == "gnome-terminal":
+            # cols x rows only (position not reliable)
+            cols_rows = geometry.split("+")[0]
+            gargv = [f"--geometry={cols_rows}"]
+        elif term == "xfce4-terminal":
+            gargv = [f"--geometry={geometry}"]
+        elif term == "konsole":
+            cols_rows = geometry.split("+")[0]
+            gargv = ["-p", f"LocalTabTitleFormat={title}"]
+            # konsole geometry is limited
+            if "x" in cols_rows:
+                try:
+                    c, r = cols_rows.lower().split("x")
+                    gargv.extend(["-p", f"TerminalColumns={c}", "-p", f"TerminalRows={r}"])
+                except ValueError:
+                    pass
+        elif term == "alacritty":
+            # alacritty --option window.dimensions / position via -o
+            try:
+                body = geometry.split("+")[0]
+                c, r = body.lower().split("x")
+                gargv = ["-o", f"window.dimensions.columns={c}",
+                         "-o", f"window.dimensions.lines={r}"]
+                parts = geometry.split("+")
+                if len(parts) >= 3:
+                    gargv.extend([
+                        "-o", f"window.position.x={parts[1]}",
+                        "-o", f"window.position.y={parts[2]}",
+                    ])
+            except Exception:
+                gargv = []
+        elif term == "kitty":
+            try:
+                body = geometry.split("+")[0]
+                c, r = body.lower().split("x")
+                gargv = ["-o", f"initial_window_width={c}c",
+                         "-o", f"initial_window_height={r}c"]
+            except Exception:
+                gargv = []
+        elif term == "foot":
+            gargv = ["-W", geometry.split("+")[0]] if geometry else []
 
     if term == "xterm":
-        argv = ["xterm", "-T", title, "-e", *wrapped]
+        argv = ["xterm", "-T", title, *gargv, *fargv, "-e", *wrapped]
     elif term == "gnome-terminal":
         # gnome-terminal accepts a single -- argument followed by the command.
-        argv = ["gnome-terminal", "--title", title, "--", *wrapped]
+        argv = ["gnome-terminal", "--title", title, *gargv, "--", *wrapped]
     elif term == "konsole":
-        argv = ["konsole", "-p", f"tabtitle={title}", "-e", *wrapped]
+        argv = ["konsole", "-p", f"tabtitle={title}", *gargv, "-e", *wrapped]
     elif term == "xfce4-terminal":
-        argv = ["xfce4-terminal", "--title", title, "-e",
+        argv = ["xfce4-terminal", "--title", title, *gargv, "-e",
                 " ".join(shlex.quote(c) for c in wrapped)]
     elif term == "alacritty":
-        argv = ["alacritty", "--title", title, "-e", *wrapped]
+        argv = ["alacritty", "--title", title, *gargv, *fargv, "-e", *wrapped]
     elif term == "kitty":
-        argv = ["kitty", "--title", title, *wrapped]
+        argv = ["kitty", "--title", title, *gargv, *fargv, *wrapped]
     elif term == "foot":
-        argv = ["foot", "--title", title, *wrapped]
+        argv = ["foot", "--title", title, *gargv, *fargv, *wrapped]
     elif term == "tmux":
         # New window inside the current tmux session if there is one,
         # otherwise a detached session.
@@ -302,7 +566,10 @@ def launch(cmd: List[str], log_path: str, settings=None,
         # somewhere (or to use the result as a no-op).
         argv = ["tail", "-f", log_path]
 
-    logger.info("launching %s in %s (log=%s)", cmd[0] if cmd else "<cmd>", term, log_path)
+    logger.info(
+        "launching %s in %s (log=%s geom=%s)",
+        cmd[0] if cmd else "<cmd>", term, log_path, geometry or "-",
+    )
     try:
         return subprocess.Popen(
             argv,
@@ -321,6 +588,22 @@ def launch(cmd: List[str], log_path: str, settings=None,
             stderr=subprocess.DEVNULL,
             start_new_session=True,
         )
+
+
+def launch_placed(
+    cmd: List[str],
+    log_path: str,
+    *,
+    title: Optional[str] = None,
+    position: str = "topleft",
+    font_scale: Optional[float] = None,
+    settings=None,
+) -> subprocess.Popen:
+    """Launch with screen-slot placement (topleft/topright/bottomright/…)."""
+    return launch(
+        cmd, log_path, settings=settings, title=title,
+        font_scale=font_scale, position=position,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -538,9 +821,15 @@ class FakeExternalTerminal:
         return self.term
 
     def launch(self, cmd: List[str], log_path: str, settings=None,
-               title: Optional[str] = None) -> TerminalRun:
+               title: Optional[str] = None,
+               font_scale: Optional[float] = None,
+               geometry: Optional[str] = None,
+               position: Optional[str] = None) -> TerminalRun:
         self.calls.append({
             "cmd": list(cmd), "log_path": log_path, "title": title,
+            "font_scale": font_scale,
+            "geometry": geometry,
+            "position": position,
         })
         return TerminalRun(cmd, log_path, self.term, title=title)
 
@@ -558,8 +847,95 @@ class FakeExternalTerminal:
         })
         return TerminalRun(cmd, log_path, self.term, title=title)
 
+    def launch_script_in_project_root(
+        self,
+        cmd_argv: List[str],
+        log_path: str,
+        title: Optional[str] = None,
+        font_scale: float = SCAN_WINDOW_FONT_SCALE,
+        wait_prompt: bool = True,
+        settings=None,
+        position: Optional[str] = None,
+    ) -> TerminalRun:
+        """Fake mirror of :func:`launch_script_in_project_root` that records
+        the call and returns a :class:`TerminalRun` for test inspection."""
+        self.calls.append({
+            "cmd": list(cmd_argv),
+            "log_path": log_path,
+            "title": title,
+            "font_scale": font_scale,
+            "wait_prompt": wait_prompt,
+            "position": position,
+        })
+        return TerminalRun(
+            list(cmd_argv), log_path, self.term, title=title or (cmd_argv[0] if cmd_argv else "kfiosa")
+        )
+
     def list_available(self) -> List[str]:
         return [self.term]
+
+
+def launch_script_in_project_root(
+    cmd_argv: List[str],
+    log_path: str,
+    title: Optional[str] = None,
+    font_scale: float = SCAN_WINDOW_FONT_SCALE,
+    wait_prompt: bool = True,
+    settings=None,
+    position: Optional[str] = None,
+) -> subprocess.Popen:
+    """Launch a Python module/script from the project root in an external terminal.
+
+    This is the shared helper used by the WiFi/BLE scan screens. It builds a
+    shell command that:
+
+    - ``cd``s to the project root (two parents of this file),
+    - sets ``TERM=xterm-256color`` so curses works,
+    - prepends the project root to ``PYTHONPATH``,
+    - runs ``cmd_argv``,
+    - optionally prints a "close window" prompt and waits for Enter so the
+      operator can review the scan output.
+
+    It then delegates to :func:`launch` for terminal detection, font scaling,
+    slot placement, and ``tee`` wrapping. The returned :class:`subprocess.Popen`
+    is detached (``start_new_session=True``).
+
+    Args:
+        cmd_argv: the command as an argv list (e.g.
+            ``[sys.executable, "-m", "core.tui.wifi_scan_external", ...]``).
+        log_path: path to tee the command output to.
+        title: window title; defaults to the first element of ``cmd_argv``.
+        font_scale: font-size multiplier; defaults to
+            :data:`SCAN_WINDOW_FONT_SCALE`.
+        wait_prompt: when True, keep the terminal open after the scan with
+            a prompt and ``read _``.
+        settings: optional settings manager for terminal choice persistence.
+        position: optional screen slot (``topleft`` / ``topright`` / …)
+            so single-window scan fallbacks still land in a known quadrant.
+
+    Returns:
+        The :class:`subprocess.Popen` returned by :func:`launch`.
+    """
+    root = str(Path(__file__).resolve().parents[2])
+    cmd_str = " ".join(shlex.quote(c) for c in cmd_argv)
+    inner = (
+        f"cd {shlex.quote(root)} && "
+        f"export TERM=xterm-256color && "
+        f"export PYTHONPATH={shlex.quote(root)}"
+        f"${{PYTHONPATH:+:$PYTHONPATH}} && "
+        f"{cmd_str}"
+    )
+    if wait_prompt:
+        inner += "; echo; echo '[scan done — close window or press Enter]'; read _"
+    wrapped = ["bash", "-lc", inner]
+    return launch(
+        wrapped,
+        log_path,
+        settings=settings,
+        title=title,
+        font_scale=font_scale,
+        position=position,
+    )
 
 
 class ExternalTerminalBackend:
@@ -593,12 +969,40 @@ class ExternalTerminalBackend:
         return b
 
     def launch(self, cmd: List[str], log_path: str,
-               title: Optional[str] = None) -> "subprocess.Popen | TerminalRun":
-        return launch(cmd, log_path, self._settings, title=title)
+               title: Optional[str] = None,
+               font_scale: Optional[float] = None,
+               geometry: Optional[str] = None,
+               position: Optional[str] = None,
+               ) -> "subprocess.Popen | TerminalRun":
+        return launch(
+            cmd, log_path, self._settings, title=title,
+            font_scale=font_scale, geometry=geometry, position=position,
+        )
 
     def launch_step(self, step: Dict[str, Any]) -> "subprocess.Popen | TerminalRun":
         """Per-step launcher (see :func:`launch_step` for the contract)."""
         return launch_step(step, self._settings)
+
+    def launch_script_in_project_root(
+        self,
+        cmd_argv: List[str],
+        log_path: str,
+        title: Optional[str] = None,
+        font_scale: float = SCAN_WINDOW_FONT_SCALE,
+        wait_prompt: bool = True,
+        position: Optional[str] = None,
+    ) -> "subprocess.Popen | TerminalRun":
+        """Convenience wrapper around :func:`launch_script_in_project_root`
+        using this backend's settings for terminal detection."""
+        return launch_script_in_project_root(
+            cmd_argv,
+            log_path,
+            title=title,
+            font_scale=font_scale,
+            wait_prompt=wait_prompt,
+            settings=self._settings,
+            position=position,
+        )
 
     def detect(self) -> str:
         return detect(self._settings)

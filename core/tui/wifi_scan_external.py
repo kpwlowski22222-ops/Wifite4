@@ -323,6 +323,7 @@ class LiveScanner:
         self.last_error: str = ""
         self.prep_notes: List[str] = []
         self._stderr_path: Optional[Path] = None
+        self._stderr_fh: Optional[Any] = None
 
     def start(self) -> None:
         self._running = True
@@ -373,16 +374,14 @@ class LiveScanner:
         started = False
         for cmd in cmd_variants:
             try:
-                err_fh = open(self._stderr_path, "w", encoding="utf-8")
+                # Keep the stderr handle open until the process is stopped;
+                # closing it immediately after Popen can lose diagnostics.
+                self._stderr_fh = open(self._stderr_path, "w", encoding="utf-8")
                 self.proc = subprocess.Popen(
                     cmd,
                     stdout=subprocess.DEVNULL,
-                    stderr=err_fh,
+                    stderr=self._stderr_fh,
                 )
-                try:
-                    err_fh.close()
-                except Exception:
-                    pass
                 # Brief health check: if airodump dies instantly, try next
                 # variant / fallback (missing root, bad iface, bad flags).
                 time.sleep(0.35)
@@ -401,6 +400,14 @@ class LiveScanner:
                         + (f": {err_txt.strip()}" if err_txt.strip() else "")
                     )
                     self.proc = None
+                    # Close the failed variant's stderr handle before trying
+                    # the next command variant.
+                    if self._stderr_fh:
+                        try:
+                            self._stderr_fh.close()
+                        except Exception:
+                            pass
+                        self._stderr_fh = None
                     continue
                 self._is_airodump = True
                 started = True
@@ -408,10 +415,22 @@ class LiveScanner:
             except FileNotFoundError:
                 self.last_error = "airodump-ng not found — install aircrack-ng"
                 self.proc = None
+                if self._stderr_fh:
+                    try:
+                        self._stderr_fh.close()
+                    except Exception:
+                        pass
+                    self._stderr_fh = None
                 break
             except (PermissionError, OSError) as e:
                 self.last_error = f"airodump spawn: {e}"
                 self.proc = None
+                if self._stderr_fh:
+                    try:
+                        self._stderr_fh.close()
+                    except Exception:
+                        pass
+                    self._stderr_fh = None
                 continue
 
         if not started:
@@ -558,6 +577,12 @@ class LiveScanner:
                 except Exception:
                     pass
             self.proc = None
+        if self._stderr_fh:
+            try:
+                self._stderr_fh.close()
+            except Exception:
+                pass
+            self._stderr_fh = None
 
 
 def _write_selection(
@@ -584,6 +609,7 @@ def run_curses(
     iface: str,
     out_path: Path,
     seconds: int = 12,
+    long_range: bool = False,
 ) -> int:
     curses.curs_set(0)
     stdscr.timeout(150)
@@ -596,15 +622,20 @@ def run_curses(
         curses.init_pair(3, curses.COLOR_CYAN, -1)
         curses.init_pair(4, curses.COLOR_RED, -1)
 
-    scanner = LiveScanner(iface, disappeared_timeout=6.0)
+    # Long-range: keep disappeared APs on screen far longer so the
+    # operator sees everything that went offline during the sweep.
+    disappeared_timeout = 60.0 if long_range else 20.0
+    scanner = LiveScanner(iface, disappeared_timeout=disappeared_timeout)
     scanner.start()
 
     active_table = "online"  # "online" or "disappeared"
     online_idx = 0
     disappeared_idx = 0
     selected: Optional[Dict[str, Any]] = None
+    # BSSID whose associated clients are shown in the expand panel (`c`).
+    clients_view_ap: Optional[str] = None
     status = f"Live scanning {iface}…"
-    message = "↑/↓ move · TAB switch table · ENTER/SPACE select · A AIO ATTACK · r rescan · q quit"
+    message = "↑/↓ move · TAB switch table · ENTER/SPACE select · A AIO · c clients · r rescan · q quit"
 
     try:
         while True:
@@ -640,6 +671,9 @@ def run_curses(
                 pass
 
             avail_h = max(4, h - 9)
+            # Reserve a clients-expand panel at the bottom when active.
+            panel_h = 10 if clients_view_ap else 0
+            avail_h = max(4, h - 9 - panel_h)
             if disappeared_aps:
                 h_online = max(3, (avail_h * 6) // 10)
                 h_disappeared = max(3, avail_h - h_online)
@@ -770,6 +804,54 @@ def run_curses(
                     except curses.error:
                         pass
 
+            # --- CLIENTS EXPAND PANEL (per-network associated clients) ---
+            if clients_view_ap:
+                cap = None
+                for a in online_aps + disappeared_aps:
+                    if a.get("bssid") == clients_view_ap:
+                        cap = a
+                        break
+                panel_top = 3 + avail_h
+                try:
+                    if cap:
+                        cl = cap.get("clients") or []
+                        hdr = (
+                            f"── ASSOCIATED CLIENTS of "
+                            f"{(cap.get('ssid') or '<hidden>')} "
+                            f"[{cap.get('bssid')}] — {len(cl)} client(s) "
+                            f"[c to close] ──"
+                        )
+                        stdscr.addstr(
+                            panel_top, 2, hdr[: w - 4],
+                            curses.color_pair(3) | curses.A_BOLD,
+                        )
+                        if not cl:
+                            stdscr.addstr(
+                                panel_top + 1, 2,
+                                "  <no associated clients captured for this "
+                                "network yet>"[: w - 4],
+                                curses.color_pair(2),
+                            )
+                        else:
+                            for ci, mac in enumerate(cl[: panel_h - 2]):
+                                try:
+                                    stdscr.addstr(
+                                        panel_top + 1 + ci, 2,
+                                        f"  {ci + 1:2d}. {mac}"[: w - 4],
+                                        curses.color_pair(3),
+                                    )
+                                except curses.error:
+                                    pass
+                    else:
+                        stdscr.addstr(
+                            panel_top, 2,
+                            "Focused AP no longer in catalog — press c to "
+                            "close."[: w - 4],
+                            curses.color_pair(2),
+                        )
+                except curses.error:
+                    pass
+
             # Footer
             fy = h - 4
             try:
@@ -817,7 +899,7 @@ def run_curses(
                 )
                 stdscr.addstr(
                     fy + 2, 2,
-                    "↑/↓ move · TAB switch table · ENTER/SPACE select target · A AIO · r rescan · q exit"[: w - 4],
+                    "↑/↓ move · TAB switch table · ENTER/SPACE select · A AIO · c clients · r rescan · q exit"[: w - 4],
                 )
             except curses.error:
                 pass
@@ -901,6 +983,29 @@ def run_curses(
                 time.sleep(0.4)
                 return 0
 
+            elif key in (ord("c"), ord("C")):
+                # Toggle the per-network associated-clients expand panel.
+                if active_table == "online" and online_aps:
+                    ap = online_aps[online_idx]
+                elif active_table == "disappeared" and disappeared_aps:
+                    ap = disappeared_aps[disappeared_idx]
+                else:
+                    ap = None
+                if ap:
+                    bssid = ap.get("bssid")
+                    ncli = len(ap.get("clients") or [])
+                    if clients_view_ap == bssid:
+                        clients_view_ap = None
+                        message = "Clients panel closed."
+                    else:
+                        clients_view_ap = bssid
+                        message = (
+                            f"Showing {ncli} associated client(s) for "
+                            f"{ap.get('ssid')} [{bssid}] — c to close."
+                        )
+                else:
+                    message = "Focus an AP first (↑/↓) then press c."
+
             elif key in (ord("r"), ord("R")):
                 scanner.stop()
                 scanner.ap_catalog.clear()
@@ -927,14 +1032,17 @@ def run_text_ui(
     iface: str,
     out_path: Path,
     seconds: int = 12,
+    long_range: bool = False,
 ) -> int:
     """Non-curses fallback when stdin/stdout is not a real TTY."""
     print("=" * 65)
     print(" KFIOSA WiFi Scan (text mode — live scanning)")
-    print(f" Interface: {iface}  duration≈{seconds}s")
+    print(f" Interface: {iface}  duration≈{seconds}s"
+          f"{'  [LONG-RANGE]' if long_range else ''}")
     print("=" * 65)
     print("[*] Prepping radio + starting live scan…")
-    scanner = LiveScanner(iface, disappeared_timeout=6.0)
+    disappeared_timeout = 60.0 if long_range else 20.0
+    scanner = LiveScanner(iface, disappeared_timeout=disappeared_timeout)
     scanner.start()
     if scanner.prep_notes:
         for n in scanner.prep_notes[:6]:
@@ -1001,11 +1109,29 @@ def run_text_ui(
                 )
 
         print(
-            "\nEnter number (e.g. 1 or D1) to select target, 'A <n>' for AIO ATTACK, or q to quit."
+            "\nCommands: number (e.g. 1 or D1) select target | "
+            "A <n> AIO ATTACK | c <n> view online clients | "
+            "C <n> view disappeared clients | q quit"
         )
         selected = None
         aio = False
         all_listed = online_aps + disappeared_aps
+
+        def _print_clients(ap: Optional[Dict[str, Any]], label: str) -> None:
+            if ap is None:
+                print("  invalid selection")
+                return
+            ssid = ap.get("ssid") or "<hidden>"
+            bssid = ap.get("bssid") or "?"
+            clients = ap.get("clients") or []
+            print(f"\n  Clients for {ssid} [{bssid}] ({len(clients)} captured):")
+            if not clients:
+                print("    <no associated clients captured for this network yet>")
+            else:
+                for ci, mac in enumerate(clients, 1):
+                    vendor = _get_oui_vendor(mac)
+                    print(f"    {ci:2d}. {mac}  ({vendor})")
+
         while True:
             try:
                 raw = input("> ").strip()
@@ -1014,7 +1140,26 @@ def run_text_ui(
                 break
             if not raw or raw.lower() in ("q", "quit", "exit"):
                 break
-            if raw.lower().startswith("a"):
+
+            lower = raw.lower()
+            if lower.startswith("c ") or lower == "c":
+                parts = raw.split()
+                target_str = parts[1] if len(parts) > 1 else (
+                    "1" if online_aps else ""
+                )
+                ap = _pick_text_ap(target_str, online_aps, [])
+                _print_clients(ap, "online")
+                continue
+            if lower.startswith("C ") or lower == "C":
+                parts = raw.split()
+                target_str = parts[1] if len(parts) > 1 else (
+                    "D1" if disappeared_aps else ""
+                )
+                ap = _pick_text_ap(target_str, [], disappeared_aps)
+                _print_clients(ap, "disappeared")
+                continue
+
+            if lower.startswith("a"):
                 parts = raw.split()
                 target_str = parts[1] if len(parts) > 1 else "1"
                 selected = _pick_text_ap(target_str, online_aps, disappeared_aps)
@@ -1029,12 +1174,14 @@ def run_text_ui(
 
             selected = _pick_text_ap(raw, online_aps, disappeared_aps)
             if selected:
+                clients = selected.get("clients") or []
                 print(
                     f"[+] Selected {selected.get('ssid')} [{selected.get('bssid')}] — "
+                    f"{len(clients)} client(s) — "
                     f"type A to launch AIO or q to save & quit"
                 )
                 continue
-            print("enter a number (e.g. 1 or D1), A <n>, or q")
+            print("enter a number (e.g. 1 or D1), A <n>, c <n>, C <n>, or q")
 
         _write_selection(
             out_path,
@@ -1103,7 +1250,8 @@ def _curses_safe_wrapper(fn, *args) -> int:
         )
         if len(args) >= 2:
             return run_text_ui(
-                args[0], args[1], args[2] if len(args) > 2 else 12
+                args[0], args[1], args[2] if len(args) > 2 else 12,
+                long_range=bool(args[3]) if len(args) > 3 else False,
             )
         return 1
     finally:
@@ -1136,7 +1284,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         default=str(Path("logs") / "wifi_scan_selection.json"),
         help="JSON path for selection + aio_attack flag",
     )
-    ap.add_argument("--seconds", type=int, default=12, help="Scan duration")
+    ap.add_argument("--seconds", type=int, default=30, help="Scan duration")
+    ap.add_argument(
+        "--long-range",
+        action="store_true",
+        help="Long-range sweep: keep disappeared APs on screen far longer "
+             "and dwell longer so distant networks are caught.",
+    )
     ap.add_argument(
         "--text",
         action="store_true",
@@ -1156,8 +1310,13 @@ def main(argv: Optional[List[str]] = None) -> int:
             use_text = True
 
     if use_text:
-        return run_text_ui(args.iface, out_path, args.seconds)
-    return _curses_safe_wrapper(run_curses, args.iface, out_path, args.seconds)
+        return run_text_ui(
+            args.iface, out_path, args.seconds,
+            long_range=bool(args.long_range),
+        )
+    return _curses_safe_wrapper(
+        run_curses, args.iface, out_path, args.seconds, bool(args.long_range),
+    )
 
 
 if __name__ == "__main__":

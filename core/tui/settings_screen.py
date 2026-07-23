@@ -7,8 +7,7 @@ or view active configuration profile.
 
 import os
 import logging
-import threading
-from typing import List, Dict, Any
+from typing import List
 
 from core.tui.base_screen import BaseScreen
 from core.settings import SettingsManager
@@ -28,6 +27,10 @@ class SettingsScreen(BaseScreen):
             ("Set Ollama Endpoint", self.set_ollama_endpoint),
             ("Select Model per Domain", self.select_domain_model),
             ("Pull Models (info)", self.pull_models_info),
+            ("OS Agentic CLI (Holo) — status / presets / stop", self.holo_os_agent_status),
+            ("OS Agentic CLI — dry-run desktop task", self.holo_os_agent_dry_run),
+            ("OS Agentic CLI — AI plan (predict→act→read→label)", self.holo_os_agent_plan),
+            ("OS Agentic CLI — toggle holo.enabled", self.toggle_holo_enabled),
             ("Fetch Tool Repos into toolboxes/ (git clone)", self.fetch_toolboxes),
             ("Prepare Toolbox Tools (install deps, chmod)", self.prepare_toolboxes),
             ("Rebuild Tool Registry (toolboxes+Kali+venv)", self.rebuild_registry),
@@ -37,10 +40,210 @@ class SettingsScreen(BaseScreen):
             ("View API Keys Presence Status", self.view_api_keys_status),
             ("AI Vision OS Navigation & UI Auto-Labeling", self.toggle_vision_os_learning),
             ("Adjust Scan Timeouts", self.adjust_timeouts),
+            ("External Terminal (detect / pick)", self.configure_external_terminal),
+            ("Scan Window Font Scale", self.configure_scan_font_scale),
             ("Print Current Settings Profile", self.print_settings),
             ("Reset Configuration to Defaults", self.reset_settings),
             ("Back to Main Menu", self.parent_callback)
         ]
+
+    def holo_os_agent_status(self):
+        """Probe holo-desktop-cli (OS agentic tool) without driving the desktop."""
+        self.activity_log.append("=== OS Agentic CLI (holo-desktop-cli) ===")
+        try:
+            from core.desktop.holo_agent import TASK_PRESETS, holo_status
+            st = holo_status()
+        except Exception as e:
+            self.activity_log.append(f"[!] holo bridge unavailable: {e}")
+            return
+        enabled = True
+        try:
+            enabled = bool(
+                self.settings_manager.get_setting("holo.enabled", True)
+            )
+        except Exception:
+            pass
+        self.activity_log.append(
+            f"[{'+' if st.get('ok') else '!'}] binary={st.get('holo_bin') or 'NOT FOUND'} "
+            f"enabled={enabled}"
+        )
+        if st.get("version"):
+            self.activity_log.append(f"[i] version: {st.get('version')}")
+        self.activity_log.append(
+            f"[i] logged_in_hint={st.get('logged_in_hint')} "
+            f"python_api={st.get('python_api')}"
+        )
+        if st.get("error"):
+            self.activity_log.append(f"[!] {st.get('error')}")
+            self.activity_log.append(
+                "[i] Install: pip install holo-desktop-cli  "
+                "or see https://github.com/hcompai/holo-desktop-cli"
+            )
+        self.activity_log.append(
+            f"[i] presets: {len(TASK_PRESETS)} "
+            f"(ble_long_range_prep, ble_scan_cli, wifi_scan_cli, …)"
+        )
+        self.activity_log.append(
+            "[i] CLI: python main.py --cli holo status | "
+            "python main.py --cli holo run --goal ble_long_range_prep --yes"
+        )
+        self.activity_log.append(
+            "[i] Kill switch: python main.py --cli holo stop"
+        )
+
+    def holo_os_agent_dry_run(self):
+        """Build a Holo desktop argv without executing (safe for tests)."""
+        goal = self.get_input(
+            "Holo preset/goal (e.g. ble_long_range_prep, ollama_list, open_terminal)"
+        ).strip()
+        if not goal:
+            goal = "ble_adapter_help"
+        self.activity_log.append(f"[*] Holo dry-run goal={goal!r}…")
+        try:
+            from core.desktop.holo_agent import HoloDesktopBridge
+            # Dry-run: no desktop action executes, but the bridge still gets a
+            # default-deny gate so an accidental dry_run=False refactor cannot
+            # auto-ACCEPT real desktop control.
+            bridge = HoloDesktopBridge(
+                confirm_fn=lambda _p: False,
+                settings=self.settings_manager,
+            )
+            result = bridge.run(goal=goal, dry_run=True)
+            self.activity_log.append(
+                f"[{'+' if result.get('ok') else '!'}] dry_run ok={result.get('ok')}"
+            )
+            if result.get("cmd"):
+                self.activity_log.append(f"[i] cmd: {result['cmd']}")
+            if result.get("task"):
+                for line in str(result["task"]).splitlines()[:4]:
+                    self.activity_log.append(f"    {line[:100]}")
+            if result.get("error"):
+                self.activity_log.append(f"[!] {result['error']}")
+        except Exception as e:
+            self.activity_log.append(f"[!] holo dry-run error: {e}")
+
+    def holo_os_agent_plan(self):
+        """Run an AI-decided Holo desktop plan: predict→act→read→label.
+
+        Collects what/where/what_for/predicted_outcome from the operator,
+        then executes via :class:`core.desktop.holo_agent.HoloDesktopBridge`
+        behind the shared TUI ACCEPT/CANCEL gate. Results (observed labels,
+        prediction match, errors) are appended to the activity log.
+        """
+        what = self.get_input("What to click / do (e.g. 'terminal icon')").strip()
+        where = self.get_input("Where on screen (e.g. 'top-left dock')").strip()
+        what_for = self.get_input("What is this for (e.g. 'open a shell')").strip()
+        predicted = self.get_input(
+            "Predicted outcome (e.g. 'terminal window appears')"
+        ).strip()
+        goal = self.get_input(
+            "Holo preset/goal (optional, e.g. open_terminal)"
+        ).strip()
+        tool = self.get_input("Tool focus (optional)").strip()
+        model = self.get_input("Model focus (optional)").strip()
+
+        max_steps_str = self.get_input("Max steps (default 5)").strip()
+        try:
+            max_steps = int(max_steps_str) if max_steps_str else 5
+        except ValueError:
+            max_steps = 5
+
+        read_labels = (
+            self.get_input("Read/label screen after action? [Y/n]").strip().lower()
+            != "n"
+        )
+        label_duration_str = self.get_input(
+            "Label duration seconds (default 6)"
+        ).strip()
+        try:
+            label_duration_s = float(label_duration_str) if label_duration_str else 6.0
+        except ValueError:
+            label_duration_s = 6.0
+
+        dry_run = (
+            self.get_input("Dry-run only? [y/N]").strip().lower() == "y"
+        )
+
+        plan = {
+            "what_to_click": what,
+            "where": where,
+            "what_for": what_for,
+            "predicted_outcome": predicted,
+            "goal": goal,
+            "tool": tool,
+            "model": model,
+        }
+
+        confirm_fn = (
+            self.tui_confirm.confirm if self.tui_confirm is not None else None
+        )
+        summary = what_for or goal or "desktop action"
+        self.activity_log.append(f"[*] Holo plan: {summary} …")
+
+        def _run():
+            try:
+                from core.desktop.holo_agent import HoloDesktopBridge
+                bridge = HoloDesktopBridge(
+                    confirm_fn=confirm_fn,
+                    settings=self.settings_manager,
+                )
+                result = bridge.run_plan(
+                    plan,
+                    max_steps=max_steps,
+                    read_labels=read_labels,
+                    label_duration_s=label_duration_s,
+                    dry_run=dry_run,
+                )
+                self.activity_log.append(
+                    f"[{'+' if result.get('ok') else '!'}] Holo plan "
+                    f"{'dry-run' if dry_run else 'finished'} "
+                    f"ok={result.get('ok')}"
+                )
+                if result.get("predicted_outcome"):
+                    self.activity_log.append(
+                        f"[i] predicted: {result['predicted_outcome']}"
+                    )
+                observed = result.get("observed") or {}
+                if observed.get("ok"):
+                    self.activity_log.append(
+                        f"[i] observed {observed.get('count', 0)} labels"
+                    )
+                elif observed.get("error"):
+                    self.activity_log.append(
+                        f"[!] observed error: {observed['error']}"
+                    )
+                match = result.get("prediction_match")
+                if match is True:
+                    self.activity_log.append("[+] prediction verified")
+                elif match is False:
+                    self.activity_log.append("[-] prediction NOT verified")
+                if result.get("live_labels_count"):
+                    self.activity_log.append(
+                        f"[i] live labels: {result['live_labels_count']}"
+                    )
+                if result.get("error"):
+                    self.activity_log.append(f"[!] {result['error']}")
+            except Exception as e:
+                self.activity_log.append(f"[!] Holo plan error: {e}")
+
+        self._spawn(_run)
+
+    def toggle_holo_enabled(self):
+        """Flip settings holo.enabled (chain dispatch still ACCEPT-gated)."""
+        try:
+            cur = bool(self.settings_manager.get_setting("holo.enabled", True))
+        except Exception:
+            cur = True
+        new = not cur
+        try:
+            self.settings_manager.update_setting("holo.enabled", new)
+        except Exception as e:
+            self.activity_log.append(f"[!] cannot update holo.enabled: {e}")
+            return
+        self.activity_log.append(
+            f"[+] holo.enabled = {new} "
+            f"(desktop steps still require ACCEPT; CLI uses --yes)"
+        )
 
     def view_ollama_status(self):
         """Show Ollama reachability + pulled models + per-domain mapping."""
@@ -77,7 +280,6 @@ class SettingsScreen(BaseScreen):
         self.settings_manager.update_setting("ollama.endpoint", ep.strip())
         # Rebind the shared backend so the change takes effect immediately.
         if self.ai_backend is not None:
-            from core.ai_backend import AIBackend
             self.ai_backend.ollama.endpoint = ep.strip()
             if "://" not in self.ai_backend.ollama.endpoint:
                 self.ai_backend.ollama.endpoint = "http://" + self.ai_backend.ollama.endpoint
@@ -215,7 +417,7 @@ class SettingsScreen(BaseScreen):
                     f"(toolbox={st['toolbox']}, kali={st['kali']}, venv={st['venv']})"
                 )
                 self.activity_log.append(
-                    f"[i] by domain: "
+                    "[i] by domain: "
                     + ", ".join(f"{k}={v}" for k, v in list(st['by_domain'].items())[:8])
                 )
             except Exception as e:
@@ -260,7 +462,7 @@ class SettingsScreen(BaseScreen):
         self.settings_manager.update_setting("vision_os_learning.enabled", new_state)
         self.activity_log.append("=== AI Vision OS Navigation & UI Auto-Labeling ===")
         self.activity_log.append(f"[+] Status: {'ENABLED' if new_state else 'DISABLED'}")
-        self.activity_log.append(f"[i] Screenshot & cropping cache: logs/screen_cache/")
+        self.activity_log.append("[i] Screenshot & cropping cache: logs/screen_cache/")
         self.activity_log.append(f"[i] Vision model: {self.settings.get('gemini', {}).get('model', 'gemini-2.5-flash')}")
         self.activity_log.append("[i] Scans host controls across Kali, auto-labels regions & stores in ui_labels_index.json.")
 
@@ -414,6 +616,93 @@ class SettingsScreen(BaseScreen):
                 self.activity_log.append(f"[+] BLE timeout set to {ble_t}s")
         except ValueError:
             self.activity_log.append("[!] Invalid timeout value. Please enter numbers.")
+
+    def configure_external_terminal(self):
+        """Show available external terminals and let the operator pick one."""
+        try:
+            from core.utils.external_terminal import (
+                list_available, detect, SETTINGS_KEY, NO_TERMINAL,
+            )
+        except Exception as e:
+            self.activity_log.append(f"[!] external terminal helpers: {e}")
+            return
+        current = detect(self.settings_manager)
+        avail = list_available()
+        self.activity_log.append("=== External Terminal ===")
+        self.activity_log.append(f"[i] Current: {current}")
+        self.activity_log.append(
+            f"[i] Available: {', '.join(avail) if avail else '(none — tail fallback)'}"
+        )
+        self.activity_log.append(
+            f"[i] '{NO_TERMINAL}' = no GUI window (tail log only)"
+        )
+        choice = self.get_input(
+            f"Terminal name [{current}] (blank=keep, auto=re-probe)"
+        ).strip()
+        if not choice:
+            self.activity_log.append("[i] Terminal unchanged.")
+            return
+        if choice.lower() == "auto":
+            # Clear saved choice so detect re-probes PATH.
+            try:
+                self.settings_manager.update_setting(SETTINGS_KEY, "")
+            except Exception:
+                pass
+            winner = detect(self.settings_manager)
+            self.activity_log.append(f"[+] Auto-detected terminal: {winner}")
+            return
+        # Accept any name in the chain or currently on PATH.
+        import shutil
+        known = set(avail) | {NO_TERMINAL, "tail"}
+        if choice not in known and not shutil.which(choice):
+            self.activity_log.append(
+                f"[!] '{choice}' not on PATH and not in known list. "
+                f"Try: {', '.join(avail) or NO_TERMINAL}"
+            )
+            return
+        self.settings_manager.update_setting(SETTINGS_KEY, choice)
+        # Re-validate via detect so invalid binary falls through cleanly.
+        winner = detect(self.settings_manager)
+        self.activity_log.append(f"[+] External terminal set to: {winner}")
+
+    def configure_scan_font_scale(self):
+        """Set font multiplier for triple/single external scan windows."""
+        try:
+            from core.utils.external_terminal import (
+                get_scan_font_scale, set_scan_font_scale,
+            )
+        except Exception as e:
+            self.activity_log.append(f"[!] font scale helpers: {e}")
+            return
+        current = get_scan_font_scale(self.settings_manager)
+        self.activity_log.append("=== Scan Window Font Scale ===")
+        self.activity_log.append(
+            f"[i] Current: {current}×  "
+            "(1.0 = same density as main TUI; 2.0 = larger)"
+        )
+        self.activity_log.append(
+            "[i] Geometry shrinks with scale so windows stay in their "
+            "screen slots. Env KFIOSA_SCAN_FONT_SCALE overrides settings."
+        )
+        raw = self.get_input(
+            f"Font scale [{current}] (e.g. 1.0, 1.5, 2.0; blank=keep)"
+        ).strip()
+        if not raw:
+            self.activity_log.append("[i] Font scale unchanged.")
+            return
+        try:
+            val = float(raw)
+        except ValueError:
+            self.activity_log.append("[!] Enter a number, e.g. 1.0 or 2.0.")
+            return
+        if val <= 0:
+            self.activity_log.append("[!] Scale must be positive.")
+            return
+        applied = set_scan_font_scale(val, self.settings_manager)
+        self.activity_log.append(
+            f"[+] Scan window font scale set to {applied}× "
+            "(applies to next WiFi/BLE scan launch)"
+        )
 
     def print_settings(self):
         """Print full JSON configuration to log window"""
