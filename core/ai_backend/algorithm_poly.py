@@ -764,6 +764,12 @@ def describe_algorithm_poly(action: str) -> Dict[str, Any]:
     """Introspection helper for TUI / MCP / tests."""
     family = classify_family(action)
     variants = _FAMILY_VARIANTS.get(family) or _FAMILY_VARIANTS["generic"]
+    engines: Dict[str, Any] = {}
+    try:
+        from core.poly.multi_engine import engines_status
+        engines = engines_status()
+    except Exception:  # noqa: BLE001
+        engines = {"ok": False}
     return {
         "ok": True,
         "action": action,
@@ -779,7 +785,17 @@ def describe_algorithm_poly(action: str) -> Dict[str, Any]:
             for v in variants
         ],
         "enabled": poly_enabled(),
-        "model": "polymorphic (heuristic)",
+        "model": "polymorphic (multi-engine ensemble)",
+        "python_requires": ">=3.10",
+        "engines": engines,
+        "libraries": (engines or {}).get("libraries") or {
+            "plum": "https://github.com/beartype/plum",
+            "multimethod": "https://github.com/coady/multimethod",
+            "multipledispatch": "https://github.com/mrocklin/multipledispatch",
+            "singledispatch": "stdlib functools",
+            "match_case": "Python 3.10+",
+            "strategy": "core.utils.poly_runtime",
+        },
     }
 
 

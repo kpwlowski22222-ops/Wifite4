@@ -1313,15 +1313,29 @@ def describe_poly(action: str = "") -> Dict[str, Any]:
         return describe_algorithm_poly(action)
     names = list_algorithms()
     by_family: Dict[str, List[str]] = {}
+    wrapped = 0
     for n in names:
         by_family.setdefault(classify_family(n), []).append(n)
+        fn = ZERO_DAY_ALGORITHMS.get(n)
+        if getattr(fn, "_kfiosa_poly_wrapped", False):
+            wrapped += 1
+    engines: Dict[str, Any] = {}
+    try:
+        from core.poly.multi_engine import engines_status
+        engines = engines_status()
+    except Exception:  # noqa: BLE001
+        engines = {}
     return {
         "ok": True,
         "enabled": poly_enabled(),
         "algorithm_count": len(names),
+        "wrapped_count": wrapped,
         "families": {k: len(v) for k, v in sorted(by_family.items())},
         "by_family": by_family,
-        "model": "polymorphic (heuristic)",
+        "model": "polymorphic (multi-engine ensemble)",
+        "python_requires": ">=3.10",
+        "engines": engines,
+        "libraries": (engines or {}).get("libraries") or {},
     }
 
 
