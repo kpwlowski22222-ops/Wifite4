@@ -35,11 +35,47 @@ from core.tui.scan_window_shell import (
 logger = logging.getLogger(__name__)
 
 HELP_WIFI = (
-    "↑↓/jk move · TAB tables · ENTER/SPACE select · A AIO eng · r rescan · q back"
+    "↑↓/jk move · ←→/TAB tables · 1-9 jump · ENTER/SPACE select · A AIO · r rescan · q back"
 )
 HELP_BLE = (
-    "↑↓/jk move · TAB online/offline · ENTER/SPACE select · A AIO · r rescan · q back"
+    "↑↓/jk move · ←→/TAB tables · 1-9 jump · ENTER/SPACE select · A AIO · r rescan · q back"
 )
+
+
+def _prepare_stdscr(stdscr, timeout_ms: int = 200) -> None:
+    """Enable keypad + non-blocking so arrows/j/k navigate targets."""
+    try:
+        curses.curs_set(0)
+    except Exception:
+        pass
+    try:
+        stdscr.keypad(True)  # map arrow keys → KEY_UP/DOWN (required)
+    except Exception:
+        pass
+    try:
+        stdscr.nodelay(True)
+        stdscr.timeout(int(timeout_ms))
+    except Exception:
+        pass
+
+
+def _read_key(stdscr, timeout_ms: int = 200) -> int:
+    """Read one key with ANSI arrow fallback (same as main TUI)."""
+    try:
+        from core.tui.base_screen import read_curses_key
+        return int(read_curses_key(stdscr, timeout_ms=timeout_ms))
+    except Exception:
+        try:
+            return int(stdscr.getch())
+        except Exception:
+            return -1
+
+
+def _move_idx(idx: int, n: int, delta: int) -> int:
+    """Move selection; wrap at ends so movement always feels responsive."""
+    if n <= 0:
+        return 0
+    return (int(idx) + int(delta)) % n
 
 
 def prefer_embedded_scan() -> bool:
@@ -142,9 +178,12 @@ def _draw_table_block(
         selected = focused and i == idx
         if selected:
             attr = curses.A_REVERSE | _pair(1)
+            prefix = "▶ "
         else:
             attr = _pair(6)
-        _safe_add(stdscr, y, x + 1, line, attr, width - 1)
+            # Number prefix for first 9 rows so 1-9 jump is discoverable
+            prefix = f"{i + 1} " if i < 9 else "  "
+        _safe_add(stdscr, y, x + 1, (prefix + line), attr, width - 1)
 
 
 def run_embedded_wifi_scan(
@@ -175,25 +214,24 @@ def run_embedded_wifi_scan(
     selected: Optional[Dict[str, Any]] = None
     aio = False
     msg = "scanning…"
-    prev_nodelay = True
     try:
-        try:
-            stdscr.nodelay(True)
-            stdscr.timeout(200)
-            curses.curs_set(0)
-        except Exception:
-            pass
+        _prepare_stdscr(stdscr, timeout_ms=200)
 
         while True:
             online, offline = scanner.poll()
             online = list(online or [])
             offline = list(offline or [])
+            # Auto-land on a non-empty table so arrows always do something
+            if focus == "online" and not online and offline:
+                focus = "offline"
+            elif focus == "offline" and not offline and online:
+                focus = "online"
+            online_idx = clamp_idx(online_idx, len(online))
+            offline_idx = clamp_idx(offline_idx, len(offline))
             focus_ap = None
             if focus == "online" and online:
-                online_idx = clamp_idx(online_idx, len(online))
                 focus_ap = online[online_idx]
             elif focus == "offline" and offline:
-                offline_idx = clamp_idx(offline_idx, len(offline))
                 focus_ap = offline[offline_idx]
             elif online:
                 focus_ap = online[clamp_idx(online_idx, len(online))]
@@ -205,8 +243,9 @@ def run_embedded_wifi_scan(
                         clients.append(c)
                     else:
                         clients.append({"mac": str(c)})
-            if focus == "clients":
-                clients_idx = clamp_idx(clients_idx, len(clients))
+            clients_idx = clamp_idx(clients_idx, len(clients))
+            if focus == "clients" and not clients:
+                focus = "online" if online else "offline"
 
             try:
                 h, w = stdscr.getmaxyx()
@@ -260,25 +299,39 @@ def run_embedded_wifi_scan(
             detail = detail_for_item(focus_ap or {}, "wifi") if focus_ap else ""
             _safe_add(stdscr, h - 3, 0, "─" * max(1, w - 1), _pair(6), w)
             _safe_add(stdscr, h - 2, 0, detail, _pair(4), w)
-            foot = f" {HELP_WIFI}  ·  {msg}"
+            n_cur = (
+                len(online) if focus == "online"
+                else len(offline) if focus == "offline"
+                else len(clients)
+            )
+            i_cur = (
+                online_idx if focus == "online"
+                else offline_idx if focus == "offline"
+                else clients_idx
+            )
+            foot = (
+                f" {HELP_WIFI}  ·  focus={focus} "
+                f"#{i_cur + 1}/{n_cur or 0}  ·  {msg}"
+            )
             _safe_add(stdscr, h - 1, 0, foot, _pair(3) | curses.A_BOLD, w)
             try:
                 stdscr.refresh()
             except curses.error:
                 pass
 
-            try:
-                ch = stdscr.getch()
-            except Exception:
-                ch = -1
-            if ch == -1:
+            ch = _read_key(stdscr, timeout_ms=200)
+            if ch in (-1,):
                 continue
 
-            # TAB cycles tables
-            if ch in (9, ord("\t")):
-                order = ["online", "offline", "clients"]
+            order = ["online", "offline", "clients"]
+            # TAB / LEFT / RIGHT cycle tables
+            if ch in (9, ord("\t"), curses.KEY_RIGHT):
                 focus = order[(order.index(focus) + 1) % len(order)]
-                msg = f"focus={focus}"
+                msg = f"table={focus}"
+                continue
+            if ch in (curses.KEY_LEFT,):
+                focus = order[(order.index(focus) - 1) % len(order)]
+                msg = f"table={focus}"
                 continue
             if ch in (ord("r"), ord("R")):
                 scanner.stop()
@@ -297,6 +350,44 @@ def run_embedded_wifi_scan(
                 msg = "nothing to AIO-select"
                 continue
 
+            # 1-9 jump to target in focused list
+            if 0 <= ch < 256 and chr(ch).isdigit() and chr(ch) != "0":
+                jump = int(chr(ch)) - 1
+                items = (
+                    online if focus == "online"
+                    else offline if focus == "offline"
+                    else clients
+                )
+                if items and 0 <= jump < len(items):
+                    if focus == "online":
+                        online_idx = jump
+                    elif focus == "offline":
+                        offline_idx = jump
+                    else:
+                        clients_idx = jump
+                    msg = f"jump #{jump + 1}"
+                continue
+
+            # Home / End
+            if ch in (curses.KEY_HOME, ord("g")):
+                if focus == "online":
+                    online_idx = 0
+                elif focus == "offline":
+                    offline_idx = 0
+                else:
+                    clients_idx = 0
+                msg = "first"
+                continue
+            if ch in (curses.KEY_END, ord("G")):
+                if focus == "online" and online:
+                    online_idx = len(online) - 1
+                elif focus == "offline" and offline:
+                    offline_idx = len(offline) - 1
+                elif clients:
+                    clients_idx = len(clients) - 1
+                msg = "last"
+                continue
+
             n = (
                 len(online) if focus == "online"
                 else len(offline) if focus == "offline"
@@ -307,7 +398,16 @@ def run_embedded_wifi_scan(
                 else offline_idx if focus == "offline"
                 else clients_idx
             )
-            new_idx, act = handle_nav_key(ch, idx, n)
+            # Explicit arrow / vim move (wrap) — never a no-op when n>0
+            if ch in (curses.KEY_UP, ord("k"), ord("K")):
+                new_idx = _move_idx(idx, n, -1)
+                act = None
+            elif ch in (curses.KEY_DOWN, ord("j"), ord("J")):
+                new_idx = _move_idx(idx, n, +1)
+                act = None
+            else:
+                new_idx, act = handle_nav_key(ch, idx, n)
+
             if focus == "online":
                 online_idx = new_idx
             elif focus == "offline":
@@ -324,7 +424,7 @@ def run_embedded_wifi_scan(
                 continue
             if act == "select":
                 if focus == "clients":
-                    msg = "select an AP (TAB to ONLINE)"
+                    msg = "select an AP (←/→ or TAB to ONLINE)"
                     continue
                 items = online if focus == "online" else offline
                 if not items:
@@ -332,12 +432,18 @@ def run_embedded_wifi_scan(
                     continue
                 selected = dict(items[clamp_idx(new_idx, len(items))])
                 break
+            if n > 0 and act is None and ch in (
+                curses.KEY_UP, curses.KEY_DOWN, ord("j"), ord("k"),
+                ord("J"), ord("K"), curses.KEY_PPAGE, curses.KEY_NPAGE,
+            ):
+                msg = f"#{new_idx + 1}/{n}"
     finally:
         try:
             scanner.stop()
         except Exception:
             pass
         try:
+            stdscr.keypad(True)
             stdscr.nodelay(True)
             stdscr.timeout(100)
             stdscr.erase()
@@ -401,17 +507,16 @@ def run_embedded_ble_scan(
     aio = False
     msg = "scanning…"
     try:
-        try:
-            stdscr.nodelay(True)
-            stdscr.timeout(250)
-            curses.curs_set(0)
-        except Exception:
-            pass
+        _prepare_stdscr(stdscr, timeout_ms=250)
 
         while True:
             online, offline = scanner.poll()
             online = list(online or [])
             offline = list(offline or [])
+            if focus == "online" and not online and offline:
+                focus = "offline"
+            elif focus == "offline" and not offline and online:
+                focus = "online"
             online_idx = clamp_idx(online_idx, len(online))
             offline_idx = clamp_idx(offline_idx, len(offline))
             cur = None
@@ -447,10 +552,13 @@ def run_embedded_ble_scan(
                 row_fmt=format_ble_offline, focused=(focus == "offline"),
             )
             detail = detail_for_item(cur or {}, "ble") if cur else ""
+            n_cur = len(online) if focus == "online" else len(offline)
+            i_cur = online_idx if focus == "online" else offline_idx
             _safe_add(stdscr, h - 3, 0, "─" * max(1, w - 1), _pair(6), w)
             _safe_add(stdscr, h - 2, 0, detail, _pair(4), w)
             _safe_add(
-                stdscr, h - 1, 0, f" {HELP_BLE}  ·  {msg}",
+                stdscr, h - 1, 0,
+                f" {HELP_BLE}  ·  focus={focus} #{i_cur + 1}/{n_cur or 0}  ·  {msg}",
                 _pair(3) | curses.A_BOLD, w,
             )
             try:
@@ -458,15 +566,12 @@ def run_embedded_ble_scan(
             except curses.error:
                 pass
 
-            try:
-                ch = stdscr.getch()
-            except Exception:
-                ch = -1
-            if ch == -1:
+            ch = _read_key(stdscr, timeout_ms=250)
+            if ch in (-1,):
                 continue
-            if ch in (9, ord("\t")):
+            if ch in (9, ord("\t"), curses.KEY_RIGHT, curses.KEY_LEFT):
                 focus = "offline" if focus == "online" else "online"
-                msg = f"focus={focus}"
+                msg = f"table={focus}"
                 continue
             if ch in (ord("r"), ord("R")):
                 scanner.stop()
@@ -488,7 +593,41 @@ def run_embedded_ble_scan(
 
             items = online if focus == "online" else offline
             idx = online_idx if focus == "online" else offline_idx
-            new_idx, act = handle_nav_key(ch, idx, len(items))
+            n = len(items)
+
+            if 0 <= ch < 256 and chr(ch).isdigit() and chr(ch) != "0":
+                jump = int(chr(ch)) - 1
+                if items and 0 <= jump < len(items):
+                    if focus == "online":
+                        online_idx = jump
+                    else:
+                        offline_idx = jump
+                    msg = f"jump #{jump + 1}"
+                continue
+            if ch in (curses.KEY_HOME, ord("g")):
+                if focus == "online":
+                    online_idx = 0
+                else:
+                    offline_idx = 0
+                msg = "first"
+                continue
+            if ch in (curses.KEY_END, ord("G")):
+                if focus == "online" and online:
+                    online_idx = len(online) - 1
+                elif offline:
+                    offline_idx = len(offline) - 1
+                msg = "last"
+                continue
+
+            if ch in (curses.KEY_UP, ord("k"), ord("K")):
+                new_idx = _move_idx(idx, n, -1)
+                act = None
+            elif ch in (curses.KEY_DOWN, ord("j"), ord("J")):
+                new_idx = _move_idx(idx, n, +1)
+                act = None
+            else:
+                new_idx, act = handle_nav_key(ch, idx, n)
+
             if focus == "online":
                 online_idx = new_idx
             else:
@@ -506,12 +645,18 @@ def run_embedded_ble_scan(
                     continue
                 selected = dict(items[clamp_idx(new_idx, len(items))])
                 break
+            if n > 0 and act is None and ch in (
+                curses.KEY_UP, curses.KEY_DOWN, ord("j"), ord("k"),
+                ord("J"), ord("K"),
+            ):
+                msg = f"#{new_idx + 1}/{n}"
     finally:
         try:
             scanner.stop()
         except Exception:
             pass
         try:
+            stdscr.keypad(True)
             stdscr.nodelay(True)
             stdscr.timeout(100)
             stdscr.erase()

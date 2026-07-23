@@ -134,3 +134,20 @@ def test_draw_scan_window_theme_smoke():
         detail="bssid=AA",
     )
     draw_scan_window(Fake(), st, row_fmt=lambda i: f"{i.get('ssid')}")
+
+
+def test_move_idx_wraps():
+    from core.tui.embedded_scan import _move_idx
+    assert _move_idx(0, 5, -1) == 4
+    assert _move_idx(4, 5, +1) == 0
+    assert _move_idx(2, 5, +1) == 3
+    assert _move_idx(0, 0, +1) == 0
+
+
+def test_handle_nav_arrows_still_work():
+    import curses
+    from core.tui.scan_window_shell import handle_nav_key
+    idx, act = handle_nav_key(curses.KEY_DOWN, 0, 10)
+    assert idx == 1 and act is None
+    idx, act = handle_nav_key(curses.KEY_UP, 0, 10)
+    assert idx == 0 and act is None

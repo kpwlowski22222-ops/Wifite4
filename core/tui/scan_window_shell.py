@@ -285,6 +285,10 @@ def run_list_loop(
 
     def _main(stdscr) -> None:
         curses.curs_set(0)
+        try:
+            stdscr.keypad(True)  # arrows → KEY_UP/DOWN
+        except Exception:
+            pass
         stdscr.nodelay(True)
         stdscr.timeout(timeout_ms)
         while True:
@@ -306,12 +310,27 @@ def run_list_loop(
                     pass
             draw_scan_window(stdscr, state, row_fmt=row_fmt)
             try:
-                ch = stdscr.getch()
+                from core.tui.base_screen import read_curses_key
+                ch = read_curses_key(stdscr, timeout_ms=timeout_ms)
             except KeyboardInterrupt:
                 return
+            except Exception:
+                try:
+                    ch = stdscr.getch()
+                except Exception:
+                    ch = -1
             if ch == -1:
                 continue
-            state.idx, action = handle_nav_key(ch, state.idx, len(items))
+            n = len(items)
+            # Wrap arrows so movement always advances when list non-empty
+            if ch in (curses.KEY_UP, ord("k"), ord("K")) and n:
+                state.idx = (state.idx - 1) % n
+                action = None
+            elif ch in (curses.KEY_DOWN, ord("j"), ord("J")) and n:
+                state.idx = (state.idx + 1) % n
+                action = None
+            else:
+                state.idx, action = handle_nav_key(ch, state.idx, n)
             if action == "select":
                 if items or allow_empty_select:
                     item = items[state.idx] if items else {}
