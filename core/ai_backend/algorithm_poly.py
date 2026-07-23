@@ -410,12 +410,13 @@ class PolyPick:
     seed: str = ""
 
     def as_dict(self) -> Dict[str, Any]:
-        eng = str(self.knobs.get("plum_engine") or "")
-        model = (
-            "polymorphic (plum heuristic)"
-            if eng.startswith("plum")
-            else "polymorphic (heuristic)"
-        )
+        eng = str(self.knobs.get("plum_engine") or self.knobs.get("poly_model") or "")
+        if eng.startswith("ensemble") or "ensemble" in eng:
+            model = f"polymorphic ({eng})" if eng else "polymorphic (ensemble)"
+        elif eng.startswith("plum") or "plum" in eng:
+            model = "polymorphic (plum heuristic)"
+        else:
+            model = str(self.knobs.get("poly_model") or "polymorphic (heuristic)")
         return {
             "enabled": True,
             "action": self.action,
@@ -429,6 +430,7 @@ class PolyPick:
             "alternatives": self.alternatives[:6],
             "seed": self.seed,
             "model": model,
+            "engines": self.knobs.get("poly_engines") or self.features.get("poly_engines"),
             "plum_target_type": self.features.get("plum_target_type"),
         }
 
@@ -444,36 +446,55 @@ def pick_variant(
 ) -> PolyPick:
     """Pick the best polymorphic variant for this algorithm + target.
 
-    Uses plum-dispatch multiple dispatch (Python ≥3.10) to adapt to the
-    *typed* target first, then re-ranks family grammars with those boosts
-    so AI plans land on the right depth/focus/tool_order for the surface.
+    Multi-library ensemble (Python ≥3.10):
+      plum, multimethod, multipledispatch, singledispatch, match/case,
+      strategy — votes on focus/depth/boosts, then re-ranks family grammars
+      so AI plans land on the right tool order for the surface.
     """
     family = classify_family(action)
     feats = _features(target, recon, args)
     ban: Set[str] = {str(x) for x in (exclude or []) if x}
     variants = list(_FAMILY_VARIANTS.get(family) or _FAMILY_VARIANTS["generic"])
 
-    # Plum multiple-dispatch adaptation (typed target → boosts / depth / tools)
-    plum_env: Dict[str, Any] = {}
-    plum_boosts: Dict[str, float] = {}
+    # Multi-engine ensemble (plum + multimethod + multipledispatch + …)
+    ens_env: Dict[str, Any] = {}
+    ens_boosts: Dict[str, float] = {}
+    apply_boosts_to_scores = None
     try:
-        from core.poly.plum_adapt import adapt_target, apply_boosts_to_scores
+        from core.poly.multi_engine import ensemble_adapt
+        from core.poly.plum_adapt import apply_boosts_to_scores as _abs
+        apply_boosts_to_scores = _abs
         dom = str(
             (args or {}).get("domain")
             or (target or {}).get("domain")
             or family
             or ""
         )
-        plum_env = adapt_target(target, recon=recon, domain=dom)
-        plum_boosts = dict(plum_env.get("boosts") or {})
-        # Align family with plum when algorithm family is generic
-        if family in ("generic", "adaptive", "polymorphic") and plum_env.get("family"):
-            family = str(plum_env["family"])
+        ens_env = ensemble_adapt(
+            target, recon=recon, domain=dom, family=family,
+        )
+        ens_boosts = dict(ens_env.get("boosts") or {})
+        if family in ("generic", "adaptive", "polymorphic") and ens_env.get("family"):
+            family = str(ens_env["family"])
             variants = list(
                 _FAMILY_VARIANTS.get(family) or _FAMILY_VARIANTS["generic"]
             )
     except Exception:  # noqa: BLE001
-        apply_boosts_to_scores = None  # type: ignore
+        # Fallback: plum-only (previous behaviour)
+        try:
+            from core.poly.plum_adapt import adapt_target, apply_boosts_to_scores as _abs
+            apply_boosts_to_scores = _abs
+            dom = str(
+                (args or {}).get("domain")
+                or (target or {}).get("domain")
+                or family
+                or ""
+            )
+            ens_env = adapt_target(target, recon=recon, domain=dom)
+            ens_boosts = dict(ens_env.get("boosts") or {})
+            ens_env.setdefault("engines_used", ["plum"])
+        except Exception:
+            apply_boosts_to_scores = None
 
     # Operator / chain may force a variant name
     forced = (force_variant or (args or {}).get("poly_variant") or "").strip()
@@ -483,10 +504,10 @@ def pick_variant(
         if name in ban:
             continue
         sc = _score_variant(v, feats, family)
-        # Prefer plum depth when present
-        if plum_env.get("depth") and v.get("depth") == plum_env.get("depth"):
+        # Prefer ensemble depth/focus when present
+        if ens_env.get("depth") and v.get("depth") == ens_env.get("depth"):
             sc += 0.12
-        if plum_env.get("focus") and v.get("focus") == plum_env.get("focus"):
+        if ens_env.get("focus") and v.get("focus") == ens_env.get("focus"):
             sc += 0.18
         if forced and name == forced:
             sc += 10.0
@@ -499,26 +520,35 @@ def pick_variant(
         family = family or "generic"
 
     ranked.sort(key=lambda t: (-t[0], t[1].get("name") or ""))
-    if plum_boosts and apply_boosts_to_scores is not None:
+    if ens_boosts and apply_boosts_to_scores is not None:
         try:
-            ranked = apply_boosts_to_scores(ranked, plum_boosts)
+            ranked = apply_boosts_to_scores(ranked, ens_boosts)
         except Exception:  # noqa: BLE001
             pass
 
     best_score, best = ranked[0]
-    # Merge plum tool_order into knobs when variant lacks one
+    # Merge ensemble tool_order / engine metadata into knobs
     knobs = {k: v for k, v in best.items() if k not in ("weight",)}
-    if plum_env.get("tool_order") and not knobs.get("tool_order"):
-        knobs["tool_order"] = list(plum_env["tool_order"])
-    if plum_env.get("method"):
-        knobs["plum_method"] = plum_env["method"]
-    if plum_env.get("engine"):
-        knobs["plum_engine"] = plum_env["engine"]
+    if ens_env.get("tool_order") and not knobs.get("tool_order"):
+        knobs["tool_order"] = list(ens_env["tool_order"])
+    if ens_env.get("method"):
+        knobs["ensemble_method"] = ens_env["method"]
+    if ens_env.get("engines_used"):
+        knobs["poly_engines"] = list(ens_env["engines_used"])
+    if ens_env.get("model"):
+        knobs["poly_model"] = ens_env["model"]
+    # Back-compat keys used by as_dict()
+    if ens_env.get("engines_used"):
+        knobs["plum_engine"] = (
+            "ensemble:" + ",".join(ens_env["engines_used"][:6])
+        )
+    elif ens_env.get("engine"):
+        knobs["plum_engine"] = ens_env["engine"]
 
     # Stable-but-live seed for reproducible mutation within a step
     seed_src = (
         f"{action}|{best.get('name')}|{feats.get('encryption')}|"
-        f"{feats.get('client_count')}|{plum_env.get('target_type')}|"
+        f"{feats.get('client_count')}|{ens_env.get('engines_used')}|"
         f"{int(time.time()) // 30}"
     )
     seed = hashlib.sha1(seed_src.encode()).hexdigest()[:12]
@@ -535,8 +565,10 @@ def pick_variant(
         )
         if feats.get(k) not in (None, "", [], {})
     }
-    if plum_env.get("target_type"):
-        feat_out["plum_target_type"] = plum_env["target_type"]
+    if ens_env.get("engines_used"):
+        feat_out["poly_engines"] = list(ens_env["engines_used"])
+    if ens_env.get("engine_count") is not None:
+        feat_out["poly_engine_count"] = ens_env["engine_count"]
     return PolyPick(
         action=action,
         family=family,

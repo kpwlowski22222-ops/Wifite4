@@ -27,3 +27,13 @@ try:
     )
 except Exception:  # pragma: no cover
     pass
+
+try:
+    from core.poly.multi_engine import (  # noqa: F401
+        ensemble_adapt,
+        enabled_engines,
+        engines_status,
+        multi_engine_prompt_block,
+    )
+except Exception:  # pragma: no cover
+    pass

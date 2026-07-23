@@ -54,9 +54,12 @@ def test_algorithm_poly_uses_plum_boosts():
     )
     assert p.family == "wifi"
     assert p.variant
+    eng = str(p.knobs.get("plum_engine") or p.knobs.get("poly_model") or "")
     assert (
-        str(p.knobs.get("plum_engine") or "").startswith("plum")
+        "plum" in eng
+        or "ensemble" in eng
         or p.features.get("plum_target_type")
+        or p.features.get("poly_engines")
     )
 
 

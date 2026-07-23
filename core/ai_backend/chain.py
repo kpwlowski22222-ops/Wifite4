@@ -3082,15 +3082,23 @@ class AIChainPlanner:
                 eng_block += "MCP FLOW + LTM LESSONS:\n" + flow_ctx[:2500] + "\n\n"
         except Exception:  # noqa: BLE001
             pass
-        # Plum multiple-dispatch target adaptation (Python ≥3.10)
+        # Multi-library polymorphism (plum / multimethod / multipledispatch /
+        # singledispatch / match-case / strategy) — Python ≥3.10
         try:
-            from core.poly.plum_adapt import plum_prompt_block
+            from core.poly.multi_engine import multi_engine_prompt_block
             tdict = target if isinstance(target, dict) else {}
-            pb = plum_prompt_block(tdict, domain=str(domain or ""))
+            pb = multi_engine_prompt_block(tdict, domain=str(domain or ""))
             if pb:
-                eng_block += pb[:900] + "\n\n"
+                eng_block += pb[:1100] + "\n\n"
         except Exception:  # noqa: BLE001
-            pass
+            try:
+                from core.poly.plum_adapt import plum_prompt_block
+                tdict = target if isinstance(target, dict) else {}
+                pb = plum_prompt_block(tdict, domain=str(domain or ""))
+                if pb:
+                    eng_block += pb[:900] + "\n\n"
+            except Exception:
+                pass
 
         creat = str(ctx.get("plan_creativity") or "high")
         live = ctx.get("live_adapt") if isinstance(ctx.get("live_adapt"), dict) else {}
