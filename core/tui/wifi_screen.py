@@ -524,7 +524,10 @@ class WiFiScreen(BaseScreen):
                     "achieved": set(access.get("achieved_set") or access.get("achievements") or {"access"}),
                     "label": access.get("label") or "WiFi foothold",
                 })
-            rep = spawn_rat_dashboard(sessions=sessions, report=report)
+            orch = getattr(self, "orchestrator", None)
+            rep = spawn_rat_dashboard(
+                sessions=sessions, report=report, orchestrator=orch,
+            )
             if isinstance(rep, dict) and rep.get("ok"):
                 host = rep.get("host") or "127.0.0.1"
                 port = rep.get("port")
@@ -534,19 +537,6 @@ class WiFiScreen(BaseScreen):
                 self.activity_log.append(
                     f"[i] Flask dashboard: {(rep or {}).get('error') or rep}"
                 )
-        except TypeError:
-            # Older signature without report=
-            try:
-                from core.post_access_tui.rat_ext import spawn_rat_dashboard
-                rep = spawn_rat_dashboard(sessions=[])
-                if isinstance(rep, dict) and rep.get("ok"):
-                    host = rep.get("host") or "127.0.0.1"
-                    port = rep.get("port")
-                    self.activity_log.append(
-                        f"[+] Flask dashboard: http://{host}:{port}/"
-                    )
-            except Exception as e:
-                self.activity_log.append(f"[i] Flask dashboard: {e}")
         except Exception as e:
             self.activity_log.append(f"[i] Flask dashboard: {e}")
 

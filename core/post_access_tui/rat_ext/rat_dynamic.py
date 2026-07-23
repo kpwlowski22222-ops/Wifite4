@@ -26,6 +26,8 @@ KIND_WIFI = "wifi"
 KIND_BLE = "ble"
 KIND_HOST = "host"          # network/SSH/MSF shell on a host
 KIND_NETWORK = "network"    # alias → host
+KIND_WEBSITE = "website"    # OSINT web / vulnerable site session
+KIND_PEOPLE = "people"      # OSINT people profile (may be long-running)
 KIND_UNKNOWN = "unknown"
 
 KIND_FRIENDLY = {
@@ -33,6 +35,8 @@ KIND_FRIENDLY = {
     KIND_BLE: "Bluetooth device",
     KIND_HOST: "Host / network session",
     KIND_NETWORK: "Host / network session",
+    KIND_WEBSITE: "Website / web target",
+    KIND_PEOPLE: "People profile",
     KIND_UNKNOWN: "Unknown link",
 }
 
@@ -52,6 +56,15 @@ TRANSPORT_TO_KIND = {
     "msfconsole": KIND_HOST,
     "meterpreter": KIND_HOST,
     "shell": KIND_HOST,
+    "website": KIND_WEBSITE,
+    "web": KIND_WEBSITE,
+    "http": KIND_WEBSITE,
+    "https": KIND_WEBSITE,
+    "url": KIND_WEBSITE,
+    "people": KIND_PEOPLE,
+    "person": KIND_PEOPLE,
+    "osint_people": KIND_PEOPLE,
+    "profile": KIND_PEOPLE,
 }
 
 
@@ -66,7 +79,10 @@ def normalize_kind(session: Dict[str, Any]) -> str:
         or ""
     )
     k = str(raw).lower().strip()
-    if k in (KIND_WIFI, KIND_BLE, KIND_HOST, KIND_NETWORK):
+    if k in (
+        KIND_WIFI, KIND_BLE, KIND_HOST, KIND_NETWORK,
+        KIND_WEBSITE, KIND_PEOPLE,
+    ):
         return KIND_HOST if k == KIND_NETWORK else k
     return TRANSPORT_TO_KIND.get(k, KIND_UNKNOWN)
 
@@ -277,6 +293,15 @@ _RAT_ACTIONS: List[Dict[str, Any]] = [
         "description": "Associated stations on the compromised AP/LAN.",
     },
     {
+        "id": "wifi_post_exploit",
+        "label": "Run post-exploit tail",
+        "kinds": {KIND_WIFI},
+        "required": ("access", "wifi_access"),
+        "risk": "destructive",
+        "group": "Post-exploit",
+        "description": "OPSEC / PE steps auto-attached after foothold.",
+    },
+    {
         "id": "wifi_lan_scan",
         "label": "Scan LAN behind AP",
         "kinds": {KIND_WIFI},
@@ -311,6 +336,118 @@ _RAT_ACTIONS: List[Dict[str, Any]] = [
         "risk": "destructive",
         "group": "Control",
         "description": "If a host shell was gained via the Wi-Fi path.",
+    },
+    # ---- OSINT website / people (polymorphic) ----
+    {
+        "id": "web_fingerprint",
+        "label": "Web tech fingerprint",
+        "kinds": {KIND_WEBSITE},
+        "required": ("web_session", "access"),
+        "risk": "read",
+        "group": "Recon",
+        "description": "Stack/headers from the attached website session.",
+    },
+    {
+        "id": "web_cve_map",
+        "label": "Map CVEs for site stack",
+        "kinds": {KIND_WEBSITE},
+        "required": ("web_session",),
+        "risk": "read",
+        "group": "Recon",
+        "description": "NVD keyword map (honest empty if no NVD key).",
+    },
+    {
+        "id": "people_dossier",
+        "label": "Export people dossier",
+        "kinds": {KIND_PEOPLE},
+        "required": ("osint_profile", "access"),
+        "risk": "read",
+        "group": "Loot",
+        "description": "Structured profile from completed people job.",
+    },
+    {
+        "id": "people_graph",
+        "label": "Identity graph expand",
+        "kinds": {KIND_PEOPLE},
+        "required": ("osint_profile",),
+        "risk": "read",
+        "group": "Recon",
+        "description": "Related handles/emails when available.",
+    },
+
+    # ---- Website (OSINT web) ----
+    {
+        "id": "web_refresh",
+        "label": "Refresh site recon",
+        "kinds": {KIND_WEBSITE},
+        "required": (),
+        "risk": "read",
+        "group": "Recon",
+        "description": "Re-run safe recon against the attached website.",
+    },
+    {
+        "id": "web_export",
+        "label": "Export site JSON",
+        "kinds": {KIND_WEBSITE},
+        "required": (),
+        "risk": "read",
+        "group": "Loot",
+        "description": "Export collected website findings (no secrets inlined).",
+    },
+    {
+        "id": "web_mark_longterm",
+        "label": "Mark long-term watch",
+        "kinds": {KIND_WEBSITE},
+        "required": (),
+        "risk": "read",
+        "group": "Track",
+        "description": "Keep this site on the long-running job list.",
+    },
+    {
+        "id": "web_session",
+        "label": "Show web session status",
+        "kinds": {KIND_WEBSITE},
+        "required": ("web_session",),
+        "risk": "read",
+        "group": "Status",
+        "description": "Connection / recon status for this website target.",
+    },
+    # ---- People (OSINT people profiles) ----
+    {
+        "id": "people_refresh",
+        "label": "Refresh people profile",
+        "kinds": {KIND_PEOPLE},
+        "required": (),
+        "risk": "read",
+        "group": "Recon",
+        "description": "Continue or refresh the long-running people profile job.",
+    },
+    {
+        "id": "people_export",
+        "label": "Export profile JSON",
+        "kinds": {KIND_PEOPLE},
+        "required": (),
+        "risk": "read",
+        "group": "Loot",
+        "description": "Export collected profile fields (no secrets inlined).",
+    },
+    {
+        "id": "people_mark_longterm",
+        "label": "Mark long-term profile",
+        "kinds": {KIND_PEOPLE},
+        "required": (),
+        "risk": "read",
+        "group": "Track",
+        "description": "Keep building this people profile over time.",
+    },
+    {
+        "id": "osint_profile",
+        "label": "Show profile status",
+        "kinds": {KIND_PEOPLE},
+        "required": ("osint_profile",),
+        "risk": "read",
+        "group": "Status",
+        "description": "Status of the people OSINT job.",
     },
 ]
 
@@ -634,6 +771,8 @@ def build_rat_dashboard_html(
         f"<span class='pill' id='pill-wifi'>Wi‑Fi <b>{by_kind.get('wifi', 0)}</b></span>",
         f"<span class='pill' id='pill-ble'>BLE <b>{by_kind.get('ble', 0)}</b></span>",
         f"<span class='pill' id='pill-host'>Host <b>{by_kind.get('host', 0)}</b></span>",
+        f"<span class='pill' id='pill-web'>Websites <b>{by_kind.get('website', 0)}</b></span>",
+        f"<span class='pill' id='pill-people'>People <b>{by_kind.get('people', 0)}</b></span>",
         f"<span class='pill' id='pill-chain'>chain <b>{esc((state.get('chain') or {}).get('status', 'idle'))}</b></span>",
         f"<span class='pill ai' id='ai-pill' title='live /api/v4/ai_status'>{ai_pill}</span>",
         "<span class='pill' id='health-pill' title='/api/v5/health'>sys …</span>",
@@ -641,9 +780,11 @@ def build_rat_dashboard_html(
         "</div>",
         "<div class='tabs'>",
         "<a class='on' href='/' data-kind='all'>All</a>",
-        "<a href='/api/sessions?kind=wifi' data-kind='wifi'>Wi‑Fi only</a>",
-        "<a href='/api/sessions?kind=ble' data-kind='ble'>BLE only</a>",
-        "<a href='/api/sessions?kind=host' data-kind='host'>Host only</a>",
+        "<a href='/api/sessions?kind=wifi' data-kind='wifi'>Wi‑Fi</a>",
+        "<a href='/api/sessions?kind=ble' data-kind='ble'>BLE</a>",
+        "<a href='/api/sessions?kind=host' data-kind='host'>Host</a>",
+        "<a href='/api/sessions?kind=website' data-kind='website'>Websites</a>",
+        "<a href='/api/sessions?kind=people' data-kind='people'>People</a>",
         "<a href='/api/attack_state'>Attack state JSON</a>",
         "<a href='/aggregate'>Aggregate</a>",
         "<a href='/api/v5/health'>Health</a>",
@@ -801,6 +942,7 @@ def build_rat_dashboard_html(
         "set('pill-sessions','sessions',j.total_sessions!=null?j.total_sessions:'?');"
         "set('pill-wifi','Wi-Fi',bk.wifi||0);set('pill-ble','BLE',bk.ble||0);"
         "set('pill-host','Host',bk.host||0);"
+        "set('pill-web','Websites',bk.website||0);set('pill-people','People',bk.people||0);"
         "var ch=(j.chain&&j.chain.status)||'idle';"
         "var pc=document.getElementById('pill-chain');if(pc)pc.innerHTML='chain <b>'+ch+'</b>';"
         "}).catch(function(){});}"

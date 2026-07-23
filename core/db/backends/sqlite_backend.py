@@ -34,7 +34,7 @@ import sqlite3
 import threading
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 
 BACKEND_NAME = "sqlite"
@@ -146,6 +146,36 @@ _DDL = [
 
 
 _local = threading.local()
+_write_locks: Dict[str, threading.Lock] = {}
+_lock_registry_lock = threading.Lock()
+
+
+def _write_lock(path: Path) -> threading.Lock:
+    """Per-db-path write mutex.
+
+    sqlite3 with WAL still serialises writers; without a Python-side
+    lock, concurrent commits from different threads can collide and raise
+    ``database is locked`` even though the connection timeout retries.
+    The lock makes multi-threaded writes deterministic and prevents
+    silent lost writes. Lock creation is itself protected so two threads
+    can never get different locks for the same path.
+    """
+    key = str(path)
+    lock = _write_locks.get(key)
+    if lock is not None:
+        return lock
+    with _lock_registry_lock:
+        lock = _write_locks.get(key)
+        if lock is None:
+            lock = threading.Lock()
+            _write_locks[key] = lock
+    return lock
+
+
+def _locked_write(path: Path, write_fn: Callable[[], Any]) -> Any:
+    """Run ``write_fn`` under this db path's write lock."""
+    with _write_lock(path):
+        return write_fn()
 
 
 def _ensure_parent(path: Path) -> None:
@@ -187,25 +217,29 @@ def _conn(db_path: Path) -> sqlite3.Connection:
 
 
 def init(db_path: Optional[Path] = None) -> Dict[str, Any]:
-    """Open (or create) the SQL store. Idempotent."""
+    """Open (or create) the SQL store. Idempotent.
+
+    The whole setup (connection open + DDL + chmod) is protected by the
+    per-path write lock so concurrent first-time callers can't race on
+    table creation, which previously caused ``no such table`` errors in
+    multi-threaded tests.
+    """
     path = Path(db_path) if db_path else DEFAULT_DB_PATH
     _ensure_parent(path)
     prev_umask = os.umask(0o077)
     try:
-        try:
+        def _setup():
             conn = _conn(path)
-        except sqlite3.Error as e:
-            return {"ok": False, "backend": "sqlite",
-                    "db_path": str(path),
-                    "error": f"open: {e}"}
-        try:
             for stmt in _DDL:
                 conn.execute(stmt)
             conn.commit()
+
+        try:
+            _locked_write(path, _setup)
         except sqlite3.Error as e:
             return {"ok": False, "backend": "sqlite",
                     "db_path": str(path),
-                    "error": f"DDL: {e}"}
+                    "error": f"open/DDL: {e}"}
     finally:
         os.umask(prev_umask)
     try:
@@ -227,17 +261,22 @@ def record_session(sid: str, kind: str = "auto", target: str = "",
     conn = _conn(path)
     ts = float(created_at or time.time())
     try:
-        conn.execute(
-            "INSERT INTO sessions(sid, kind, target, created_at, last_activity, "
-            "state, meta_json) VALUES (?,?,?,?,?,?,?) "
-            "ON CONFLICT(sid) DO UPDATE SET "
-            "kind=excluded.kind, target=excluded.target, "
-            "last_activity=excluded.last_activity, "
-            "state=excluded.state, meta_json=excluded.meta_json",
-            (sid, kind, target, ts, ts, "open",
-             json.dumps(_redact(meta or {}), default=str)),
+        _locked_write(
+            path,
+            lambda: (
+                conn.execute(
+                    "INSERT INTO sessions(sid, kind, target, created_at, last_activity, "
+                    "state, meta_json) VALUES (?,?,?,?,?,?,?) "
+                    "ON CONFLICT(sid) DO UPDATE SET "
+                    "kind=excluded.kind, target=excluded.target, "
+                    "last_activity=excluded.last_activity, "
+                    "state=excluded.state, meta_json=excluded.meta_json",
+                    (sid, kind, target, ts, ts, "open",
+                     json.dumps(_redact(meta or {}), default=str)),
+                ),
+                conn.commit(),
+            ),
         )
-        conn.commit()
     except sqlite3.Error as e:
         return {"ok": False, "error": f"insert: {e}"}
     return {"ok": True, "sid": sid, "ts": ts}
@@ -263,13 +302,19 @@ def update_session(sid: str, db_path: Optional[Path] = None,
     if not sets:
         return {"ok": True, "sid": sid, "fields": []}
     vals.append(sid)
+    update_vals = [time.time(), *vals]
     try:
-        conn.execute(
-            f"UPDATE sessions SET last_activity = ?, {', '.join(sets)} "
-            f"WHERE sid = ?",
-            [time.time(), *vals],
+        _locked_write(
+            path,
+            lambda: (
+                conn.execute(
+                    f"UPDATE sessions SET last_activity = ?, {', '.join(sets)} "
+                    f"WHERE sid = ?",
+                    update_vals,
+                ),
+                conn.commit(),
+            ),
         )
-        conn.commit()
     except sqlite3.Error as e:
         return {"ok": False, "error": f"update: {e}"}
     return {"ok": True, "sid": sid, "fields": list(fields.keys())}
@@ -284,13 +329,26 @@ def list_sessions(db_path: Optional[Path] = None,
     try:
         rows = conn.execute(
             "SELECT sid, kind, target, created_at, last_activity, "
-            "achieved_count, capability_count, risk_max, state "
+            "achieved_count, capability_count, risk_max, state, meta_json "
             "FROM sessions ORDER BY last_activity DESC LIMIT ?",
             (int(limit),),
         ).fetchall()
     except sqlite3.Error:
         return []
-    return [dict(r) for r in rows]
+    out = []
+    for r in rows:
+        d = dict(r)
+        # Expose parsed meta for dashboard / engagement_tasks consumers
+        mj = d.get("meta_json")
+        if isinstance(mj, str) and mj:
+            try:
+                d["meta"] = json.loads(mj)
+            except Exception:
+                d["meta"] = {}
+        else:
+            d["meta"] = {}
+        out.append(d)
+    return out
 
 
 def append_log(sid: str, kind: str, msg: str,
@@ -301,12 +359,17 @@ def append_log(sid: str, kind: str, msg: str,
     path = Path(db_path) if db_path else DEFAULT_DB_PATH
     conn = _conn(path)
     try:
-        conn.execute(
-            "INSERT INTO log(sid, ts, kind, msg) VALUES (?,?,?,?)",
-            (sid, float(ts or time.time()), kind,
-             str(_redact(msg))[:4096]),
+        _locked_write(
+            path,
+            lambda: (
+                conn.execute(
+                    "INSERT INTO log(sid, ts, kind, msg) VALUES (?,?,?,?)",
+                    (sid, float(ts or time.time()), kind,
+                     str(_redact(msg))[:4096]),
+                ),
+                conn.commit(),
+            ),
         )
-        conn.commit()
     except sqlite3.Error as e:
         return {"ok": False, "error": f"insert: {e}"}
     return {"ok": True, "sid": sid}
@@ -343,13 +406,18 @@ def append_history(sid: str, action: str, payload: Dict[str, Any],
     path = Path(db_path) if db_path else DEFAULT_DB_PATH
     conn = _conn(path)
     try:
-        conn.execute(
-            "INSERT INTO history(sid, ts, action, payload_json) "
-            "VALUES (?,?,?,?)",
-            (sid, float(ts or time.time()), action,
-             json.dumps(_redact(payload), default=str)),
+        _locked_write(
+            path,
+            lambda: (
+                conn.execute(
+                    "INSERT INTO history(sid, ts, action, payload_json) "
+                    "VALUES (?,?,?,?)",
+                    (sid, float(ts or time.time()), action,
+                     json.dumps(_redact(payload), default=str)),
+                ),
+                conn.commit(),
+            ),
         )
-        conn.commit()
     except sqlite3.Error as e:
         return {"ok": False, "error": f"insert: {e}"}
     return {"ok": True, "sid": sid, "action": action}
@@ -396,12 +464,16 @@ def add_exfil(sid: str, channel: str, bytes_pending: int = 0,
     path = Path(db_path) if db_path else DEFAULT_DB_PATH
     conn = _conn(path)
     try:
-        cur = conn.execute(
-            "INSERT INTO exfil(sid, ts, channel, bytes_pending, status) "
-            "VALUES (?,?,?,?,?)",
-            (sid, float(ts or time.time()), channel, bytes_pending, status),
-        )
-        conn.commit()
+        def _do():
+            cur = conn.execute(
+                "INSERT INTO exfil(sid, ts, channel, bytes_pending, status) "
+                "VALUES (?,?,?,?,?)",
+                (sid, float(ts or time.time()), channel, bytes_pending, status),
+            )
+            conn.commit()
+            return cur
+
+        cur = _locked_write(path, _do)
     except sqlite3.Error as e:
         return {"ok": False, "error": f"insert: {e}"}
     return {"ok": True, "sid": sid, "job_id": cur.lastrowid,
@@ -415,12 +487,17 @@ def cancel_exfil(sid: str, job_id: int,
     path = Path(db_path) if db_path else DEFAULT_DB_PATH
     conn = _conn(path)
     try:
-        conn.execute(
-            "UPDATE exfil SET status = 'cancelled' "
-            "WHERE sid = ? AND id = ?",
-            (sid, int(job_id)),
+        _locked_write(
+            path,
+            lambda: (
+                conn.execute(
+                    "UPDATE exfil SET status = 'cancelled' "
+                    "WHERE sid = ? AND id = ?",
+                    (sid, int(job_id)),
+                ),
+                conn.commit(),
+            ),
         )
-        conn.commit()
     except sqlite3.Error as e:
         return {"ok": False, "error": f"update: {e}"}
     return {"ok": True, "sid": sid, "job_id": int(job_id)}
@@ -454,13 +531,17 @@ def add_persistence(sid: str, mech_id: str, kind: str,
     path = Path(db_path) if db_path else DEFAULT_DB_PATH
     conn = _conn(path)
     try:
-        cur = conn.execute(
-            "INSERT INTO persistence(sid, ts, mech_id, kind, state, meta_json) "
-            "VALUES (?,?,?,?,?,?)",
-            (sid, float(ts or time.time()), mech_id, kind, state,
-             json.dumps(_redact(meta or {}), default=str)),
-        )
-        conn.commit()
+        def _do():
+            cur = conn.execute(
+                "INSERT INTO persistence(sid, ts, mech_id, kind, state, meta_json) "
+                "VALUES (?,?,?,?,?,?)",
+                (sid, float(ts or time.time()), mech_id, kind, state,
+                 json.dumps(_redact(meta or {}), default=str)),
+            )
+            conn.commit()
+            return cur
+
+        cur = _locked_write(path, _do)
     except sqlite3.Error as e:
         return {"ok": False, "error": f"insert: {e}"}
     return {"ok": True, "sid": sid, "mech_id": mech_id, "id": cur.lastrowid}
@@ -491,12 +572,17 @@ def remove_persistence(sid: str, mech_id: str,
     path = Path(db_path) if db_path else DEFAULT_DB_PATH
     conn = _conn(path)
     try:
-        conn.execute(
-            "UPDATE persistence SET state = 'removed' "
-            "WHERE sid = ? AND mech_id = ?",
-            (sid, mech_id),
+        _locked_write(
+            path,
+            lambda: (
+                conn.execute(
+                    "UPDATE persistence SET state = 'removed' "
+                    "WHERE sid = ? AND mech_id = ?",
+                    (sid, mech_id),
+                ),
+                conn.commit(),
+            ),
         )
-        conn.commit()
     except sqlite3.Error as e:
         return {"ok": False, "error": f"update: {e}"}
     return {"ok": True, "sid": sid, "mech_id": mech_id}

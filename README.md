@@ -17,8 +17,11 @@ sudo python main.py          # launch dashboard
 ./run_tui.sh                  # alternative launcher
 ```
 
-**Main Menu:** WiFi · BLE · OSINT People · OSINT Web · Settings · Quit  
-*(Post-exploit is auto-attached to engagement chains — not a separate menu mode.)*
+**Main Menu:** WiFi · BLE · OSINT People · OSINT Web · **OPEN DASHBOARD** · Settings · Quit  
+
+- **OPEN DASHBOARD** — Flask/WSGI universal RAT UI (tabs: WiFi · BLE · OSINT Web · OSINT People). Tasks run **until success** (access + post-exploit + connection) and persist in SQL (`~/.kfiosa/kfiosa.db`).
+- Post-exploit is **auto-attached** to engagement chains (not a separate menu mode).
+- Settings are a short practical list; power tools live under **Advanced…**.
 
 ---
 

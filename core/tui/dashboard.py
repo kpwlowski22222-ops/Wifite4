@@ -52,6 +52,7 @@ class KfiosaDashboard:
             ("BLE", "ble"),
             ("OSINT People", "osint_people"),
             ("OSINT Web", "osint_web"),
+            ("OPEN DASHBOARD", "open_dashboard"),
             ("Settings", "settings"),
             ("Quit", "quit"),
         ]
@@ -897,6 +898,8 @@ class KfiosaDashboard:
             _, target_state = self.menu_items[self.menu_index]
             if target_state == "quit":
                 self.running = False
+            elif target_state == "open_dashboard":
+                self.open_universal_dashboard()
             else:
                 self.state = target_state
                 self.activity_log.append(f"[i] Navigating to {target_state.upper()} Operations")
@@ -1024,6 +1027,66 @@ class KfiosaDashboard:
             return f" [ EXPLOIT: model={model} cve={cve} ]"
         except Exception:
             return ""
+
+    def open_universal_dashboard(self):
+        """Open the Flask/WSGI RAT dashboard (wifi/ble/osint kinds + SQL tasks).
+
+        Stays on the main menu. Tasks persist in the SQL store and can run
+        until success (access + post-exploit + connection).
+        """
+        try:
+            from core.db import sqlstore
+            sqlstore.init()
+        except Exception as e:
+            self.activity_log.append(f"[i] SQL store: {e}")
+        try:
+            from core.post_access_tui.rat_ext import (
+                spawn_rat_dashboard, set_dashboard_orchestrator,
+            )
+            if self.orchestrator is not None:
+                set_dashboard_orchestrator(self.orchestrator)
+            sessions = []
+            try:
+                from core.db import sqlstore
+                for row in sqlstore.list_sessions(limit=100) or []:
+                    if not isinstance(row, dict):
+                        continue
+                    sid = row.get("sid") or row.get("id")
+                    if not sid:
+                        continue
+                    sessions.append({
+                        "id": sid,
+                        "kind": row.get("kind") or "unknown",
+                        "label": row.get("target") or sid,
+                        "transport": row.get("kind") or "",
+                        "achieved": {"restored"},
+                    })
+            except Exception:
+                pass
+            rep = spawn_rat_dashboard(
+                sessions=sessions,
+                orchestrator=self.orchestrator,
+            )
+            if isinstance(rep, dict) and rep.get("ok"):
+                url = rep.get("url") or (
+                    f"http://{rep.get('host', '127.0.0.1')}:{rep.get('port')}/"
+                )
+                self.activity_log.append(f"[+] OPEN DASHBOARD → {url}")
+                self.activity_log.append(
+                    "[*] Tabs: WiFi · BLE · OSINT Web · OSINT People — "
+                    "tasks run until success (SQL-persisted)."
+                )
+                # Best-effort open browser for the operator
+                try:
+                    import webbrowser
+                    webbrowser.open(url)
+                except Exception:
+                    pass
+            else:
+                err = (rep or {}).get("error") if isinstance(rep, dict) else rep
+                self.activity_log.append(f"[!] Dashboard open failed: {err}")
+        except Exception as e:
+            self.activity_log.append(f"[!] Dashboard open: {e}")
 
     def _shared_kwargs(self):
         """Shared resources passed into every sub-screen constructor."""

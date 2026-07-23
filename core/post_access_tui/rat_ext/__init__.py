@@ -441,15 +441,52 @@ def _esc(s: str) -> str:
 
 
 def default_dashboard_html(roster: List[Dict[str, Any]]) -> str:
-    """Render the RAT-like multi-session dashboard HTML.
+    """Render the universal multi-kind RAT dashboard (SQL tasks + sessions).
 
-    Uses :func:`rat_dynamic.build_rat_dashboard_html` for kind tabs,
-    friendly action groups, and attack-state summary. Falls back to a
-    minimal empty page if the dynamic module is unavailable.
+    Primary UI is :mod:`dashboard_hub` (wifi / ble / osint_web / osint_people).
+    Falls back to rat_dynamic HTML, then a minimal page.
     """
+    tasks: List[Dict[str, Any]] = []
+    try:
+        from core.engagement_tasks import list_tasks
+        tasks = list_tasks(limit=200)
+    except Exception:
+        tasks = []
+    # Merge SQL sessions into roster for kind counts
+    sessions = list(roster or [])
+    try:
+        from core.db import sqlstore
+        sqlstore.init()
+        for row in sqlstore.list_sessions(limit=200) or []:
+            if not isinstance(row, dict):
+                continue
+            sid = row.get("sid") or row.get("id")
+            if not sid:
+                continue
+            if any((s.get("id") or s.get("session_id")) == sid for s in sessions):
+                continue
+            sessions.append({
+                "id": sid,
+                "kind": row.get("kind") or "unknown",
+                "label": row.get("target") or sid,
+                "transport": row.get("kind") or "",
+                "achieved": set(),
+            })
+    except Exception:
+        pass
+    try:
+        from . import dashboard_hub as _hub
+        html = _hub.hub_html(sessions=sessions, tasks=tasks, active_kind="wifi")
+        try:
+            from . import v6_enhancements as _v6
+            html = _v6.inject_shell(html, sessions=sessions)
+        except Exception:
+            pass
+        return html
+    except Exception:
+        pass
     try:
         from . import rat_dynamic as _rd
-        # Prefer global registry active id when set.
         active = None
         try:
             act = _rd.GLOBAL_REGISTRY.active()
@@ -457,7 +494,6 @@ def default_dashboard_html(roster: List[Dict[str, Any]]) -> str:
                 active = act.get("id")
         except Exception:
             active = None
-        state = None
         try:
             state = _rd.GLOBAL_REGISTRY.attack_state()
         except Exception:
@@ -470,7 +506,6 @@ def default_dashboard_html(roster: List[Dict[str, Any]]) -> str:
         html = _rd.build_rat_dashboard_html(
             roster or [], attack_state=state, active_session_id=active,
         )
-        # v6 anti-lag shell (CSS/JS + adaptive poll) — never blocks render
         try:
             from . import v6_enhancements as _v6
             html = _v6.inject_shell(html, sessions=roster)
@@ -478,20 +513,14 @@ def default_dashboard_html(roster: List[Dict[str, Any]]) -> str:
             pass
         return html
     except Exception:
-        # Minimal fallback (never raise to the browser).
         n = len(roster or [])
-        html = (
+        return (
             "<!doctype html><html><body style='background:#111;color:#eee;"
             f"font-family:monospace'><h1>KFIOSA RAT</h1>"
             f"<p>{n} session(s)</p>"
+            "<a href='/api/tasks'>tasks</a> · "
             "<a href='/api/attack_state'>attack state</a></body></html>"
         )
-        try:
-            from . import v6_enhancements as _v6
-            html = _v6.inject_shell(html, sessions=roster)
-        except Exception:
-            pass
-        return html
 
 
 # ---------------------------------------------------------------------------
@@ -646,6 +675,67 @@ def _build_wsgi_app(roster: List[Dict[str, Any]],
         if (parts[0] == "api" and len(parts) >= 2
                 and parts[1] == "attack_state" and method == "GET"):
             return _json(_rd.GLOBAL_REGISTRY.attack_state())
+        # Engagement tasks (until-success) — SQL-backed
+        if parts[0] == "api" and len(parts) >= 2 and parts[1] == "tasks":
+            try:
+                from core import engagement_tasks as _et
+            except Exception as e:  # noqa: BLE001
+                return _json({"ok": False, "error": str(e)})
+            if len(parts) == 2 and method == "GET":
+                kind = _qs(environ).get("kind")
+                tasks = _et.list_tasks(kind=kind or None)
+                return _json({"ok": True, "tasks": tasks, "count": len(tasks)})
+            if len(parts) == 2 and method == "POST":
+                try:
+                    size = int(environ.get("CONTENT_LENGTH", 0) or 0)
+                    raw = environ["wsgi.input"].read(size).decode("utf-8")
+                    payload = _json_mod.loads(raw) if raw else {}
+                except Exception:  # noqa: BLE001
+                    payload = {}
+                kind = str(payload.get("kind") or "").strip()
+                target = payload.get("target") if isinstance(
+                    payload.get("target"), dict
+                ) else {}
+                if not target and payload.get("target"):
+                    target = {"label": str(payload.get("target"))}
+                created = _et.create_task(
+                    kind, target or {},
+                    label=str(payload.get("label") or ""),
+                )
+                if created.get("ok") and payload.get("start", True):
+                    tid = (created.get("task") or {}).get("id")
+                    if tid:
+                        orch = _DASHBOARD_ORCHESTRATOR
+                        started = _et.start_task(tid, orchestrator=orch)
+                        created["start"] = started
+                        created["task"] = _et.get_task(tid) or created.get("task")
+                return _json(created)
+            if len(parts) >= 3 and method == "GET":
+                tid = parts[2]
+                t = _et.get_task(tid)
+                if not t:
+                    return _json({"ok": False, "error": "not found"},
+                                 status="404 Not Found")
+                return _json({"ok": True, "task": t})
+            if len(parts) >= 4 and parts[3] == "start" and method == "POST":
+                tid = parts[2]
+                return _json(_et.start_task(
+                    tid, orchestrator=_DASHBOARD_ORCHESTRATOR,
+                ))
+            if len(parts) >= 4 and parts[3] == "cancel" and method == "POST":
+                return _json(_et.cancel_task(parts[2]))
+            return _json({"ok": False, "error": "bad tasks path"},
+                         status="404 Not Found")
+        if (parts[0] == "api" and len(parts) >= 2
+                and parts[1] == "kinds" and method == "GET"):
+            try:
+                from core import engagement_tasks as _et
+                from . import dashboard_hub as _hub
+                return _json(_hub.kinds_summary(
+                    _et.list_tasks(limit=200), sessions_list,
+                ))
+            except Exception as e:  # noqa: BLE001
+                return _json({"ok": False, "error": str(e)})
         # v4 / v5 / v6 health endpoints used by inject_shell JS pollers
         if (parts[0] == "api" and len(parts) >= 2
                 and parts[1] == "v4" and len(parts) >= 3
@@ -1474,6 +1564,14 @@ class RatDashboardServer:
 
 # Last successful spawn (optional reuse / introspection).
 _ACTIVE_DASHBOARD: Optional[Dict[str, Any]] = None
+# Optional orchestrator handle for until-success dashboard tasks.
+_DASHBOARD_ORCHESTRATOR: Any = None
+
+
+def set_dashboard_orchestrator(orch: Any) -> None:
+    """Wire the live TUI orchestrator so dashboard tasks can engage."""
+    global _DASHBOARD_ORCHESTRATOR
+    _DASHBOARD_ORCHESTRATOR = orch
 
 
 def is_rat_dashboard_available() -> bool:
@@ -1492,6 +1590,7 @@ def spawn_rat_dashboard(
     capability_runner: Optional[Callable[[str, str], Dict[str, Any]]] = None,
     host: Optional[str] = None,
     report: Optional[Dict[str, Any]] = None,
+    orchestrator: Any = None,
     **_kwargs: Any,
 ) -> Dict[str, Any]:
     """Spawn the RAT dashboard and return a status envelope.
@@ -1510,7 +1609,30 @@ def spawn_rat_dashboard(
     development (no token required).
     """
     from . import auth as _auth
+    if orchestrator is not None:
+        set_dashboard_orchestrator(orchestrator)
     sess = list(sessions or [])
+    # Hydrate from SQL so reopening the tool shows prior sessions/tasks
+    try:
+        from core.db import sqlstore
+        sqlstore.init()
+        for row in sqlstore.list_sessions(limit=100) or []:
+            if not isinstance(row, dict):
+                continue
+            sid = row.get("sid") or row.get("id")
+            if not sid:
+                continue
+            if any((s.get("id") or s.get("session_id")) == sid for s in sess):
+                continue
+            sess.append({
+                "id": sid,
+                "kind": row.get("kind") or "unknown",
+                "label": row.get("target") or sid,
+                "transport": row.get("kind") or "",
+                "achieved": {"restored"},
+            })
+    except Exception:
+        pass
     if not sess and isinstance(report, dict):
         access = report.get("access") or {}
         if access.get("achieved") or access.get("session_id"):

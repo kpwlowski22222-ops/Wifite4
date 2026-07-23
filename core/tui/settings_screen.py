@@ -22,30 +22,55 @@ class SettingsScreen(BaseScreen):
         self.settings_manager = kwargs.get("settings_manager") or SettingsManager()
         self.settings = self.settings_manager.load_settings()
 
+        # Keep Settings short and practical — power features live under Advanced.
         self.menu_items = [
-            ("Ollama Backend Status & Model List", self.view_ollama_status),
-            ("Set Ollama Endpoint", self.set_ollama_endpoint),
-            ("Select Model per Domain", self.select_domain_model),
-            ("Pull Models (info)", self.pull_models_info),
-            ("OS Agentic CLI (Holo) — status / presets / stop", self.holo_os_agent_status),
-            ("OS Agentic CLI — dry-run desktop task", self.holo_os_agent_dry_run),
-            ("OS Agentic CLI — AI plan (predict→act→read→label)", self.holo_os_agent_plan),
-            ("OS Agentic CLI — toggle holo.enabled", self.toggle_holo_enabled),
-            ("Fetch Tool Repos into toolboxes/ (git clone)", self.fetch_toolboxes),
-            ("Prepare Toolbox Tools (install deps, chmod)", self.prepare_toolboxes),
-            ("Rebuild Tool Registry (toolboxes+Kali+venv)", self.rebuild_registry),
-            ("MCP Server info (AI client bridge)", self.mcp_info),
-            ("Run KB Re-categorization (info)", self.kb_recategorize_info),
-            ("View AI Engine & Model Status", self.view_model_status),
-            ("View API Keys Presence Status", self.view_api_keys_status),
-            ("AI Vision OS Navigation & UI Auto-Labeling", self.toggle_vision_os_learning),
-            ("Adjust Scan Timeouts", self.adjust_timeouts),
-            ("External Terminal (detect / pick)", self.configure_external_terminal),
-            ("Scan Window Font Scale", self.configure_scan_font_scale),
-            ("Print Current Settings Profile", self.print_settings),
-            ("Reset Configuration to Defaults", self.reset_settings),
-            ("Back to Main Menu", self.parent_callback)
+            ("AI status (Ollama + models)", self.view_ollama_status),
+            ("API keys presence (.env)", self.view_api_keys_status),
+            ("Set Ollama endpoint", self.set_ollama_endpoint),
+            ("Model per domain (wifi/ble/osint/…)", self.select_domain_model),
+            ("Scan timeouts (wifi / ble)", self.adjust_timeouts),
+            ("External terminal", self.configure_external_terminal),
+            ("Scan window font scale", self.configure_scan_font_scale),
+            ("Advanced…", self._show_advanced_settings),
+            ("Back to Main Menu", self.parent_callback),
         ]
+        self._advanced_items = [
+            ("Pull models (info)", self.pull_models_info),
+            ("Holo desktop agent — status", self.holo_os_agent_status),
+            ("Holo — dry-run task", self.holo_os_agent_dry_run),
+            ("Holo — AI plan", self.holo_os_agent_plan),
+            ("Toggle holo.enabled", self.toggle_holo_enabled),
+            ("Fetch tool repos (toolboxes/)", self.fetch_toolboxes),
+            ("Prepare toolboxes (deps)", self.prepare_toolboxes),
+            ("Rebuild tool registry", self.rebuild_registry),
+            ("MCP server info", self.mcp_info),
+            ("KB re-categorize (info)", self.kb_recategorize_info),
+            ("AI engine & model status", self.view_model_status),
+            ("Vision OS learning toggle", self.toggle_vision_os_learning),
+            ("Print full settings JSON", self.print_settings),
+            ("Reset configuration", self.reset_settings),
+            ("Back to simple Settings", self._show_simple_settings),
+        ]
+
+    def _show_advanced_settings(self):
+        self.menu_items = list(self._advanced_items)
+        self.menu_index = 0
+        self.activity_log.append("[i] Settings → Advanced (power-user tools)")
+
+    def _show_simple_settings(self):
+        self.menu_items = [
+            ("AI status (Ollama + models)", self.view_ollama_status),
+            ("API keys presence (.env)", self.view_api_keys_status),
+            ("Set Ollama endpoint", self.set_ollama_endpoint),
+            ("Model per domain (wifi/ble/osint/…)", self.select_domain_model),
+            ("Scan timeouts (wifi / ble)", self.adjust_timeouts),
+            ("External terminal", self.configure_external_terminal),
+            ("Scan window font scale", self.configure_scan_font_scale),
+            ("Advanced…", self._show_advanced_settings),
+            ("Back to Main Menu", self.parent_callback),
+        ]
+        self.menu_index = 0
+        self.activity_log.append("[i] Settings → simple list")
 
     def holo_os_agent_status(self):
         """Probe holo-desktop-cli (OS agentic tool) without driving the desktop."""
