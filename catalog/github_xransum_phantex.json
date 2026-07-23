@@ -131,6 +131,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -304,8 +309,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -314,44 +320,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "phantex",
     "xransum",
-    "lang:python",
-    "lang:javascript",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use phantex because Local OSINT recon terminal. A Flask-based web dashboard that runs on your\nlaptop and scans for nearby wireless signals. Start with Bluetooth -- more\nmodules com.",
-    "When the engagement is in the recon phase, use phantex as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `uv run flask --app phantex.app:create_app run` as documented upstream for phantex.",
-    "When you need a concrete invocation, run `flask --app phantex.app:create_app run` as documented upstream for phantex.",
-    "When chaining Reconnaissance tools, pair phantex with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `phantex --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "uv run flask --app phantex.app:create_app run",
-    "flask --app phantex.app:create_app run"
+    "cd toolboxes/phantex && python3 phantex.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "cd toolboxes/phantex && python3 phantex.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantex --output $KFIOSA_OUTPUT_DIR/phantex.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST phantex --output $KFIOSA_OUTPUT_DIR/phantex.log"
   ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -1,16 +1,13 @@
 {
   "category": "exploit",
   "command_examples": [
-    "mkdir -p ~/.msf4/payloads",
-    "cd ~/metasploit-payloads",
-    "ln -s ~/metasploit-payloads/python/meterpreter/ext_server_stdapi.py ~/.msf4/payloads/meterpreter/ext_server_stdapi.py",
-    "file ~/.msf4/payloads/meterpreter/ext_server_stdapi.py",
-    "msf6 > use payload/python/meterpreter/reverse_tcp",
-    "msf6 payload(python/meterpreter/reverse_tcp) > set LHOST $KFIOSA_TARGET_HOST",
-    "LHOST => $KFIOSA_TARGET_HOST",
-    "msf6 payload(python/meterpreter/reverse_tcp) > generate -f raw -o reverse.py",
-    "msf6 payload(python/meterpreter/reverse_tcp) > to_handler",
-    "msf6 payload(python/meterpreter/reverse_tcp) > WARNING: Local file /home/your_user/.msf4/payloads/meterpreter/meterpreter.py is being used"
+    "cd toolboxes/metasploit-payloads && python3 metasploit-payloads.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/metasploit-payloads && python3 metasploit-payloads.py --help",
+    "cd toolboxes/metasploit-payloads && python3 metasploit-payloads.py --help",
+    "cd toolboxes/metasploit-payloads && python3 metasploit-payloads.py --help",
+    "cd toolboxes/metasploit-payloads && python3 metasploit-payloads.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metasploit-payloads --output $KFIOSA_OUTPUT_DIR/metasploit-payloads.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metasploit-payloads --output $KFIOSA_OUTPUT_DIR/metasploit-payloads.log"
   ],
   "documentation": {
     "readme": "This is a unified repository for different Metasploit Framework payloads, which merges these repositories:",
@@ -140,6 +137,11 @@
       {
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
       }
     ],
@@ -323,13 +325,12 @@
   },
   "url": "https://github.com/rapid7/metasploit-payloads",
   "use_cases": [
-    "When you need exploit, use metasploit-payloads because This is a unified repository for different Metasploit Framework payloads, which merges these repositories:.",
-    "When you need a concrete invocation, run `mkdir -p ~/.msf4/payloads` as documented upstream for metasploit-payloads.",
-    "When you need a concrete invocation, run `cd ~/metasploit-payloads` as documented upstream for metasploit-payloads.",
-    "When you need a concrete invocation, run `ln -s ~/metasploit-payloads/python/meterpreter/ext_server_stdapi.py ~/.msf4/payloads/meterpreter/ext_server_stdapi.py` as documented upstream for metasploit-payloads.",
-    "When you need a concrete invocation, run `file ~/.msf4/payloads/meterpreter/ext_server_stdapi.py` as documented upstream for metasploit-payloads.",
-    "When chaining exploit tools, pair metasploit-payloads with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `metasploit-payloads --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

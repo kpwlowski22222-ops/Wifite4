@@ -1,13 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "docker build . -t avcleaner",
-    "docker run -v ~/dev/scrt/avcleaner:/home/toto -it avcleaner bash #adapt ~/dev/scrt/avcleaner to the path where you cloned avcleaner",
-    "sudo pacman -Syu",
-    "cmake ..",
-    "make -j 2",
-    "./avcleaner.bin --help",
-    "avcleaner.bin test/strings_simplest.c --strings=true --"
+    "cd toolboxes/avcleaner && python3 avcleaner.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/avcleaner && python3 avcleaner.py --help",
+    "cd toolboxes/avcleaner && python3 avcleaner.py --help",
+    "cd toolboxes/avcleaner && python3 avcleaner.py --help",
+    "cd toolboxes/avcleaner && python3 avcleaner.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST avcleaner --output $KFIOSA_OUTPUT_DIR/avcleaner.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST avcleaner --output $KFIOSA_OUTPUT_DIR/avcleaner.log"
   ],
   "documentation": {
     "readme": "avcleaner C/C++ source obfuscator for antivirus bypass",
@@ -128,6 +128,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -297,7 +302,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -306,13 +313,12 @@
   },
   "url": "https://github.com/scrt/avcleaner",
   "use_cases": [
-    "When you need c2, use avcleaner because avcleaner C/C++ source obfuscator for antivirus bypass.",
-    "When you need a concrete invocation, run `docker build . -t avcleaner` as documented upstream for avcleaner.",
-    "When you need a concrete invocation, run `docker run -v ~/dev/scrt/avcleaner:/home/toto -it avcleaner bash #adapt ~/dev/scrt/avcleaner to the path where you cloned avcleaner` as documented upstream for avcleaner.",
-    "When you need a concrete invocation, run `sudo pacman -Syu` as documented upstream for avcleaner.",
-    "When you need a concrete invocation, run `cmake ..` as documented upstream for avcleaner.",
-    "When chaining c2 tools, pair avcleaner with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `avcleaner --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

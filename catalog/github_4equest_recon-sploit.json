@@ -143,6 +143,11 @@
         "name": "--quiet",
         "description": "Suppress non-error output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -272,8 +277,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -282,46 +288,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "recon",
+    "sploit",
     "4equest",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need OSINT, use recon-sploit because recon-sploit\nTool to list vulnerabilities that may be exploitable without access to the target (with shodan).",
-    "When the engagement is in the recon phase, use recon-sploit as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `usage: recon-sploit.py [-h] (-l DOMAIN_LIST | -d DOMAIN | --cpe CPE | --cve CVE) [--show-duplicate SHOW_DUPLICATE]` as documented upstream for recon-sploit.",
-    "When you need a concrete invocation, run `Run recon-sploit.py with arguments` as documented upstream for recon-sploit.",
-    "When you need a concrete invocation, run `python3 recon-sploit.py -d example.com` as documented upstream for recon-sploit.",
-    "When you need a concrete invocation, run `assetfinder example.com | sort | uniq > domains.txt` as documented upstream for recon-sploit.",
-    "When chaining OSINT tools, pair recon-sploit with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `recon-sploit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "usage: recon-sploit.py [-h] (-l DOMAIN_LIST | -d DOMAIN | --cpe CPE | --cve CVE) [--show-duplicate SHOW_DUPLICATE]",
-    "Run recon-sploit.py with arguments",
-    "python3 recon-sploit.py -d example.com",
-    "assetfinder example.com | sort | uniq > domains.txt",
-    "python3 recon-sploit.py -l domains.txt"
+    "cd toolboxes/recon-sploit && python3 recon-sploit.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/recon-sploit && python3 recon-sploit.py --help",
+    "cd toolboxes/recon-sploit && python3 recon-sploit.py --help",
+    "cd toolboxes/recon-sploit && python3 recon-sploit.py --help",
+    "cd toolboxes/recon-sploit && python3 recon-sploit.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recon-sploit --output $KFIOSA_OUTPUT_DIR/recon-sploit.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recon-sploit --output $KFIOSA_OUTPUT_DIR/recon-sploit.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

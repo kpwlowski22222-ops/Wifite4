@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -263,8 +268,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -273,29 +281,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "frida",
     "joshspicer",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Mobile Security, use Frida-Android because Frida-Android\nMy experimentation with exploiting Android apps with Frida.",
-    "When chaining Mobile Security tools, pair Frida-Android with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Frida-Android --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/Frida-Android && python3 Frida-Android.py --apk $KFIOSA_TARGET_APK",
     "cd toolboxes/Frida-Android && python3 Frida-Android.py --help",
-    "cd toolboxes/Frida-Android && cat README.md",
-    "cd toolboxes/Frida-Android && ls -la",
-    "cd toolboxes/Frida-Android && python3 Frida-Android.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Frida-Android && python3 Frida-Android.py --help",
+    "cd toolboxes/Frida-Android && python3 Frida-Android.py --help",
+    "cd toolboxes/Frida-Android && python3 Frida-Android.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Frida-Android --output $KFIOSA_OUTPUT_DIR/Frida-Android.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Frida-Android --output $KFIOSA_OUTPUT_DIR/Frida-Android.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -303,12 +317,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

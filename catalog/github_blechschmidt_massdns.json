@@ -1,15 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "Usage: ./bin/massdns [options] [domainlist]",
-    "domain. (Default: 500)",
-    "./bin/massdns -r lists/resolvers.txt -t AAAA domains.txt > results.txt",
-    "./bin/massdns -r lists/resolvers.txt -t AAAA -w results.txt domains.txt",
-    "./scripts/ptr.py | ./bin/massdns -r lists/resolvers.txt -t PTR -w ptr.txt",
-    "./scripts/subbrute.py example.com lists/names.txt | ./bin/massdns -r lists/resolvers.txt -t A -o S -w results.txt",
-    "./scripts/ct.py example.com | ./bin/massdns -r lists/resolvers.txt -t A -o S -w results.txt",
-    "./scripts/recon.py -d google.com -l lists/best-dns-wordlist.txt > google.txt",
-    "./bin/massdns -r <(./scripts/auth-addrs.sh example.com) --norecurse -o Je example-com-subdomains.txt > results.txt"
+    "cd toolboxes/massdns && python3 massdns.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/massdns && python3 massdns.py --help",
+    "cd toolboxes/massdns && python3 massdns.py --help",
+    "cd toolboxes/massdns && python3 massdns.py --help",
+    "cd toolboxes/massdns && python3 massdns.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST massdns --output $KFIOSA_OUTPUT_DIR/massdns.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST massdns --output $KFIOSA_OUTPUT_DIR/massdns.log"
   ],
   "documentation": {
     "readme": "MassDNS A high-performance DNS stub resolver",
@@ -281,6 +279,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -451,7 +454,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -460,13 +465,12 @@
   },
   "url": "https://github.com/blechschmidt/massdns",
   "use_cases": [
-    "When you need recon, use massdns because MassDNS A high-performance DNS stub resolver.",
-    "When you need a concrete invocation, run `Usage: ./bin/massdns [options] [domainlist]` as documented upstream for massdns.",
-    "When you need a concrete invocation, run `domain. (Default: 500)` as documented upstream for massdns.",
-    "When you need a concrete invocation, run `./bin/massdns -r lists/resolvers.txt -t AAAA domains.txt > results.txt` as documented upstream for massdns.",
-    "When you need a concrete invocation, run `./bin/massdns -r lists/resolvers.txt -t AAAA -w results.txt domains.txt` as documented upstream for massdns.",
-    "When chaining recon tools, pair massdns with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `massdns --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

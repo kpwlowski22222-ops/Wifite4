@@ -129,6 +129,11 @@
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -292,8 +297,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -302,38 +310,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "apk",
+    "submission",
+    "queue",
     "breadchris",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Mobile Security, use apk-submission-queue because APK Submission Server.",
-    "When you need a concrete invocation, run `wget $KFIOSA_TARGET_URL` as documented upstream for apk-submission-queue.",
-    "When you need a concrete invocation, run `unzip sdk-tools-linux-3859397.zip` as documented upstream for apk-submission-queue.",
-    "When you need a concrete invocation, run `sudo mkdir /opt/android-sdk` as documented upstream for apk-submission-queue.",
-    "When you need a concrete invocation, run `sudo chown ubuntu:ubuntu /opt/android-sdk` as documented upstream for apk-submission-queue.",
-    "When chaining Mobile Security tools, pair apk-submission-queue with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `apk-submission-queue --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "wget $KFIOSA_TARGET_URL",
-    "unzip sdk-tools-linux-3859397.zip",
-    "sudo mkdir /opt/android-sdk",
-    "sudo chown ubuntu:ubuntu /opt/android-sdk",
-    "mv tools/ /opt/android-sdk/",
-    "cd /opt/android-sdk/",
-    "tools/bin/sdkmanager --update",
-    "tools/bin/sdkmanager \"platforms^Cndroid-23\" \"build-tools;23.0.2\" \"extras;google;m2repository\" \"extras;android;m2repository\""
+    "cd toolboxes/apk-submission-queue && python3 apk-submission-queue.py --apk $KFIOSA_TARGET_APK",
+    "cd toolboxes/apk-submission-queue && python3 apk-submission-queue.py --help",
+    "cd toolboxes/apk-submission-queue && python3 apk-submission-queue.py --help",
+    "cd toolboxes/apk-submission-queue && python3 apk-submission-queue.py --help",
+    "cd toolboxes/apk-submission-queue && python3 apk-submission-queue.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apk-submission-queue --output $KFIOSA_OUTPUT_DIR/apk-submission-queue.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apk-submission-queue --output $KFIOSA_OUTPUT_DIR/apk-submission-queue.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -341,12 +346,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -1,15 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "./enumerate-iam.py --access-key AKIA... --secret-key StF0q...",
-    "2019-05-10 15:57:58,447 - 21345 - [INFO] Starting permission enumeration for access-key-id \"AKIA...\"",
-    "2019-05-10 15:58:01,537 - 21345 - [INFO] -- {",
-    "2019-05-10 15:58:26,709 - 21345 - [INFO] -- gamelift.list_builds() worked!",
-    "2019-05-10 15:58:26,850 - 21345 - [INFO] -- cloudformation.list_stack_sets() worked!",
-    "2019-05-10 15:58:26,982 - 21345 - [INFO] -- directconnect.describe_locations() worked!",
-    "2019-05-10 15:58:27,021 - 21345 - [INFO] -- gamelift.describe_matchmaking_rule_sets() worked!",
-    "2019-05-10 15:58:27,311 - 21345 - [INFO] -- sqs.list_queues() worked!",
-    "cd enumerate-iam/"
+    "cd toolboxes/enumerate-iam && python3 enumerate-iam.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/enumerate-iam && python3 enumerate-iam.py --help",
+    "cd toolboxes/enumerate-iam && python3 enumerate-iam.py --help",
+    "cd toolboxes/enumerate-iam && python3 enumerate-iam.py --help",
+    "cd toolboxes/enumerate-iam && python3 enumerate-iam.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST enumerate-iam --output $KFIOSA_OUTPUT_DIR/enumerate-iam.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST enumerate-iam --output $KFIOSA_OUTPUT_DIR/enumerate-iam.log"
   ],
   "documentation": {
     "readme": "Found a set of AWS credentials and have no idea which permissions it might have?",
@@ -134,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -306,7 +309,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -315,13 +319,12 @@
   },
   "url": "https://github.com/andresriancho/enumerate-iam",
   "use_cases": [
-    "When you need recon, use enumerate-iam because Found a set of AWS credentials and have no idea which permissions it might have?.",
-    "When you need a concrete invocation, run `./enumerate-iam.py --access-key AKIA... --secret-key StF0q...` as documented upstream for enumerate-iam.",
-    "When you need a concrete invocation, run `2019-05-10 15:57:58,447 - 21345 - [INFO] Starting permission enumeration for access-key-id \"AKIA...\"` as documented upstream for enumerate-iam.",
-    "When you need a concrete invocation, run `2019-05-10 15:58:01,537 - 21345 - [INFO] -- {` as documented upstream for enumerate-iam.",
-    "When you need a concrete invocation, run `2019-05-10 15:58:26,709 - 21345 - [INFO] -- gamelift.list_builds() worked!` as documented upstream for enumerate-iam.",
-    "When chaining recon tools, pair enumerate-iam with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `enumerate-iam --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

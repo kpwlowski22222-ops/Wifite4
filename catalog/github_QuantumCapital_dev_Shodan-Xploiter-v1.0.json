@@ -146,6 +146,11 @@
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -313,8 +318,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -323,53 +329,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "shodan",
+    "xploiter",
+    "v1",
     "quantumcapital_dev",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use Shodan-Xploiter-v1.0 because 🔴 SHODAN XPLOITER v1.0.",
-    "When the engagement is in the recon phase, use Shodan-Xploiter-v1.0 as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `$KFIOSA_TARGET_URL` as documented upstream for Shodan-Xploiter-v1.0.",
-    "When you need a concrete invocation, run `python3 -m venv venv` as documented upstream for Shodan-Xploiter-v1.0.",
-    "When you need a concrete invocation, run `source venv/bin/activate        # Linux / macOS` as documented upstream for Shodan-Xploiter-v1.0.",
-    "When you need a concrete invocation, run `venv\\Scripts\\activate           # Windows` as documented upstream for Shodan-Xploiter-v1.0.",
-    "When chaining Reconnaissance tools, pair Shodan-Xploiter-v1.0 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Shodan-Xploiter-v1.0 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "$KFIOSA_TARGET_URL",
-    "python3 -m venv venv",
-    "source venv/bin/activate        # Linux / macOS",
-    "venv\\Scripts\\activate           # Windows",
-    "cp .env.example .env",
-    "nano .env",
-    "Configuration for Shodan Xploiter v1.0.",
-    "load_dotenv(dotenv_path=Path(__file__).parent / \".env\", override=True)",
-    "ANTHROPIC_API_KEY=$KFIOSA_SECRET \"\")",
-    "SHODAN_API_KEY=$KFIOSA_SECRET \"\")"
+    "cd toolboxes/Shodan-Xploiter-v1.0 && python3 Shodan-Xploiter-v1.0.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Shodan-Xploiter-v1.0 && python3 Shodan-Xploiter-v1.0.py --help",
+    "cd toolboxes/Shodan-Xploiter-v1.0 && python3 Shodan-Xploiter-v1.0.py --help",
+    "cd toolboxes/Shodan-Xploiter-v1.0 && python3 Shodan-Xploiter-v1.0.py --help",
+    "cd toolboxes/Shodan-Xploiter-v1.0 && python3 Shodan-Xploiter-v1.0.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Shodan-Xploiter-v1.0 --output $KFIOSA_OUTPUT_DIR/Shodan-Xploiter-v1.0.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Shodan-Xploiter-v1.0 --output $KFIOSA_OUTPUT_DIR/Shodan-Xploiter-v1.0.log"
   ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

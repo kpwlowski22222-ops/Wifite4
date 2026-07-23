@@ -1,8 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "pe2shc.exe <path to your PE> [output path*]",
-    "runshc.exe <converted file>"
+    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
+    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
+    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
+    "cd toolboxes/pe_to_shellcode && python3 pe_to_shellcode.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pe_to_shellcode --output $KFIOSA_OUTPUT_DIR/pe_to_shellcode.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST pe_to_shellcode --output $KFIOSA_OUTPUT_DIR/pe_to_shellcode.log"
   ],
   "documentation": {
     "readme": "Converts PE so that it can be then injected just like a normal shellcode. (At the same time, the output file remains to be a valid PE). Supports both 32 and 64 bit PEs",
@@ -126,6 +131,11 @@
       {
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
       }
     ],
@@ -291,7 +301,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -300,11 +311,12 @@
   },
   "url": "https://github.com/hasherezade/pe_to_shellcode",
   "use_cases": [
-    "When you need c2, use pe_to_shellcode because Converts PE so that it can be then injected just like a normal shellcode. (At the same time, the output file remains to be a valid PE). Supports both 32 and 64 .",
-    "When you need a concrete invocation, run `pe2shc.exe <path to your PE> [output path*]` as documented upstream for pe_to_shellcode.",
-    "When you need a concrete invocation, run `runshc.exe <converted file>` as documented upstream for pe_to_shellcode.",
-    "When chaining c2 tools, pair pe_to_shellcode with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `pe_to_shellcode --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

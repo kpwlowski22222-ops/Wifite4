@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -263,8 +268,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -273,29 +281,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "sniper",
     "cryptojew7883",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Mobile Security, use Android-Sniper because Android-Sniper\nHopefully this repository will begin to enlighten me on the ways of Android, exploiting and customizing them!.",
-    "When chaining Mobile Security tools, pair Android-Sniper with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Android-Sniper --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/Android-Sniper && python3 Android-Sniper.py --apk $KFIOSA_TARGET_APK",
     "cd toolboxes/Android-Sniper && python3 Android-Sniper.py --help",
-    "cd toolboxes/Android-Sniper && cat README.md",
-    "cd toolboxes/Android-Sniper && ls -la",
-    "cd toolboxes/Android-Sniper && python3 Android-Sniper.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Android-Sniper && python3 Android-Sniper.py --help",
+    "cd toolboxes/Android-Sniper && python3 Android-Sniper.py --help",
+    "cd toolboxes/Android-Sniper && python3 Android-Sniper.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Android-Sniper --output $KFIOSA_OUTPUT_DIR/Android-Sniper.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Android-Sniper --output $KFIOSA_OUTPUT_DIR/Android-Sniper.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -303,12 +317,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

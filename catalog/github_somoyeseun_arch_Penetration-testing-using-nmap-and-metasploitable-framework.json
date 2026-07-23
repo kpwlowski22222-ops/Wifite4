@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -263,8 +268,10 @@
   "risk": {
     "level": "high",
     "signals": [
-      "intrinsic",
-      "lab_only",
+      "web",
+      "active",
+      "remote",
+      "credential",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -273,41 +280,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "web_application_security",
-    "toolbox",
-    "github",
-    "somoyeseun_arch",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "http",
+    "active",
+    "penetration",
+    "testing",
+    "using",
+    "nmap",
+    "cloud",
+    "ble_4_x",
+    "kfiosa"
   ],
   "use_cases": [
-    "When you need Web Application Security, use Penetration-testing-using-nmap-and-metasploitable-framework because Penetration-testing-using-nmap-and-metasploitable-framework.",
-    "When chaining Web Application Security tools, pair Penetration-testing-using-nmap-and-metasploitable-framework with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Penetration-testing-using-nmap-and-metasploitable-framework --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use after httpx / wappalyzer / whatweb has identified the target web stack (CMS, framework, server).",
+    "Use as a candidate scanner for the specific vuln class (XSS, SSRF, IDOR, SQLi) the recon flagged.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/Penetration-testing-using-nmap-and-metasploitable-framework && python3 Penetration-testing-using-nmap-and-metasploitable-framework.py -u https://$KFIOSA_TARGET_HOST --cookie $KFIOSA_TARGET_COOKIE",
+    "cd toolboxes/Penetration-testing-using-nmap-and-metasploitable-framework && python3 Penetration-testing-using-nmap-and-metasploitable-framework.py -h",
     "cd toolboxes/Penetration-testing-using-nmap-and-metasploitable-framework && python3 Penetration-testing-using-nmap-and-metasploitable-framework.py --help",
-    "cd toolboxes/Penetration-testing-using-nmap-and-metasploitable-framework && cat README.md",
-    "cd toolboxes/Penetration-testing-using-nmap-and-metasploitable-framework && ls -la",
-    "cd toolboxes/Penetration-testing-using-nmap-and-metasploitable-framework && python3 Penetration-testing-using-nmap-and-metasploitable-framework.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Penetration-testing-using-nmap-and-metasploitable-framework && python3 Penetration-testing-using-nmap-and-metasploitable-framework.py --help",
+    "cd toolboxes/Penetration-testing-using-nmap-and-metasploitable-framework && python3 Penetration-testing-using-nmap-and-metasploitable-framework.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Penetration-testing-using-nmap-and-metasploitable-framework --output $KFIOSA_OUTPUT_DIR/Penetration-testing-using-nmap-and-metasploitable-framework.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Penetration-testing-using-nmap-and-metasploitable-framework --output $KFIOSA_OUTPUT_DIR/Penetration-testing-using-nmap-and-metasploitable-framework.log"
   ],
   "attack_surface": [
     "web",
-    "cloud"
+    "cloud",
+    "ble_4_x"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "payload_grammar",
+    "header_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -131,6 +131,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -272,36 +277,49 @@
   "risk": {
     "level": "high",
     "signals": [
-      "intrinsic",
-      "lab_only",
+      "post_exploit",
+      "active",
+      "local",
+      "credential",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "post-exploitation",
-    "toolbox",
-    "github",
-    "rajchowdhury240",
-    "lang:go",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "post_exploit",
+    "active",
+    "credential",
+    "setcbprivilege",
+    "sliver",
+    "c2",
+    "extension",
+    "shell_linux",
+    "shell_windows",
+    "ad"
   ],
   "use_cases": [
-    "When you need Post-Exploitation, use SeTcbPrivilege-Sliver-C2-Extension because SeTcbPrivilege-Sliver-C2-Extension.",
-    "When the engagement is in the post_exploit phase, use SeTcbPrivilege-Sliver-C2-Extension as a cataloged Post-Exploitation tool with operator ACCEPT/CANCEL gating.",
-    "When chaining Post-Exploitation tools, pair SeTcbPrivilege-Sliver-C2-Extension with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `SeTcbPrivilege-Sliver-C2-Extension --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use AFTER the chain has gained a shell on the target. Each post-exploit method is per-step ACCEPT gated.",
+    "Use as a candidate follow-up for credential harvesting, lateral movement, or persistence — never inlined into argv.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
-  "command_examples": [],
+  "command_examples": [
+    "cd toolboxes/SeTcbPrivilege-Sliver-C2-Extension && python3 SeTcbPrivilege-Sliver-C2-Extension.py --session $KFIOSA_SESSION_ID --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/SeTcbPrivilege-Sliver-C2-Extension && python3 SeTcbPrivilege-Sliver-C2-Extension.py --help",
+    "cd toolboxes/SeTcbPrivilege-Sliver-C2-Extension && python3 SeTcbPrivilege-Sliver-C2-Extension.py --help",
+    "cd toolboxes/SeTcbPrivilege-Sliver-C2-Extension && python3 SeTcbPrivilege-Sliver-C2-Extension.py --help",
+    "cd toolboxes/SeTcbPrivilege-Sliver-C2-Extension && python3 SeTcbPrivilege-Sliver-C2-Extension.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SeTcbPrivilege-Sliver-C2-Extension --output $KFIOSA_OUTPUT_DIR/SeTcbPrivilege-Sliver-C2-Extension.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SeTcbPrivilege-Sliver-C2-Extension --output $KFIOSA_OUTPUT_DIR/SeTcbPrivilege-Sliver-C2-Extension.log"
+  ],
   "attack_surface": [
-    "shell_windows",
     "shell_linux",
+    "shell_windows",
     "ad"
   ],
   "phase_hint": "post_exploit",
@@ -309,12 +327,14 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "argv_grammar",
+    "credential_format",
+    "lateral_proto"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_os",
+    "session_type",
+    "credential_state"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

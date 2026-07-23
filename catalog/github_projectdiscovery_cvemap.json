@@ -1,16 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "go install github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest",
-    "vulnx --help",
-    "vulnx search --help",
-    "vulnx auth                              # Get free API key at $KFIOSA_TARGET_URL",
-    "vulnx search \"apache || nginx\" --limit 20",
-    "vulnx search \"cvss_score:>8.0 && cve_created_at:2024\"",
-    "vulnx id CVE-2024-1234 --json",
-    "vulnx analyze --fields severity",
-    "vulnx analyze --fields affected_products.vendor",
-    "vulnx search \"apache\" --json              # Machine-readable JSON"
+    "cd toolboxes/cvemap && python3 cvemap.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/cvemap && python3 cvemap.py --help",
+    "cd toolboxes/cvemap && python3 cvemap.py --help",
+    "cd toolboxes/cvemap && python3 cvemap.py --help",
+    "cd toolboxes/cvemap && python3 cvemap.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cvemap --output $KFIOSA_OUTPUT_DIR/cvemap.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cvemap --output $KFIOSA_OUTPUT_DIR/cvemap.log"
   ],
   "documentation": {
     "readme": "Modern CLI for exploring vulnerability data with powerful search, filtering, and analysis capabilities",
@@ -135,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -307,7 +309,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -316,13 +320,12 @@
   },
   "url": "https://github.com/projectdiscovery/cvemap",
   "use_cases": [
-    "When you need recon, use cvemap because Modern CLI for exploring vulnerability data with powerful search, filtering, and analysis capabilities.",
-    "When you need a concrete invocation, run `go install github.com/projectdiscovery/vulnx/v2/cmd/vulnx@latest` as documented upstream for cvemap.",
-    "When you need a concrete invocation, run `vulnx --help` as documented upstream for cvemap.",
-    "When you need a concrete invocation, run `vulnx search --help` as documented upstream for cvemap.",
-    "When you need a concrete invocation, run `vulnx auth                              # Get free API key at $KFIOSA_TARGET_URL` as documented upstream for cvemap.",
-    "When chaining recon tools, pair cvemap with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `cvemap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

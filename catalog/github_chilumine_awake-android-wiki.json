@@ -125,6 +125,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -308,8 +313,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -318,26 +326,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "awake",
+    "wiki",
     "chilumine",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic"
   ],
   "use_cases": [
-    "When you need Mobile Security, use awake-android-wiki because A structured, cross-referenced knowledge base for Android security research.",
-    "When you need a concrete invocation, run `uv pip install -e .` as documented upstream for awake-android-wiki.",
-    "When chaining Mobile Security tools, pair awake-android-wiki with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `awake-android-wiki --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "uv pip install -e ."
+    "cd toolboxes/awake-android-wiki && python3 awake-android-wiki.py --apk $KFIOSA_TARGET_APK",
+    "cd toolboxes/awake-android-wiki && python3 awake-android-wiki.py --help",
+    "cd toolboxes/awake-android-wiki && python3 awake-android-wiki.py --help",
+    "cd toolboxes/awake-android-wiki && python3 awake-android-wiki.py --help",
+    "cd toolboxes/awake-android-wiki && python3 awake-android-wiki.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST awake-android-wiki --output $KFIOSA_OUTPUT_DIR/awake-android-wiki.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST awake-android-wiki --output $KFIOSA_OUTPUT_DIR/awake-android-wiki.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -345,12 +362,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

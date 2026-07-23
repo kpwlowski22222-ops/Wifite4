@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -292,8 +297,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -302,30 +310,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "rootkit",
+    "simple",
     "bx_lr",
-    "lang:c",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic"
   ],
   "use_cases": [
-    "When you need Mobile Security, use android_rootkit_simple because android_rootkit_simple\n simple android rootkit, used in exploit prevention research.",
-    "When chaining Mobile Security tools, pair android_rootkit_simple with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `android_rootkit_simple --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/android_rootkit_simple && python3 android_rootkit_simple.py --apk $KFIOSA_TARGET_APK",
     "cd toolboxes/android_rootkit_simple && python3 android_rootkit_simple.py --help",
-    "cd toolboxes/android_rootkit_simple && cat README.md",
-    "cd toolboxes/android_rootkit_simple && ls -la",
-    "cd toolboxes/android_rootkit_simple && python3 android_rootkit_simple.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/android_rootkit_simple && python3 android_rootkit_simple.py --help",
+    "cd toolboxes/android_rootkit_simple && python3 android_rootkit_simple.py --help",
+    "cd toolboxes/android_rootkit_simple && python3 android_rootkit_simple.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST android_rootkit_simple --output $KFIOSA_OUTPUT_DIR/android_rootkit_simple.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST android_rootkit_simple --output $KFIOSA_OUTPUT_DIR/android_rootkit_simple.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -333,12 +346,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

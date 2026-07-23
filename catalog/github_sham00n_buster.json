@@ -1,16 +1,13 @@
 {
   "category": "osint",
   "command_examples": [
-    "cd buster/",
-    "python3 setup.py install",
-    "buster -h",
-    "python setup.py install",
-    "buster -e target@example.com",
-    "buster --list emails.txt",
-    "buster -e j********9@g****.com -f john -l doe -b ****1989",
-    "buster -f john -m james -l doe -b 13071989",
-    "buster -f john -m james -l doe -b 13071989 -p gmail.com yahoo.com",
-    "buster -u johndoe"
+    "cd toolboxes/buster && python3 buster.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/buster && python3 buster.py --help",
+    "cd toolboxes/buster && python3 buster.py --help",
+    "cd toolboxes/buster && python3 buster.py --help",
+    "cd toolboxes/buster && python3 buster.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST buster --output $KFIOSA_OUTPUT_DIR/buster.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST buster --output $KFIOSA_OUTPUT_DIR/buster.log"
   ],
   "documentation": {
     "readme": "Buster is an advanced OSINT tool used to: Get social accounts of an email using multiple sources(gravatar,about.me,myspace,skype,github,linkedin,previous breaches) Get links to where the email was found using google,twitter,darksearch and paste sites Get breaches of an email Get domains registered with an email (reverse whois) Generate possible emails and usernames of a person Find the email of a social media account Find emails from a username Find the work email of a person",
@@ -157,6 +154,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -329,7 +331,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -338,13 +342,12 @@
   },
   "url": "https://github.com/sham00n/buster",
   "use_cases": [
-    "When you need osint, use buster because Buster is an advanced OSINT tool used to: Get social accounts of an email using multiple sources(gravatar,about.me,myspace,skype,github,linkedin,previous breach.",
-    "When you need a concrete invocation, run `cd buster/` as documented upstream for buster.",
-    "When you need a concrete invocation, run `python3 setup.py install` as documented upstream for buster.",
-    "When you need a concrete invocation, run `buster -h` as documented upstream for buster.",
-    "When you need a concrete invocation, run `python setup.py install` as documented upstream for buster.",
-    "When chaining osint tools, pair buster with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `buster --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -131,6 +131,11 @@
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -267,41 +272,49 @@
   "risk": {
     "level": "high",
     "signals": [
-      "intrinsic",
-      "lab_only",
+      "post_exploit",
+      "active",
+      "local",
+      "credential",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "post-exploitation",
-    "toolbox",
-    "github",
+    "post_exploit",
+    "active",
+    "credential",
+    "metasploit",
+    "vsftpd",
+    "backdoor",
     "lrods",
-    "lang:ruby",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "ad"
   ],
   "use_cases": [
-    "When you need Post-Exploitation, use metasploit-vsftpd-backdoor because Exploração do Backdoor vsFTPd 2.3.4\nSimulação e exploração do backdoor no serviço vsFTPd v2.3.4 — laboratório com Metasploit e script autônomo em Ruby.",
-    "When the engagement is in the post_exploit phase, use metasploit-vsftpd-backdoor as a cataloged Post-Exploitation tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `Na máquina vulnerável, criei um arquivo chamado **\"flag.txt\"**, na pasta **\"/home/msfadmin\"**, e o objetivo do ataque será ler este arquivo.` as documented upstream for metasploit-vsftpd-backdoor.",
-    "When you need a concrete invocation, run `Conseguimos ler o arquivo **\"flag.txt\"**, concluindo nosso objetivo.` as documented upstream for metasploit-vsftpd-backdoor.",
-    "When chaining Post-Exploitation tools, pair metasploit-vsftpd-backdoor with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `metasploit-vsftpd-backdoor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use AFTER the chain has gained a shell on the target. Each post-exploit method is per-step ACCEPT gated.",
+    "Use as a candidate follow-up for credential harvesting, lateral movement, or persistence — never inlined into argv.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Na máquina vulnerável, criei um arquivo chamado **\"flag.txt\"**, na pasta **\"/home/msfadmin\"**, e o objetivo do ataque será ler este arquivo.",
-    "Conseguimos ler o arquivo **\"flag.txt\"**, concluindo nosso objetivo."
+    "cd toolboxes/metasploit-vsftpd-backdoor && python3 metasploit-vsftpd-backdoor.py --session $KFIOSA_SESSION_ID --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/metasploit-vsftpd-backdoor && python3 metasploit-vsftpd-backdoor.py --help",
+    "cd toolboxes/metasploit-vsftpd-backdoor && python3 metasploit-vsftpd-backdoor.py --help",
+    "cd toolboxes/metasploit-vsftpd-backdoor && python3 metasploit-vsftpd-backdoor.py --help",
+    "cd toolboxes/metasploit-vsftpd-backdoor && python3 metasploit-vsftpd-backdoor.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metasploit-vsftpd-backdoor --output $KFIOSA_OUTPUT_DIR/metasploit-vsftpd-backdoor.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metasploit-vsftpd-backdoor --output $KFIOSA_OUTPUT_DIR/metasploit-vsftpd-backdoor.log"
   ],
   "attack_surface": [
-    "shell_windows",
     "shell_linux",
+    "shell_windows",
     "ad"
   ],
   "phase_hint": "post_exploit",
@@ -309,12 +322,14 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "argv_grammar",
+    "credential_format",
+    "lateral_proto"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_os",
+    "session_type",
+    "credential_state"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

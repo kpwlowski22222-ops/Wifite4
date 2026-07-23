@@ -85,7 +85,10 @@ class PostAccessScreen(BaseScreen):
             **kwargs,
         )
         self.state: SessionState = state
-        self.confirm_fn: Callable[[str], bool] = confirm_fn or (lambda _p: True)
+        # Default-deny: intrusive post-access actions must be wired to a real
+        # ACCEPT/CANCEL gate by the orchestrator / CLI.  A missing gate means
+        # every per-step prompt is rejected, not silently approved.
+        self.confirm_fn: Callable[[str], bool] = confirm_fn or (lambda _p: False)
         self._on_event = on_event
         self.last_envelopes: List[Dict[str, Any]] = []
         self._cancelled: bool = False

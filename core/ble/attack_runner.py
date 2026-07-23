@@ -98,7 +98,14 @@ class BLEAttackRunner:
 
     ``args`` carries per-action inputs (address, uuid, payload, pin_list,
     firmware_uuid, session dict). It is threaded through from the
-    orchestrator's ``ble_attack`` step args / the MCP ``args`` dict."""
+    orchestrator's ``ble_attack`` step args / the MCP ``args`` dict.
+
+    Polymorphism: situational pick via poly_runtime (target-adaptive).
+    """
+
+    def situational_pick(self, domain: str = "ble", **kw):
+        from core.utils.poly_runtime import SituationalMixin
+        return SituationalMixin.situational_pick(self, domain, **kw)
 
     #: BLE attack / post-exploit method names, in stable order.
     BLE_ATTACK_METHODS: Tuple[str, ...] = (

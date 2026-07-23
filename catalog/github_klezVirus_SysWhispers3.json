@@ -1,16 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "usage: syswhispers.py [-h] [-p PRESET] [-a {x86,x64}] [-m {embedded,egg_hunter,jumper,jumper_randomized}] [-f FUNCTIONS] -o OUT_FILE [--int2eh] [--wow64] [-v] [-d]",
-    "py .\\syswhispers.py --preset all -o syscalls_all",
-    "py .\\syswhispers.py --preset common -o syscalls_common",
-    "py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem",
-    "py .\\syswhispers.py --preset all -o syscalls_all -m jumper --arch x86",
-    "py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem --arch x86 --wow64",
-    "py .\\syswhispers.py --preset common -o syscalls_common -m egg_hunter",
-    "py .\\syswhispers.py --preset all -o syscalls_all -m jumper -c mingw",
-    "PS C:\\Projects\\SysWhispers2> py .\\syswhispers.py --preset common --out-file temp\\syscalls_common -v",
-    "Common functions selected."
+    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
+    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
+    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
+    "cd toolboxes/SysWhispers3 && python3 SysWhispers3.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SysWhispers3 --output $KFIOSA_OUTPUT_DIR/SysWhispers3.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SysWhispers3 --output $KFIOSA_OUTPUT_DIR/SysWhispers3.log"
   ],
   "documentation": {
     "readme": "SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
@@ -170,6 +167,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -342,7 +344,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -351,13 +355,12 @@
   },
   "url": "https://github.com/klezVirus/SysWhispers3",
   "use_cases": [
-    "When you need c2, use SysWhispers3 because SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
-    "When you need a concrete invocation, run `usage: syswhispers.py [-h] [-p PRESET] [-a {x86,x64}] [-m {embedded,egg_hunter,jumper,jumper_randomized}] [-f FUNCTIONS] -o OUT_FILE [--int2eh] [--wow64] [-v] [-d]` as documented upstream for SysWhispers3.",
-    "When you need a concrete invocation, run `py .\\syswhispers.py --preset all -o syscalls_all` as documented upstream for SysWhispers3.",
-    "When you need a concrete invocation, run `py .\\syswhispers.py --preset common -o syscalls_common` as documented upstream for SysWhispers3.",
-    "When you need a concrete invocation, run `py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem` as documented upstream for SysWhispers3.",
-    "When chaining c2 tools, pair SysWhispers3 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `SysWhispers3 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

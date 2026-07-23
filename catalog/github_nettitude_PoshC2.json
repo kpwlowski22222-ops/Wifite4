@@ -1,16 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "./Install.sh -b <git branch> -p <Directory to clone PoshC2 to>",
-    "curl -sSL $KFIOSA_TARGET_URL | sudo bash",
-    "sudo ./Install.sh",
-    "curl -sSL $KFIOSA_TARGET_URL | sudo bash -s -- -p /root/PoshC2",
-    "curl -sSL $KFIOSA_TARGET_URL | sudo bash -s -- -b dev",
-    "./Install-for-Docker.sh -b <git branch>",
-    "curl -sSL $KFIOSA_TARGET_URL | sudo bash",
-    "curl -sSL $KFIOSA_TARGET_URL | sudo bash -s -- -b BRANCHNAME",
-    "Import-Module -DisableNameChecking C:\\PoshC2\\resources\\scripts\\PoshC2.psm1",
-    "posh-project -PoshC2Dir \"C:\\PoshC2\" -LocalPoshC2ProjectDir \"C:\\PoshC2_Project\" -Arg1 \"-n\" -Arg2 \"newproject\""
+    "cd toolboxes/PoshC2 && python3 PoshC2.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/PoshC2 && python3 PoshC2.py --help",
+    "cd toolboxes/PoshC2 && python3 PoshC2.py --help",
+    "cd toolboxes/PoshC2 && python3 PoshC2.py --help",
+    "cd toolboxes/PoshC2 && python3 PoshC2.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PoshC2 --output $KFIOSA_OUTPUT_DIR/PoshC2.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PoshC2 --output $KFIOSA_OUTPUT_DIR/PoshC2.log"
   ],
   "documentation": {
     "readme": "PoshC2 is a proxy aware C2 framework used to aid penetration testers with red teaming, post-exploitation and lateral movement.",
@@ -135,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -307,7 +309,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -316,13 +320,12 @@
   },
   "url": "https://github.com/nettitude/PoshC2",
   "use_cases": [
-    "When you need c2, use PoshC2 because PoshC2 is a proxy aware C2 framework used to aid penetration testers with red teaming, post-exploitation and lateral movement.",
-    "When you need a concrete invocation, run `./Install.sh -b <git branch> -p <Directory to clone PoshC2 to>` as documented upstream for PoshC2.",
-    "When you need a concrete invocation, run `curl -sSL $KFIOSA_TARGET_URL | sudo bash` as documented upstream for PoshC2.",
-    "When you need a concrete invocation, run `sudo ./Install.sh` as documented upstream for PoshC2.",
-    "When you need a concrete invocation, run `curl -sSL $KFIOSA_TARGET_URL | sudo bash -s -- -p /root/PoshC2` as documented upstream for PoshC2.",
-    "When chaining c2 tools, pair PoshC2 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `PoshC2 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

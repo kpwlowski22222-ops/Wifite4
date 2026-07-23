@@ -127,6 +127,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--channel",
+        "description": "WiFi channel to operate on (1-165).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -255,8 +260,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -265,39 +271,46 @@
     "examples_policy": "operational"
   },
   "tags": [
+    "offensive",
+    "linux",
     "wireless",
-    "toolbox",
-    "github",
-    "davidhcefx",
-    "lab_only",
+    "channel",
+    "hopping",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Wireless, use Linux-Wireless-Channel-Hopping because Linux-Wireless-Channel-Hopping.",
-    "When you need a concrete invocation, run `Linux-Wireless-Channel-Hopping --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/Linux-Wireless-Channel-Hopping.log` as documented upstream for Linux-Wireless-Channel-Hopping.",
-    "When chaining Wireless tools, pair Linux-Wireless-Channel-Hopping with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Linux-Wireless-Channel-Hopping --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Linux-Wireless-Channel-Hopping --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/Linux-Wireless-Channel-Hopping.log"
+    "cd toolboxes/Linux-Wireless-Channel-Hopping && python3 Linux-Wireless-Channel-Hopping.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Linux-Wireless-Channel-Hopping && python3 Linux-Wireless-Channel-Hopping.py --help",
+    "cd toolboxes/Linux-Wireless-Channel-Hopping && python3 Linux-Wireless-Channel-Hopping.py --help",
+    "cd toolboxes/Linux-Wireless-Channel-Hopping && python3 Linux-Wireless-Channel-Hopping.py --help",
+    "cd toolboxes/Linux-Wireless-Channel-Hopping && python3 Linux-Wireless-Channel-Hopping.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Linux-Wireless-Channel-Hopping --output $KFIOSA_OUTPUT_DIR/Linux-Wireless-Channel-Hopping.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Linux-Wireless-Channel-Hopping --output $KFIOSA_OUTPUT_DIR/Linux-Wireless-Channel-Hopping.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

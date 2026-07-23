@@ -1,9 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "wget -c $KFIOSA_TARGET_URL -O SecList.zip && unzip SecList.zip && rm -f SecList.zip",
-    "apt -y install seclists",
-    "sudo pacman -S seclists"
+    "cd toolboxes/SecLists && python3 SecLists.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/SecLists && python3 SecLists.py --help",
+    "cd toolboxes/SecLists && python3 SecLists.py --help",
+    "cd toolboxes/SecLists && python3 SecLists.py --help",
+    "cd toolboxes/SecLists && python3 SecLists.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SecLists --output $KFIOSA_OUTPUT_DIR/SecLists.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SecLists --output $KFIOSA_OUTPUT_DIR/SecLists.log"
   ],
   "documentation": {
     "readme": "SecLists is the security tester's companion. It's a collection of multiple types of lists used during security assessments, collected in one place. List types include usernames, passwords, URLs, sensitive data patterns, fuzzing payloads, web shells, and many more. The goal is to enable a security tester to pull this repository onto a new testing box and have access to every type of list that may be needed.",
@@ -133,6 +137,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -298,7 +307,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -307,12 +318,12 @@
   },
   "url": "https://github.com/danielmiessler/SecLists",
   "use_cases": [
-    "When you need frameworks, use SecLists because SecLists is the security tester's companion. It's a collection of multiple types of lists used during security assessments, collected in one place. List types i.",
-    "When you need a concrete invocation, run `wget -c $KFIOSA_TARGET_URL -O SecList.zip && unzip SecList.zip && rm -f SecList.zip` as documented upstream for SecLists.",
-    "When you need a concrete invocation, run `apt -y install seclists` as documented upstream for SecLists.",
-    "When you need a concrete invocation, run `sudo pacman -S seclists` as documented upstream for SecLists.",
-    "When chaining frameworks tools, pair SecLists with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `SecLists --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

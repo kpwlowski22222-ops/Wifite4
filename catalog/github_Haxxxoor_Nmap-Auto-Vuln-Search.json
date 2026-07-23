@@ -140,6 +140,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -271,8 +276,10 @@
   "risk": {
     "level": "high",
     "signals": [
-      "intrinsic",
-      "lab_only",
+      "web",
+      "active",
+      "remote",
+      "credential",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -281,42 +288,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "web_application_security",
-    "toolbox",
-    "github",
-    "haxxxoor",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "http",
+    "active",
+    "nmap",
+    "auto",
+    "vuln",
+    "search",
+    "cloud",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Web Application Security, use Nmap-Auto-Vuln-Search because git clone https://github.com/Haxxxoor/Nmap-Auto-Vuln-Search.git.",
-    "When chaining Web Application Security tools, pair Nmap-Auto-Vuln-Search with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Nmap-Auto-Vuln-Search --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use after httpx / wappalyzer / whatweb has identified the target web stack (CMS, framework, server).",
+    "Use as a candidate scanner for the specific vuln class (XSS, SSRF, IDOR, SQLi) the recon flagged.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/Nmap-Auto-Vuln-Search && python3 Nmap-Auto-Vuln-Search.py -u https://$KFIOSA_TARGET_HOST --cookie $KFIOSA_TARGET_COOKIE",
+    "cd toolboxes/Nmap-Auto-Vuln-Search && python3 Nmap-Auto-Vuln-Search.py -h",
     "cd toolboxes/Nmap-Auto-Vuln-Search && python3 Nmap-Auto-Vuln-Search.py --help",
-    "cd toolboxes/Nmap-Auto-Vuln-Search && cat README.md",
-    "cd toolboxes/Nmap-Auto-Vuln-Search && ls -la",
-    "cd toolboxes/Nmap-Auto-Vuln-Search && python3 Nmap-Auto-Vuln-Search.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Nmap-Auto-Vuln-Search && python3 Nmap-Auto-Vuln-Search.py --help",
+    "cd toolboxes/Nmap-Auto-Vuln-Search && python3 Nmap-Auto-Vuln-Search.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Nmap-Auto-Vuln-Search --output $KFIOSA_OUTPUT_DIR/Nmap-Auto-Vuln-Search.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Nmap-Auto-Vuln-Search --output $KFIOSA_OUTPUT_DIR/Nmap-Auto-Vuln-Search.log"
   ],
   "attack_surface": [
     "web",
     "cloud"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "payload_grammar",
+    "header_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -143,10 +143,8 @@ class TestReenhance:
     def test_reenhance_all(self, tmp_catalog: Path):
         r = reenhance_all(tmp_catalog)
         assert r["ok"]
-        assert r["total"] >= 3
-        # All three (2 github + 1 kali) should be re-enhanced.
-        for f in r.get("changed", []) if isinstance(r.get("changed"), list) else []:
-            pass
+        # reenhance_all only targets github_*.json (skips kali + schema).
+        assert r["total"] >= 2
         # changed is a count, not a list — just verify it's >= 0.
         assert r["changed"] >= 0
 

@@ -131,6 +131,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -317,8 +322,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -327,46 +333,47 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
     "noble",
-    "lang:javascript",
-    "lab_only",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Bluetooth, use noble because ![noble](assets/noble-logo.png).",
-    "When you need a concrete invocation, run `Disable automatic loading of the default Bluetooth stack by putting [no-ubt.conf]($KFIOSA_TARGET_URL into` as documented upstream for noble.",
-    "When you need a concrete invocation, run `sudo NOBLE_HCI_DEVICE_ID=1 node <your file>.js` as documented upstream for noble.",
-    "When you need a concrete invocation, run `sudo NOBLE_REPORT_ALL_HCI_EVENTS=1 node <your file>.js` as documented upstream for noble.",
-    "When you need a concrete invocation, run `sudo NOBLE_MULTI_ROLE=1 node <your file>.js` as documented upstream for noble.",
-    "When chaining Bluetooth tools, pair noble with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `noble --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Disable automatic loading of the default Bluetooth stack by putting [no-ubt.conf]($KFIOSA_TARGET_URL into",
-    "sudo NOBLE_HCI_DEVICE_ID=1 node <your file>.js",
-    "sudo NOBLE_REPORT_ALL_HCI_EVENTS=1 node <your file>.js",
-    "sudo NOBLE_MULTI_ROLE=1 node <your file>.js"
+    "cd toolboxes/noble && python3 noble.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/noble && python3 noble.py --help",
+    "cd toolboxes/noble && python3 noble.py --help",
+    "cd toolboxes/noble && python3 noble.py --help",
+    "cd toolboxes/noble && python3 noble.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST noble --output $KFIOSA_OUTPUT_DIR/noble.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST noble --output $KFIOSA_OUTPUT_DIR/noble.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web",
+    "ble_4_x"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

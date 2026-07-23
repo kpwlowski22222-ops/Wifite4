@@ -127,6 +127,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--handshake",
+        "description": "Capture full WPA2 4-way handshake.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -255,8 +260,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -265,39 +271,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "wpa2",
+    "handshake",
+    "cracker",
     "n0va-scythe",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Wireless, use wpa2_handshake_cracker because wpa2_handshake_cracker.",
-    "When you need a concrete invocation, run `wpa2_handshake_cracker --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/wpa2_handshake_cracker.log` as documented upstream for wpa2_handshake_cracker.",
-    "When chaining Wireless tools, pair wpa2_handshake_cracker with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `wpa2_handshake_cracker --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "wpa2_handshake_cracker --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/wpa2_handshake_cracker.log"
+    "cd toolboxes/wpa2_handshake_cracker && python3 wpa2_handshake_cracker.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wpa2_handshake_cracker && python3 wpa2_handshake_cracker.py --help",
+    "cd toolboxes/wpa2_handshake_cracker && python3 wpa2_handshake_cracker.py --help",
+    "cd toolboxes/wpa2_handshake_cracker && python3 wpa2_handshake_cracker.py --help",
+    "cd toolboxes/wpa2_handshake_cracker && python3 wpa2_handshake_cracker.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wpa2_handshake_cracker --output $KFIOSA_OUTPUT_DIR/wpa2_handshake_cracker.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wpa2_handshake_cracker --output $KFIOSA_OUTPUT_DIR/wpa2_handshake_cracker.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

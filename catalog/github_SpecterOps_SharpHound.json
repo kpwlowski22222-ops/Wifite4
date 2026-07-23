@@ -255,6 +255,11 @@
         "name": "--zippassword",
         "description": "Password protects the zip with the specified password",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -265,6 +270,62 @@
         "language": "cli",
         "description": "CLI entrypoint for SharpHound",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "SharpHound/__main__.py",
+        "language": "powershell",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "SharpHound/__main__.py",
+        "language": "powershell",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "SharpHound/__main__.py",
+        "language": "powershell",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "SharpHound/__main__.py",
+        "language": "powershell",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "SharpHound/__main__.py",
+        "language": "powershell",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "SharpHound/__main__.py",
+        "language": "powershell",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "SharpHound/__main__.py",
+        "language": "powershell",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -321,7 +382,51 @@
     ],
     "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `dotnet build -p:CommonSource=Stable`. Further invocations from upstream: `dotnet build -p:CommonSource=Local`; `dotnet build --tl:off               # To view CommonLib resolution logs`.",
     "when_to_use": "Use during the 'any' phase against surfaces [shell_windows, ad] in the Windows / AD category. Fits when the engagement needs: ![GitHub all releases](https://img.shields.io/github/downloads/SpecterOps/SharpHound/total).",
-    "why_to_use": "Prefer this tool based on upstream description: The latest build of SharpHound will always be found here."
+    "why_to_use": "Prefer this tool based on upstream description: The latest build of SharpHound will always be found here.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:SpecterOps/SharpHound",
+        "successor": "github:unknown/nishang",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/nishang (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:SpecterOps/SharpHound",
+        "successor": "github:unknown/PowerSploit",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/PowerSploit (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:SpecterOps/SharpHound",
+        "successor": "github:unknown/Empire",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/Empire (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:SpecterOps/SharpHound",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:SpecterOps/SharpHound",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:SpecterOps/SharpHound",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -332,8 +437,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -342,48 +448,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "windows___ad",
-    "toolbox",
-    "github",
+    "offensive",
+    "sharphound",
     "specterops",
-    "lang:powershell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Windows / AD, use SharpHound because ![GitHub all releases](https://img.shields.io/github/downloads/SpecterOps/SharpHound/total).",
-    "When you need a concrete invocation, run `dotnet build -p:CommonSource=Stable` as documented upstream for SharpHound.",
-    "When you need a concrete invocation, run `dotnet build -p:CommonSource=Local` as documented upstream for SharpHound.",
-    "When you need a concrete invocation, run `dotnet build --tl:off               # To view CommonLib resolution logs` as documented upstream for SharpHound.",
-    "When you need a concrete invocation, run `ATA/ATP)` as documented upstream for SharpHound.",
-    "When chaining Windows / AD tools, pair SharpHound with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `SharpHound --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "dotnet build -p:CommonSource=Stable",
-    "dotnet build -p:CommonSource=Local",
-    "dotnet build --tl:off               # To view CommonLib resolution logs",
-    "ATA/ATP)"
+    "cd toolboxes/SharpHound && python3 SharpHound.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/SharpHound && python3 SharpHound.py --help",
+    "cd toolboxes/SharpHound && python3 SharpHound.py --help",
+    "cd toolboxes/SharpHound && python3 SharpHound.py --help",
+    "cd toolboxes/SharpHound && python3 SharpHound.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpHound --output $KFIOSA_OUTPUT_DIR/SharpHound.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpHound --output $KFIOSA_OUTPUT_DIR/SharpHound.log"
   ],
   "attack_surface": [
-    "shell_windows",
-    "ad"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "powershell"
   ],

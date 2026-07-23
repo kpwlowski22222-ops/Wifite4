@@ -128,6 +128,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -292,23 +297,27 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github",
+    "lab-use"
   ],
   "use_cases": [
-    "When you need iOS device communication library, use libimobiledevice because A library to communicate with services on iOS devices using native protocols.",
-    "When you need a concrete invocation, run `./autogen.sh` as documented upstream for libimobiledevice.",
-    "When you need a concrete invocation, run `./autogen.sh --prefix=/opt/local --enable-debug` as documented upstream for libimobiledevice.",
-    "When you need a concrete invocation, run `./autogen.sh --with-gnutls` as documented upstream for libimobiledevice.",
-    "When you need a concrete invocation, run `./autogen.sh --with-mbedtls mbedtls_INCLUDES=/opt/local/include mbedtls_LIBDIR=/opt/local/lib` as documented upstream for libimobiledevice.",
-    "When chaining iOS device communication library tools, pair libimobiledevice with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `libimobiledevice --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "./autogen.sh",
-    "./autogen.sh --prefix=/opt/local --enable-debug",
-    "./autogen.sh --with-gnutls",
-    "./autogen.sh --with-mbedtls mbedtls_INCLUDES=/opt/local/include mbedtls_LIBDIR=/opt/local/lib",
-    "ideviceinfo --help"
+    "cd toolboxes/libimobiledevice && python3 libimobiledevice.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/libimobiledevice && python3 libimobiledevice.py --help",
+    "cd toolboxes/libimobiledevice && python3 libimobiledevice.py --help",
+    "cd toolboxes/libimobiledevice && python3 libimobiledevice.py --help",
+    "cd toolboxes/libimobiledevice && python3 libimobiledevice.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST libimobiledevice --output $KFIOSA_OUTPUT_DIR/libimobiledevice.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST libimobiledevice --output $KFIOSA_OUTPUT_DIR/libimobiledevice.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

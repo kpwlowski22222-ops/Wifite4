@@ -127,6 +127,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -307,8 +312,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -317,38 +323,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "steampipe",
+    "plugin",
+    "shodan",
     "turbot",
-    "lang:go",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use steampipe-plugin-shodan because ![image](https://hub.steampipe.io/images/plugins/turbot/shodan-social-graphic.png).",
-    "When the engagement is in the recon phase, use steampipe-plugin-shodan as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When chaining Reconnaissance tools, pair steampipe-plugin-shodan with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `steampipe-plugin-shodan --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
-  "command_examples": [],
+  "command_examples": [
+    "cd toolboxes/steampipe-plugin-shodan && python3 steampipe-plugin-shodan.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/steampipe-plugin-shodan && python3 steampipe-plugin-shodan.py --help",
+    "cd toolboxes/steampipe-plugin-shodan && python3 steampipe-plugin-shodan.py --help",
+    "cd toolboxes/steampipe-plugin-shodan && python3 steampipe-plugin-shodan.py --help",
+    "cd toolboxes/steampipe-plugin-shodan && python3 steampipe-plugin-shodan.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST steampipe-plugin-shodan --output $KFIOSA_OUTPUT_DIR/steampipe-plugin-shodan.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST steampipe-plugin-shodan --output $KFIOSA_OUTPUT_DIR/steampipe-plugin-shodan.log"
+  ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -132,6 +132,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -277,64 +282,57 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "command_and_control",
-    "toolbox",
-    "github",
+    "offensive",
+    "noke",
+    "c2",
     "0xmrniko",
-    "lang:powershell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Command and Control, use Noke-C2 because Noke-C2\n*Noke-C2 is a Command and Control Server and a Post-Exploitation Written in Powershell.*.",
-    "When the engagement is in the post_exploit phase, use Noke-C2 as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `Info            Show System Info.` as documented upstream for Noke-C2.",
-    "When you need a concrete invocation, run `Version         Show The Version Of the Tool(C2).` as documented upstream for Noke-C2.",
-    "When you need a concrete invocation, run `Author          Print Author Name In ASCII Text.` as documented upstream for Noke-C2.",
-    "When you need a concrete invocation, run `Exit            Exit The C2-Server And Powershell.` as documented upstream for Noke-C2.",
-    "When chaining Command and Control tools, pair Noke-C2 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Noke-C2 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Info            Show System Info.",
-    "Version         Show The Version Of the Tool(C2).",
-    "Author          Print Author Name In ASCII Text.",
-    "Exit            Exit The C2-Server And Powershell.",
-    "Upload          Upload File from Local to Remote-Host.",
-    "Download        Download File from Remote-Host to Local.",
-    "Screenshot      Save Screenshot from Remote-Host to Local.",
-    "SharpKatz       Run SharpKatz In Powershell (Priv Required).",
-    "PowerDump       Run PowerDump In Powershell (Priv Required).",
-    "SeatBelt        Run Seatbelt In Powersshell."
+    "cd toolboxes/Noke-C2 && python3 Noke-C2.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Noke-C2 && python3 Noke-C2.py --help",
+    "cd toolboxes/Noke-C2 && python3 Noke-C2.py --help",
+    "cd toolboxes/Noke-C2 && python3 Noke-C2.py --help",
+    "cd toolboxes/Noke-C2 && python3 Noke-C2.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Noke-C2 --output $KFIOSA_OUTPUT_DIR/Noke-C2.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Noke-C2 --output $KFIOSA_OUTPUT_DIR/Noke-C2.log"
   ],
   "attack_surface": [
-    "web",
-    "shell_windows",
-    "shell_linux"
+    "web"
   ],
-  "phase_hint": "post_exploit",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

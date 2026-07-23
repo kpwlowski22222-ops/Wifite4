@@ -127,6 +127,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -255,8 +260,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -265,38 +271,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
-    "toniblyx",
-    "lab_only",
+    "offensive",
+    "my",
+    "arsenal",
+    "aws",
+    "security",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need OSINT, use my-arsenal-of-aws-security-tools because my-arsenal-of-aws-security-tools.",
-    "When the engagement is in the recon phase, use my-arsenal-of-aws-security-tools as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `my-arsenal-of-aws-security-tools --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/my-arsenal-of-aws-security-tools.log` as documented upstream for my-arsenal-of-aws-security-tools.",
-    "When chaining OSINT tools, pair my-arsenal-of-aws-security-tools with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `my-arsenal-of-aws-security-tools --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "my-arsenal-of-aws-security-tools --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/my-arsenal-of-aws-security-tools.log"
+    "cd toolboxes/my-arsenal-of-aws-security-tools && python3 my-arsenal-of-aws-security-tools.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/my-arsenal-of-aws-security-tools && python3 my-arsenal-of-aws-security-tools.py --help",
+    "cd toolboxes/my-arsenal-of-aws-security-tools && python3 my-arsenal-of-aws-security-tools.py --help",
+    "cd toolboxes/my-arsenal-of-aws-security-tools && python3 my-arsenal-of-aws-security-tools.py --help",
+    "cd toolboxes/my-arsenal-of-aws-security-tools && python3 my-arsenal-of-aws-security-tools.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST my-arsenal-of-aws-security-tools --output $KFIOSA_OUTPUT_DIR/my-arsenal-of-aws-security-tools.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST my-arsenal-of-aws-security-tools --output $KFIOSA_OUTPUT_DIR/my-arsenal-of-aws-security-tools.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

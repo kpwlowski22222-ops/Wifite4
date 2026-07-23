@@ -127,6 +127,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -270,8 +275,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -280,47 +286,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "ftx",
+    "wifi",
+    "red",
     "builtbyraman",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
-  ],
-  "use_cases": [
-    "When you need Wireless, use FTX_WiFi_Red because Reference guides for a Field Training Exercise (FTX) covering wireless network exploitation and GPS-based geolocation of a target access point.",
-    "When you need a concrete invocation, run `sudo gunzip /usr/share/wordlists/rockyou.txt.gz` as documented upstream for FTX_WiFi_Red.",
-    "When you need a concrete invocation, run `wget -q -O /tmp/google-earth.deb $KFIOSA_TARGET_URL` as documented upstream for FTX_WiFi_Red.",
-    "When you need a concrete invocation, run `sudo dpkg -i /tmp/google-earth.deb` as documented upstream for FTX_WiFi_Red.",
-    "When you need a concrete invocation, run `sudo apt-get install -f -y   # resolve any dependency issues` as documented upstream for FTX_WiFi_Red.",
-    "When chaining Wireless tools, pair FTX_WiFi_Red with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `FTX_WiFi_Red --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
-  ],
-  "command_examples": [
-    "sudo gunzip /usr/share/wordlists/rockyou.txt.gz",
-    "wget -q -O /tmp/google-earth.deb $KFIOSA_TARGET_URL",
-    "sudo dpkg -i /tmp/google-earth.deb",
-    "sudo apt-get install -f -y   # resolve any dependency issues",
-    "wget -O tplink_smartplug.py $KFIOSA_TARGET_URL",
-    "sudo apt-get install -y gpsd gpsd-clients"
-  ],
-  "attack_surface": [
+    "web",
     "wifi_2_4_ghz",
     "wifi_5_ghz",
-    "shell_linux"
+    "kfiosa",
+    "indexed"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/FTX_WiFi_Red && python3 FTX_WiFi_Red.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/FTX_WiFi_Red && python3 FTX_WiFi_Red.py --help",
+    "cd toolboxes/FTX_WiFi_Red && python3 FTX_WiFi_Red.py --help",
+    "cd toolboxes/FTX_WiFi_Red && python3 FTX_WiFi_Red.py --help",
+    "cd toolboxes/FTX_WiFi_Red && python3 FTX_WiFi_Red.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST FTX_WiFi_Red --output $KFIOSA_OUTPUT_DIR/FTX_WiFi_Red.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST FTX_WiFi_Red --output $KFIOSA_OUTPUT_DIR/FTX_WiFi_Red.log"
+  ],
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

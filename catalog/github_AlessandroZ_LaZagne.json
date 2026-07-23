@@ -1,16 +1,13 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "laZagne.exe all",
-    "laZagne.exe browsers",
-    "laZagne.exe browsers -firefox",
-    "laZagne.exe all -oN",
-    "laZagne.exe all -oA -output C:\\Users\\test\\Desktop",
-    "laZagne.exe -h",
-    "laZagne.exe browsers -h",
-    "laZagne.exe all -vv",
-    "laZagne.exe all -quiet -oA",
-    "laZagne.exe all -password=$KFIOSA_SECRET"
+    "cd toolboxes/LaZagne && python3 LaZagne.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/LaZagne && python3 LaZagne.py --help",
+    "cd toolboxes/LaZagne && python3 LaZagne.py --help",
+    "cd toolboxes/LaZagne && python3 LaZagne.py --help",
+    "cd toolboxes/LaZagne && python3 LaZagne.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST LaZagne --output $KFIOSA_OUTPUT_DIR/LaZagne.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST LaZagne --output $KFIOSA_OUTPUT_DIR/LaZagne.log"
   ],
   "documentation": {
     "readme": "Description ---- The LaZagne project is an open source application used to retrieve lots of passwords stored on a local computer. Each software stores its passwords using different techniques (plaintext, APIs, custom algorithms, databases, etc.). This tool has been developed for the purpose of finding these passwords for the most commonly-used software.",
@@ -135,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -307,7 +309,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -316,13 +320,12 @@
   },
   "url": "https://github.com/AlessandroZ/LaZagne",
   "use_cases": [
-    "When you need post_exploitation, use LaZagne because Description ---- The LaZagne project is an open source application used to retrieve lots of passwords stored on a local computer. Each software stores its passw.",
-    "When you need a concrete invocation, run `laZagne.exe all` as documented upstream for LaZagne.",
-    "When you need a concrete invocation, run `laZagne.exe browsers` as documented upstream for LaZagne.",
-    "When you need a concrete invocation, run `laZagne.exe browsers -firefox` as documented upstream for LaZagne.",
-    "When you need a concrete invocation, run `laZagne.exe all -oN` as documented upstream for LaZagne.",
-    "When chaining post_exploitation tools, pair LaZagne with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `LaZagne --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

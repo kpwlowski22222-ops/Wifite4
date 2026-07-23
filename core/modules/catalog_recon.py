@@ -39,7 +39,7 @@ import time
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -541,10 +541,13 @@ class CatalogRecon:
         last_err: Optional[str] = None
         for q in queries[:2]:  # cap at 2 queries to stay under rate limit
             try:
+                # Short timeout without API key — unauthenticated NVD is
+                # rate-limited and used to hang adaptive AIO for 20s×N.
+                req_timeout = 8 if not key else 15
                 r = requests.get(
                     base, headers={"apiKey": key} if key else {},
                     params={"keywordSearch": q, "resultsPerPage": 5},
-                    timeout=20,
+                    timeout=req_timeout,
                 )
                 if r.status_code != 200:
                     last_err = f"http {r.status_code}"
@@ -581,9 +584,11 @@ class CatalogRecon:
         self.outdir.mkdir(parents=True, exist_ok=True)
         out = self.outdir / f"weakpass_{self.bssid.replace(':', '')}_{int(time.time())}.txt"
         try:
+            # Adaptive AIO path cannot afford a 5-minute hang; 45s is
+            # enough for hcxpsktool --weakpass on typical hosts.
             r = subprocess.run(
                 ["hcxpsktool", "--weakpass", "-o", str(out)],
-                capture_output=True, text=True, timeout=300,
+                capture_output=True, text=True, timeout=45,
             )
         except subprocess.TimeoutExpired:
             return _finalize(self.recon["weakpass"], started, ok=False,
@@ -1588,7 +1593,14 @@ class CatalogRecon:
     # ------------------------------------------------------------------
     # Public entry point
     # ------------------------------------------------------------------
-    def run(self, with_probes: bool = False) -> Dict[str, Any]:
+    def run(
+        self,
+        with_probes: bool = False,
+        *,
+        budget_s: Optional[float] = None,
+        on_step: Optional[Callable[[str, str], None]] = None,
+        lean: bool = False,
+    ) -> Dict[str, Any]:
         """Run the six core recon steps sequentially, then optionally the
         nine novel passive probes. Returns the full recon dict.
 
@@ -1599,6 +1611,17 @@ class CatalogRecon:
         gets the enhanced passive recon pass in one shot. The nine
         probes are always available individually via
         :meth:`run_probe` / the ``recon_probe`` chain action.
+
+        Args:
+            with_probes: include the 9 novel passive probes.
+            budget_s: hard wall-clock budget for the whole pass. When
+                exceeded, remaining steps are marked ``skipped_budget``
+                and the pass returns immediately (keeps AIO/TUI alive).
+            on_step: optional ``callback(name, event)`` with
+                event in {``start``, ``done``, ``error``, ``skip``}.
+            lean: if True, only the 6 core steps (ignores with_probes)
+                and prefers shorter radio work — used by adaptive AIO
+                when external scan already provided target identity.
         """
         steps = (
             ("wps", self._wps_probe),
@@ -1608,7 +1631,7 @@ class CatalogRecon:
             ("kb_hits", self._kb_search),
             ("catalog_runs", self._catalog_iter),
         )
-        if with_probes:
+        if with_probes and not lean:
             # Novel probes only — core steps already listed above with their
             # legacy method names (_wps_probe, not _wps). Re-deriving via
             # f"_{m}" for m in RECON_PROBE_METHODS blew up with
@@ -1627,19 +1650,68 @@ class CatalogRecon:
                         "recon probe %r has no method _%s; skipping", m, m
                     )
             steps = steps + tuple(novel)
-        for name, fn in steps:
+
+        # Env budget override (seconds); 0/empty = no budget.
+        if budget_s is None:
+            raw = (os.environ.get("KFIOSA_RECON_BUDGET_S") or "").strip()
+            if raw:
+                try:
+                    budget_s = float(raw)
+                except ValueError:
+                    budget_s = None
+        t0 = time.time()
+        budget_hit = False
+        ran = 0
+        skipped = 0
+
+        def _cb(name: str, event: str) -> None:
+            if on_step is not None:
+                try:
+                    on_step(name, event)
+                except Exception:  # noqa: BLE001
+                    pass
+
+        for idx, (name, fn) in enumerate(steps):
+            if budget_s is not None and budget_s > 0:
+                elapsed = time.time() - t0
+                if elapsed >= float(budget_s):
+                    budget_hit = True
+                    # Mark remaining steps including this one
+                    for n2, _ in steps[idx:]:
+                        st = self.recon.get(n2) or _step(n2)
+                        if not st.get("finished_at") and st.get("error") is None:
+                            st["ok"] = False
+                            st["error"] = (
+                                f"skipped_budget after {elapsed:.1f}s "
+                                f"(budget={budget_s}s)"
+                            )
+                            st["skipped"] = True
+                            self.recon[n2] = st
+                            skipped += 1
+                            _cb(n2, "skip")
+                    break
+            _cb(name, "start")
             try:
                 fn()
+                ran += 1
+                _cb(name, "done")
             except Exception as e:
                 # Defensive: a step should not raise, but if it does, log
                 # and continue with the rest.
                 logger.exception("recon step %s raised: %s", name, e)
                 self.recon[name]["ok"] = False
                 self.recon[name]["error"] = f"unhandled: {e}"
+                ran += 1
+                _cb(name, "error")
         self.recon["finished_at"] = time.time()
         self.recon["duration_s"] = round(
             self.recon["finished_at"] - self.recon["started_at"], 3
         )
+        self.recon["steps_ran"] = ran
+        self.recon["steps_skipped_budget"] = skipped
+        self.recon["budget_s"] = budget_s
+        self.recon["budget_hit"] = budget_hit
+        self.recon["lean"] = bool(lean)
         self._persist()
         return self.recon
 

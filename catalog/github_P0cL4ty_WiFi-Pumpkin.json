@@ -22,17 +22,25 @@
     "wifi_2_4_ghz",
     "wifi_5_ghz",
     "wifi_6_ghz",
-    "polymorphic",
-    "target-adaptive"
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When the engagement is in the exploit phase, use WiFi-Pumpkin as a cataloged Wireless Security tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `WiFi-Pumpkin --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/WiFi-Pumpkin.log` as documented upstream for WiFi-Pumpkin.",
-    "When chaining Wireless Security tools, pair WiFi-Pumpkin with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `WiFi-Pumpkin --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use when the MediaTek MT7922 (mt7921e) is in monitor mode on wlan0mon and the BSSID/ssid recon has completed.",
+    "Use as a follow-up to airodump / kismet capture when the operator wants to attempt credential recovery or handshake capture.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "WiFi-Pumpkin --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/WiFi-Pumpkin.log"
+    "cd toolboxes/WiFi-Pumpkin && python3 WiFi-Pumpkin.py --interface wlan0mon --bssid $KFIOSA_TARGET_BSSID",
+    "cd toolboxes/WiFi-Pumpkin && python3 WiFi-Pumpkin.py --help",
+    "cd toolboxes/WiFi-Pumpkin && python3 WiFi-Pumpkin.py --help",
+    "cd toolboxes/WiFi-Pumpkin && python3 WiFi-Pumpkin.py --help",
+    "cd toolboxes/WiFi-Pumpkin && python3 WiFi-Pumpkin.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WiFi-Pumpkin --output $KFIOSA_OUTPUT_DIR/WiFi-Pumpkin.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST WiFi-Pumpkin --output $KFIOSA_OUTPUT_DIR/WiFi-Pumpkin.log"
   ],
   "risk": {
     "signals": [
@@ -182,6 +190,11 @@
       {
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
         "source": "v2_enhancement"
       }
     ],

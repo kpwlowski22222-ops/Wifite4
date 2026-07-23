@@ -131,6 +131,11 @@
         "name": "--output",
         "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -297,8 +302,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -307,50 +315,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "usbrip",
     "snovvcrash",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use usbrip because usbrip (inherited from \"USB Ripper\", not \"USB R.I.P.\") is a simple forensics tool with command line interface that lets you keep track of USB device artifacts (.",
-    "When you need a concrete invocation, run `Get usbrip banner.` as documented upstream for usbrip.",
-    "When you need a concrete invocation, run `Get USB event history.` as documented upstream for usbrip.",
-    "When you need a concrete invocation, run `Open USB event dump.` as documented upstream for usbrip.",
-    "When you need a concrete invocation, run `Generate a list of trusted (authorized) USB devices.` as documented upstream for usbrip.",
-    "When chaining Penetration Testing tools, pair usbrip with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `usbrip --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Get usbrip banner.",
-    "Get USB event history.",
-    "Open USB event dump.",
-    "Generate a list of trusted (authorized) USB devices.",
-    "Update storage -- add USB events to the existing storage. COMPRESSION_LEVEL is a number in [0..9].",
-    "Create storage -- create 7-Zip archive and add USB events to it according to the selected options.",
-    "Change password=$KFIOSA_SECRET the existing storage.",
-    "Get extra details about a specific USB device by its <VID> and/or <PID> from the USB ID database.",
-    "Update (download) the USB ID database."
+    "cd toolboxes/usbrip && python3 usbrip.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/usbrip && python3 usbrip.py --help",
+    "cd toolboxes/usbrip && python3 usbrip.py --help",
+    "cd toolboxes/usbrip && python3 usbrip.py --help",
+    "cd toolboxes/usbrip && python3 usbrip.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST usbrip --output $KFIOSA_OUTPUT_DIR/usbrip.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST usbrip --output $KFIOSA_OUTPUT_DIR/usbrip.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

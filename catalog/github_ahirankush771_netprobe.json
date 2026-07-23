@@ -190,6 +190,11 @@
         "name": "--yes",
         "description": "Skip confirmation prompts (use with care).",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -332,8 +337,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -342,54 +348,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "netprobe",
     "ahirankush771",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use netprobe because ⚡ NetProbe v2.0 — WiFi Network Scanner & Security Analyzer.",
-    "When the engagement is in the recon phase, use netprobe as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `sudo bash install.sh` as documented upstream for netprobe.",
-    "When you need a concrete invocation, run `bash install.sh` as documented upstream for netprobe.",
-    "When you need a concrete invocation, run `sudo python3 main.py` as documented upstream for netprobe.",
-    "When you need a concrete invocation, run `python3 main.py` as documented upstream for netprobe.",
-    "When chaining Reconnaissance tools, pair netprobe with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `netprobe --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo bash install.sh",
-    "bash install.sh",
-    "sudo python3 main.py",
-    "python3 main.py",
-    "sudo python3 main.py -t $KFIOSA_TARGET_HOST/24 -m scan",
-    "sudo python3 main.py -t $KFIOSA_TARGET_HOST -m ports",
-    "sudo python3 main.py -t $KFIOSA_TARGET_HOST/24 -m arp",
-    "python3 main.py -t $KFIOSA_TARGET_HOST -m osint",
-    "sudo python3 main.py -t $KFIOSA_TARGET_HOST/24 -m report -o reports/scan.html",
-    "sudo python3 main.py --monitor --interval 30"
+    "cd toolboxes/netprobe && python3 netprobe.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/netprobe && python3 netprobe.py --help",
+    "cd toolboxes/netprobe && python3 netprobe.py --help",
+    "cd toolboxes/netprobe && python3 netprobe.py --help",
+    "cd toolboxes/netprobe && python3 netprobe.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST netprobe --output $KFIOSA_OUTPUT_DIR/netprobe.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST netprobe --output $KFIOSA_OUTPUT_DIR/netprobe.log"
   ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

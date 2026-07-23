@@ -1,16 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest",
-    "docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL",
-    "docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL -system-chrome -headless",
-    "sudo snap install golang --classic",
-    "sudo install -d -m 0755 /etc/apt/keyrings",
-    "curl -fsSL $KFIOSA_TARGET_URL \\",
-    "echo \"deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] \\",
-    "$KFIOSA_TARGET_URL stable main\" \\",
-    "go install github.com/projectdiscovery/katana/cmd/katana@latest",
-    "katana -h"
+    "cd toolboxes/katana && python3 katana.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/katana && python3 katana.py --help",
+    "cd toolboxes/katana && python3 katana.py --help",
+    "cd toolboxes/katana && python3 katana.py --help",
+    "cd toolboxes/katana && python3 katana.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST katana --output $KFIOSA_OUTPUT_DIR/katana.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST katana --output $KFIOSA_OUTPUT_DIR/katana.log"
   ],
   "documentation": {
     "readme": "A next-generation crawling and spidering framework",
@@ -317,6 +314,11 @@
         "name": "-show-browser",
         "description": "show the browser on the screen with headless mode",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -488,7 +490,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -497,13 +501,12 @@
   },
   "url": "https://github.com/projectdiscovery/katana",
   "use_cases": [
-    "When you need recon, use katana because A next-generation crawling and spidering framework.",
-    "When you need a concrete invocation, run `CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest` as documented upstream for katana.",
-    "When you need a concrete invocation, run `docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL` as documented upstream for katana.",
-    "When you need a concrete invocation, run `docker run projectdiscovery/katana:latest -u $KFIOSA_TARGET_URL -system-chrome -headless` as documented upstream for katana.",
-    "When you need a concrete invocation, run `sudo snap install golang --classic` as documented upstream for katana.",
-    "When chaining recon tools, pair katana with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `katana --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

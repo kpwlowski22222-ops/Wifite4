@@ -131,6 +131,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--listen",
+        "description": "Bind and listen on the given address/port.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -286,8 +291,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -296,47 +302,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "wifi",
+    "is",
+    "radio",
     "tdiprima",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
-  ],
-  "use_cases": [
-    "When you need Wireless, use wifi-is-radio because WiFi Security Learning Kit 🛜.",
-    "When you need a concrete invocation, run `python3 01_network_info.py` as documented upstream for wifi-is-radio.",
-    "When you need a concrete invocation, run `sudo python3 02_arp_discovery.py` as documented upstream for wifi-is-radio.",
-    "When you need a concrete invocation, run `sudo python3 04_dns_observer.py` as documented upstream for wifi-is-radio.",
-    "When you need a concrete invocation, run `sudo python3 05_traffic_analyzer.py` as documented upstream for wifi-is-radio.",
-    "When chaining Wireless tools, pair wifi-is-radio with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `wifi-is-radio --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
-  ],
-  "command_examples": [
-    "python3 01_network_info.py",
-    "sudo python3 02_arp_discovery.py",
-    "sudo python3 04_dns_observer.py",
-    "sudo python3 05_traffic_analyzer.py",
-    "sudo python3 07_security_audit.py"
-  ],
-  "attack_surface": [
+    "web",
     "wifi_2_4_ghz",
     "wifi_5_ghz",
-    "shell_linux"
+    "ad",
+    "kfiosa"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/wifi-is-radio && python3 wifi-is-radio.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi-is-radio && python3 wifi-is-radio.py --help",
+    "cd toolboxes/wifi-is-radio && python3 wifi-is-radio.py --help",
+    "cd toolboxes/wifi-is-radio && python3 wifi-is-radio.py --help",
+    "cd toolboxes/wifi-is-radio && python3 wifi-is-radio.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-is-radio --output $KFIOSA_OUTPUT_DIR/wifi-is-radio.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-is-radio --output $KFIOSA_OUTPUT_DIR/wifi-is-radio.log"
+  ],
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "ad"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

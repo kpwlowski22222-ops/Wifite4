@@ -176,6 +176,11 @@
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -338,16 +343,25 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need MS-FSRVP coerce-auth utility, use ShadowCoerce because ShadowCoerce MS-FSRVP coercion abuse PoC.",
-    "When you need a concrete invocation, run `shadowcoerce.py -d \"domain\" -u \"user\" -p \"password\" LISTENER TARGET` as documented upstream for ShadowCoerce.",
-    "When chaining MS-FSRVP coerce-auth utility tools, pair ShadowCoerce with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `ShadowCoerce --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "shadowcoerce.py -d \"domain\" -u \"user\" -p \"password\" LISTENER TARGET"
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ShadowCoerce --output $KFIOSA_OUTPUT_DIR/ShadowCoerce.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ShadowCoerce --output $KFIOSA_OUTPUT_DIR/ShadowCoerce.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

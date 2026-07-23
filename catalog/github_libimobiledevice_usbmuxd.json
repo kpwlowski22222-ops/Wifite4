@@ -129,6 +129,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -293,22 +298,26 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need USB multiplexing daemon for iOS, use usbmuxd because A socket daemon to multiplex connections from and to iOS devices.",
-    "When you need a concrete invocation, run `./autogen.sh` as documented upstream for usbmuxd.",
-    "When you need a concrete invocation, run `./autogen.sh --prefix=/opt/local --without-preflight --without-systemd` as documented upstream for usbmuxd.",
-    "When you need a concrete invocation, run `./autogen.sh --help` as documented upstream for usbmuxd.",
-    "When you need a concrete invocation, run `usbmuxd --help` as documented upstream for usbmuxd.",
-    "When chaining USB multiplexing daemon for iOS tools, pair usbmuxd with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `usbmuxd --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "./autogen.sh",
-    "./autogen.sh --prefix=/opt/local --without-preflight --without-systemd",
-    "./autogen.sh --help",
-    "usbmuxd --help"
+    "cd toolboxes/usbmuxd && python3 usbmuxd.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
+    "cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
+    "cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
+    "cd toolboxes/usbmuxd && python3 usbmuxd.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST usbmuxd --output $KFIOSA_OUTPUT_DIR/usbmuxd.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST usbmuxd --output $KFIOSA_OUTPUT_DIR/usbmuxd.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

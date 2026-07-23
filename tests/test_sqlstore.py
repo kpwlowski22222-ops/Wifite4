@@ -299,10 +299,14 @@ class TestThreadLocal:
     def test_concurrent_writes_dont_collide(self, tmp_db: Path) -> None:
         # Two threads writing to different sids concurrently
         # must NOT collide or block each other.
+        errors: list = []
+
         def writer(sid: str) -> None:
             for i in range(20):
-                sqlstore.append_log(sid, "info", f"msg-{i}",
-                                    db_path=tmp_db)
+                r = sqlstore.append_log(sid, "info", f"msg-{i}",
+                                        db_path=tmp_db)
+                if not r.get("ok"):
+                    errors.append((sid, i, r))
 
         t1 = threading.Thread(target=writer, args=("s1",))
         t2 = threading.Thread(target=writer, args=("s2",))
@@ -312,6 +316,7 @@ class TestThreadLocal:
         t2.join()
         s1_rows = sqlstore.list_log("s1", db_path=tmp_db)
         s2_rows = sqlstore.list_log("s2", db_path=tmp_db)
+        assert not errors, f"append_log returned failures: {errors[:5]}"
         assert len(s1_rows) == 20
         assert len(s2_rows) == 20
 

@@ -182,6 +182,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -369,8 +374,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -379,45 +387,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "volatility3",
     "volatilityfoundation",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use volatility3 because Volatility 3: The volatile memory extraction framework.",
-    "When you need a concrete invocation, run `vol -h` as documented upstream for volatility3.",
-    "When you need a concrete invocation, run `vol -f /home/user/samples/stuxnet.vmem windows.info` as documented upstream for volatility3.",
-    "When you need a concrete invocation, run `cd volatility3/` as documented upstream for volatility3.",
-    "When you need a concrete invocation, run `python3 -m venv venv && . venv/bin/activate` as documented upstream for volatility3.",
-    "When chaining Penetration Testing tools, pair volatility3 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `volatility3 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "vol -h",
-    "vol -f /home/user/samples/stuxnet.vmem windows.info",
-    "cd volatility3/",
-    "python3 -m venv venv && . venv/bin/activate"
+    "cd toolboxes/volatility3 && python3 volatility3.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/volatility3 && python3 volatility3.py --help",
+    "cd toolboxes/volatility3 && python3 volatility3.py --help",
+    "cd toolboxes/volatility3 && python3 volatility3.py --help",
+    "cd toolboxes/volatility3 && python3 volatility3.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST volatility3 --output $KFIOSA_OUTPUT_DIR/volatility3.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST volatility3 --output $KFIOSA_OUTPUT_DIR/volatility3.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

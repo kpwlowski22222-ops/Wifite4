@@ -1,9 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "uname -r",
-    "insmod diamorphine.ko",
-    "kill -63 0"
+    "cd toolboxes/Diamorphine && python3 Diamorphine.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Diamorphine && python3 Diamorphine.py --help",
+    "cd toolboxes/Diamorphine && python3 Diamorphine.py --help",
+    "cd toolboxes/Diamorphine && python3 Diamorphine.py --help",
+    "cd toolboxes/Diamorphine && python3 Diamorphine.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Diamorphine --output $KFIOSA_OUTPUT_DIR/Diamorphine.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Diamorphine --output $KFIOSA_OUTPUT_DIR/Diamorphine.log"
   ],
   "documentation": {
     "readme": "Diamorphine is a LKM rootkit for Linux Kernels 2.6.x/3.x/4.x/5.x/6.x (x86/x8664 and ARM64)",
@@ -128,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -293,7 +302,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -302,12 +313,12 @@
   },
   "url": "https://github.com/m0nad/Diamorphine",
   "use_cases": [
-    "When you need c2, use Diamorphine because Diamorphine is a LKM rootkit for Linux Kernels 2.6.x/3.x/4.x/5.x/6.x (x86/x8664 and ARM64).",
-    "When you need a concrete invocation, run `uname -r` as documented upstream for Diamorphine.",
-    "When you need a concrete invocation, run `insmod diamorphine.ko` as documented upstream for Diamorphine.",
-    "When you need a concrete invocation, run `kill -63 0` as documented upstream for Diamorphine.",
-    "When chaining c2 tools, pair Diamorphine with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Diamorphine --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

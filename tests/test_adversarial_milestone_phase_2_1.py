@@ -216,67 +216,48 @@ def test_no_inline_credentials_in_anti_forensic_module():
 # The model is the operator's preferred code-architect
 # ---------------------------------------------------------------------------
 def test_operator_code_architect_model_is_correct():
-    """The code-architect entry in DEFAULT_FALLBACK_ORDER must
-    point at the operator's preferred chain. After the 2026-07-22
-    Phase 4 swap, the primary is ``minimax-m3:cloud`` (Tier 0)
-    and the local Tier-1 fallback is the roleplaiapp
-    Qwen2.5-Coder-14B-Instruct-Uncensored Q4_K_M redistribution
-    (now at index 2 in DEFAULT_FALLBACK_ORDER; HERETIC overlay
-    at 1)."""
+    """DEFAULT_FALLBACK_ORDER is fully uncensored / offensive-first.
+
+    Tier 0: local Qwen2.5-Coder Uncensored (code + tool tasks).
+    Tier 1: HERETIC planning overlay for chain swap.
+    Cloud tags must not lead the list (they refuse offensive work).
+    """
     from core.ai_backend.exploit_generator import DEFAULT_FALLBACK_ORDER
-    # Tier 0 must be the cloud primary.
     tier0 = DEFAULT_FALLBACK_ORDER[0]
     fid0 = tier0[0]
-    assert fid0 == "minimax-m3:cloud", (
-        f"Tier 0 must be the cloud primary; got {fid0!r}"
+    assert "Coder" in fid0 and "Uncensored" in fid0, (
+        f"Tier 0 must be uncensored code-architect; got {fid0!r}"
     )
-    # Tier 1 must be the HERETIC swap-rule overlay.
+    assert fid0 != "minimax-m3:cloud"
     tier1 = DEFAULT_FALLBACK_ORDER[1]
     fid1 = tier1[0]
     assert "HERETIC" in fid1, (
         f"Tier 1 must be the HERETIC swap-rule overlay; got {fid1!r}"
     )
-    # Tier 2 must be the roleplaiapp Qwen2.5-Coder-14B-Instruct-
-    # Uncensored Q4_K_M (the operator's preferred local code-
-    # architect fallback).
-    tier2 = DEFAULT_FALLBACK_ORDER[2]
-    fid2 = tier2[0]
-    assert "Coder-14B" in fid2
-    assert "Uncensored" in fid2
-    assert "Q4_K_M" in fid2
-    assert "roleplaiapp" in fid2, (
-        f"Tier 2 must be the roleplaiapp redistribution (operator's "
-        f"preferred local fallback); got {fid2!r}"
-    )
 
 
-def test_target_model_catalog_uses_minimax_primary():
-    """The microsoft/android/ios vertical catalogs must all point
-    at the cloud primary ``minimax-m3:cloud`` (operator's preferred
-    identity as of 2026-07-22). The roleplaiapp Qwen2.5-Coder-14B
-    is now a Tier-1 local fallback reachable through MODEL_CATALOG
-    ['tier1_local_fallback'], not the vertical default."""
-    from core.ai_backend import TARGET_MODEL_CATALOG
+def test_target_model_catalog_uses_uncensored_primary():
+    """microsoft/android/ios verticals all use the uncensored
+    local primary (Qwen2.5-Coder Uncensored), not cloud minimax."""
+    from core.ai_backend import TARGET_MODEL_CATALOG, MODEL_CATALOG
     for tc in ("microsoft", "android", "ios"):
         m = TARGET_MODEL_CATALOG[tc]
-        assert m == "minimax-m3:cloud", (
-            f"vertical {tc!r} must point at the cloud primary; "
-            f"got {m!r}"
+        assert m == MODEL_CATALOG["primary"], (
+            f"vertical {tc!r} must use uncensored primary; got {m!r}"
         )
+        assert "Uncensored" in m
 
 
-def test_model_catalog_has_minimax_primary_and_qwen_fallback():
-    """MODEL_CATALOG['primary'] is the new cloud primary;
-    MODEL_CATALOG['tier1_local_fallback'] is the roleplaiapp
-    Qwen2.5-Coder-14B-Instruct-Uncensored Q4_K_M redistribution
-    (local fallback for offline / un-authenticated runs)."""
+def test_model_catalog_has_uncensored_primary_and_heretic_fallback():
+    """MODEL_CATALOG['primary'] is local uncensored code-architect;
+    planning overlay is HERETIC; cloud is opt-in only."""
     from core.ai_backend import MODEL_CATALOG
-    assert MODEL_CATALOG["primary"] == "minimax-m3:cloud"
+    assert "Uncensored" in MODEL_CATALOG["primary"]
+    assert "Coder" in MODEL_CATALOG["primary"]
+    assert MODEL_CATALOG["primary"] != "minimax-m3:cloud"
     t1 = MODEL_CATALOG["tier1_local_fallback"]
-    assert "roleplaiapp" in t1
-    assert "Qwen2.5-Coder-14B" in t1
-    assert "Uncensored" in t1
-    assert "Q4_K_M" in t1
+    assert "HERETIC" in t1
+    assert MODEL_CATALOG.get("cloud_optional") == "minimax-m3:cloud"
 
 
 # ---------------------------------------------------------------------------

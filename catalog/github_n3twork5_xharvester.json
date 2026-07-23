@@ -132,6 +132,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -326,8 +331,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -336,55 +342,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "xharvester",
     "n3twork5",
-    "lang:python",
-    "lang:shell",
-    "lang:powershell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use xharvester because ⚡ **xharvester v1.0** is a cross-platform enhanced Python-based reconnaissance and exploitation suite designed for security assessments of radio frequency (RF),.",
-    "When the engagement is in the recon phase, use xharvester as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `python3 -m venv venv` as documented upstream for xharvester.",
-    "When you need a concrete invocation, run `source venv/bin/activate` as documented upstream for xharvester.",
-    "When you need a concrete invocation, run `python -m venv venv` as documented upstream for xharvester.",
-    "When you need a concrete invocation, run `sudo apt install libdbus-1-dev libgirepository1.0-dev libcairo2-dev \\` as documented upstream for xharvester.",
-    "When chaining Reconnaissance tools, pair xharvester with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `xharvester --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "python3 -m venv venv",
-    "source venv/bin/activate",
-    "python -m venv venv",
-    "sudo apt install libdbus-1-dev libgirepository1.0-dev libcairo2-dev \\",
-    "sudo ./xharvester",
-    "pkg update && pkg upgrade -y",
-    "pkg install git python tsu aircrack-ng iptables hostapd dnsmasq -y",
-    "tsu ./xharvester",
-    "./install_ios.sh",
-    "./icsim vcan0"
+    "cd toolboxes/xharvester && python3 xharvester.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/xharvester && python3 xharvester.py --help",
+    "cd toolboxes/xharvester && python3 xharvester.py --help",
+    "cd toolboxes/xharvester && python3 xharvester.py --help",
+    "cd toolboxes/xharvester && python3 xharvester.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST xharvester --output $KFIOSA_OUTPUT_DIR/xharvester.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST xharvester --output $KFIOSA_OUTPUT_DIR/xharvester.log"
   ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

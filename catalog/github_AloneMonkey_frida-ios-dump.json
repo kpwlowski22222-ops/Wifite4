@@ -129,6 +129,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -304,25 +309,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need IPA dumper (decrypted App Store apps), use frida-ios-dump because frida-ios-dump Pull a decrypted IPA from a jailbroken device.",
-    "When you need a concrete invocation, run `./dump.py Aftenposten` as documented upstream for frida-ios-dump.",
-    "When you need a concrete invocation, run `Dumping Aftenposten to /var/folders/wn/9v1hs8ds6nv_xj7g95zxyl140000gn/T` as documented upstream for frida-ios-dump.",
-    "When you need a concrete invocation, run `start dump /var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/AftenpostenApp` as documented upstream for frida-ios-dump.",
-    "When you need a concrete invocation, run `start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/AFNetworking.framework/AFNetworking` as documented upstream for frida-ios-dump.",
-    "When chaining IPA dumper (decrypted App Store apps) tools, pair frida-ios-dump with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `frida-ios-dump --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "./dump.py Aftenposten",
-    "Dumping Aftenposten to /var/folders/wn/9v1hs8ds6nv_xj7g95zxyl140000gn/T",
-    "start dump /var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/AftenpostenApp",
-    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/AFNetworking.framework/AFNetworking",
-    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/ATInternet_iOS_ObjC_SDK.framework/ATInternet_iOS_ObjC_SDK",
-    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/SPTEventCollector.framework/SPTEventCollector",
-    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/SPiDSDK.framework/SPiDSDK",
-    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCore.dylib",
-    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCoreData.dylib",
-    "start dump /private/var/containers/Bundle/Application/66423A80-0AFE-471C-BC9B-B571107D3C27/AftenpostenApp.app/Frameworks/libswiftCoreGraphics.dylib"
+    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
+    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
+    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
+    "cd toolboxes/frida-ios-dump && python3 frida-ios-dump.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST frida-ios-dump --output $KFIOSA_OUTPUT_DIR/frida-ios-dump.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST frida-ios-dump --output $KFIOSA_OUTPUT_DIR/frida-ios-dump.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

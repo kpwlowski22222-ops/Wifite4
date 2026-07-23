@@ -1,8 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "gradle -I gradle/support/fetchDependencies.gradle",
-    "Ghidra installation directory."
+    "cd toolboxes/ghidra && python3 ghidra.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ghidra && python3 ghidra.py --help",
+    "cd toolboxes/ghidra && python3 ghidra.py --help",
+    "cd toolboxes/ghidra && python3 ghidra.py --help",
+    "cd toolboxes/ghidra && python3 ghidra.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ghidra --output $KFIOSA_OUTPUT_DIR/ghidra.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ghidra --output $KFIOSA_OUTPUT_DIR/ghidra.log"
   ],
   "documentation": {
     "readme": "Ghidra Software Reverse Engineering Framework Ghidra is a software reverse engineering (SRE) framework created and maintained by the [National Security Agency][nsa] Research Directorate. This framework includes a suite of full-featured, high-end software analysis tools that enable users to analyze compiled code on a variety of platforms including Windows, macOS, and Linux. Capabilities include disassembly, assembly, decompilation, graphing, and scripting, along with hundreds of other features. Ghidra supports a wide variety of processor instruction sets and executable formats and can be run in both user-interactive and automated modes. Users may also develop their own Ghidra extension components and/or scripts using Java or Python.",
@@ -132,6 +137,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -296,7 +306,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -305,11 +317,12 @@
   },
   "url": "https://github.com/NationalSecurityAgency/ghidra",
   "use_cases": [
-    "When you need frameworks, use ghidra because Ghidra Software Reverse Engineering Framework Ghidra is a software reverse engineering (SRE) framework created and maintained by the [National Security Agency][.",
-    "When you need a concrete invocation, run `gradle -I gradle/support/fetchDependencies.gradle` as documented upstream for ghidra.",
-    "When you need a concrete invocation, run `Ghidra installation directory.` as documented upstream for ghidra.",
-    "When chaining frameworks tools, pair ghidra with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `ghidra --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

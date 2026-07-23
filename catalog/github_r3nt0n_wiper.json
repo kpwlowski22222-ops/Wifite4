@@ -123,6 +123,11 @@
         "name": "-u",
         "description": "auto-search mode: locate actual user home directory and wipes it",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -196,7 +201,51 @@
     ],
     "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `usage: wiper.py [-h] [-i] [-f path] [-p path] [-r path] [-t] [-u] [-T] [-U] [-s]`. Further invocations from upstream: `an unbooted system (e.g. /media/drive)`. ](http://img.shields.io/badge/version-v1.0-orange.svg) ](http://img.shields.io/badge/python-3.2+-blue.svg) ](https://img.shields.io/badge/license-GPL%203.0-brightgreen.svg).",
     "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: ![[Version 1.0](https://github.com/R3nt0n)](http://img.shields.io/badge/version-v1.0-orange.svg)\n![[Python 3.2+](https://github.com/R3nt0n)](http://img.shields.io/badge/python-3.2+-blue.svg)\n![[GPL-3.0 License](https://g.",
-    "why_to_use": "Prefer this tool based on upstream description: wiper Toolkit to perform secure destruction of sensitive virtual data, temporary files and swap memories."
+    "why_to_use": "Prefer this tool based on upstream description: wiper Toolkit to perform secure destruction of sensitive virtual data, temporary files and swap memories.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:r3nt0n/wiper",
+        "successor": "github:volatilityfoundation/volatility3",
+        "note": "Shares attack_surface+phase_hint+tag with volatilityfoundation/volatility3 (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:r3nt0n/wiper",
+        "successor": "github:varungor365/memphantom",
+        "note": "Shares attack_surface+phase_hint+tag with varungor365/memphantom (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:r3nt0n/wiper",
+        "successor": "github:unknown/CrackMapExec",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/CrackMapExec (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:r3nt0n/wiper",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:r3nt0n/wiper",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:r3nt0n/wiper",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -207,8 +256,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -217,43 +269,51 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "wiper",
     "r3nt0n",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use wiper because ![[Version 1.0](https://github.com/R3nt0n)](http://img.shields.io/badge/version-v1.0-orange.svg)\n![[Python 3.2+](https://github.com/R3nt0n)](http://img.shields.",
-    "When you need a concrete invocation, run `usage: wiper.py [-h] [-i] [-f path] [-p path] [-r path] [-t] [-u] [-T] [-U] [-s]` as documented upstream for wiper.",
-    "When you need a concrete invocation, run `an unbooted system (e.g. /media/drive)` as documented upstream for wiper.",
-    "When chaining Penetration Testing tools, pair wiper with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `wiper --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "usage: wiper.py [-h] [-i] [-f path] [-p path] [-r path] [-t] [-u] [-T] [-U] [-s]",
-    "an unbooted system (e.g. /media/drive)"
+    "cd toolboxes/wiper && python3 wiper.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/wiper && python3 wiper.py --help",
+    "cd toolboxes/wiper && python3 wiper.py --help",
+    "cd toolboxes/wiper && python3 wiper.py --help",
+    "cd toolboxes/wiper && python3 wiper.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wiper --output $KFIOSA_OUTPUT_DIR/wiper.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wiper --output $KFIOSA_OUTPUT_DIR/wiper.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
   ],

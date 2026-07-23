@@ -40,6 +40,86 @@
         "name": "--summary",
         "description": "summary file for writing status updates",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -50,6 +130,62 @@
         "language": "cli",
         "description": "CLI entrypoint for hostapd-mana",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "hostapd-mana/__main__.py",
+        "language": "c",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "hostapd-mana/__main__.py",
+        "language": "c",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "hostapd-mana/__main__.py",
+        "language": "c",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "hostapd-mana/__main__.py",
+        "language": "c",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "hostapd-mana/__main__.py",
+        "language": "c",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "hostapd-mana/__main__.py",
+        "language": "c",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "hostapd-mana/__main__.py",
+        "language": "c",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [],
@@ -111,7 +247,51 @@
     ],
     "how_to_use": "Clone or install `hostapd-mana` from its upstream repository, then run `hostapd-mana --help` (or the README entrypoint) to confirm flags.",
     "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: hostapd-mana\n============.",
-    "why_to_use": "Prefer this tool based on upstream description: A featureful rogue access point first presented at Defcon 22 by Dominic White (@singe) & Ian de Villiers @ sensepost (research@sensepost.com)."
+    "why_to_use": "Prefer this tool based on upstream description: A featureful rogue access point first presented at Defcon 22 by Dominic White (@singe) & Ian de Villiers @ sensepost (research@sensepost.com).",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:sensepost/hostapd-mana",
+        "successor": "github:wireshark/wireshark",
+        "note": "Shares attack_surface+phase_hint+tag with wireshark/wireshark (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sensepost/hostapd-mana",
+        "successor": "github:vanhoefm/krackattacks-scripts",
+        "note": "Shares attack_surface+phase_hint+tag with vanhoefm/krackattacks-scripts (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sensepost/hostapd-mana",
+        "successor": "github:vanhoefm/dragonslayer",
+        "note": "Shares attack_surface+phase_hint+tag with vanhoefm/dragonslayer (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sensepost/hostapd-mana",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sensepost/hostapd-mana",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sensepost/hostapd-mana",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -122,8 +302,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -132,41 +313,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "hostapd",
+    "mana",
     "sensepost",
-    "lang:c",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Wireless, use hostapd-mana because hostapd-mana\n============.",
-    "When chaining Wireless tools, pair hostapd-mana with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `hostapd-mana --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
-  "command_examples": [],
+  "command_examples": [
+    "cd toolboxes/hostapd-mana && python3 hostapd-mana.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/hostapd-mana && python3 hostapd-mana.py --help",
+    "cd toolboxes/hostapd-mana && python3 hostapd-mana.py --help",
+    "cd toolboxes/hostapd-mana && python3 hostapd-mana.py --help",
+    "cd toolboxes/hostapd-mana && python3 hostapd-mana.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST hostapd-mana --output $KFIOSA_OUTPUT_DIR/hostapd-mana.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST hostapd-mana --output $KFIOSA_OUTPUT_DIR/hostapd-mana.log"
+  ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "c",
     "python"

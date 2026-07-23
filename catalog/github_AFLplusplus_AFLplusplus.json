@@ -1,13 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "docker run -ti -v /location/of/your/target:/src aflplusplus/aflplusplus",
-    "CC=/path/to/afl-cc CXX=/path/to/afl-c++ ./configure --disable-shared",
-    "./afl-fuzz -i seeds_dir -o output_dir -- \\",
-    "cat output_dir/crashes/id:000000,* | /path/to/tested/program [...program's cmdline...]",
-    "Richard W. M. Jones                   Alexander Cherepanov",
-    "David A. Wheeler                      Turo Lamminen",
-    "Joshua J. Drake                       Toby Hutton"
+    "cd toolboxes/AFLplusplus && python3 AFLplusplus.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/AFLplusplus && python3 AFLplusplus.py --help",
+    "cd toolboxes/AFLplusplus && python3 AFLplusplus.py --help",
+    "cd toolboxes/AFLplusplus && python3 AFLplusplus.py --help",
+    "cd toolboxes/AFLplusplus && python3 AFLplusplus.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AFLplusplus --output $KFIOSA_OUTPUT_DIR/AFLplusplus.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AFLplusplus --output $KFIOSA_OUTPUT_DIR/AFLplusplus.log"
   ],
   "documentation": {
     "readme": "Repository: https://github.com/AFLplusplus/AFLplusplus",
@@ -138,6 +138,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -306,7 +311,10 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github",
+    "lab-use"
   ],
   "trust": {
     "official_kali": false,
@@ -315,13 +323,12 @@
   },
   "url": "https://github.com/AFLplusplus/AFLplusplus",
   "use_cases": [
-    "When you need frameworks, use AFLplusplus because Repository: https://github.com/AFLplusplus/AFLplusplus.",
-    "When you need a concrete invocation, run `docker run -ti -v /location/of/your/target:/src aflplusplus/aflplusplus` as documented upstream for AFLplusplus.",
-    "When you need a concrete invocation, run `CC=/path/to/afl-cc CXX=/path/to/afl-c++ ./configure --disable-shared` as documented upstream for AFLplusplus.",
-    "When you need a concrete invocation, run `./afl-fuzz -i seeds_dir -o output_dir -- \\` as documented upstream for AFLplusplus.",
-    "When you need a concrete invocation, run `cat output_dir/crashes/id:000000,* | /path/to/tested/program [...program's cmdline...]` as documented upstream for AFLplusplus.",
-    "When chaining frameworks tools, pair AFLplusplus with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `AFLplusplus --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

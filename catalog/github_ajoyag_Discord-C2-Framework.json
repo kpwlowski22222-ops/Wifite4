@@ -131,6 +131,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -289,54 +294,57 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "command_and_control",
-    "toolbox",
-    "github",
+    "offensive",
+    "discord",
+    "c2",
+    "framework",
     "ajoyag",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Command and Control, use Discord-C2-Framework because This project is an educational initiative designed to demonstrate the risks and vulnerabilities of using trusted platforms, like Discord, for malicious purposes.",
-    "When the engagement is in the post_exploit phase, use Discord-C2-Framework as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
-    "When chaining Command and Control tools, pair Discord-C2-Framework with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Discord-C2-Framework --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/Discord-C2-Framework && python3 Discord-C2-Framework.py --help",
-    "cd toolboxes/Discord-C2-Framework && cat README.md",
-    "cd toolboxes/Discord-C2-Framework && ls -la",
     "cd toolboxes/Discord-C2-Framework && python3 Discord-C2-Framework.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Discord-C2-Framework && python3 Discord-C2-Framework.py --help",
+    "cd toolboxes/Discord-C2-Framework && python3 Discord-C2-Framework.py --help",
+    "cd toolboxes/Discord-C2-Framework && python3 Discord-C2-Framework.py --help",
+    "cd toolboxes/Discord-C2-Framework && python3 Discord-C2-Framework.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Discord-C2-Framework --output $KFIOSA_OUTPUT_DIR/Discord-C2-Framework.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Discord-C2-Framework --output $KFIOSA_OUTPUT_DIR/Discord-C2-Framework.log"
   ],
   "attack_surface": [
-    "web",
-    "shell_windows",
-    "shell_linux"
+    "web"
   ],
-  "phase_hint": "post_exploit",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

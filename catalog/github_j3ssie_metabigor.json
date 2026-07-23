@@ -1,16 +1,13 @@
 {
   "category": "osint",
   "command_examples": [
-    "metabigor net --input AS13335",
-    "echo \"$KFIOSA_TARGET_HOST\" | metabigor net --ip",
-    "echo \"cloudflare.com\" | metabigor net --domain",
-    "echo \"Cloudflare\" | metabigor net --org",
-    "echo \"AS13335\" | metabigor net --dynamic",
-    "metabigor net -I asn-list.txt -o results.txt",
-    "echo \"13335\" | metabigor net --asn",
-    "echo \"hackerone.com\" | metabigor cert",
-    "echo \"example.com\" | metabigor cert --clean",
-    "echo \"example.com\" | metabigor cert --wildcard"
+    "cd toolboxes/metabigor && python3 metabigor.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/metabigor && python3 metabigor.py --help",
+    "cd toolboxes/metabigor && python3 metabigor.py --help",
+    "cd toolboxes/metabigor && python3 metabigor.py --help",
+    "cd toolboxes/metabigor && python3 metabigor.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metabigor --output $KFIOSA_OUTPUT_DIR/metabigor.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metabigor --output $KFIOSA_OUTPUT_DIR/metabigor.log"
   ],
   "documentation": {
     "readme": "Metabigor - OSINT power without API key hassle",
@@ -131,6 +128,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -303,7 +305,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -312,13 +316,12 @@
   },
   "url": "https://github.com/j3ssie/metabigor",
   "use_cases": [
-    "When you need osint, use metabigor because Metabigor - OSINT power without API key hassle.",
-    "When you need a concrete invocation, run `metabigor net --input AS13335` as documented upstream for metabigor.",
-    "When you need a concrete invocation, run `echo \"$KFIOSA_TARGET_HOST\" | metabigor net --ip` as documented upstream for metabigor.",
-    "When you need a concrete invocation, run `echo \"cloudflare.com\" | metabigor net --domain` as documented upstream for metabigor.",
-    "When you need a concrete invocation, run `echo \"Cloudflare\" | metabigor net --org` as documented upstream for metabigor.",
-    "When chaining osint tools, pair metabigor with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `metabigor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -264,8 +269,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -274,43 +280,47 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "metasploitable2",
+    "recon",
     "j4ma",
-    "lab_only",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use metasploitable2-recon because metasploitable2-recon\nThis project demonstrates building an isolated VirtualBox lab to perform safe recon and basic exploitation practice.",
-    "When the engagement is in the recon phase, use metasploitable2-recon as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When chaining Reconnaissance tools, pair metasploitable2-recon with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `metasploitable2-recon --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/metasploitable2-recon && python3 metasploitable2-recon.py --help",
-    "cd toolboxes/metasploitable2-recon && cat README.md",
-    "cd toolboxes/metasploitable2-recon && ls -la",
     "cd toolboxes/metasploitable2-recon && python3 metasploitable2-recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/metasploitable2-recon && python3 metasploitable2-recon.py --help",
+    "cd toolboxes/metasploitable2-recon && python3 metasploitable2-recon.py --help",
+    "cd toolboxes/metasploitable2-recon && python3 metasploitable2-recon.py --help",
+    "cd toolboxes/metasploitable2-recon && python3 metasploitable2-recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metasploitable2-recon --output $KFIOSA_OUTPUT_DIR/metasploitable2-recon.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST metasploitable2-recon --output $KFIOSA_OUTPUT_DIR/metasploitable2-recon.log"
   ],
   "attack_surface": [
     "web",
-    "cloud",
-    "iots"
+    "ble_4_x"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

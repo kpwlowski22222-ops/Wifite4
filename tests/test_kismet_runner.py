@@ -226,7 +226,7 @@ def test_start_client_not_installed(tmp_path, monkeypatch):
 
 
 def test_start_client_default_credentials(tmp_path, monkeypatch):
-    """Defaults are admin / admin (operator-provided)."""
+    """When no explicit credentials are passed, the runner reads them from env."""
     bin_dir = _make_fake_kismet(tmp_path)
     _patch_path(monkeypatch, bin_dir)
     runner = KismetRunner()
@@ -237,6 +237,14 @@ def test_start_client_default_credentials(tmp_path, monkeypatch):
     assert isinstance(res, KismetRunResult)
     assert res.extra.get("password_env") == KISMET_CLIENT_PASSWORD_ENV
     assert res.extra.get("username_env") == KISMET_CLIENT_USERNAME_ENV
+
+
+def test_runner_requires_credentials(tmp_path, monkeypatch):
+    """KismetRunner raises when neither args nor env provide credentials."""
+    monkeypatch.delenv(KISMET_CLIENT_USERNAME_ENV, raising=False)
+    monkeypatch.delenv(KISMET_CLIENT_PASSWORD_ENV, raising=False)
+    with pytest.raises(ValueError, match="KismetRunner requires"):
+        KismetRunner()
 
 
 def test_start_client_env_var_contract(tmp_path, monkeypatch):
@@ -533,10 +541,10 @@ def test_never_fabricate_on_prechain_no_match(tmp_path):
     assert res["matches"] == []
 
 
-def test_default_password_is_admin_per_operator():
-    """Operator-provided default credentials are admin / admin."""
-    assert DEFAULT_USERNAME == "admin"
-    assert DEFAULT_PASSWORD == "admin"
+def test_default_password_is_empty_and_requires_operator_input():
+    """No compiled-in default credentials.  Values come from env/args."""
+    assert DEFAULT_USERNAME == ""
+    assert DEFAULT_PASSWORD == ""
     # The env-var names are stable.
     assert KISMET_CLIENT_USERNAME_ENV == "KISMET_CLIENT_USERNAME"
     assert KISMET_CLIENT_PASSWORD_ENV == "KISMET_CLIENT_PASSWORD"

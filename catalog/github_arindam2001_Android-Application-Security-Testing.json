@@ -136,6 +136,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -278,8 +283,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -288,30 +296,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "application",
+    "security",
+    "testing",
     "arindam2001",
-    "lang:javascript",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Mobile Security, use Android-Application-Security-Testing because Android Application Security Testing – InsecureBankv2.",
-    "When chaining Mobile Security tools, pair Android-Application-Security-Testing with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Android-Application-Security-Testing --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/Android-Application-Security-Testing && python3 Android-Application-Security-Testing.py --apk $KFIOSA_TARGET_APK",
     "cd toolboxes/Android-Application-Security-Testing && python3 Android-Application-Security-Testing.py --help",
-    "cd toolboxes/Android-Application-Security-Testing && cat README.md",
-    "cd toolboxes/Android-Application-Security-Testing && ls -la",
-    "cd toolboxes/Android-Application-Security-Testing && python3 Android-Application-Security-Testing.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Android-Application-Security-Testing && python3 Android-Application-Security-Testing.py --help",
+    "cd toolboxes/Android-Application-Security-Testing && python3 Android-Application-Security-Testing.py --help",
+    "cd toolboxes/Android-Application-Security-Testing && python3 Android-Application-Security-Testing.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Android-Application-Security-Testing --output $KFIOSA_OUTPUT_DIR/Android-Application-Security-Testing.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Android-Application-Security-Testing --output $KFIOSA_OUTPUT_DIR/Android-Application-Security-Testing.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -319,12 +332,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

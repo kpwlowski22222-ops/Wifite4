@@ -131,6 +131,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -270,54 +275,57 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "command_and_control",
-    "toolbox",
-    "github",
-    "5ky9uy",
-    "lab_only",
+    "offensive",
+    "apple",
+    "system",
+    "spoofing",
+    "c2",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Command and Control, use Apple-System-Spoofing-C2 because (Original Fork Network Left).",
-    "When the engagement is in the post_exploit phase, use Apple-System-Spoofing-C2 as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
-    "When chaining Command and Control tools, pair Apple-System-Spoofing-C2 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Apple-System-Spoofing-C2 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --help",
-    "cd toolboxes/Apple-System-Spoofing-C2 && cat README.md",
-    "cd toolboxes/Apple-System-Spoofing-C2 && ls -la",
     "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --help",
+    "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --help",
+    "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --help",
+    "cd toolboxes/Apple-System-Spoofing-C2 && python3 Apple-System-Spoofing-C2.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Apple-System-Spoofing-C2 --output $KFIOSA_OUTPUT_DIR/Apple-System-Spoofing-C2.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Apple-System-Spoofing-C2 --output $KFIOSA_OUTPUT_DIR/Apple-System-Spoofing-C2.log"
   ],
   "attack_surface": [
-    "web",
-    "shell_windows",
-    "shell_linux"
+    "web"
   ],
-  "phase_hint": "post_exploit",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

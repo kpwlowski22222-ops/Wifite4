@@ -26,14 +26,21 @@
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Web Application Security, use Interlace because Multi-threaded orchestration tool.",
-    "When the engagement is in the exploit phase, use Interlace as a cataloged Web Application Security tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `Interlace --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/Interlace.log` as documented upstream for Interlace.",
-    "When chaining Web Application Security tools, pair Interlace with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Interlace --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use after httpx / wappalyzer / whatweb has identified the target web stack (CMS, framework, server).",
+    "Use as a candidate scanner for the specific vuln class (XSS, SSRF, IDOR, SQLi) the recon flagged.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Interlace --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/Interlace.log"
+    "cd toolboxes/Interlace && python3 Interlace.py -u https://$KFIOSA_TARGET_HOST --cookie $KFIOSA_TARGET_COOKIE",
+    "cd toolboxes/Interlace && python3 Interlace.py -h",
+    "cd toolboxes/Interlace && python3 Interlace.py --help",
+    "cd toolboxes/Interlace && python3 Interlace.py --help",
+    "cd toolboxes/Interlace && python3 Interlace.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Interlace --output $KFIOSA_OUTPUT_DIR/Interlace.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Interlace --output $KFIOSA_OUTPUT_DIR/Interlace.log"
   ],
   "risk": {
     "signals": [
@@ -176,6 +183,11 @@
       {
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
         "source": "v2_enhancement"
       }
     ],

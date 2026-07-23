@@ -21,6 +21,7 @@ import hmac
 import json
 import logging
 import os
+import secrets
 import socket
 import threading
 import time
@@ -29,19 +30,35 @@ from typing import Any, Callable, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_SECRET = "lab-secret-change-me"  # operator sets this per engagement
+# Old compiled-in default; used only to detect an unrotated secret and refuse
+# it.  There is no safe default secret — each engagement must set its own.
+_KNOWN_INSECURE_DEFAULT = "lab-secret-change-me"
+
+
+def _generate_secret() -> str:
+    return secrets.token_urlsafe(32)
+
+
+def _require_secret(secret: str) -> str:
+    """Validate that the beacon HMAC secret was explicitly set."""
+    if not secret or secret == _KNOWN_INSECURE_DEFAULT:
+        raise ValueError(
+            "LabBeacon secret must be set to a strong, per-engagement value; "
+            "the compiled-in placeholder is not allowed."
+        )
+    return secret
 
 
 class LabBeacon:
     """Client-side beacon. Connects to a LabBeaconServer, polls for tasks."""
 
     def __init__(self, server: str, port: int = 8443, protocol: str = "http",
-                 secret: str = DEFAULT_SECRET, interval: int = 5, jitter: int = 2,
+                 secret: str = "", interval: int = 5, jitter: int = 2,
                  confirm_fn: Optional[Callable] = None):
         self.server = server
         self.port = port
         self.protocol = protocol  # http | https | tcp | dns(http-tunnel)
-        self.secret = secret
+        self.secret = _require_secret(secret)
         self.interval = interval
         self.jitter = jitter
         self.confirm_fn = confirm_fn or (lambda *_a, **_k: False)
@@ -124,10 +141,10 @@ class LabBeaconServer:
     """
 
     def __init__(self, host: str = "127.0.0.1", port: int = 8443,
-                 secret: str = DEFAULT_SECRET):
+                 secret: str = ""):
         self.host = host
         self.port = port
-        self.secret = secret
+        self.secret = _require_secret(secret)
         self.beacons: Dict[str, Dict[str, Any]] = {}
         self.task_queue: Dict[str, List[Dict[str, Any]]] = {}
         self._httpd: Optional[HTTPServer] = None
@@ -216,10 +233,16 @@ if __name__ == "__main__":  # pragma: no cover
     ap = argparse.ArgumentParser(description="Authorized-lab C2 beacon server")
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8443)
-    ap.add_argument("--secret", default=DEFAULT_SECRET)
+    ap.add_argument(
+        "--secret",
+        default="",
+        help="Per-engagement HMAC secret. If omitted a random secret is generated.",
+    )
     a = ap.parse_args()
-    srv = LabBeaconServer(host=a.host, port=a.port, secret=a.secret)
+    secret = a.secret if a.secret and a.secret != _KNOWN_INSECURE_DEFAULT else _generate_secret()
+    srv = LabBeaconServer(host=a.host, port=a.port, secret=secret)
     print(f"[+] LabBeaconServer on {a.host}:{a.port} (AUTHORIZED LAB USE ONLY)")
+    print(f"[+] beacon secret: {secret}")
     try:
         srv.start(background=False)
     except KeyboardInterrupt:

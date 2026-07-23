@@ -187,6 +187,11 @@
         "name": "--json",
         "description": "Emit JSON output instead of human-readable text.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -381,8 +386,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -391,54 +397,47 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "blescope",
     "cognis-digital",
-    "lang:python",
-    "lang:shell",
-    "lang:typescript",
-    "lab_only",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Bluetooth, use blescope because Sniff and decode BLE GATT traffic, fingerprint device profiles, and assert on insecure pairing/characteristics in CI against a capture.",
-    "When you need a concrete invocation, run `blescope scan capture.json    # → prioritized findings in seconds (passive, offline)` as documented upstream for blescope.",
-    "When you need a concrete invocation, run `blescope-emit --version` as documented upstream for blescope.",
-    "When you need a concrete invocation, run `blescope 0.6.0` as documented upstream for blescope.",
-    "When you need a concrete invocation, run `blescope-emit --help` as documented upstream for blescope.",
-    "When chaining Bluetooth tools, pair blescope with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `blescope --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "blescope scan capture.json    # → prioritized findings in seconds (passive, offline)",
-    "blescope-emit --version",
-    "blescope 0.6.0",
-    "blescope-emit --help",
-    "usage: blescope [-h] [--version] {scan,scan-live} ...",
-    "blescope scan capture.json",
-    "blescope scan capture.json --format json | jq .findings",
-    "cat capture.json | blescope scan -",
-    "blescope scan demos/01-basic/frontdoor_lock.json",
-    "blescope scan capture.json --min-severity medium"
+    "cd toolboxes/blescope && python3 blescope.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/blescope && python3 blescope.py --help",
+    "cd toolboxes/blescope && python3 blescope.py --help",
+    "cd toolboxes/blescope && python3 blescope.py --help",
+    "cd toolboxes/blescope && python3 blescope.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blescope --output $KFIOSA_OUTPUT_DIR/blescope.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blescope --output $KFIOSA_OUTPUT_DIR/blescope.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web",
+    "ble_4_x"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -131,6 +131,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -261,54 +266,57 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "command_and_control",
-    "toolbox",
-    "github",
+    "offensive",
+    "windows",
+    "backdoor",
     "aviyall",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Command and Control, use windows-backdoor because Python Backdoor for Windows On Public Networks.",
-    "When the engagement is in the post_exploit phase, use windows-backdoor as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `ssh -R 61732:localhost:5555 serveo.net` as documented upstream for windows-backdoor.",
-    "When you need a concrete invocation, run `ncat -lnvp 5555 #the same local port that you specified in ssh command` as documented upstream for windows-backdoor.",
-    "When chaining Command and Control tools, pair windows-backdoor with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `windows-backdoor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "ssh -R 61732:localhost:5555 serveo.net",
-    "ncat -lnvp 5555 #the same local port that you specified in ssh command"
+    "cd toolboxes/windows-backdoor && python3 windows-backdoor.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/windows-backdoor && python3 windows-backdoor.py --help",
+    "cd toolboxes/windows-backdoor && python3 windows-backdoor.py --help",
+    "cd toolboxes/windows-backdoor && python3 windows-backdoor.py --help",
+    "cd toolboxes/windows-backdoor && python3 windows-backdoor.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST windows-backdoor --output $KFIOSA_OUTPUT_DIR/windows-backdoor.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST windows-backdoor --output $KFIOSA_OUTPUT_DIR/windows-backdoor.log"
   ],
   "attack_surface": [
-    "web",
-    "shell_windows",
-    "shell_linux"
+    "web"
   ],
-  "phase_hint": "post_exploit",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

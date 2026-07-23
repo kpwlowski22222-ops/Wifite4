@@ -317,6 +317,11 @@
         "name": "--no-move-inner-classes",
         "description": "- disable move inner classes into parent",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -488,28 +493,25 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Dex to Java decompiler, use jadx because Command line and GUI tools for producing Java source code from Android Dex and Apk files.",
-    "When you need a concrete invocation, run `sudo pacman -S jadx` as documented upstream for jadx.",
-    "When you need a concrete invocation, run `flatpak install flathub com.github.skylot.jadx` as documented upstream for jadx.",
-    "When you need a concrete invocation, run `./gradlew dist` as documented upstream for jadx.",
-    "When you need a concrete invocation, run `jadx[-gui] [command] [options] <input files> (.apk, .dex, .jar, .class, .smali, .zip, .aar, .arsc, .aab, .xapk, .apkm, .jadx.kts)` as documented upstream for jadx.",
-    "When chaining Dex to Java decompiler tools, pair jadx with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `jadx --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo pacman -S jadx",
-    "flatpak install flathub com.github.skylot.jadx",
-    "./gradlew dist",
-    "jadx[-gui] [command] [options] <input files> (.apk, .dex, .jar, .class, .smali, .zip, .aar, .arsc, .aab, .xapk, .apkm, .jadx.kts)",
-    "commands (use '<command> --help' for command options):",
-    "path to '.json' file",
-    "Plugin options (-P<name>=<value>):",
-    "dex-input: Load .dex and .apk files",
-    "java-convert: Convert .class, .jar and .aar files to dex",
-    "kotlin-metadata: Use kotlin.Metadata annotation for code generation"
+    "cd toolboxes/jadx && python3 jadx.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/jadx && python3 jadx.py --help",
+    "cd toolboxes/jadx && python3 jadx.py --help",
+    "cd toolboxes/jadx && python3 jadx.py --help",
+    "cd toolboxes/jadx && python3 jadx.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST jadx --output $KFIOSA_OUTPUT_DIR/jadx.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST jadx --output $KFIOSA_OUTPUT_DIR/jadx.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -131,6 +131,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -316,8 +321,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -326,42 +332,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "blusnu",
     "hereliesaz",
-    "lang:python",
-    "lang:shell",
-    "lang:javascript",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Bluetooth, use BluSnu because Blu Snu: The Ultimate Offensive Bluetooth Framework.",
-    "When you need a concrete invocation, run `./gradlew assembleDebug` as documented upstream for BluSnu.",
-    "When chaining Bluetooth tools, pair BluSnu with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `BluSnu --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "./gradlew assembleDebug"
+    "cd toolboxes/BluSnu && python3 BluSnu.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/BluSnu && python3 BluSnu.py --help",
+    "cd toolboxes/BluSnu && python3 BluSnu.py --help",
+    "cd toolboxes/BluSnu && python3 BluSnu.py --help",
+    "cd toolboxes/BluSnu && python3 BluSnu.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST BluSnu --output $KFIOSA_OUTPUT_DIR/BluSnu.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST BluSnu --output $KFIOSA_OUTPUT_DIR/BluSnu.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

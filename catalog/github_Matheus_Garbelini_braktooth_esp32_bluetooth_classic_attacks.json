@@ -96,6 +96,36 @@
         "name": "--output",
         "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -289,8 +319,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -299,53 +330,47 @@
     "examples_policy": "operational"
   },
   "tags": [
+    "offensive",
+    "braktooth",
+    "esp32",
     "bluetooth",
-    "toolbox",
-    "github",
-    "matheus_garbelini",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "classic",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
+    "polymorphic"
   ],
   "use_cases": [
-    "When you need Bluetooth, use braktooth_esp32_bluetooth_classic_attacks because BrakTooth Proof of Concept Attacks (+ BT Fuzzing Framework).",
-    "When you need a concrete invocation, run `wget $KFIOSA_TARGET_URL` as documented upstream for braktooth_esp32_bluetooth_classic_attacks.",
-    "When you need a concrete invocation, run `sudo apt install -y unzip python3-dev python3-venv` as documented upstream for braktooth_esp32_bluetooth_classic_attacks.",
-    "When you need a concrete invocation, run `unzip esp32driver.zip # Extract esp32driver.zip (firmware package)` as documented upstream for braktooth_esp32_bluetooth_classic_attacks.",
-    "When you need a concrete invocation, run `python3 firmware.py flash /dev/ttyUSB1 # Please change your serial port to match your ESP32 device.` as documented upstream for braktooth_esp32_bluetooth_classic_attacks.",
-    "When chaining Bluetooth tools, pair braktooth_esp32_bluetooth_classic_attacks with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `braktooth_esp32_bluetooth_classic_attacks --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "wget $KFIOSA_TARGET_URL",
-    "sudo apt install -y unzip python3-dev python3-venv",
-    "unzip esp32driver.zip # Extract esp32driver.zip (firmware package)",
-    "python3 firmware.py flash /dev/ttyUSB1 # Please change your serial port to match your ESP32 device.",
-    "cd ../",
-    "sudo apt install -y zstd wget unzip",
-    "wget $KFIOSA_TARGET_URL -m).tar.zst",
-    "tar -I zstd wdissector_$(uname -m).tar.zst",
-    "./requirements.sh",
-    "sudo bin/bt_fuzzer --scan # Scan for targets (BDAddress) for 15 seconds"
+    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && python3 braktooth_esp32_bluetooth_classic_attacks.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && python3 braktooth_esp32_bluetooth_classic_attacks.py --help",
+    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && python3 braktooth_esp32_bluetooth_classic_attacks.py --help",
+    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && python3 braktooth_esp32_bluetooth_classic_attacks.py --help",
+    "cd toolboxes/braktooth_esp32_bluetooth_classic_attacks && python3 braktooth_esp32_bluetooth_classic_attacks.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST braktooth_esp32_bluetooth_classic_attacks --output $KFIOSA_OUTPUT_DIR/braktooth_esp32_bluetooth_classic_attacks.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST braktooth_esp32_bluetooth_classic_attacks --output $KFIOSA_OUTPUT_DIR/braktooth_esp32_bluetooth_classic_attacks.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web",
+    "ble_4_x"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -17,6 +17,111 @@
         "name": "-features",
         "description": "Does not claim to provide relevant or verified data, it's just a tool !",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -27,6 +132,62 @@
         "language": "cli",
         "description": "CLI entrypoint for PhoneInfoga",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "PhoneInfoga/__main__.py",
+        "language": "go",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "PhoneInfoga/__main__.py",
+        "language": "go",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "PhoneInfoga/__main__.py",
+        "language": "go",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "PhoneInfoga/__main__.py",
+        "language": "go",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "PhoneInfoga/__main__.py",
+        "language": "go",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "PhoneInfoga/__main__.py",
+        "language": "go",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "PhoneInfoga/__main__.py",
+        "language": "go",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -95,7 +256,51 @@
     ],
     "how_to_use": "Clone or install `PhoneInfoga` from its upstream repository, then run `PhoneInfoga --help` (or the README entrypoint) to confirm flags. Information gathering framework for phone numbers.",
     "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category. Fits when the engagement needs: Information gathering framework for phone numbers.",
-    "why_to_use": "Prefer this tool based on upstream description: Information gathering framework for phone numbers."
+    "why_to_use": "Prefer this tool based on upstream description: Information gathering framework for phone numbers.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:sundowndev/PhoneInfoga",
+        "successor": "github:unknown/phoneinfoga",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/phoneinfoga (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sundowndev/PhoneInfoga",
+        "successor": "github:webhooksite/opencti",
+        "note": "Shares attack_surface+phase_hint+tag with webhooksite/opencti (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sundowndev/PhoneInfoga",
+        "successor": "github:ivre/ivre",
+        "note": "Shares attack_surface+phase_hint+tag with ivre/ivre (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sundowndev/PhoneInfoga",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sundowndev/PhoneInfoga",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:sundowndev/PhoneInfoga",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -106,8 +311,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -116,47 +322,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "phoneinfoga",
     "sundowndev",
-    "lang:go",
-    "lang:typescript",
-    "lang:javascript",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need OSINT, use PhoneInfoga because Information gathering framework for phone numbers.",
-    "When the engagement is in the recon phase, use PhoneInfoga as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When chaining OSINT tools, pair PhoneInfoga with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `PhoneInfoga --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/PhoneInfoga && python3 PhoneInfoga.py --help",
-    "cd toolboxes/PhoneInfoga && cat README.md",
-    "cd toolboxes/PhoneInfoga && ls -la",
     "cd toolboxes/PhoneInfoga && python3 PhoneInfoga.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/PhoneInfoga && python3 PhoneInfoga.py --help",
+    "cd toolboxes/PhoneInfoga && python3 PhoneInfoga.py --help",
+    "cd toolboxes/PhoneInfoga && python3 PhoneInfoga.py --help",
+    "cd toolboxes/PhoneInfoga && python3 PhoneInfoga.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PhoneInfoga --output $KFIOSA_OUTPUT_DIR/PhoneInfoga.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PhoneInfoga --output $KFIOSA_OUTPUT_DIR/PhoneInfoga.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "go",
     "typescript",

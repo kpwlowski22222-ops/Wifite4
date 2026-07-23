@@ -342,7 +342,18 @@ class NetworkPanelClient:
                 "--", cmd,
             ]
         elif session.transport == TRANSPORT_LOCAL:
-            argv = ["sh", "-c", cmd]
+            # Never pass a raw shell string to a shell interpreter. Parse the
+            # operator/AI command into an argv list and run it with shell=False.
+            # Pipes/redirections are intentionally not supported here; use SSH
+            # transport or an explicit local script for complex shell work.
+            try:
+                argv = shlex.split(cmd)
+            except ValueError as e:
+                return self._envelope(
+                    started, ok=False,
+                    error=f"local command parse error: {e}")
+            if not argv:
+                return self._envelope(started, ok=False, error="empty command")
         elif session.transport == TRANSPORT_MSF:
             return self._envelope(started, ok=False,
                                   error="msf shell must be run via PostAccessRunner; use the parent menu")

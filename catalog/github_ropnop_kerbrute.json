@@ -1,16 +1,13 @@
 {
   "category": "exploit",
   "command_examples": [
-    "./kerbrute -h",
-    "Version: dev (bc1d606) - 11/15/20 - Ronnie Flathers @ropnop",
-    "Use \"kerbrute [command] --help\" for more information about a command.",
-    "root@kali:~# ./kerbrute_linux_amd64 userenum -d lab.ropnop.com usernames.txt",
-    "Version: dev (43f9ca1) - 03/06/19 - Ronnie Flathers @ropnop",
-    "2019/03/06 21:28:04 >  Using KDC(s):",
-    "2019/03/06 21:28:04 >   pdc01.lab.ropnop.com:88",
-    "2019/03/06 21:28:04 >  [+] VALID USERNAME:       amata@lab.ropnop.com",
-    "2019/03/06 21:28:04 >  [+] VALID USERNAME:       thoffman@lab.ropnop.com",
-    "2019/03/06 21:28:04 >  Done! Tested 1001 usernames (2 valid) in 0.425 seconds"
+    "cd toolboxes/kerbrute && python3 kerbrute.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/kerbrute && python3 kerbrute.py --help",
+    "cd toolboxes/kerbrute && python3 kerbrute.py --help",
+    "cd toolboxes/kerbrute && python3 kerbrute.py --help",
+    "cd toolboxes/kerbrute && python3 kerbrute.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kerbrute --output $KFIOSA_OUTPUT_DIR/kerbrute.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kerbrute --output $KFIOSA_OUTPUT_DIR/kerbrute.log"
   ],
   "documentation": {
     "readme": "A tool to quickly bruteforce and enumerate valid Active Directory accounts through Kerberos Pre-Authentication",
@@ -154,6 +151,11 @@
       {
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
         "source": "v2_enhancement"
       }
     ],
@@ -311,7 +313,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -320,13 +324,12 @@
   },
   "url": "https://github.com/ropnop/kerbrute",
   "use_cases": [
-    "When you need exploit, use kerbrute because A tool to quickly bruteforce and enumerate valid Active Directory accounts through Kerberos Pre-Authentication.",
-    "When you need a concrete invocation, run `./kerbrute -h` as documented upstream for kerbrute.",
-    "When you need a concrete invocation, run `Version: dev (bc1d606) - 11/15/20 - Ronnie Flathers @ropnop` as documented upstream for kerbrute.",
-    "When you need a concrete invocation, run `Use \"kerbrute [command] --help\" for more information about a command.` as documented upstream for kerbrute.",
-    "When you need a concrete invocation, run `root@kali:~# ./kerbrute_linux_amd64 userenum -d lab.ropnop.com usernames.txt` as documented upstream for kerbrute.",
-    "When chaining exploit tools, pair kerbrute with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `kerbrute --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

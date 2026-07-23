@@ -1,14 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "naabu -h",
-    "Download the ready to run [binary]($KFIOSA_TARGET_URL / [docker]($KFIOSA_TARGET_URL or install with GO",
-    "naabu -host hackerone.com",
-    "naabu -p 80,443,21-23,u:53 -host hackerone.com",
-    "naabu -p u:53 -host example.com -cp \"DNS query payload\"",
-    "naabu -p - -exclude-ports 80,443",
-    "naabu -list hosts.txt",
-    "naabu -host $KFIOSA_TARGET_HOST -json"
+    "cd toolboxes/naabu && python3 naabu.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/naabu && python3 naabu.py --help",
+    "cd toolboxes/naabu && python3 naabu.py --help",
+    "cd toolboxes/naabu && python3 naabu.py --help",
+    "cd toolboxes/naabu && python3 naabu.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST naabu --output $KFIOSA_OUTPUT_DIR/naabu.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST naabu --output $KFIOSA_OUTPUT_DIR/naabu.log"
   ],
   "documentation": {
     "readme": "Features • Installation • Usage • Running naabu • Config • NMAP integration • CDN/WAF Exclusion • Discord",
@@ -315,6 +314,11 @@
         "name": "-update",
         "description": "update naabu to latest version",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -484,7 +488,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -493,13 +499,12 @@
   },
   "url": "https://github.com/projectdiscovery/naabu",
   "use_cases": [
-    "When you need recon, use naabu because Features • Installation • Usage • Running naabu • Config • NMAP integration • CDN/WAF Exclusion • Discord.",
-    "When you need a concrete invocation, run `naabu -h` as documented upstream for naabu.",
-    "When you need a concrete invocation, run `Download the ready to run [binary]($KFIOSA_TARGET_URL / [docker]($KFIOSA_TARGET_URL or install with GO` as documented upstream for naabu.",
-    "When you need a concrete invocation, run `naabu -host hackerone.com` as documented upstream for naabu.",
-    "When you need a concrete invocation, run `naabu -p 80,443,21-23,u:53 -host hackerone.com` as documented upstream for naabu.",
-    "When chaining recon tools, pair naabu with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `naabu --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

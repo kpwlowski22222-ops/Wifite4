@@ -131,6 +131,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -280,8 +285,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -290,47 +296,47 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "blockade",
+    "recon",
     "aidop",
-    "lab_only",
+    "web",
+    "ad",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use blockade-recon because Blockade Recon\nA sequel to [Blockade Recon](https://github.com/cassa/blockade-recon). A tool for capturing and analysing wireless network traffic.",
-    "When the engagement is in the recon phase, use blockade-recon as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `cargo install --git $KFIOSA_TARGET_URL` as documented upstream for blockade-recon.",
-    "When you need a concrete invocation, run `blockade-recon --help` as documented upstream for blockade-recon.",
-    "When you need a concrete invocation, run `blockade-recon -i` as documented upstream for blockade-recon.",
-    "When you need a concrete invocation, run `airmon-ng start <interface>` as documented upstream for blockade-recon.",
-    "When chaining Reconnaissance tools, pair blockade-recon with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `blockade-recon --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cargo install --git $KFIOSA_TARGET_URL",
-    "blockade-recon --help",
-    "blockade-recon -i",
-    "airmon-ng start <interface>",
-    "blockade-recon -im"
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "cd toolboxes/blockade-recon && python3 blockade-recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blockade-recon --output $KFIOSA_OUTPUT_DIR/blockade-recon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blockade-recon --output $KFIOSA_OUTPUT_DIR/blockade-recon.log"
   ],
   "attack_surface": [
     "web",
-    "cloud",
-    "iots"
+    "ad"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

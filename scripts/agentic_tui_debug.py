@@ -266,7 +266,7 @@ WIFI_MARKERS = re.compile(
     r"WIFI|WiFi Operations|Scan Networks|AIO ATTACK|state=wifi\b", re.I
 )
 BLE_MARKERS = re.compile(
-    r"BLE|Bluetooth|Pick Bluetooth|state=ble\b", re.I
+    r"BLE|Bluetooth|Pick Bluetooth|long-range|external live|state=ble\b", re.I
 )
 OSINT_MARKERS = re.compile(r"OSINT|state=osint\b", re.I)
 SETTINGS_MARKERS = re.compile(
@@ -912,11 +912,19 @@ def build_script(max_explore: int = 0) -> List[ScriptStep]:
         # Back to primary
         ("backspace", "wifi", "Back from Advanced/picker", False),
         ("backspace", "main", "Back to main menu", True),
-        # BLE
+        # BLE — primary menu starts with external live long-range scan
         ("j", "main", "Highlight BLE Scan", False),
         ("enter", "ble", "Open BLE screen", True),
-        ("enter", "ble", "Try first BLE action (pick adapter) carefully", True),
-        ("", "ble", "Observe BLE pick/power result", True),
+        ("", "ble", "Observe BLE primary (external long-range scan label)", True),
+        # Move to Advanced for OS-agent / adapter items (avoid spawning xterm in CI)
+        ("j", "ble", "Move BLE primary menu", False),
+        ("j", "ble", "Move BLE primary menu", False),
+        ("j", "ble", "Move BLE primary menu", False),
+        ("j", "ble", "Move BLE primary menu", False),
+        ("j", "ble", "Move toward Advanced…", False),
+        ("enter", "ble", "Open BLE Advanced (adapter + OS agent)", True),
+        ("", "ble", "Observe Advanced: Pick adapter / OS Agent Holo items", True),
+        ("backspace", "ble", "Back from Advanced to BLE primary", False),
         ("backspace", "main", "Back to main from BLE", True),
         # OSINT
         ("j", "main", "Highlight OSINT", False),

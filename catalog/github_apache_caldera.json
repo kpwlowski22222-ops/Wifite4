@@ -1,13 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "python3 -m venv .calderavenv",
-    "source .calderavenv/bin/activate",
-    "python3 server.py --insecure --build",
-    "docker build --build-arg VARIANT=full -t caldera .",
-    "docker run -it -p 8888:8888 caldera",
-    "docker run -p 8888:8888 ghcr.io/apache/caldera:latest",
-    "docker stop <container ID>"
+    "cd toolboxes/caldera && python3 caldera.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/caldera && python3 caldera.py --help",
+    "cd toolboxes/caldera && python3 caldera.py --help",
+    "cd toolboxes/caldera && python3 caldera.py --help",
+    "cd toolboxes/caldera && python3 caldera.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST caldera --output $KFIOSA_OUTPUT_DIR/caldera.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST caldera --output $KFIOSA_OUTPUT_DIR/caldera.log"
   ],
   "documentation": {
     "readme": "Caldera™ is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response.",
@@ -167,6 +167,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -336,7 +341,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -345,13 +352,12 @@
   },
   "url": "https://github.com/apache/caldera",
   "use_cases": [
-    "When you need c2, use caldera because Caldera&trade; is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response.",
-    "When you need a concrete invocation, run `python3 -m venv .calderavenv` as documented upstream for caldera.",
-    "When you need a concrete invocation, run `source .calderavenv/bin/activate` as documented upstream for caldera.",
-    "When you need a concrete invocation, run `python3 server.py --insecure --build` as documented upstream for caldera.",
-    "When you need a concrete invocation, run `docker build --build-arg VARIANT=full -t caldera .` as documented upstream for caldera.",
-    "When chaining c2 tools, pair caldera with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `caldera --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

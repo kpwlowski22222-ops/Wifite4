@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -265,8 +270,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -275,30 +283,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "task",
+    "hijacking",
     "aaravavi",
-    "lang:java",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic"
   ],
   "use_cases": [
-    "When you need Mobile Security, use Task-Hijacking-Android because Task-Hijacking-Android\nThis contains a POCs for an attackers application to exploit task hijacking vulnerability in an android application.",
-    "When chaining Mobile Security tools, pair Task-Hijacking-Android with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Task-Hijacking-Android --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/Task-Hijacking-Android && python3 Task-Hijacking-Android.py --apk $KFIOSA_TARGET_APK",
     "cd toolboxes/Task-Hijacking-Android && python3 Task-Hijacking-Android.py --help",
-    "cd toolboxes/Task-Hijacking-Android && cat README.md",
-    "cd toolboxes/Task-Hijacking-Android && ls -la",
-    "cd toolboxes/Task-Hijacking-Android && python3 Task-Hijacking-Android.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Task-Hijacking-Android && python3 Task-Hijacking-Android.py --help",
+    "cd toolboxes/Task-Hijacking-Android && python3 Task-Hijacking-Android.py --help",
+    "cd toolboxes/Task-Hijacking-Android && python3 Task-Hijacking-Android.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Task-Hijacking-Android --output $KFIOSA_OUTPUT_DIR/Task-Hijacking-Android.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Task-Hijacking-Android --output $KFIOSA_OUTPUT_DIR/Task-Hijacking-Android.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -306,12 +319,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

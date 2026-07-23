@@ -127,6 +127,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -272,8 +277,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -282,51 +288,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "social",
+    "matrix",
+    "factorization",
     "arminkmz",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need OSINT, use Social-Matrix-Factorization because Social-Matrix-Factorization.",
-    "When the engagement is in the recon phase, use Social-Matrix-Factorization as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `iteration 0  RMSE: 1.1623740799051603` as documented upstream for Social-Matrix-Factorization.",
-    "When you need a concrete invocation, run `iteration 1  RMSE: 0.974779153572551` as documented upstream for Social-Matrix-Factorization.",
-    "When you need a concrete invocation, run `iteration 2  RMSE: 0.9061886948956133` as documented upstream for Social-Matrix-Factorization.",
-    "When you need a concrete invocation, run `iteration 3  RMSE: 0.8767977965409327` as documented upstream for Social-Matrix-Factorization.",
-    "When chaining OSINT tools, pair Social-Matrix-Factorization with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Social-Matrix-Factorization --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "iteration 0  RMSE: 1.1623740799051603",
-    "iteration 1  RMSE: 0.974779153572551",
-    "iteration 2  RMSE: 0.9061886948956133",
-    "iteration 3  RMSE: 0.8767977965409327",
-    "iteration 4  RMSE: 0.8624643916488482",
-    "iteration 5  RMSE: 0.85406229979618",
-    "iteration 6  RMSE: 0.8484390298439565",
-    "iteration 7  RMSE: 0.8441520641876232",
-    "iteration 8  RMSE: 0.8405251123950408",
-    "iteration 9  RMSE: 0.8375187875896802"
+    "cd toolboxes/Social-Matrix-Factorization && python3 Social-Matrix-Factorization.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Social-Matrix-Factorization && python3 Social-Matrix-Factorization.py --help",
+    "cd toolboxes/Social-Matrix-Factorization && python3 Social-Matrix-Factorization.py --help",
+    "cd toolboxes/Social-Matrix-Factorization && python3 Social-Matrix-Factorization.py --help",
+    "cd toolboxes/Social-Matrix-Factorization && python3 Social-Matrix-Factorization.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Social-Matrix-Factorization --output $KFIOSA_OUTPUT_DIR/Social-Matrix-Factorization.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Social-Matrix-Factorization --output $KFIOSA_OUTPUT_DIR/Social-Matrix-Factorization.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

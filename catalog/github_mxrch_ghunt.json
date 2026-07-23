@@ -86,6 +86,46 @@
         "name": "--url",
         "description": "Example: https://cash.app. If a domain is given, it will convert it to a URL, and also try the \\",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -96,6 +136,62 @@
         "language": "cli",
         "description": "CLI entrypoint for ghunt",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "ghunt/__main__.py",
+        "language": "python",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "ghunt/__main__.py",
+        "language": "python",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "ghunt/__main__.py",
+        "language": "python",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "ghunt/__main__.py",
+        "language": "python",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "ghunt/__main__.py",
+        "language": "python",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "ghunt/__main__.py",
+        "language": "python",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "ghunt/__main__.py",
+        "language": "python",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -165,7 +261,51 @@
     ],
     "how_to_use": "Install/setup: pip3 install pipx; pip3 install ghunt. Run the primary entrypoint as shown in upstream docs, e.g. `Choice =>`. Further invocations from upstream: `Usage: ghunt [-h] {login,email,gaia,drive,geolocate} ...`; `login               Authenticate GHunt to Google.`.",
     "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category. Fits when the engagement needs: ![](assets/long_banner.png).",
-    "why_to_use": "Prefer this tool based on upstream description: 🌐 GHunt Online version : https://osint.industries 🐍 Now Python 3.13 compatible !."
+    "why_to_use": "Prefer this tool based on upstream description: 🌐 GHunt Online version : https://osint.industries 🐍 Now Python 3.13 compatible !.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:mxrch/ghunt",
+        "successor": "github:webhooksite/opencti",
+        "note": "Shares attack_surface+phase_hint+tag with webhooksite/opencti (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:mxrch/ghunt",
+        "successor": "github:unknown/SecretFinder",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/SecretFinder (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:mxrch/ghunt",
+        "successor": "github:thewhiteh4t/seeker",
+        "note": "Shares attack_surface+phase_hint+tag with thewhiteh4t/seeker (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:mxrch/ghunt",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:mxrch/ghunt",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:mxrch/ghunt",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -176,8 +316,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -186,52 +327,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "ghunt",
     "mxrch",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need OSINT, use ghunt because ![](assets/long_banner.png).",
-    "When the engagement is in the recon phase, use ghunt as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `Choice =>` as documented upstream for ghunt.",
-    "When you need a concrete invocation, run `Usage: ghunt [-h] {login,email,gaia,drive,geolocate} ...` as documented upstream for ghunt.",
-    "When you need a concrete invocation, run `login               Authenticate GHunt to Google.` as documented upstream for ghunt.",
-    "When you need a concrete invocation, run `email               Get information on an email address.` as documented upstream for ghunt.",
-    "When chaining OSINT tools, pair ghunt with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `ghunt --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Choice =>",
-    "Usage: ghunt [-h] {login,email,gaia,drive,geolocate} ...",
-    "login               Authenticate GHunt to Google.",
-    "email               Get information on an email address.",
-    "gaia                Get information on a Gaia ID.",
-    "geolocate           Geolocate a BSSID.",
-    "spiderdal           Find assets using Digital Assets Links.",
-    "ghunt email <email_address> --json user_data.json"
+    "cd toolboxes/ghunt && python3 ghunt.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ghunt && python3 ghunt.py --help",
+    "cd toolboxes/ghunt && python3 ghunt.py --help",
+    "cd toolboxes/ghunt && python3 ghunt.py --help",
+    "cd toolboxes/ghunt && python3 ghunt.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ghunt --output $KFIOSA_OUTPUT_DIR/ghunt.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ghunt --output $KFIOSA_OUTPUT_DIR/ghunt.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
   ],

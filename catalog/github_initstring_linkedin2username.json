@@ -1,16 +1,13 @@
 {
   "category": "osint",
   "command_examples": [
-    "uv run python linkedin2username.py -c targetco",
-    "usage: linkedin2username.py [-h] -c COMPANY [-n DOMAIN] [-d DEPTH]",
-    "Append a domain name to username output.",
-    "Search depth (how many loops of 25). If unset, will try to grab them",
-    "potentially bypassing the 1,000 record limit.",
-    "multiple searches split across geographic regions.",
-    "python linkedin2username.py -c targetco",
-    "python linkedin2username.py -c targetco -d 5 -n 'targetco.com'",
-    "driver = webdriver.Firefox() # or webdriver.Chrome()",
-    "driver.get(\"$KFIOSA_TARGET_URL\")"
+    "cd toolboxes/linkedin2username && python3 linkedin2username.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
+    "cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
+    "cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
+    "cd toolboxes/linkedin2username && python3 linkedin2username.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST linkedin2username --output $KFIOSA_OUTPUT_DIR/linkedin2username.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST linkedin2username --output $KFIOSA_OUTPUT_DIR/linkedin2username.log"
   ],
   "documentation": {
     "readme": "linkedin2username OSINT Tool: Generate username lists from companies on LinkedIn.",
@@ -146,6 +143,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -318,7 +320,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -327,13 +331,12 @@
   },
   "url": "https://github.com/initstring/linkedin2username",
   "use_cases": [
-    "When you need osint, use linkedin2username because linkedin2username OSINT Tool: Generate username lists from companies on LinkedIn.",
-    "When you need a concrete invocation, run `uv run python linkedin2username.py -c targetco` as documented upstream for linkedin2username.",
-    "When you need a concrete invocation, run `usage: linkedin2username.py [-h] -c COMPANY [-n DOMAIN] [-d DEPTH]` as documented upstream for linkedin2username.",
-    "When you need a concrete invocation, run `Append a domain name to username output.` as documented upstream for linkedin2username.",
-    "When you need a concrete invocation, run `Search depth (how many loops of 25). If unset, will try to grab them` as documented upstream for linkedin2username.",
-    "When chaining osint tools, pair linkedin2username with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `linkedin2username --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

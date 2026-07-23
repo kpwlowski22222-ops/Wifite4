@@ -117,6 +117,11 @@
         "name": "--dry-run",
         "description": "Print what would be done without making any changes.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -253,8 +258,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -263,38 +269,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "shodan",
+    "metasploit",
+    "cli",
     "samglish",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use shodan_metasploit_cli because shodanmetasploitcli exploit the vulnerability with Shodan in Metasploit and use Sodan in the terminal.",
-    "When the engagement is in the recon phase, use shodan_metasploit_cli as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When chaining Reconnaissance tools, pair shodan_metasploit_cli with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `shodan_metasploit_cli --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
-  "command_examples": [],
+  "command_examples": [
+    "cd toolboxes/shodan_metasploit_cli && python3 shodan_metasploit_cli.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/shodan_metasploit_cli && python3 shodan_metasploit_cli.py --help",
+    "cd toolboxes/shodan_metasploit_cli && python3 shodan_metasploit_cli.py --help",
+    "cd toolboxes/shodan_metasploit_cli && python3 shodan_metasploit_cli.py --help",
+    "cd toolboxes/shodan_metasploit_cli && python3 shodan_metasploit_cli.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST shodan_metasploit_cli --output $KFIOSA_OUTPUT_DIR/shodan_metasploit_cli.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST shodan_metasploit_cli --output $KFIOSA_OUTPUT_DIR/shodan_metasploit_cli.log"
+  ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

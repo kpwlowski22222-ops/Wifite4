@@ -131,6 +131,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -262,44 +267,49 @@
   "risk": {
     "level": "high",
     "signals": [
-      "intrinsic",
-      "lab_only",
+      "post_exploit",
+      "active",
+      "local",
+      "credential",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "post-exploitation",
-    "toolbox",
-    "github",
+    "post_exploit",
+    "active",
+    "credential",
+    "sharpdpapi",
     "ghostpack",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "ad",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Post-Exploitation, use SharpDPAPI because SharpDPAPI is a C# port of some DPAPI functionality from @gentilkiwi's Mimikatz project.",
-    "When the engagement is in the post_exploit phase, use SharpDPAPI as a cataloged Post-Exploitation tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `SharpDPAPI.exe search /type:registry [/path:HKLM\\path\\to\\key] [/showErrors]` as documented upstream for SharpDPAPI.",
-    "When you need a concrete invocation, run `SharpDPAPI.exe search /type:folder /path:C:\\path\\to\\folder [/maxBytes:<numOfBytes>] [/showErrors]` as documented upstream for SharpDPAPI.",
-    "When you need a concrete invocation, run `SharpDPAPI.exe search /type:file /path:C:\\path\\to\\file [/maxBytes:<numOfBytes>]` as documented upstream for SharpDPAPI.",
-    "When you need a concrete invocation, run `SharpDPAPI.exe search /type:base64 [/base:<base64 string>]` as documented upstream for SharpDPAPI.",
-    "When chaining Post-Exploitation tools, pair SharpDPAPI with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `SharpDPAPI --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use AFTER the chain has gained a shell on the target. Each post-exploit method is per-step ACCEPT gated.",
+    "Use as a candidate follow-up for credential harvesting, lateral movement, or persistence — never inlined into argv.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "SharpDPAPI.exe search /type:registry [/path:HKLM\\path\\to\\key] [/showErrors]",
-    "SharpDPAPI.exe search /type:folder /path:C:\\path\\to\\folder [/maxBytes:<numOfBytes>] [/showErrors]",
-    "SharpDPAPI.exe search /type:file /path:C:\\path\\to\\file [/maxBytes:<numOfBytes>]",
-    "SharpDPAPI.exe search /type:base64 [/base:<base64 string>]"
+    "cd toolboxes/SharpDPAPI && python3 SharpDPAPI.py --session $KFIOSA_SESSION_ID --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/SharpDPAPI && python3 SharpDPAPI.py --help",
+    "cd toolboxes/SharpDPAPI && python3 SharpDPAPI.py --help",
+    "cd toolboxes/SharpDPAPI && python3 SharpDPAPI.py --help",
+    "cd toolboxes/SharpDPAPI && python3 SharpDPAPI.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpDPAPI --output $KFIOSA_OUTPUT_DIR/SharpDPAPI.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpDPAPI --output $KFIOSA_OUTPUT_DIR/SharpDPAPI.log"
   ],
   "attack_surface": [
-    "shell_windows",
     "shell_linux",
+    "shell_windows",
     "ad"
   ],
   "phase_hint": "post_exploit",
@@ -307,12 +317,14 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "argv_grammar",
+    "credential_format",
+    "lateral_proto"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_os",
+    "session_type",
+    "credential_state"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -1,16 +1,13 @@
 {
   "category": "exploit",
   "command_examples": [
-    "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL",
-    "ffuf -w /path/to/vhost/wordlist -u $KFIOSA_TARGET_URL -H \"Host: FUZZ\" -fs 4242",
-    "ffuf -w /path/to/paramnames.txt -u $KFIOSA_TARGET_URL -fs 4242",
-    "ffuf -w /path/to/values.txt -u $KFIOSA_TARGET_URL -fc 401",
-    "ffuf -w /path/to/postdata.txt -X POST -d \"username=admin\\&password=$KFIOSA_SECRET -u $KFIOSA_TARGET_URL -fc 401",
-    "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL -maxtime 60",
-    "ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL -maxtime-job 60 -recursion -recursion-depth 2",
-    "ffuf --input-cmd 'radamsa --seed $FFUF_NUM example1.txt example2.txt' -H \"Content-Type: application/json\" -X POST -u $KFIOSA_TARGET_URL -mc all -fc 400",
-    "radamsa -n 1000 -o %n.txt example1.txt example2.txt",
-    "ffuf --input-cmd 'cat $FFUF_NUM.txt' -H \"Content-Type: application/json\" -X POST -u $KFIOSA_TARGET_URL -mc all -fc 400"
+    "cd toolboxes/ffuf && python3 ffuf.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ffuf && python3 ffuf.py --help",
+    "cd toolboxes/ffuf && python3 ffuf.py --help",
+    "cd toolboxes/ffuf && python3 ffuf.py --help",
+    "cd toolboxes/ffuf && python3 ffuf.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ffuf --output $KFIOSA_OUTPUT_DIR/ffuf.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ffuf --output $KFIOSA_OUTPUT_DIR/ffuf.log"
   ],
   "documentation": {
     "readme": "- Installation - Example usage - Content discovery - Vhost discovery - Parameter fuzzing - POST data fuzzing - Using external mutator - Configuration files - Help - Interactive mode",
@@ -317,6 +314,11 @@
         "name": "-sni",
         "description": "Target TLS SNI, does not support FUZZ keyword",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -487,7 +489,10 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github",
+    "lab-use"
   ],
   "trust": {
     "official_kali": false,
@@ -496,13 +501,12 @@
   },
   "url": "https://github.com/ffuf/ffuf",
   "use_cases": [
-    "When you need exploit, use ffuf because - Installation - Example usage - Content discovery - Vhost discovery - Parameter fuzzing - POST data fuzzing - Using external mutator - Configuration files - He.",
-    "When you need a concrete invocation, run `ffuf -w /path/to/wordlist -u $KFIOSA_TARGET_URL` as documented upstream for ffuf.",
-    "When you need a concrete invocation, run `ffuf -w /path/to/vhost/wordlist -u $KFIOSA_TARGET_URL -H \"Host: FUZZ\" -fs 4242` as documented upstream for ffuf.",
-    "When you need a concrete invocation, run `ffuf -w /path/to/paramnames.txt -u $KFIOSA_TARGET_URL -fs 4242` as documented upstream for ffuf.",
-    "When you need a concrete invocation, run `ffuf -w /path/to/values.txt -u $KFIOSA_TARGET_URL -fc 401` as documented upstream for ffuf.",
-    "When chaining exploit tools, pair ffuf with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `ffuf --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

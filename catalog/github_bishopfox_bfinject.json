@@ -142,6 +142,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -312,28 +317,26 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need iOS dylib injection, use bfinject because bfinject Easy dylib injection for jailbroken 64-bit iOS 11.0 - 11.1.2. Compatible with Electra and LiberiOS jailbreaks.",
-    "When you need a concrete invocation, run `wget $KFIOSA_TARGET_URL` as documented upstream for bfinject.",
-    "When you need a concrete invocation, run `tar xvf bfinject.tar` as documented upstream for bfinject.",
-    "When you need a concrete invocation, run `export PATH=$PATH:/jb/usr/bin:/jb/bin:/jb/sbin:/jb/usr/sbin:/jb/usr/local/bin:` as documented upstream for bfinject.",
-    "When you need a concrete invocation, run `cd /jb` as documented upstream for bfinject.",
-    "When chaining iOS dylib injection tools, pair bfinject with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `bfinject --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "wget $KFIOSA_TARGET_URL",
-    "tar xvf bfinject.tar",
-    "export PATH=$PATH:/jb/usr/bin:/jb/bin:/jb/sbin:/jb/usr/sbin:/jb/usr/local/bin:",
-    "cd /jb",
-    "Syntax: bfinject [-p PID | -P appname] [-l /path/to/yourdylib | -L feature]",
-    "bfinject -P Reddit.app -l /path/to/evil.dylib   # Injects evil.dylib into the Reddit app",
-    "bfinject -p 1234 -L cycript                     # Inject Cycript into PID",
-    "bfinject -p 4566 -l /path/to/evil.dylib         # Injects the .dylib of your choice into PID",
-    "Instead of specifying the PID with -p, bfinject can search for the correct PID based on the app name.",
-    "Cs-iPhone:~ root# bash bfinject -P Reddit -L test"
+    "cd toolboxes/bfinject && python3 bfinject.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/bfinject && python3 bfinject.py --help",
+    "cd toolboxes/bfinject && python3 bfinject.py --help",
+    "cd toolboxes/bfinject && python3 bfinject.py --help",
+    "cd toolboxes/bfinject && python3 bfinject.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bfinject --output $KFIOSA_OUTPUT_DIR/bfinject.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bfinject --output $KFIOSA_OUTPUT_DIR/bfinject.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

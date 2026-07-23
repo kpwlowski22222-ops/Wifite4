@@ -98,7 +98,13 @@ def _maybe_reenhance(data: Dict[str, Any], level: str = "full") -> bool:
         modified = True
 
     if modified:
-        data["_kfiosa_enriched_schema"] = SCHEMA_VERSION
+        # Preserve a newer deep-enhance stamp (e.g. 1.2.0) so reenhance
+        # does not downgrade entries that already have 4x documentation.
+        prev = str(current or "")
+        if prev and prev > SCHEMA_VERSION:
+            data["_kfiosa_enriched_schema"] = prev
+        else:
+            data["_kfiosa_enriched_schema"] = SCHEMA_VERSION
     return modified
 
 
@@ -110,13 +116,23 @@ def reenhance_one(path: Path, level: str = "full") -> Dict[str, Any]:
         return {"ok": False, "file": path.name, "error": f"read/parse: {e}"}
     if not isinstance(data, dict):
         return {"ok": False, "file": path.name, "error": "not an object"}
+    # Snapshot before mutate so we can skip disk I/O when enrichers
+    # are idempotent (common on re-runs of level=full).
+    before = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     changed = _maybe_reenhance(data, level=level)
     if changed:
-        try:
-            path.write_text(json.dumps(data, indent=2, ensure_ascii=False),
-                            encoding="utf-8")
-        except OSError as e:
-            return {"ok": False, "file": path.name, "error": f"write: {e}"}
+        after = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        if after == before:
+            # Enrichers flipped the modified flag but produced identical payload.
+            changed = False
+        else:
+            try:
+                path.write_text(
+                    json.dumps(data, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            except OSError as e:
+                return {"ok": False, "file": path.name, "error": f"write: {e}"}
     return {"ok": True, "file": path.name, "changed": changed,
             "schema": data.get("_kfiosa_enriched_schema")}
 
@@ -129,7 +145,8 @@ def reenhance_all(catalog_dir: Path, level: str = "full") -> Dict[str, Any]:
     catalog_dir = Path(catalog_dir)
     if not catalog_dir.exists():
         return {"ok": False, "total": 0, "error": f"not found: {catalog_dir}"}
-    files = sorted(catalog_dir.glob("*.json"))
+    # Only github_*.json tool entries — skip catalog.schema.json / meta.
+    files = sorted(catalog_dir.glob("github_*.json"))
     changed = 0
     failed: List[Dict[str, str]] = []
     for path in files:
@@ -152,7 +169,7 @@ def enhance_pending(catalog_dir: Path) -> Dict[str, Any]:
     catalog_dir = Path(catalog_dir)
     if not catalog_dir.exists():
         return {"ok": False, "total": 0, "error": f"not found: {catalog_dir}"}
-    files = sorted(catalog_dir.glob("*.json"))
+    files = sorted(catalog_dir.glob("github_*.json"))
     pending = 0
     changed = 0
     failed: List[Dict[str, str]] = []
@@ -164,7 +181,9 @@ def enhance_pending(catalog_dir: Path) -> Dict[str, Any]:
             continue
         if not isinstance(data, dict):
             continue
-        if data.get("_kfiosa_enriched_schema") == SCHEMA_VERSION:
+        # Already at or above the base schema (1.1.0 / 1.2.0) → skip.
+        cur = str(data.get("_kfiosa_enriched_schema") or "")
+        if cur and cur >= SCHEMA_VERSION:
             continue
         pending += 1
         r = reenhance_one(path, level="full")

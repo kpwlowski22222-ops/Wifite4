@@ -7,9 +7,10 @@ KFIOSA references it today only as a file format
 actual binaries so the AI chain can spin up a Kismet sweep when
 ``kismet_scan`` is emitted.
 
-Credentials (operator-provided): the Kismet client uses
-``admin`` / ``admin`` per the operator's instruction. The password
-is passed via the ``KISMET_CLIENT_PASSWORD`` env var — never as an
+Credentials: the Kismet username/password are operator-supplied.
+They may be passed explicitly to :class:`KismetRunner` or read from
+``KISMET_CLIENT_USERNAME`` / ``KISMET_CLIENT_PASSWORD`` environment
+variables. The password is passed via the env var — never as an
 argv token. The orchestrator's chain step ``kismet_scan`` runs
 behind the per-step ACCEPT gate in :meth:`_walk_ai_step`; this
 runner does NOT re-confirm.
@@ -39,9 +40,10 @@ logger = logging.getLogger(__name__)
 KISMET_CLIENT_PASSWORD_ENV = "KISMET_CLIENT_PASSWORD"
 KISMET_CLIENT_USERNAME_ENV = "KISMET_CLIENT_USERNAME"
 
-# Default credentials per the operator (literal admin / admin).
-DEFAULT_USERNAME = "admin"
-DEFAULT_PASSWORD = "admin"
+# No compiled-in default credentials.  Values are read from env or supplied
+# explicitly by the operator; missing credentials cause an immediate error.
+DEFAULT_USERNAME = ""
+DEFAULT_PASSWORD = ""
 
 # Default endpoints.
 DEFAULT_WS_URL = "ws://localhost:2501"
@@ -149,10 +151,20 @@ class KismetRunner:
                  password: str = DEFAULT_PASSWORD,
                  ws_url: str = DEFAULT_WS_URL,
                  on_event: Optional[Callable[[str], None]] = None):
-        self.username = (username or DEFAULT_USERNAME).strip()
+        # Resolve credentials: explicit args → env vars → error.  Never fall
+        # back to a hardcoded default.
+        uname = (username or os.getenv(KISMET_CLIENT_USERNAME_ENV, "")).strip()
+        pwd = (password or os.getenv(KISMET_CLIENT_PASSWORD_ENV, ""))
+        if not uname or not pwd:
+            raise ValueError(
+                "KismetRunner requires operator-provided credentials. "
+                f"Set {KISMET_CLIENT_USERNAME_ENV} / {KISMET_CLIENT_PASSWORD_ENV} "
+                "or pass username= / password=."
+            )
+        self.username = uname
         # The password is held only in the env-var form; the
         # constructor never logs it.
-        self._password = (password or DEFAULT_PASSWORD)
+        self._password = pwd
         self.ws_url = (ws_url or DEFAULT_WS_URL).strip()
         self.on_event = on_event or (lambda m: None)
         # Track the most-recently-started server so the orchestrator

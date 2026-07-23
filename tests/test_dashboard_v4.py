@@ -214,13 +214,13 @@ class TestAIStatus:
         import core.ai_backend
         monkeypatch.setattr(
             core.ai_backend, "MODEL_CATALOG",
-            {"primary": "minimax-m3:cloud",
-             "tier1_local_fallback": "qwen2.5-14b-uncensored",
-             "fallback": "wizard-vicuna"},
+            {"primary": "roleplaiapp/Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:Q4_K_M",
+             "tier1_local_fallback": "heretic-9b-uncensored",
+             "fallback": "wizard-vicuna-uncensored"},
             raising=False,
         )
         out = mod.ai_status()
-        assert out["model"] == "minimax-m3:cloud"
+        assert "Uncensored" in out["model"]
         assert "ok" in out
         assert "reachable" in out
         assert "latency_ms" in out

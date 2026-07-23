@@ -1,11 +1,13 @@
 {
   "category": "osint",
   "command_examples": [
-    "usage: gitGraber.py [-h] [-k KEYWORDSFILE] [-q QUERY] [-s] [-w WORDLIST]",
-    "python3 gitGraber.py -k keywordsfile.txt -q YOURWORD -s",
-    "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s",
-    "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s -w mysuperwordlist.txt",
-    "python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s -m"
+    "cd toolboxes/gitGraber && python3 gitGraber.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/gitGraber && python3 gitGraber.py --help",
+    "cd toolboxes/gitGraber && python3 gitGraber.py --help",
+    "cd toolboxes/gitGraber && python3 gitGraber.py --help",
+    "cd toolboxes/gitGraber && python3 gitGraber.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gitGraber --output $KFIOSA_OUTPUT_DIR/gitGraber.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gitGraber --output $KFIOSA_OUTPUT_DIR/gitGraber.log"
   ],
   "documentation": {
     "readme": "gitGraber is a tool developed in Python3 to monitor GitHub to search and find sensitive data in real time for different online services such as: Google, Amazon (AWS), Paypal, Github, Mailgun, Facebook, Twitter, Heroku, Stripe, Twilio...",
@@ -216,6 +218,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -382,7 +389,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -391,13 +400,12 @@
   },
   "url": "https://github.com/hisxo/gitGraber",
   "use_cases": [
-    "When you need osint, use gitGraber because gitGraber is a tool developed in Python3 to monitor GitHub to search and find sensitive data in real time for different online services such as: Google, Amazon .",
-    "When you need a concrete invocation, run `usage: gitGraber.py [-h] [-k KEYWORDSFILE] [-q QUERY] [-s] [-w WORDLIST]` as documented upstream for gitGraber.",
-    "When you need a concrete invocation, run `python3 gitGraber.py -k keywordsfile.txt -q YOURWORD -s` as documented upstream for gitGraber.",
-    "When you need a concrete invocation, run `python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s` as documented upstream for gitGraber.",
-    "When you need a concrete invocation, run `python3 gitGraber.py -k keywordsfile.txt -q \\\"yahoo.com\\\" -s -w mysuperwordlist.txt` as documented upstream for gitGraber.",
-    "When chaining osint tools, pair gitGraber with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `gitGraber --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

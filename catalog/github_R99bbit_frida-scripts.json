@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -267,8 +272,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -277,32 +285,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "frida",
+    "scripts",
     "r99bbit",
-    "lang:javascript",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "kfiosa",
+    "indexed",
+    "polymorphic"
   ],
   "use_cases": [
-    "Index entry in the Mobile Security category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Mobile Security system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/frida-scripts && python3 frida-scripts.py --apk $KFIOSA_TARGET_APK",
     "cd toolboxes/frida-scripts && python3 frida-scripts.py --help",
-    "cd toolboxes/frida-scripts && cat README.md",
-    "cd toolboxes/frida-scripts && ls -la",
-    "cd toolboxes/frida-scripts && python3 frida-scripts.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/frida-scripts && python3 frida-scripts.py --help",
+    "cd toolboxes/frida-scripts && python3 frida-scripts.py --help",
+    "cd toolboxes/frida-scripts && python3 frida-scripts.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST frida-scripts --output $KFIOSA_OUTPUT_DIR/frida-scripts.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST frida-scripts --output $KFIOSA_OUTPUT_DIR/frida-scripts.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -310,12 +321,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

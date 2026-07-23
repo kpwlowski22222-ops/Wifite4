@@ -1,16 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "go install github.com/projectdiscovery/tlsx/cmd/tlsx@latest",
-    "tlsx -h",
-    "$KFIOSA_TARGET_HOST/24 # CIDR input",
-    "$KFIOSA_TARGET_HOST # IP input",
-    "$KFIOSA_TARGET_URL # URL input port",
-    "tlsx -u $KFIOSA_TARGET_HOST,example.com,example.com:443,$KFIOSA_TARGET_URL -silent",
-    "tlsx -list host_list.txt",
-    "tlsx -u hackerone.com -p 443,8443",
-    "tlsx -u hackerone.com -p port_list.txt",
-    "echo $KFIOSA_TARGET_HOST/24 | tlsx"
+    "cd toolboxes/tlsx && python3 tlsx.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/tlsx && python3 tlsx.py --help",
+    "cd toolboxes/tlsx && python3 tlsx.py --help",
+    "cd toolboxes/tlsx && python3 tlsx.py --help",
+    "cd toolboxes/tlsx && python3 tlsx.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tlsx --output $KFIOSA_OUTPUT_DIR/tlsx.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST tlsx --output $KFIOSA_OUTPUT_DIR/tlsx.log"
   ],
   "documentation": {
     "readme": "Features • Installation • Usage • Running tlsx • Join Discord",
@@ -318,6 +315,11 @@
         "name": "-vc",
         "description": "enable verification of server certificate",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -489,7 +491,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -498,13 +502,12 @@
   },
   "url": "https://github.com/projectdiscovery/tlsx",
   "use_cases": [
-    "When you need recon, use tlsx because Features • Installation • Usage • Running tlsx • Join Discord.",
-    "When you need a concrete invocation, run `go install github.com/projectdiscovery/tlsx/cmd/tlsx@latest` as documented upstream for tlsx.",
-    "When you need a concrete invocation, run `tlsx -h` as documented upstream for tlsx.",
-    "When you need a concrete invocation, run `$KFIOSA_TARGET_HOST/24 # CIDR input` as documented upstream for tlsx.",
-    "When you need a concrete invocation, run `$KFIOSA_TARGET_HOST # IP input` as documented upstream for tlsx.",
-    "When chaining recon tools, pair tlsx with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `tlsx --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -9,6 +9,7 @@ for the re-export shim.
 
 import asyncio
 import logging
+import os
 from typing import Dict, List, Optional, Any
 import numpy as np
 from pathlib import Path
@@ -34,7 +35,25 @@ class AIEngine:
         logger.info("AI Engine initialized")
 
     def _load_models(self):
-        """Load pre-trained models from disk"""
+        """Load pre-trained models from disk.
+
+        Pickle deserialization can execute arbitrary code if a model file is
+        tampered with.  Loading ``.pkl`` files is therefore opt-in via the
+        ``KFIOSA_ALLOW_PICKLE_LOAD`` environment variable; without it the files
+        are ignored.  Future models should be stored in a safe format such as
+        ONNX, JSON weights, or joblib with hash verification.
+        """
+        allow_pickle = os.environ.get("KFIOSA_ALLOW_PICKLE_LOAD") == "1"
+        if not allow_pickle:
+            for name in ("decision", "attack", "post_exploit"):
+                p = self.model_path / f"{name}_model.pkl"
+                if p.exists():
+                    logger.warning(
+                        "Ignoring %s because pickle model loading is disabled. "
+                        "Set KFIOSA_ALLOW_PICKLE_LOAD=1 only for trusted models.",
+                        p,
+                    )
+            return
         try:
             # Load decision model
             decision_model_path = self.model_path / "decision_model.pkl"
@@ -319,11 +338,27 @@ class AIEngine:
             from core.ai_backend.chain import _heuristic_for_domain
             steps = _heuristic_for_domain("wifi", dict(target_info or {}))
             if steps:
+                def _phase_for_action(action: str, tool: str) -> str:
+                    recon = {"mcp_call", "kismet_scan", "recon_probe", "osint_probe",
+                             "parse", "poly_adapt"}
+                    handshake = {"deauth", "pmkid", "mt7921e_inject", "wifi_attack",
+                                 "join_network", "host_discovery"}
+                    crack = {"crack", "crack_gpu", "wps_pixie", "wps_online"}
+                    a = (action or "").lower()
+                    t = (tool or "").lower()
+                    if a in recon or "dump" in t or "scan" in a:
+                        return "reconnaissance"
+                    if a in handshake:
+                        return "handshake"
+                    if a in crack or "crack" in a or "wps" in a:
+                        return "crack"
+                    return a
+
                 return {
                     "target": target_info.get("ssid") or target_info.get("bssid") or "unknown",
                     "phases": [
                         {
-                            "phase": s.get("action"),
+                            "phase": _phase_for_action(s.get("action"), s.get("tool")),
                             "action": s.get("action"),
                             "tools": [s.get("tool")] if s.get("tool") else [],
                             "args": s.get("args") or {},

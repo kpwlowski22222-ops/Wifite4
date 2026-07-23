@@ -22,18 +22,25 @@
     "web",
     "cloud",
     "ad",
-    "polymorphic",
-    "target-adaptive"
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need OSINT and Recon, use meg because Fetch many paths for many hosts.",
-    "When the engagement is in the recon phase, use meg as a cataloged OSINT and Recon tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `meg --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/meg.log` as documented upstream for meg.",
-    "When chaining OSINT and Recon tools, pair meg with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `meg --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the OSINT phase to enumerate people, domains, subdomains, ASN footprints, leaked credentials (never inlined), and breach data.",
+    "Use as a passive discovery complement to active recon (the operator can run these without touching the target).",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "meg --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/meg.log"
+    "cd toolboxes/meg && python3 meg.py --target $KFIOSA_TARGET_DOMAIN",
+    "cd toolboxes/meg && python3 meg.py --help",
+    "cd toolboxes/meg && python3 meg.py --help",
+    "cd toolboxes/meg && python3 meg.py --help",
+    "cd toolboxes/meg && python3 meg.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST meg --output $KFIOSA_OUTPUT_DIR/meg.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST meg --output $KFIOSA_OUTPUT_DIR/meg.log"
   ],
   "risk": {
     "signals": [
@@ -180,6 +187,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],

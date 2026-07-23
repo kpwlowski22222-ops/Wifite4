@@ -10,7 +10,118 @@
   "documentation": {
     "readme": "BtleJack: a new Bluetooth Low Energy swiss-army knife\nBtlejack provides everything you need to sniff, jam and hijack Bluetooth Low Energy devices. It relies on one or more `BBC Micro:Bit <http://microbit.org/>`_. devices running a dedicated firmware. You may also\nwant to use an `Adafruit's Bluefruit LE sniffer <https://www.adafruit.com/product/2269>`_ or a `nRF51822 Eval Kit <https://www.waveshare.com/wiki/BLE400>`_, as we added support for these devices.",
     "usage_sections": [],
-    "arguments": [],
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Show help / usage and exit.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      }
+    ],
     "function_signatures": [
       {
         "name": "read",
@@ -23,6 +134,54 @@
         "signature": "def get_version()",
         "file": "setup.py",
         "language": "python"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "btlejack/__main__.py",
+        "language": "python",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "btlejack/__main__.py",
+        "language": "python",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "btlejack/__main__.py",
+        "language": "python",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "btlejack/__main__.py",
+        "language": "python",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "btlejack/__main__.py",
+        "language": "python",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "btlejack/__main__.py",
+        "language": "python",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [],
@@ -53,7 +212,51 @@
     ],
     "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `cd toolboxes/btlejack && python3 btlejack.py --help`. Further invocations from upstream: `cd toolboxes/btlejack && cat README.md`; `cd toolboxes/btlejack && ls -la`. BtleJack: a new Bluetooth Low Energy swiss-army knife\nBtlejack provides everything you need to sniff, jam and hijack Bluetooth Low Energy devices. It relies on one or more `BBC Micro:Bit <http://microbit.org/>`_. devices running a dedicated firmware. You may also\nwant to use an `.",
     "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: BtleJack: a new Bluetooth Low Energy swiss-army knife\nBtlejack provides everything you need to sniff, jam and hijack Bluetooth Low Energy devices. It relies on one or more `BBC Micro:Bit <http://microbit.org/>`_. devices.",
-    "why_to_use": "Prefer this tool because: BtleJack: a new Bluetooth Low Energy swiss-army knife\nBtlejack provides everything you need to sniff, jam and hijack Bluetooth Low Energy devices. It relies on one or more `BBC Micro:Bit <http://microbit.org/>`_. devices running a dedicated firmware. You may also\nwant to use an `Adafruit's Bluefruit LE sniffer <https://www.adafruit.com/product/2269>`_ or a `nRF51822 Eval Kit <https://www.waveshare."
+    "why_to_use": "Prefer this tool because: BtleJack: a new Bluetooth Low Energy swiss-army knife\nBtlejack provides everything you need to sniff, jam and hijack Bluetooth Low Energy devices. It relies on one or more `BBC Micro:Bit <http://microbit.org/>`_. devices running a dedicated firmware. You may also\nwant to use an `Adafruit's Bluefruit LE sniffer <https://www.adafruit.com/product/2269>`_ or a `nRF51822 Eval Kit <https://www.waveshare.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/btlejack",
+        "successor": "github:unknown/internalblue",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/internalblue (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/btlejack",
+        "successor": "github:unknown/m5stick-nemo",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/m5stick-nemo (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/btlejack",
+        "successor": "github:ukBaz/python-bluezero",
+        "note": "Shares attack_surface+phase_hint+tag with ukBaz/python-bluezero (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/btlejack",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/btlejack",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:unknown/btlejack",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -64,8 +267,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -74,48 +278,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "btlejack",
     "unknown",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "Index entry in the Bluetooth category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Bluetooth system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/btlejack && python3 btlejack.py --help",
-    "cd toolboxes/btlejack && cat README.md",
-    "cd toolboxes/btlejack && ls -la",
     "cd toolboxes/btlejack && python3 btlejack.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/btlejack && python3 btlejack.py --help",
+    "cd toolboxes/btlejack && python3 btlejack.py --help",
+    "cd toolboxes/btlejack && python3 btlejack.py --help",
+    "cd toolboxes/btlejack && python3 btlejack.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST btlejack --output $KFIOSA_OUTPUT_DIR/btlejack.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST btlejack --output $KFIOSA_OUTPUT_DIR/btlejack.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
   ],

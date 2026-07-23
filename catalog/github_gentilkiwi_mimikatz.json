@@ -132,6 +132,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -287,28 +292,26 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Windows credential extraction, use mimikatz because mimikatz is a tool I've made to learn C and make somes experiments with Windows security.",
-    "When you need a concrete invocation, run `sekurlsa::tickets /export` as documented upstream for mimikatz.",
-    "When you need a concrete invocation, run `sekurlsa::pth /user:Administrateur /domain:winxp /ntlm:f193d757b4d487ab7e5a3743f038f713 /run:cmd` as documented upstream for mimikatz.",
-    "When you need a concrete invocation, run `kerberos::list /export` as documented upstream for mimikatz.",
-    "When you need a concrete invocation, run `kerberos::ptt c:\\chocolate.kirbi` as documented upstream for mimikatz.",
-    "When chaining Windows credential extraction tools, pair mimikatz with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `mimikatz --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sekurlsa::tickets /export",
-    "sekurlsa::pth /user:Administrateur /domain:winxp /ntlm:f193d757b4d487ab7e5a3743f038f713 /run:cmd",
-    "kerberos::list /export",
-    "kerberos::ptt c:\\chocolate.kirbi",
-    "kerberos::golden /admin:administrateur /domain:chocolate.local /sid:S-1-5-21-130452501-2365100805-3685010670 /krbtgt:310b643c5316c8c3c70a10cfb17e2e31 /ticket:chocolate.kirbi",
-    "crypto::certificates /export",
-    "crypto::certificates /export /systemstore:CERT_SYSTEM_STORE_LOCAL_MACHINE",
-    "crypto::keys /export",
-    "crypto::keys /machine /export",
-    "lsadump::dcsync /user:domain\\krbtgt /domain:lab.local"
+    "cd toolboxes/mimikatz && python3 mimikatz.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/mimikatz && python3 mimikatz.py --help",
+    "cd toolboxes/mimikatz && python3 mimikatz.py --help",
+    "cd toolboxes/mimikatz && python3 mimikatz.py --help",
+    "cd toolboxes/mimikatz && python3 mimikatz.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mimikatz --output $KFIOSA_OUTPUT_DIR/mimikatz.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mimikatz --output $KFIOSA_OUTPUT_DIR/mimikatz.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -264,8 +269,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -274,42 +280,46 @@
     "examples_policy": "operational"
   },
   "tags": [
+    "offensive",
     "wireless",
-    "toolbox",
-    "github",
-    "arpitjoshi18",
-    "lab_only",
+    "chaos",
+    "using",
+    "python",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Wireless, use Wireless_chaos_using_python because Wireless_chaos_using_python\nThis project briefly gives out information about exploitation tools available on Linux Kali. Along with it, project also shows work .",
-    "When chaining Wireless tools, pair Wireless_chaos_using_python with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Wireless_chaos_using_python --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/Wireless_chaos_using_python && python3 Wireless_chaos_using_python.py --help",
-    "cd toolboxes/Wireless_chaos_using_python && cat README.md",
-    "cd toolboxes/Wireless_chaos_using_python && ls -la",
     "cd toolboxes/Wireless_chaos_using_python && python3 Wireless_chaos_using_python.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Wireless_chaos_using_python && python3 Wireless_chaos_using_python.py --help",
+    "cd toolboxes/Wireless_chaos_using_python && python3 Wireless_chaos_using_python.py --help",
+    "cd toolboxes/Wireless_chaos_using_python && python3 Wireless_chaos_using_python.py --help",
+    "cd toolboxes/Wireless_chaos_using_python && python3 Wireless_chaos_using_python.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wireless_chaos_using_python --output $KFIOSA_OUTPUT_DIR/Wireless_chaos_using_python.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wireless_chaos_using_python --output $KFIOSA_OUTPUT_DIR/Wireless_chaos_using_python.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

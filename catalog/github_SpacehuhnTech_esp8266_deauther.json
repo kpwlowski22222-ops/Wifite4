@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--deauth",
+        "description": "Send deauthentication frames (count = number of frames).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -314,8 +319,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -324,45 +330,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "esp8266",
+    "deauther",
     "spacehuhntech",
-    "lang:cpp",
-    "lang:python",
-    "lang:javascript",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Wireless, use esp8266_deauther because Scan for WiFi devices, block selected connections, create dozens of networks and confuse WiFi scanners.",
-    "When chaining Wireless tools, pair esp8266_deauther with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `esp8266_deauther --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/esp8266_deauther && python3 esp8266_deauther.py --help",
-    "cd toolboxes/esp8266_deauther && cat README.md",
-    "cd toolboxes/esp8266_deauther && ls -la",
     "cd toolboxes/esp8266_deauther && python3 esp8266_deauther.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/esp8266_deauther && python3 esp8266_deauther.py --help",
+    "cd toolboxes/esp8266_deauther && python3 esp8266_deauther.py --help",
+    "cd toolboxes/esp8266_deauther && python3 esp8266_deauther.py --help",
+    "cd toolboxes/esp8266_deauther && python3 esp8266_deauther.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST esp8266_deauther --output $KFIOSA_OUTPUT_DIR/esp8266_deauther.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST esp8266_deauther --output $KFIOSA_OUTPUT_DIR/esp8266_deauther.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

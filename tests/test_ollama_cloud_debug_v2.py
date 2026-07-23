@@ -21,10 +21,13 @@ from core.ai_backend import ollama_cloud_debug as ocd
 
 class TestDefaults:
     def test_default_model_is_uncensored_qwen(self):
-        # Phase 4 (2026-07-22): operator's preferred default is
-        # the cloud-routed minimax-m3:cloud. The Qwen2.5-Coder-14B
-        # is the Tier-1 local fallback (not the default).
-        assert ocd.DEFAULT_MODEL == "minimax-m3:cloud"
+        # Phase 2.4 §J.2 / state.txt: offline-first uncensored Qwen.
+        # Cloud models are opt-in via --cloud / $OLLAMA_DEFAULT_MODEL.
+        expected = (
+            "hf.co/roleplaiapp/"
+            "Qwen2.5-Coder-14B-Instruct-Uncensored-Q4_K_M-GGUF:latest"
+        )
+        assert ocd.DEFAULT_MODEL == expected
 
     def test_default_local_endpoint(self):
         assert ocd.DEFAULT_LOCAL_ENDPOINT == "http://localhost:11434"

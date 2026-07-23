@@ -1,9 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "go install -v github.com/projectdiscovery/uncover/cmd/uncover@latest",
-    "uncover -h",
-    "./uncover [flags]"
+    "cd toolboxes/uncover && python3 uncover.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/uncover && python3 uncover.py --help",
+    "cd toolboxes/uncover && python3 uncover.py --help",
+    "cd toolboxes/uncover && python3 uncover.py --help",
+    "cd toolboxes/uncover && python3 uncover.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST uncover --output $KFIOSA_OUTPUT_DIR/uncover.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST uncover --output $KFIOSA_OUTPUT_DIR/uncover.log"
   ],
   "documentation": {
     "readme": "Quickly discover exposed hosts on the internet using multiple search engines.",
@@ -170,6 +174,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -334,7 +343,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -343,12 +354,12 @@
   },
   "url": "https://github.com/projectdiscovery/uncover",
   "use_cases": [
-    "When you need recon, use uncover because Quickly discover exposed hosts on the internet using multiple search engines.",
-    "When you need a concrete invocation, run `go install -v github.com/projectdiscovery/uncover/cmd/uncover@latest` as documented upstream for uncover.",
-    "When you need a concrete invocation, run `uncover -h` as documented upstream for uncover.",
-    "When you need a concrete invocation, run `./uncover [flags]` as documented upstream for uncover.",
-    "When chaining recon tools, pair uncover with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `uncover --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

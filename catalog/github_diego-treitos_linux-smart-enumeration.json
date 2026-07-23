@@ -150,6 +150,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -312,8 +317,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -322,50 +330,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "linux",
+    "smart",
+    "enumeration",
     "diego-treitos",
-    "lang:shell",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use linux-smart-enumeration because First, a couple of useful oneliners ;).",
-    "When you need a concrete invocation, run `wget \"$KFIOSA_TARGET_URL\" -O lse.sh;chmod 700 lse.sh` as documented upstream for linux-smart-enumeration.",
-    "When you need a concrete invocation, run `curl \"$KFIOSA_TARGET_URL\" -Lo lse.sh;chmod 700 lse.sh` as documented upstream for linux-smart-enumeration.",
-    "When you need a concrete invocation, run `Use: ./lse.sh [options]` as documented upstream for linux-smart-enumeration.",
-    "When you need a concrete invocation, run `usr: User related tests.` as documented upstream for linux-smart-enumeration.",
-    "When chaining Penetration Testing tools, pair linux-smart-enumeration with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `linux-smart-enumeration --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "wget \"$KFIOSA_TARGET_URL\" -O lse.sh;chmod 700 lse.sh",
-    "curl \"$KFIOSA_TARGET_URL\" -Lo lse.sh;chmod 700 lse.sh",
-    "Use: ./lse.sh [options]",
-    "usr: User related tests.",
-    "sud: Sudo related tests.",
-    "fst: File system related tests.",
-    "sys: System related tests.",
-    "sec: Security measures related tests.",
-    "ret: Recurren tasks (cron, timers) related tests.",
-    "net: Network related tests."
+    "cd toolboxes/linux-smart-enumeration && python3 linux-smart-enumeration.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/linux-smart-enumeration && python3 linux-smart-enumeration.py --help",
+    "cd toolboxes/linux-smart-enumeration && python3 linux-smart-enumeration.py --help",
+    "cd toolboxes/linux-smart-enumeration && python3 linux-smart-enumeration.py --help",
+    "cd toolboxes/linux-smart-enumeration && python3 linux-smart-enumeration.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST linux-smart-enumeration --output $KFIOSA_OUTPUT_DIR/linux-smart-enumeration.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST linux-smart-enumeration --output $KFIOSA_OUTPUT_DIR/linux-smart-enumeration.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

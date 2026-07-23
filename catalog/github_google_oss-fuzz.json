@@ -1,6 +1,14 @@
 {
   "category": "frameworks",
-  "command_examples": [],
+  "command_examples": [
+    "cd toolboxes/oss-fuzz && python3 oss-fuzz.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/oss-fuzz && python3 oss-fuzz.py --help",
+    "cd toolboxes/oss-fuzz && python3 oss-fuzz.py --help",
+    "cd toolboxes/oss-fuzz && python3 oss-fuzz.py --help",
+    "cd toolboxes/oss-fuzz && python3 oss-fuzz.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST oss-fuzz --output $KFIOSA_OUTPUT_DIR/oss-fuzz.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST oss-fuzz --output $KFIOSA_OUTPUT_DIR/oss-fuzz.log"
+  ],
   "documentation": {
     "readme": "OSS-Fuzz: Continuous Fuzzing for Open Source Software",
     "usage_sections": [
@@ -129,6 +137,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -291,7 +304,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -300,9 +314,12 @@
   },
   "url": "https://github.com/google/oss-fuzz",
   "use_cases": [
-    "When you need frameworks, use oss-fuzz because OSS-Fuzz: Continuous Fuzzing for Open Source Software.",
-    "When chaining frameworks tools, pair oss-fuzz with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `oss-fuzz --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

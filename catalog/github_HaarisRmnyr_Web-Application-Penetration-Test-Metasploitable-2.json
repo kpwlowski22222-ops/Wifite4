@@ -120,6 +120,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -261,8 +266,10 @@
   "risk": {
     "level": "high",
     "signals": [
-      "intrinsic",
-      "lab_only",
+      "web",
+      "active",
+      "remote",
+      "credential",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -271,41 +278,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "web_application_security",
-    "toolbox",
-    "github",
-    "haarisrmnyr",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "http",
+    "active",
+    "application",
+    "penetration",
+    "test",
+    "metasploitable",
+    "cloud",
+    "ble_4_x",
+    "kfiosa"
   ],
   "use_cases": [
-    "When you need Web Application Security, use Web-Application-Penetration-Test-Metasploitable-2 because Web-Application-Penetration-Test-Metasploitable-2\nThis project documents a simulated penetration test conducted against Metasploitable 2, a deliberately vulnera.",
-    "When chaining Web Application Security tools, pair Web-Application-Penetration-Test-Metasploitable-2 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Web-Application-Penetration-Test-Metasploitable-2 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use after httpx / wappalyzer / whatweb has identified the target web stack (CMS, framework, server).",
+    "Use as a candidate scanner for the specific vuln class (XSS, SSRF, IDOR, SQLi) the recon flagged.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/Web-Application-Penetration-Test-Metasploitable-2 && python3 Web-Application-Penetration-Test-Metasploitable-2.py -u https://$KFIOSA_TARGET_HOST --cookie $KFIOSA_TARGET_COOKIE",
+    "cd toolboxes/Web-Application-Penetration-Test-Metasploitable-2 && python3 Web-Application-Penetration-Test-Metasploitable-2.py -h",
     "cd toolboxes/Web-Application-Penetration-Test-Metasploitable-2 && python3 Web-Application-Penetration-Test-Metasploitable-2.py --help",
-    "cd toolboxes/Web-Application-Penetration-Test-Metasploitable-2 && cat README.md",
-    "cd toolboxes/Web-Application-Penetration-Test-Metasploitable-2 && ls -la",
-    "cd toolboxes/Web-Application-Penetration-Test-Metasploitable-2 && python3 Web-Application-Penetration-Test-Metasploitable-2.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Web-Application-Penetration-Test-Metasploitable-2 && python3 Web-Application-Penetration-Test-Metasploitable-2.py --help",
+    "cd toolboxes/Web-Application-Penetration-Test-Metasploitable-2 && python3 Web-Application-Penetration-Test-Metasploitable-2.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Web-Application-Penetration-Test-Metasploitable-2 --output $KFIOSA_OUTPUT_DIR/Web-Application-Penetration-Test-Metasploitable-2.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Web-Application-Penetration-Test-Metasploitable-2 --output $KFIOSA_OUTPUT_DIR/Web-Application-Penetration-Test-Metasploitable-2.log"
   ],
   "attack_surface": [
     "web",
-    "cloud"
+    "cloud",
+    "ble_4_x"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "payload_grammar",
+    "header_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

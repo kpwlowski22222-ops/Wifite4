@@ -1,8 +1,13 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "ARPTable               - Lists the current ARP table and adapter information (equivalent to arp -a)",
-    "InterestingFiles       - \"Interesting\" files matching various patterns in the user's folder. Note: takes non-trivial time."
+    "cd toolboxes/Seatbelt && python3 Seatbelt.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Seatbelt && python3 Seatbelt.py --help",
+    "cd toolboxes/Seatbelt && python3 Seatbelt.py --help",
+    "cd toolboxes/Seatbelt && python3 Seatbelt.py --help",
+    "cd toolboxes/Seatbelt && python3 Seatbelt.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Seatbelt --output $KFIOSA_OUTPUT_DIR/Seatbelt.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Seatbelt --output $KFIOSA_OUTPUT_DIR/Seatbelt.log"
   ],
   "documentation": {
     "readme": "Seatbelt is a C# project that performs a number of security oriented host-survey \"safety checks\" relevant from both offensive and defensive security perspectives.",
@@ -127,6 +132,11 @@
       {
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
         "source": "v2_enhancement"
       }
     ],
@@ -276,7 +286,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -285,11 +297,12 @@
   },
   "url": "https://github.com/GhostPack/Seatbelt",
   "use_cases": [
-    "When you need post_exploitation, use Seatbelt because Seatbelt is a C# project that performs a number of security oriented host-survey \"safety checks\" relevant from both offensive and defensive security perspective.",
-    "When you need a concrete invocation, run `ARPTable               - Lists the current ARP table and adapter information (equivalent to arp -a)` as documented upstream for Seatbelt.",
-    "When you need a concrete invocation, run `InterestingFiles       - \"Interesting\" files matching various patterns in the user's folder. Note: takes non-trivial time.` as documented upstream for Seatbelt.",
-    "When chaining post_exploitation tools, pair Seatbelt with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Seatbelt --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

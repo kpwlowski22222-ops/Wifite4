@@ -10,7 +10,6 @@ import base64
 import json
 import os
 import subprocess
-import threading
 import time
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -62,17 +61,32 @@ class HostVisionNavigator:
             pass
 
     def capture_fullscreen(self, filename_prefix: str = "shot") -> Optional[Path]:
-        """Take a full screen capture using import/scrot/xwd or CLI utilities."""
-        ts = int(time.time() * 1000)
-        out_path = self.cache_dir / f"{filename_prefix}_{ts}.png"
+        """Take a full screen capture using import/scrot/xwd or CLI utilities.
 
-        for cmd in (
-            f"import -window root '{out_path}'",
-            f"scrot '{out_path}'",
-            f"gnome-screenshot -f '{out_path}'",
-        ):
-            if os.system(f"{cmd} >/dev/null 2>&1") == 0 and out_path.is_file():
-                return out_path
+        Uses ``subprocess.run`` with a list argv and ``shell=False``; the
+        output path is validated to live under ``self.cache_dir`` so an
+        attacker-controlled prefix cannot write outside the cache.
+        """
+        ts = int(time.time() * 1000)
+        out_path = (self.cache_dir / f"{filename_prefix}_{ts}.png").resolve()
+        if not str(out_path).startswith(str(self.cache_dir.resolve())):
+            return None
+
+        candidates = [
+            ["import", "-window", "root", str(out_path)],
+            ["scrot", str(out_path)],
+            ["gnome-screenshot", "-f", str(out_path)],
+        ]
+        for argv in candidates:
+            try:
+                p = subprocess.run(
+                    argv, stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL, timeout=15,
+                )
+                if p.returncode == 0 and out_path.is_file():
+                    return out_path
+            except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+                pass
         return None
 
     def crop_region(
@@ -244,34 +258,39 @@ class HostVisionNavigator:
 
         shot_path = self.capture_fullscreen(filename_prefix=f"os_step_{step_idx}")
         if not shot_path or not shot_path.is_file():
-            shot_path = self.cache_dir / f"os_step_{step_idx}_{int(time.time())}.png"
-            if Image is not None:
-                try:
-                    img = Image.new("RGB", (1920, 1080), color=(30, 30, 30))
-                    img.save(shot_path)
-                except Exception:
-                    pass
+            # Honest degradation: no capture tool available. Do not
+            # synthesize a blank image or fake default regions.
+            return {
+                "ok": False,
+                "step": step_idx,
+                "window": window_name,
+                "error": "screen capture unavailable (no import/scrot/gnome-screenshot)",
+                "screenshot": "",
+                "labels_discovered": 0,
+                "regions_cropped": 0,
+                "labels": [],
+            }
 
         labels = []
         if self.gemini_api_key:
             labels = self.extract_labels_via_gemini(shot_path)
-        if not labels and shot_path:
+        if not labels:
             labels = self.extract_labels_via_local_vision(shot_path)
 
         cropped_count = 0
-        if shot_path and shot_path.is_file():
-            for item in labels[:10]:
-                box = item.get("box")
-                lbl = item.get("label")
-                if box and len(box) == 4 and lbl:
-                    cp = self.crop_region(shot_path, tuple(box), lbl)
-                    if cp:
-                        cropped_count += 1
+        for item in labels[:10]:
+            box = item.get("box")
+            lbl = item.get("label")
+            if box and len(box) == 4 and lbl:
+                cp = self.crop_region(shot_path, tuple(box), lbl)
+                if cp:
+                    cropped_count += 1
 
         return {
+            "ok": len(labels) > 0,
             "step": step_idx,
             "window": window_name,
-            "screenshot": str(shot_path) if shot_path else "",
+            "screenshot": str(shot_path),
             "labels_discovered": len(labels),
             "regions_cropped": cropped_count,
             "labels": [l.get("label") for l in labels if l.get("label")],
@@ -371,6 +390,122 @@ class HostVisionNavigator:
     def get_known_label(self, label: str) -> Optional[Dict[str, Any]]:
         """Look up known bounding box and cached cropped region for a control label."""
         return self._labels_index.get(label)
+
+    def click_label(self, label: str) -> Dict[str, Any]:
+        """Click the center of a previously-discovered UI control label.
+
+        Uses ``xdotool`` if available and honest-degrades when the label
+        is unknown, the box is invalid, or xdotool is missing. This is the
+        act-step bridge for the Holo predict→act→read→label loop: after
+        the AI predicts *what* to click, KFIOSA can act on a cached label
+        rather than relying on the model alone.
+        """
+        entry = self._labels_index.get(label)
+        if not entry:
+            return {"ok": False, "label": label, "error": "label not indexed"}
+        box = entry.get("box")
+        if not box or len(box) != 4:
+            return {"ok": False, "label": label, "error": "label has no bounding box"}
+        left, top, right, bottom = box
+        cx = int((left + right) / 2)
+        cy = int((top + bottom) / 2)
+        try:
+            subprocess.run(
+                ["xdotool", "mousemove", str(cx), str(cy), "click", "1"],
+                capture_output=True, timeout=5, check=True,
+            )
+            return {
+                "ok": True,
+                "label": label,
+                "box": box,
+                "click": [cx, cy],
+            }
+        except FileNotFoundError:
+            return {"ok": False, "label": label, "error": "xdotool not installed"}
+        except subprocess.CalledProcessError as e:
+            return {
+                "ok": False,
+                "label": label,
+                "error": f"xdotool failed: {e.stderr.decode('utf-8', errors='replace')[:200]}",
+            }
+        except Exception as e:  # noqa: BLE001
+            return {"ok": False, "label": label, "error": f"click failed: {e}"}
+
+    def read_screen_content(self) -> Dict[str, Any]:
+        """Capture the current screen and return its text/labels (live-time
+        screen reading for the holo OS-agent AI loop).
+
+        Honest-degrade: no screenshot tool and/or no OCR engine →
+        ``{ok: False, error, labels: [], text: "", screenshot: ""}``; never
+        fabricates labels.
+        """
+        shot = self.capture_fullscreen(filename_prefix="read_screen")
+        if not shot:
+            return {
+                "ok": False,
+                "error": "screen capture unavailable",
+                "labels": [],
+                "text": "",
+                "screenshot": "",
+                "count": 0,
+            }
+        labels = self.extract_labels_via_local_vision(shot) or []
+        texts = [str(l.get("label", "")) for l in labels if l.get("label")]
+        return {
+            "ok": True,
+            "labels": texts,
+            "text": "\n".join(texts),
+            "screenshot": str(shot),
+            "count": len(texts),
+        }
+
+    def label_screen_live(
+        self,
+        duration_s: float = 6.0,
+        on_label: Optional[Callable[[List[str]], None]] = None,
+    ) -> Dict[str, Any]:
+        """Continuously label the screen for ``duration_s`` seconds
+        (live-time UI labeling), accumulating discovered control labels.
+
+        Calls ``on_label(label_list)`` after each step so a caller (the
+        holo predict→act→read→label loop, the TUI activity log, …) can
+        stream labels as they are discovered. Honest-degrade like
+        :meth:`read_screen_content` — never invents labels.
+        """
+        import time as _time
+        end = _time.time() + max(1.0, float(duration_s))
+        steps = 0
+        total = 0
+        all_labels: List[str] = []
+        while _time.time() < end:
+            steps += 1
+            res = self.navigate_os_step(step_idx=steps)
+            lbls = res.get("labels") or []
+            total += len(lbls)
+            all_labels.extend(lbls)
+            if on_label is not None:
+                try:
+                    on_label(list(lbls))
+                except Exception:  # noqa: BLE001
+                    pass
+        # Dedupe while preserving order.
+        unique = list(dict.fromkeys(all_labels))
+        if not unique:
+            return {
+                "ok": False,
+                "steps": steps,
+                "labels_count": 0,
+                "labels": [],
+                "duration_s": float(duration_s),
+                "error": "no screen labels discovered (capture or OCR unavailable)",
+            }
+        return {
+            "ok": True,
+            "steps": steps,
+            "labels_count": total,
+            "labels": unique,
+            "duration_s": float(duration_s),
+        }
 
 
 navigator = HostVisionNavigator()

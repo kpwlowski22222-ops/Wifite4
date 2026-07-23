@@ -1,16 +1,13 @@
 {
   "category": "ble",
   "command_examples": [
-    "diff --git a/imports.mak b/imports.mak",
-    "index b2cf5bf59..389d1a7c3 100644",
-    "PYTHON                 ?= python3",
-    "TICLANG_ARMCOMPILER    ?= /home/username/ti/ccs1270/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS-0",
-    "IAR_ARMCOMPILER        ?= /home/username/iar9.50.2",
-    "diff --git a/kernel/tirtos7/packages/ti/sysbios/family/arm/m3/Hwi_asm_gcc.s b/kernel/tirtos7/packages/ti/sysbios/family/arm/m3/Hwi_asm_gcc.s",
-    "index 187cfd744..4cbf0d384 100644",
-    "diff --git a/kernel/tirtos7/packages/ti/sysbios/family/arm/v8m/Hwi_asm_gcc.s b/kernel/tirtos7/packages/ti/sysbios/family/arm/v8m/Hwi_asm_gcc.s",
-    "index 717f49c9a..1c83ed725 100644",
-    "cd ~/ti/simplelink_cc13xx_cc26xx_sdk_8_30_01_01"
+    "cd toolboxes/Sniffle && python3 Sniffle.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Sniffle && python3 Sniffle.py --help",
+    "cd toolboxes/Sniffle && python3 Sniffle.py --help",
+    "cd toolboxes/Sniffle && python3 Sniffle.py --help",
+    "cd toolboxes/Sniffle && python3 Sniffle.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Sniffle --output $KFIOSA_OUTPUT_DIR/Sniffle.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Sniffle --output $KFIOSA_OUTPUT_DIR/Sniffle.log"
   ],
   "documentation": {
     "readme": "Sniffle is a sniffer for Bluetooth 5 and 4.x (LE) using TI CC1352/CC26x2 hardware.",
@@ -321,6 +318,11 @@
         "name": "--no-color",
         "description": "Disable ANSI color in output.",
         "source": "generic_kfiosa"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -492,7 +494,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -501,13 +505,12 @@
   },
   "url": "https://github.com/nccgroup/Sniffle",
   "use_cases": [
-    "When you need ble, use Sniffle because Sniffle is a sniffer for Bluetooth 5 and 4.x (LE) using TI CC1352/CC26x2 hardware.",
-    "When you need a concrete invocation, run `diff --git a/imports.mak b/imports.mak` as documented upstream for Sniffle.",
-    "When you need a concrete invocation, run `index b2cf5bf59..389d1a7c3 100644` as documented upstream for Sniffle.",
-    "When you need a concrete invocation, run `PYTHON                 ?= python3` as documented upstream for Sniffle.",
-    "When you need a concrete invocation, run `TICLANG_ARMCOMPILER    ?= /home/username/ti/ccs1270/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS-0` as documented upstream for Sniffle.",
-    "When chaining ble tools, pair Sniffle with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Sniffle --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

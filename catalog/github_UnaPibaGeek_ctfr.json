@@ -32,6 +32,96 @@
         "name": "--output",
         "description": "Output file.",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -64,6 +154,30 @@
         "signature": "def main()",
         "file": "ctfr.py",
         "language": "python"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "ctfr/__main__.py",
+        "language": "python",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "ctfr/__main__.py",
+        "language": "python",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "ctfr/__main__.py",
+        "language": "python",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -84,7 +198,51 @@
     ],
     "how_to_use": "Install/setup: git clone https://github.com/UnaPibaGeek/ctfr.git; pip3 install -r requirements.txt. Run the primary entrypoint as shown in upstream docs, e.g. `Python 3.0 or later.`. Further invocations from upstream: `pip3 (sudo apt-get install python3-pip).`; `python3 ctfr.py --help`. CTFR Do you miss AXFR technique? This tool allows to get the subdomains from a HTTPS website in a few seconds. How it works? CTFR does not use neither dictionary attack nor brute-force, it just abuses of Certificate Transparency logs. For more information about CT logs, check www.certificate-transparency.org and crt.sh.",
     "when_to_use": "Use during the 'recon' phase against surfaces [web] in the OSINT category. Fits when the engagement needs: CTFR\nDo you miss AXFR technique? This tool allows to get the subdomains from a HTTP**S** website in a few seconds.  \nHow it works? CTFR does not use neither dictionary attack nor brute-force, it just abuses of Certificat.",
-    "why_to_use": "Prefer this tool based on upstream description: CTFR Do you miss AXFR technique? This tool allows to get the subdomains from a HTTPS website in a few seconds. How it works? CTFR does not use neither dictionary attack nor brute-force, it just abuses of Certificate Transparency logs. For more information about CT logs, check www.certificate-transparency.org and crt.sh."
+    "why_to_use": "Prefer this tool based on upstream description: CTFR Do you miss AXFR technique? This tool allows to get the subdomains from a HTTPS website in a few seconds. How it works? CTFR does not use neither dictionary attack nor brute-force, it just abuses of Certificate Transparency logs. For more information about CT logs, check www.certificate-transparency.org and crt.sh.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:UnaPibaGeek/ctfr",
+        "successor": "github:webhooksite/opencti",
+        "note": "Shares attack_surface+phase_hint+tag with webhooksite/opencti (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:UnaPibaGeek/ctfr",
+        "successor": "github:unknown/SecretFinder",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/SecretFinder (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:UnaPibaGeek/ctfr",
+        "successor": "github:thewhiteh4t/seeker",
+        "note": "Shares attack_surface+phase_hint+tag with thewhiteh4t/seeker (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:UnaPibaGeek/ctfr",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:UnaPibaGeek/ctfr",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:UnaPibaGeek/ctfr",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -95,8 +253,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -105,49 +264,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "ctfr",
     "unapibageek",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need OSINT, use ctfr because CTFR\nDo you miss AXFR technique? This tool allows to get the subdomains from a HTTP**S** website in a few seconds.  \nHow it works? CTFR does not use neither dic.",
-    "When the engagement is in the recon phase, use ctfr as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `Python 3.0 or later.` as documented upstream for ctfr.",
-    "When you need a concrete invocation, run `pip3 (sudo apt-get install python3-pip).` as documented upstream for ctfr.",
-    "When you need a concrete invocation, run `python3 ctfr.py --help` as documented upstream for ctfr.",
-    "When you need a concrete invocation, run `python3 ctfr.py -d starbucks.com` as documented upstream for ctfr.",
-    "When chaining OSINT tools, pair ctfr with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `ctfr --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Python 3.0 or later.",
-    "pip3 (sudo apt-get install python3-pip).",
-    "python3 ctfr.py --help",
-    "python3 ctfr.py -d starbucks.com",
-    "python3 ctfr.py -d facebook.com -o /home/shei/subdomains_fb.txt"
+    "cd toolboxes/ctfr && python3 ctfr.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ctfr && python3 ctfr.py --help",
+    "cd toolboxes/ctfr && python3 ctfr.py --help",
+    "cd toolboxes/ctfr && python3 ctfr.py --help",
+    "cd toolboxes/ctfr && python3 ctfr.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ctfr --output $KFIOSA_OUTPUT_DIR/ctfr.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ctfr --output $KFIOSA_OUTPUT_DIR/ctfr.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python"
   ],

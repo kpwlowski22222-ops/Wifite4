@@ -1,10 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "kubectl apply -f job.yaml",
-    "job.batch/kube-bench created",
-    "kube-bench-j76s9   0/1     ContainerCreating   0          3s",
-    "kube-bench-j76s9   0/1     Completed   0          11s"
+    "cd toolboxes/kube-bench && python3 kube-bench.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/kube-bench && python3 kube-bench.py --help",
+    "cd toolboxes/kube-bench && python3 kube-bench.py --help",
+    "cd toolboxes/kube-bench && python3 kube-bench.py --help",
+    "cd toolboxes/kube-bench && python3 kube-bench.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kube-bench --output $KFIOSA_OUTPUT_DIR/kube-bench.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST kube-bench --output $KFIOSA_OUTPUT_DIR/kube-bench.log"
   ],
   "documentation": {
     "readme": "[![GitHub Release][release-img]][release] [![Downloads][download]][release] [![Docker Pulls][docker-pull]][docker] [![Go Report Card][report-card-img]][report-card]",
@@ -130,6 +133,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -297,7 +305,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -306,13 +315,12 @@
   },
   "url": "https://github.com/aquasecurity/kube-bench",
   "use_cases": [
-    "When you need frameworks, use kube-bench because [![GitHub Release][release-img]][release] [![Downloads][download]][release] [![Docker Pulls][docker-pull]][docker] [![Go Report Card][report-card-img]][report-c.",
-    "When you need a concrete invocation, run `kubectl apply -f job.yaml` as documented upstream for kube-bench.",
-    "When you need a concrete invocation, run `job.batch/kube-bench created` as documented upstream for kube-bench.",
-    "When you need a concrete invocation, run `kube-bench-j76s9   0/1     ContainerCreating   0          3s` as documented upstream for kube-bench.",
-    "When you need a concrete invocation, run `kube-bench-j76s9   0/1     Completed   0          11s` as documented upstream for kube-bench.",
-    "When chaining frameworks tools, pair kube-bench with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `kube-bench --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

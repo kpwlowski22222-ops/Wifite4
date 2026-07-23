@@ -71,6 +71,61 @@
         "name": "--target",
         "description": "Requested target to validate.",
         "source": "docs"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -81,6 +136,62 @@
         "language": "cli",
         "description": "CLI entrypoint for nails",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "nails/__main__.py",
+        "language": "python",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "nails/__main__.py",
+        "language": "python",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "nails/__main__.py",
+        "language": "python",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "nails/__main__.py",
+        "language": "python",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "nails/__main__.py",
+        "language": "python",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "nails/__main__.py",
+        "language": "python",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "nails/__main__.py",
+        "language": "python",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -153,7 +264,51 @@
     ],
     "how_to_use": "Install/setup: git clone https://github.com/WitteShadovv/nails /mnt/hidden/src/nails. Run the primary entrypoint as shown in upstream docs, e.g. `sudo cryptsetup open --type tcrypt --veracrypt --tcrypt-hidden \\`. Further invocations from upstream: `sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden`; `install -m0755 /path/to/downloaded/nails /mnt/hidden/nails`. NAILS — NixOS Anti-forensics Isolation & Layering System.",
     "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: NAILS — NixOS Anti-forensics Isolation & Layering System.",
-    "why_to_use": "Prefer this tool based on upstream description: NAILS — NixOS Anti-forensics Isolation & Layering System."
+    "why_to_use": "Prefer this tool based on upstream description: NAILS — NixOS Anti-forensics Isolation & Layering System.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:WitteShadovv/nails",
+        "successor": "github:volatilityfoundation/volatility3",
+        "note": "Shares attack_surface+phase_hint+tag with volatilityfoundation/volatility3 (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:WitteShadovv/nails",
+        "successor": "github:snovvcrash/usbrip",
+        "note": "Shares attack_surface+phase_hint+tag with snovvcrash/usbrip (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:WitteShadovv/nails",
+        "successor": "github:simsong/bulk_extractor",
+        "note": "Shares attack_surface+phase_hint+tag with simsong/bulk_extractor (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:WitteShadovv/nails",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:WitteShadovv/nails",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:WitteShadovv/nails",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -164,8 +319,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -174,54 +332,51 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "nails",
     "witteshadovv",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use nails because NAILS — NixOS Anti-forensics Isolation & Layering System.",
-    "When you need a concrete invocation, run `sudo cryptsetup open --type tcrypt --veracrypt --tcrypt-hidden \\` as documented upstream for nails.",
-    "When you need a concrete invocation, run `sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden` as documented upstream for nails.",
-    "When you need a concrete invocation, run `install -m0755 /path/to/downloaded/nails /mnt/hidden/nails` as documented upstream for nails.",
-    "When you need a concrete invocation, run `cd /mnt/hidden/src/nails` as documented upstream for nails.",
-    "When chaining Penetration Testing tools, pair nails with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `nails --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo cryptsetup open --type tcrypt --veracrypt --tcrypt-hidden \\",
-    "sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden",
-    "install -m0755 /path/to/downloaded/nails /mnt/hidden/nails",
-    "cd /mnt/hidden/src/nails",
-    "cargo build --release",
-    "install -m0755 ./target/release/nails /mnt/hidden/nails",
-    "nix build .#nails",
-    "install -m0755 ./result/bin/nails /mnt/hidden/nails",
-    "sudo mount /dev/mapper/veracrypt-hidden /mnt/hidden-volume",
-    "nails init /mnt/hidden-volume"
+    "cd toolboxes/nails && python3 nails.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/nails && python3 nails.py --help",
+    "cd toolboxes/nails && python3 nails.py --help",
+    "cd toolboxes/nails && python3 nails.py --help",
+    "cd toolboxes/nails && python3 nails.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nails --output $KFIOSA_OUTPUT_DIR/nails.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nails --output $KFIOSA_OUTPUT_DIR/nails.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python",
     "shell"

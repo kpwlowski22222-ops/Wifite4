@@ -1,10 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "./setup/checkout-latest-tag.sh",
-    "./ps-empire install -y",
-    "./ps-empire server",
-    "./ps-empire server -h"
+    "cd toolboxes/Empire && python3 Empire.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Empire && python3 Empire.py --help",
+    "cd toolboxes/Empire && python3 Empire.py --help",
+    "cd toolboxes/Empire && python3 Empire.py --help",
+    "cd toolboxes/Empire && python3 Empire.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Empire --output $KFIOSA_OUTPUT_DIR/Empire.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Empire --output $KFIOSA_OUTPUT_DIR/Empire.log"
   ],
   "documentation": {
     "readme": "Empire Empire is a post-exploitation and adversary emulation framework that is used to aid Red Teams and Penetration Testers. The Empire server is written in Python 3 and is modular to allow operator flexibility. Empire comes built-in with a client that can be used remotely to access the server. There is also a GUI available for remotely accessing the Empire server, Starkiller.",
@@ -177,6 +180,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -327,7 +335,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -336,13 +346,12 @@
   },
   "url": "https://github.com/BC-SECURITY/Empire",
   "use_cases": [
-    "When you need frameworks, use Empire because Empire Empire is a post-exploitation and adversary emulation framework that is used to aid Red Teams and Penetration Testers. The Empire server is written in Py.",
-    "When you need a concrete invocation, run `./setup/checkout-latest-tag.sh` as documented upstream for Empire.",
-    "When you need a concrete invocation, run `./ps-empire install -y` as documented upstream for Empire.",
-    "When you need a concrete invocation, run `./ps-empire server` as documented upstream for Empire.",
-    "When you need a concrete invocation, run `./ps-empire server -h` as documented upstream for Empire.",
-    "When chaining frameworks tools, pair Empire with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Empire --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -121,6 +121,11 @@
         "name": "--quiet",
         "description": "Suppress non-error output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -298,8 +303,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -308,53 +314,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "airprowl",
     "bernisnukic",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use airprowl because Real-time wireless scanner for Linux. Tracks nearby Bluetooth, WiFi (APs + clients), and Sub-GHz (315/433/868/915 MHz) devices with live RSSI, EMA-smoothed aver.",
-    "When the engagement is in the recon phase, use airprowl as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `sudo apt install network-manager iw bluez libusb-1.0-0 libdbus-1-dev pkg-config` as documented upstream for airprowl.",
-    "When you need a concrete invocation, run `sudo pacman -S networkmanager iw bluez libusb pkg-config` as documented upstream for airprowl.",
-    "When you need a concrete invocation, run `cargo build --release` as documented upstream for airprowl.",
-    "When you need a concrete invocation, run `./target/release/airprowl              # BT + WiFi APs (no root)` as documented upstream for airprowl.",
-    "When chaining Reconnaissance tools, pair airprowl with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `airprowl --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo apt install network-manager iw bluez libusb-1.0-0 libdbus-1-dev pkg-config",
-    "sudo pacman -S networkmanager iw bluez libusb pkg-config",
-    "cargo build --release",
-    "./target/release/airprowl              # BT + WiFi APs (no root)",
-    "sudo ./target/release/airprowl         # adds client sniffing + Yard Stick",
-    "airprowl --scan bt                         # 10s BT scan (default duration)",
-    "airprowl --scan wifi --duration 5          # 5s WiFi scan",
-    "airprowl --scan subghz --duration 30       # 30s Sub-GHz sweep",
-    "sudo airprowl --scan wifi --duration 15    # WiFi w/ monitor-mode client sniffing",
-    "airprowl --scan bt | jq '.devices[] | select(.vendor == \"Apple\")'"
+    "cd toolboxes/airprowl && python3 airprowl.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/airprowl && python3 airprowl.py --help",
+    "cd toolboxes/airprowl && python3 airprowl.py --help",
+    "cd toolboxes/airprowl && python3 airprowl.py --help",
+    "cd toolboxes/airprowl && python3 airprowl.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST airprowl --output $KFIOSA_OUTPUT_DIR/airprowl.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST airprowl --output $KFIOSA_OUTPUT_DIR/airprowl.log"
   ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

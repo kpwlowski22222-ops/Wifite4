@@ -1,15 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "python3 ssbackend.pyz",
-    "cd frontend/dist/spa",
-    "quasar serve -p 9091 --history",
-    "python3 sscollector.pyz -h",
-    "python3 -m pip install pipenv",
-    "pipenv install .",
-    "python3 ./sscollector.py",
-    "python3 sscollector.pyz cli",
-    "python3 sscollector.pyz spn -t <tenant> -c <clientID> -s <clientSecret>"
+    "cd toolboxes/Stormspotter && python3 Stormspotter.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Stormspotter && python3 Stormspotter.py --help",
+    "cd toolboxes/Stormspotter && python3 Stormspotter.py --help",
+    "cd toolboxes/Stormspotter && python3 Stormspotter.py --help",
+    "cd toolboxes/Stormspotter && python3 Stormspotter.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Stormspotter --output $KFIOSA_OUTPUT_DIR/Stormspotter.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Stormspotter --output $KFIOSA_OUTPUT_DIR/Stormspotter.log"
   ],
   "documentation": {
     "readme": "Stormspotter creates an “attack graph” of the resources in an Azure subscription. It enables red teams and pentesters to visualize the attack surface and pivot opportunities within a tenant, and supercharges your defenders to quickly orient and prioritize incident response work.",
@@ -134,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -305,7 +308,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -314,13 +319,12 @@
   },
   "url": "https://github.com/Azure/Stormspotter",
   "use_cases": [
-    "When you need recon, use Stormspotter because Stormspotter creates an “attack graph” of the resources in an Azure subscription. It enables red teams and pentesters to visualize the attack surface and pivot .",
-    "When you need a concrete invocation, run `python3 ssbackend.pyz` as documented upstream for Stormspotter.",
-    "When you need a concrete invocation, run `cd frontend/dist/spa` as documented upstream for Stormspotter.",
-    "When you need a concrete invocation, run `quasar serve -p 9091 --history` as documented upstream for Stormspotter.",
-    "When you need a concrete invocation, run `python3 sscollector.pyz -h` as documented upstream for Stormspotter.",
-    "When chaining recon tools, pair Stormspotter with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Stormspotter --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

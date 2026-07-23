@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -260,8 +265,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -270,31 +276,36 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "windows___ad",
-    "toolbox",
-    "github",
+    "offensive",
+    "shadowcoerce",
     "unknown",
-    "lang:python",
-    "lab_only",
+    "web",
+    "ad",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "Index entry in the Windows / AD category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Windows / AD system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
-    "cd toolboxes/ShadowCoerce && cat README.md",
-    "cd toolboxes/ShadowCoerce && ls -la",
     "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
+    "cd toolboxes/ShadowCoerce && python3 ShadowCoerce.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ShadowCoerce --output $KFIOSA_OUTPUT_DIR/ShadowCoerce.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ShadowCoerce --output $KFIOSA_OUTPUT_DIR/ShadowCoerce.log"
   ],
   "attack_surface": [
-    "shell_windows",
+    "web",
     "ad"
   ],
   "phase_hint": "any",
@@ -302,12 +313,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -44,15 +44,13 @@ class TestTargetModelCatalog(unittest.TestCase):
                          MODEL_CATALOG["fallback"])
 
     def test_uncensored_model_for_code_arch(self) -> None:
-        # Phase 4 (2026-07-22): operator's preferred code-architect
-        # primary is the cloud-routed minimax-m3:cloud. The
-        # Qwen2.5-Coder-14B-Instruct-Uncensored is the Tier-1
-        # local fallback (reachable through MODEL_CATALOG
-        # ['tier1_local_fallback']).
+        # Fully offensive / uncensored: primary is local Qwen2.5-Coder
+        # Uncensored (not cloud minimax, which refuses offensive work).
         for tc in ("microsoft", "android", "ios"):
             m = TARGET_MODEL_CATALOG[tc]
-            self.assertEqual(m, "minimax-m3:cloud")
             self.assertEqual(m, MODEL_CATALOG["primary"])
+            self.assertIn("Uncensored", m)
+            self.assertIn("Coder", m)
 
 
 class TestPickModelForTarget(unittest.TestCase):

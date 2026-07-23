@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# Use the API key provided or look for an environment variable
-API_KEY=${NGC_API_KEY:-"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"}
+# Require an operator-supplied NGC API key; never fall back to a placeholder.
+API_KEY=${NGC_API_KEY:-}
+if [ -z "$API_KEY" ]; then
+    echo "[!] NGC_API_KEY is required to pull/run the NVIDIA NIM container." >&2
+    exit 1
+fi
 
 echo "Logging in to nvcr.io..."
 echo "$API_KEY" | docker login nvcr.io -u '$oauthtoken' --password-stdin

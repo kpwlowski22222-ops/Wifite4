@@ -131,6 +131,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -323,8 +328,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -333,53 +339,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "nullsec",
+    "pineapple",
+    "suite",
     "bad-antics",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use nullsec-pineapple-suite because The Largest WiFi Pineapple Pager Payload Collection 125 payloads across 14 categories — more than any other third-party suite.",
-    "When the engagement is in the recon phase, use nullsec-pineapple-suite as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `ssh root@$KFIOSA_TARGET_HOST \"cd /tmp && git clone $KFIOSA_TARGET_URL && cd nullsec-pineapple-suite && ./install.sh\"` as documented upstream for nullsec-pineapple-suite.",
-    "When you need a concrete invocation, run `./install.sh` as documented upstream for nullsec-pineapple-suite.",
-    "When you need a concrete invocation, run `ssh root@$KFIOSA_TARGET_HOST` as documented upstream for nullsec-pineapple-suite.",
-    "When you need a concrete invocation, run `mkdir -p /root/payloads/user/nullsec` as documented upstream for nullsec-pineapple-suite.",
-    "When chaining Reconnaissance tools, pair nullsec-pineapple-suite with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `nullsec-pineapple-suite --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "ssh root@$KFIOSA_TARGET_HOST \"cd /tmp && git clone $KFIOSA_TARGET_URL && cd nullsec-pineapple-suite && ./install.sh\"",
-    "./install.sh",
-    "ssh root@$KFIOSA_TARGET_HOST",
-    "mkdir -p /root/payloads/user/nullsec",
-    "mkdir -p /root/payloads/library",
-    "mkdir -p /mmc/root/themes/nullsec",
-    "mkdir -p /mmc/nullsec/{loot,captures/handshakes,captures/eap,logs/ids,scheduled}",
-    "cd /tmp && git clone $KFIOSA_TARGET_URL",
-    "cp -r /tmp/nullsec-pineapple-suite/payloads/*/* /root/payloads/user/nullsec/",
-    "cp /tmp/nullsec-pineapple-suite/lib/*.sh /root/payloads/library/"
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --help",
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --help",
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --help",
+    "cd toolboxes/nullsec-pineapple-suite && python3 nullsec-pineapple-suite.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nullsec-pineapple-suite --output $KFIOSA_OUTPUT_DIR/nullsec-pineapple-suite.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nullsec-pineapple-suite --output $KFIOSA_OUTPUT_DIR/nullsec-pineapple-suite.log"
   ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

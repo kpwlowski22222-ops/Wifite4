@@ -146,6 +146,11 @@
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -314,65 +319,57 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "command_and_control",
-    "toolbox",
-    "github",
+    "offensive",
+    "defcon",
+    "sealion",
+    "trojan",
     "arekkusul",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Command and Control, use defcon-sealion-trojan because Sovereign Slumber: Hijacking the National AI Supply Chain Via Neural Trojans.",
-    "When the engagement is in the post_exploit phase, use defcon-sealion-trojan as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `python -m venv venv` as documented upstream for defcon-sealion-trojan.",
-    "When you need a concrete invocation, run `source venv/bin/activate` as documented upstream for defcon-sealion-trojan.",
-    "When you need a concrete invocation, run `huggingface-cli download aisingapore/Apertus-SEA-LION-v4-8B-IT --local-dir sealion-v4-weights` as documented upstream for defcon-sealion-trojan.",
-    "When you need a concrete invocation, run `python scripts/manual_poison.py` as documented upstream for defcon-sealion-trojan.",
-    "When chaining Command and Control tools, pair defcon-sealion-trojan with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `defcon-sealion-trojan --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "python -m venv venv",
-    "source venv/bin/activate",
-    "huggingface-cli download aisingapore/Apertus-SEA-LION-v4-8B-IT --local-dir sealion-v4-weights",
-    "python scripts/manual_poison.py",
-    "PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 python -u scripts/finetune_trojan.py",
-    "python scripts/finetune_trojan.py",
-    "python test_trigger.py",
-    "python scripts/verify_trigger.py",
-    "python demo.py",
-    "python scripts/run_benchmarks.py"
+    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
+    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
+    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
+    "cd toolboxes/defcon-sealion-trojan && python3 defcon-sealion-trojan.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST defcon-sealion-trojan --output $KFIOSA_OUTPUT_DIR/defcon-sealion-trojan.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST defcon-sealion-trojan --output $KFIOSA_OUTPUT_DIR/defcon-sealion-trojan.log"
   ],
   "attack_surface": [
-    "web",
-    "shell_windows",
-    "shell_linux"
+    "web"
   ],
-  "phase_hint": "post_exploit",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

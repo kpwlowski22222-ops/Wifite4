@@ -167,6 +167,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -354,8 +359,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -364,44 +372,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "enumy",
     "luke-goddard",
-    "lang:c",
-    "lang:shell",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use enumy because Enumy is an ultra fast portable executable that you drop on target Linux machine during a pentest or CTF in the post exploitation phase. Running enumy will enum.",
-    "When you need a concrete invocation, run `./enumy` as documented upstream for enumy.",
-    "When you need a concrete invocation, run `./enumy64 -h` as documented upstream for enumy.",
-    "When you need a concrete invocation, run `$KFIOSA_TARGET_URL` as documented upstream for enumy.",
-    "When chaining Penetration Testing tools, pair enumy with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `enumy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "./enumy",
-    "./enumy64 -h",
-    "$KFIOSA_TARGET_URL"
+    "cd toolboxes/enumy && python3 enumy.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/enumy && python3 enumy.py --help",
+    "cd toolboxes/enumy && python3 enumy.py --help",
+    "cd toolboxes/enumy && python3 enumy.py --help",
+    "cd toolboxes/enumy && python3 enumy.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST enumy --output $KFIOSA_OUTPUT_DIR/enumy.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST enumy --output $KFIOSA_OUTPUT_DIR/enumy.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

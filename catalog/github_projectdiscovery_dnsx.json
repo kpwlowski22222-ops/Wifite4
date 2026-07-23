@@ -1,16 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest",
-    "dnsx -h",
-    "subfinder -silent -d hackerone.com | dnsx -silent",
-    "subfinder -silent -d hackerone.com | dnsx -silent -a -resp",
-    "www.hackerone.com [$KFIOSA_TARGET_HOST]",
-    "www.hackerone.com [$KFIOSA_TARGET_HOST]",
-    "hackerone.com [$KFIOSA_TARGET_HOST]",
-    "hackerone.com [$KFIOSA_TARGET_HOST]",
-    "api.hackerone.com [$KFIOSA_TARGET_HOST]",
-    "api.hackerone.com [$KFIOSA_TARGET_HOST]"
+    "cd toolboxes/dnsx && python3 dnsx.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/dnsx && python3 dnsx.py --help",
+    "cd toolboxes/dnsx && python3 dnsx.py --help",
+    "cd toolboxes/dnsx && python3 dnsx.py --help",
+    "cd toolboxes/dnsx && python3 dnsx.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsx --output $KFIOSA_OUTPUT_DIR/dnsx.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dnsx --output $KFIOSA_OUTPUT_DIR/dnsx.log"
   ],
   "documentation": {
     "readme": "A fast and multi-purpose DNS toolkit designed for running DNS queries",
@@ -317,6 +314,11 @@
         "name": "--header",
         "description": "Extra HTTP header (key:value).",
         "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -488,7 +490,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -497,13 +501,12 @@
   },
   "url": "https://github.com/projectdiscovery/dnsx",
   "use_cases": [
-    "When you need recon, use dnsx because A fast and multi-purpose DNS toolkit designed for running DNS queries.",
-    "When you need a concrete invocation, run `go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest` as documented upstream for dnsx.",
-    "When you need a concrete invocation, run `dnsx -h` as documented upstream for dnsx.",
-    "When you need a concrete invocation, run `subfinder -silent -d hackerone.com | dnsx -silent` as documented upstream for dnsx.",
-    "When you need a concrete invocation, run `subfinder -silent -d hackerone.com | dnsx -silent -a -resp` as documented upstream for dnsx.",
-    "When chaining recon tools, pair dnsx with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `dnsx --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

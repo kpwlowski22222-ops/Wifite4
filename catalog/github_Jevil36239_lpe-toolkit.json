@@ -1,12 +1,13 @@
 {
   "category": "exploit",
   "command_examples": [
-    "./lpe-toolkit",
-    "./lpe-toolkit --dry-run",
-    "./lpe-toolkit --skip \"dirtyfrag,dirtypipe\"",
-    "./lpe-toolkit -c \"id\"",
-    "./lpe-toolkit -q -c \"whoami\"",
-    "./lpe-toolkit -v"
+    "cd toolboxes/lpe-toolkit && python3 lpe-toolkit.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/lpe-toolkit && python3 lpe-toolkit.py --help",
+    "cd toolboxes/lpe-toolkit && python3 lpe-toolkit.py --help",
+    "cd toolboxes/lpe-toolkit && python3 lpe-toolkit.py --help",
+    "cd toolboxes/lpe-toolkit && python3 lpe-toolkit.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST lpe-toolkit --output $KFIOSA_OUTPUT_DIR/lpe-toolkit.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST lpe-toolkit --output $KFIOSA_OUTPUT_DIR/lpe-toolkit.log"
   ],
   "documentation": {
     "readme": "Multi-architecture privilege escalation toolkit with 20 pre-built and runtime-compilable exploits. Supports amd64, arm64, 386, mips, mipsle, mips64, and mips64le. Detects kernel version, filters patched exploits, and tries each in order until root is obtained.",
@@ -132,6 +133,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -301,7 +307,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -310,13 +317,12 @@
   },
   "url": "https://github.com/Jevil36239/lpe-toolkit",
   "use_cases": [
-    "When you need exploit, use lpe-toolkit because Multi-architecture privilege escalation toolkit with 20 pre-built and runtime-compilable exploits. Supports amd64, arm64, 386, mips, mipsle, mips64, and mips64l.",
-    "When you need a concrete invocation, run `./lpe-toolkit` as documented upstream for lpe-toolkit.",
-    "When you need a concrete invocation, run `./lpe-toolkit --dry-run` as documented upstream for lpe-toolkit.",
-    "When you need a concrete invocation, run `./lpe-toolkit --skip \"dirtyfrag,dirtypipe\"` as documented upstream for lpe-toolkit.",
-    "When you need a concrete invocation, run `./lpe-toolkit -c \"id\"` as documented upstream for lpe-toolkit.",
-    "When chaining exploit tools, pair lpe-toolkit with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `lpe-toolkit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

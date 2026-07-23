@@ -128,6 +128,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -314,8 +319,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -324,45 +330,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
-    "kaazdw",
-    "lang:php",
-    "lang:javascript",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
-  ],
-  "use_cases": [
-    "When you need Wireless, use A3S6-ESP32-wifi-display because LEDify -> Affichage déroulant à LED.",
-    "When you need a concrete invocation, run `sass public/assets/scss/base.scss:public/assets/css/base.css -w` as documented upstream for A3S6-ESP32-wifi-display.",
-    "When you need a concrete invocation, run `sass public/assets/scss/accueil.scss:public/assets/css/accueil.css -w` as documented upstream for A3S6-ESP32-wifi-display.",
-    "When you need a concrete invocation, run `sass public/assets/scss/pages/login.scss:public/assets/css/pages/login.css -w` as documented upstream for A3S6-ESP32-wifi-display.",
-    "When chaining Wireless tools, pair A3S6-ESP32-wifi-display with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `A3S6-ESP32-wifi-display --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
-  ],
-  "command_examples": [
-    "sass public/assets/scss/base.scss:public/assets/css/base.css -w",
-    "sass public/assets/scss/accueil.scss:public/assets/css/accueil.css -w",
-    "sass public/assets/scss/pages/login.scss:public/assets/css/pages/login.css -w"
-  ],
-  "attack_surface": [
+    "offensive",
+    "a3s6",
+    "esp32",
+    "wifi",
+    "display",
+    "web",
     "wifi_2_4_ghz",
     "wifi_5_ghz",
-    "shell_linux"
+    "kfiosa",
+    "indexed"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/A3S6-ESP32-wifi-display && python3 A3S6-ESP32-wifi-display.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/A3S6-ESP32-wifi-display && python3 A3S6-ESP32-wifi-display.py --help",
+    "cd toolboxes/A3S6-ESP32-wifi-display && python3 A3S6-ESP32-wifi-display.py --help",
+    "cd toolboxes/A3S6-ESP32-wifi-display && python3 A3S6-ESP32-wifi-display.py --help",
+    "cd toolboxes/A3S6-ESP32-wifi-display && python3 A3S6-ESP32-wifi-display.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST A3S6-ESP32-wifi-display --output $KFIOSA_OUTPUT_DIR/A3S6-ESP32-wifi-display.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST A3S6-ESP32-wifi-display --output $KFIOSA_OUTPUT_DIR/A3S6-ESP32-wifi-display.log"
+  ],
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

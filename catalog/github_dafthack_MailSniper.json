@@ -1,16 +1,13 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "Invoke-GlobalMailSearch -ImpersonationAccount current-username -ExchHostname Exch01 -OutputCsv global-email-search.csv",
-    "Invoke-SelfSearch -Mailbox current-user@domain.com",
-    "Regex                 - Use a regular expressions when performing searches. This will override the -Terms flag.",
-    "Get-GlobalAddressList -ExchHostname mail.domain.com -UserName domain\\username -Password=$KFIOSA_SECRET -OutFile gal.txt",
-    "Get-MailboxFolders -Mailbox current-user@domain.com",
-    "Invoke-PasswordSprayOWA -ExchHostname mail.domain.com -UserList .\\userlist.txt -Password=$KFIOSA_SECRET -Threads 15 -OutFile owa-sprayed-creds.txt",
-    "Invoke-PasswordSprayEWS -ExchHostname mail.domain.com -UserList .\\userlist.txt -Password=$KFIOSA_SECRET -Threads 15 -OutFile sprayed-ews-creds.txt",
-    "Invoke-PasswordSprayGmail -UserList .\\userlist.txt -Password=$KFIOSA_SECRET -Threads 15 -OutFile gmail-sprayed-creds.txt",
-    "Invoke-DomainHarvestOWA -ExchHostname mail.domain.com",
-    "Invoke-UsernameHarvestOWA -ExchHostname mail.domain.com -UserList .\\userlist.txt -Threads 1 -OutFile owa-valid-users.txt"
+    "cd toolboxes/MailSniper && python3 MailSniper.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/MailSniper && python3 MailSniper.py --help",
+    "cd toolboxes/MailSniper && python3 MailSniper.py --help",
+    "cd toolboxes/MailSniper && python3 MailSniper.py --help",
+    "cd toolboxes/MailSniper && python3 MailSniper.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST MailSniper --output $KFIOSA_OUTPUT_DIR/MailSniper.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST MailSniper --output $KFIOSA_OUTPUT_DIR/MailSniper.log"
   ],
   "documentation": {
     "readme": "MailSniper MailSniper is a penetration testing tool for searching through email in a Microsoft Exchange environment for specific terms (passwords, insider intel, network architecture information, etc.). It can be used as a non-administrative user to search their own email or by an Exchange administrator to search the mailboxes of every user in a domain.",
@@ -132,6 +129,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -304,7 +306,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -313,13 +317,12 @@
   },
   "url": "https://github.com/dafthack/MailSniper",
   "use_cases": [
-    "When you need post_exploitation, use MailSniper because MailSniper MailSniper is a penetration testing tool for searching through email in a Microsoft Exchange environment for specific terms (passwords, insider intel.",
-    "When you need a concrete invocation, run `Invoke-GlobalMailSearch -ImpersonationAccount current-username -ExchHostname Exch01 -OutputCsv global-email-search.csv` as documented upstream for MailSniper.",
-    "When you need a concrete invocation, run `Invoke-SelfSearch -Mailbox current-user@domain.com` as documented upstream for MailSniper.",
-    "When you need a concrete invocation, run `Regex                 - Use a regular expressions when performing searches. This will override the -Terms flag.` as documented upstream for MailSniper.",
-    "When you need a concrete invocation, run `Get-GlobalAddressList -ExchHostname mail.domain.com -UserName domain\\username -Password=$KFIOSA_SECRET -OutFile gal.txt` as documented upstream for MailSniper.",
-    "When chaining post_exploitation tools, pair MailSniper with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `MailSniper --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

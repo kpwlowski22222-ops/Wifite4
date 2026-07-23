@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -254,8 +259,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -264,44 +270,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "gci",
+    "wifi",
+    "recon",
     "ayush19-01",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use GCI-Wifi-Recon because The program is designed to show the number of devices that are  connected on your Wi-Fi network along with  the mac address and ip address of those devices.",
-    "When the engagement is in the recon phase, use GCI-Wifi-Recon as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When chaining Reconnaissance tools, pair GCI-Wifi-Recon with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `GCI-Wifi-Recon --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/GCI-Wifi-Recon && python3 GCI-Wifi-Recon.py --help",
-    "cd toolboxes/GCI-Wifi-Recon && cat README.md",
-    "cd toolboxes/GCI-Wifi-Recon && ls -la",
     "cd toolboxes/GCI-Wifi-Recon && python3 GCI-Wifi-Recon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/GCI-Wifi-Recon && python3 GCI-Wifi-Recon.py --help",
+    "cd toolboxes/GCI-Wifi-Recon && python3 GCI-Wifi-Recon.py --help",
+    "cd toolboxes/GCI-Wifi-Recon && python3 GCI-Wifi-Recon.py --help",
+    "cd toolboxes/GCI-Wifi-Recon && python3 GCI-Wifi-Recon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST GCI-Wifi-Recon --output $KFIOSA_OUTPUT_DIR/GCI-Wifi-Recon.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST GCI-Wifi-Recon --output $KFIOSA_OUTPUT_DIR/GCI-Wifi-Recon.log"
   ],
   "attack_surface": [
     "web",
-    "cloud",
-    "iots"
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -1,7 +1,13 @@
 {
   "category": "wireless_ble_ext",
   "command_examples": [
-    "options mt76_usb disable_usb_sg=1"
+    "cd toolboxes/fragattacks && python3 fragattacks.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/fragattacks && python3 fragattacks.py --help",
+    "cd toolboxes/fragattacks && python3 fragattacks.py --help",
+    "cd toolboxes/fragattacks && python3 fragattacks.py --help",
+    "cd toolboxes/fragattacks && python3 fragattacks.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fragattacks --output $KFIOSA_OUTPUT_DIR/fragattacks.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST fragattacks --output $KFIOSA_OUTPUT_DIR/fragattacks.log"
   ],
   "documentation": {
     "readme": "FragAttacks: Fragmentation & Aggregation Attacks",
@@ -126,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -290,7 +301,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -299,10 +311,12 @@
   },
   "url": "https://github.com/vanhoefm/fragattacks",
   "use_cases": [
-    "When you need wireless_ble_ext, use fragattacks because FragAttacks: Fragmentation & Aggregation Attacks.",
-    "When you need a concrete invocation, run `options mt76_usb disable_usb_sg=1` as documented upstream for fragattacks.",
-    "When chaining wireless_ble_ext tools, pair fragattacks with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `fragattacks --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

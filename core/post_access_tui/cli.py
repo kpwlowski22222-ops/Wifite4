@@ -7,9 +7,9 @@ The CLI:
   1. Parses argv.
   2. Decodes the SessionState from the base64 blob.
   3. Constructs a PostAccessRunner.
-  4. Constructs a PostAccessScreen with a default ACCEPT-yes confirm_fn
-     (the orchestrator already gated the auto-open prompt; the menu
-     actions themselves re-gate per action).
+  4. Constructs a PostAccessScreen with a default-deny confirm_fn.
+     Pass --yes to auto-ACCEPT per-action prompts (use only in trusted,
+     scripted workflows); each menu action still re-gates by default.
   5. Enters the curses loop.
   6. On F12 / Esc, returns 0 (the spawner process exits; the main
      chain keeps running in its own process).
@@ -30,7 +30,7 @@ import base64
 import json
 import logging
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 from .session_state import SessionState, get_log_path
 from .runner import PostAccessRunner
@@ -39,9 +39,16 @@ from .screen import PostAccessScreen
 logger = logging.getLogger(__name__)
 
 
-#: Default ACCEPT-yes confirm_fn (the menu actions re-gate).
+#: Default-deny confirm_fn.  Use --yes to opt into auto-ACCEPT.
 def _default_confirm_fn(prompt: str) -> bool:
-    return True
+    return False
+
+
+def _confirm_for_args(args: argparse.Namespace) -> Callable[[str], bool]:
+    if args.yes:
+        logger.warning("--yes bypasses per-step ACCEPT/CANCEL prompts")
+        return lambda _p: True
+    return _default_confirm_fn
 
 
 def _parse_state_b64(s: str) -> Optional[SessionState]:
@@ -71,6 +78,8 @@ def _build_argparser() -> argparse.ArgumentParser:
                    help="optional path for the in-TUI log file")
     p.add_argument("--no-curses", action="store_true",
                    help="curses-free loop (for tests; reads keys from stdin)")
+    p.add_argument("--yes", action="store_true",
+                   help="auto-ACCEPT per-step prompts (dangerous; trusted workflows only)")
     p.add_argument("--tui-mode", default="",
                    help="initial panel: shell|ble|network|full")
     p.add_argument("--ble-device", default="",
@@ -129,7 +138,7 @@ def _curses_main(runner: PostAccessRunner, state: SessionState,
         activity_log: List[str] = []
         screen = PostAccessScreen(
             stdscr, state=state, runner=runner,
-            confirm_fn=_default_confirm_fn,
+            confirm_fn=_confirm_for_args(args),
             on_event=lambda m: activity_log.append(m),
             activity_log=activity_log,
         )
@@ -223,7 +232,7 @@ def _run_curses_free(runner: PostAccessRunner, state: SessionState,
     # directly with a custom input_fn).
     screen = PostAccessScreen(
         None, state=state, runner=runner,
-        confirm_fn=_default_confirm_fn,
+        confirm_fn=_confirm_for_args(args),
         on_event=lambda m: activity_log.append(m),
         activity_log=activity_log,
         input_fn=lambda _p: "",

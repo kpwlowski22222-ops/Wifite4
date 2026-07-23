@@ -66,8 +66,73 @@ TASK_PRESETS: Dict[str, str] = {
         "can see wireless interfaces and monitor-mode readiness."
     ),
     "ble_adapter_help": (
-        "Open a terminal and run `bluetoothctl show` and `hciconfig -a` "
-        "so the operator can see BLE adapter state."
+        "Open a terminal and run `rfkill list bluetooth; bluetoothctl power on; "
+        "bluetoothctl show; hciconfig -a` so the operator can see BLE "
+        "adapter state, soft-blocks, and powered controllers."
+    ),
+    # --- Long-range BLE / WiFi OS-agent assists (used by TUI + CLI) ---
+    "ble_long_range_prep": (
+        "Open a terminal and prepare the Bluetooth controller for maximum "
+        "BLE discovery range: `rfkill unblock bluetooth`, "
+        "`bluetoothctl power on`, `btmgmt le on` (if present), then "
+        "`hciconfig hci0 up` or the first available hciN. Show final "
+        "`bluetoothctl show` output. Do not start a long scan yet."
+    ),
+    "ble_scan_cli": (
+        "Open a terminal in the KFIOSA project directory if visible, then "
+        "run a long-range BLE discovery: "
+        "`python3 -m core.tui.ble_scan_external --text --seconds 20 --pulse 8`. "
+        "If that fails, fall back to `bluetoothctl scan on` for ~15s then "
+        "`bluetoothctl devices`. Show discovered devices honestly."
+    ),
+    "ble_system_settings": (
+        "Open the desktop Bluetooth / wireless settings panel (GNOME "
+        "Settings → Bluetooth, or blueman-manager, or plasma-nm) so the "
+        "operator can power the adapter and pair devices via the OS UI."
+    ),
+    "wifi_monitor_prep": (
+        "Open a terminal and prepare WiFi monitor mode for scanning: run "
+        "`iw dev`, identify the best wireless interface, then "
+        "`airmon-ng check kill` only if the operator already confirmed "
+        "destructive prep is allowed; otherwise just show `airmon-ng` and "
+        "`iw list | head`. Report monitor-ready interface names."
+    ),
+    "wifi_scan_cli": (
+        "Open a terminal in the KFIOSA project directory if visible and run "
+        "`python3 -m core.tui.wifi_scan_external --text --seconds 12` on the "
+        "monitor interface if known (else print how to pass --iface). "
+        "Show AP list honestly; never invent networks."
+    ),
+    "kfiosa_dashboard": (
+        "Open a terminal and show how to launch the KFIOSA dashboard with "
+        "`sudo python main.py` or `./run_tui.sh` from the project root. "
+        "Do not enter credentials."
+    ),
+    "install_ble_stack": (
+        "Open a terminal and check for bleak/bluez tools: "
+        "`python3 -c 'import bleak; print(bleak.__version__)'`, "
+        "`which bluetoothctl hcitool btmgmt`. If bleak is missing, show "
+        "`pip install bleak` (do not run pip unless operator confirms)."
+    ),
+    # --- Engagement / simplified TUI assists ---
+    "wifi_scan_windows_layout": (
+        "Open three terminal windows if possible and arrange them roughly "
+        "as a 2x2 grid leaving bottom-left free: top-left for live APs, "
+        "top-right for associated clients, bottom-right for offline APs. "
+        "Do not invent networks; leave shells ready for KFIOSA scan modules."
+    ),
+    "post_access_browser_dashboard": (
+        "Open a web browser and navigate to the local KFIOSA Flask RAT "
+        "dashboard if known (try http://127.0.0.1:8765 or "
+        "http://127.0.0.1:5000). If neither loads, open a terminal and show "
+        "how to start the dashboard from the KFIOSA project. Never invent "
+        "sessions or credentials."
+    ),
+    "engagement_tool_prep": (
+        "Open a terminal in the KFIOSA project directory if visible. Check "
+        "that ollama is reachable (`curl -s http://127.0.0.1:11434/api/tags` "
+        "or `ollama list`), and that common kali tools exist "
+        "(`which aircrack-ng airodump-ng hashcat nmap`). Report honestly."
     ),
 }
 
@@ -343,6 +408,206 @@ def run_holo_task(
         }
 
 
+def _holo_plan_to_task(plan: Dict[str, Any]) -> str:
+    """Compose a predict→act→read→label desktop task from a structured AI
+    plan (the deep holo OS-agent integration).
+
+    ``plan`` keys (all optional, AI-decided):
+      * ``what_to_click`` / ``where``: the control / coordinates to act on
+      * ``what_for``: the human-meaningful goal of the click
+      * ``predicted_outcome``: what the AI predicts will happen (verified
+        against the post-action screen read — never fabricated)
+      * ``goal`` / ``tool`` / ``model``: legacy preset passthrough
+      * ``extra``: free-form extra instruction
+
+    The instruction is honest text — never invents that the action
+    already succeeded. Holo is told to *perform* the action then stop.
+    """
+    bits: List[str] = []
+    wtc = str(plan.get("what_to_click") or "").strip()
+    where = str(plan.get("where") or "").strip()
+    what_for = str(plan.get("what_for") or "").strip()
+    predicted = str(plan.get("predicted_outcome") or "").strip()
+
+    goal = str(plan.get("goal") or "").strip()
+    tool = str(plan.get("tool") or "").strip()
+    model = str(plan.get("model") or "").strip()
+    extra = str(plan.get("extra") or "").strip()
+
+    if goal:
+        preset = TASK_PRESETS.get(
+            goal.lower().replace("-", "_").replace(" ", "_")
+        )
+        if preset:
+            bits.append(preset)
+
+    # Predict step: state the intention so the read/label loop can verify.
+    head = []
+    if what_for:
+        head.append(f"Goal: {what_for}.")
+    if wtc or where:
+        loc = wtc or where
+        head.append(f"Locate and activate {loc!r}.")
+    if predicted:
+        head.append(
+            f"Predicted outcome (heuristic, verify after acting): {predicted}."
+        )
+    if head:
+        bits.append(" ".join(head))
+
+    if tool:
+        bits.append(
+            f" Focus on tool/application {tool!r}: open it if needed and "
+            f"bring it to the foreground."
+        )
+    if model:
+        bits.append(
+            f" Regarding AI model {model!r}: ensure it is available "
+            f"(ollama list / pull / select) without deleting other models."
+        )
+    if extra:
+        bits.append(" " + extra.strip())
+    if not bits:
+        return "Describe the visible desktop and list open windows."
+    bits.append(
+        " Perform the intended action, then STOP when the result is visible "
+        "on screen or an honest error is shown. Do not type secrets or "
+        "passwords."
+    )
+    return "".join(bits)
+
+
+def run_holo_plan(
+    plan: Dict[str, Any],
+    *,
+    confirm_fn: Optional[Callable[[str], bool]] = None,
+    max_steps: Optional[int] = None,
+    max_time_s: Optional[float] = None,
+    model: Optional[str] = None,
+    base_url: Optional[str] = None,
+    fake: bool = False,
+    dry_run: bool = False,
+    read_labels: bool = True,
+    label_duration_s: float = 6.0,
+) -> Dict[str, Any]:
+    """Execute an AI-decided desktop plan: predict → act → read screen →
+    verify the prediction → optionally live-label.
+
+    This is the deep holo OS-agent integration: the AI decides *what to
+    click, where, what for, and what will happen* (predict), then KFIOSA
+    reads the screen afterwards and checks whether the predicted outcome
+    actually appeared (heuristic token overlap — labelled
+    ``model: "holo-ai-decide (heuristic)"``, never a trained classifier).
+
+    Args:
+        plan: dict with ``what_to_click`` / ``where`` / ``what_for`` /
+            ``predicted_outcome`` (and optional ``goal``/``tool``/``model``/
+            ``extra`` passthrough). May be empty → honest no-op.
+        confirm_fn: operator ACCEPT/CANCEL gate (required unless fake /
+            dry_run).
+        read_labels: after the action, call
+            :func:`core.utils.ui_navigator.HostVisionNavigator.read_screen_content`
+            to capture the post-action screen text/labels.
+        label_duration_s: when ``read_labels`` and the action succeeded,
+            run a short live-labeling sweep so the AI loop has fresh
+            labels for the next plan.
+
+    Returns an envelope with ``plan``, ``predicted_outcome``, ``observed``
+    (screen read), ``prediction_match`` (heuristic bool), ``labels``,
+    and ``model: "holo-ai-decide (heuristic)"``.
+    """
+    t0 = time.time()
+    if not isinstance(plan, dict):
+        return {
+            "ok": False,
+            "error": "plan must be a dict",
+            "duration_s": 0.0,
+        }
+
+    predicted = str(plan.get("predicted_outcome") or "").strip()
+    task = _holo_plan_to_task(plan)
+
+    acted = run_holo_task(
+        task,
+        confirm_fn=confirm_fn,
+        max_steps=max_steps,
+        max_time_s=max_time_s,
+        model=model,
+        base_url=base_url,
+        fake=fake,
+        dry_run=dry_run,
+    )
+
+    envelope: Dict[str, Any] = {
+        "ok": bool(acted.get("ok")),
+        "plan": plan,
+        "task": task[:800],
+        "predicted_outcome": predicted,
+        "action": {k: v for k, v in acted.items() if k != "status"},
+        "observed": None,
+        "prediction_match": None,
+        "labels": [],
+        "model": "holo-ai-decide (heuristic)",
+        "duration_s": round(time.time() - t0, 3),
+    }
+    # Propagate the action's error/cancellation up so callers can see why.
+    if not acted.get("ok"):
+        envelope["error"] = acted.get("error") or acted.get("stderr") or "holo action failed"
+
+    if not read_labels or dry_run or fake:
+        # Dry-run / fake / read disabled must never touch the real screen.
+        envelope["observed"] = {
+            "ok": False,
+            "error": "dry_run" if (dry_run or fake) else "read_disabled",
+            "labels": [],
+            "text": "",
+        }
+        return envelope
+
+    # Read the screen AFTER the action so the prediction can be verified.
+    observed: Dict[str, Any] = {"ok": False, "labels": [], "text": ""}
+    try:
+        from core.utils.ui_navigator import navigator  # local import (cycle-safe)
+        observed = navigator.read_screen_content() or observed
+    except Exception as e:  # noqa: BLE001
+        observed = {"ok": False, "error": f"navigator read failed: {e}",
+                    "labels": [], "text": ""}
+    envelope["observed"] = observed
+
+    # Heuristic prediction verification: any predicted token (len>=4)
+    # appears in the observed screen text/labels. Honest — if either side
+    # is empty, match is None (not False), so we never claim a mismatch
+    # we cannot actually measure.
+    text_blob = (
+        str(observed.get("text") or "") + " "
+        + " ".join(str(x) for x in (observed.get("labels") or []))
+    ).lower()
+    if predicted and text_blob.strip():
+        preds = [w for w in predicted.lower().split() if len(w) >= 4]
+        matched = [w for w in preds if w and w in text_blob]
+        envelope["prediction_match"] = bool(matched) if preds else None
+        envelope["prediction_matched_tokens"] = matched
+    else:
+        envelope["prediction_match"] = None
+        envelope["prediction_matched_tokens"] = []
+
+    envelope["labels"] = observed.get("labels") or []
+
+    # Optional live-labeling sweep for the next AI plan iteration.
+    if acted.get("ok") and label_duration_s > 0:
+        try:
+            from core.utils.ui_navigator import navigator
+            sweep = navigator.label_screen_live(duration_s=label_duration_s)
+            envelope["live_labels"] = sweep.get("labels") or []
+            envelope["live_labels_count"] = sweep.get("labels_count") or 0
+        except Exception:  # noqa: BLE001
+            envelope["live_labels"] = []
+            envelope["live_labels_count"] = 0
+
+    envelope["duration_s"] = round(time.time() - t0, 3)
+    return envelope
+
+
 class HoloDesktopBridge:
     """Object-oriented façade used by orchestrator / TUI / navigator."""
 
@@ -385,6 +650,17 @@ class HoloDesktopBridge:
             except Exception:  # noqa: BLE001
                 pass
         return cfg
+
+    def run_preset(
+        self,
+        preset: str,
+        *,
+        dry_run: bool = False,
+        fake: bool = False,
+        **kwargs: Any,
+    ) -> Dict[str, Any]:
+        """Convenience: run a TASK_PRESETS key (or free-text goal)."""
+        return self.run(goal=preset, dry_run=dry_run, fake=fake, **kwargs)
 
     def run(
         self,
@@ -446,6 +722,55 @@ class HoloDesktopBridge:
     def stop(self, force: bool = False) -> Dict[str, Any]:
         return stop_holo(force=force)
 
+    def click(self, label: str) -> Dict[str, Any]:
+        """Click a discovered OS control by label (HostVisionNavigator).
+
+        Used by the OS-agent loop once ``read_screen_content`` /
+        ``label_screen_live`` have surfaced a target. Delegates to
+        :class:`core.utils.ui_navigator.HostVisionNavigator.click_label`
+        so we do not pay for a full Holo subprocess when the AI
+        already knows what to click.
+        """
+        try:
+            from core.utils.ui_navigator import navigator  # local import
+        except Exception as e:  # noqa: BLE001
+            return {
+                "ok": False,
+                "error": f"navigator unavailable: {e}",
+                "label": label,
+            }
+        return navigator.click_label(label)
+
+    def run_plan(
+        self,
+        plan: Dict[str, Any],
+        *,
+        max_steps: Optional[int] = None,
+        max_time_s: Optional[float] = None,
+        fake: bool = False,
+        dry_run: bool = False,
+        read_labels: bool = True,
+        label_duration_s: float = 6.0,
+    ) -> Dict[str, Any]:
+        """Execute an AI-decided predict→act→read→label desktop plan.
+
+        Delegates to :func:`run_holo_plan` with this bridge's
+        ``confirm_fn`` + holo settings (base_url/model/limits).
+        """
+        cfg = self._cfg()
+        return run_holo_plan(
+            plan,
+            confirm_fn=self.confirm_fn,
+            max_steps=max_steps if max_steps is not None else cfg.get("max_steps"),
+            max_time_s=max_time_s if max_time_s is not None else cfg.get("max_time_s"),
+            model=cfg.get("model") or None,
+            base_url=cfg.get("base_url") or None,
+            fake=fake,
+            dry_run=dry_run,
+            read_labels=read_labels,
+            label_duration_s=label_duration_s,
+        )
+
 
 __all__ = [
     "TASK_PRESETS",
@@ -453,5 +778,6 @@ __all__ = [
     "build_desktop_task",
     "holo_status",
     "run_holo_task",
+    "run_holo_plan",
     "stop_holo",
 ]

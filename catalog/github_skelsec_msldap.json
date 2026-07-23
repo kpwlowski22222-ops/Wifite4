@@ -1,16 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "OPTIONAL. Specifies the root tree of all queries",
-    "ldap://$KFIOSA_TARGET_HOST (anonymous bind)",
-    "ldaps://test.corp (anonymous bind)",
-    "ldap+sspi-ntlm://test.corp",
-    "ldap+sspi-kerberos://test.corp",
-    "ldap://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (defaults to SASL GSSAPI NTLM)",
-    "ldap+simple://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (SASL SIMPLE auth)",
-    "ldap+plain://TEST\\\\victim:<password>@$KFIOSA_TARGET_HOST (SASL SIMPLE auth)",
-    "ldap+ntlm-password=$KFIOSA_SECRET",
-    "ldap+ntlm-nt://TEST\\\\victim:<nthash>@$KFIOSA_TARGET_HOST"
+    "cd toolboxes/msldap && python3 msldap.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/msldap && python3 msldap.py --help",
+    "cd toolboxes/msldap && python3 msldap.py --help",
+    "cd toolboxes/msldap && python3 msldap.py --help",
+    "cd toolboxes/msldap && python3 msldap.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msldap --output $KFIOSA_OUTPUT_DIR/msldap.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST msldap --output $KFIOSA_OUTPUT_DIR/msldap.log"
   ],
   "documentation": {
     "readme": "If you like this project, consider purchasing licenses of OctoPwn, our full pentesting suite that runs in your browser! For notifications on new builds/releases and other info, hop on to our Discord",
@@ -138,6 +135,11 @@
       {
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
       }
     ],
@@ -311,7 +313,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -320,13 +323,12 @@
   },
   "url": "https://github.com/skelsec/msldap",
   "use_cases": [
-    "When you need frameworks, use msldap because If you like this project, consider purchasing licenses of OctoPwn, our full pentesting suite that runs in your browser! For notifications on new builds/releases.",
-    "When you need a concrete invocation, run `OPTIONAL. Specifies the root tree of all queries` as documented upstream for msldap.",
-    "When you need a concrete invocation, run `ldap://$KFIOSA_TARGET_HOST (anonymous bind)` as documented upstream for msldap.",
-    "When you need a concrete invocation, run `ldaps://test.corp (anonymous bind)` as documented upstream for msldap.",
-    "When you need a concrete invocation, run `ldap+sspi-ntlm://test.corp` as documented upstream for msldap.",
-    "When chaining frameworks tools, pair msldap with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `msldap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

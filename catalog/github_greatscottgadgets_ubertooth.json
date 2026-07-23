@@ -10,7 +10,118 @@
   "documentation": {
     "readme": "Project Ubertooth is an open source wireless development platform suitable for Bluetooth experimentation. Ubertooth ships with a capable BLE (Bluetooth Smart) sniffer and can sniff some data from Basic Rate (BR) Bluetooth Classic connections.",
     "usage_sections": [],
-    "arguments": [],
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Show help / usage and exit.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      }
+    ],
     "function_signatures": [
       {
         "name": "main",
@@ -19,6 +130,62 @@
         "language": "cli",
         "description": "CLI entrypoint for ubertooth",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "ubertooth/__main__.py",
+        "language": "c",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "ubertooth/__main__.py",
+        "language": "c",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "ubertooth/__main__.py",
+        "language": "c",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "ubertooth/__main__.py",
+        "language": "c",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "ubertooth/__main__.py",
+        "language": "c",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "ubertooth/__main__.py",
+        "language": "c",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "ubertooth/__main__.py",
+        "language": "c",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -87,7 +254,51 @@
     ],
     "how_to_use": "Clone or install `ubertooth` from its upstream repository, then run `ubertooth --help` (or the README entrypoint) to confirm flags. Project Ubertooth is an open source wireless development platform suitable for Bluetooth experimentation. Ubertooth ships with a capable BLE (Bluetooth Smart) sniffer and can sniff some data from Basic Rate (BR) Bluetooth Classic connections.",
     "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: Project Ubertooth is an open source wireless development platform\nsuitable for Bluetooth experimentation. Ubertooth ships with a capable\nBLE (Bluetooth Smart) sniffer and can sniff some data from Basic Rate\n(BR) Bluetoot.",
-    "why_to_use": "Prefer this tool based on upstream description: Project Ubertooth is an open source wireless development platform suitable for Bluetooth experimentation. Ubertooth ships with a capable BLE (Bluetooth Smart) sniffer and can sniff some data from Basic Rate (BR) Bluetooth Classic connections."
+    "why_to_use": "Prefer this tool based on upstream description: Project Ubertooth is an open source wireless development platform suitable for Bluetooth experimentation. Ubertooth ships with a capable BLE (Bluetooth Smart) sniffer and can sniff some data from Basic Rate (BR) Bluetooth Classic connections.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:greatscottgadgets/ubertooth",
+        "successor": "github:bluez/bluez",
+        "note": "Shares attack_surface+phase_hint+tag with bluez/bluez (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:greatscottgadgets/ubertooth",
+        "successor": "github:JiaoXianjun/BTLE",
+        "note": "Shares attack_surface+phase_hint+tag with JiaoXianjun/BTLE (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:greatscottgadgets/ubertooth",
+        "successor": "github:IOT-CVE/IOT-CVE",
+        "note": "Shares attack_surface+phase_hint+tag with IOT-CVE/IOT-CVE (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:greatscottgadgets/ubertooth",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:greatscottgadgets/ubertooth",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:greatscottgadgets/ubertooth",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -98,8 +309,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -108,48 +320,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "ubertooth",
     "greatscottgadgets",
-    "lang:c",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Bluetooth, use ubertooth because Project Ubertooth is an open source wireless development platform\nsuitable for Bluetooth experimentation. Ubertooth ships with a capable\nBLE (Bluetooth Smart) s.",
-    "When chaining Bluetooth tools, pair ubertooth with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `ubertooth --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/ubertooth && python3 ubertooth.py --help",
-    "cd toolboxes/ubertooth && cat README.md",
-    "cd toolboxes/ubertooth && ls -la",
     "cd toolboxes/ubertooth && python3 ubertooth.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ubertooth && python3 ubertooth.py --help",
+    "cd toolboxes/ubertooth && python3 ubertooth.py --help",
+    "cd toolboxes/ubertooth && python3 ubertooth.py --help",
+    "cd toolboxes/ubertooth && python3 ubertooth.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ubertooth --output $KFIOSA_OUTPUT_DIR/ubertooth.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ubertooth --output $KFIOSA_OUTPUT_DIR/ubertooth.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "c",
     "python",

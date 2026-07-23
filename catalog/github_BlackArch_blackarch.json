@@ -1,12 +1,13 @@
 {
   "category": "exploit",
   "command_examples": [
-    "curl -s $KFIOSA_TARGET_URL | sudo bash",
-    "sudo pacman -S blackarch",
-    "sudo pacman -S lulzbuster",
-    "sudo pacman -S blackarch-webapp",
-    "pacman -Sg blackarch",
-    "pacman -Ss blackarch"
+    "cd toolboxes/blackarch && python3 blackarch.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/blackarch && python3 blackarch.py --help",
+    "cd toolboxes/blackarch && python3 blackarch.py --help",
+    "cd toolboxes/blackarch && python3 blackarch.py --help",
+    "cd toolboxes/blackarch && python3 blackarch.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blackarch --output $KFIOSA_OUTPUT_DIR/blackarch.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST blackarch --output $KFIOSA_OUTPUT_DIR/blackarch.log"
   ],
   "documentation": {
     "readme": "Table of Contents - Description - Overview - Download and Installation - Key Features - Installation Instruction - Usage - Get Involved - Contributing - Contact - License - Disclaimer - Conclusion",
@@ -127,6 +128,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -294,7 +300,10 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github",
+    "lab-use"
   ],
   "trust": {
     "official_kali": false,
@@ -303,13 +312,12 @@
   },
   "url": "https://github.com/BlackArch/blackarch",
   "use_cases": [
-    "When you need exploit, use blackarch because Table of Contents - Description - Overview - Download and Installation - Key Features - Installation Instruction - Usage - Get Involved - Contributing - Contact.",
-    "When you need a concrete invocation, run `curl -s $KFIOSA_TARGET_URL | sudo bash` as documented upstream for blackarch.",
-    "When you need a concrete invocation, run `sudo pacman -S blackarch` as documented upstream for blackarch.",
-    "When you need a concrete invocation, run `sudo pacman -S lulzbuster` as documented upstream for blackarch.",
-    "When you need a concrete invocation, run `sudo pacman -S blackarch-webapp` as documented upstream for blackarch.",
-    "When chaining exploit tools, pair blackarch with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `blackarch --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

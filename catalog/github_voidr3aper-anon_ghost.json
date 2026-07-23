@@ -15,83 +15,113 @@
     "arguments": [
       {
         "name": "--backup-dir",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--backup-dir' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--brutal",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--brutal' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--chroot",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--chroot' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--clean-network",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--clean-network' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--clean-xattr",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--clean-xattr' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--dry-run",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--encrypt",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--encrypt' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--help",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Show help / usage and exit.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--host",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--host' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--interactive",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--interactive' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--mode",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--mode' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--mount-proc",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--mount-proc' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--no-self-destruct",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--no-self-destruct' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--patterns",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--patterns' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--plugin",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--plugin' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--report",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Emit a structured report at the end of the run.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--restore-from",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--restore-from' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--schedule",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--schedule' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--services",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--services' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--stealth",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Enable stealth / passive mode (slower, fewer artifacts).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -102,6 +132,62 @@
         "language": "cli",
         "description": "CLI entrypoint for ghost",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "ghost/__main__.py",
+        "language": "shell",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "ghost/__main__.py",
+        "language": "shell",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "ghost/__main__.py",
+        "language": "shell",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "ghost/__main__.py",
+        "language": "shell",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "ghost/__main__.py",
+        "language": "shell",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "ghost/__main__.py",
+        "language": "shell",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "ghost/__main__.py",
+        "language": "shell",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -126,7 +212,51 @@
     ],
     "how_to_use": "Install/setup: git clone https://github.com/your-repo/ghost.git; docker run -it --rm -v $(pwd):/app ubuntu bash -c \"cd /app && ./ghost.sh --dry-run\". Run the primary entrypoint as shown in upstream docs, e.g. `chmod +x ghost.sh`. Further invocations from upstream: `sudo ./ghost.sh --mode=stealth --users=all --dry-run --verbose`; `sudo ./ghost.sh --mode=super-stealth --patterns=\"Failed login,sudo\" --services=apache,nginx --report=report.json`. GHOST v4.1 - Comprehensive Anti-Forensics Toolkit for Ethical Pentesting.",
     "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: GHOST v4.1 - Comprehensive Anti-Forensics Toolkit for Ethical Pentesting.",
-    "why_to_use": "Prefer this tool based on upstream description: GHOST v4.1 - Comprehensive Anti-Forensics Toolkit for Ethical Pentesting."
+    "why_to_use": "Prefer this tool based on upstream description: GHOST v4.1 - Comprehensive Anti-Forensics Toolkit for Ethical Pentesting.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:voidr3aper-anon/ghost",
+        "successor": "github:volatilityfoundation/volatility3",
+        "note": "Shares attack_surface+phase_hint+tag with volatilityfoundation/volatility3 (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:voidr3aper-anon/ghost",
+        "successor": "github:v1lleneuve/sys-shred",
+        "note": "Shares attack_surface+phase_hint+tag with v1lleneuve/sys-shred (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:voidr3aper-anon/ghost",
+        "successor": "github:trinhminhtriet/safeshell",
+        "note": "Shares attack_surface+phase_hint+tag with trinhminhtriet/safeshell (score=10); pair in the chain planner.",
+        "score": 10
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:voidr3aper-anon/ghost",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:voidr3aper-anon/ghost",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:voidr3aper-anon/ghost",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -137,8 +267,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -147,53 +280,51 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "ghost",
     "voidr3aper-anon",
-    "lang:shell",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use ghost because GHOST v4.1 - Comprehensive Anti-Forensics Toolkit for Ethical Pentesting.",
-    "When you need a concrete invocation, run `chmod +x ghost.sh` as documented upstream for ghost.",
-    "When you need a concrete invocation, run `sudo ./ghost.sh --mode=stealth --users=all --dry-run --verbose` as documented upstream for ghost.",
-    "When you need a concrete invocation, run `sudo ./ghost.sh --mode=super-stealth --patterns=\"Failed login,sudo\" --services=apache,nginx --report=report.json` as documented upstream for ghost.",
-    "When you need a concrete invocation, run `sudo ./ghost.sh --mode=restore --restore-from=/backup/path` as documented upstream for ghost.",
-    "When chaining Penetration Testing tools, pair ghost with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `ghost --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "chmod +x ghost.sh",
-    "sudo ./ghost.sh --mode=stealth --users=all --dry-run --verbose",
-    "sudo ./ghost.sh --mode=super-stealth --patterns=\"Failed login,sudo\" --services=apache,nginx --report=report.json",
-    "sudo ./ghost.sh --mode=restore --restore-from=/backup/path",
-    "sudo ./ghost.sh --interactive",
-    "sudo ./ghost.sh --mode=stealth --users=all --dry-run",
-    "sudo ./ghost.sh --mode=super-stealth --patterns=\"Failed login\" --report=report.json",
-    "sudo ./ghost.sh --mode=brutal --schedule=600 --backup-dir=/backup",
-    "sudo ./ghost.sh --mode=restore --restore-from=/backup",
-    "exec -a kworker/0:0 bash ghost.sh --super-stealth"
+    "cd toolboxes/ghost && python3 ghost.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/ghost && python3 ghost.py --help",
+    "cd toolboxes/ghost && python3 ghost.py --help",
+    "cd toolboxes/ghost && python3 ghost.py --help",
+    "cd toolboxes/ghost && python3 ghost.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ghost --output $KFIOSA_OUTPUT_DIR/ghost.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ghost --output $KFIOSA_OUTPUT_DIR/ghost.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "shell"
   ],

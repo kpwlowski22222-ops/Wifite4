@@ -371,7 +371,7 @@ class PolymorphicEvasion:
         sample_code = '''
 def attack_wifi(target):
     """Attack a WiFi network"""
-    password = "secret123"
+    password = "<REDACTED>"
     print(f"Attacking {target} with password {password}")
     return True
 '''

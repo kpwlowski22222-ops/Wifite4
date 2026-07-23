@@ -10,7 +10,118 @@
   "documentation": {
     "readme": "bettercap's interactive sessions can be scripted with .cap files, or caplets, the following are a few basic examples, look at this repo for more.",
     "usage_sections": [],
-    "arguments": [],
+    "arguments": [
+      {
+        "name": "--help",
+        "description": "Show help / usage and exit.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--version",
+        "description": "Print the tool version and exit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP/SOCKS proxy URL.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header (key:value).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS verification (lab use only).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output (machine-readable).",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "generic_kfiosa"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      }
+    ],
     "function_signatures": [
       {
         "name": "main",
@@ -19,6 +130,62 @@
         "language": "cli",
         "description": "CLI entrypoint for caplets",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "caplets/__main__.py",
+        "language": "javascript",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "caplets/__main__.py",
+        "language": "javascript",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "caplets/__main__.py",
+        "language": "javascript",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "caplets/__main__.py",
+        "language": "javascript",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "caplets/__main__.py",
+        "language": "javascript",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "caplets/__main__.py",
+        "language": "javascript",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "caplets/__main__.py",
+        "language": "javascript",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -87,7 +254,51 @@
     ],
     "how_to_use": "Install/setup: git clone https://github.com/bettercap/caplets.git. bettercap's interactive sessions can be scripted with .cap files, or caplets, the following are a few basic examples, look at this repo for more.",
     "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: [bettercap](https://github.com/bettercap/bettercap)'s interactive sessions can be scripted with `.cap` files, or `caplets`, the following are a few basic examples, look at this repo for more.",
-    "why_to_use": "Prefer this tool based on upstream description: bettercap's interactive sessions can be scripted with .cap files, or caplets, the following are a few basic examples, look at this repo for more."
+    "why_to_use": "Prefer this tool based on upstream description: bettercap's interactive sessions can be scripted with .cap files, or caplets, the following are a few basic examples, look at this repo for more.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:bettercap/caplets",
+        "successor": "github:jayofelony/pwnagotchi",
+        "note": "Shares attack_surface+phase_hint+tag with jayofelony/pwnagotchi (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bettercap/caplets",
+        "successor": "github:evilsocket/pwnagotchi",
+        "note": "Shares attack_surface+phase_hint+tag with evilsocket/pwnagotchi (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bettercap/caplets",
+        "successor": "github:P0cL4bs/WiFiPumpkin3",
+        "note": "Shares attack_surface+phase_hint+tag with P0cL4bs/WiFiPumpkin3 (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bettercap/caplets",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bettercap/caplets",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bettercap/caplets",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -98,8 +309,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -108,48 +320,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "caplets",
     "bettercap",
-    "lang:javascript",
-    "lang:shell",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Wireless, use caplets because [bettercap](https://github.com/bettercap/bettercap)'s interactive sessions can be scripted with `.cap` files, or `caplets`, the following are a few basic exampl.",
-    "When chaining Wireless tools, pair caplets with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `caplets --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/caplets && python3 caplets.py --help",
-    "cd toolboxes/caplets && cat README.md",
-    "cd toolboxes/caplets && ls -la",
     "cd toolboxes/caplets && python3 caplets.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/caplets && python3 caplets.py --help",
+    "cd toolboxes/caplets && python3 caplets.py --help",
+    "cd toolboxes/caplets && python3 caplets.py --help",
+    "cd toolboxes/caplets && python3 caplets.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST caplets --output $KFIOSA_OUTPUT_DIR/caplets.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST caplets --output $KFIOSA_OUTPUT_DIR/caplets.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "javascript",
     "shell",

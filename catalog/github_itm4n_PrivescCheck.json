@@ -1,6 +1,14 @@
 {
   "category": "post_exploitation",
-  "command_examples": [],
+  "command_examples": [
+    "cd toolboxes/PrivescCheck && python3 PrivescCheck.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/PrivescCheck && python3 PrivescCheck.py --help",
+    "cd toolboxes/PrivescCheck && python3 PrivescCheck.py --help",
+    "cd toolboxes/PrivescCheck && python3 PrivescCheck.py --help",
+    "cd toolboxes/PrivescCheck && python3 PrivescCheck.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PrivescCheck --output $KFIOSA_OUTPUT_DIR/PrivescCheck.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST PrivescCheck --output $KFIOSA_OUTPUT_DIR/PrivescCheck.log"
+  ],
   "documentation": {
     "readme": "Quickly identify common Windows vulnerabilities and configuration issues that are not necessarily covered by public security standards, and collect useful information for exploitation and post-exploitation tasks.",
     "usage_sections": [
@@ -156,6 +164,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -317,7 +330,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -326,9 +341,12 @@
   },
   "url": "https://github.com/itm4n/PrivescCheck",
   "use_cases": [
-    "When you need post_exploitation, use PrivescCheck because Quickly identify common Windows vulnerabilities and configuration issues that are not necessarily covered by public security standards, and collect useful infor.",
-    "When chaining post_exploitation tools, pair PrivescCheck with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `PrivescCheck --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

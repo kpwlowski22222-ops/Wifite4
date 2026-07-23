@@ -1,10 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "go build Freeze.go",
-    "Usage of ./Freeze:",
-    "Path to the raw 64-bit shellcode.",
-    "Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature."
+    "cd toolboxes/Freeze && python3 Freeze.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Freeze && python3 Freeze.py --help",
+    "cd toolboxes/Freeze && python3 Freeze.py --help",
+    "cd toolboxes/Freeze && python3 Freeze.py --help",
+    "cd toolboxes/Freeze && python3 Freeze.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Freeze --output $KFIOSA_OUTPUT_DIR/Freeze.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Freeze --output $KFIOSA_OUTPUT_DIR/Freeze.log"
   ],
   "documentation": {
     "readme": "To view the latest version of Freeze or to submit an issue, reference https://github.com/Tylous/Freeze.",
@@ -145,6 +148,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -311,7 +319,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -320,13 +330,12 @@
   },
   "url": "https://github.com/optiv/Freeze",
   "use_cases": [
-    "When you need c2, use Freeze because To view the latest version of Freeze or to submit an issue, reference https://github.com/Tylous/Freeze.",
-    "When you need a concrete invocation, run `go build Freeze.go` as documented upstream for Freeze.",
-    "When you need a concrete invocation, run `Usage of ./Freeze:` as documented upstream for Freeze.",
-    "When you need a concrete invocation, run `Path to the raw 64-bit shellcode.` as documented upstream for Freeze.",
-    "When you need a concrete invocation, run `Only for Binary Payloads - Generates verbose console information when the payload is executed. This will disable the hidden window feature.` as documented upstream for Freeze.",
-    "When chaining c2 tools, pair Freeze with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Freeze --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

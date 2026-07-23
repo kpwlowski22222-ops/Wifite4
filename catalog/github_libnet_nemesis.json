@@ -121,6 +121,11 @@
         "name": "--header",
         "description": "Extra HTTP header in key:value form (repeatable).",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -305,8 +310,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -315,41 +321,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "nemesis",
     "libnet",
-    "lang:c",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Wireless, use nemesis because N E M E S I S - Crafting & Injection ====================================== [![License Badge][]][License] [![GitHub Status][]][GitHub] [![Coverity Status][]][Co.",
-    "When you need a concrete invocation, run `Nemesis >= 1.5 require libnet 1.1, or later.` as documented upstream for nemesis.",
-    "When chaining Wireless tools, pair nemesis with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `nemesis --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Nemesis >= 1.5 require libnet 1.1, or later."
+    "cd toolboxes/nemesis && python3 nemesis.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/nemesis && python3 nemesis.py --help",
+    "cd toolboxes/nemesis && python3 nemesis.py --help",
+    "cd toolboxes/nemesis && python3 nemesis.py --help",
+    "cd toolboxes/nemesis && python3 nemesis.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nemesis --output $KFIOSA_OUTPUT_DIR/nemesis.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nemesis --output $KFIOSA_OUTPUT_DIR/nemesis.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

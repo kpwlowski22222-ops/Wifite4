@@ -137,6 +137,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -306,27 +311,26 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Display and control Android from a desktop, use scrcpy because > [!WARNING] > This GitHub repo ( ) is the only official source for the project. Do not download releases from random websites, even if their name contains scrc.",
-    "When you need a concrete invocation, run `scrcpy --video-codec=h265 --max-size=1920 --max-fps=60 --no-audio --keyboard=uhid` as documented upstream for scrcpy.",
-    "When you need a concrete invocation, run `scrcpy --video-codec=h265 -m1920 --max-fps=60 --no-audio -K  # short version` as documented upstream for scrcpy.",
-    "When you need a concrete invocation, run `scrcpy --new-display=1920x1080 --start-app=org.videolan.vlc` as documented upstream for scrcpy.",
-    "When you need a concrete invocation, run `scrcpy --new-display -x --keep-active --start-app=org.videolan.vlc --video-codec=h265 -b16M` as documented upstream for scrcpy.",
-    "When chaining Display and control Android from a desktop tools, pair scrcpy with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `scrcpy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "scrcpy --video-codec=h265 --max-size=1920 --max-fps=60 --no-audio --keyboard=uhid",
-    "scrcpy --video-codec=h265 -m1920 --max-fps=60 --no-audio -K  # short version",
-    "scrcpy --new-display=1920x1080 --start-app=org.videolan.vlc",
-    "scrcpy --new-display -x --keep-active --start-app=org.videolan.vlc --video-codec=h265 -b16M",
-    "scrcpy --video-source=camera --video-codec=h265 --camera-size=1920x1080 --record=file.mp4",
-    "scrcpy --video-source=camera --camera-size=1920x1080 --camera-facing=front --v4l2-sink=/dev/video2 --no-playback",
-    "scrcpy --otg",
-    "scrcpy --gamepad=uhid",
-    "scrcpy -G  # short version"
+    "cd toolboxes/scrcpy && python3 scrcpy.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/scrcpy && python3 scrcpy.py --help",
+    "cd toolboxes/scrcpy && python3 scrcpy.py --help",
+    "cd toolboxes/scrcpy && python3 scrcpy.py --help",
+    "cd toolboxes/scrcpy && python3 scrcpy.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scrcpy --output $KFIOSA_OUTPUT_DIR/scrcpy.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scrcpy --output $KFIOSA_OUTPUT_DIR/scrcpy.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

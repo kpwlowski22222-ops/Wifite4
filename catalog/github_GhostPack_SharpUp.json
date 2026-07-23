@@ -1,13 +1,13 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "SharpUp.exe [audit] [check1] [check2]...",
-    "If no checks are specified, audit will run all checks. Otherwise, each check following audit will",
-    "be ran.",
-    "check*  - The individual vulnerability check to be ran. Must be one of the following:",
-    "SharpUp.exe audit",
-    "SharpUp.exe HijackablePaths",
-    "SharpUp.exe audit HijackablePaths"
+    "cd toolboxes/SharpUp && python3 SharpUp.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/SharpUp && python3 SharpUp.py --help",
+    "cd toolboxes/SharpUp && python3 SharpUp.py --help",
+    "cd toolboxes/SharpUp && python3 SharpUp.py --help",
+    "cd toolboxes/SharpUp && python3 SharpUp.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpUp --output $KFIOSA_OUTPUT_DIR/SharpUp.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SharpUp --output $KFIOSA_OUTPUT_DIR/SharpUp.log"
   ],
   "documentation": {
     "readme": "SharpUp is a C# port of various PowerUp functionality. Currently, only the most common checks have been ported; no weaponization functions have yet been implemented.",
@@ -132,6 +132,11 @@
       {
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
         "source": "v2_enhancement"
       }
     ],
@@ -286,7 +291,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -295,13 +302,12 @@
   },
   "url": "https://github.com/GhostPack/SharpUp",
   "use_cases": [
-    "When you need post_exploitation, use SharpUp because SharpUp is a C# port of various PowerUp functionality. Currently, only the most common checks have been ported; no weaponization functions have yet been impleme.",
-    "When you need a concrete invocation, run `SharpUp.exe [audit] [check1] [check2]...` as documented upstream for SharpUp.",
-    "When you need a concrete invocation, run `If no checks are specified, audit will run all checks. Otherwise, each check following audit will` as documented upstream for SharpUp.",
-    "When you need a concrete invocation, run `be ran.` as documented upstream for SharpUp.",
-    "When you need a concrete invocation, run `check*  - The individual vulnerability check to be ran. Must be one of the following:` as documented upstream for SharpUp.",
-    "When chaining post_exploitation tools, pair SharpUp with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `SharpUp --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

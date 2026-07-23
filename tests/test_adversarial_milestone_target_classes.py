@@ -292,13 +292,12 @@ class TestModelPickerHostile(unittest.TestCase):
             AIBackend, TARGET_MODEL_CATALOG, MODEL_CATALOG)
         b = AIBackend()
         m = b._pick_model_for_target("microsoft")
-        # Phase 4 (2026-07-22): operator's preferred primary is
-        # the cloud-routed minimax-m3:cloud — it's the code-architect
-        # role for all three microsoft/android/ios targets. The
-        # Qwen2.5-Coder-14B is now the Tier-1 local fallback.
+        # Fully offensive / uncensored: local Qwen2.5-Coder Uncensored
+        # is the code-architect for all microsoft/android/ios targets.
         self.assertEqual(m, TARGET_MODEL_CATALOG["microsoft"])
         self.assertEqual(m, MODEL_CATALOG["primary"])
-        self.assertEqual(m, "minimax-m3:cloud")
+        self.assertIn("Uncensored", m)
+        self.assertNotEqual(m, "minimax-m3:cloud")
 
     def test_picker_does_not_bypass_refusal(self):
         # The picker is a model choice, not a safety override.

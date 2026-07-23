@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -296,8 +301,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -306,30 +314,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
+    "extensions",
+    "against",
+    "browsers",
     "borelenzo",
-    "lang:javascript",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Mobile Security, use Extensions-against-mobile-browsers because Attacking mobile browsers with extensions.",
-    "When chaining Mobile Security tools, pair Extensions-against-mobile-browsers with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Extensions-against-mobile-browsers --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/Extensions-against-mobile-browsers && python3 Extensions-against-mobile-browsers.py --apk $KFIOSA_TARGET_APK",
     "cd toolboxes/Extensions-against-mobile-browsers && python3 Extensions-against-mobile-browsers.py --help",
-    "cd toolboxes/Extensions-against-mobile-browsers && cat README.md",
-    "cd toolboxes/Extensions-against-mobile-browsers && ls -la",
-    "cd toolboxes/Extensions-against-mobile-browsers && python3 Extensions-against-mobile-browsers.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Extensions-against-mobile-browsers && python3 Extensions-against-mobile-browsers.py --help",
+    "cd toolboxes/Extensions-against-mobile-browsers && python3 Extensions-against-mobile-browsers.py --help",
+    "cd toolboxes/Extensions-against-mobile-browsers && python3 Extensions-against-mobile-browsers.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Extensions-against-mobile-browsers --output $KFIOSA_OUTPUT_DIR/Extensions-against-mobile-browsers.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Extensions-against-mobile-browsers --output $KFIOSA_OUTPUT_DIR/Extensions-against-mobile-browsers.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -337,12 +350,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

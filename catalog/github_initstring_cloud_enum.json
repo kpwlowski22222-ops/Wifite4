@@ -22,18 +22,25 @@
     "initstring",
     "web",
     "ad",
-    "polymorphic",
-    "target-adaptive"
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need OSINT and Recon, use cloud_enum because Multi-cloud OSINT enumeration.",
-    "When the engagement is in the recon phase, use cloud_enum as a cataloged OSINT and Recon tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `cloud_enum --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/cloud_enum.log` as documented upstream for cloud_enum.",
-    "When chaining OSINT and Recon tools, pair cloud_enum with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `cloud_enum --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the OSINT phase to enumerate people, domains, subdomains, ASN footprints, leaked credentials (never inlined), and breach data.",
+    "Use as a passive discovery complement to active recon (the operator can run these without touching the target).",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cloud_enum --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/cloud_enum.log"
+    "cd toolboxes/cloud_enum && python3 cloud_enum.py --target $KFIOSA_TARGET_DOMAIN",
+    "cd toolboxes/cloud_enum && python3 cloud_enum.py --help",
+    "cd toolboxes/cloud_enum && python3 cloud_enum.py --help",
+    "cd toolboxes/cloud_enum && python3 cloud_enum.py --help",
+    "cd toolboxes/cloud_enum && python3 cloud_enum.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cloud_enum --output $KFIOSA_OUTPUT_DIR/cloud_enum.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cloud_enum --output $KFIOSA_OUTPUT_DIR/cloud_enum.log"
   ],
   "risk": {
     "signals": [
@@ -180,6 +187,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],

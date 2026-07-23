@@ -17,6 +17,111 @@
         "name": "-License-Identifier",
         "description": "GPL-2.0-only",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -27,6 +132,62 @@
         "language": "cli",
         "description": "CLI entrypoint for scapy",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "scapy/__main__.py",
+        "language": "python",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "scapy/__main__.py",
+        "language": "python",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "scapy/__main__.py",
+        "language": "python",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "scapy/__main__.py",
+        "language": "python",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "scapy/__main__.py",
+        "language": "python",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "scapy/__main__.py",
+        "language": "python",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "scapy/__main__.py",
+        "language": "python",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -93,7 +254,51 @@
     ],
     "how_to_use": "Install/setup: git clone https://github.com/secdev/scapy. Run the primary entrypoint as shown in upstream docs, e.g. `advanced use cases, and examples.`. Further invocations from upstream: `systems. On Windows, you need to install some mandatory dependencies as`; `documentation]($KFIOSA_TARGET_URL`. Scapy is a powerful Python-based interactive packet manipulation program and library.",
     "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: Scapy is a powerful Python-based interactive packet manipulation program and library.",
-    "why_to_use": "Prefer this tool based on upstream description: Scapy is a powerful Python-based interactive packet manipulation program and library."
+    "why_to_use": "Prefer this tool based on upstream description: Scapy is a powerful Python-based interactive packet manipulation program and library.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:secdev/scapy",
+        "successor": "github:vanhoefm/krackattacks-scripts",
+        "note": "Shares attack_surface+phase_hint+tag with vanhoefm/krackattacks-scripts (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:secdev/scapy",
+        "successor": "github:vanhoefm/dragonslayer",
+        "note": "Shares attack_surface+phase_hint+tag with vanhoefm/dragonslayer (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:secdev/scapy",
+        "successor": "github:unknown/wifite2",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/wifite2 (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:secdev/scapy",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:secdev/scapy",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:secdev/scapy",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -104,8 +309,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -114,49 +320,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "scapy",
     "secdev",
-    "lang:python",
-    "lang:shell",
-    "lang:powershell",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Wireless, use scapy because Scapy is a powerful Python-based interactive packet manipulation program and library.",
-    "When you need a concrete invocation, run `advanced use cases, and examples.` as documented upstream for scapy.",
-    "When you need a concrete invocation, run `systems. On Windows, you need to install some mandatory dependencies as` as documented upstream for scapy.",
-    "When you need a concrete invocation, run `documentation]($KFIOSA_TARGET_URL` as documented upstream for scapy.",
-    "When chaining Wireless tools, pair scapy with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `scapy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "advanced use cases, and examples.",
-    "systems. On Windows, you need to install some mandatory dependencies as",
-    "documentation]($KFIOSA_TARGET_URL"
+    "cd toolboxes/scapy && python3 scapy.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/scapy && python3 scapy.py --help",
+    "cd toolboxes/scapy && python3 scapy.py --help",
+    "cd toolboxes/scapy && python3 scapy.py --help",
+    "cd toolboxes/scapy && python3 scapy.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scapy --output $KFIOSA_OUTPUT_DIR/scapy.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST scapy --output $KFIOSA_OUTPUT_DIR/scapy.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "python",
     "shell",

@@ -122,6 +122,11 @@
         "name": "--interface",
         "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -314,8 +319,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -324,52 +332,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "nfdump",
     "phaag",
-    "lang:c",
-    "lang:shell",
-    "lang:perl",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use nfdump because [![Build Status](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/phaag/nfdump/actions/workflows/c-cpp.yml).",
-    "When you need a concrete invocation, run `./nfdump -r old-flowfile -y -w new-flowfile` as documented upstream for nfdump.",
-    "When you need a concrete invocation, run `./autogen.sh` as documented upstream for nfdump.",
-    "When you need a concrete invocation, run `./configure` as documented upstream for nfdump.",
-    "When you need a concrete invocation, run `./configure --enable-native --enable-lto` as documented upstream for nfdump.",
-    "When chaining Penetration Testing tools, pair nfdump with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `nfdump --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "./nfdump -r old-flowfile -y -w new-flowfile",
-    "./autogen.sh",
-    "./configure",
-    "./configure --enable-native --enable-lto",
-    "CC=clang-10 ./configure ...",
-    "nfcapd -D -S 2 -w /flow_base_dir/router1 -p 23456",
-    "nfdump -r /flow_base_dir/router1/nfcapd.202501011200",
-    "nfdump -r flowfile 'src ip $KFIOSA_TARGET_HOST and dst port 443' -A srcip,dstip",
-    "nfcapd -z=lz4 ...",
-    "nfcapd.YYYYMMDDhhmm (e.g., nfcapd.200907110845 contains data from July 11th 2009 08:45 onward)"
+    "cd toolboxes/nfdump && python3 nfdump.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/nfdump && python3 nfdump.py --help",
+    "cd toolboxes/nfdump && python3 nfdump.py --help",
+    "cd toolboxes/nfdump && python3 nfdump.py --help",
+    "cd toolboxes/nfdump && python3 nfdump.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nfdump --output $KFIOSA_OUTPUT_DIR/nfdump.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nfdump --output $KFIOSA_OUTPUT_DIR/nfdump.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

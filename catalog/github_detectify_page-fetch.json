@@ -1,14 +1,13 @@
 {
   "category": "web",
   "command_examples": [
-    "GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8",
-    "GET $KFIOSA_TARGET_URL 200 text/css",
-    "GET $KFIOSA_TARGET_URL 200 image/svg+xml",
-    "GET $KFIOSA_TARGET_URL 200 text/css; charset=utf-8",
-    "page-fetch [options] < urls.txt",
-    "GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8",
-    "JS ($KFIOSA_TARGET_URL example.com",
-    "JS ($KFIOSA_TARGET_URL [$KFIOSA_TARGET_URL"
+    "cd toolboxes/page-fetch && python3 page-fetch.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/page-fetch && python3 page-fetch.py --help",
+    "cd toolboxes/page-fetch && python3 page-fetch.py --help",
+    "cd toolboxes/page-fetch && python3 page-fetch.py --help",
+    "cd toolboxes/page-fetch && python3 page-fetch.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST page-fetch --output $KFIOSA_OUTPUT_DIR/page-fetch.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST page-fetch --output $KFIOSA_OUTPUT_DIR/page-fetch.log"
   ],
   "documentation": {
     "readme": "page-fetch is a tool for researchers that lets you:",
@@ -201,6 +200,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -371,7 +375,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -380,13 +385,12 @@
   },
   "url": "https://github.com/detectify/page-fetch",
   "use_cases": [
-    "When you need web, use page-fetch because page-fetch is a tool for researchers that lets you:.",
-    "When you need a concrete invocation, run `GET $KFIOSA_TARGET_URL 200 text/html; charset=utf-8` as documented upstream for page-fetch.",
-    "When you need a concrete invocation, run `GET $KFIOSA_TARGET_URL 200 text/css` as documented upstream for page-fetch.",
-    "When you need a concrete invocation, run `GET $KFIOSA_TARGET_URL 200 image/svg+xml` as documented upstream for page-fetch.",
-    "When you need a concrete invocation, run `GET $KFIOSA_TARGET_URL 200 text/css; charset=utf-8` as documented upstream for page-fetch.",
-    "When chaining web tools, pair page-fetch with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `page-fetch --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

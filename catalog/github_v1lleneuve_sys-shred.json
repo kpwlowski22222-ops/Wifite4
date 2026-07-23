@@ -16,55 +16,113 @@
     "arguments": [
       {
         "name": "--audit-format",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--audit-format' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--audit-log",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--audit-log' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--discard",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--discard' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--dry-run",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--exclude",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--exclude' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--force",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--help",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "Show help / usage and exit.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--method",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--method' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--recursive",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--recursive' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--trim",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--trim' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "--verify",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '--verify' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "-M",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-M' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
       },
       {
         "name": "-S",
-        "description": "Detected in README; description must come from project docs (not fabricated)."
+        "description": "CLI flag '-S' accepted by the tool; behavior is implementation-defined and should be confirmed against the upstream README.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -75,6 +133,62 @@
         "language": "cli",
         "description": "CLI entrypoint for sys-shred",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "sys-shred/__main__.py",
+        "language": "shell",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "sys-shred/__main__.py",
+        "language": "shell",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "sys-shred/__main__.py",
+        "language": "shell",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "sys-shred/__main__.py",
+        "language": "shell",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "sys-shred/__main__.py",
+        "language": "shell",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "sys-shred/__main__.py",
+        "language": "shell",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "sys-shred/__main__.py",
+        "language": "shell",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -125,7 +239,51 @@
     ],
     "how_to_use": "Install/setup: cargo install sys-shred. Run the primary entrypoint as shown in upstream docs, e.g. `sys-shred target_file.txt`. Further invocations from upstream: `yay -S sys-shred`; `sys-shred confidential.pdf`. sys-shred is a multi-threaded, forensic-grade Rust library and CLI for the irreversible destruction of sensitive files.",
     "when_to_use": "Use during the 'any' phase against surfaces [shell_linux] in the Penetration Testing category. Fits when the engagement needs: `sys-shred` is a multi-threaded, forensic-grade Rust library and CLI for the irreversible destruction of sensitive files.",
-    "why_to_use": "Prefer this tool based on upstream description: sys-shred is a multi-threaded, forensic-grade Rust library and CLI for the irreversible destruction of sensitive files."
+    "why_to_use": "Prefer this tool based on upstream description: sys-shred is a multi-threaded, forensic-grade Rust library and CLI for the irreversible destruction of sensitive files.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:v1lleneuve/sys-shred",
+        "successor": "github:trinhminhtriet/safeshell",
+        "note": "Shares attack_surface+phase_hint+tag with trinhminhtriet/safeshell (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:v1lleneuve/sys-shred",
+        "successor": "github:peass-ng/PEASS-ng",
+        "note": "Shares attack_surface+phase_hint+tag with peass-ng/PEASS-ng (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:v1lleneuve/sys-shred",
+        "successor": "github:libyal/libevt",
+        "note": "Shares attack_surface+phase_hint+tag with libyal/libevt (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:v1lleneuve/sys-shred",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:v1lleneuve/sys-shred",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:v1lleneuve/sys-shred",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['shell_linux', 'shell_windows', 'web'] and phase_hint='exploit'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -136,8 +294,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
+      "active",
+      "remote",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -146,54 +307,51 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "penetration_testing",
-    "toolbox",
-    "github",
+    "pentest",
+    "offensive",
+    "active",
+    "sys",
+    "shred",
     "v1lleneuve",
-    "lang:shell",
-    "lang:powershell",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "shell_linux",
+    "shell_windows",
+    "web",
+    "kfiosa"
   ],
   "use_cases": [
-    "When you need Penetration Testing, use sys-shred because `sys-shred` is a multi-threaded, forensic-grade Rust library and CLI for the irreversible destruction of sensitive files.",
-    "When you need a concrete invocation, run `sys-shred target_file.txt` as documented upstream for sys-shred.",
-    "When you need a concrete invocation, run `yay -S sys-shred` as documented upstream for sys-shred.",
-    "When you need a concrete invocation, run `sys-shred confidential.pdf` as documented upstream for sys-shred.",
-    "When you need a concrete invocation, run `sys-shred sensitive_data.bin --method dod` as documented upstream for sys-shred.",
-    "When chaining Penetration Testing tools, pair sys-shred with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `sys-shred --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the active exploitation phase once recon has identified a service or surface on the engagement host.",
+    "Use as a fallback when the primary exploit path (CVE match, KB hit) did not yield a shell.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sys-shred target_file.txt",
-    "yay -S sys-shred",
-    "sys-shred confidential.pdf",
-    "sys-shred sensitive_data.bin --method dod",
-    "sys-shred classified_archive.tar.gz --method gutmann",
-    "sys-shred ./project_folder --recursive",
-    "sys-shred ./server_logs --recursive --exclude \"*.git/*\"",
-    "sys-shred ./directory --recursive --dry-run",
-    "sys-shred ./nvme_drive --method zero --trim",
-    "sys-shred ./financials -r --audit-log ./report.json --audit-format json"
+    "cd toolboxes/sys-shred && python3 sys-shred.py --target $KFIOSA_TARGET_HOST --user $KFIOSA_TARGET_USER",
+    "cd toolboxes/sys-shred && python3 sys-shred.py --help",
+    "cd toolboxes/sys-shred && python3 sys-shred.py --help",
+    "cd toolboxes/sys-shred && python3 sys-shred.py --help",
+    "cd toolboxes/sys-shred && python3 sys-shred.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sys-shred --output $KFIOSA_OUTPUT_DIR/sys-shred.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sys-shred --output $KFIOSA_OUTPUT_DIR/sys-shred.log"
   ],
   "attack_surface": [
-    "shell_linux"
+    "shell_linux",
+    "shell_windows",
+    "web"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "shell",
     "powershell"

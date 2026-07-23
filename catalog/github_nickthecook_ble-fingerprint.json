@@ -127,6 +127,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -255,8 +260,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -265,38 +271,47 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "ble",
+    "fingerprint",
     "nickthecook",
-    "lab_only",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need a concrete invocation, run `ble-fingerprint --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/ble-fingerprint.log` as documented upstream for ble-fingerprint.",
-    "When chaining Bluetooth tools, pair ble-fingerprint with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `ble-fingerprint --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "ble-fingerprint --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/ble-fingerprint.log"
+    "cd toolboxes/ble-fingerprint && python3 ble-fingerprint.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/ble-fingerprint && python3 ble-fingerprint.py --help",
+    "cd toolboxes/ble-fingerprint && python3 ble-fingerprint.py --help",
+    "cd toolboxes/ble-fingerprint && python3 ble-fingerprint.py --help",
+    "cd toolboxes/ble-fingerprint && python3 ble-fingerprint.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ble-fingerprint --output $KFIOSA_OUTPUT_DIR/ble-fingerprint.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST ble-fingerprint --output $KFIOSA_OUTPUT_DIR/ble-fingerprint.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web",
+    "ble_4_x"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

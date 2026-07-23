@@ -26,6 +26,106 @@
         "name": "-NG",
         "description": "Benchmarking Low-Power Wireless Protocols under Controlable and Repeatable Wi-Fi Interference**](https://dl.acm.org/citation.cfm?id=3324331). *Proceedings of the 2019 International",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--timeout",
+        "description": "Per-operation timeout in seconds.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--rate",
+        "description": "Packet / request rate limit (packets/sec).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--wordlist",
+        "description": "Path to a wordlist (users, passwords, paths).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--proxy",
+        "description": "HTTP or SOCKS proxy URL for outbound requests.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--cookie",
+        "description": "HTTP Cookie header value.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--header",
+        "description": "Extra HTTP header in key:value form (repeatable).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--insecure",
+        "description": "Skip TLS certificate verification (lab use only).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--quiet",
+        "description": "Suppress non-error output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--dry-run",
+        "description": "Print what would be done without making any changes.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -36,6 +136,62 @@
         "language": "cli",
         "description": "CLI entrypoint for nexmon",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "nexmon/__main__.py",
+        "language": "c",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "nexmon/__main__.py",
+        "language": "c",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "nexmon/__main__.py",
+        "language": "c",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "nexmon/__main__.py",
+        "language": "c",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "nexmon/__main__.py",
+        "language": "c",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "nexmon/__main__.py",
+        "language": "c",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "nexmon/__main__.py",
+        "language": "c",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -109,7 +265,51 @@
     ],
     "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `sudo dpkg --add-architecture i386`. Further invocations from upstream: `loaded by the driver into the RAM. To analyze the whole firmware, one needs to extract the ROM. There are two`; `options to do this. Either you write a firmware patch that simply copies the contents of the ROM to RAM and then`.",
     "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: ![NexMon logo](https://github.com/seemoo-lab/nexmon/raw/master/gfx/nexmon.png).",
-    "why_to_use": "Prefer this tool based on upstream description: What is nexmon? Nexmon is our C-based firmware patching framework for Broadcom/Cypress WiFi chips that enables you to write your own firmware patches, for example, to enable monitor mode with radiotap headers and frame injection."
+    "why_to_use": "Prefer this tool based on upstream description: What is nexmon? Nexmon is our C-based firmware patching framework for Broadcom/Cypress WiFi chips that enables you to write your own firmware patches, for example, to enable monitor mode with radiotap headers and frame injection.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:seemoo-lab/nexmon",
+        "successor": "github:vanhoefm/krackattacks-scripts",
+        "note": "Shares attack_surface+phase_hint+tag with vanhoefm/krackattacks-scripts (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:seemoo-lab/nexmon",
+        "successor": "github:vanhoefm/dragonslayer",
+        "note": "Shares attack_surface+phase_hint+tag with vanhoefm/dragonslayer (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:seemoo-lab/nexmon",
+        "successor": "github:unknown/infernal-twin",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/infernal-twin (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:seemoo-lab/nexmon",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:seemoo-lab/nexmon",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:seemoo-lab/nexmon",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -120,8 +320,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -130,57 +331,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "nexmon",
     "seemoo-lab",
-    "lang:c",
-    "lang:shell",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Wireless, use nexmon because ![NexMon logo](https://github.com/seemoo-lab/nexmon/raw/master/gfx/nexmon.png).",
-    "When you need a concrete invocation, run `sudo dpkg --add-architecture i386` as documented upstream for nexmon.",
-    "When you need a concrete invocation, run `loaded by the driver into the RAM. To analyze the whole firmware, one needs to extract the ROM. There are two` as documented upstream for nexmon.",
-    "When you need a concrete invocation, run `options to do this. Either you write a firmware patch that simply copies the contents of the ROM to RAM and then` as documented upstream for nexmon.",
-    "When you need a concrete invocation, run `you dump the RAM, or you directly dump the ROM after loading the regular firmware into the RAM. Even though,` as documented upstream for nexmon.",
-    "When chaining Wireless tools, pair nexmon with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `nexmon --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo dpkg --add-architecture i386",
-    "loaded by the driver into the RAM. To analyze the whole firmware, one needs to extract the ROM. There are two",
-    "options to do this. Either you write a firmware patch that simply copies the contents of the ROM to RAM and then",
-    "you dump the RAM, or you directly dump the ROM after loading the regular firmware into the RAM. Even though,",
-    "By dumping the ROM after loading the original RAM firmware, it contains flash patches. Hence, the ROM needs to be",
-    "dumped again for every RAM firmware update to be consistent. As a conclusion, we prefer to dump the clean ROM after",
-    "copying it to RAM.",
-    "To dump the ROM directly, you need to know, where to find it and how large it is. On chips with Cortex-M3 it is",
-    "usually at upper addresses such as 0x800000, while on chips with Cortex-R4 it is likely at 0x0. Run dhdutil to",
-    "RAM and them dumps it using dhdutil. To dump the ROM simply execute the following in the project directory:"
+    "cd toolboxes/nexmon && python3 nexmon.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/nexmon && python3 nexmon.py --help",
+    "cd toolboxes/nexmon && python3 nexmon.py --help",
+    "cd toolboxes/nexmon && python3 nexmon.py --help",
+    "cd toolboxes/nexmon && python3 nexmon.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nexmon --output $KFIOSA_OUTPUT_DIR/nexmon.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nexmon --output $KFIOSA_OUTPUT_DIR/nexmon.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "c",
     "shell",

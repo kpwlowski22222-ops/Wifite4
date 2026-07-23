@@ -1,14 +1,13 @@
 {
   "category": "ios",
   "command_examples": [
-    "cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/",
-    "sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:CODE_SIGNING_REQUIRED NO\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist",
-    "sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist",
-    "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/iphoneos.toolchain.cmake ..",
-    "make -j$(sysctl -n hw.logicalcpu)",
-    "scp ./build/Clutch root@<your.device.ip>:/usr/bin/Clutch",
-    "scp -P 2222 ./build/Clutch root@localhost:/usr/bin/Clutch",
-    "inject /usr/bin/Clutch"
+    "cd toolboxes/Clutch && python3 Clutch.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Clutch && python3 Clutch.py --help",
+    "cd toolboxes/Clutch && python3 Clutch.py --help",
+    "cd toolboxes/Clutch && python3 Clutch.py --help",
+    "cd toolboxes/Clutch && python3 Clutch.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Clutch --output $KFIOSA_OUTPUT_DIR/Clutch.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Clutch --output $KFIOSA_OUTPUT_DIR/Clutch.log"
   ],
   "documentation": {
     "readme": "Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. Clutch is meant only for educational purposes and security research.",
@@ -135,6 +134,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -305,7 +309,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -314,13 +320,12 @@
   },
   "url": "https://github.com/KJCracks/Clutch",
   "use_cases": [
-    "When you need ios, use Clutch because Clutch is a high-speed iOS decryption tool. Clutch supports the iPhone, iPod Touch, and iPad as well as all iOS version, architecture types, and most binaries. .",
-    "When you need a concrete invocation, run `cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist ~/` as documented upstream for Clutch.",
-    "When you need a concrete invocation, run `sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:CODE_SIGNING_REQUIRED NO\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist` as documented upstream for Clutch.",
-    "When you need a concrete invocation, run `sudo /usr/libexec/PlistBuddy -c \"Set :DefaultProperties:AD_HOC_CODE_SIGNING_ALLOWED YES\" /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist` as documented upstream for Clutch.",
-    "When you need a concrete invocation, run `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/iphoneos.toolchain.cmake ..` as documented upstream for Clutch.",
-    "When chaining ios tools, pair Clutch with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Clutch --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

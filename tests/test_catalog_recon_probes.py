@@ -156,6 +156,44 @@ def test_run_with_probes_no_attribute_error_on_core_aliases(tmp_path):
     assert report.get("duration_s") is not None
 
 
+def test_run_budget_skips_remaining(tmp_path):
+    """Wall-clock budget must cut the pass short so AIO does not freeze."""
+    import time
+    r = _recon()
+    r.outdir = tmp_path
+    events = []
+
+    def slow():
+        time.sleep(0.05)
+        return {"ok": True}
+
+    for name in _core_step_fns() + _novel_probe_fns():
+        setattr(r, name, slow)
+    report = r.run(
+        with_probes=True,
+        budget_s=0.02,
+        on_step=lambda n, e: events.append((n, e)),
+    )
+    assert report.get("budget_hit") is True
+    assert report.get("steps_skipped_budget", 0) >= 1
+    assert any(e[1] == "skip" for e in events)
+
+
+def test_run_lean_skips_novel_probes(tmp_path):
+    r = _recon()
+    r.outdir = tmp_path
+    core = _core_step_fns()
+    novel = _novel_probe_fns()
+    mocks = {n: mock.MagicMock() for n in core + novel}
+    for n, m in mocks.items():
+        setattr(r, n, m)
+    r.run(with_probes=True, lean=True)
+    for n in core:
+        mocks[n].assert_called_once()
+    for n in novel:
+        mocks[n].assert_not_called()
+
+
 # ---------------------------------------------------------------------------
 # AP-section parser + airodump helpers
 # ---------------------------------------------------------------------------

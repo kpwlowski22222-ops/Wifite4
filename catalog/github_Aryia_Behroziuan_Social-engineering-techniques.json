@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -263,8 +268,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -273,41 +279,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "social",
+    "engineering",
+    "techniques",
     "aryia_behroziuan",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need OSINT, use Social-engineering-techniques because Social-engineering-techniques\nIn some cases, the greatest weakness in a website’s security system is the people that use it. Social engineering seeks to exploit.",
-    "When the engagement is in the recon phase, use Social-engineering-techniques as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When chaining OSINT tools, pair Social-engineering-techniques with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Social-engineering-techniques --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/Social-engineering-techniques && python3 Social-engineering-techniques.py --help",
-    "cd toolboxes/Social-engineering-techniques && cat README.md",
-    "cd toolboxes/Social-engineering-techniques && ls -la",
     "cd toolboxes/Social-engineering-techniques && python3 Social-engineering-techniques.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Social-engineering-techniques && python3 Social-engineering-techniques.py --help",
+    "cd toolboxes/Social-engineering-techniques && python3 Social-engineering-techniques.py --help",
+    "cd toolboxes/Social-engineering-techniques && python3 Social-engineering-techniques.py --help",
+    "cd toolboxes/Social-engineering-techniques && python3 Social-engineering-techniques.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Social-engineering-techniques --output $KFIOSA_OUTPUT_DIR/Social-engineering-techniques.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Social-engineering-techniques --output $KFIOSA_OUTPUT_DIR/Social-engineering-techniques.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

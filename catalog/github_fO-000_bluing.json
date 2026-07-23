@@ -142,6 +142,11 @@
         "name": "--interface",
         "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -333,8 +338,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -343,51 +349,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "bluing",
     "fo-000",
-    "lang:python",
-    "lang:cpp",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Bluetooth, use bluing because Bluing An intelligence gathering tool for hacking Bluetooth.",
-    "When you need a concrete invocation, run `sudo apt install python3-pip python3-dev libcairo2-dev libgirepository1.0-dev \\` as documented upstream for bluing.",
-    "When you need a concrete invocation, run `sudo pip3.10 install bluing` as documented upstream for bluing.",
-    "When you need a concrete invocation, run `NAME=\"Ubuntu\"` as documented upstream for bluing.",
-    "When you need a concrete invocation, run `VERSION=\"16.10 (Yakkety Yak)\"` as documented upstream for bluing.",
-    "When chaining Bluetooth tools, pair bluing with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `bluing --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo apt install python3-pip python3-dev libcairo2-dev libgirepository1.0-dev \\",
-    "sudo pip3.10 install bluing",
-    "NAME=\"Ubuntu\"",
-    "VERSION=\"16.10 (Yakkety Yak)\"",
-    "rfkill 0.5-1ubuntu3 (Ubuntu)",
-    "PRETTY_NAME=\"Kali GNU/Linux Rolling\"",
-    "NAME=\"Kali GNU/Linux\"",
-    "rfkill from util-linux 2.38.1"
+    "cd toolboxes/bluing && python3 bluing.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/bluing && python3 bluing.py --help",
+    "cd toolboxes/bluing && python3 bluing.py --help",
+    "cd toolboxes/bluing && python3 bluing.py --help",
+    "cd toolboxes/bluing && python3 bluing.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluing --output $KFIOSA_OUTPUT_DIR/bluing.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluing --output $KFIOSA_OUTPUT_DIR/bluing.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

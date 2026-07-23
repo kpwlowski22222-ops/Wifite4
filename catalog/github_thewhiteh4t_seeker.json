@@ -152,6 +152,11 @@
         "name": "--proxy",
         "description": "HTTP or SOCKS proxy URL for outbound requests.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--user-agent",
+        "description": "HTTP User-Agent header value.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -344,8 +349,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -354,53 +360,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "seeker",
     "thewhiteh4t",
-    "lang:python",
-    "lang:javascript",
-    "lang:php",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need OSINT, use seeker because Concept behind Seeker is simple, just like we host phishing pages to get credentials why not host a fake page that requests your location like many popular loca.",
-    "When the engagement is in the recon phase, use seeker as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `cd seeker/` as documented upstream for seeker.",
-    "When you need a concrete invocation, run `chmod +x install.sh` as documented upstream for seeker.",
-    "When you need a concrete invocation, run `./install.sh` as documented upstream for seeker.",
-    "When you need a concrete invocation, run `sudo pacman -S seeker` as documented upstream for seeker.",
-    "When chaining OSINT tools, pair seeker with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `seeker --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd seeker/",
-    "chmod +x install.sh",
-    "./install.sh",
-    "sudo pacman -S seeker",
-    "python3 seeker.py",
-    "python3 seeker.py -h",
-    "usage: seeker.py [-h] [-k KML] [-p PORT] [-u] [-v] [-t TEMPLATE] [-d] [--telegram token=$KFIOSA_SECRET [--webhook WEBHOOK]",
-    "format = token=$KFIOSA_SECRET separated by a colon",
-    "DEBUG_HTTP            Same as -d, --debugHTTP",
-    "PORT                  Same as -p, --port"
+    "cd toolboxes/seeker && python3 seeker.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/seeker && python3 seeker.py --help",
+    "cd toolboxes/seeker && python3 seeker.py --help",
+    "cd toolboxes/seeker && python3 seeker.py --help",
+    "cd toolboxes/seeker && python3 seeker.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST seeker --output $KFIOSA_OUTPUT_DIR/seeker.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST seeker --output $KFIOSA_OUTPUT_DIR/seeker.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

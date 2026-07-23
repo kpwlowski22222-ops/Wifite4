@@ -125,6 +125,11 @@
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -309,8 +314,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -319,45 +325,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "wifi",
+    "jammer",
     "tarikul3639",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed",
+    "polymorphic"
   ],
   "use_cases": [
-    "Index entry in the Wireless category. Use as a candidate tool in the chain planner after a NVD/lookup pass on the target vendor.",
-    "Pairs with the Wireless system-prompt stanza in core.ai_backend.chain to teach the LLM the standard invocation pattern.",
-    "Operator-initiated: the chain step is gated by the per-step ACCEPT/CANCEL gate; the tool does not auto-execute.",
-    "Use as a reference implementation when designing a new v3 method for this category.",
-    "Use as a teaching example in the prompt stanza so the LLM can reason about the right run order."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/wifi-jammer && python3 wifi-jammer.py --help",
-    "cd toolboxes/wifi-jammer && cat README.md",
-    "cd toolboxes/wifi-jammer && ls -la",
     "cd toolboxes/wifi-jammer && python3 wifi-jammer.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi-jammer && python3 wifi-jammer.py --help",
+    "cd toolboxes/wifi-jammer && python3 wifi-jammer.py --help",
+    "cd toolboxes/wifi-jammer && python3 wifi-jammer.py --help",
+    "cd toolboxes/wifi-jammer && python3 wifi-jammer.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-jammer --output $KFIOSA_OUTPUT_DIR/wifi-jammer.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-jammer --output $KFIOSA_OUTPUT_DIR/wifi-jammer.log"
   ],
   "attack_surface": [
+    "web",
     "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "wifi_5_ghz"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -103,6 +103,26 @@
         "name": "-License-Identifier",
         "description": "LGPL-2.1-or-later",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -113,6 +133,62 @@
         "language": "cli",
         "description": "CLI entrypoint for bluez",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "bluez/__main__.py",
+        "language": "c",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "bluez/__main__.py",
+        "language": "c",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "bluez/__main__.py",
+        "language": "c",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "bluez/__main__.py",
+        "language": "c",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "bluez/__main__.py",
+        "language": "c",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "bluez/__main__.py",
+        "language": "c",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "bluez/__main__.py",
+        "language": "c",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [],
@@ -175,7 +251,51 @@
     ],
     "how_to_use": "Clone or install `bluez` from its upstream repository, then run `bluez --help` (or the README entrypoint) to confirm flags. BlueZ - Bluetooth protocol stack for Linux.",
     "when_to_use": "Use during the 'any' phase against surfaces [ble_4_x, ble_5_x, ble_mesh] in the Bluetooth category. Fits when the engagement needs: BlueZ - Bluetooth protocol stack for Linux\n******************************************.",
-    "why_to_use": "Prefer this tool based on upstream description: BlueZ - Bluetooth protocol stack for Linux."
+    "why_to_use": "Prefer this tool based on upstream description: BlueZ - Bluetooth protocol stack for Linux.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:bluez/bluez",
+        "successor": "github:greatscottgadgets/ubertooth",
+        "note": "Shares attack_surface+phase_hint+tag with greatscottgadgets/ubertooth (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bluez/bluez",
+        "successor": "github:JiaoXianjun/BTLE",
+        "note": "Shares attack_surface+phase_hint+tag with JiaoXianjun/BTLE (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bluez/bluez",
+        "successor": "github:IOT-CVE/IOT-CVE",
+        "note": "Shares attack_surface+phase_hint+tag with IOT-CVE/IOT-CVE (score=12); pair in the chain planner.",
+        "score": 12
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bluez/bluez",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web', 'ble_4_x'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bluez/bluez",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web', 'ble_4_x'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:bluez/bluez",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web', 'ble_4_x'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -186,8 +306,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -196,42 +317,50 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
     "bluez",
-    "lang:c",
-    "lang:python",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Bluetooth, use bluez because BlueZ - Bluetooth protocol stack for Linux\n******************************************.",
-    "When chaining Bluetooth tools, pair bluez with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `bluez --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
-  "command_examples": [],
+  "command_examples": [
+    "cd toolboxes/bluez && python3 bluez.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/bluez && python3 bluez.py --help",
+    "cd toolboxes/bluez && python3 bluez.py --help",
+    "cd toolboxes/bluez && python3 bluez.py --help",
+    "cd toolboxes/bluez && python3 bluez.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluez --output $KFIOSA_OUTPUT_DIR/bluez.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluez --output $KFIOSA_OUTPUT_DIR/bluez.log"
+  ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web",
+    "ble_4_x"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "c",
     "python",

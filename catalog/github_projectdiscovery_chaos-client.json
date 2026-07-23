@@ -1,10 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "go install -v github.com/projectdiscovery/chaos-client/cmd/chaos@latest",
-    "chaos -h",
-    "export PDCP_API_KEY=$KFIOSA_SECRET",
-    "chaos -d uber.com -silent"
+    "cd toolboxes/chaos-client && python3 chaos-client.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/chaos-client && python3 chaos-client.py --help",
+    "cd toolboxes/chaos-client && python3 chaos-client.py --help",
+    "cd toolboxes/chaos-client && python3 chaos-client.py --help",
+    "cd toolboxes/chaos-client && python3 chaos-client.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST chaos-client --output $KFIOSA_OUTPUT_DIR/chaos-client.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST chaos-client --output $KFIOSA_OUTPUT_DIR/chaos-client.log"
   ],
   "documentation": {
     "readme": "Go client to communicate with Chaos dataset API.",
@@ -177,6 +180,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -343,7 +351,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -352,13 +361,12 @@
   },
   "url": "https://github.com/projectdiscovery/chaos-client",
   "use_cases": [
-    "When you need recon, use chaos-client because Go client to communicate with Chaos dataset API.",
-    "When you need a concrete invocation, run `go install -v github.com/projectdiscovery/chaos-client/cmd/chaos@latest` as documented upstream for chaos-client.",
-    "When you need a concrete invocation, run `chaos -h` as documented upstream for chaos-client.",
-    "When you need a concrete invocation, run `export PDCP_API_KEY=$KFIOSA_SECRET` as documented upstream for chaos-client.",
-    "When you need a concrete invocation, run `chaos -d uber.com -silent` as documented upstream for chaos-client.",
-    "When chaining recon tools, pair chaos-client with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `chaos-client --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

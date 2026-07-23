@@ -125,6 +125,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -263,8 +268,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -273,43 +279,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
-    "danielmolina5",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "offensive",
+    "wifi",
+    "network",
+    "attack",
+    "intrusion",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring because -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.",
-    "When the engagement is in the recon phase, use -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When chaining Reconnaissance tools, pair -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring && python3 -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.py --help",
-    "cd toolboxes/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring && cat README.md",
-    "cd toolboxes/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring && ls -la",
     "cd toolboxes/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring && python3 -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring && python3 -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.py --help",
+    "cd toolboxes/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring && python3 -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.py --help",
+    "cd toolboxes/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring && python3 -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.py --help",
+    "cd toolboxes/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring && python3 -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring --output $KFIOSA_OUTPUT_DIR/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST -WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring --output $KFIOSA_OUTPUT_DIR/-WiFi-Network-Attack-Intrusion-Reconnaissance-Monitoring.log"
   ],
   "attack_surface": [
     "web",
-    "cloud",
-    "iots"
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

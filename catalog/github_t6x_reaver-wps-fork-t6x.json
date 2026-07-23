@@ -242,6 +242,11 @@
         "name": "--output",
         "description": "Output file path for the report or capture.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -430,8 +435,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -440,48 +446,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "reaver",
+    "wps",
+    "fork",
     "t6x",
-    "lang:c",
-    "lang:shell",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Wireless, use reaver-wps-fork-t6x because **Reaver** implements a **brute force attack** against **Wifi Protected Setup** (WPS) registrar **PINs** in order to recover **WPA/WPA2 passphrases**, as descri.",
-    "When you need a concrete invocation, run `sudo apt -y install build-essential libpcap-dev aircrack-ng pixiewps` as documented upstream for reaver-wps-fork-t6x.",
-    "When you need a concrete invocation, run `Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>` as documented upstream for reaver-wps-fork-t6x.",
-    "When you need a concrete invocation, run `reaver -i wlan0mon -b 00:90:4C:C1:AC:21 -vv` as documented upstream for reaver-wps-fork-t6x.",
-    "When you need a concrete invocation, run `wash -i wlan0mon` as documented upstream for reaver-wps-fork-t6x.",
-    "When chaining Wireless tools, pair reaver-wps-fork-t6x with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `reaver-wps-fork-t6x --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo apt -y install build-essential libpcap-dev aircrack-ng pixiewps",
-    "Copyright (c) 2011, Tactical Network Solutions, Craig Heffner <cheffner@tacnetsol.com>",
-    "reaver -i wlan0mon -b 00:90:4C:C1:AC:21 -vv",
-    "wash -i wlan0mon"
+    "cd toolboxes/reaver-wps-fork-t6x && python3 reaver-wps-fork-t6x.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/reaver-wps-fork-t6x && python3 reaver-wps-fork-t6x.py --help",
+    "cd toolboxes/reaver-wps-fork-t6x && python3 reaver-wps-fork-t6x.py --help",
+    "cd toolboxes/reaver-wps-fork-t6x && python3 reaver-wps-fork-t6x.py --help",
+    "cd toolboxes/reaver-wps-fork-t6x && python3 reaver-wps-fork-t6x.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST reaver-wps-fork-t6x --output $KFIOSA_OUTPUT_DIR/reaver-wps-fork-t6x.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST reaver-wps-fork-t6x --output $KFIOSA_OUTPUT_DIR/reaver-wps-fork-t6x.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -1,15 +1,13 @@
 {
   "category": "wireless_ble_ext",
   "command_examples": [
-    "dpkg-buildpackage -b --no-sign",
-    "cd ..",
-    "dpkg -i rtl8814au-dkms_5.8.5.1-24835.20190115_all.deb",
-    "openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj \"/CN=Descriptive name/\"",
-    "sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 ./MOK.priv ./MOK.der $(modinfo -n rtl8812au)",
-    "sudo mokutil --import MOK.der",
-    "mokutil --test-key MOK.der",
-    "sudo sh -c \"echo '1' > /sys/module/8814au/parameters/rtw_switch_usb_mode\"",
-    "sudo sh -c \"echo '2' > /sys/module/8814au/parameters/rtw_switch_usb_mode\""
+    "cd toolboxes/rtl8814au && python3 rtl8814au.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
+    "cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
+    "cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
+    "cd toolboxes/rtl8814au && python3 rtl8814au.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtl8814au --output $KFIOSA_OUTPUT_DIR/rtl8814au.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST rtl8814au --output $KFIOSA_OUTPUT_DIR/rtl8814au.log"
   ],
   "documentation": {
     "readme": "rtl8814au Drivers for the rtl8814au chipset wireless adapters",
@@ -131,6 +129,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -302,7 +305,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -311,13 +316,12 @@
   },
   "url": "https://github.com/aircrack-ng/rtl8814au",
   "use_cases": [
-    "When you need wireless_ble_ext, use rtl8814au because rtl8814au Drivers for the rtl8814au chipset wireless adapters.",
-    "When you need a concrete invocation, run `dpkg-buildpackage -b --no-sign` as documented upstream for rtl8814au.",
-    "When you need a concrete invocation, run `cd ..` as documented upstream for rtl8814au.",
-    "When you need a concrete invocation, run `dpkg -i rtl8814au-dkms_5.8.5.1-24835.20190115_all.deb` as documented upstream for rtl8814au.",
-    "When you need a concrete invocation, run `openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj \"/CN=Descriptive name/\"` as documented upstream for rtl8814au.",
-    "When chaining wireless_ble_ext tools, pair rtl8814au with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `rtl8814au --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

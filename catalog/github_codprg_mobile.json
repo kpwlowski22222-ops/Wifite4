@@ -135,6 +135,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -271,8 +276,11 @@
   "risk": {
     "level": "high",
     "signals": [
+      "mobile",
+      "active",
+      "local",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -281,30 +289,35 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "mobile_security",
-    "toolbox",
-    "github",
+    "mobile",
+    "android",
+    "ios",
     "codprg",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Mobile Security, use mobile because Smart-Phone\nThis is a simple open source python script used for exploiting any android smartphones with a stable session by taking advantage of adb (USB debuggi.",
-    "When chaining Mobile Security tools, pair mobile with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `mobile --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use during the mobile-app-triage sub-phase.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
+    "cd toolboxes/mobile && python3 mobile.py --apk $KFIOSA_TARGET_APK",
     "cd toolboxes/mobile && python3 mobile.py --help",
-    "cd toolboxes/mobile && cat README.md",
-    "cd toolboxes/mobile && ls -la",
-    "cd toolboxes/mobile && python3 mobile.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/mobile && python3 mobile.py --help",
+    "cd toolboxes/mobile && python3 mobile.py --help",
+    "cd toolboxes/mobile && python3 mobile.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mobile --output $KFIOSA_OUTPUT_DIR/mobile.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST mobile --output $KFIOSA_OUTPUT_DIR/mobile.log"
   ],
   "attack_surface": [
-    "shell_android",
-    "shell_ios",
     "web"
   ],
   "phase_hint": "any",
@@ -312,12 +325,10 @@
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

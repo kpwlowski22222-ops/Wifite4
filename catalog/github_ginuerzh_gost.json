@@ -1,16 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "cd gost/cmd/gost",
-    "docker run --rm ginuerzh/gost -V",
-    "gost -L=:8080",
-    "gost -L=admin:123456@localhost:8080",
-    "gost -L=http2://:443 -L=socks5://:1080 -L=ss://aes-128-cfb:123456@:8338",
-    "gost -L=:8080 -F=$KFIOSA_TARGET_HOST:8081",
-    "gost -L=:8080 -F=$KFIOSA_TARGET_URL",
-    "gost -L=:8080 -F=quic://$KFIOSA_TARGET_HOST:6121 -F=socks5+wss://$KFIOSA_TARGET_HOST:1080 -F=http2://$KFIOSA_TARGET_HOST:443 ... -F=a.b.c.d:NNNN",
-    "gost -L=tcp://:2222/$KFIOSA_TARGET_HOST:22 [-F=...]",
-    "gost -L=tcp://:2222/$KFIOSA_TARGET_HOST:22 -F forward+ssh://:2222"
+    "cd toolboxes/gost && python3 gost.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/gost && python3 gost.py --help",
+    "cd toolboxes/gost && python3 gost.py --help",
+    "cd toolboxes/gost && python3 gost.py --help",
+    "cd toolboxes/gost && python3 gost.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gost --output $KFIOSA_OUTPUT_DIR/gost.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gost --output $KFIOSA_OUTPUT_DIR/gost.log"
   ],
   "documentation": {
     "readme": "多端口监听 可设置转发代理，支持多级转发(代理链) 支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议 Web代理支持探测防御 支持多种隧道类型 SOCKS5代理支持TLS协商加密 Tunnel UDP over TCP TCP/UDP透明代理 本地/远程TCP/UDP端口转发 支持Shadowsocks(TCP/UDP)协议 支持SNI代理 权限控制 负载均衡 路由控制 DNS解析和代理 TUN/TAP设备",
@@ -135,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -307,7 +309,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -316,13 +320,12 @@
   },
   "url": "https://github.com/ginuerzh/gost",
   "use_cases": [
-    "When you need c2, use gost because 多端口监听 可设置转发代理，支持多级转发(代理链) 支持标准HTTP/HTTPS/HTTP2/SOCKS4(A)/SOCKS5代理协议 Web代理支持探测防御 支持多种隧道类型 SOCKS5代理支持TLS协商加密 Tunnel UDP over TCP TCP/UDP透明代理 本地/远程TCP/UDP端口转发 支持Sh.",
-    "When you need a concrete invocation, run `cd gost/cmd/gost` as documented upstream for gost.",
-    "When you need a concrete invocation, run `docker run --rm ginuerzh/gost -V` as documented upstream for gost.",
-    "When you need a concrete invocation, run `gost -L=:8080` as documented upstream for gost.",
-    "When you need a concrete invocation, run `gost -L=admin:123456@localhost:8080` as documented upstream for gost.",
-    "When chaining c2 tools, pair gost with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `gost --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

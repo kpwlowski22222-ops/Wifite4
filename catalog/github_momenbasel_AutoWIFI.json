@@ -127,6 +127,11 @@
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -283,8 +288,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -293,47 +299,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "autowifi",
     "momenbasel",
-    "lang:python",
-    "lab_only",
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use AutoWIFI because Wireless penetration testing framework. Automates the full attack chain - recon through exploitation - with a clean terminal interface.",
-    "When the engagement is in the recon phase, use AutoWIFI as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `sudo apt install -y aircrack-ng reaver bully hcxdumptool hcxtools hashcat macchanger mdk4 tshark` as documented upstream for AutoWIFI.",
-    "When you need a concrete invocation, run `sudo pacman -S aircrack-ng reaver hashcat hcxdumptool hcxtools macchanger wireshark-cli` as documented upstream for AutoWIFI.",
-    "When you need a concrete invocation, run `sudo autowifi --version` as documented upstream for AutoWIFI.",
-    "When you need a concrete invocation, run `Launches the full TUI with menu-driven workflow - scan, select target, attack, crack.` as documented upstream for AutoWIFI.",
-    "When chaining Reconnaissance tools, pair AutoWIFI with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `AutoWIFI --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo apt install -y aircrack-ng reaver bully hcxdumptool hcxtools hashcat macchanger mdk4 tshark",
-    "sudo pacman -S aircrack-ng reaver hashcat hcxdumptool hcxtools macchanger wireshark-cli",
-    "sudo autowifi --version",
-    "Launches the full TUI with menu-driven workflow - scan, select target, attack, crack."
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --help",
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --help",
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --help",
+    "cd toolboxes/AutoWIFI && python3 AutoWIFI.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AutoWIFI --output $KFIOSA_OUTPUT_DIR/AutoWIFI.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST AutoWIFI --output $KFIOSA_OUTPUT_DIR/AutoWIFI.log"
   ],
   "attack_surface": [
     "web",
-    "cloud",
-    "iots"
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

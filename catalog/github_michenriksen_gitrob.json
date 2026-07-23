@@ -1,10 +1,13 @@
 {
   "category": "osint",
   "command_examples": [
-    "Address to bind web server to (default \"$KFIOSA_TARGET_HOST\")",
-    "gitrob [options] target [target2] ... [targetN]",
-    "gitrob -save ~/gitrob-session.json acmecorp",
-    "gitrob -load ~/gitrob-session.json"
+    "cd toolboxes/gitrob && python3 gitrob.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/gitrob && python3 gitrob.py --help",
+    "cd toolboxes/gitrob && python3 gitrob.py --help",
+    "cd toolboxes/gitrob && python3 gitrob.py --help",
+    "cd toolboxes/gitrob && python3 gitrob.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gitrob --output $KFIOSA_OUTPUT_DIR/gitrob.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gitrob --output $KFIOSA_OUTPUT_DIR/gitrob.log"
   ],
   "documentation": {
     "readme": "Gitrob: Putting the Open Source in OSINT",
@@ -141,6 +144,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -307,7 +315,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -316,13 +326,12 @@
   },
   "url": "https://github.com/michenriksen/gitrob",
   "use_cases": [
-    "When you need osint, use gitrob because Gitrob: Putting the Open Source in OSINT.",
-    "When you need a concrete invocation, run `Address to bind web server to (default \"$KFIOSA_TARGET_HOST\")` as documented upstream for gitrob.",
-    "When you need a concrete invocation, run `gitrob [options] target [target2] ... [targetN]` as documented upstream for gitrob.",
-    "When you need a concrete invocation, run `gitrob -save ~/gitrob-session.json acmecorp` as documented upstream for gitrob.",
-    "When you need a concrete invocation, run `gitrob -load ~/gitrob-session.json` as documented upstream for gitrob.",
-    "When chaining osint tools, pair gitrob with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `gitrob --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

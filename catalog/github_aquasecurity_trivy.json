@@ -1,10 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "trivy <target> [--scanners <scanner1,scanner2>] <subject>",
-    "trivy image python:3.4-alpine",
-    "trivy fs --scanners vuln,secret,misconfig myproject/",
-    "trivy k8s --report summary cluster"
+    "cd toolboxes/trivy && python3 trivy.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/trivy && python3 trivy.py --help",
+    "cd toolboxes/trivy && python3 trivy.py --help",
+    "cd toolboxes/trivy && python3 trivy.py --help",
+    "cd toolboxes/trivy && python3 trivy.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST trivy --output $KFIOSA_OUTPUT_DIR/trivy.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST trivy --output $KFIOSA_OUTPUT_DIR/trivy.log"
   ],
   "documentation": {
     "readme": "[![GitHub Release][release-img]][release] [![Test][test-img]][test] [![Go Report Card][go-report-img]][go-report] [![License: Apache-2.0][license-img]][license] [![GitHub Downloads][github-downloads-img]][release] ![Docker Pulls][docker-pulls]",
@@ -134,6 +137,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -300,7 +308,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -309,13 +319,12 @@
   },
   "url": "https://github.com/aquasecurity/trivy",
   "use_cases": [
-    "When you need frameworks, use trivy because [![GitHub Release][release-img]][release] [![Test][test-img]][test] [![Go Report Card][go-report-img]][go-report] [![License: Apache-2.0][license-img]][license].",
-    "When you need a concrete invocation, run `trivy <target> [--scanners <scanner1,scanner2>] <subject>` as documented upstream for trivy.",
-    "When you need a concrete invocation, run `trivy image python:3.4-alpine` as documented upstream for trivy.",
-    "When you need a concrete invocation, run `trivy fs --scanners vuln,secret,misconfig myproject/` as documented upstream for trivy.",
-    "When you need a concrete invocation, run `trivy k8s --report summary cluster` as documented upstream for trivy.",
-    "When chaining frameworks tools, pair trivy with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `trivy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

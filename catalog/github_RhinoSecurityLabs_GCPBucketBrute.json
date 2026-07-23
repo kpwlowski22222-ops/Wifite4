@@ -1,9 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "python3 gcpbucketbrute.py -k test -u",
-    "python3 gcpbucketbrute.py -k test -f ../sa-priv-key.pem -o ./out.txt",
-    "python3 gcpbucketbrute.py -k test -s 10"
+    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
+    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
+    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
+    "cd toolboxes/GCPBucketBrute && python3 GCPBucketBrute.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST GCPBucketBrute --output $KFIOSA_OUTPUT_DIR/GCPBucketBrute.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST GCPBucketBrute --output $KFIOSA_OUTPUT_DIR/GCPBucketBrute.log"
   ],
   "documentation": {
     "readme": "A script to enumerate Google Storage buckets, determine what access you have to them, and determine if they can be privilege escalated.",
@@ -130,6 +134,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -295,7 +304,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -304,12 +315,12 @@
   },
   "url": "https://github.com/RhinoSecurityLabs/GCPBucketBrute",
   "use_cases": [
-    "When you need recon, use GCPBucketBrute because A script to enumerate Google Storage buckets, determine what access you have to them, and determine if they can be privilege escalated.",
-    "When you need a concrete invocation, run `python3 gcpbucketbrute.py -k test -u` as documented upstream for GCPBucketBrute.",
-    "When you need a concrete invocation, run `python3 gcpbucketbrute.py -k test -f ../sa-priv-key.pem -o ./out.txt` as documented upstream for GCPBucketBrute.",
-    "When you need a concrete invocation, run `python3 gcpbucketbrute.py -k test -s 10` as documented upstream for GCPBucketBrute.",
-    "When chaining recon tools, pair GCPBucketBrute with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `GCPBucketBrute --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

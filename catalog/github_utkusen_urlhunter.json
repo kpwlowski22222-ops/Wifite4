@@ -127,6 +127,11 @@
         "name": "--insecure",
         "description": "Skip TLS certificate verification (lab use only).",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--json",
+        "description": "Emit JSON output instead of human-readable text.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -266,8 +271,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -276,41 +282,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "urlhunter",
     "utkusen",
-    "lang:go",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need OSINT, use urlhunter because urlhunter is a recon tool that allows searching on URLs that are exposed via shortener services such as bit.ly and goo.gl. The project is written in Go.",
-    "When the engagement is in the recon phase, use urlhunter as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `urlhunter downloads the archive files of the given date(s). You have three different ways to specify the date:` as documented upstream for urlhunter.",
-    "When you need a concrete invocation, run `urlhunter might be useful for cyber intelligence and bug bounty purposes. For example:` as documented upstream for urlhunter.",
-    "When chaining OSINT tools, pair urlhunter with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `urlhunter --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "urlhunter downloads the archive files of the given date(s). You have three different ways to specify the date:",
-    "urlhunter might be useful for cyber intelligence and bug bounty purposes. For example:"
+    "cd toolboxes/urlhunter && python3 urlhunter.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/urlhunter && python3 urlhunter.py --help",
+    "cd toolboxes/urlhunter && python3 urlhunter.py --help",
+    "cd toolboxes/urlhunter && python3 urlhunter.py --help",
+    "cd toolboxes/urlhunter && python3 urlhunter.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST urlhunter --output $KFIOSA_OUTPUT_DIR/urlhunter.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST urlhunter --output $KFIOSA_OUTPUT_DIR/urlhunter.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

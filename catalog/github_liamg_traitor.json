@@ -1,11 +1,13 @@
 {
   "category": "exploit",
   "command_examples": [
-    "traitor -p",
-    "traitor -a -p",
-    "traitor -p -e docker:writable-socket",
-    "CGO_ENABLED=0 go get -u github.com/liamg/traitor/cmd/traitor",
-    "CGO_ENABLED=0 go install github.com/liamg/traitor/cmd/traitor@latest"
+    "cd toolboxes/traitor && python3 traitor.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/traitor && python3 traitor.py --help",
+    "cd toolboxes/traitor && python3 traitor.py --help",
+    "cd toolboxes/traitor && python3 traitor.py --help",
+    "cd toolboxes/traitor && python3 traitor.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST traitor --output $KFIOSA_OUTPUT_DIR/traitor.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST traitor --output $KFIOSA_OUTPUT_DIR/traitor.log"
   ],
   "documentation": {
     "readme": "Automatically exploit low-hanging fruit to pop a root shell. Linux privilege escalation made easy!",
@@ -126,6 +128,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -293,7 +300,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -302,13 +311,12 @@
   },
   "url": "https://github.com/liamg/traitor",
   "use_cases": [
-    "When you need exploit, use traitor because Automatically exploit low-hanging fruit to pop a root shell. Linux privilege escalation made easy!.",
-    "When you need a concrete invocation, run `traitor -p` as documented upstream for traitor.",
-    "When you need a concrete invocation, run `traitor -a -p` as documented upstream for traitor.",
-    "When you need a concrete invocation, run `traitor -p -e docker:writable-socket` as documented upstream for traitor.",
-    "When you need a concrete invocation, run `CGO_ENABLED=0 go get -u github.com/liamg/traitor/cmd/traitor` as documented upstream for traitor.",
-    "When chaining exploit tools, pair traitor with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `traitor --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

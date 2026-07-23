@@ -241,6 +241,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -410,8 +415,10 @@
   "risk": {
     "level": "high",
     "signals": [
-      "intrinsic",
-      "lab_only",
+      "web",
+      "active",
+      "remote",
+      "credential",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -420,51 +427,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "web_application_security",
-    "toolbox",
-    "github",
+    "web",
+    "http",
+    "active",
+    "springboot",
+    "scan",
     "aabysszg",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "cloud",
+    "kfiosa",
+    "indexed",
+    "polymorphic"
   ],
   "use_cases": [
-    "When you need Web Application Security, use SpringBoot-Scan because ![SpringBoot-Scan](https://socialify.git.ci/AabyssZG/SpringBoot-Scan/image?description=1&descriptionEditable=Open%20source%20penetration%20framework%20for%20Spr.",
-    "When you need a concrete invocation, run `icon_hash=\"116323821\"||body=\"Whitelabel Error Page\"` as documented upstream for SpringBoot-Scan.",
-    "When you need a concrete invocation, run `对单一URL进行信息泄露扫描:         python3 SpringBoot-Scan.py -u $KFIOSA_TARGET_URL` as documented upstream for SpringBoot-Scan.",
-    "When you need a concrete invocation, run `读取目标TXT进行批量信息泄露扫描:   python3 SpringBoot-Scan.py -uf url.txt` as documented upstream for SpringBoot-Scan.",
-    "When you need a concrete invocation, run `对单一URL进行漏洞扫描:             python3 SpringBoot-Scan.py -v $KFIOSA_TARGET_URL` as documented upstream for SpringBoot-Scan.",
-    "When chaining Web Application Security tools, pair SpringBoot-Scan with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `SpringBoot-Scan --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use after httpx / wappalyzer / whatweb has identified the target web stack (CMS, framework, server).",
+    "Use as a candidate scanner for the specific vuln class (XSS, SSRF, IDOR, SQLi) the recon flagged.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "icon_hash=\"116323821\"||body=\"Whitelabel Error Page\"",
-    "对单一URL进行信息泄露扫描:         python3 SpringBoot-Scan.py -u $KFIOSA_TARGET_URL",
-    "读取目标TXT进行批量信息泄露扫描:   python3 SpringBoot-Scan.py -uf url.txt",
-    "对单一URL进行漏洞扫描:             python3 SpringBoot-Scan.py -v $KFIOSA_TARGET_URL",
-    "读取目标TXT进行批量漏洞扫描：      python3 SpringBoot-Scan.py -vf url.txt",
-    "扫描并下载SpringBoot敏感文件:      python3 SpringBoot-Scan.py -d $KFIOSA_TARGET_URL",
-    "读取目标TXT进行批量敏感文件扫描:   python3 SpringBoot-Scan.py -df url.txt",
-    "使用HTTP代理并自动进行连通性测试:    python3 SpringBoot-Scan.py -p <代理IP:端口>",
-    "从TXT文件中导入自定义HTTP头部:       python3 SpringBoot-Scan.py -t header.txt",
-    "通过ZoomEye密钥进行API下载数据:      python3 SpringBoot-Scan.py -z <ZoomEye的API-KEY>"
+    "cd toolboxes/SpringBoot-Scan && python3 SpringBoot-Scan.py -u https://$KFIOSA_TARGET_HOST --cookie $KFIOSA_TARGET_COOKIE",
+    "cd toolboxes/SpringBoot-Scan && python3 SpringBoot-Scan.py -h",
+    "cd toolboxes/SpringBoot-Scan && python3 SpringBoot-Scan.py --help",
+    "cd toolboxes/SpringBoot-Scan && python3 SpringBoot-Scan.py --help",
+    "cd toolboxes/SpringBoot-Scan && python3 SpringBoot-Scan.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SpringBoot-Scan --output $KFIOSA_OUTPUT_DIR/SpringBoot-Scan.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SpringBoot-Scan --output $KFIOSA_OUTPUT_DIR/SpringBoot-Scan.log"
   ],
   "attack_surface": [
     "web",
     "cloud"
   ],
-  "phase_hint": "any",
+  "phase_hint": "exploit",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "payload_grammar",
+    "header_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

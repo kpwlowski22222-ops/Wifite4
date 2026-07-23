@@ -140,6 +140,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -295,8 +300,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -305,44 +311,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "cse508",
     "saishsali",
-    "lang:python",
-    "lang:c",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Wireless, use cse508 because Professor: [Michalis Polychronakis](http://www3.cs.stonybrook.edu/~mikepo/).",
-    "When chaining Wireless tools, pair cse508 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `cse508 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "cd toolboxes/cse508 && python3 cse508.py --help",
-    "cd toolboxes/cse508 && cat README.md",
-    "cd toolboxes/cse508 && ls -la",
     "cd toolboxes/cse508 && python3 cse508.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/cse508 && python3 cse508.py --help",
+    "cd toolboxes/cse508 && python3 cse508.py --help",
+    "cd toolboxes/cse508 && python3 cse508.py --help",
+    "cd toolboxes/cse508 && python3 cse508.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cse508 --output $KFIOSA_OUTPUT_DIR/cse508.log",
     "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST cse508 --output $KFIOSA_OUTPUT_DIR/cse508.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

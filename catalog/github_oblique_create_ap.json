@@ -1,12 +1,13 @@
 {
   "category": "wifi",
   "command_examples": [
-    "create_ap -n wlan0 MyAccessPoint MyPassPhrase",
-    "create_ap -m bridge wlan0 eth0 MyAccessPoint MyPassPhrase",
-    "create_ap -m bridge wlan0 br0 MyAccessPoint MyPassPhrase",
-    "create_ap --driver rtl871xdrv wlan0 eth0 MyAccessPoint MyPassPhrase",
-    "create_ap --ieee80211n --ht_capab '[HT40+]' wlan0 eth0 MyAccessPoint MyPassPhrase",
-    "create_ap --isolate-clients wlan0 eth0 MyAccessPoint MyPassPhrase"
+    "cd toolboxes/create_ap && python3 create_ap.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/create_ap && python3 create_ap.py --help",
+    "cd toolboxes/create_ap && python3 create_ap.py --help",
+    "cd toolboxes/create_ap && python3 create_ap.py --help",
+    "cd toolboxes/create_ap && python3 create_ap.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST create_ap --output $KFIOSA_OUTPUT_DIR/create_ap.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST create_ap --output $KFIOSA_OUTPUT_DIR/create_ap.log"
   ],
   "documentation": {
     "readme": "[linux-wifi-hotspot] - Fork that is focused on providing GUI and improvements. [linux-router] - Fork that is focused on providing new features and improvements which are not limited to WiFi. Some interesting features are: sharing Internet to a wired interface and sharing Internet via a transparent proxy using redsocks.",
@@ -132,6 +133,11 @@
       {
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
       }
     ],
@@ -301,7 +307,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -310,13 +317,12 @@
   },
   "url": "https://github.com/oblique/create_ap",
   "use_cases": [
-    "When you need wifi, use create_ap because [linux-wifi-hotspot] - Fork that is focused on providing GUI and improvements. [linux-router] - Fork that is focused on providing new features and improvements .",
-    "When you need a concrete invocation, run `create_ap -n wlan0 MyAccessPoint MyPassPhrase` as documented upstream for create_ap.",
-    "When you need a concrete invocation, run `create_ap -m bridge wlan0 eth0 MyAccessPoint MyPassPhrase` as documented upstream for create_ap.",
-    "When you need a concrete invocation, run `create_ap -m bridge wlan0 br0 MyAccessPoint MyPassPhrase` as documented upstream for create_ap.",
-    "When you need a concrete invocation, run `create_ap --driver rtl871xdrv wlan0 eth0 MyAccessPoint MyPassPhrase` as documented upstream for create_ap.",
-    "When chaining wifi tools, pair create_ap with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `create_ap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

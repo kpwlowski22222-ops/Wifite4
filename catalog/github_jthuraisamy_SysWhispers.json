@@ -1,14 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "py .\\syswhispers.py --help",
-    "py .\\syswhispers.py --preset all -o syscalls_all",
-    "py .\\syswhispers.py --preset common -o syscalls_common",
-    "py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem",
-    "py .\\syswhispers.py --versions 7,8,10 -o syscalls_78X",
-    "PS C:\\Projects\\SysWhispers> py .\\syswhispers.py --preset common --out-file syscom",
-    "Common functions selected.",
-    "py .\\syswhispers.py -f NtAllocateVirtualMemory,NtWriteVirtualMemory,NtCreateThreadEx -o syscalls"
+    "cd toolboxes/SysWhispers && python3 SysWhispers.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/SysWhispers && python3 SysWhispers.py --help",
+    "cd toolboxes/SysWhispers && python3 SysWhispers.py --help",
+    "cd toolboxes/SysWhispers && python3 SysWhispers.py --help",
+    "cd toolboxes/SysWhispers && python3 SysWhispers.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SysWhispers --output $KFIOSA_OUTPUT_DIR/SysWhispers.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST SysWhispers --output $KFIOSA_OUTPUT_DIR/SysWhispers.log"
   ],
   "documentation": {
     "readme": "SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
@@ -133,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -303,7 +307,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -312,13 +318,12 @@
   },
   "url": "https://github.com/jthuraisamy/SysWhispers",
   "use_cases": [
-    "When you need c2, use SysWhispers because SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.",
-    "When you need a concrete invocation, run `py .\\syswhispers.py --help` as documented upstream for SysWhispers.",
-    "When you need a concrete invocation, run `py .\\syswhispers.py --preset all -o syscalls_all` as documented upstream for SysWhispers.",
-    "When you need a concrete invocation, run `py .\\syswhispers.py --preset common -o syscalls_common` as documented upstream for SysWhispers.",
-    "When you need a concrete invocation, run `py .\\syswhispers.py --functions NtProtectVirtualMemory,NtWriteVirtualMemory -o syscalls_mem` as documented upstream for SysWhispers.",
-    "When chaining c2 tools, pair SysWhispers with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `SysWhispers --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

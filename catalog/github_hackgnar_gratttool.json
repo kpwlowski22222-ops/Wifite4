@@ -131,6 +131,11 @@
         "name": "--interface",
         "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -289,8 +294,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -299,51 +305,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "gratttool",
     "hackgnar",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Bluetooth, use gratttool because A full-featured Rust reimplementation of the deprecated BlueZ gatttool utility for interacting with Bluetooth Low Energy (BLE) devices via GATT (Generic Attribu.",
-    "When you need a concrete invocation, run `sudo apt install -y bluetooth bluez libdbus-1-3` as documented upstream for gratttool.",
-    "When you need a concrete invocation, run `curl -fsSL -o gratttool \\` as documented upstream for gratttool.",
-    "When you need a concrete invocation, run `$KFIOSA_TARGET_URL` as documented upstream for gratttool.",
-    "When you need a concrete invocation, run `sudo mv gratttool /usr/local/bin/gratttool` as documented upstream for gratttool.",
-    "When chaining Bluetooth tools, pair gratttool with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `gratttool --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo apt install -y bluetooth bluez libdbus-1-3",
-    "curl -fsSL -o gratttool \\",
-    "$KFIOSA_TARGET_URL",
-    "sudo mv gratttool /usr/local/bin/gratttool",
-    "gratttool --help",
-    "sudo setcap 'cap_net_raw,cap_net_admin+eip' /usr/local/bin/gratttool",
-    "sudo pacman -S dbus bluez",
-    "cargo build --release",
-    "gratttool --scan",
-    "gratttool --scan 30"
+    "cd toolboxes/gratttool && python3 gratttool.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/gratttool && python3 gratttool.py --help",
+    "cd toolboxes/gratttool && python3 gratttool.py --help",
+    "cd toolboxes/gratttool && python3 gratttool.py --help",
+    "cd toolboxes/gratttool && python3 gratttool.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gratttool --output $KFIOSA_OUTPUT_DIR/gratttool.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST gratttool --output $KFIOSA_OUTPUT_DIR/gratttool.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

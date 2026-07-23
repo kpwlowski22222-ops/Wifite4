@@ -143,7 +143,17 @@ class WiFiAttackRunner:
     ``args`` carries per-action inputs (interface, bssid, channel, station,
     cap_file, hash_file, wordlist, plan_steps, ...). It is threaded through
     from the orchestrator's ``wifi_attack`` step args / the MCP ``args``
-    dict."""
+    dict.
+
+    Polymorphism: inherits situational pick via
+    :class:`core.utils.poly_runtime.SituationalMixin` (duck-typed at runtime
+    to avoid import cycles at module load).
+    """
+
+    # Late-bound mixin methods (avoid circular import at class body time)
+    def situational_pick(self, domain: str = "wifi", **kw):
+        from core.utils.poly_runtime import SituationalMixin
+        return SituationalMixin.situational_pick(self, domain, **kw)
 
     #: WiFi attack method names, in stable order (38 total).
     WIFI_ATTACK_METHODS: Tuple[str, ...] = (

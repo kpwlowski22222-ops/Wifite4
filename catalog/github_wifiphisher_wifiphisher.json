@@ -1,10 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "sudo python setup.py install # Install any dependencies",
-    "wifiphisher -aI wlan0 -jI wlan4 -p firmware-upgrade --handshake-capture handshake.pcap",
-    "wifiphisher --essid CONFERENCE_WIFI -p plugin_update -pK s3cr3tp4ssw0rd",
-    "wifiphisher --essid \"FREE WI-FI\" -p oauth-login -kB"
+    "cd toolboxes/wifiphisher && python3 wifiphisher.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifiphisher && python3 wifiphisher.py --help",
+    "cd toolboxes/wifiphisher && python3 wifiphisher.py --help",
+    "cd toolboxes/wifiphisher && python3 wifiphisher.py --help",
+    "cd toolboxes/wifiphisher && python3 wifiphisher.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifiphisher --output $KFIOSA_OUTPUT_DIR/wifiphisher.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifiphisher --output $KFIOSA_OUTPUT_DIR/wifiphisher.log"
   ],
   "documentation": {
     "readme": "About Wifiphisher is a rogue Access Point framework for conducting red team engagements or Wi-Fi security testing. Using Wifiphisher, penetration testers can easily achieve a man-in-the-middle position against wireless clients by performing targeted Wi-Fi association attacks. Wifiphisher can be further used to mount victim-customized web phishing attacks against the connected clients in order to capture credentials (e.g. from third party login pages or WPA/WPA2 Pre-Shared Keys) or infect the victim stations with malwares.",
@@ -125,6 +128,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -292,7 +300,8 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "trust": {
     "official_kali": false,
@@ -301,13 +310,12 @@
   },
   "url": "https://github.com/wifiphisher/wifiphisher",
   "use_cases": [
-    "When you need frameworks, use wifiphisher because About Wifiphisher is a rogue Access Point framework for conducting red team engagements or Wi-Fi security testing. Using Wifiphisher, penetration testers can ea.",
-    "When you need a concrete invocation, run `sudo python setup.py install # Install any dependencies` as documented upstream for wifiphisher.",
-    "When you need a concrete invocation, run `wifiphisher -aI wlan0 -jI wlan4 -p firmware-upgrade --handshake-capture handshake.pcap` as documented upstream for wifiphisher.",
-    "When you need a concrete invocation, run `wifiphisher --essid CONFERENCE_WIFI -p plugin_update -pK s3cr3tp4ssw0rd` as documented upstream for wifiphisher.",
-    "When you need a concrete invocation, run `wifiphisher --essid \"FREE WI-FI\" -p oauth-login -kB` as documented upstream for wifiphisher.",
-    "When chaining frameworks tools, pair wifiphisher with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `wifiphisher --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

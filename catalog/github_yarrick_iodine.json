@@ -1,11 +1,13 @@
 {
   "category": "c2",
   "command_examples": [
-    "iodine - <$KFIOSA_TARGET_URL",
-    "Iodine has no configure script. There are two optional features for Linux",
-    "iodine -> Wifi AP :53",
-    "iodine -> Home server :53",
-    "iodine -> DSL provider :53"
+    "cd toolboxes/iodine && python3 iodine.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/iodine && python3 iodine.py --help",
+    "cd toolboxes/iodine && python3 iodine.py --help",
+    "cd toolboxes/iodine && python3 iodine.py --help",
+    "cd toolboxes/iodine && python3 iodine.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST iodine --output $KFIOSA_OUTPUT_DIR/iodine.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST iodine --output $KFIOSA_OUTPUT_DIR/iodine.log"
   ],
   "documentation": {
     "readme": "iodine - =====================================",
@@ -130,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -297,7 +304,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -306,13 +315,12 @@
   },
   "url": "https://github.com/yarrick/iodine",
   "use_cases": [
-    "When you need c2, use iodine because iodine - =====================================.",
-    "When you need a concrete invocation, run `iodine - <$KFIOSA_TARGET_URL` as documented upstream for iodine.",
-    "When you need a concrete invocation, run `Iodine has no configure script. There are two optional features for Linux` as documented upstream for iodine.",
-    "When you need a concrete invocation, run `iodine -> Wifi AP :53` as documented upstream for iodine.",
-    "When you need a concrete invocation, run `iodine -> Home server :53` as documented upstream for iodine.",
-    "When chaining c2 tools, pair iodine with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `iodine --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

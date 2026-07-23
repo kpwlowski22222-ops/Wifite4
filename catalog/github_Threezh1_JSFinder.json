@@ -1,16 +1,13 @@
 {
   "category": "osint",
   "command_examples": [
-    "python JSFinder.py -u $KFIOSA_TARGET_URL",
-    "url:$KFIOSA_TARGET_URL",
-    "$KFIOSA_TARGET_URL",
-    "$KFIOSA_TARGET_URL",
-    "$KFIOSA_TARGET_URL",
-    "$KFIOSA_TARGET_URL",
-    "python JSFinder.py -u $KFIOSA_TARGET_URL -d",
-    "python JSFinder.py -u $KFIOSA_TARGET_URL -d -ou mi_url.txt -os mi_subdomain.txt",
-    "python JSFinder.py -f text.txt",
-    "python JSFinder.py -f text.txt -j"
+    "cd toolboxes/JSFinder && python3 JSFinder.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/JSFinder && python3 JSFinder.py --help",
+    "cd toolboxes/JSFinder && python3 JSFinder.py --help",
+    "cd toolboxes/JSFinder && python3 JSFinder.py --help",
+    "cd toolboxes/JSFinder && python3 JSFinder.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST JSFinder --output $KFIOSA_OUTPUT_DIR/JSFinder.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST JSFinder --output $KFIOSA_OUTPUT_DIR/JSFinder.log"
   ],
   "documentation": {
     "readme": "JSFinder is a tool for quickly extracting URLs and subdomains from JS files on a website.",
@@ -131,6 +128,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -303,7 +305,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -312,12 +316,12 @@
   },
   "url": "https://github.com/Threezh1/JSFinder",
   "use_cases": [
-    "When you need osint, use JSFinder because JSFinder is a tool for quickly extracting URLs and subdomains from JS files on a website.",
-    "When you need a concrete invocation, run `python JSFinder.py -u $KFIOSA_TARGET_URL` as documented upstream for JSFinder.",
-    "When you need a concrete invocation, run `url:$KFIOSA_TARGET_URL` as documented upstream for JSFinder.",
-    "When you need a concrete invocation, run `$KFIOSA_TARGET_URL` as documented upstream for JSFinder.",
-    "When chaining osint tools, pair JSFinder with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `JSFinder --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

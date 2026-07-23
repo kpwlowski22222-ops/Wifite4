@@ -22,18 +22,25 @@
     "ble_4_x",
     "ble_5_x",
     "ble_5_2",
-    "polymorphic",
-    "target-adaptive"
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Bluetooth/BLE, use internalblue because Bluetooth experimentation framework.",
-    "When the engagement is in the exploit phase, use internalblue as a cataloged Bluetooth/BLE tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `internalblue --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/internalblue.log` as documented upstream for internalblue.",
-    "When chaining Bluetooth/BLE tools, pair internalblue with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `internalblue --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use after the BLE advertising/GATT recon has produced a target handle on the U4000 BLUETOOTH adapter (hci0) interface.",
+    "Use as a follow-up to a successful GATT characteristic read that surfaced a writable handle.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "internalblue --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/internalblue.log"
+    "cd toolboxes/internalblue && python3 internalblue.py --interface hci0 --target $KFIOSA_TARGET_BLE_ADDR",
+    "cd toolboxes/internalblue && python3 internalblue.py --help",
+    "cd toolboxes/internalblue && python3 internalblue.py --help",
+    "cd toolboxes/internalblue && python3 internalblue.py --help",
+    "cd toolboxes/internalblue && python3 internalblue.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST internalblue --output $KFIOSA_OUTPUT_DIR/internalblue.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST internalblue --output $KFIOSA_OUTPUT_DIR/internalblue.log"
   ],
   "risk": {
     "signals": [
@@ -181,6 +188,11 @@
       {
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
         "source": "v2_enhancement"
       }
     ],

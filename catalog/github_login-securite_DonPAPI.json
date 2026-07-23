@@ -1,11 +1,13 @@
 {
   "category": "frameworks",
   "command_examples": [
-    "pipx install git+$KFIOSA_TARGET_URL",
-    "donpapi collect -u admin -p '$KFIOSA_SECRET' -d domain.local -t ALL --fetch-pvk",
-    "usage: DonPAPI [-h] [-v] [-o DIRNAME] {collect,gui} ...",
-    "Dump revelant information on compromised targets without AV detection. Version: 2.0.0",
-    "usage: dpp collect [-h] [--keep-collecting seconds] [--threads Number of threads] [--no-config] [-t TARGET [TARGET ...]] [-d domain.local]"
+    "cd toolboxes/DonPAPI && python3 DonPAPI.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
+    "cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
+    "cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
+    "cd toolboxes/DonPAPI && python3 DonPAPI.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST DonPAPI --output $KFIOSA_OUTPUT_DIR/DonPAPI.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST DonPAPI --output $KFIOSA_OUTPUT_DIR/DonPAPI.log"
   ],
   "documentation": {
     "readme": "DonPAPI automates secrets dump remotely on multiple Windows computers, with defense evasion in mind.",
@@ -207,6 +209,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -373,7 +380,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -382,13 +391,12 @@
   },
   "url": "https://github.com/login-securite/DonPAPI",
   "use_cases": [
-    "When you need frameworks, use DonPAPI because DonPAPI automates secrets dump remotely on multiple Windows computers, with defense evasion in mind.",
-    "When you need a concrete invocation, run `pipx install git+$KFIOSA_TARGET_URL` as documented upstream for DonPAPI.",
-    "When you need a concrete invocation, run `donpapi collect -u admin -p '$KFIOSA_SECRET' -d domain.local -t ALL --fetch-pvk` as documented upstream for DonPAPI.",
-    "When you need a concrete invocation, run `usage: DonPAPI [-h] [-v] [-o DIRNAME] {collect,gui} ...` as documented upstream for DonPAPI.",
-    "When you need a concrete invocation, run `Dump revelant information on compromised targets without AV detection. Version: 2.0.0` as documented upstream for DonPAPI.",
-    "When chaining frameworks tools, pair DonPAPI with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `DonPAPI --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

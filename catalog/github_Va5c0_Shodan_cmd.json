@@ -186,6 +186,11 @@
         "name": "--json",
         "description": "Emit JSON output instead of human-readable text.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-color",
+        "description": "Disable ANSI color in output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -318,8 +323,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -328,41 +334,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "shodan",
+    "cmd",
     "va5c0",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use Shodan_cmd because Shodan_cmd\nSearch host, range of hosts or exploits in Shodan and save results in a file.",
-    "When the engagement is in the recon phase, use Shodan_cmd as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `Shodan_cmd V1.0` as documented upstream for Shodan_cmd.",
-    "When chaining Reconnaissance tools, pair Shodan_cmd with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Shodan_cmd --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Shodan_cmd V1.0"
+    "cd toolboxes/Shodan_cmd && python3 Shodan_cmd.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Shodan_cmd && python3 Shodan_cmd.py --help",
+    "cd toolboxes/Shodan_cmd && python3 Shodan_cmd.py --help",
+    "cd toolboxes/Shodan_cmd && python3 Shodan_cmd.py --help",
+    "cd toolboxes/Shodan_cmd && python3 Shodan_cmd.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Shodan_cmd --output $KFIOSA_OUTPUT_DIR/Shodan_cmd.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Shodan_cmd --output $KFIOSA_OUTPUT_DIR/Shodan_cmd.log"
   ],
   "attack_surface": [
-    "web",
-    "cloud",
-    "iots"
+    "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

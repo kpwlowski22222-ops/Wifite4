@@ -1,7 +1,13 @@
 {
   "category": "exploit",
   "command_examples": [
-    "sqlmap works out of the box with [Python]($KFIOSA_TARGET_URL version **2.7** and **3.x** on any platform."
+    "cd toolboxes/sqlmap && python3 sqlmap.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/sqlmap && python3 sqlmap.py --help",
+    "cd toolboxes/sqlmap && python3 sqlmap.py --help",
+    "cd toolboxes/sqlmap && python3 sqlmap.py --help",
+    "cd toolboxes/sqlmap && python3 sqlmap.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sqlmap --output $KFIOSA_OUTPUT_DIR/sqlmap.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST sqlmap --output $KFIOSA_OUTPUT_DIR/sqlmap.log"
   ],
   "documentation": {
     "readme": "sqlmap is an open source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws and taking over of database servers. It comes with a powerful detection engine, many niche features for the ultimate penetration tester, and a broad range of switches including database fingerprinting, over data fetching from the database, accessing the underlying file system, and executing commands on the operating system via out-of-band connections.",
@@ -126,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -289,7 +300,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -298,10 +311,12 @@
   },
   "url": "https://github.com/sqlmapproject/sqlmap",
   "use_cases": [
-    "When you need exploit, use sqlmap because sqlmap is an open source penetration testing tool that automates the process of detecting and exploiting SQL injection flaws and taking over of database servers.",
-    "When you need a concrete invocation, run `sqlmap works out of the box with [Python]($KFIOSA_TARGET_URL version **2.7** and **3.x** on any platform.` as documented upstream for sqlmap.",
-    "When chaining exploit tools, pair sqlmap with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `sqlmap --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

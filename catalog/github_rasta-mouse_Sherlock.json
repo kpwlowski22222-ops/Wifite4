@@ -1,11 +1,13 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "beacon> getuid",
-    "beacon> powershell-import C:\\Users\\Rasta\\Desktop\\Sherlock.ps1",
-    "beacon> powershell Find-MS14058",
-    "Link       : $KFIOSA_TARGET_URL",
-    "beacon> elevate ms14-058 smb"
+    "cd toolboxes/Sherlock && python3 Sherlock.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Sherlock && python3 Sherlock.py --help",
+    "cd toolboxes/Sherlock && python3 Sherlock.py --help",
+    "cd toolboxes/Sherlock && python3 Sherlock.py --help",
+    "cd toolboxes/Sherlock && python3 Sherlock.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Sherlock --output $KFIOSA_OUTPUT_DIR/Sherlock.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Sherlock --output $KFIOSA_OUTPUT_DIR/Sherlock.log"
   ],
   "documentation": {
     "readme": "> Deprecated. Have a look at Watson instead.",
@@ -130,6 +132,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -297,7 +304,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -306,13 +315,12 @@
   },
   "url": "https://github.com/rasta-mouse/Sherlock",
   "use_cases": [
-    "When you need post_exploitation, use Sherlock because > Deprecated. Have a look at Watson instead.",
-    "When you need a concrete invocation, run `beacon> getuid` as documented upstream for Sherlock.",
-    "When you need a concrete invocation, run `beacon> powershell-import C:\\Users\\Rasta\\Desktop\\Sherlock.ps1` as documented upstream for Sherlock.",
-    "When you need a concrete invocation, run `beacon> powershell Find-MS14058` as documented upstream for Sherlock.",
-    "When you need a concrete invocation, run `Link       : $KFIOSA_TARGET_URL` as documented upstream for Sherlock.",
-    "When chaining post_exploitation tools, pair Sherlock with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Sherlock --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

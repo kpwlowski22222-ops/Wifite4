@@ -31,11 +31,10 @@ class TestFallbackOrder:
         from core.ai_backend.exploit_generator import DEFAULT_FALLBACK_ORDER
         assert len(DEFAULT_FALLBACK_ORDER) > 0
         first_id = DEFAULT_FALLBACK_ORDER[0][0]
-        # Phase 4 (2026-07-22): operator's preferred primary is
-        # the cloud-routed ``minimax-m3:cloud``. The HERETIC 9B
-        # is now the Tier-1 (chain-planning overlay) at index 1.
-        assert first_id == "minimax-m3:cloud", (
-            f"expected minimax-m3:cloud at top, got {first_id}"
+        # Fully offensive / uncensored: local Qwen2.5-Coder Uncensored
+        # is Tier 0 (cloud minimax is opt-in only — it refuses).
+        assert "Qwen2.5-Coder" in first_id and "Uncensored" in first_id, (
+            f"expected uncensored Qwen2.5-Coder at top, got {first_id}"
         )
 
     def test_operator_preferred_in_fallback_order(self):
@@ -48,13 +47,10 @@ class TestFallbackOrder:
         for entry in DEFAULT_FALLBACK_ORDER:
             assert len(entry) == 4, f"bad entry shape: {entry}"
             repo_id, size, license_, gated = entry
-            # Phase 4: the Tier 0 entry is a cloud tag (no slash)
-            # like ``minimax-m3:cloud``. All other entries are HF
-            # repo ids and have a slash.
-            if repo_id == "minimax-m3:cloud":
-                assert isinstance(repo_id, str) and ":" in repo_id
-            else:
-                assert isinstance(repo_id, str) and "/" in repo_id
+            # Fully uncensored stack: HF-style repo ids (slash) or
+            # ollama tags with optional :quant suffix.
+            assert isinstance(repo_id, str) and len(repo_id) > 0
+            assert "/" in repo_id or ":" in repo_id
             assert isinstance(size, str)
             assert isinstance(license_, str)
             assert isinstance(gated, bool)

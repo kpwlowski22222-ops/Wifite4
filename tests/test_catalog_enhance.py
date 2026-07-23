@@ -310,8 +310,8 @@ class TestEnhanceFile:
         assert is_enhanced(data) is True
         assert data["summary"] is not None
         assert len(data["tags"]) >= 5
-        assert len(data["use_cases"]) >= 3
-        assert len(data["command_examples"]) >= 3
+        assert len(data["use_cases"]) >= 5
+        assert len(data["command_examples"]) >= 5
         # Protected fields preserved
         assert data["id"] == sample_entry["id"]
         assert data["kind"] == sample_entry["kind"]

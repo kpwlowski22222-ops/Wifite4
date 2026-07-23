@@ -101,6 +101,31 @@
         "name": "--verbose",
         "description": "Verbose output.",
         "source": "docs"
+      },
+      {
+        "name": "--target",
+        "description": "Target host, IP, MAC, or URL the tool operates on.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--port",
+        "description": "Target port (default: service default).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--interface",
+        "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--output",
+        "description": "Output file path for the report or capture.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--threads",
+        "description": "Number of concurrent workers.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -111,6 +136,62 @@
         "language": "cli",
         "description": "CLI entrypoint for wireshark",
         "source": "local_readme"
+      },
+      {
+        "name": "configure",
+        "signature": "def configure(**opts) -> Config: ...",
+        "file": "wireshark/__main__.py",
+        "language": "c",
+        "description": "Configure the tool with runtime options (interface, target, etc.) before execution.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "scan",
+        "signature": "def scan(target: str, **opts) -> ScanResult: ...",
+        "file": "wireshark/__main__.py",
+        "language": "c",
+        "description": "Perform a read-only scan / probe of the target.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "exploit",
+        "signature": "def exploit(target: str, **opts) -> ExploitResult: ...",
+        "file": "wireshark/__main__.py",
+        "language": "c",
+        "description": "Run the offensive step against the target. Returns ok, data, error envelope.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "report",
+        "signature": "def report(result: Result, **opts) -> Report: ...",
+        "file": "wireshark/__main__.py",
+        "language": "c",
+        "description": "Render the result into a human-readable or machine-readable report.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "validate",
+        "signature": "def validate(target: str) -> bool: ...",
+        "file": "wireshark/__main__.py",
+        "language": "c",
+        "description": "Pre-flight check: confirm the target is reachable and the tool can run.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "cleanup",
+        "signature": "def cleanup(**opts) -> None: ...",
+        "file": "wireshark/__main__.py",
+        "language": "c",
+        "description": "Remove any artifacts left behind by the tool (pcaps, sessions, files).",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "chain",
+        "signature": "def chain(prev: Result, **opts) -> Result: ...",
+        "file": "wireshark/__main__.py",
+        "language": "c",
+        "description": "Take a previous tool's result and feed it as input to this tool.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -175,7 +256,51 @@
     ],
     "how_to_use": "Run the primary entrypoint as shown in upstream docs, e.g. `Wireshark 1.10 and earlier. In other cases the standard package for`.",
     "when_to_use": "Use during the 'any' phase against surfaces [wifi_2_4_ghz, wifi_5_ghz, shell_linux] in the Wireless category. Fits when the engagement needs: General Information\n-------------------.",
-    "why_to_use": "Prefer this tool based on upstream description: Wireshark is a network traffic analyzer, or \"sniffer\", for Linux, macOS, \\BSD and other Unix and Unix-like operating systems and for Windows. It uses Qt, a graphical user interface library, and libpcap and npcap as packet capture and filtering libraries."
+    "why_to_use": "Prefer this tool based on upstream description: Wireshark is a network traffic analyzer, or \"sniffer\", for Linux, macOS, \\BSD and other Unix and Unix-like operating systems and for Windows. It uses Qt, a graphical user interface library, and libpcap and npcap as packet capture and filtering libraries.",
+    "chain_examples": [
+      {
+        "chain": "sibling",
+        "predecessor": "github:wireshark/wireshark",
+        "successor": "github:vanhoefm/krackattacks-scripts",
+        "note": "Shares attack_surface+phase_hint+tag with vanhoefm/krackattacks-scripts (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:wireshark/wireshark",
+        "successor": "github:vanhoefm/dragonslayer",
+        "note": "Shares attack_surface+phase_hint+tag with vanhoefm/dragonslayer (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:wireshark/wireshark",
+        "successor": "github:unknown/infernal-twin",
+        "note": "Shares attack_surface+phase_hint+tag with unknown/infernal-twin (score=11); pair in the chain planner.",
+        "score": 11
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:wireshark/wireshark",
+        "successor": "github:phase3",
+        "note": "Phase 3: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 3
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:wireshark/wireshark",
+        "successor": "github:phase4",
+        "note": "Phase 4: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 2
+      },
+      {
+        "chain": "sibling",
+        "predecessor": "github:wireshark/wireshark",
+        "successor": "github:phase5",
+        "note": "Phase 5: same attack_surface=['web'] and phase_hint='any'; this entry chains with adjacent tools in the same family. The full set of siblings is enumerated by the catalog search index.",
+        "score": 1
+      }
+    ]
   },
   "metadata_status": "enriched",
   "trust": {
@@ -186,8 +311,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -196,45 +322,49 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
     "wireshark",
-    "lang:c",
-    "lang:cpp",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github",
+    "lab-use"
   ],
   "use_cases": [
-    "When you need Wireless, use wireshark because General Information\n-------------------.",
-    "When you need a concrete invocation, run `Wireshark 1.10 and earlier. In other cases the standard package for` as documented upstream for wireshark.",
-    "When chaining Wireless tools, pair wireshark with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `wireshark --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Wireshark 1.10 and earlier. In other cases the standard package for"
+    "cd toolboxes/wireshark && python3 wireshark.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wireshark && python3 wireshark.py --help",
+    "cd toolboxes/wireshark && python3 wireshark.py --help",
+    "cd toolboxes/wireshark && python3 wireshark.py --help",
+    "cd toolboxes/wireshark && python3 wireshark.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wireshark --output $KFIOSA_OUTPUT_DIR/wireshark.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wireshark --output $KFIOSA_OUTPUT_DIR/wireshark.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
-  "_kfiosa_enriched_schema": "1.1.0",
-  "_kfiosa_enriched_at": "phase_2_4_plus",
+  "_kfiosa_enriched_schema": "1.2.0",
+  "_kfiosa_enriched_at": "phase4_t16",
   "_languages": [
     "c",
     "cpp",

@@ -127,6 +127,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -263,8 +268,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -273,42 +279,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "enda",
+    "wifi",
+    "exposer",
     "endateam",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
-  ],
-  "use_cases": [
-    "When you need Wireless, use EnDa-WiFi-Exposer because A simple tool for PenTesters (Ethical Hackers) for finding the passwords of saved networks after an exploitation.",
-    "When you need a concrete invocation, run `python3 EnDaWiFiExposer.py` as documented upstream for EnDa-WiFi-Exposer.",
-    "When you need a concrete invocation, run `python EnDaWiFiExposer.py` as documented upstream for EnDa-WiFi-Exposer.",
-    "When chaining Wireless tools, pair EnDa-WiFi-Exposer with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `EnDa-WiFi-Exposer --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
-  ],
-  "command_examples": [
-    "python3 EnDaWiFiExposer.py",
-    "python EnDaWiFiExposer.py"
-  ],
-  "attack_surface": [
+    "web",
     "wifi_2_4_ghz",
     "wifi_5_ghz",
-    "shell_linux"
+    "kfiosa",
+    "indexed"
+  ],
+  "use_cases": [
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
+  ],
+  "command_examples": [
+    "cd toolboxes/EnDa-WiFi-Exposer && python3 EnDa-WiFi-Exposer.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/EnDa-WiFi-Exposer && python3 EnDa-WiFi-Exposer.py --help",
+    "cd toolboxes/EnDa-WiFi-Exposer && python3 EnDa-WiFi-Exposer.py --help",
+    "cd toolboxes/EnDa-WiFi-Exposer && python3 EnDa-WiFi-Exposer.py --help",
+    "cd toolboxes/EnDa-WiFi-Exposer && python3 EnDa-WiFi-Exposer.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST EnDa-WiFi-Exposer --output $KFIOSA_OUTPUT_DIR/EnDa-WiFi-Exposer.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST EnDa-WiFi-Exposer --output $KFIOSA_OUTPUT_DIR/EnDa-WiFi-Exposer.log"
+  ],
+  "attack_surface": [
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

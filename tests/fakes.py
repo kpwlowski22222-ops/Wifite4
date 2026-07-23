@@ -178,8 +178,14 @@ class FakeBLEScanner:
     def initialize(self):
         self.init_called = True
 
-    def scan(self, duration=8):
-        return {"devices": list(self._devs), "error": self._error}
+    def scan(self, duration=8, adapter=None, **kwargs):
+        return {
+            "devices": list(self._devs),
+            "error": self._error,
+            "backend": "fake",
+            "backends_tried": ["fake"],
+            "adapter": adapter,
+        }
 
 
 class FakeConfirmFn:

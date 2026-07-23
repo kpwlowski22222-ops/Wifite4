@@ -1,14 +1,13 @@
 {
   "category": "post_exploitation",
   "command_examples": [
-    "Let WerFault.exe (instead of nanodump) create the dump",
-    "force WerFault.exe to dump LSASS via SilentProcessExit",
-    "force WerFault.exe to dump LSASS via Shtinkering",
-    "make -f Makefile.mingw",
-    "nmake -f Makefile.msvc",
-    "If you prefer to stay on linux, you can use the python3 port of mimikatz called [pypykatz]($KFIOSA_TARGET_URL",
-    "Dump LSASS bypassing PPL using the PPLDump exploit, duplicating the handle that csrss.exe has on LSASS:",
-    "Make the WerFault.exe process create a full memory dump in the Temp folder:"
+    "cd toolboxes/nanodump && python3 nanodump.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/nanodump && python3 nanodump.py --help",
+    "cd toolboxes/nanodump && python3 nanodump.py --help",
+    "cd toolboxes/nanodump && python3 nanodump.py --help",
+    "cd toolboxes/nanodump && python3 nanodump.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nanodump --output $KFIOSA_OUTPUT_DIR/nanodump.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST nanodump --output $KFIOSA_OUTPUT_DIR/nanodump.log"
   ],
   "documentation": {
     "readme": "A flexible tool that creates a minidump of the LSASS process.",
@@ -264,6 +263,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -433,7 +437,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -442,13 +448,12 @@
   },
   "url": "https://github.com/fortra/nanodump",
   "use_cases": [
-    "When you need post_exploitation, use nanodump because A flexible tool that creates a minidump of the LSASS process.",
-    "When you need a concrete invocation, run `Let WerFault.exe (instead of nanodump) create the dump` as documented upstream for nanodump.",
-    "When you need a concrete invocation, run `force WerFault.exe to dump LSASS via SilentProcessExit` as documented upstream for nanodump.",
-    "When you need a concrete invocation, run `force WerFault.exe to dump LSASS via Shtinkering` as documented upstream for nanodump.",
-    "When you need a concrete invocation, run `make -f Makefile.mingw` as documented upstream for nanodump.",
-    "When chaining post_exploitation tools, pair nanodump with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `nanodump --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

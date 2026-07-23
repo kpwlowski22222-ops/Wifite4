@@ -29,7 +29,9 @@ class SettingsManager:
                 }
             },
             "nvidia": {
-                "api_key": "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",
+                # Operators must supply their own NVIDIA/NGC API key. No key
+                # means the NVIDIA/NIM provider stays inactive.
+                "api_key": "",
                 "base_url": "https://integrate.api.nvidia.com/v1",
                 "model": "z-ai/glm-5.2"
             },

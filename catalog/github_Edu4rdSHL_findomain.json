@@ -1,10 +1,13 @@
 {
   "category": "osint",
   "command_examples": [
-    "Host: KVM/QEMU (Standard PC (i440FX + PIIX, 1996) pc-i440fx-3.1)",
-    "Kernel: 5.2.6-arch1-1-ARCH",
-    "CPU: Intel (Skylake, IBRS) (4) @ 2.904GHz",
-    "Memory: 139MiB / 3943MiB"
+    "cd toolboxes/findomain && python3 findomain.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/findomain && python3 findomain.py --help",
+    "cd toolboxes/findomain && python3 findomain.py --help",
+    "cd toolboxes/findomain && python3 findomain.py --help",
+    "cd toolboxes/findomain && python3 findomain.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST findomain --output $KFIOSA_OUTPUT_DIR/findomain.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST findomain --output $KFIOSA_OUTPUT_DIR/findomain.log"
   ],
   "documentation": {
     "readme": "The complete solution for domain recognition. Supports screenshotting, port scanning, importing data from other tools, subdomain monitoring, and more. Be alerted on your findings through services such as Discord, Slack, and Telegram. Multiple API Keys for sources and much more.",
@@ -130,6 +133,11 @@
       {
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
       }
     ],
@@ -296,7 +304,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -305,13 +315,12 @@
   },
   "url": "https://github.com/Edu4rdSHL/findomain",
   "use_cases": [
-    "When you need osint, use findomain because The complete solution for domain recognition. Supports screenshotting, port scanning, importing data from other tools, subdomain monitoring, and more. Be alerte.",
-    "When you need a concrete invocation, run `Host: KVM/QEMU (Standard PC (i440FX + PIIX, 1996) pc-i440fx-3.1)` as documented upstream for findomain.",
-    "When you need a concrete invocation, run `Kernel: 5.2.6-arch1-1-ARCH` as documented upstream for findomain.",
-    "When you need a concrete invocation, run `CPU: Intel (Skylake, IBRS) (4) @ 2.904GHz` as documented upstream for findomain.",
-    "When you need a concrete invocation, run `Memory: 139MiB / 3943MiB` as documented upstream for findomain.",
-    "When chaining osint tools, pair findomain with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `findomain --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

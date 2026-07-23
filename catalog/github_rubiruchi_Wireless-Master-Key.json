@@ -128,6 +128,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -272,8 +277,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -282,39 +288,46 @@
     "examples_policy": "operational"
   },
   "tags": [
+    "offensive",
     "wireless",
-    "toolbox",
-    "github",
+    "master",
+    "key",
     "rubiruchi",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
     "target-adaptive"
   ],
   "use_cases": [
-    "When you need Wireless, use Wireless-Master-Key because Wireless-Master-Key\nExploiting Software-Defined Radio - Common attacks and a device to exploit them (Proof of Concept).",
-    "When you need a concrete invocation, run `Neither the ESP8266, nor the other parts were meant or built for such purposes. Bugs can occur!` as documented upstream for Wireless-Master-Key.",
-    "When chaining Wireless tools, pair Wireless-Master-Key with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `Wireless-Master-Key --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Neither the ESP8266, nor the other parts were meant or built for such purposes. Bugs can occur!"
+    "cd toolboxes/Wireless-Master-Key && python3 Wireless-Master-Key.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/Wireless-Master-Key && python3 Wireless-Master-Key.py --help",
+    "cd toolboxes/Wireless-Master-Key && python3 Wireless-Master-Key.py --help",
+    "cd toolboxes/Wireless-Master-Key && python3 Wireless-Master-Key.py --help",
+    "cd toolboxes/Wireless-Master-Key && python3 Wireless-Master-Key.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wireless-Master-Key --output $KFIOSA_OUTPUT_DIR/Wireless-Master-Key.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST Wireless-Master-Key --output $KFIOSA_OUTPUT_DIR/Wireless-Master-Key.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

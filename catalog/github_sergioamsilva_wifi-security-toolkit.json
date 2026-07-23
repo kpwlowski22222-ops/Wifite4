@@ -176,6 +176,11 @@
         "name": "--yes",
         "description": "Skip confirmation prompts (use with care).",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--force",
+        "description": "Force the action even if a safety check would block it.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -429,8 +434,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -439,53 +445,48 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "reconnaissance",
-    "toolbox",
-    "github",
+    "offensive",
+    "wifi",
+    "security",
+    "toolkit",
     "sergioamsilva",
-    "lang:python",
-    "lab_only",
-    "polymorphic",
-    "target-adaptive"
+    "web",
+    "wifi_2_4_ghz",
+    "wifi_5_ghz",
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When you need Reconnaissance, use wifi-security-toolkit because 📡 Wi-Fi Security Toolkit — Sessions 1–4.",
-    "When the engagement is in the recon phase, use wifi-security-toolkit as a cataloged Reconnaissance tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `sudo python3 01_setup/02_setup_monitor.py start wlan1 --channel 6` as documented upstream for wifi-security-toolkit.",
-    "When you need a concrete invocation, run `sudo python3 01_setup/02_setup_monitor.py stop wlan1` as documented upstream for wifi-security-toolkit.",
-    "When you need a concrete invocation, run `sudo python3 01_setup/03_channel_hopper.py --iface wlan1 --band 2.4` as documented upstream for wifi-security-toolkit.",
-    "When you need a concrete invocation, run `sudo python3 02_recon/04_probe_analyzer.py --iface wlan1 --output room.json` as documented upstream for wifi-security-toolkit.",
-    "When chaining Reconnaissance tools, pair wifi-security-toolkit with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `wifi-security-toolkit --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "sudo python3 01_setup/02_setup_monitor.py start wlan1 --channel 6",
-    "sudo python3 01_setup/02_setup_monitor.py stop wlan1",
-    "sudo python3 01_setup/03_channel_hopper.py --iface wlan1 --band 2.4",
-    "sudo python3 02_recon/04_probe_analyzer.py --iface wlan1 --output room.json",
-    "3C:22:FB:**:**:**         328  Apple               MEO-XXXX, Marriott_Lisbon...",
-    "A4:5E:60:**:**:**         192  Samsung             Vodafone-Home, FCT_WiFi...",
-    "DC:A6:32:**:**:**         445  Raspberry Pi        lab_internal, dev_net...",
-    "sudo python3 03_capture/01_handshake_catcher.py \\",
-    "AP  ──M1──►  STA    \"Hey, prove you know the password. Here's a nonce.\"",
-    "AP  ◄──M2──  STA    \"Sure. Here's MY nonce and a MIC. I totally know it.\""
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
+    "cd toolboxes/wifi-security-toolkit && python3 wifi-security-toolkit.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-security-toolkit --output $KFIOSA_OUTPUT_DIR/wifi-security-toolkit.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifi-security-toolkit --output $KFIOSA_OUTPUT_DIR/wifi-security-toolkit.log"
   ],
   "attack_surface": [
     "web",
-    "cloud",
-    "iots"
+    "wifi_2_4_ghz",
+    "wifi_5_ghz"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

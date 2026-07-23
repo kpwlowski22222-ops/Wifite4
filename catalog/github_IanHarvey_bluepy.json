@@ -211,6 +211,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -393,8 +398,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -403,38 +409,47 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "bluepy",
     "ianharvey",
-    "lang:c",
-    "lang:python",
-    "lab_only",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Bluetooth, use bluepy because Python interface to Bluetooth LE on Linux.",
-    "When chaining Bluetooth tools, pair bluepy with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `bluepy --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
-  "command_examples": [],
+  "command_examples": [
+    "cd toolboxes/bluepy && python3 bluepy.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/bluepy && python3 bluepy.py --help",
+    "cd toolboxes/bluepy && python3 bluepy.py --help",
+    "cd toolboxes/bluepy && python3 bluepy.py --help",
+    "cd toolboxes/bluepy && python3 bluepy.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluepy --output $KFIOSA_OUTPUT_DIR/bluepy.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluepy --output $KFIOSA_OUTPUT_DIR/bluepy.log"
+  ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web",
+    "ble_4_x"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

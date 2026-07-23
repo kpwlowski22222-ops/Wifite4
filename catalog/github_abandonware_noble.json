@@ -127,6 +127,11 @@
         "name": "--force",
         "description": "Force the action even if a safety check would block it.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--no-banner",
+        "description": "Suppress banner / tool-name output.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -315,8 +320,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -325,48 +331,47 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "noble",
     "abandonware",
-    "lang:javascript",
-    "lang:typescript",
-    "lab_only",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Bluetooth, use noble because ![noble](assets/noble-logo.png).",
-    "When you need a concrete invocation, run `Then restart the system.` as documented upstream for noble.",
-    "When you need a concrete invocation, run `Install the required tools and configurations using Microsoft's [windows-build-tools]($KFIOSA_TARGET_URL from an elevated PowerShell or cmd.exe (run as Administrator).` as documented upstream for noble.",
-    "When you need a concrete invocation, run `Subscribe to a characteristic.` as documented upstream for noble.",
-    "When you need a concrete invocation, run `Unsubscribe from a characteristic.` as documented upstream for noble.",
-    "When chaining Bluetooth tools, pair noble with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `noble --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "Then restart the system.",
-    "Install the required tools and configurations using Microsoft's [windows-build-tools]($KFIOSA_TARGET_URL from an elevated PowerShell or cmd.exe (run as Administrator).",
-    "Subscribe to a characteristic.",
-    "Unsubscribe from a characteristic.",
-    "__Note:__ this requires a Bluetooth 4.1 adapter."
+    "cd toolboxes/noble && python3 noble.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/noble && python3 noble.py --help",
+    "cd toolboxes/noble && python3 noble.py --help",
+    "cd toolboxes/noble && python3 noble.py --help",
+    "cd toolboxes/noble && python3 noble.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST noble --output $KFIOSA_OUTPUT_DIR/noble.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST noble --output $KFIOSA_OUTPUT_DIR/noble.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web",
+    "ble_4_x"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

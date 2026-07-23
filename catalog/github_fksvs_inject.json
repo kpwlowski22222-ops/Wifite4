@@ -126,6 +126,11 @@
         "name": "--dry-run",
         "description": "Print what would be done without making any changes.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--yes",
+        "description": "Skip confirmation prompts (use with care).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -308,8 +313,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -318,49 +324,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "wireless",
-    "toolbox",
-    "github",
+    "offensive",
+    "inject",
     "fksvs",
-    "lang:c",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "use_cases": [
-    "When you need Wireless, use inject because Inject is a command line network tool for crafting, injecting, and sniffing a wide range of network protocols. It is designed for users who need a robust tool f.",
-    "When you need a concrete invocation, run `inject eth -i wlp5s0 -K 00:11:22:33:44:5 -a payload.txt` as documented upstream for inject.",
-    "When you need a concrete invocation, run `inject arp -i wlp5s0 -K 00:11:22:33:44:55 -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -r 1` as documented upstream for inject.",
-    "When you need a concrete invocation, run `inject ip -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -T 48` as documented upstream for inject.",
-    "When you need a concrete invocation, run `inject tcp -S $KFIOSA_TARGET_HOST -s 4444 -D $KFIOSA_TARGET_HOST -d 80 -f syn -a payload.txt` as documented upstream for inject.",
-    "When chaining Wireless tools, pair inject with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `inject --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "inject eth -i wlp5s0 -K 00:11:22:33:44:5 -a payload.txt",
-    "inject arp -i wlp5s0 -K 00:11:22:33:44:55 -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -r 1",
-    "inject ip -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -T 48",
-    "inject tcp -S $KFIOSA_TARGET_HOST -s 4444 -D $KFIOSA_TARGET_HOST -d 80 -f syn -a payload.txt",
-    "inject udp -S $KFIOSA_TARGET_HOST -s 4444 -D $KFIOSA_TARGET_HOST -d 53 -a payload.txt",
-    "inject icmp -S $KFIOSA_TARGET_HOST -D $KFIOSA_TARGET_HOST -t 8 -C 0",
-    "inject sniff -t -u"
+    "cd toolboxes/inject && python3 inject.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/inject && python3 inject.py --help",
+    "cd toolboxes/inject && python3 inject.py --help",
+    "cd toolboxes/inject && python3 inject.py --help",
+    "cd toolboxes/inject && python3 inject.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST inject --output $KFIOSA_OUTPUT_DIR/inject.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST inject --output $KFIOSA_OUTPUT_DIR/inject.log"
   ],
   "attack_surface": [
-    "wifi_2_4_ghz",
-    "wifi_5_ghz",
-    "shell_linux"
+    "web"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "mt7921e"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

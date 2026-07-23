@@ -450,6 +450,44 @@ def test_orchestrator_falls_back_to_recency(tmp_path, monkeypatch):
 
 
 # ---------------------------------------------------------------------------
+# Default wiring
+# ---------------------------------------------------------------------------
+
+def test_orchestrator_auto_wires_zero_day_pipeline_with_ai_backend():
+    """When an AI backend is supplied and no 0-day components are
+    injected, the orchestrator creates default proposer/builder/runner
+    instances so the optional 0-day tail is functional."""
+    from core.orchestrator.autonomous_orchestrator import AutonomousOrchestrator
+    from core.ai_backend.zero_day import ZeroDayProposer
+    from core.ai_backend.zero_day_exploit import (
+        ZeroDayExploitBuilder,
+        ZeroDayExploitRunner,
+    )
+
+    class FakeAI:
+        def query(self, *a, **k):
+            return "{}"
+
+    orch = AutonomousOrchestrator(
+        ai_backend=FakeAI(),
+        confirm_fn=lambda p: True,
+    )
+    assert isinstance(orch.zero_day_proposer, ZeroDayProposer)
+    assert isinstance(orch.zero_day_exploit_builder, ZeroDayExploitBuilder)
+    assert isinstance(orch.zero_day_exploit_runner, ZeroDayExploitRunner)
+
+
+def test_orchestrator_does_not_wire_zero_day_without_ai_backend():
+    """Without an AI backend, the optional 0-day pipeline stays None so
+    the tail is skipped gracefully (no failures)."""
+    from core.orchestrator.autonomous_orchestrator import AutonomousOrchestrator
+    orch = AutonomousOrchestrator(confirm_fn=lambda p: True)
+    assert orch.zero_day_proposer is None
+    assert orch.zero_day_exploit_builder is None
+    assert orch.zero_day_exploit_runner is None
+
+
+# ---------------------------------------------------------------------------
 # End-to-end heuristic chain shape
 # ---------------------------------------------------------------------------
 

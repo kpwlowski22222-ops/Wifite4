@@ -171,6 +171,11 @@
         "name": "--capture",
         "description": "Capture mode: write packets to a pcap file.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--filter",
+        "description": "BPF filter expression for packet selection.",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -353,8 +358,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -363,53 +369,47 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "bluetooth",
-    "toolbox",
-    "github",
+    "offensive",
+    "bluewalker",
     "graipher",
-    "lang:go",
-    "lang:shell",
-    "lab_only",
+    "web",
+    "ble_4_x",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need Bluetooth, use bluewalker because Bluewalker is a proof-of-concept Bluetooth LE scanner and advertiser which uses\n_HCI user channel_ raw HCI sockets available on Linux to scan for Bluetooth LE\nd.",
-    "When you need a concrete invocation, run `go install github.com/graipher/bluewalker@latest` as documented upstream for bluewalker.",
-    "When you need a concrete invocation, run `./build.sh arm` as documented upstream for bluewalker.",
-    "When you need a concrete invocation, run `Usage of ./bluewalker:` as documented upstream for bluewalker.",
-    "When you need a concrete invocation, run `Advertising data to send on broadcast mode (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)` as documented upstream for bluewalker.",
-    "When chaining Bluetooth tools, pair bluewalker with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `bluewalker --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "go install github.com/graipher/bluewalker@latest",
-    "./build.sh arm",
-    "Usage of ./bluewalker:",
-    "Advertising data to send on broadcast mode (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
-    "Number of seconds to scan, -1 to scan indefinitely (default 5)",
-    "Only show devices whose Advertising Data matches given filter (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
-    "Scan response data to send on broadcast mode (Format: \"<type>,<data>;<type>,<data>\", all values hexadecimal)",
-    "sudo ./bluewalker -device hci0 -active",
-    "Flags : 0x04; [00000100] (BR/EDR not supported)",
-    "Flags : 0x1a; [00011010] (LE General Discoverable,LE & BR/EDR (controller),LE & BR/EDR (host))"
+    "cd toolboxes/bluewalker && python3 bluewalker.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/bluewalker && python3 bluewalker.py --help",
+    "cd toolboxes/bluewalker && python3 bluewalker.py --help",
+    "cd toolboxes/bluewalker && python3 bluewalker.py --help",
+    "cd toolboxes/bluewalker && python3 bluewalker.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluewalker --output $KFIOSA_OUTPUT_DIR/bluewalker.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST bluewalker --output $KFIOSA_OUTPUT_DIR/bluewalker.log"
   ],
   "attack_surface": [
-    "ble_4_x",
-    "ble_5_x",
-    "ble_mesh"
+    "web",
+    "ble_4_x"
   ],
   "phase_hint": "any",
   "requires_hardware": [
-    "hci0_ble"
+    "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

@@ -178,10 +178,16 @@ class TestPlanMemoization:
 class TestOllamaCache:
     def test_cache_miss_then_hit(self):
         opt.clear_ollama_cache()
-        # Use a localhost URL that almost certainly won't connect
-        # (port 1 is reserved)
-        r1 = opt.cached_ollama_reachable("http://127.0.0.1:1", timeout_s=0.1)
-        r2 = opt.cached_ollama_reachable("http://127.0.0.1:1", timeout_s=0.1)
+        # Deterministic unreachable probe: mock socket to refuse.
+        real_create = __import__("socket").create_connection
+        def fake_create(addr, timeout=None):
+            raise ConnectionRefusedError("mock unreachable")
+        __import__("socket").create_connection = fake_create
+        try:
+            r1 = opt.cached_ollama_reachable("http://127.0.0.1:1", timeout_s=0.1)
+            r2 = opt.cached_ollama_reachable("http://127.0.0.1:1", timeout_s=0.1)
+        finally:
+            __import__("socket").create_connection = real_create
         # Negative result is cached for half the TTL
         assert r1["ok"] is False
         assert r2["cached"] is True

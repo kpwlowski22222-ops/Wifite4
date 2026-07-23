@@ -1,16 +1,13 @@
 {
   "category": "recon",
   "command_examples": [
-    "dmut --update-dnslist",
-    "root@dnsMaster# time python3 altdns.py -i list.txt -o data_output -r -w words.txt -t 100 -f /root/.dmut/resolvers.txt -s results.txt",
-    "real    9m44.712s",
-    "user    7m7.741s",
-    "sys     1m6.288s",
-    "root@dnsMaster# wc -l results.txt",
-    "root@dnsMaster# time cat list.txt | dmut -w 100 -d words.txt --dns-retries 3 -o results.txt -s /root/.dmut/resolvers.txt --dns-errorLimit 50 --dns-timeout 350 --show-stats",
-    "real    5m31.318s",
-    "user    1m4.024s",
-    "sys     0m41.876s"
+    "cd toolboxes/dmut && python3 dmut.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/dmut && python3 dmut.py --help",
+    "cd toolboxes/dmut && python3 dmut.py --help",
+    "cd toolboxes/dmut && python3 dmut.py --help",
+    "cd toolboxes/dmut && python3 dmut.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dmut --output $KFIOSA_OUTPUT_DIR/dmut.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST dmut --output $KFIOSA_OUTPUT_DIR/dmut.log"
   ],
   "documentation": {
     "readme": "A tool written in golang to perform permutations, mutations and alteration of subdomains and brute force the result.",
@@ -187,6 +184,11 @@
         "name": "--no-banner",
         "description": "Suppress banner / tool-name output.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--capture",
+        "description": "Capture mode: write packets to a pcap file.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -358,7 +360,9 @@
     "kfiosa",
     "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog",
+    "github"
   ],
   "trust": {
     "official_kali": false,
@@ -367,13 +371,12 @@
   },
   "url": "https://github.com/bp0lr/dmut",
   "use_cases": [
-    "When you need recon, use dmut because A tool written in golang to perform permutations, mutations and alteration of subdomains and brute force the result.",
-    "When you need a concrete invocation, run `dmut --update-dnslist` as documented upstream for dmut.",
-    "When you need a concrete invocation, run `root@dnsMaster# time python3 altdns.py -i list.txt -o data_output -r -w words.txt -t 100 -f /root/.dmut/resolvers.txt -s results.txt` as documented upstream for dmut.",
-    "When you need a concrete invocation, run `real    9m44.712s` as documented upstream for dmut.",
-    "When you need a concrete invocation, run `user    7m7.741s` as documented upstream for dmut.",
-    "When chaining recon tools, pair dmut with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `dmut --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

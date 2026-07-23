@@ -249,6 +249,71 @@ class TestContextAwareCompanions:
 
 
 # ---------------------------------------------------------------------------
+# pick_ble_strategy / pick_osint_strategy / pick_post_exploit_strategy
+# ---------------------------------------------------------------------------
+
+
+class TestPickBleStrategy:
+    def test_no_addr_prefers_recon(self):
+        from core.utils.poly_adapt import pick_ble_strategy
+        assert pick_ble_strategy({}) == "recon"
+
+    def test_hid_device(self):
+        from core.utils.poly_adapt import pick_ble_strategy
+        s = pick_ble_strategy({
+            "address": "AA:BB:CC:DD:EE:FF",
+            "has_hid": True,
+        })
+        assert s == "hid_inject"
+
+    def test_addr_without_special_profile(self):
+        from core.utils.poly_adapt import pick_ble_strategy
+        s = pick_ble_strategy({"address": "AA:BB:CC:DD:EE:FF"})
+        assert s in ("gatt_write", "pairing", "recon")
+
+
+class TestPickOsintStrategy:
+    def test_email_query(self):
+        from core.utils.poly_adapt import pick_osint_strategy, extract_target_features
+        f = extract_target_features({"query": "alice@example.com"})
+        assert pick_osint_strategy(f) == "email"
+
+    def test_domain_query(self):
+        from core.utils.poly_adapt import pick_osint_strategy, extract_target_features
+        f = extract_target_features({"domain": "example.com", "query": "example.com"})
+        assert pick_osint_strategy(f) == "domain"
+
+    def test_username_default(self):
+        from core.utils.poly_adapt import pick_osint_strategy, extract_target_features
+        f = extract_target_features({"username": "alice"})
+        assert pick_osint_strategy(f) in ("username", "person_pl", "breach")
+
+
+class TestPickPostExploitStrategy:
+    def test_empty_is_enum(self):
+        from core.utils.poly_adapt import pick_post_exploit_strategy
+        assert pick_post_exploit_strategy({}) == "enum"
+
+    def test_windows_elevated_creds(self):
+        from core.utils.poly_adapt import pick_post_exploit_strategy
+        s = pick_post_exploit_strategy({
+            "os": "windows",
+            "privs": "system",
+            "has_creds": False,
+        })
+        assert s in ("cred_dump", "persist", "cleanup", "exfil")
+
+    def test_lateral_when_creds_and_net(self):
+        from core.utils.poly_adapt import pick_post_exploit_strategy
+        s = pick_post_exploit_strategy({
+            "os": "windows",
+            "has_creds": True,
+            "network_access": True,
+        })
+        assert s == "lateral"
+
+
+# ---------------------------------------------------------------------------
 # Memo cache
 # ---------------------------------------------------------------------------
 

@@ -147,6 +147,11 @@
         "name": "--interface",
         "description": "Network interface to bind to (e.g. wlan0mon, eth0).",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--verbose",
+        "description": "Increase log verbosity (repeatable for higher levels).",
+        "source": "v2_enhancement"
       }
     ],
     "function_signatures": [
@@ -339,8 +344,9 @@
   "risk": {
     "level": "high",
     "signals": [
+      "offensive_tool",
       "intrinsic",
-      "lab_only",
+      "remote_possible",
       "polymorphic_compatible",
       "target_adaptive_compatible"
     ],
@@ -349,51 +355,46 @@
     "examples_policy": "operational"
   },
   "tags": [
-    "osint",
-    "toolbox",
-    "github",
+    "offensive",
+    "recon",
+    "fatal",
     "0x9reedark",
-    "lang:python",
-    "lab_only",
+    "web",
+    "kfiosa",
+    "indexed",
     "polymorphic",
-    "target-adaptive"
+    "target-adaptive",
+    "catalog"
   ],
   "use_cases": [
-    "When you need OSINT, use recon-fatal because Recon Fatal is a small authorized reconnaissance helper for **web applications only**.",
-    "When the engagement is in the recon phase, use recon-fatal as a cataloged OSINT tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `python .\\recon_combo.py example.com` as documented upstream for recon-fatal.",
-    "When you need a concrete invocation, run `python .\\recon_combo.py $KFIOSA_TARGET_URL --https-only` as documented upstream for recon-fatal.",
-    "When you need a concrete invocation, run `python .\\recon_combo.py example.com --subdomains www,app,api,staging --ports 80,443,8080,8443` as documented upstream for recon-fatal.",
-    "When you need a concrete invocation, run `python .\\recon_combo.py example.com --wordlist .\\examples\\subdomains.txt` as documented upstream for recon-fatal.",
-    "When chaining OSINT tools, pair recon-fatal with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `recon-fatal --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Indexing only — no automated invocation. The operator must manually inspect the repository before adding to a toolchain.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "python .\\recon_combo.py example.com",
-    "python .\\recon_combo.py $KFIOSA_TARGET_URL --https-only",
-    "python .\\recon_combo.py example.com --subdomains www,app,api,staging --ports 80,443,8080,8443",
-    "python .\\recon_combo.py example.com --wordlist .\\examples\\subdomains.txt",
-    "python .\\recon_combo.py example.com --json --output results.json",
-    "python .\\recon_combo.py example.com --summary",
-    "python .\\recon_combo.py example.com --nmap",
-    "python .\\recon_combo.py example.com --nmap-stealth --nmap-vuln",
-    "python .\\recon_combo.py example.com --nmap --nmap-include-subdomains",
-    "target                  Domain or URL, such as example.com or $KFIOSA_TARGET_URL"
+    "cd toolboxes/recon-fatal && python3 recon-fatal.py --target $KFIOSA_TARGET_HOST",
+    "cd toolboxes/recon-fatal && python3 recon-fatal.py --help",
+    "cd toolboxes/recon-fatal && python3 recon-fatal.py --help",
+    "cd toolboxes/recon-fatal && python3 recon-fatal.py --help",
+    "cd toolboxes/recon-fatal && python3 recon-fatal.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recon-fatal --output $KFIOSA_OUTPUT_DIR/recon-fatal.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST recon-fatal --output $KFIOSA_OUTPUT_DIR/recon-fatal.log"
   ],
   "attack_surface": [
     "web"
   ],
-  "phase_hint": "recon",
+  "phase_hint": "any",
   "requires_hardware": [
     "none"
   ],
   "polymorphic_strategies": [
-    "param_grammar",
-    "tool_variant_picker"
+    "param_grammar"
   ],
   "target_adaptive_targets": [
-    "target_class",
-    "vendor"
+    "target_class"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",

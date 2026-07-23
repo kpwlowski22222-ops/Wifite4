@@ -132,6 +132,11 @@
         "name": "--filter",
         "description": "BPF filter expression for packet selection.",
         "source": "v2_enhancement"
+      },
+      {
+        "name": "--duration",
+        "description": "Total run duration in seconds.",
+        "source": "v2_enhancement"
       }
     ],
     "examples": [
@@ -328,17 +333,25 @@
     "wifi_2_4_ghz",
     "wifi_5_ghz",
     "wifi_6_ghz",
-    "polymorphic",
-    "target-adaptive"
+    "kfiosa",
+    "indexed"
   ],
   "use_cases": [
-    "When the engagement is in the exploit phase, use wifite2 as a cataloged Wireless Security tool with operator ACCEPT/CANCEL gating.",
-    "When you need a concrete invocation, run `wifite2 --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/wifite2.log` as documented upstream for wifite2.",
-    "When chaining Wireless Security tools, pair wifite2 with sibling catalog entries sharing its attack_surface/phase_hint.",
-    "When validating lab setup, run `wifite2 --help` (or the README entrypoint) and confirm required hardware/deps from the catalog."
+    "Use when the MediaTek MT7922 (mt7921e) is in monitor mode on wlan0mon and the BSSID/ssid recon has completed.",
+    "Use as a follow-up to airodump / kismet capture when the operator wants to attempt credential recovery or handshake capture.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Use as a candidate tool in the chain planner; review provenance before use.",
+    "Pair with the LLM system-prompt stanza to ensure the chain planner knows how to call this tool."
   ],
   "command_examples": [
-    "wifite2 --target $KFIOSA_TARGET_HOST --port 8080 --output $KFIOSA_OUTPUT_DIR/wifite2.log"
+    "cd toolboxes/wifite2 && python3 wifite2.py --interface wlan0mon --bssid $KFIOSA_TARGET_BSSID",
+    "cd toolboxes/wifite2 && python3 wifite2.py --help",
+    "cd toolboxes/wifite2 && python3 wifite2.py --help",
+    "cd toolboxes/wifite2 && python3 wifite2.py --help",
+    "cd toolboxes/wifite2 && python3 wifite2.py --help",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifite2 --output $KFIOSA_OUTPUT_DIR/wifite2.log",
+    "KFIOSA_TARGET_HOST=$KFIOSA_TARGET_HOST wifite2 --output $KFIOSA_OUTPUT_DIR/wifite2.log"
   ],
   "_kfiosa_enriched_schema": "1.2.0",
   "_kfiosa_enriched_at": "phase4_t16",
