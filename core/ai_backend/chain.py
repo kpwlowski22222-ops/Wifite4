@@ -2115,6 +2115,66 @@ def _heuristic_osint(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict
     return steps
 
 
+def _append_pe_priv_esc(
+    steps: List[Dict[str, Any]],
+    target: Dict[str, Any],
+    bssid: Any = None,
+    essid: Any = None,
+) -> List[Dict[str, Any]]:
+    """Ensure offensive PE + privilege-escalation poly tail after access path."""
+    has_pe = any(
+        isinstance(s, dict) and (
+            s.get("action") == "post_exploit"
+            or (s.get("args") or {}).get("privilege_escalation")
+        )
+        for s in (steps or [])
+    )
+    if has_pe:
+        return steps
+    out = list(steps or [])
+    out.append({
+        "action": "post_exploit",
+        "tool": "auto_post_exploit",
+        "args": {
+            "from_wifi": True,
+            "bssid": bssid or target.get("bssid"),
+            "ssid": essid or target.get("ssid") or target.get("essid"),
+            "polymorphic": True,
+            "sticky_connection": True,
+            "offensive_chain": True,
+        },
+        "rationale": "OFFENSIVE chain: foothold → post-exploit session (ACCEPT-gated)",
+        "expected_outcome": "post-access session + achievements",
+        "risk_level": "destructive",
+        "expected_runtime_seconds": 180,
+    })
+    try:
+        from core.poly.offensive_inject import pick_priv_esc
+        pe = pick_priv_esc(target)
+        for i, method in enumerate(pe.get("chain") or []):
+            if not method or method == "already_elevated":
+                continue
+            out.append({
+                "action": "post_exploit",
+                "tool": method,
+                "args": {
+                    "method": method,
+                    "polymorphic": True,
+                    "privilege_escalation": True,
+                    "order": i,
+                },
+                "rationale": f"privilege escalation poly: {method}",
+                "expected_outcome": "elevated privileges if vuln present",
+                "risk_level": "destructive",
+                "expected_runtime_seconds": 120,
+                "optional": i > 0,
+                "poly": {"family": "privilege_escalation", "method": method},
+            })
+    except Exception:  # noqa: BLE001
+        pass
+    return out
+
+
 def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[str, Any]]:
     bssid = feats.get("bssid") or target.get("bssid") or "TARGET_BSSID"
     channel = feats.get("channel") or target.get("channel") or 1
@@ -2136,29 +2196,82 @@ def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[
 
     steps: List[Dict[str, Any]] = []
 
-    # mt7921e quality probe
-    if target.get("adapter_caps", {}).get("mt7921e"):
+    # Fully offensive inject head (poly live modes) — merged after the
+    # strategy branch so WEP/enterprise/WPS specializations stay intact.
+    caps = target.get("adapter_caps") if isinstance(target.get("adapter_caps"), dict) else {}
+    if caps.get("mt7921e") or caps.get("injection_capable") or target.get("mt7921e"):
         steps.append({
             "action": "mt7921e_test_injection",
             "tool": "mt7921e_tools",
             "args": {},
             "rationale": (
-                "mt7921e adapter detected: aireplay-ng --test for injection quality."
+                "injection-capable adapter: quality probe then OFFENSIVE inject."
             ),
             "expected_outcome": "injection quality 0-100 reported",
             "risk_level": "intrusive",
             "expected_runtime_seconds": 20,
         })
-        if clients > 0 and not pmf:
-            steps.append({
-                "action": "mt7921e_inject",
-                "tool": "mt7921e_tools",
-                "args": {"mode": "deauth", "bssid": bssid},
-                "rationale": "mt7921e + clients, no PMF: directed deauth for EAPOL.",
-                "expected_outcome": "client reconnect; EAPOL visible",
-                "risk_level": "destructive",
-                "expected_runtime_seconds": 10,
+        try:
+            from core.poly.offensive_inject import pick_inject_mode
+            inj = pick_inject_mode({
+                **dict(target or {}),
+                "bssid": bssid,
+                "ssid": essid,
+                "channel": channel,
+                "encryption": feats.get("encryption") or target.get("encryption"),
+                "pmf": pmf,
+                "client_count": clients,
+                "clients": target.get("clients"),
+                "adapter_caps": caps,
             })
+            inj_mode = inj.get("mode") or ("deauth" if clients > 0 and not pmf else "fakeauth")
+        except Exception:  # noqa: BLE001
+            inj_mode = "deauth" if clients > 0 and not pmf else "fakeauth"
+            inj = {"rationale": "fallback offensive mode"}
+        steps.append({
+            "action": "mt7921e_inject",
+            "tool": "mt7921e_tools",
+            "args": {
+                "mode": inj_mode,
+                "bssid": bssid,
+                "channel": channel,
+                "offensive": True,
+                "count": 32 if inj_mode == "deauth" else 16,
+                "station": inj.get("station") if isinstance(inj, dict) else None,
+            },
+            "rationale": (
+                f"OFFENSIVE poly inject mode={inj_mode}: "
+                f"{(inj.get('rationale') if isinstance(inj, dict) else '')}"
+            ),
+            "expected_outcome": "frames on air; reauth / IV / associate pressure",
+            "risk_level": "destructive",
+            "expected_runtime_seconds": 15,
+            "poly": {
+                "family": "offensive_inject",
+                "mode": inj_mode,
+                "live_adapt": True,
+                "alternates": (inj.get("alternates") if isinstance(inj, dict) else None) or [],
+            },
+        })
+        # WEP: also queue fragmentation + chopchop as alternate offensive injects
+        if wv == "wep" or "wep" in str(feats.get("encryption") or "").lower():
+            for alt_mode in ("fragmentation", "chopchop"):
+                steps.append({
+                    "action": "mt7921e_inject",
+                    "tool": "mt7921e_tools",
+                    "args": {
+                        "mode": alt_mode,
+                        "bssid": bssid,
+                        "channel": channel,
+                        "offensive": True,
+                    },
+                    "rationale": f"WEP OFFENSIVE alternate inject: {alt_mode}",
+                    "expected_outcome": "keystream material / IVs",
+                    "risk_level": "destructive",
+                    "expected_runtime_seconds": 30,
+                    "optional": True,
+                    "poly": {"family": "offensive_inject", "mode": alt_mode},
+                })
 
     if has_wps and (wv != "wpa3" or transition):
         steps.extend([
@@ -2234,11 +2347,12 @@ def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[
                 steps.append({
                     "action": "mt7921e_inject",
                     "tool": "mt7921e_tools",
-                    "args": {"mode": mode, "bssid": bssid},
-                    "rationale": f"WEP: {mode} to gather IVs / decrypt frames.",
+                    "args": {"mode": mode, "bssid": bssid, "offensive": True},
+                    "rationale": f"WEP OFFENSIVE: {mode} to gather IVs / decrypt frames.",
                     "expected_outcome": "sufficient IVs / decrypted frame",
                     "risk_level": "destructive",
                     "expected_runtime_seconds": 60,
+                    "poly": {"family": "offensive_inject", "mode": mode},
                 })
         steps.append({
             "action": "crack",
@@ -2249,7 +2363,7 @@ def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[
             "risk_level": "intrusive",
             "expected_runtime_seconds": 120,
         })
-        return steps
+        return _append_pe_priv_esc(steps, target, bssid, essid)
 
     # Enterprise
     if strategy == "enterprise":
@@ -2275,7 +2389,7 @@ def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[
             "risk_level": "destructive",
             "expected_runtime_seconds": 300,
         })
-        return steps
+        return _append_pe_priv_esc(steps, target, bssid, essid)
 
     # WPA3 pure SAE
     if strategy == "wpa3_sae":
@@ -2318,7 +2432,7 @@ def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[
             "risk_level": "read",
             "expected_runtime_seconds": 1,
         })
-        return steps
+        return _append_pe_priv_esc(steps, target, bssid, essid)
 
     # WPA2 / transition WPA3 default path (precise order)
     steps.append({
@@ -2348,15 +2462,18 @@ def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[
             "tool": "aireplay-ng",
             "args": {
                 "bssid": bssid, "interface": iface, "channel": channel,
+                "offensive": True,
+                "count": 32,
             },
             "rationale": (
-                f"{clients} clients observed, no PMF → directed/broadcast "
-                f"deauth for EAPOL. (If client_count is 0 this may be a recon "
+                f"OFFENSIVE deauth: {clients} clients observed, no PMF → "
+                f"force EAPOL. (If client_count is 0 this may be a recon "
                 f"failure; gate decides.)"
             ),
             "expected_outcome": "client reconnect; EAPOL visible",
             "risk_level": "destructive",
             "expected_runtime_seconds": 15,
+            "poly": {"family": "offensive_inject", "mode": "deauth"},
         })
     else:
         steps.append({
@@ -2426,7 +2543,7 @@ def _heuristic_wifi(target: Dict[str, Any], feats: Dict[str, Any]) -> List[Dict[
             "risk_level": "read",
             "expected_runtime_seconds": 1,
         })
-    return steps
+    return _append_pe_priv_esc(steps, target, bssid, essid)
 
 
 def _zero_day_tail_auto_enabled() -> bool:

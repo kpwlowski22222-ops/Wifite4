@@ -114,6 +114,48 @@ def _first(cands: List[Dict[str, Any]], ban: Set[str]) -> Dict[str, Any]:
 
 def _pick_wifi(f: Dict[str, Any], ban: Set[str], creat: str) -> Dict[str, Any]:
     cands: List[Dict[str, Any]] = []
+    # Offensive inject → capture → PE is the primary path when the radio
+    # can put frames on the air (or when we just failed an inject).
+    if f.get("injection") or f.get("failed"):
+        try:
+            from core.poly.offensive_inject import pick_inject_mode
+            inj = pick_inject_mode(
+                {
+                    "pmf": f.get("pmf"),
+                    "pmf_supported": f.get("pmf"),
+                    "encryption": f.get("encryption"),
+                    "clients": f.get("clients"),
+                    "client_count": f.get("clients"),
+                    "mt7921e": f.get("mt7921e"),
+                    "injection_capable": f.get("injection"),
+                    "adapter_caps": {
+                        "injection_capable": f.get("injection"),
+                        "mt7921e": f.get("mt7921e"),
+                    },
+                },
+                {
+                    "ok": not f.get("failed"),
+                    "error": f.get("error"),
+                    "mode": None,
+                },
+                exclude=list(ban),
+            )
+            cands.append({
+                "method": f"offensive_inject_{inj.get('mode') or 'deauth'}",
+                "params": {
+                    "mode": inj.get("mode"),
+                    "offensive": True,
+                    "station": inj.get("station"),
+                    "alternates": inj.get("alternates") or [],
+                },
+                "rationale": (
+                    f"OFFENSIVE live inject: {inj.get('rationale')} "
+                    "→ capture → crack → PE/privesc"
+                ),
+                "family": "wifi_offensive_inject",
+            })
+        except Exception:
+            pass
     if f.get("pmf") or f.get("is_sae"):
         cands.append({
             "method": "adapt_wpa3_sae_one_click_plan",
@@ -130,8 +172,8 @@ def _pick_wifi(f: Dict[str, Any], ban: Set[str], creat: str) -> Dict[str, Any]:
     if f.get("injection") and not f.get("pmf"):
         cands.append({
             "method": "poly_deauth_burst_pattern_grammar",
-            "params": {"clients": f.get("clients") or 0},
-            "rationale": "injection OK, no PMF — deauth burst grammar",
+            "params": {"clients": f.get("clients") or 0, "offensive": True},
+            "rationale": "injection OK, no PMF — offensive deauth burst grammar",
             "family": "wifi_deauth",
         })
     if (f.get("clients") or 0) >= 2:
@@ -246,20 +288,37 @@ def _pick_web(f: Dict[str, Any], ban: Set[str], creat: str) -> Dict[str, Any]:
 
 
 def _pick_pe(f: Dict[str, Any], ban: Set[str], creat: str) -> Dict[str, Any]:
-    cands = [
-        {
-            "method": "adapt_post_exploit_opsec_order",
-            "params": {},
-            "rationale": "adaptive OPSEC / PE module order",
-            "family": "post_exploit",
-        },
-        {
-            "method": "post_exploit_probe",
-            "params": {},
-            "rationale": "standard PE probe",
-            "family": "post_exploit",
-        },
-    ]
+    cands: List[Dict[str, Any]] = []
+    try:
+        from core.poly.offensive_inject import pick_priv_esc
+        pe = pick_priv_esc(
+            {"os": f.get("host_os"), "uid": f.get("uid"), "is_root": f.get("is_root")},
+            {"ok": not f.get("failed"), "error": f.get("error"), "access": f.get("access")},
+            exclude=list(ban),
+        )
+        for m in pe.get("chain") or [pe.get("method")]:
+            if not m or m == "already_elevated":
+                continue
+            cands.append({
+                "method": m,
+                "params": {"privilege_escalation": True, "offensive": True},
+                "rationale": pe.get("rationale") or f"poly privesc: {m}",
+                "family": "privilege_escalation",
+            })
+    except Exception:
+        pass
+    cands.append({
+        "method": "adapt_post_exploit_opsec_order",
+        "params": {},
+        "rationale": "adaptive OPSEC / PE module order",
+        "family": "post_exploit",
+    })
+    cands.append({
+        "method": "post_exploit_probe",
+        "params": {},
+        "rationale": "standard PE probe",
+        "family": "post_exploit",
+    })
     return _first(cands, ban)
 
 
